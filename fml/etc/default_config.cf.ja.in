@@ -55,13 +55,14 @@
 #   http://www.fml.org/software/fml-devel/Documentation/ja/tutorial/
 # の「プログラミングスタイル」の章を御覧ください。
 #
+
 =head1	基本的なパラメータ
 
 =head2	ＭＬの管理者
 
 # Descriptions: いわゆるＭＬの管理者、エラーメールの返る先
 #      History: fml 4.0 の $MAINTAINER
-#        Value: rfc822_address
+#        Value: RFC822_ADDRESS
 #     Examples: elena-admin@fml.org
 maintainer	=
 
@@ -71,7 +72,7 @@ maintainer	=
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: UMASK
 #     Examples:
 default_umask		=	077
 
@@ -81,14 +82,9 @@ default_umask		=	077
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: TIMEZONE
 #     Examples:
 system_timezone		=	+0900
-
-
-
-
-
 
 
 
@@ -98,19 +94,19 @@ system_timezone		=	+0900
 
 # Descriptions: ディレクトリを作成する時のデフォルトモード
 #      History:
-#        Value:
+#        Value: FILE_MODE
 #     Examples:
 directory_default_mode	=	0755
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: FILE_MODE
 #     Examples:
 directory_public_mode	=	0755
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: FILE_MODE
 #     Examples:
 directory_private_mode	=	0700
 
@@ -118,6 +114,10 @@ directory_private_mode	=	0700
 =head2 newml で初期化する
 
 
+# Descriptions:
+#      History:
+#        Value: DIR_LIST
+#     Examples:
 newml_command_init_public_directories	=	$domain_config_base_dir
 						$domain_mail_config_dir
 						$domain_postfix_config_dir
@@ -128,6 +128,11 @@ newml_command_init_public_directories	=	$domain_config_base_dir
 						$shared_db_dir
 						$udb_base_dir
 
+
+# Descriptions:
+#      History:
+#        Value: DIR_LIST
+#     Examples:
 newml_command_init_private_directories	=	$etc_dir
 						$tmp_dir
 						$spool_dir
@@ -141,7 +146,7 @@ newml_command_init_private_directories	=	$etc_dir
 
 # Descriptions: ユーザ fml のホーム
 #      History: fml 4.0 にはない
-#        Value: directory
+#        Value: DIR
 #     Examples: /home/fml
 #               なお、この値はプロセスの UID から動的に決定される
 #		くわしくは FML::Process::Kernel を参照のこと
@@ -152,7 +157,7 @@ newml_command_init_private_directories	=	$etc_dir
 #               $ml_home_dir は起動時に渡されるアーギュメントを元に
 #               FML::Process::Switch が決める
 #      History: fml 4.0 の $DIR にあたるもの
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena
 # ml_home_dir	=
 
@@ -162,14 +167,14 @@ newml_command_init_private_directories	=	$etc_dir
 
 # Descriptions: fml からシステムに教えるデータを置くためのディレクトリ
 #      History: fml 4.0 ではきめうち
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/etc
 domain_config_base_dir	= $ml_home_prefix/etc
 
 
 # Descriptions: ML 間でシェアするデータベースをおくホームディレクトリ
 #      History: fml 4.0 に該当するものはない
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/@db@
 shared_db_dir	= $ml_home_prefix/@db@
 
@@ -178,7 +183,7 @@ shared_db_dir	= $ml_home_prefix/@db@
 #               $shared_db_dir は使われなくなる。
 #               udb は unified database の略称。
 #      History: $shared_db_dir の後継にあたる
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/@udb@
 udb_base_dir	= $ml_home_prefix/@udb@
 
@@ -188,7 +193,7 @@ udb_base_dir	= $ml_home_prefix/@udb@
 
 # Descriptions: パスワードファイルなどを置くディレクトリ
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/etc
 etc_dir		= $ml_home_dir/etc
 
@@ -196,21 +201,21 @@ etc_dir		= $ml_home_dir/etc
 # Descriptions: さまざまな目的につかう
 #               multi-purpose log, temporary, transient, and spool files
 #      History: $VAR_DIR
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/var
 var_dir		= $ml_home_dir/var
 
 
 # Descriptions: 一時的な中間ファイルを置くディレクトリ
 #      History: $TMP_DIR
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/tmp
 tmp_dir		= $ml_home_dir/tmp
 
 
 # Descriptions: 各種データファイルを置くディレクトリ
 #      History: $VARDB_DIR
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/var/db
 db_dir		= $var_dir/db
 
@@ -220,21 +225,21 @@ db_dir		= $var_dir/db
 
 # Descriptions: 各ＭＬローカルのディレクトリ
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/local
 ml_local_dir		=	$ml_home_dir/local
 
 
 # Descriptions: 各ＭＬローカルの lib/ ディレクトリ
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/local/lib
 ml_local_lib_dir	=	$ml_local_dir/lib
 
 
 # Descriptions: 各ＭＬローカルの share/ ディレクトリ
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/local/share
 ml_local_share_dir	=	$ml_local_dir/share
 
@@ -248,14 +253,14 @@ ml_local_share_dir	=	$ml_local_dir/share
 # Descriptions: domian local なディレクトリ。
 #               admin/*.cgi など ml_name が特定されない場合にだけ使う。
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml
 domain_local_dir	=	$ml_home_prefix
 
 # Descriptions: domian local な tmp ディレクトリ。
 #               admin/*.cgi など ml_name が特定されない場合にだけ使う。
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/@tmp@
 domain_local_tmp_dir	=	$ml_home_prefix/@tmp@
 
@@ -265,7 +270,7 @@ domain_local_tmp_dir	=	$ml_home_prefix/@tmp@
 
 # Descriptions: イヴェントのキューディレクトリ
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/var/event
 event_queue_dir	= $var_dir/event/queue
 
@@ -276,7 +281,7 @@ event_queue_dir	= $var_dir/event/queue
 
 # Descriptions: ファイルを作成する時のデフォルトモード
 #      History:
-#        Value:
+#        Value: FILE_MODE
 #     Examples:
 file_default_mode	=	0600
 
@@ -288,7 +293,7 @@ file_default_mode	=	0600
 
 # Descriptions: FML::Credential でアドレスの比較をするか?(当然する)
 #      History: 当然するので、off/on スイッチなぞない
-#        Value: yes | no
+#        Value: YES_OR_NO
 #     Examples: yes
 use_address_compare_function = yes
 
@@ -297,7 +302,10 @@ use_address_compare_function = yes
 #               大文字小文字を区別するかしないか？
 #               互換性のため、デフォルトは「しない」 
 #      History: none
-#        Value: user_part_case_sensitive | user_part_case_insensitive
+#        Value: SELECT (
+#			user_part_case_sensitive 
+#			user_part_case_insensitive
+#		)	
 #     Examples: user_part_case_insensitive
 address_compare_function_type = user_part_case_insensitive
 
@@ -307,7 +315,7 @@ address_compare_function_type = user_part_case_insensitive
 
 # Descriptions: 投稿への制限
 #      History: fml 4.0 の PERMIT_POST_FROM と REJECT_ADDR を合体したもの
-#        Value: list of attributes (
+#        Value: MIX (
 #			permit_anyone
 #			permit_member_maps
 #			check_article_thread
@@ -321,7 +329,7 @@ article_post_restrictions	=	reject_system_special_accounts
 
 # Descriptions: コマンドへの制限
 #      History: fml 4.0 の PERMIT_COMMAND_FROM と REJECT_ADDR を合体したもの
-#        Value: list of attributes (
+#        Value: MIX (
 #			permit_anyone
 #			permit_member_maps
 #			permit_anonymous_command
@@ -338,7 +346,7 @@ command_mail_restrictions	=	reject_system_special_accounts
 
 # Descriptions: admin コマンドへの制限
 #      History: fml 4.0 の ?
-#        Value: list of attributes (
+#        Value: MIX (
 #			permit_anyone
 #			permit_admin_member_maps
 #			check_admin_member_password
@@ -362,14 +370,14 @@ admin_command_mail_restrictions	=	reject_system_special_accounts
 #               XXX map のタイプによっては書き込みできないこともある
 #               XXX (例: unix.group )
 #      History: fml 4.0 の $MEMBER_LIST
-#        Value: filename
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/members
 primary_member_map	=	file:$ml_home_dir/members
 
 
 # Descriptions: メンバーかどうか認証する際に検索するすべてのメンバーリスト
 #      History: fml 4.0 の $MEMBER_LIST @MEMBER_LIST 相当
-#         Type:
+#        Value: MAP_LIST
 #     Examples:
 member_maps		=	$primary_member_map
 				$admin_member_maps
@@ -383,7 +391,7 @@ member_maps		=	$primary_member_map
 #               XXX map のタイプによっては書き込みできないこともある
 #               XXX (例: unix.group )
 #      History: fml 4.0 の $ACTIVE_LIST
-#        Value: filename
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/recipients
 primary_recipient_map	=	 file:$ml_home_dir/recipients
 
@@ -391,7 +399,7 @@ primary_recipient_map	=	 file:$ml_home_dir/recipients
 # Descriptions: すべての受信者のリスト
 #               互換性のため actives もサーチの対象 
 #      History: fml 4.0 の $ACTIVE_LIST @ACTIVE_LIST 相当
-#        Value: a list of filenames
+#        Value: MAP_LIST
 #     Examples: file:$ml_home_dir/recipients
 #		unix.group:fml
 recipient_maps		=	$primary_recipient_map
@@ -403,14 +411,14 @@ recipient_maps		=	$primary_recipient_map
 
 # Descriptions: ダミー
 #      History: none
-#        Value: filename
+#        Value: MAP
 #     Examples:
 primary_digest_member_map	=	$primary_member_map
 
 
 # Descriptions: ダミー
 #      History: none
-#        Value: list of filenames
+#        Value: MAP_LIST
 #     Examples:
 digest_member_maps		=	$primary_member_maps
 
@@ -419,14 +427,14 @@ digest_member_maps		=	$primary_member_maps
 #               XXX map のタイプによっては書き込みできないこともある
 #               XXX (例: unix.group )
 #      History: fml 4.0 では $ACTIVE_LIST のオプションとして実装
-#        Value: filename
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/recipients-digest
 primary_digest_recipient_map	=	 file:$ml_home_dir/recipients-digest
 
 
 # Descriptions: すべてのまとめ送りをするべき受信者のリスト
 #      History: fml 4.0 の $ACTIVE_LIST @ACTIVE_LIST のオプションとして実装
-#        Value: a list of filenames
+#        Value: MAP_LIST
 #     Examples: file:$ml_home_dir/recipients-digest
 #		unix.group:fml
 digest_recipient_maps		=	$primary_digest_recipient_map
@@ -438,35 +446,35 @@ digest_recipient_maps		=	$primary_digest_recipient_map
 #               XXX map のタイプによっては書き込みできないこともある
 #               XXX (例: unix.group )
 #      History: fml 4.0 の $ADMIN_MEMBER_LIST
-#        Value: filename
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/members-admin
 primary_admin_member_map	=	file:$ml_home_dir/members-admin
 
 
 # Descriptions: メンバーかどうか認証する際に検索するすべてのメンバーリスト
 #      History: fml 4.0 の $ADMIN_MEMBER_LIST @ADMIN_MEMBER_LIST 相当
-#         Type:
+#        Value: MAP_LIST
 #     Examples:
 admin_member_maps		=	$primary_admin_member_map
 
 
 # Descriptions: とりあえず定義してあるけど、使われてはいない
 #      History: 4.0 にはない
-#        Value: file
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/recipients-admin
 primary_admin_recipient_map	=	file:$ml_home_dir/recipients-admin
 
 
 # Descriptions: とりあえず定義してあるけど、使われてはいない
 #      History: 4.0 にはない
-#        Value: file
+#        Value: MAP_LIST
 #     Examples: /var/spool/ml/elena/recipients-admin
 admin_recipient_maps		=	$primary_admin_recipient_map
 
 
 # Descriptions: リモート管理者のパスワードファイル
 #      History: 4.0 の $PASSWD_FILE
-#        Value: file
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/etc/passwd
 primary_admin_member_password_map = file:$etc_dir/passwd-admin
 
@@ -474,7 +482,7 @@ primary_admin_member_password_map = file:$etc_dir/passwd-admin
 # Descriptions: リモート管理者のパスワードファイル(群)
 #               互換性のため etc/passwd もサーチの対象 
 #      History: 4.0 にはない
-#        Value:
+#        Value: MAP_LIST
 #     Examples:
 admin_member_password_maps	=	$primary_admin_member_password_map
 					file:$etc_dir/passwd
@@ -486,28 +494,28 @@ admin_member_password_maps	=	$primary_admin_member_password_map
 #               XXX map のタイプによっては書き込みできないこともある
 #               XXX (例: unix.group )
 #      History: fml 4.0 の $MODERATOR_MEMBER_LIST
-#        Value: filename
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/members-moderator
 primary_moderator_member_map	=	file:$ml_home_dir/members-moderator
 
 
 # Descriptions: メンバーかどうか認証する際に検索するすべてのメンバーリスト
 #      History: fml 4.0 には相当物がない、$MODERATOR_MEMBER_LIST のみだった
-#        Value: 
+#        Value: MAP_LIST
 #     Examples: 
 moderator_member_maps		=	$primary_moderator_member_map
 
 
 # Descriptions: とりあえず定義してあるけど、使われてはいない
 #      History: 4.0 にはない
-#        Value: file
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/recipients-moderator
 primary_moderator_recipient_map	=	file:$ml_home_dir/recipients-moderator
 
 
 # Descriptions: とりあえず定義してあるけど、使われてはいない
 #      History: 4.0 にはない
-#        Value: file
+#        Value: MAP_LIST
 #     Examples: /var/spool/ml/elena/recipients-moderator
 moderator_recipient_maps	=	$primary_moderator_recipient_map
 
@@ -521,7 +529,7 @@ moderator_recipient_maps	=	$primary_moderator_recipient_map
 #                    メールループなどをひきおこしうる。
 #               これらの理由により望ましくないアカウントたちと思われる。
 #      History: fml 4.0 の $REJECT_ADDR
-#        Value: a list of strings
+#        Value: REGEXP_LIST
 #     Examples: see below
 system_special_accounts		=	root
 					postmaster
@@ -543,7 +551,7 @@ system_special_accounts		=	root
 #               たとえば、libexec/error は、これらのアドレスを
 #               削除しちゃいけない。
 #      History: none
-#        Value: a list of strings
+#        Value: RFC822_ADDRESS_LIST
 #     Examples: (elena-ctl@fml.org elena-ctl@fml.org ...)
 list_addresses	=	$maintainer
 			$article_post_address
@@ -551,16 +559,18 @@ list_addresses	=	$maintainer
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: RFC822_ADDRESS
 #     Examples:
 article_post_address	=	$address_for_post
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: RFC822_ADDRESS
 #     Examples:
 command_mail_address	=	$address_for_command
+
+
 
 =head1	ユーザ情報
 
@@ -569,25 +579,25 @@ command_mail_address	=	$address_for_command
 
 # Descriptions: primary { address => gecos_field } map.
 #      History: none
-#        Value: map
+#        Value: MAP
 #     Examples:
 primary_user_db_gecos_map	=	$db_dir/gecos
 
 # Descriptions: { address => gecos_field } maps.
 #      History: none
-#        Value: map
+#        Value: MAP_LIST
 #     Examples:
 user_db_gecos_maps		=	$primary_user_db_gecos_map
 
 # Descriptions: primary { address => unix time when subscribed } map.
 #      History: none
-#        Value: map
+#        Value: MAP
 #     Examples:
 primary_user_db_subscribe_date_map	=	$db_dir/subscribe_date
 
 # Descriptions: { address => unix time when subscribed } maps.
 #      History: none
-#        Value: map
+#        Value: MAP_LIST
 #     Examples:
 user_db_subscribe_date_maps	=	$primary_user_db_subscribe_date_map
 
@@ -618,21 +628,21 @@ default_mail_body_size_limit	=	10240000
 #               デフォルトは postfix にあわせて 1000
 #      History: 4.0 で直接対応するものはない。
 #               $MCI_SMTP_HOSTS は似ているがちょっと違う
-#        Value: number
+#        Value: NUM
 #     Examples:
 smtp_recipient_limit		=	1000
 
 # Descriptions: デフォールトの MTA は自分自身( localhost )
 #               IPv6 の loopback がデフォルトなのがおしゃれ :-)
 #      History: fml 4.0 の $HOST
-#        Value: host:port
+#        Value: TRANSPORT_LIST
 #     Examples:
 smtp_servers		=	[::1]:25
 				127.0.0.1:25
 
 # Descriptions: SMTP の MAIL FROM:<$smtp_sender> で使うパラメータ
 #      History: fml 4.0 の $SMTP_SENDER
-#        Value: mail_address (RFC822 の addrspec)
+#        Value: RFC822_ADDRESS
 #     Examples: elena-admin@fml.org
 smtp_sender		=	$maintainer
 
@@ -642,7 +652,7 @@ smtp_sender		=	$maintainer
 # Descriptions: mail queue のディレクトリ
 #      History: 似たような目的に tmp/ が使われていたが、
 #               fml 4.0 には直接該当するものはない。
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/var/mail/queue
 mail_queue_dir	= $var_dir/mail/queue
 
@@ -654,14 +664,14 @@ mail_queue_dir	= $var_dir/mail/queue
 
 # Descriptions: 入力されるメールをキャッシュするか？
 #      History: $NUM_LOG_MAIL
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples: y
 use_incoming_mail_cache	=	yes
 
 
 # Descriptions: 入力されるメールを置くディレクトリ
 #      History: LOG_MAIL_DIR ($DIR/var/Mail/)
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/var/mail/incoming
 incoming_mail_cache_dir	= $var_dir/mail/incoming
 
@@ -678,14 +688,14 @@ incoming_mail_cache_size	=	128
 
 # Descriptions: 出力(配送)されるメールをキャッシュするか？
 #      History: $NUM_LOG_MAIL
-#        Value: yes / no
-#     Examples: y
+#        Value: YES_OR_NO
+#     Examples: yes
 use_outgoing_mail_cache	=	yes
 
 
 # Descriptions: deliver されるメールを置くディレクトリ
 #      History: LOG_MAIL_DIR ($DIR/var/Mail/)
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/var/mail/outgoing
 outgoing_mail_cache_dir	= $var_dir/mail/outgoing
 
@@ -702,13 +712,14 @@ outgoing_mail_cache_size	=	128
 # Descriptions:
 #      History: none
 #		use_digest_program (fml8 pre alpha)
-#        Value:
+#        Value: YES_OR_NO
 #     Examples:
 use_article_digest_function = ${use_digest_program:-yes}
 
+
 # Descriptions: まとめ送りした最後の記事番号を保存するファイル
 #      History: fml4 では各自それぞれの番号を保存していた。
-#        Value: filename
+#        Value: FILE
 #     Examples:
 digest_sequence_file	= $ml_home_dir/seq-digest
 
@@ -730,7 +741,7 @@ digest_sequence_file	= $ml_home_dir/seq-digest
 #		一方、英語のＭＬ(language_preference_order = en)の場合でも、
 #		Accept-Lanaguage: ja なら日本語で返事をするべきであろう。
 #      History: none
-#        Value: ja en
+#        Value: MIX ( ja en )
 #     Examples: ja en
 language_preference_order	=	ja en
 
@@ -739,57 +750,57 @@ language_preference_order	=	ja en
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( iso-2022-jp us-ascii )
 #     Examples:
 report_mail_default_charset	=	$report_mail_charset_ja
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( iso-2022-jp )
 #     Examples:
 report_mail_charset_ja	=	iso-2022-jp
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( us-ascii )
 #     Examples:
 report_mail_charset_en	=	us-ascii
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( iso-2022-jp us-ascii )
 #     Examples:
 template_file_default_charset	=	$template_file_charset_ja
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( euc-jp )
 #     Examples:
 template_file_charset_ja	=	euc-jp
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( us-ascii )
 #     Examples:
 template_file_charset_en	=	us-ascii
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: MIX ( iso-2022-jp us-ascii )
 #     Examples:
 template_file_charset_select_list	=	euc-jp	
 						us-ascii
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SUBJECT
 #     Examples:
 message_default_subject	=	fml system message ($ml_name ML)
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SUBJECT
 #     Examples:
 report_mail_subject	=	fml results ($ml_name ML)
 
@@ -799,14 +810,14 @@ report_mail_subject	=	fml results ($ml_name ML)
 
 # Descriptions: directory to hold message template files
 #      History: /usr/local/fml/drafts/
-#        Value: directory
+#        Value: DIR
 #     Examples: /usr/local/share/fml/$fml_version/message
 message_template_dir	= $fml_share_dir/message
 
 
 # Descriptions: directory to hold ml specific message template files
 #      History: $DIR/drafts/
-#        Value: directory
+#        Value: DIR
 #     Examples: /usr/local/share/fml/$fml_version/template/$language
 ml_local_message_template_dir	= $ml_local_share_dir/message
 
@@ -816,19 +827,19 @@ ml_local_message_template_dir	= $ml_local_share_dir/message
 
 # Descriptions: ヘルプファイル
 #      History:
-#        Value:
+#        Value: FILE
 #     Examples:
 help_file		=	$ml_home_dir/help
 
 # Descriptions: ヘルプファイル
 #      History:
-#        Value:
+#        Value: FILE
 #     Examples:
 guide_file		=	$ml_home_dir/guide
 
 # Descriptions: ヘルプファイル
 #      History:
-#        Value:
+#        Value: FILE
 #     Examples:
 objective_file		=	$ml_home_dir/objective
 
@@ -837,22 +848,27 @@ objective_file		=	$ml_home_dir/objective
 
 # Descriptions: ヘッダ情報を根拠にしたループチェックをするか？
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_incoming_mail_header_loop_check		=	yes
 
 
 # Descriptions: ヘッダに対するループチェックのルール群
 #      History:
-#        Value:
+#        Value: MIX (
+#			check_message_id
+#			check_x_ml_info
+#			check_list_post
+#		)
 #     Examples:
 incoming_mail_header_loop_check_rules		=	check_message_id
 							check_x_ml_info
 							check_list_post
 
+
 # Descriptions: すべての Message-ID のキャッシュを格納するディレクトリ
 #      History: なし
-#        Value:
+#        Value: DIR
 #     Examples:
 message_id_cache_dir		=	$db_dir/message_id
 
@@ -860,14 +876,14 @@ message_id_cache_dir		=	$db_dir/message_id
 # Descriptions: 記事としてスプールに格納されたメールの 
 #               Message-ID のキャッシュを格納するディレクトリ
 #      History: なし
-#        Value:
+#        Value: DIR
 #     Examples:
 article_message_id_cache_dir	=	$db_dir/article_message_id
 
 
 # Descriptions: ヘッダ書換えの操作をするか？
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_header_rewrite		=	yes
 
@@ -875,7 +891,18 @@ use_article_header_rewrite		=	yes
 # Descriptions: 記事のヘッダを書き換えるルール群
 #               Re: を切り落とす操作はデフォルトなので指定の必要なし
 #      History:
-#        Value:
+#        Value: MIX (
+#			delete_unsafe_header_fields
+#			rewrite_article_subject_tag
+#			rewrite_reply_to
+#			rewrite_errors_to
+#			add_software_info
+#			add_fml_ml_name
+#			add_fml_traditional_article_id
+#			add_fml_article_id
+#			add_x_sequence
+#			add_rfc2369
+#		)
 #     Examples:
 article_header_rewrite_rules	=	delete_unsafe_header_fields
 					rewrite_article_subject_tag
@@ -891,14 +918,14 @@ article_header_rewrite_rules	=	delete_unsafe_header_fields
 
 # Descriptions: ヘッダ書換えの操作をするか？
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_digest_header_rewrite		=	yes
 
 
 # Descriptions: 記事のまとめおくりのヘッダを書き換えるルール群
 #      History:
-#        Value:
+#        Value: MIX ( add_software_info add_rfc2369 )
 #     Examples:
 digest_header_rewrite_rules	=	add_software_info
 					add_rfc2369
@@ -906,7 +933,7 @@ digest_header_rewrite_rules	=	add_software_info
 
 # Descriptions: あぶないタグを消す
 #      History: fml 4.0 の SKIP_FIELDS
-#        Value: strings
+#        Value: HEADER_FIELD_LIST
 #     Examples:
 unsafe_header_fields		=	Return-Receipt-To
 
@@ -914,7 +941,7 @@ unsafe_header_fields		=	Return-Receipt-To
 # Descriptions: Subject: のタグ
 #               % の意味は UNIX マニュアルを参照。例えば sprintf 関数など
 #      History:
-#        Value:
+#        Value: SUBJECT_TAG
 #     Examples: [elena:00080]
 article_subject_tag			=	[$ml_name:%05d]
 
@@ -923,7 +950,7 @@ article_subject_tag			=	[$ml_name:%05d]
 #               XXX そこだけ変えたい場合があるかもしれないので、
 #               XXX 一応 $ml_name とは分けておく。
 #      History:
-#        Value:
+#        Value: ML_NAME
 #     Examples: elena
 outgoing_mail_header_x_ml_name			=	$ml_name
 
@@ -932,21 +959,21 @@ outgoing_mail_header_x_ml_name			=	$ml_name
 
 # Descriptions: ヘッダ情報を根拠にしたループチェックをするか？
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_incoming_mail_body_loop_check		=	yes
 
 
 # Descriptions: ヘッダに対するループチェックのルール群
 #      History:
-#        Value:
+#        Value: MIX ( check_body_cksum )
 #     Examples:
 incoming_mail_body_loop_check_rules		=	check_body_cksum
 
 
 # Descriptions: Message-ID のキャッシュを格納するディレクトリ
 #      History:
-#        Value:
+#        Value: DIR
 #     Examples:
 incoming_mail_body_cksum_cache_dir		=	$db_dir/body_cksum
 
@@ -954,25 +981,25 @@ incoming_mail_body_cksum_cache_dir		=	$db_dir/body_cksum
 
 # Descriptions: ロックをするか？
 #      History:
-#        Value: yes /no
+#        Value: YES_OR_NO
 use_lock	= yes
 
 # Descriptions: ロックファイルを置くディレクトリ
 #      History:
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/var/lock
 lock_dir	= $var_dir/lock
 
 # Descriptions: ロックファイル (ジャイアントロック用のファイル）
 #      History: fml 4.0 ではスプールディレクトリ $SPOOL_DIR
 #               をロックしていた。
-#        Value: filename
+#        Value: FILE
 #     Examples: /var/spool/ml/elena/var/lock/giantlock
 lock_file	= $lock_dir/giantlock
 
 # Descriptions: ロックのタイプ
 #      History: fml 4.0 の $USE_FLOCK
-#        Value: flock
+#        Value: SELECT ( flock )
 #     Examples:
 lock_type	= flock
 
@@ -982,25 +1009,26 @@ lock_type	= flock
 
 # Descriptions: ログとり機能を有効にする
 #      History: fml 4.0 では有無を言わさずログをとる
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_log		=	yes
 
 # Descriptions: ML 固有のログファイル
 #      History: fml 4.0 の $LOGFILE
-#        Value: filename
+#        Value: FILE
 #     Examples:
 log_file	=	$ml_home_dir/log
 
 # Descriptions: ログとりのタイプ (syslog は未実装)
 #      History: fml 8.0 new
-#        Value: file / syslog
+#        Value: SELECT ( file syslog )
 #     Examples:
 log_type	=	file
 
 # Descriptions: log message format
 #      History:
-#        Value: fml4_compatible
+#        Value: STR
+#		fml4_compatible
 #               process[pid]
 #               process:time.pid ?
 #     Examples: * fml4_compatible の例
@@ -1013,7 +1041,7 @@ log_format_type	=	process[pid]
 
 # Descriptions: ログファイル
 #      History:
-#        Value: filename
+#        Value: DIR
 #     Examples:
 log_dir		=	$var_dir/log
 
@@ -1023,7 +1051,7 @@ log_dir		=	$var_dir/log
 
 # Descriptions: ログファイルローテションを行なうか否か
 #      History: $LOGFILE_NEWSYSLOG_LIMIT が 0 なら no、0 でないなら yes
-#        Value: yes | no
+#        Value: YES_OR_NO
 #     Examples: no
 use_log_rotate		=	no
 
@@ -1032,7 +1060,7 @@ use_log_rotate		=	no
 #               サイズが一定値を越えたら行なうのか？(デフォルト)
 #               それても一定時間おきに行なうのか？
 #      History: none
-#        Value: size | interval
+#        Value: SELECT ( size interval )
 #     Examples: size
 log_rotate_policy	=	size
 
@@ -1064,19 +1092,19 @@ log_rotate_num_backlog 	=	4
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( ja en )
 #     Examples:
 log_file_default_charset   =       $log_file_charset_ja
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( euc-jp us-ascii )
 #     Examples:
 log_file_charset_ja        =       euc-jp
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( euc-jp us-ascii )
 #     Examples:
 log_file_charset_en        =       us-ascii
 
@@ -1087,7 +1115,7 @@ log_file_charset_en        =       us-ascii
 # Descriptions: ドメイン固有のログファイル
 #               admin/*.cgi など ml_name が特定されない場合にだけ使う。
 #      History: none
-#        Value: filename
+#        Value: FILE
 #     Examples: /var/spool/ml/@log@
 domain_local_log_file	=	$domain_local_dir/@log@
 
@@ -1099,7 +1127,7 @@ domain_local_log_file	=	$domain_local_dir/@log@
 #               コマンドラインオプションで --log-computer-output を指定すると
 #               use_log_computer_output = yes と同じ意味になる。
 #      History: none
-#        Value: yes | no
+#        Value: YES_OR_NO
 #     Examples: no
 use_log_computer_output	=	no
 
@@ -1119,7 +1147,7 @@ log_computer_output_engine	=	FML::Log::Print::Simple
 # Descriptions: 記事の配送処理プログラムをそもそも使うか？
 #      History: なし
 #	 	$use_distribute_program (fml8 pre alpha) 
-#        Value: yes
+#        Value: YES_OR_NO
 #     Examples: yes / no
 use_article_post_function = ${use_distribute_program:-yes}
 
@@ -1134,7 +1162,7 @@ use_article_post_function = ${use_distribute_program:-yes}
 
 # Descriptions: 記事を配送する機能を使うか否か？
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_delivery	=	yes
 
@@ -1142,7 +1170,7 @@ use_article_delivery	=	yes
 # Descriptions: トランスポート(配送システム)の指定。
 #		smtpのばあい、$smtp_serversで指定されたMTAを順番に試す。
 #      History: NONE
-#        Value: smtp / lmtp
+#        Value: SELECT ( smtp lmtp )
 #     Examples: smtp
 article_delivery_transport	=	smtp
 
@@ -1152,7 +1180,7 @@ article_delivery_transport	=	smtp
 
 # Descriptions: 記事番号を保存するファイル (ダミー？)
 #      History: $SEQ_FILE
-#        Value: filename
+#        Value: FILE
 #     Examples:
 article_sequence_file	= $sequence_file
 
@@ -1163,7 +1191,7 @@ article_sequence_file	= $sequence_file
 # Descriptions: 弾いたメールをどのようにフォワードするか？
 #               ウィルスなどを考慮すると、文字列がいいとおもう
 #      History: 4.0 では文字列で、これはハードコーディングされていた。
-#        Value: multipart / string
+#        Value: SELECT ( multipart string )
 #     Examples: string
 article_post_restrictions_reject_notice_data_type	=	string
 
@@ -1225,14 +1253,22 @@ outgoing_article_body_size_limit	= $default_mail_body_size_limit
 #		$USE_DISTRIBUTE_FILTER
 #		$INCOMING_MAIL_SIZE_LIMIT
 #		ADD_CONTENT_HANDLER()
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples: yes
 use_article_filter	= 	yes
  
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: MIX (
+#			article_size_filter
+#			article_header_filter
+#			article_non_mime_filter
+#			article_mime_component_filter
+#			article_text_plain_filter
+#			article_spam_filter
+#			article_virus_filter
+#		)
 #     Examples:
 article_filter_functions	=	article_size_filter
 					article_header_filter
@@ -1248,7 +1284,7 @@ article_filter_functions	=	article_size_filter
 
 # Descriptions: サイズ情報を根拠にしたフィルタリングをするか？
 #      History: no
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_size_filter	=	yes
 
@@ -1256,7 +1292,10 @@ use_article_size_filter	=	yes
 # Descriptions: フィルタリングのルール。
 #               どのルールにもマッチしないなら、記事の投稿は認められる。
 #      History:
-#        Value:
+#        Value: MIX (	check_header_size
+#			check_body_size
+#			permit
+#		)
 #     Examples:
 article_size_filter_rules	=	check_header_size
 					check_body_size
@@ -1269,7 +1308,7 @@ article_size_filter_rules	=	check_header_size
 # Descriptions: ヘッダ情報を根拠にしたフィルタリングをするか？
 #      History: disabled by default.
 #               "yes" always if $USE_DISTRIBUTE_FILTER is yes.
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_header_filter		=	yes
 
@@ -1277,7 +1316,11 @@ use_article_header_filter		=	yes
 # Descriptions: フィルタリングのルール。
 #               どのルールにもマッチしないなら、記事の投稿は認められる。
 #      History: check_date に該当するものはない。
-#        Value:
+#        Value: MIX (
+#			check_message_id
+#			check_date
+#			permit
+#		)
 #     Examples:
 article_header_filter_rules		=	check_message_id
 						check_date
@@ -1290,14 +1333,14 @@ article_header_filter_rules		=	check_message_id
 # Descriptions: とりあえず、だみ〜
 #      History: 4.0 の content filter で、!MIME にあたる部分。
 #		よって、デフォルトでは no ということになる。
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_non_mime_filter		=	yes
 
 
 # Descriptions: とりあえず、だみ〜
 #      History: なし
-#        Value: permit / reject_empty_content_type
+#        Value: MIX ( permit reject_empty_content_type )
 #     Examples: permit
 article_non_mime_filter_rules		=	reject_empty_content_type
 						permit
@@ -1305,14 +1348,14 @@ article_non_mime_filter_rules		=	reject_empty_content_type
 
 # Descriptions: MIME の構造に基づいたフィルタを行なう
 #      History: 4.0 の content filter 相当。デフォルトでは no だ。
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_mime_component_filter	=	yes
 
 
 # Descriptions: ファイル名
 #      History: 4.0 の @CONTENT_HANDLER 相当
-#        Value:
+#        Value: FILE
 #     Examples:
 article_mime_component_filter_rules	= $fml_config_dir/mime_component_filter
 
@@ -1326,7 +1369,7 @@ article_mime_component_filter_rules	= $fml_config_dir/mime_component_filter
 #      History: 4.0 の EnvelopeFilter 相当。
 #		$USE_DISTRIBUTE_FILTER が yes の場合、
 #		以下のルールの半分くらいが自動的に適用されていた。
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_text_plain_filter		=	yes
 
@@ -1355,7 +1398,16 @@ use_article_text_plain_filter		=	yes
 #				<=> FILTER_ATTR_REJECT_MS_GUID
 #
 #         Note: permit by default 
-#        Value:
+#        Value: MIX (
+#			reject_not_iso2022jp_japanese_string
+#			reject_null_mail_body
+#			reject_one_line_message
+#			reject_old_fml_command_syntax
+#			reject_invalid_fml_command_syntax
+#			reject_japanese_command_syntax
+#			reject_ms_guid
+#			permit
+#		)
 #     Examples:
 article_text_plain_filter_rules	=	reject_not_iso2022jp_japanese_string
 					reject_null_mail_body
@@ -1374,14 +1426,14 @@ article_text_plain_filter_rules	=	reject_not_iso2022jp_japanese_string
 #		また有効にした場合、ヘッダにSPAMであることを知らせる
 #		フラッグをつけ通過させる動作がデフォルト。
 #      History: none
-#        Value: yes | no
+#        Value: YES_OR_NO
 #     Examples: no
 use_article_spam_filter		=	no
 
 
 # Descriptions: SPAMだと判定された場合、どうするか？
 #      History: none
-#        Value: reject | ignore | header_rewrite
+#        Value: MIX ( reject ignore header_rewrite )
 #     Examples: header_rewrite
 article_spam_filter_rules	=	header_rewrite
 
@@ -1389,7 +1441,7 @@ article_spam_filter_rules	=	header_rewrite
 # Descriptions: SPAMチェッカとして使う外部プログラム。
 #		複数指定すると、複数のプログラムを順に試す。
 #      History: none
-#        Value: spamassasin | spamc | bogofilter
+#        Value: MIX ( spamassasin spamc bogofilter )
 #     Examples: bogofilter
 article_spam_filter_drivers	=	bogofilter
 
@@ -1399,14 +1451,14 @@ article_spam_filter_drivers	=	bogofilter
 
 # Descriptions: 外部のVirusチェッカを使った検査、デフォルトでは無効。
 #      History: none
-#        Value: yes | no
+#        Value: YES_OR_NO
 #     Examples: no
 use_article_virus_filter	=	no
 
 
 # Descriptions: ウィルスだと判定された場合、どうするか？
 #      History: none
-#        Value: reject | ignore | header_rewrite
+#        Value: MIX ( reject ignore header_rewrite )
 #     Examples: reject
 article_virus_filter_rules	=	reject
 
@@ -1414,7 +1466,7 @@ article_virus_filter_rules	=	reject
 # Descriptions: ウィルスチェッカとして使う外部プログラム
 #		複数指定すると、複数のプログラムを順に試す。
 #      History: none
-#        Value: clamscan 
+#        Value: MIX ( clamscan )
 #     Examples: clamscan
 article_virus_filter_drivers	=	clamscan
 
@@ -1427,7 +1479,7 @@ article_virus_filter_drivers	=	clamscan
 #      History: maintainer には常に弾かれたことを知らせるが、
 #		sender に対しては $FILTER_NOTIFY_REJECTION (= 0 by default)。
 #		デフォルトでは、管理者にのみ知らせる。
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples: yes
 use_article_filter_reject_notice	=	yes
 
@@ -1436,7 +1488,7 @@ use_article_filter_reject_notice	=	yes
 #      History: 4.0 では maintainer あてはハードコーデイングで常に知らせる。
 #		sender 宛ては $FILTER_NOTIFY_REJECTION で制御されていて
 #		デフォルトでは知らせない。
-#        Value: maintainer | sender
+#        Value: MIX ( maintainer sender )
 #     Examples: maintainer sender
 article_filter_reject_notice_recipients	=	maintainer
 						sender
@@ -1445,23 +1497,25 @@ article_filter_reject_notice_recipients	=	maintainer
 # Descriptions: 弾いたメールをどのようにフォワードするか？
 #               ウィルスなどを考慮すると、文字列がいいとおもう
 #      History: 4.0 では文字列で、これはハードコーディングされていた。
-#        Value: multipart / string
+#        Value: SELECT ( multipart string )
 #     Examples: string
 article_filter_reject_notice_data_type	=	string
+
+
 
 =head2	ARTICLE SPAM FILTER CONFIGURATIONS
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: YES_OR_NO
 #     Examples:
 use_article_spam_filter		=	no
 
 
 # Descriptions: list up driver names used as spam checker.
 #      History: none
-#        Value: spamassassin | spamc | bogofilter
+#        Value: MIX ( spamassassin spamc bogofilter )
 #     Examples: bogofilter
 article_spam_filter_functions	=	bogofilter
 
@@ -1471,14 +1525,14 @@ article_spam_filter_functions	=	bogofilter
 
 # Descriptions: exit non-zero status code when spam caught if "-e" specified.
 #      History: none
-#        Value: STR
+#        Value: COMMAND_LINE_OPTIONS
 #     Examples: -e
 article_spam_filter_spamassassin_options	=	-e
 
 
 # Descriptions: spamc optoins. "-c" means check only.
 #      History: none
-#        Value: STR
+#        Value: COMMAND_LINE_OPTIONS
 #     Examples: -c
 article_spam_filter_spamc_options		=	-c
 
@@ -1488,7 +1542,7 @@ article_spam_filter_spamc_options		=	-c
 
 # Descriptions: "-e" implies embedded mode.
 #      History: none
-#        Value: STR
+#        Value: COMMAND_LINE_OPTIONS
 #     Examples: -e
 article_spam_filter_bogofilter_options		=	-e
 
@@ -1496,64 +1550,62 @@ article_spam_filter_bogofilter_options		=	-e
 
 =head1	記事および記事のスプール
 
+
 # Descriptions: 記事をスプールディレクトリに保存する
 #      History: 4.0 の $NOT_USE_SPOOL
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_spool	= 	yes
 
-# Descriptions: 記事のスプールディレクトリを階層化するか？
+
+# Descriptions: スプールのタイプ
+#		記事のスプールディレクトリを階層化するか？
+#               デフォルトでは平面的にファイルを配置する
 #      History: 4.0 にはない。fml-devel new
-#        Value: plane subdir
+#        Value: SELECT ( plane subdir )
 #     Examples: plane
 spool_type	= 	plane
 
 
+# Descriptions: 記事を保存するディレクトリ
+#      History: 4.0 の $SPOOL_DIR
+#        Value: DIR
+#     Examples:
+spool_dir	= $ml_home_dir/spool
+
+
 # Descriptions:
 #      History:
-#        Value:
+#        Value: NUM
 #     Examples:
 spool_subdir_unit =	1000
 
 
 # Descriptions: 記事番号を保存するファイル
 #      History: $SEQ_FILE
-#        Value: filename
+#        Value: FILE
 #     Examples:
 sequence_file	= $ml_home_dir/seq
-
-# Descriptions: 記事を保存するディレクトリ
-#      History: 4.0 の $SPOOL_DIR
-#        Value: directory
-#     Examples:
-spool_dir	= $ml_home_dir/spool
-
-# Descriptions: スプールのタイプ
-#               デフォルトでは平面的にファイルを配置する
-#      History:
-#        Value: plane
-#     Examples:
-spool_type	= plane
 
 =head1	記事のサマリ
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: FILE
 #     Examples:
 article_summary_file		=	$ml_home_dir/summary
 
 
 # Descriptions:
 #      History:
-#        Value: fml4_compatible
+#        Value: SELECT ( fml4_compatible )
 #     Examples:
 article_summary_file_format_style	=	fml4_compatible
 
 
 # Descriptions: アドレスは先頭の何バイトかだけを記録する。詳しくはログ見ろ
 #      History:
-#        Value: \d+
+#        Value: NUM
 #     Examples: 15
 article_summary_file_format_address_length	=	15
 
@@ -1562,7 +1614,7 @@ article_summary_file_format_address_length	=	15
 
 # Descriptions: 記事を HTML 化するか否か
 #      History: fml 4 の $AUTO_HTML_GEN
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples: yes
 use_html_archive	=	yes
 
@@ -1570,49 +1622,49 @@ use_html_archive	=	yes
 # Descriptions: HTML 化された記事を作るディレクトリ (ＭＬごと)
 #               注意: ドメインごと、ＭＬごとに別のディレクトリになる
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: ~fml/public_html/fml/mlarchive/fml.org/elena
 html_archive_dir	= $fml_owner_home_dir/public_html/fml/mlarchive/$ml_domain/$ml_name
 
 
 # Descriptions:
 #      History:
-#        Value: normal / reverse
+#        Value: SELECT ( normal reverse )
 #     Examples: reverse
 html_archive_index_order_type	=	reverse
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: YES_OR_NO
 #     Examples:
 use_html_archive_address_mask	=	yes
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( all )
 #     Examples:
 html_archive_address_mask_type	=	all
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( euc-jp us-ascii )
 #     Examples:
 html_archive_default_charset	=	$html_archive_charset_ja
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( euc-jp )
 #     Examples:
 html_archive_charset_ja		=	euc-jp
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( us-ascii )
 #     Examples:
 html_archive_charset_en		=	us-ascii
 
@@ -1625,7 +1677,7 @@ html_archive_charset_en		=	us-ascii
 # Descriptions: コマンドメールを使うか？
 #      History: なし
 #		$use_command_mail_program (fml8 pre alpha)
-#        Value: yes
+#        Value: YES_OR_NO
 #     Examples: yes / no
 use_command_mail_function = ${use_command_mail_program:-yes}
 
@@ -1635,7 +1687,7 @@ use_command_mail_function = ${use_command_mail_program:-yes}
 
 # Descriptions: command prompt in message reply
 #      History: hard coded in fml (< 4.0)
-#        Value: string without spaces
+#        Value: PROMPT
 #     Examples: >>>
 command_mail_reply_prompt			=	>>>
 
@@ -1645,14 +1697,14 @@ command_mail_reply_prompt			=	>>>
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: YES_OR_NO
 #     Examples:
 use_command_mail_filter	= 	yes
  
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: MIX ( command_mail_size_filter )
 #     Examples:
 command_mail_filter_functions	=	command_mail_size_filter
 
@@ -1662,14 +1714,14 @@ command_mail_filter_functions	=	command_mail_size_filter
 
 # Descriptions: フィルタで弾かれたことを教える
 #      History: 4.0 ではハードコードだったような…
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples: yes
 use_command_mail_filter_reject_notice	=	yes
 
 
 # Descriptions: エラーのお知らせの受信者
 #      History: 4.0 ではハードコードだったような…
-#        Value: maintainer | sender
+#        Value: MIX ( maintainer sender )
 #     Examples: maintainer sender
 command_mail_filter_reject_notice_recipients	=	maintainer
 							sender
@@ -1678,7 +1730,7 @@ command_mail_filter_reject_notice_recipients	=	maintainer
 # Descriptions: 弾いたメールをどのようにフォワードするか？
 #               ウィルスなどを考慮すると、文字列がいいとおもう
 #      History: 4.0 では文字列で、これはハードコーディングされていた。
-#        Value: multipart / string
+#        Value: SELECT ( multipart string )
 #     Examples: string
 command_mail_filter_reject_notice_data_type	=	string
 
@@ -1688,7 +1740,7 @@ command_mail_filter_reject_notice_data_type	=	string
 
 # Descriptions: サイズ情報を根拠にしたフィルタリングをするか？
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_command_mail_size_filter	=	yes
 
@@ -1696,7 +1748,13 @@ use_command_mail_size_filter	=	yes
 # Descriptions: フィルタリングのルール。
 #               どのルールにもマッチしないなら、コマンドメールは認められる。
 #      History:
-#        Value:
+#        Value: MIX (
+#			check_header_size
+#			check_body_size
+#			check_command_limit
+#			check_line_length_limit
+#			permit
+#		)
 #     Examples:
 command_mail_size_filter_rules	=	check_header_size
 					check_body_size
@@ -1775,21 +1833,21 @@ command_mail_line_length_limit	=	128
 
 # Descriptions: listinfo template
 #      History: /usr/local/fml/listinfo/
-#        Value: directory
+#        Value: DIR
 #     Examples: /usr/local/share/fml/$fml_version/listinfo/$language
 listinfo_template_dir	= $fml_share_dir/listinfo/$template_file_default_charset
 
 
 # Descriptions: information をおくディレクトリ (ＭＬごと)
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: ~fml/public_html/fml/listinfo/fml.org/elena
 listinfo_base_dir	= $fml_owner_home_dir/public_html/fml/listinfo
 
 
 # Descriptions: information をおくディレクトリ (ＭＬごと)
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: ~fml/public_html/fml/listinfo/fml.org/elena
 listinfo_dir	= $listinfo_base_dir/$ml_domain/$ml_name
 
@@ -1802,7 +1860,7 @@ listinfo_dir	= $listinfo_base_dir/$ml_domain/$ml_name
 #      History: fml 4.0 ではデフォルトのコマンド定義一覧に対し
 #               @PERMIT_PROCEDURE @DENY_PROCEDURE などで
 #               変更を加える
-#        Value:
+#        Value: FML_COMMAND_LIST
 #     Examples:
 user_command_mail_allowed_commands	=		help
 					get
@@ -1829,6 +1887,10 @@ user_command_mail_allowed_commands	=		help
 					summary
 
 
+# Descriptions:
+#      History:
+#        Value: FML_COMMAND_LIST
+#     Examples:
 anonymous_command_mail_allowed_commands	=		guide
 					info
 					add
@@ -1837,6 +1899,10 @@ anonymous_command_mail_allowed_commands	=		guide
 					$confirm_command_prefix
 
 
+# Descriptions:
+#      History:
+#        Value: FML_COMMAND_LIST
+#     Examples:
 admin_command_mail_allowed_commands	=	subscribe
 					add
 					unsubscribe
@@ -1867,6 +1933,10 @@ admin_command_mail_allowed_commands	=	subscribe
 					list
 
 
+# Descriptions:
+#      History:
+#        Value: FML_COMMAND_LIST
+#     Examples:
 admin_cgi_allowed_commands	=		adduser
 					deluser
 					addadmin
@@ -1878,6 +1948,10 @@ admin_cgi_allowed_commands	=		adduser
 					newml
 					rmml
 
+# Descriptions:
+#      History:
+#        Value: FML_COMMAND_LIST
+#     Examples:
 commands_for_ml_admin_cgi	=	adduser
 					deluser
 					addadmin
@@ -1892,13 +1966,13 @@ commands_for_ml_admin_cgi	=	adduser
 
 
 # Descriptions: confirmation の返事を表す特別なコマンド
-#        Value: STR
+#        Value: FML_COMMAND
 #     Examples:
 confirm_command_prefix		=	confirm
 
 
 # Descriptions: 管理用のコマンドを表す特別なコマンド
-#        Value: STR
+#        Value: FML_COMMAND
 #     Examples:
 privileged_command_prefix	=	admin
 
@@ -1916,7 +1990,7 @@ get_command_request_limit	=	100
 # Descriptions: subscribe コマンドで confirmation 認証(コールバック認証)
 #               を行なうか否か？
 #      History:
-#        Value:  confirmation / ""
+#        Value: SELECT ( confirmation )
 #     Examples:
 subscribe_command_auth_type	=	confirmation
 
@@ -1924,7 +1998,7 @@ subscribe_command_auth_type	=	confirmation
 # Descriptions: chaddr コマンドで confirmation 認証(コールバック認証)
 #               を行なうか否か？
 #      History:
-#        Value:  confirmation / ""
+#        Value: SELECT ( confirmation )
 #     Examples:
 chaddr_command_auth_type	=	confirmation
 
@@ -1932,7 +2006,7 @@ chaddr_command_auth_type	=	confirmation
 # Descriptions: unsubscribe コマンドで confirmation 認証(コールバック認証)
 #               を行なうか否か？
 #      History:
-#        Value:  confirmation / ""
+#        Value: SELECT ( confirmation )
 #     Examples:
 unsubscribe_command_auth_type	=	confirmation
 
@@ -1942,7 +2016,7 @@ unsubscribe_command_auth_type	=	confirmation
 
 # Descriptions: ＭＬ作成時 (makefml newml)の際に作られる
 #		テンプレートファイル
-#        Value: ARRAY
+#        Value: FILE_LIST
 #     Examples:
 newml_command_template_files 		=	config.cf
 
@@ -1950,7 +2024,7 @@ newml_command_template_files 		=	config.cf
 # Descriptions: ＭＬ作成時の際に作われる fml_owner の値の指定。
 #               -admin 宛のエラーメールなどが転送される先である。
 #               デフォルトでは main.cf の fml_owner の値(通常ユーザ fml)。
-#        Value: STR
+#        Value: RFC822_USER_OR_RFC822_ADDRESS
 #     Examples:
 newml_command_ml_admin_default_address 	=	$fml_owner
 
@@ -1960,7 +2034,7 @@ newml_command_ml_admin_default_address 	=	$fml_owner
 
 # Descriptions: 引数で指定しない時に、list コマンドが表示するべきマップ
 #      History: none
-#        Value: ARRAY
+#        Value: MAP_LIST
 #     Examples:
 list_command_default_maps		=	$recipient_maps
 
@@ -1984,7 +2058,7 @@ log_command_tail_starting_location	=	100
 #               リモート管理の時は、admin_recipient_maps にしたいなどの
 #               需要があると思われる。
 #      History: 4.0 に該当するものはない
-#        Value: maps
+#        Value: MAP_LIST
 #     Examples: file:$ml_home_dir/recipients-maintainer
 #               $admin_recipient_maps 
 maintainer_recipient_maps	=
@@ -1996,7 +2070,7 @@ maintainer_recipient_maps	=
 # Descriptions: エラー解析プログラムを使うか？
 #      History: なし
 #		use_error_analyzer_program (fml8 pre alpha)
-#        Value: yes
+#        Value: YES_OR_NO
 #     Examples: yes / no
 use_error_mail_analyzer_function = ${use_error_analyzer_program:-yes}
 
@@ -2006,21 +2080,21 @@ use_error_mail_analyzer_function = ${use_error_analyzer_program:-yes}
 
 # Descriptions: error messages のキャッシュを格納するディレクトリ
 #      History: /var/spool/ml/mead/errormaillog
-#        Value: directory
+#        Value: DIR
 #     Examples: 
 error_mail_analyzer_cache_dir		=	$db_dir/error
 
 
 # Descriptions: キャッシュのタイプ
 #      History: none
-#        Value: string
+#        Value: CLASS
 #     Examples: File::CacheDir
 error_mail_analyzer_cache_type		=	File::CacheDir
 
 
 # Descriptions: キャッシュのモード
 #      History: none
-#        Value: string
+#        Value: SELECT ( temporal )
 #     Examples: 
 error_mail_analyzer_cache_mode		=	temporal
 
@@ -2028,7 +2102,7 @@ error_mail_analyzer_cache_mode		=	temporal
 # Descriptions: キャッシュのサイズ
 #		mode が temporal なら日数だ。
 #      History: none
-#        Value: number
+#        Value: NUM
 #     Examples: 
 error_mail_analyzer_cache_size		=	14
 
@@ -2038,7 +2112,7 @@ error_mail_analyzer_cache_size		=	14
 
 # Descriptions: FML::Error::Analyze 中の関数名。
 #      History: none
-#        Value: simple_count / histgram
+#        Value: MIX ( simple_count histgram )
 #     Examples: simple_count
 error_mail_analyzer_function_select_list	=	simple_count
 						histgram
@@ -2046,7 +2120,7 @@ error_mail_analyzer_function_select_list	=	simple_count
 
 # Descriptions: FML::Error::Analyze 中の関数名。
 #      History: none
-#        Value: simple_count / histgram
+#        Value: SELECT ( simple_count histgram )
 #     Examples: simple_count
 error_mail_analyzer_function			=	histgram
 
@@ -2057,12 +2131,14 @@ error_mail_analyzer_function			=	histgram
 #     Examples: 5
 error_mail_analyzer_simple_count_limit	=	5
 
+
+
 =head1	スレッド追跡システム
 
 
 # Descriptions: スレッド追跡システムを使うか
 #      History: fml 8.0 new
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_thread_track	=	yes
 
@@ -2070,7 +2146,7 @@ use_thread_track	=	yes
 # Descriptions: スレッド追跡システムは Subject タグを利用するか？
 #               XXX ん〜でも、使わなくてもいけそうですわ
 #      History: fml 5.0 new
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_thread_subject_tag	=	no
 
@@ -2079,7 +2155,7 @@ use_thread_subject_tag	=	no
 #               複数のＭＬにまたがったチケットを追跡するために
 #               必要
 #      History: fml 5.0 new
-#        Value: string
+#        Value: ML_NAME
 #     Examples: elena
 thread_subject_tag_name	=	$ml_name
 
@@ -2087,7 +2163,7 @@ thread_subject_tag_name	=	$ml_name
 # Descriptions: チケット番号のシンタックス
 #               XXX ん〜でも、使わなくてもいけそうですわ
 #      History: fml 5.0 new
-#        Value:
+#        Value: SUBJECT_TAG
 #     Examples: elena_#00001010     $ml_name_#%08d
 #               elena/100           $ml_name/%d
 thread_id_syntax	=	$ml_name/%d
@@ -2098,7 +2174,7 @@ thread_id_syntax	=	$ml_name/%d
 #               前後につけてもらうとわかりやすそう?
 #               XXX ん〜でも、使わなくてもいけそうですわ
 #      History: fml 5.0 new
-#        Value:
+#        Value: SUBJECT_TAG
 #     Examples: [elena_#00001010]
 #               [elena/100]
 thread_subject_tag	=	[$thread_id_syntax]
@@ -2107,7 +2183,7 @@ thread_subject_tag	=	[$thread_id_syntax]
 # Descriptions: Subject につけるチケット番号のシンタックスの場所
 #               前につけるか、それとも後ろにつけるか？
 #      History: fml 5.0 new
-#        Value: appended/prepended
+#        Value: SELECT ( appended prepended )
 #     Examples: Subject: [elena/100] ....
 #               Subject: .... [elena/100]
 thread_subject_tag_location	=	appended
@@ -2115,7 +2191,7 @@ thread_subject_tag_location	=	appended
 
 # Descriptions: チケット番号を保存するファイル
 #      History: fml 5.0 new
-#        Value: filename
+#        Value: FILE
 #     Examples: /var/spool/ml/elena/thread.seq
 thread_sequence_file	=	$ml_home_dir/thread.seq
 
@@ -2124,28 +2200,28 @@ thread_sequence_file	=	$ml_home_dir/thread.seq
 #               実際にはこの下に elena/article.db のように
 #               ＭＬ名のサブディレクトリがおかれる
 #      History: fml 5.0 new
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/@db@/thread
 thread_db_dir		=	$shared_db_dir/thread
 
 
 # Descriptions: CGI の相対パス
 #      History:
-#        Value:
+#        Value: FILE
 #     Examples:
 thread_cgi_base_url	=	/cgi-bin/fmlthread.cgi
 
 
 # Descriptions: CGI のタイトル
 #      History:
-#        Value:
+#        Value: STR
 #     Examples:
 thread_cgi_title	=	thread tracking system interface
 
 
 # Descriptions: CGI 画面の基本カラー
 #      History:
-#        Value:
+#        Value: HTML_COLOR
 #     Examples:
 thread_cgi_bgcolor	=	#E6E6FA
 
@@ -2162,31 +2238,35 @@ thread_cgi_bgcolor	=	#E6E6FA
 
 # Descriptions: LDAP サーバ
 #      History:
-#        Value:
+#        Value: HOSTNAME_LIST
 #     Examples:
 ldap_servers		=
 
+
 # Descriptions: LDAP サーバにログインするためのパスワード
 #      History:
-#        Value:
+#        Value: PASSWORD
 #     Examples:
 ldap_server_password	=
 
+
 # Descriptions: LDAP の search base
 #      History:
-#        Value:
+#        Value: LDAP_SEARCH_BASE
 #     Examples:
 ldap_search_base	=
 
+
 # Descriptions: LDAP の search bind
 #      History:
-#        Value:
+#        Value: LDAP_SEVERVER_BIND
 #     Examples:
 ldap_server_bind	=
 
+
 # Descriptions: LDAP のフィルタ
 #      History:
-#        Value:
+#        Value: LDAP_QUERY_FILTER
 #     Examples:
 ldap_query_filter	=	(objectclass=*)
 
@@ -2195,7 +2275,7 @@ ldap_query_filter	=	(objectclass=*)
 
 # Descriptions: CGI を置くトップディレクトリ
 #      History:
-#        Value:
+#        Value: DIR
 #     Examples:
 cgi_base_dir	=	$fml_owner_home_dir/public_html/cgi-bin/fml/$ml_domain
 
@@ -2203,7 +2283,7 @@ cgi_base_dir	=	$fml_owner_home_dir/public_html/cgi-bin/fml/$ml_domain
 # Descriptions: このＭＬの admin CGI を置くディレクトリ
 #               注意: ドメインごと、ＭＬごとに別のディレクトリになる
 #      History:
-#        Value:
+#        Value: DIR
 #     Examples: ~fml/public_admin/cgi-bin/fml/admin/fml.org/elena
 #        Notes: admin/.htaccess か admin/$domain/.htaccess で ACL する
 admin_cgi_base_dir	=	$cgi_base_dir/admin
@@ -2212,42 +2292,42 @@ admin_cgi_base_dir	=	$cgi_base_dir/admin
 # Descriptions: このＭＬの admin CGI を置くディレクトリ
 #               注意: ドメインごと、ＭＬごとに別のディレクトリになる
 #      History:
-#        Value:
+#        Value: DIR
 #     Examples: ~fml/public_admin/cgi-bin/fml/admin/fml.org/elena
 ml_admin_cgi_base_dir	=	$cgi_base_dir/ml-admin/$ml_name
 
 
 # Descriptions: CGI の表示の CHARSET
 #      History:
-#        Value:
+#        Value: SELECT ( euc-jp us-ascii )
 #     Examples:
 cgi_default_charset	=	$cgi_charset_ja
 
 
 # Descriptions: CGI の表示の CHARSET
 #      History:
-#        Value:
+#        Value: SELECT ( euc-jp )
 #     Examples:
 cgi_charset_ja	=	euc-jp
 
 
 # Descriptions: CGI の表示の CHARSET
 #      History:
-#        Value:
+#        Value: SELECT ( us-ascii)
 #     Examples:
 cgi_charset_en	=	us-ascii
 
 
 # Descriptions: CGI の言語モード (!= charset) 
 #      History:
-#        Value:
+#        Value: SELECT ( japanese )
 #     Examples:
 cgi_default_language	=	japanese
 
 
 # Descriptions: CGI で利用可能な言語モード (!= charset) 
 #      History:
-#        Value:
+#        Value: MIX ( japanese english )
 #     Examples:
 cgi_language_select_list	=	japanese
 					english
@@ -2255,38 +2335,46 @@ cgi_language_select_list	=	japanese
 
 # Descriptions: デフォルトの bgcolor
 #      History:
-#        Value: #%6x
+#        Value: HTML_COLOR
 #     Examples: #FFFFFF
 cgi_main_menu_color		=	#FFFFFF
 
 
 # Descriptions: デフォルトの bgcolor
 #      History: 4.0 には該当する変数はない
-#        Value: #%6x
+#        Value: HTML_COLOR
 #     Examples: #FFFFFF
 cgi_navigation_bar_color	=	#FFFFFF
 
 
 # Descriptions: CGI のアドレス操作の際に選べる種類
 #      History: 4.0 には該当する変数はない
-#        Value: member recipient admin_member
+#        Value: MIX ( member recipient admin_member )
 #     Examples: member recipient admin_member
 cgi_menu_address_map_select_list		=	member
-					recipient
-					admin_member
+							recipient
+							admin_member
 
 
 # Descriptions: CGI のアドレス操作の際に選べる種類のデフォルト値
 #      History: 4.0 には該当する変数はない
-#        Value: member recipient admin_member
+#        Value: MIX ( member recipient admin_member )
 #     Examples: member
 cgi_menu_default_address_map		=	recipient
 
 
 =head1	MTA に依存する設定のヒント
 
+# Descriptions:
+#      History:
+#        Value: MIX ( postfix sendmail qmail procmail )
+#     Examples:
 newml_command_mta_config_list	=	postfix sendmail qmail procmail
 
+# Descriptions:
+#      History:
+#        Value: MIX ( postfix sendmail qmail procmail )
+#     Examples:
 rmml_command_mta_config_list	=	$newml_command_mta_config_list
 
 
@@ -2295,42 +2383,42 @@ rmml_command_mta_config_list	=	$newml_command_mta_config_list
 
 # Descriptions: MTA 用に教えるための設定ファイルを置くディレクトリ
 #      History: fml 4.0 ではきめうち
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/etc/mail
 domain_mail_config_dir		= 	$domain_config_base_dir/mail
 
 
 # Descriptions: postfix 用に教えるための設定ファイルを置くディレクトリ
 #      History: fml 4.0 ではきめうち
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/etc/mail
 domain_postfix_config_dir	= 	$domain_config_base_dir/postfix
 
 
 # Descriptions: qmail 用に教えるための設定ファイルを置くディレクトリ
 #      History: fml 4.0 ではきめうち
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/etc/mail
 domain_qmail_config_dir		= 	$domain_config_base_dir/qmail
 
 
 # Descriptions: exim 用に教えるための設定ファイルを置くディレクトリ
 #      History: fml 4.0 ではきめうち
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/etc/mail
 domain_exim_config_dir		= 	$domain_config_base_dir/exim
 
 
 # Descriptions: sendmail 用に教えるための設定ファイルを置くディレクトリ
 #      History: fml 4.0 ではきめうち
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/etc/sendmail
 domain_sendmail_config_dir	= 	$domain_config_base_dir/sendmail
 
 
 # Descriptions: MTA 用に教えるための設定ファイルを置くディレクトリ
 #      History: fml 4.0 ではきめうち
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/etc/procmail
 domain_procmail_config_dir	= 	$domain_config_base_dir/procmail
 
@@ -2340,7 +2428,7 @@ domain_procmail_config_dir	= 	$domain_config_base_dir/procmail
 
 # Descriptions: MTA に教えるための aliases ファイル
 #      History: fml 4.0 ではきめうち
-#        Value: file path
+#        Value: FILE
 #     Examples: /var/spool/ml/etc/mail/aliases
 mail_aliases_file	=	$domain_mail_config_dir/aliases
 
@@ -2350,7 +2438,7 @@ mail_aliases_file	=	$domain_mail_config_dir/aliases
 
 # Descriptions: MTA に教えるための virtual map ファイル
 #      History: none
-#        Value: file path
+#        Value: FILE
 #     Examples: /var/spool/ml/etc/mail/virtual
 postfix_virtual_map_file	=	$domain_postfix_config_dir/virtual
 
@@ -2358,7 +2446,7 @@ postfix_virtual_map_file	=	$domain_postfix_config_dir/virtual
 
 # Descriptions: ＭＬ作成時 (makefml newml)の際に作られる
 #		postfix テンプレートファイル
-#        Value: ARRAY
+#        Value: FILE_LIST
 #     Examples:
 newml_command_postfix_template_files 	=	include
 						include-ctl
@@ -2367,7 +2455,7 @@ newml_command_postfix_template_files 	=	include
 
 # Descriptions: verps delimieters used in postfix
 #      History: none
-#        Value: +=
+#        Value: RFC822_ADDRESS_DELIMITERS
 #     Examples: +=
 postfix_verp_delimiters	=	+=
 
@@ -2377,7 +2465,7 @@ postfix_verp_delimiters	=	+=
 
 # Descriptions: ＭＬ作成時 (makefml newml)の際に作られる
 #		qmail テンプレートファイル
-#        Value: ARRAY
+#        Value: FILE_LIST
 #     Examples:
 newml_command_qmail_template_files 	=	dot-qmail
 						dot-qmail-ctl
@@ -2388,14 +2476,14 @@ newml_command_qmail_template_files 	=	dot-qmail
 
 # Descriptions: virtual domain configurations for qmail
 #      History: none
-#        Value: file path
+#        Value: FILE
 #     Examples: /var/qmail/control/virtualdomains
 qmail_virtualdomains_file = /var/qmail/control/virtualdomains
 
 
 # Descriptions: MTA に教えるための virtual map ファイル(テンプレート)
 #      History: none
-#        Value: file path
+#        Value: FILE
 #     Examples: /var/spool/ml/etc/qmail/virtualdomains
 qmail_virtual_map_file	=	$domain_qmail_config_dir/virtualdomains
 
@@ -2403,7 +2491,7 @@ qmail_virtual_map_file	=	$domain_qmail_config_dir/virtualdomains
 
 # Descriptions: verps delimieters used in qmail
 #      History: none
-#        Value: -=
+#        Value: RFC822_ADDRESS_DELIMITERS
 #     Examples: -=
 qmail_verp_delimiters	=	-=
 
@@ -2412,7 +2500,7 @@ qmail_verp_delimiters	=	-=
 
 # Descriptions: MTA に教えるための virtual map ファイル
 #      History: none
-#        Value: file path
+#        Value: FILE
 #     Examples: /var/spool/ml/etc/mail/virtual
 sendmail_virtual_map_file =	$domain_sendmail_config_dir/virtusertable
 
@@ -2422,7 +2510,7 @@ sendmail_virtual_map_file =	$domain_sendmail_config_dir/virtusertable
 
 # Descriptions: MTA に教えるための aliases ファイル
 #      History: fml 4.0 ではきめうち
-#        Value: file path
+#        Value: FILE
 #     Examples: /var/spool/ml/etc/procmail/aliases
 procmail_aliases_file	=	$domain_procmail_config_dir/procmailrc
 
@@ -2430,102 +2518,266 @@ procmail_aliases_file	=	$domain_procmail_config_dir/procmailrc
 
 =head1 program paths
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_perl                 = @PERL@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_cksum                = @CKSUM@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_sum                  = @SUM@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_md5                  = @MD5@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_tar                  = @TAR@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_gzip                 = @GZIP@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_zcat                 = @ZCAT@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_gzcat                = @GZCAT@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_gunzip               = @GUNZIP@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_lha                  = @LHA@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_ls                   = @LS@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_ish                  = @ISH@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_bzip2                = @BZIP2@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_bunzip2              = @BUNZIP2@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_uuencode             = @UUENCODE@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_compress             = @COMPRESS@
 
 
 =head2 MTA related program paths
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_sendmail             = @SENDMAIL@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_makemap              = @MAKEMAP@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_newaliases           = @NEWALIASES@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_postfix              = @POSTFIX@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_postalias            = @POSTALIAS@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_postconf             = @POSTCONF@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_postmap              = @POSTMAP@
 
 
 =head2 encryption/decryption
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_pgp                  = @PGP@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_pgp5                 = @PGP5@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_pgpe                 = @PGPe@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_pgpk                 = @PGPK@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_pgps                 = @PGPS@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_pgpv                 = @PGPV@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_gpg                  = @GPG@
 
 
 =head2	utilities
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_nkf                  = @NKF@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_kakasi               = @KAKASI@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_namazu               = @NAMAZU@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_less                 = @LESS@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_more                 = @MORE@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_w3m                  = @W3M@
 
 
 =head2 spam related utilities
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_spamassassin         = @SPAMASSASSIN@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_spamd                = @SPAMD@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_spamc                = @SPAMC@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_bogofilter           = @BOGOFILTER@
 
 
 =head2 virus checker
 
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_clamscan             = @CLAMSCAN@
 
 =head1	システム依存 (主に BSD との非互換性を記述している)
@@ -2536,35 +2788,36 @@ path_clamscan             = @CLAMSCAN@
 
 # Descriptions: getpwuid(2) があるか？
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 system_has_getpwuid	=	yes
 
 # Descriptions: getpwgid(2) があるか？
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 system_has_getpwgid	=	yes
 
 # Descriptions: alarm(2) があるか？
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 system_has_alarm	=	yes
 
 # Descriptions: select(2) があるか？
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 system_has_select	=	yes
 
 # Descriptions: fork(2) があるか？
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 system_has_fork	=	yes
 
 =head1 MySQL の例
+
 
 #
 # 注意: 次の ^=head で名前空間はリセットされる
@@ -2577,27 +2830,77 @@ system_has_fork	=	yes
 # 	fml_recipient int
 # );
 
+
 [mysql:fml]
 
+
+# Descriptions:
+#      History:
+#        Value: HOSTNAME
+#     Examples:
 sql_server	=	localhost
+
+
+# Descriptions:
+#      History:
+#        Value: USER
+#     Examples:
 sql_user	=	fml
+
+
+# Descriptions:
+#      History:
+#        Value: PASSWORD
+#     Examples:
 sql_password	=	uja
+
+
+# Descriptions:
+#      History:
+#        Value: SQL_DATABASE
+#     Examples:
 sql_database	=	fml
+
+
+# Descriptions:
+#      History:
+#        Value: SQL_TABLE
+#     Examples:
 sql_table	=	ml
 
+
+# Descriptions:
+#      History:
+#        Value: SQL_STATEMENT
+#     Examples:
 sql_get_next_key =	select fml_address from $sql_table
 			where fml_ml = '$ml_name'
 					and
 				fml_domain = '$ml_domain'
 
+
+# Descriptions:
+#      History:
+#        Value: SQL_STATEMENT
+#     Examples:
 sql_getline	=	select fml_address from $sql_table
 			where fml_ml = '$ml_name'
 					and
 				fml_domain = '$ml_domain'
 
+
+# Descriptions:
+#      History:
+#        Value: SQL_STATEMENT
+#     Examples:
 sql_add		=	insert into $sql_table
 			values ('$ml_name', '$ml_domain', '&address', 1, 1)
 
+
+# Descriptions:
+#      History:
+#        Value: SQL_STATEMENT
+#     Examples:
 sql_delete	=	delete from $sql_table
 			where	fml_ml = '$ml_name'
 					and
@@ -2605,6 +2908,11 @@ sql_delete	=	delete from $sql_table
 					and
 				fml_address = '&address'
 
+
+# Descriptions:
+#      History:
+#        Value: SQL_STATEMENT
+#     Examples:
 sql_find	=	select fml_address from $sql_table
 			where	fml_ml = '$ml_name'
 					and

@@ -65,7 +65,7 @@
 
 # Descriptions: ML maintainer. person who receives the error messages.
 #      History: fml 4.0's $MAINTAINER
-#        Value: rfc822_address
+#        Value: RFC822_ADDRESS
 #     Examples: elena-admin@fml.org
 maintainer	=
 
@@ -75,7 +75,7 @@ maintainer	=
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: UMASK
 #     Examples:
 default_umask		=	077
 
@@ -85,7 +85,7 @@ default_umask		=	077
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: TIMEZONE
 #     Examples:
 system_timezone		=	+0900
 
@@ -95,19 +95,19 @@ system_timezone		=	+0900
 
 # Descriptions: default mode in creating directory.
 #      History:
-#        Value:
+#        Value: FILE_MODE
 #     Examples:
 directory_default_mode	=	0755
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: FILE_MODE
 #     Examples:
 directory_public_mode	=	0755
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: FILE_MODE
 #     Examples:
 directory_private_mode	=	0700
 
@@ -115,6 +115,10 @@ directory_private_mode	=	0700
 =head2 directories "makefml newml" initializes 
 
 
+# Descriptions:
+#      History:
+#        Value: DIR_LIST
+#     Examples:
 newml_command_init_public_directories	=	$domain_config_base_dir
 						$domain_mail_config_dir
 						$domain_postfix_config_dir
@@ -125,6 +129,11 @@ newml_command_init_public_directories	=	$domain_config_base_dir
 						$shared_db_dir
 						$udb_base_dir
 
+
+# Descriptions:
+#      History:
+#        Value: DIR_LIST
+#     Examples:
 newml_command_init_private_directories	=	$etc_dir
 						$tmp_dir
 						$spool_dir
@@ -138,14 +147,14 @@ newml_command_init_private_directories	=	$etc_dir
 
 # Descriptions: home directory of user fml
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /home/fml
 # fml_owner_home_dir =
 
 
 # Descriptions: home directory of this ML
 #      History: $DIR
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena
 # ml_home_dir	=
 
@@ -155,14 +164,14 @@ newml_command_init_private_directories	=	$etc_dir
 
 # Descriptions: system data directory provided by fml
 #      History: hard-coded in fml 4.0
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/etc
 domain_config_base_dir	= $ml_home_prefix/etc
 
 
 # Descriptions: database directory shared among ML's
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/@db@
 shared_db_dir	= $ml_home_prefix/@db@
 
@@ -170,7 +179,7 @@ shared_db_dir	= $ml_home_prefix/@db@
 # Descriptions: database directory shared among ML's.
 #               udb == unified database.
 #      History: inherit $shared_db_dir
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/@udb@
 udb_base_dir	= $ml_home_prefix/@udb@
 
@@ -180,7 +189,7 @@ udb_base_dir	= $ml_home_prefix/@udb@
 
 # Descriptions: etc directory
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /etc/spool/ml/elena/etc
 etc_dir		= $ml_home_dir/etc
 
@@ -188,21 +197,21 @@ etc_dir		= $ml_home_dir/etc
 # Descriptions: directory hoding
 #               multi-purpose log, temporary, transient, and spool files
 #      History: $VAR_DIR
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/var
 var_dir		= $ml_home_dir/var
 
 
 # Descriptions: directory to hold temporary files
 #      History: $TMP_DIR
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/tmp
 tmp_dir		= $ml_home_dir/tmp
 
 
 # Descriptions: directoy to hold several data files
 #      History: $VARDB_DIR
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/var/db
 db_dir		= $var_dir/db
 
@@ -212,21 +221,21 @@ db_dir		= $var_dir/db
 
 # Descriptions: ML local directory
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/local
 ml_local_dir		=	$ml_home_dir/local
 
 
 # Descriptions: ML local library path
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/local/lib
 ml_local_lib_dir	=	$ml_local_dir/lib
 
 
 # Descriptions: ML local share/
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/local/share
 ml_local_share_dir	=	$ml_local_dir/share
 
@@ -240,14 +249,14 @@ ml_local_share_dir	=	$ml_local_dir/share
 # Descriptions: domian local directory.
 #               used in admin/*.cgi e.g. when ml_name unspecified.
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml
 domain_local_dir	=	$ml_home_prefix
 
 # Descriptions: domian local temporary directory.
 #               used in admin/*.cgi e.g. when ml_name unspecified.
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/@tmp@
 domain_local_tmp_dir	=	$ml_home_prefix/@tmp@
 
@@ -256,7 +265,7 @@ domain_local_tmp_dir	=	$ml_home_prefix/@tmp@
 
 # Descriptions: event queue directory for scheduler
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/var/event
 event_queue_dir	= $var_dir/event/queue
 
@@ -267,7 +276,7 @@ event_queue_dir	= $var_dir/event/queue
 
 # Descriptions: default mode in creating file
 #      History:
-#        Value:
+#        Value: FILE_MODE
 #     Examples:
 file_default_mode	=	0600
 
@@ -278,14 +287,17 @@ file_default_mode	=	0600
 
 # Descriptions: FML::Credential checks address comparison
 #      History: always enabled
-#        Value: yes | no
+#        Value: YES_OR_NO
 #     Examples: yes
 use_address_compare_function = yes
 
 
 # Descriptions: case insensitive comparison of user part of mail address.
 #      History: none
-#        Value: user_part_case_sensitive | user_part_case_insensitive
+#        Value: SELECT (
+#			user_part_case_sensitive 
+#			user_part_case_insensitive
+#		)	
 #     Examples: user_part_case_insensitive
 address_compare_function_type = user_part_case_insensitive
 
@@ -294,7 +306,7 @@ address_compare_function_type = user_part_case_insensitive
 
 # Descriptions: restrictions for post
 #      History: fml 4.0's PERMIT_POST_FROM + REJECT_ADDR
-#        Value: list of attributes (
+#        Value: MIX (
 #			permit_anyone
 #			permit_member_maps
 #			check_article_thread
@@ -308,7 +320,7 @@ article_post_restrictions	=	reject_system_special_accounts
 
 # Descriptions: restrictions for command mail
 #      History: fml 4.0's PERMIT_COMMAND_FROM + REJECT_ADDR
-#        Value: list of attributes (
+#        Value: MIX (
 #			permit_anyone
 #			permit_member_maps
 #			permit_anonymous_command
@@ -325,7 +337,7 @@ command_mail_restrictions	=	reject_system_special_accounts
 
 # Descriptions: restrictions for admin command mail
 #      History: fml 4.0's ?
-#        Value: list of attributes (
+#        Value: MIX (
 #			permit_anyone
 #			permit_admin_member_maps
 #			check_admin_member_password
@@ -349,7 +361,7 @@ admin_command_mail_restrictions	=	reject_system_special_accounts
 #               fml (CUI,GUI,command mail) modifies this map.
 #               XXX some map e.g. uni.group is read only
 #      History: fml 4.0's $MEMBER_LIST
-#        Value: filename
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/members
 primary_member_map	=	file:$ml_home_dir/members
 
@@ -357,6 +369,7 @@ primary_member_map	=	file:$ml_home_dir/members
 # Descriptions: all maps used to check member list.
 #      History: fml 4.0's $MEMBER_LIST + @MEMBER_LIST
 #         Type:
+#        Value: MAP_LIST
 #     Examples:
 member_maps		=	$primary_member_map
 				$admin_member_maps
@@ -370,7 +383,7 @@ member_maps		=	$primary_member_map
 #               fml (CUI,GUI,command mail) modifies this map.
 #               XXX some map e.g. uni.group is read only
 #      History: fml 4.0's $ACTIVE_LIST
-#        Value: filename
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/recipients
 primary_recipient_map	=	 file:$ml_home_dir/recipients
 
@@ -378,7 +391,7 @@ primary_recipient_map	=	 file:$ml_home_dir/recipients
 # Descriptions: all maps used as recipient list.
 #               actives is added for backward compability.
 #      History: fml 4.0's $ACTIVE_LIST + @ACTIVE_LIST
-#        Value: a list of filenames
+#        Value: MAP_LIST
 #     Examples: file:$ml_home_dir/recipients
 #		unix.group:fml
 recipient_maps		=	$primary_recipient_map
@@ -390,14 +403,14 @@ recipient_maps		=	$primary_recipient_map
 
 # Descriptions: dummy
 #      History: none
-#        Value: filename
+#        Value: MAP
 #     Examples:
 primary_digest_member_map	=	$primary_member_map
 
 
 # Descriptions: dummy
 #      History: none
-#        Value: list of filenames
+#        Value: MAP_LIST
 #     Examples:
 digest_member_maps		=	$primary_member_maps
 
@@ -405,14 +418,14 @@ digest_member_maps		=	$primary_member_maps
 # Descriptions: primary list of digest recipients.
 #               fml (CUI,GUI,command mail) modifies this map.
 #      History: In fml 4.0, options of $ACTIVE_LIST.
-#        Value: filename
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/recipients-digest
 primary_digest_recipient_map	=	 file:$ml_home_dir/recipients-digest
 
 
 # Descriptions: all maps of digest recipients.
 #      History: In fml 4.0, options of $ACTIVE_LIST.
-#        Value: a list of filenames
+#        Value: MAP_LIST
 #     Examples: file:$ml_home_dir/recipients-digest
 #		unix.group:fml
 digest_recipient_maps		=	$primary_digest_recipient_map
@@ -425,28 +438,28 @@ digest_recipient_maps		=	$primary_digest_recipient_map
 #               fml (CUI,GUI,command mail) modifies this map.
 #               XXX some map e.g. uni.group is read only
 #      History: fml 4.0's $ADMIN_MEMBER_LIST
-#        Value: filename
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/members-admin
 primary_admin_member_map	=	file:$ml_home_dir/members-admin
 
 
 # Descriptions: all remote administrator lists
 #      History: fml 4.0's $ADMIN_MEMBER_LIST + @ADMIN_MEMBER_LIST
-#         Type:
+#        Value: MAP_LIST
 #     Examples:
 admin_member_maps		=	$primary_admin_member_map
 
 
 # Descriptions: dummy
 #      History: none
-#        Value: file
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/recipients-admin
 primary_admin_recipient_map	=	file:$ml_home_dir/recipients-admin
 
 
 # Descriptions: dummy
 #      History: none
-#        Value: file
+#        Value: MAP_LIST
 #     Examples: /var/spool/ml/elena/recipients-admin
 admin_recipient_maps		=	$primary_admin_recipient_map
 
@@ -455,7 +468,7 @@ admin_recipient_maps		=	$primary_admin_recipient_map
 #               in password auth (detault).
 #               fml (CUI,GUI,command mail) modifies this map.
 #      History: 4.0's $PASSWD_FILE
-#        Value: file
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/etc/passwd
 primary_admin_member_password_map = file:$etc_dir/passwd-admin
 
@@ -463,7 +476,7 @@ primary_admin_member_password_map = file:$etc_dir/passwd-admin
 # Descriptions: all password files.
 #               For backward compatibility, etc/passwd is included.
 #      History: none
-#        Value:
+#        Value: MAP_LIST
 #     Examples:
 admin_member_password_maps	=	$primary_admin_member_password_map
 					file:$etc_dir/passwd
@@ -475,28 +488,28 @@ admin_member_password_maps	=	$primary_admin_member_password_map
 #               fml (CUI,GUI,command mail) modifies this map.
 #               XXX some map e.g. uni.group is read only
 #      History: fml 4.0's $MODERATOR_MEMBER_LIST
-#        Value: filename
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/members-moderator
 primary_moderator_member_map	=	file:$ml_home_dir/members-moderator
 
 
 # Descriptions: all list of moderator lists.
 #      History: $MODERATOR_MEMBER_LIST
-#        Value: 
+#        Value: MAP_LIST
 #     Examples: 
 moderator_member_maps		=	$primary_moderator_member_map
 
 
 # Descriptions: dummy
 #      History: none
-#        Value: file
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/recipients-moderator
 primary_moderator_recipient_map	=	file:$ml_home_dir/recipients-moderator
 
 
 # Descriptions: dummy
 #      History: none
-#        Value: file
+#        Value: MAP_LIST
 #     Examples: /var/spool/ml/elena/recipients-moderator
 moderator_recipient_maps	=	$primary_moderator_recipient_map
 
@@ -509,7 +522,7 @@ moderator_recipient_maps	=	$primary_moderator_recipient_map
 #               It may cause mail loop.
 #               Hence it is safe to reject such a sender.
 #      History: fml 4.0's $REJECT_ADDR
-#        Value: a list of strings
+#        Value: REGEXP_LIST
 #     Examples: see below
 system_special_accounts		=	root
 				postmaster
@@ -529,7 +542,7 @@ system_special_accounts		=	root
 # Descriptions: addresses fml uses: e.g. elena, elena-ctl
 #               libexec/error ignores these addresses.
 #      History: none
-#        Value: a list of strings
+#        Value: RFC822_ADDRESS_LIST
 #     Examples: (elena-ctl@fml.org elena-ctl@fml.org ...)
 list_addresses	=	$maintainer
 			$article_post_address
@@ -537,40 +550,40 @@ list_addresses	=	$maintainer
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: RFC822_ADDRESS
 #     Examples:
 article_post_address	=	$address_for_post
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: RFC822_ADDRESS
 #     Examples:
 command_mail_address	=	$address_for_command
 
-=head1	ユーザ情報
+=head1	User Information
 
 # Descriptions: primary { address => gecos_field } map.
 #      History: none
-#        Value: map
+#        Value: MAP
 #     Examples:
 primary_user_db_gecos_map	=	$db_dir/gecos
 
 # Descriptions: { address => gecos_field } maps.
 #      History: none
-#        Value: map
+#        Value: MAP_LIST
 #     Examples:
 user_db_gecos_maps		=	$primary_user_db_gecos_map
 
 # Descriptions: primary { address => unix time when subscribed } map.
 #      History: none
-#        Value: map
+#        Value: MAP
 #     Examples:
 primary_user_db_subscribe_date_map	=	$db_dir/subscribe_date
 
 # Descriptions: { address => unix time when subscribed } maps.
 #      History: none
-#        Value: map
+#        Value:  MAP_LIST
 #     Examples:
 user_db_subscribe_date_maps	=	$primary_user_db_subscribe_date_map
 
@@ -600,21 +613,21 @@ default_mail_body_size_limit	=	10240000
 # Descriptions: recipient limits over one smtp transaction.
 #               1000 by default and ite value is same as postfix.
 #      History: none
-#        Value: number
+#        Value: NUM
 #     Examples:
 smtp_recipient_limit		=	1000
 
 # Descriptions: smtp servers.
 #               IPv4 and IPv6 loopback by default :)
 #      History: fml 4.0's $HOST
-#        Value: host:port
+#        Value: TRANSPORT_LIST
 #     Examples:
 smtp_servers		=	[::1]:25
 				127.0.0.1:25
 
 # Descriptions: MAIL FROM:<$smtp_sender> in SMTP
 #      History: fml 4.0 $SMTP_SENDER
-#        Value: mail_address (RFC822 addrspec)
+#        Value: RFC822_ADDRESS
 #     Examples: elena-admin@fml.org
 smtp_sender		=	$maintainer
 
@@ -623,7 +636,7 @@ smtp_sender		=	$maintainer
 
 # Descriptions: mail queue directory
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/var/mail/queue
 mail_queue_dir	= $var_dir/mail/queue
 
@@ -635,14 +648,14 @@ mail_queue_dir	= $var_dir/mail/queue
 
 # Descriptions: cache incoing mail ?
 #      History: $NUM_LOG_MAIL
-#        Value: yes / no
-#     Examples: y
+#        Value: YES_OR_NO
+#     Examples: yes
 use_incoming_mail_cache	=	yes
 
 
 # Descriptions: incoming mail queue directory
 #      History: LOG_MAIL_DIR ($DIR/var/Mail/)
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/var/mail/incoming
 incoming_mail_cache_dir	= $var_dir/mail/incoming
 
@@ -659,14 +672,14 @@ incoming_mail_cache_size	=	128
 
 # Descriptions: cache outgoing mail cache ?
 #      History: $NUM_LOG_MAIL
-#        Value: yes / no
-#     Examples: y
+#        Value: YES_OR_NO
+#     Examples: yes
 use_outgoing_mail_cache	=	yes
 
 
 # Descriptions: outgoing mail cache directory
 #      History: LOG_MAIL_DIR ($DIR/var/Mail/)
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/var/mail/outgoing
 outgoing_mail_cache_dir	= $var_dir/mail/outgoing
 
@@ -683,14 +696,14 @@ outgoing_mail_cache_size	=	128
 # Descriptions:
 #      History: none
 #		use_digest_program (fml8 pre alpha)
-#        Value:
+#        Value: YES_OR_NO
 #     Examples:
 use_article_digest_function = ${use_digest_program:-yes}
 
 
 # Descriptions: file to store the last sequence to deliver
 #      History: special file to store the sequence for each recipient
-#        Value: filename
+#        Value: FILE
 #     Examples:
 digest_sequence_file	= $ml_home_dir/seq-digest
 
@@ -699,6 +712,10 @@ digest_sequence_file	= $ml_home_dir/seq-digest
 
 =head2 hint
 
+# Descriptions:
+#      History:
+#        Value: MIX ( ja en )
+#     Examples:
 language_preference_order	=	en ja
 
 
@@ -706,57 +723,57 @@ language_preference_order	=	en ja
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( iso-2022-jp us-ascii )
 #     Examples:
 report_mail_default_charset	=	$report_mail_charset_en
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( iso-2022-jp )
 #     Examples:
 report_mail_charset_ja	=	iso-2022-jp
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( us-ascii )
 #     Examples:
 report_mail_charset_en	=	us-ascii
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( iso-2022-jp us-ascii )
 #     Examples:
 template_file_default_charset	=	$template_file_charset_ja
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( euc-jp )
 #     Examples:
 template_file_charset_ja	=	euc-jp
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( us-ascii )
 #     Examples:
 template_file_charset_en	=	us-ascii
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: MIX ( iso-2022-jp us-ascii )
 #     Examples:
 template_file_charset_select_list	=	euc-jp	
 						us-ascii
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SUBJECT
 #     Examples:
 message_default_subject	=	fml system message ($ml_name ML)
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SUBJECT
 #     Examples:
 report_mail_subject	=	fml results ($ml_name ML)
 
@@ -766,14 +783,14 @@ report_mail_subject	=	fml results ($ml_name ML)
 
 # Descriptions: directory to hold message template files
 #      History: /usr/local/fml/drafts/
-#        Value: directory
+#        Value: DIR
 #     Examples: /usr/local/share/fml/$fml_version/message
 message_template_dir	= $fml_share_dir/message
 
 
 # Descriptions: directory to hold ml specific message template files
 #      History: $DIR/drafts/
-#        Value: directory
+#        Value: DIR
 #     Examples: /usr/local/share/fml/$fml_version/template/$language
 ml_local_message_template_dir	= $ml_local_share_dir/message
 
@@ -783,19 +800,19 @@ ml_local_message_template_dir	= $ml_local_share_dir/message
 
 # Descriptions: help file
 #      History:
-#        Value:
+#        Value: FILE
 #     Examples:
 help_file		=	$ml_home_dir/help
 
 # Descriptions: guilde file
 #      History:
-#        Value:
+#        Value: FILE
 #     Examples:
 guide_file		=	$ml_home_dir/guide
 
 # Descriptions: objective file
 #      History:
-#        Value:
+#        Value: FILE
 #     Examples:
 objective_file		=	$ml_home_dir/objective
 
@@ -804,43 +821,58 @@ objective_file		=	$ml_home_dir/objective
 
 # Descriptions: use loop check based on header information ?
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_incoming_mail_header_loop_check		=	yes
 
 
 # Descriptions: loop check rules
 #      History:
-#        Value:
+#        Value: MIX (
+#			check_message_id
+#			check_x_ml_info
+#			check_list_post
+#		)
 #     Examples:
 incoming_mail_header_loop_check_rules		=	check_message_id
-					check_x_ml_info
-					check_list_post
+							check_x_ml_info
+							check_list_post
 
 # Descriptions: Message-ID cache directory
 #      History:
-#        Value:
+#        Value: DIR
 #     Examples:
 message_id_cache_dir		=	$db_dir/message_id
 
 
 # Descriptions: article Message-ID cache directory
 #      History:
-#        Value:
+#        Value: DIR
 #     Examples:
 article_message_id_cache_dir	=	$db_dir/article_message_id
 
 
 # Descriptions: use article header rewrite function ?
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_header_rewrite		=	yes
 
 
 # Descriptions: header rewriting rules
 #      History:
-#        Value:
+#        Value: MIX (
+#			delete_unsafe_header_fields
+#			rewrite_article_subject_tag
+#			rewrite_reply_to
+#			rewrite_errors_to
+#			add_software_info
+#			add_fml_ml_name
+#			add_fml_traditional_article_id
+#			add_fml_article_id
+#			add_x_sequence
+#			add_rfc2369
+#		)
 #     Examples:
 article_header_rewrite_rules	=	delete_unsafe_header_fields
 					rewrite_article_subject_tag
@@ -856,14 +888,14 @@ article_header_rewrite_rules	=	delete_unsafe_header_fields
 
 # Descriptions: use digest article header rewrite function ?
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_digest_header_rewrite		=	yes
 
 
 # Descriptions: digest article header rewrite rules
 #      History:
-#        Value:
+#        Value: MIX ( add_software_info add_rfc2369 )
 #     Examples:
 digest_header_rewrite_rules	=	add_software_info
 					add_rfc2369
@@ -871,7 +903,7 @@ digest_header_rewrite_rules	=	add_software_info
 
 # Descriptions: remove unsafe header fields
 #      History: $SKIP_FIELDS
-#        Value: strings
+#        Value: HEADER_FIELD_LIST
 #     Examples:
 unsafe_header_fields		=	Return-Receipt-To
 
@@ -879,14 +911,14 @@ unsafe_header_fields		=	Return-Receipt-To
 # Descriptions: Subject: tag.
 #               see sprintf(3) on the usage of % et.al.
 #      History:
-#        Value:
+#        Value: SUBJECT_TAG
 #     Examples: [elena:00080]
 article_subject_tag			=	[$ml_name:%05d]
 
 
 # Descriptions: ml name in both X-ML-Name: and X-Sequence header fields.
 #      History:
-#        Value:
+#        Value: ML_NAME
 #     Examples: elena
 outgoing_mail_header_x_ml_name			=	$ml_name
 
@@ -895,21 +927,21 @@ outgoing_mail_header_x_ml_name			=	$ml_name
 
 # Descriptions: use loop check based on body information
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_incoming_mail_body_loop_check		=	yes
 
 
 # Descriptions: body loop check rules
 #      History:
-#        Value:
+#        Value: MIX ( check_body_cksum )
 #     Examples:
 incoming_mail_body_loop_check_rules		=	check_body_cksum
 
 
 # Descriptions: Message-ID cache directory
 #      History:
-#        Value:
+#        Value: DIR
 #     Examples:
 incoming_mail_body_cksum_cache_dir		=	$db_dir/body_cksum
 
@@ -917,24 +949,24 @@ incoming_mail_body_cksum_cache_dir		=	$db_dir/body_cksum
 
 # Descriptions: use lock system ?
 #      History:
-#        Value: yes /no
+#        Value: YES_OR_NO
 use_lock	= yes
 
 # Descriptions: directory where lock files are created.
 #      History:
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/var/lock
 lock_dir	= $var_dir/lock
 
 # Descriptions: giant lock file name
 #      History: $SPOOL_DIR
-#        Value: filename
+#        Value: FILE
 #     Examples: /var/spool/ml/elena/var/lock/giantlock
 lock_file	= $lock_dir/giantlock
 
 # Descriptions: lock algorithm type
 #      History: $USE_FLOCK
-#        Value: flock
+#        Value:  SELECT ( flock )
 #     Examples:
 lock_type	= flock
 
@@ -942,25 +974,28 @@ lock_type	= flock
 
 # Descriptions: user logging function
 #      History: enabled by default
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_log		=	yes
 
 # Descriptions: log file
 #      History: $LOGFILE
-#        Value: filename
+#        Value: FILE
 #     Examples:
 log_file	=	$ml_home_dir/log
 
 # Descriptions: logging type
 #      History: fml 8.0 new
-#        Value: file / syslog
+#        Value: SELECT ( file syslog )
 #     Examples:
 log_type	=	file
 
 # Descriptions: log message format
 #      History:
-#        Value: fml4_compatible
+#        Value: STR
+#		fml4_compatible
+#               process[pid]
+#               process:time.pid ?
 #               process[pid]
 #               process:time.pid ?
 #     Examples: * fml4_compatible example
@@ -973,7 +1008,7 @@ log_format_type	=	process[pid]
 
 # Descriptions: log dir
 #      History:
-#        Value: filename
+#        Value: DIR
 #     Examples:
 log_dir		=	$var_dir/log
 
@@ -983,14 +1018,14 @@ log_dir		=	$var_dir/log
 
 # Descriptions: rotate log files or not.
 #      History: no if $LOGFILE_NEWSYSLOG_LIMIT == 0, yes if > 0.
-#        Value: yes | no
+#        Value: YES_OR_NO
 #     Examples: no
 use_log_rotate		=	no
 
 
 # Descriptions: log rotation policy. 
 #      History: none
-#        Value: size | interval
+#        Value: SELECT ( size interval )
 #     Examples: size
 log_rotate_policy	=	size
 
@@ -1022,19 +1057,19 @@ log_rotate_num_backlog 	=	4
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( ja en )
 #     Examples:
 log_file_default_charset   =       $log_file_charset_en
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( euc-jp us-ascii )
 #     Examples:
 log_file_charset_ja        =       euc-jp
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( euc-jp us-ascii )
 #     Examples:
 log_file_charset_en        =       us-ascii
 
@@ -1045,7 +1080,7 @@ log_file_charset_en        =       us-ascii
 # Descriptions: domin local log file.
 #               used in admin/*.cgi e.g. when ml_name unspecified.
 #      History: none
-#        Value: filename
+#        Value: FILE
 #     Examples: /var/spool/ml/@log@
 domain_local_log_file	=	$domain_local_dir/@log@
 
@@ -1057,14 +1092,14 @@ domain_local_log_file	=	$domain_local_dir/@log@
 # Descriptions: if yes, makefml/fml outputs machine friendly log.
 #               --coputer-output option implies "use_log_computer_output = yes".
 #      History: none
-#        Value: yes | no
+#        Value: YES_OR_NO
 #     Examples: no
 use_log_computer_output	=	no
 
 
 # Descriptions: specify perl module for output engine.
 #      History: none
-#        Value: CLASS
+#        Value:  CLASS
 #     Examples: FML::Log::Print::Simple
 log_computer_output_engine	=	FML::Log::Print::Simple
 
@@ -1076,8 +1111,8 @@ log_computer_output_engine	=	FML::Log::Print::Simple
 # Descriptions: use function of article delivery
 #      History: none
 #		use_distribute_program (fml8 pre alpha)
-#        Value: yes
-#     Examples: yes / no
+#        Value: YES_OR_NO
+#     Examples: yes
 use_article_post_function = ${use_distribute_program:-yes}
 
 
@@ -1088,14 +1123,14 @@ use_article_post_function = ${use_distribute_program:-yes}
 
 # Descriptions: user article delivery function ?
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_delivery	=	yes
 
 # Descriptions: specify transport for article delivery.
 #               try MTA of $smtp_servers incrementary in the case of smtp.
 #      History: none
-#        Value: smtp / lmtp
+#        Value: SELECT ( smtp lmtp )
 #     Examples: smtp
 article_delivery_transport	=	smtp
 
@@ -1105,7 +1140,7 @@ article_delivery_transport	=	smtp
 
 # Descriptions: file to store sequence number
 #      History: $SEQ_FILE
-#        Value: filename
+#        Value: FILE
 #     Examples:
 article_sequence_file	= $sequence_file
 
@@ -1117,7 +1152,7 @@ article_sequence_file	= $sequence_file
 #               when the filter system rejects.
 #               We prefer string not mime/multipart to avoid parsing by MUA.
 #      History: string in 4.0.
-#        Value: multipart / string
+#        Value: SELECT ( multipart string )
 #     Examples: string
 article_post_restrictions_reject_notice_data_type	=	string
 
@@ -1178,14 +1213,22 @@ outgoing_article_body_size_limit	= $default_mail_body_size_limit
 #			$INCOMING_MAIL_SIZE_LIMIT
 #			ADD_CONTENT_HANDLER()
 #		functions.
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples: yes
 use_article_filter	= 	yes
  
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: MIX (
+#			article_size_filter
+#			article_header_filter
+#			article_non_mime_filter
+#			article_mime_component_filter
+#			article_text_plain_filter
+#			article_spam_filter
+#			article_virus_filter
+#		)
 #     Examples:
 article_filter_functions	=	article_size_filter
 					article_header_filter
@@ -1201,7 +1244,7 @@ article_filter_functions	=	article_size_filter
 
 # Descriptions: use size based filter.
 #      History: no
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_size_filter	=	yes
 
@@ -1210,7 +1253,10 @@ use_article_size_filter	=	yes
 #               first match. 
 #               permit post if no rule matched.
 #      History:
-#        Value:
+#        Value: MIX (	check_header_size
+#			check_body_size
+#			permit
+#		)
 #     Examples:
 article_size_filter_rules	=	check_header_size
 					check_body_size
@@ -1223,7 +1269,7 @@ article_size_filter_rules	=	check_header_size
 # Descriptions: use header based filter ?
 #      History: disabled by default.
 #               "yes" always if $USE_DISTRIBUTE_FILTER is yes.
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_header_filter		=	yes
 
@@ -1232,7 +1278,11 @@ use_article_header_filter		=	yes
 #               first match. 
 #               permit post if no rule matched.
 #      History: fml4 has no check_date rule.
-#        Value:
+#        Value: MIX (
+#			check_message_id
+#			check_date
+#			permit
+#		)
 #     Examples:
 article_header_filter_rules		=	check_message_id
 						check_date
@@ -1245,28 +1295,28 @@ article_header_filter_rules		=	check_message_id
 # Descriptions: dummy
 #      History: disabled by default.
 #		!MIME of 4.0 content filter.
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_non_mime_filter		=	yes
 
 
 # Descriptions: dummy
 #      History:
-#        Value: permit / reject
+#        Value: MIX ( permit reject_empty_content_type )
 #     Examples: permit
 article_non_mime_filter_rules		=	permit
 
 
 # Descriptions: MIME structure based filter
 #      History: 4.0 content filter. disabled by default.
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_mime_component_filter	=	yes
 
 
 # Descriptions: file of filter rules
 #      History: @CONTENT_HANDLER
-#        Value:
+#        Value: FILE
 #     Examples:
 article_mime_component_filter_rules	= $fml_config_dir/mime_component_filter
 
@@ -1279,7 +1329,7 @@ article_mime_component_filter_rules	= $fml_config_dir/mime_component_filter
 #      History: 4.0's EnvelopeFilter.
 #		half of the following rules applied when
 #		$USE_DISTRIBUTE_FILTER is enabled.
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_text_plain_filter		=	yes
 
@@ -1309,7 +1359,16 @@ use_article_text_plain_filter		=	yes
 #				<=> FILTER_ATTR_REJECT_MS_GUID
 #
 #         Note: permit by default 
-#        Value:
+#        Value: MIX (
+#			reject_not_iso2022jp_japanese_string
+#			reject_null_mail_body
+#			reject_one_line_message
+#			reject_old_fml_command_syntax
+#			reject_invalid_fml_command_syntax
+#			reject_japanese_command_syntax
+#			reject_ms_guid
+#			permit
+#		)
 #     Examples:
 article_text_plain_filter_rules	=	reject_not_iso2022jp_japanese_string
 					reject_null_mail_body
@@ -1328,14 +1387,14 @@ article_text_plain_filter_rules	=	reject_not_iso2022jp_japanese_string
 #		disabled by default.
 #		add flag to header and go through if the message looks a spam.
 #      History: none
-#        Value: yes | no
+#        Value: YES_OR_NO
 #     Examples: no
 use_article_spam_filter		=	no
 
 
 # Descriptions: action if the message looks a spam.
 #      History: none
-#        Value: reject | ignore | header_rewrite
+#        Value: MIX ( reject ignore header_rewrite )
 #     Examples: header_rewrite
 article_spam_filter_rules	=	header_rewrite
 
@@ -1343,7 +1402,7 @@ article_spam_filter_rules	=	header_rewrite
 # Descriptions: external spam checker.
 #		if plural drivers specified, try them sequentially.
 #      History: none
-#        Value: spamassasin | spamc | bogofilter
+#        Value: MIX ( spamassasin spamc bogofilter )
 #     Examples: bogofilter
 article_spam_filter_drivers	=	bogofilter
 
@@ -1353,14 +1412,14 @@ article_spam_filter_drivers	=	bogofilter
 
 # Descriptions: external virus checker. disabled by default.
 #      History: none
-#        Value: yes | no
+#        Value: YES_OR_NO
 #     Examples: no
 use_article_virus_filter	=	no
 
 
 # Descriptions: action if virus found.
 #      History: none
-#        Value: reject | ignore | header_rewrite
+#        Value: MIX ( reject ignore header_rewrite )
 #     Examples: reject
 article_virus_filter_rules	=	reject
 
@@ -1368,7 +1427,7 @@ article_virus_filter_rules	=	reject
 # Descriptions: external virus checker.
 #		if plural drivers specified, try them sequentially.
 #      History: none
-#        Value: clamscan 
+#        Value: MIX ( clamscan )
 #     Examples: clamscan
 article_virus_filter_drivers	=	clamscan
 
@@ -1382,7 +1441,7 @@ article_virus_filter_drivers	=	clamscan
 #		notice is always sent to maintainer, 
 #		but not to sender by default.
 #		$FILTER_NOTIFY_REJECTION controlls notice to sender.
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples: yes
 use_article_filter_reject_notice	=	yes
 
@@ -1392,7 +1451,7 @@ use_article_filter_reject_notice	=	yes
 #		notice is always sent to maintainer, 
 #		but not to sender by default.
 #		$FILTER_NOTIFY_REJECTION controlls notice to sender.
-#        Value: maintainer | sender
+#        Value: MIX ( maintainer sender )
 #     Examples: maintainer sender
 article_filter_reject_notice_recipients	=	maintainer
 						sender
@@ -1401,7 +1460,7 @@ article_filter_reject_notice_recipients	=	maintainer
 # Descriptions: how fml refer the rejeced message.
 #               We prefer string not multipart to avoid parsing of MUA.
 #      History: string in fml 4.0.
-#        Value: multipart / string
+#        Value: SELECT ( multipart string )
 #     Examples: string
 article_filter_reject_notice_data_type	=	string
 
@@ -1410,14 +1469,14 @@ article_filter_reject_notice_data_type	=	string
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: YES_OR_NO
 #     Examples:
 use_article_spam_filter		=	no
 
 
 # Descriptions: list up driver names used as spam checker.
 #      History: none
-#        Value: spamassassin | spamc | bogofilter
+#        Value: MIX ( spamassassin spamc bogofilter )
 #     Examples: bogofilter
 article_spam_filter_functions	=	bogofilter
 
@@ -1427,14 +1486,14 @@ article_spam_filter_functions	=	bogofilter
 
 # Descriptions: exit non-zero status code when spam caught if "-e" specified.
 #      History: none
-#        Value: STR
+#        Value: COMMAND_LINE_OPTIONS
 #     Examples: -e
 article_spam_filter_spamassassin_options	=	-e
 
 
 # Descriptions: spamc optoins. "-c" means check only.
 #      History: none
-#        Value: STR
+#        Value: COMMAND_LINE_OPTIONS
 #     Examples: -c
 article_spam_filter_spamc_options		=	-c
 
@@ -1444,7 +1503,7 @@ article_spam_filter_spamc_options		=	-c
 
 # Descriptions: "-e" implies embedded mode.
 #      History: none
-#        Value: STR
+#        Value: COMMAND_LINE_OPTIONS
 #     Examples: -e
 article_spam_filter_bogofilter_options		=	-e
 
@@ -1452,34 +1511,38 @@ article_spam_filter_bogofilter_options		=	-e
 
 =head1	article and article spool
 
+
 # Descriptions: store article into spool directory ?
 #      History: $NOT_USE_SPOOL
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_spool	= 	yes
 
+
 # Descriptions: use subdir in spool directory ?
 #      History: 
-#        Value: plane subdir
+#        Value: SELECT ( plane subdir )
 #     Examples: plane
 spool_type	= 	plane
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: NUM
 #     Examples:
 spool_subdir_unit =	1000
 
+
 # Descriptions: file to store article sequence.
 #      History: $SEQ_FILE
-#        Value: filename
+#        Value: FILE
 #     Examples:
 sequence_file	= $ml_home_dir/seq
 
+
 # Descriptions: spool directory
 #      History: $SPOOL_DIR
-#        Value: directory
+#        Value:  DIR
 #     Examples:
 spool_dir	= $ml_home_dir/spool
 
@@ -1487,21 +1550,21 @@ spool_dir	= $ml_home_dir/spool
 
 # Descriptions: article summary file.
 #      History:
-#        Value:
+#        Value: FILE
 #     Examples:
 article_summary_file		=	$ml_home_dir/summary
 
 
 # Descriptions: format style.
 #      History:
-#        Value: fml4_compatible
+#        Value: SELECT ( fml4_compatible )
 #     Examples:
 article_summary_file_format_style	=	fml4_compatible
 
 
 # Descriptions: save the first N bytes of the address in summary.
 #      History:
-#        Value: \d+
+#        Value:  NUM
 #     Examples: 15
 article_summary_file_format_address_length	=	15
 
@@ -1510,56 +1573,56 @@ article_summary_file_format_address_length	=	15
 
 # Descriptions: use html converter function ?
 #      History: $AUTO_HTML_GEN
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples: yes
 use_html_archive	=	yes
 
 
 # Descriptions: html archive directory of the specific ML.
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: ~fml/public_html/fml/mlarchive/fml.org/elena
 html_archive_dir	= $fml_owner_home_dir/public_html/fml/mlarchive/$ml_domain/$ml_name
 
 
 # Descriptions:
 #      History:
-#        Value: normal / reverse
+#        Value: SELECT ( normal reverse )
 #     Examples: reverse
 html_archive_index_order_type	=	reverse
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: YES_OR_NO
 #     Examples:
 use_html_archive_address_mask	=	yes
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( all )
 #     Examples:
 html_archive_address_mask_type	=	all
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( euc-jp us-ascii )
 #     Examples:
 html_archive_default_charset	=	$html_archive_charset_en
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( euc-jp )
 #     Examples:
 html_archive_charset_ja		=	euc-jp
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( us-ascii )
 #     Examples:
 html_archive_charset_en		=	us-ascii
 
@@ -1572,8 +1635,8 @@ html_archive_charset_en		=	us-ascii
 # Descriptions: use commnd mail ?
 #      History: none
 #		use_command_mail_program (fml8 pre alpha)
-#        Value: yes
-#     Examples: yes / no
+#        Value: YES_OR_NO
+#     Examples: yes
 use_command_mail_function = ${use_command_mail_program:-yes}
 
 
@@ -1625,14 +1688,14 @@ get_command_request_limit	=	100
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: YES_OR_NO
 #     Examples:
 use_command_mail_filter	= 	yes
  
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: MIX ( command_mail_size_filter )
 #     Examples:
 command_mail_filter_functions	=	command_mail_size_filter
 
@@ -1642,7 +1705,7 @@ command_mail_filter_functions	=	command_mail_size_filter
 
 # Descriptions: use size based filter
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_command_mail_size_filter	=	yes
 
@@ -1651,7 +1714,13 @@ use_command_mail_size_filter	=	yes
 #               first match.
 #               permit if no rule matched.
 #      History:
-#        Value:
+#        Value: MIX (
+#			check_header_size
+#			check_body_size
+#			check_command_limit
+#			check_line_length_limit
+#			permit
+#		)
 #     Examples:
 command_mail_size_filter_rules	=	check_header_size
 					check_body_size
@@ -1689,28 +1758,28 @@ command_mail_line_length_limit	=	128
 
 # Descriptions: command prompt in message reply
 #      History: hard coded in fml (< 4.0)
-#        Value: string without spaces
+#        Value: PROMPT
 #     Examples: >>>
 command_mail_reply_prompt			=	>>>
 
 
 # Descriptions: use comnfirmation in subscribe command ?
 #      History:
-#        Value:  confirmation / ""
+#        Value: SELECT ( confirmation )
 #     Examples:
 subscribe_command_auth_type	=	confirmation
 
 
 # Descriptions: use comnfirmation in chaddr command ?
 #      History:
-#        Value:  confirmation / ""
+#        Value: SELECT ( confirmation )
 #     Examples:
 chaddr_command_auth_type	=	confirmation
 
 
 # Descriptions: use comnfirmation in unsubscribe command ?
 #      History:
-#        Value:  confirmation / ""
+#        Value: SELECT ( confirmation )
 #     Examples:
 unsubscribe_command_auth_type	=	confirmation
 
@@ -1718,7 +1787,7 @@ unsubscribe_command_auth_type	=	confirmation
 
 # Descriptions: effective command in normal commnd mail (for usual users)
 #      History: @PERMIT_PROCEDURE @DENY_PROCEDURE
-#        Value:
+#        Value: FML_COMMAND_LIST
 #     Examples:
 user_command_mail_allowed_commands	=		help
 					get
@@ -1745,6 +1814,10 @@ user_command_mail_allowed_commands	=		help
 					summary
 
 
+# Descriptions:
+#      History:
+#        Value: FML_COMMAND_LIST
+#     Examples:
 anonymous_command_mail_allowed_commands	=		guide
 					info
 					add
@@ -1753,6 +1826,10 @@ anonymous_command_mail_allowed_commands	=		guide
 					$confirm_command_prefix
 
 
+# Descriptions:
+#      History:
+#        Value: FML_COMMAND_LIST
+#     Examples:
 admin_command_mail_allowed_commands	=	subscribe
 					add
 					unsubscribe
@@ -1783,6 +1860,10 @@ admin_command_mail_allowed_commands	=	subscribe
 					list
 
 
+# Descriptions:
+#      History:
+#        Value: FML_COMMAND_LIST
+#     Examples:
 admin_cgi_allowed_commands	=		adduser
 					deluser
 					addadmin
@@ -1794,6 +1875,11 @@ admin_cgi_allowed_commands	=		adduser
 					newml
 					rmml
 
+
+# Descriptions:
+#      History:
+#        Value: FML_COMMAND_LIST
+#     Examples:
 commands_for_ml_admin_cgi	=	adduser
 					deluser
 					addadmin
@@ -1805,13 +1891,13 @@ commands_for_ml_admin_cgi	=	adduser
 
 
 # Descriptions: special command name used as confirmation
-#        Value: STR
+#        Value: FML_COMMAND
 #     Examples:
 confirm_command_prefix		=	confirm
 
 
 # Descriptions: special command name used as admin command mail
-#        Value: STR
+#        Value: FML_COMMAND
 #     Examples:
 privileged_command_prefix	=	admin
 
@@ -1821,21 +1907,21 @@ privileged_command_prefix	=	admin
 
 # Descriptions: listinfo template
 #      History: /usr/local/fml/listinfo/
-#        Value: directory
+#        Value: DIR
 #     Examples: /usr/local/share/fml/$fml_version/listinfo/$language
 listinfo_template_dir	= $fml_share_dir/listinfo/$template_file_charset
 
 
 # Descriptions: base directory for ML information
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: ~fml/public_html/fml/listinfo/fml.org/elena
 listinfo_base_dir	= $fml_owner_home_dir/public_html/fml/listinfo
 
 
 # Descriptions: directory for ML information
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: ~fml/public_html/fml/listinfo/fml.org/elena
 listinfo_dir	= $listinfo_base_dir/$ml_domain/$ml_name
 
@@ -1845,14 +1931,14 @@ listinfo_dir	= $listinfo_base_dir/$ml_domain/$ml_name
 
 # Descriptions: inform filter rejection ?
 #      History: hard-coded.
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples: yes
 use_command_mail_filter_reject_notice	=	yes
 
 
 # Descriptions: recipients to inform
 #      History: hard-coded.
-#        Value: maintainer | sender
+#        Value: MIX ( maintainer sender )
 #     Examples: maintainer sender
 command_mail_filter_reject_notice_recipients	=	maintainer
 							sender
@@ -1861,7 +1947,7 @@ command_mail_filter_reject_notice_recipients	=	maintainer
 # Descriptions: how fml refer the rejeced message.
 #               We prefer string not multipart to avoid parsing of MUA.
 #      History: string in fml 4.0.
-#        Value: multipart / string
+#        Value: SELECT ( multipart string )
 #     Examples: string
 command_mail_filter_reject_notice_data_type	=	string
 
@@ -1870,7 +1956,7 @@ command_mail_filter_reject_notice_data_type	=	string
 
 
 # Descriptions: template files used in running "makefml newml"
-#        Value: ARRAY
+#        Value: FILE_LIST
 #     Examples:
 newml_command_template_files 		=	config.cf
 
@@ -1878,7 +1964,7 @@ newml_command_template_files 		=	config.cf
 # Descriptions: fml_owner value used by newml command.
 #               this value is a destination where error mail are forwardeded.
 #               user "fml" by default (same as $fml_owner in main.cf).
-#        Value: STR
+#        Value: ADDR
 #     Examples:
 newml_command_ml_admin_default_address 	=	$fml_owner
 
@@ -1889,7 +1975,7 @@ newml_command_ml_admin_default_address 	=	$fml_owner
 
 # Descriptions: default map to show by list command.
 #      History: none
-#        Value: ARRAY
+#        Value: MAP_LIST
 #     Examples:
 list_command_default_maps		=	$recipient_maps
 
@@ -1912,7 +1998,7 @@ log_command_tail_starting_location	=	100
 # 		it is useful to use mysql to control recipients of 
 #               error messages.
 #      History: none
-#        Value: maps
+#        Value: MAP_LIST
 #     Examples: file:$ml_home_dir/recipients-maintainer
 #               $admin_recipient_maps 
 maintainer_recipient_maps	=
@@ -1924,7 +2010,7 @@ maintainer_recipient_maps	=
 # Descriptions: use error message analyzer ?
 #      History: none
 #		use_error_analyzer_program (fml8 pre alpha)
-#        Value: yes
+#        Value: YES_OR_NO
 #     Examples: yes / no
 use_error_mail_analyzer_function = ${use_error_analyzer_program:-yes}
 
@@ -1933,21 +2019,21 @@ use_error_mail_analyzer_function = ${use_error_analyzer_program:-yes}
 
 # Descriptions: directory to cache error messages.
 #      History: /var/spool/ml/mead/errormaillog
-#        Value: directory
+#        Value: DIR
 #     Examples: 
 error_mail_analyzer_cache_dir		=	$db_dir/error
 
 
 # Descriptions: module as cache engine
 #      History: none
-#        Value: string
+#        Value: CLASS
 #     Examples: File::CacheDir
 error_mail_analyzer_cache_type		=	File::CacheDir
 
 
 # Descriptions: mode of cache expiration
 #      History: none
-#        Value: string
+#        Value: SELECT ( temporal )
 #     Examples: 
 error_mail_analyzer_cache_mode		=	temporal
 
@@ -1955,7 +2041,7 @@ error_mail_analyzer_cache_mode		=	temporal
 # Descriptions: cache size.
 #		it implies days if the cache mode is temporal.
 #      History: none
-#        Value: number
+#        Value: NUM
 #     Examples: 
 error_mail_analyzer_cache_size		=	14
 
@@ -1965,7 +2051,7 @@ error_mail_analyzer_cache_size		=	14
 
 # Descriptions: functions defined in FML::Error::Analyze
 #      History: none
-#        Value: simple_count / histgram
+#        Value: MIX ( simple_count histgram )
 #     Examples: simple_count
 error_mail_analyzer_function_select_list	=	simple_count
 						histgram
@@ -1973,14 +2059,14 @@ error_mail_analyzer_function_select_list	=	simple_count
 
 # Descriptions: function in FML::Error::Analyze to analyze.
 #      History: none
-#        Value: simple_count / histgram
+#        Value: SELECT ( simple_count histgram )
 #     Examples: simple_count
 error_mail_analyzer_function			=	histgram
 
 
 # Descriptions: error limit in using simple_count as anlyzer function.
 #      History: none
-#        Value: NUM
+#        Value:  NUM
 #     Examples: 5
 error_mail_analyzer_simple_count_limit	=	5
 
@@ -1989,28 +2075,28 @@ error_mail_analyzer_simple_count_limit	=	5
 
 # Descriptions: user thread tracking system ?
 #      History: fml 8.0 new
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_thread_track	=	yes
 
 
 # Descriptions: use special subject tag ?
 #      History: fml 8.0 new
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_thread_subject_tag	=	no
 
 
 # Descriptions: ml name assigned to ticket
 #      History: fml 8.0 new
-#        Value: string
+#        Value: ML_NAME
 #     Examples: elena
 thread_subject_tag_name	=	$ml_name
 
 
 # Descriptions: ticket number
 #      History: fml 8.0 new
-#        Value:
+#        Value: SUBJECT_TAG
 #     Examples: elena_#00001010     $ml_name_#%08d
 #               elena/100           $ml_name/%d
 thread_id_syntax	=	$ml_name/%d
@@ -2018,7 +2104,7 @@ thread_id_syntax	=	$ml_name/%d
 
 # Descriptions: syntax added to Subject:
 #      History: fml 8.0 new
-#        Value:
+#        Value: SUBJECT_TAG
 #     Examples: [elena_#00001010]
 #               [elena/100]
 thread_subject_tag	=	[$thread_id_syntax]
@@ -2026,7 +2112,7 @@ thread_subject_tag	=	[$thread_id_syntax]
 
 # Descriptions: location of insertion of tag
 #      History: fml 8.0 new
-#        Value: appended/prepended
+#        Value: SELECT ( appended prepended )
 #     Examples: Subject: [elena/100] ....
 #               Subject: .... [elena/100]
 thread_subject_tag_location	=	appended
@@ -2034,35 +2120,35 @@ thread_subject_tag_location	=	appended
 
 # Descriptions: file to store ticket sequence
 #      History: fml 8.0 new
-#        Value: filename
+#        Value: FILE
 #     Examples: /var/spool/ml/elena/thread.seq
 thread_sequence_file	=	$ml_home_dir/thread.seq
 
 
 # Descriptions: directory to hold ticket data
 #      History: fml 8.0 new 
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/@db@/thread
 thread_db_dir		=	$shared_db_dir/thread
 
 
 # Descriptions: CGI relative path
 #      History:
-#        Value:
+#        Value: FILE
 #     Examples:
 thread_cgi_base_url	=	/cgi-bin/fmlthread.cgi
 
 
 # Descriptions: CGI title
 #      History:
-#        Value:
+#        Value: STR
 #     Examples:
 thread_cgi_title	=	thread tracking system interface
 
 
 # Descriptions: CGI color
 #      History:
-#        Value:
+#        Value:  HTML_COLOR
 #     Examples:
 thread_cgi_bgcolor	=	#E6E6FA
 
@@ -2078,31 +2164,31 @@ thread_cgi_bgcolor	=	#E6E6FA
 
 # Descriptions: LDAP server
 #      History:
-#        Value:
+#        Value: HOSTNAME_LIST
 #     Examples:
 ldap_servers		=
 
 # Descriptions: LDAP password
 #      History:
-#        Value:
+#        Value: PASSWORD
 #     Examples:
 ldap_server_password	=
 
 # Descriptions: LDAP search base
 #      History:
-#        Value:
+#        Value: LDAP_SEARCH_BASE
 #     Examples:
 ldap_search_base	=
 
 # Descriptions: LDAP search bind
 #      History:
-#        Value:
+#        Value: LDAP_SERVER_BIND
 #     Examples:
 ldap_server_bind	=
 
 # Descriptions: LDAP filter
 #      History:
-#        Value:
+#        Value: LDAP_QUERY_FILTER 
 #     Examples:
 ldap_query_filter	=	(objectclass=*)
 
@@ -2111,14 +2197,14 @@ ldap_query_filter	=	(objectclass=*)
 
 # Descriptions: base directory which locates .cgi for this domain.
 #      History:
-#        Value:
+#        Value: DIR
 #     Examples:
 cgi_base_dir	=	$fml_owner_home_dir/public_html/cgi-bin/fml/$ml_domain
 
 
 # Descriptions: base directory which locates .cgi for this domain.
 #      History:
-#        Value:
+#        Value: DIR
 #     Examples: ~fml/public_admin/cgi-bin/fml/admin/fml.org/elena
 #        Notes: ACL is contorlled by
 #               admin/.htaccess or admin/$domain/.htaccess.
@@ -2127,59 +2213,59 @@ admin_cgi_base_dir	=	$cgi_base_dir/admin
 
 # Descriptions: base directory which locates .cgi for this ML.
 #      History:
-#        Value:
+#        Value: DIR
 #     Examples: ~fml/public_admin/cgi-bin/fml/admin/fml.org/elena
 ml_admin_cgi_base_dir	=	$cgi_base_dir/ml-admin/$ml_name
 
 
 # Descriptions: default charset
 #      History:
-#        Value:
+#        Value: SELECT ( euc-jp us-ascii )
 #     Examples:
 cgi_default_charset	=	us-ascii
 
 # Descriptions: cgi charset in Japanese
 #      History:
-#        Value:
+#        Value: SELECT ( euc-jp )
 #     Examples:
 cgi_charset_ja		=	euc-jp
 
 # Descriptions: cgi charset in English
 #      History:
-#        Value:
+#        Value: SELECT ( us-ascii)
 #     Examples:
 cgi_charset_en		=	us-ascii
 
 # Descriptions: language mode of CGI (!= charset) 
 #      History:
-#        Value:
+#        Value: SELECT ( japanese )
 #     Examples:
 cgi_default_language   =       english
 
 # Descriptions: available language mode in CGI
 #      History:
-#        Value:
+#        Value: MIX ( japanese english )
 #     Examples:
 cgi_language_select_list      =	english
 				japanese
 
 # Descriptions: default bgcolor
 #      History:
-#        Value: #%6x
+#        Value: HTML_COLOR
 #     Examples: #FFFFFF
 cgi_main_menu_color		=	#FFFFFF
 
 
 # Descriptions: default bgcolor in navigation menu
 #      History: 
-#        Value: #%6x
+#        Value: HTML_COLOR
 #     Examples: #FFFFFF
 cgi_navigation_bar_color	=	#FFFFFF
 
 
 # Descriptions: choise of address list types in CGI operations.
 #      History: 
-#        Value: member recipient admin_member
+#        Value: MIX ( member recipient admin_member )
 #     Examples: member recipient admin_member
 cgi_menu_address_map_select_list	=	member
 						recipient
@@ -2188,14 +2274,24 @@ cgi_menu_address_map_select_list	=	member
 
 # Descriptions: default value of list types in CGI operations.
 #      History: 
-#        Value: member recipient admin_member
+#        Value: MIX ( member recipient admin_member )
 #     Examples: member
 cgi_menu_default_address_map		=	recipient
 
 =head1 MTA related configurations
 
+
+# Descriptions:
+#      History:
+#        Value: MIX ( postfix sendmail qmail procmail )
+#     Examples:
 newml_command_mta_config_list	=	postfix sendmail qmail procmail
 
+
+# Descriptions:
+#      History:
+#        Value: MIX ( postfix sendmail qmail procmail )
+#     Examples:
 rmml_command_mta_config_list	=	$newml_command_mta_config_list
 
 
@@ -2204,42 +2300,42 @@ rmml_command_mta_config_list	=	$newml_command_mta_config_list
 
 # Descriptions: directory to hold config files for MTA
 #      History: hard-coded in fml 4.0
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/etc/mail
 domain_mail_config_dir		= 	$domain_config_base_dir/mail
 
 
 # Descriptions: directory to hold postfix specific config files.
 #      History: hard-coded in fml 4.0
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/etc/mail
 domain_postfix_config_dir	= 	$domain_config_base_dir/postfix
 
 
 # Descriptions: directory to hold qmail specific config files.
 #      History: hard-coded in fml 4.0
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/etc/mail
 domain_qmail_config_dir		= 	$domain_config_base_dir/qmail
 
 
 # Descriptions: directory to hold exim specific config files.
 #      History: hard-coded in fml 4.0
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/etc/mail
 domain_exim_config_dir		= 	$domain_config_base_dir/exim
 
 
 # Descriptions: directory to hold sendmail specific config files.
 #      History: hard-coded in fml 4.0
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/etc/sendmail
 domain_sendmail_config_dir	= 	$domain_config_base_dir/sendmail
 
 
 # Descriptions: directory to hold procmail specific config files.
 #      History: hard-coded in fml 4.0
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/etc/procmail
 domain_procmail_config_dir	= 	$domain_config_base_dir/procmail
 
@@ -2249,7 +2345,7 @@ domain_procmail_config_dir	= 	$domain_config_base_dir/procmail
 
 # Descriptions: aliases
 #      History: hard-coded in fml 4.0
-#        Value: file path
+#        Value: FILE
 #     Examples: /var/spool/ml/etc/mail/aliases
 mail_aliases_file	=	$domain_mail_config_dir/aliases
 
@@ -2259,14 +2355,14 @@ mail_aliases_file	=	$domain_mail_config_dir/aliases
 
 # Descriptions: virtual map file
 #      History: none
-#        Value: file path
+#        Value: FILE
 #     Examples: /var/spool/ml/etc/mail/virtual
 postfix_virtual_map_file	=	$domain_postfix_config_dir/virtual
 
 
 
 # Descriptions: templates of include files
-#        Value: ARRAY
+#        Value: FILE_LIST
 #     Examples:
 newml_command_postfix_template_files 	=	include
 						include-ctl
@@ -2275,7 +2371,7 @@ newml_command_postfix_template_files 	=	include
 
 # Descriptions: verps delimieters used in postfix
 #      History: none
-#        Value: +=
+#        Value: RFC822_ADDRESS_DELIMITERS
 #     Examples: +=
 postfix_verp_delimiters	=	+=
 
@@ -2284,7 +2380,7 @@ postfix_verp_delimiters	=	+=
 
 
 # Descriptions: templates files of ~fml/.qmail-*
-#        Value: ARRAY
+#        Value: FILE_LIST
 #     Examples:
 newml_command_qmail_template_files 	=	dot-qmail
 						dot-qmail-ctl
@@ -2295,14 +2391,14 @@ newml_command_qmail_template_files 	=	dot-qmail
 
 # Descriptions: virtual domain configurations for qmail
 #      History: none
-#        Value: file path
+#        Value: FILE
 #     Examples: /var/qmail/control/virtualdomains
 qmail_virtualdomains_file = /var/qmail/control/virtualdomains
 
 
 # Descriptions: template of /var/qmail/control/virtualdomains
 #      History: none
-#        Value: file path
+#        Value: FILE
 #     Examples: /var/spool/ml/etc/qmail/virtualdomains
 qmail_virtual_map_file	=	$domain_qmail_config_dir/virtualdomains
 
@@ -2310,7 +2406,7 @@ qmail_virtual_map_file	=	$domain_qmail_config_dir/virtualdomains
 
 # Descriptions: verps delimieters used in qmail
 #      History: none
-#        Value: -=
+#        Value: RFC822_ADDRESS_DELIMITERS
 #     Examples: -=
 qmail_verp_delimiters	=	-=
 
@@ -2319,7 +2415,7 @@ qmail_verp_delimiters	=	-=
 
 # Descriptions: sample of /etc/mail/virtusertable
 #      History: none
-#        Value: file path
+#        Value: FILE
 #     Examples: /var/spool/ml/etc/mail/virtual
 sendmail_virtual_map_file =	$domain_sendmail_config_dir/virtusertable
 
@@ -2329,7 +2425,7 @@ sendmail_virtual_map_file =	$domain_sendmail_config_dir/virtusertable
 
 # Descriptions: sample of ~fml/.procmailrc
 #      History: hard-coded in fml 4.0
-#        Value: file path
+#        Value: FILE
 #     Examples: /var/spool/ml/etc/procmail/aliases
 procmail_aliases_file	=	$domain_procmail_config_dir/procmailrc
 
@@ -2337,102 +2433,266 @@ procmail_aliases_file	=	$domain_procmail_config_dir/procmailrc
 
 =head1 program paths
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_perl                 = @PERL@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_cksum                = @CKSUM@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_sum                  = @SUM@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_md5                  = @MD5@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_tar                  = @TAR@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_gzip                 = @GZIP@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_zcat                 = @ZCAT@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_gzcat                = @GZCAT@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_gunzip               = @GUNZIP@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_lha                  = @LHA@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_ls                   = @LS@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_ish                  = @ISH@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_bzip2                = @BZIP2@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_bunzip2              = @BUNZIP2@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_uuencode             = @UUENCODE@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_compress             = @COMPRESS@
 
 
 =head2 MTA related program paths
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_sendmail             = @SENDMAIL@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_makemap              = @MAKEMAP@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_newaliases           = @NEWALIASES@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_postfix              = @POSTFIX@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_postalias            = @POSTALIAS@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_postconf             = @POSTCONF@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_postmap              = @POSTMAP@
 
 
 =head2 encryption/decryption
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_pgp                  = @PGP@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_pgp5                 = @PGP5@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_pgpe                 = @PGPe@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_pgpk                 = @PGPK@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_pgps                 = @PGPS@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_pgpv                 = @PGPV@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_gpg                  = @GPG@
 
 
 =head2	utilities
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_nkf                  = @NKF@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_kakasi               = @KAKASI@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_namazu               = @NAMAZU@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_less                 = @LESS@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_more                 = @MORE@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_w3m                  = @W3M@
 
 
 =head2 spam related utilities
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_spamassassin         = @SPAMASSASSIN@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_spamd                = @SPAMD@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_spamc                = @SPAMC@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_bogofilter           = @BOGOFILTER@
 
 
 =head2 virus checker
 
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_clamscan             = @CLAMSCAN@
 
 =head1	system dependence (incompatibility against BSD)
@@ -2443,31 +2703,31 @@ path_clamscan             = @CLAMSCAN@
 
 # Descriptions: has getpwuid(2) ?
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 system_has_getpwuid	=	yes
 
 # Descriptions: has getpwgid(2) ?
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 system_has_getpwgid	=	yes
 
 # Descriptions: has alarm(2) ?
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 system_has_alarm	=	yes
 
 # Descriptions: has select(2) ?
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 system_has_select	=	yes
 
 # Descriptions: has fork(2) ?
 #      History:
-#        Value: yes / no
+#        Value:  YES_OR_NO
 #     Examples:
 system_has_fork	=	yes
 
@@ -2484,25 +2744,74 @@ system_has_fork	=	yes
 
 [mysql:fml]
 
+
+# Descriptions:
+#      History:
+#        Value: HOSTNAME
+#     Examples:
 sql_server	=	localhost
+
+
+# Descriptions:
+#      History:
+#        Value: USER
+#     Examples:
 sql_user	=	fml
+
+
+# Descriptions:
+#      History:
+#        Value: PASSWORD
+#     Examples:
 sql_password	=	uja
+
+
+# Descriptions:
+#      History:
+#        Value: SQL_DATABASE
+#     Examples:
 sql_database	=	fml
+
+
+# Descriptions:
+#      History:
+#        Value: SQL_TABLE
+#     Examples:
 sql_table	=	ml
 
+
+# Descriptions:
+#      History:
+#        Value: SQL_STATEMENT
+#     Examples:
 sql_get_next_key =	select fml_address from $sql_table
 			where fml_ml = '$ml_name'
 					and
 				fml_domain = '$ml_domain'
 
+
+# Descriptions:
+#      History:
+#        Value: SQL_STATEMENT
+#     Examples:
 sql_getline	=	select fml_address from $sql_table
 			where fml_ml = '$ml_name'
 					and
 				fml_domain = '$ml_domain'
 
+
+# Descriptions:
+#      History:
+#        Value: SQL_STATEMENT
+#     Examples:
 sql_add		=	insert into $sql_table
 			values ('$ml_name', '$ml_domain', '&address', 1, 1)
 
+
+# Descriptions:
+#      History:
+#        Value: SQL_STATEMENT
+#     Examples:
 sql_delete	=	delete from $sql_table
 			where	fml_ml = '$ml_name'
 					and
@@ -2510,6 +2819,11 @@ sql_delete	=	delete from $sql_table
 					and
 				fml_address = '&address'
 
+
+# Descriptions:
+#      History:
+#        Value: SQL_STATEMENT
+#     Examples:
 sql_find	=	select fml_address from $sql_table
 			where	fml_ml = '$ml_name'
 					and
