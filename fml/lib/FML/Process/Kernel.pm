@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML: Kernel.pm,v 1.41 2001/04/14 14:44:23 fukachan Exp $
+# $FML: Kernel.pm,v 1.42 2001/04/15 08:46:39 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -369,7 +369,8 @@ sub load_config_files
     }
 
     # XXX We need to expand variables after we load all *cf files.
-    $curproc->{ config }->expand_variables();
+    # XXX 2001/05/05 changed to dynamic expansion for hook
+    # $curproc->{ config }->expand_variables();
 }
 
 
