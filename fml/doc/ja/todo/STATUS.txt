@@ -15,9 +15,11 @@
 			smrsh はリンク張る必要はあります。
 
 	(postfix + perl 5.6.1   on Solaris 7)			*
+	postfix 2.0.3 + perl 5.6.1 on Solaris 9			*
 
 		[注意]
 		  * 新 installer がうまく動いている OS 
+		 () テスト中
 
 3章
 	[TODO] ＭＬサーバの理論をかく
@@ -433,4 +435,4 @@ VIII部　付録
 
 
 ---
-$FML: STATUS.txt,v 1.21 2003/02/05 04:22:14 fukachan Exp $
+$FML: STATUS.txt,v 1.22 2003/02/08 09:03:41 fukachan Exp $
