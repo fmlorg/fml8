@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MessageID.pm,v 1.9 2002/09/28 09:27:43 fukachan Exp $
+# $FML: MessageID.pm,v 1.10 2002/12/18 04:26:53 fukachan Exp $
 #
 
 package FML::Header::MessageID;
@@ -69,7 +69,7 @@ open db and return HASH_REF for the db access.
 # Descriptions: open message-id database
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
-# Return Value: OBJ
+# Return Value: HASH_ERF
 sub db_open
 {
     my ($self, $args) = @_;
@@ -79,6 +79,7 @@ sub db_open
 
     if ($dir) {
 	unless (-d $dir) {
+	    # XXX-TODO: dir_mode is hard-coded ?
 	    my $dir_mode = $self->{ _dir_mode } || 0700;
 
 	    use File::Path;
@@ -126,6 +127,7 @@ sub get
     my ($self, $key) = @_;
     my $db = $self->{ _db };
 
+    # XXX-TODO: what should we do if undefined ?
     if (defined $db) {
 	return $db->{ $key };
     }
@@ -168,8 +170,9 @@ sub gen_id
     my ($self, $curproc, $args) = @_;
     my $config = $curproc->{ config };
 
+    # XXX-TODO: if $config->{ address_for_post } undefined ?
     $Counter++;
-    time.".$$.$Counter\@" . $config->{ address_for_post };
+    return time.".$$.$Counter\@" . $config->{ address_for_post };
 }
 
 
