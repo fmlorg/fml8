@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: get.pm,v 1.2 2001/09/13 11:53:30 fukachan Exp $
+# $FML: get.pm,v 1.3 2001/09/13 14:45:46 fukachan Exp $
 #
 
 package FML::Command::Admin::get;
@@ -14,11 +14,13 @@ use Carp;
 
 use ErrorStatus;
 use FML::Command::Utils;
-@ISA = qw(FML::Command::Utils ErrorStatus);
+use FML::Command::SendFile;
+use FML::Log qw(Log LogWarn LogError);
+@ISA = qw(FML::Command::SendFile FML::Command::Utils ErrorStatus);
 
 =head1 NAME
 
-FML::Command::Admin::get - what is this
+FML::Command::Admin::get - get arbitrary file in $ml_home_dir
 
 =head1 SYNOPSIS
 
@@ -33,38 +35,26 @@ not yet implemented
 
 sub process
 {
-    my ($self, $curproc, $optargs) = @_;
-    my $options   = $optargs->{ 'options' };
-    my $config    = $curproc->{ 'config' };
-    my $spool_dir = $config->{ 'spool_dir' };
-    my @options   = @$options;
-    my $recipient = shift @options;
-    my @files;
+    my ($self, $curproc, $command_args) = @_;
+    my $command     = $command_args->{ 'command' };
+    my $config      = $curproc->{ 'config' };
+    my $ml_home_dir = $config->{ ml_home_dir };
 
-    for my $id (@options) {
-	use File::Spec;
-	my $f = File::Spec->catfile($spool_dir, $id);
-	if (-f $f) {
-	    $curproc->reply_message( {
-		type        => "message/rfc822",
-		path        => $f,
-		filename    => $id,
-		disposition => "article $id",
-	    });
-	}
-	else {
-	    use FML::Log qw(Log);
-	    &Log("article $id not found");
-	}
+    use File::Spec;
+    my $file = File::Spec->catfile($ml_home_dir, $f);
+
+    if (-f $file) {
+	$command_args->{ _file_to_send } = $file;
+	$self->send_file($curproc, $command_args);
     }
-
-    my $queue = $curproc->queue_in('reply_message', {
-	'sender'  => 'fukachan',
-	'subject' => 'get result',
-	'recipient' => $recipient,
-    });
-
-    $curproc->queue_flush( $queue );
+    else {
+	$curproc->reply_message_nl('error.no_such_file', 
+				   "no such file $file",
+				   {
+				       _arg_file => $f,
+				   });
+	croak("no such file $file");
+    }
 }
 
 
