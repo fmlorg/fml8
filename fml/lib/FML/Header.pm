@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.66 2004/01/01 23:52:08 fukachan Exp $
+# $FML: Header.pm,v 1.67 2004/01/02 14:50:28 fukachan Exp $
 #
 
 package FML::Header;
@@ -343,7 +343,7 @@ sub add_rfc2369
     }
 }
 
-# Descriptions: add "Message-ID if not define
+# Descriptions: add "Message-ID if not defined.
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
@@ -372,8 +372,11 @@ sub add_message_id
 sub add_x_sequence
 {
     my ($header, $config, $rw_args) = @_;
+    my $name = $config->{ outgoing_mail_header_x_ml_name };
+    my $id   = $rw_args->{ id };
+    my $seq  = sprintf("%s %s", $name, $id);
 
-    $header->add('X-Sequence',  "$config->{ outgoing_mail_header_x_ml_name } $rw_args->{ id }");
+    $header->add('X-Sequence', $seq);
 }
 
 
@@ -448,6 +451,7 @@ sub rewrite_reply_to
 sub rewrite_errors_to
 {
     my ($header, $config, $rw_args) = @_;
+
     $header->add('Errors-To', $config->{ maintainer });
 }
 
@@ -477,10 +481,10 @@ sub rewrite_date
 sub rewrite_received
 {
     my ($header, $config, $rw_args) = @_;
-    my($i,$data);
     my $org = "Received";
     my $new = "X-Received";
     my $num = $header->count($org);
+    my ($i, $data);
 
     for ($i = 0; $i < $num; $i++) {
 	$data = $header->get($org, $i);
@@ -602,7 +606,7 @@ C<address_for_post> address.
 sub check_message_id
 {
     my ($header, $config, $rw_args) = @_;
-    my $dir = $config->{ 'message_id_cache_dir' },
+    my $dir = $config->{ 'message_id_cache_dir' };
     my $mid = $header->get('message-id');
     my $dup = 0;
 
