@@ -4,7 +4,7 @@
 # Copyright (C) 2000 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Scheduler.pm,v 1.3 2001/04/05 08:31:44 fukachan Exp $
+# $FML: Scheduler.pm,v 1.4 2001/06/28 09:06:44 fukachan Exp $
 #
 
 package FML::Process::Scheduler;
@@ -62,50 +62,92 @@ sub new
 }
 
 
-sub prepare { ; }
+sub prepare        { 1; }
+sub verify_request { 1; }
+sub finish         { 1; }
 
 
 sub run
 {
     my ($self, $args) = @_;
-    
+    my $argv   = $args->{ argv };
+    my $option = $args->{ options };
+    my $mode   = 'text';
+
+    if (defined $option->{ h }) { return $self->help();}
+
     use FileHandle;
     use TinyScheduler;
 
-    my $schedule = new TinyScheduler $args;
-    my $tmp      = $schedule->tmpfile;
-    my $fh       = new FileHandle $tmp, "w";
+    # prepare new() argument
+    $mode             = $option->{ m } if defined $option->{ m };
+    my $schedule_dir  = $option->{ D } if defined $option->{ D };
+    my $schedule_file = $option->{ F } if defined $option->{ F };
+    my $schargs  = {
+	schedule_dir  => $schedule_dir,
+	schedule_file => undef,
+    };
+    my $schedule = new TinyScheduler $schargs;
 
-    # show three calender for this month, next month, last month
-    my $show_3_month = defined($args->{ options }->{ a }) ? 1 : 0;
-    if ($show_3_month) {
-	for my $n ('this', 'next', 'last') {
-	    $schedule->print_specific_month($fh, $n);
+    # prepare output channel
+    my $tmpf     = $schedule->tmpfile;
+    my $wh       = new FileHandle $tmpf, "w";
+
+    # set output mode
+    $schedule->set_mode( $mode );
+
+    # -a option: show three calender for this, next and last month.
+    if (defined($option->{ a })) {
+	for my $month ('this', 'next', 'last') {
+	    $schedule->print_specific_month($wh, $month);
 	}
     }
+    elsif (defined(@$argv) && @$argv) {
+	# ($month, $yeer) = @$argv;
+	$schedule->print_specific_month($wh, @$argv);
+    }
     else {
-	$schedule->print_specific_month($fh, 'this');
+	$schedule->print_specific_month($wh, 'this');
     }
 
-    $fh->close;
+    $wh->close;
 
-    my $mode = $args->{ options }->{ m } || 'text';
     if ($mode eq 'text') {
-	system "w3m -dump $tmp";
+	system "w3m -dump $tmpf";
     }
     else {
-	system "cat $tmp";	
+	system "cat $tmpf";	
     }
 
-    unlink $tmp;
+    unlink $tmpf if -f $tmpf;
 }
 
 
-# dummy to avoid the error ( undefined function )
-sub AUTOLOAD
+
+sub help
 {
-    ;
+    my ($self) = @_;
+
+    my $name = $0;
+    eval q{ use File::Basename; $name = basename($0);};
+
+print <<"_EOF_";
+
+Usage: $name [-a] [-m mode] [month] [year]
+
+           show this month if not specified.
+
+-h         show this help
+-a         show calender at this, next and last month
+-m mode    mode is 'text' or 'html'
+-D DIR     alternative of ~/.schedule/
+-F FILE    specify schedule file to read
+
+--debug    debug mode on
+
+_EOF_
 }
+
 
 =head1 AUTHOR
 
