@@ -169,7 +169,12 @@ sub _expand_variables
 sub yes
 {
     my ($self, $key) = @_;
-    $_fml_config{$key} eq 'yes' ? 1 : 0;
+    if (defined $_fml_config{$key}) {
+	$_fml_config{$key} eq 'yes' ? 1 : 0;
+    }
+    else {
+	0;
+    }
 }
 
 
