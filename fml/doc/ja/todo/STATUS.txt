@@ -5,14 +5,19 @@
 	  だできないかをリストアップしたものです。
 
 ○ 動作実績
-	perl 5.6.1   on NetBSD 1.5.x (1.5 stable)
+	perl 5.6.1   on NetBSD 1.5.x (1.5 stable)		*
+	perl 5.6.1   on NetBSD 1.6				*
 	perl 5.00503 on FreeBSD 4.3 STABLE
 	perl ?       on FreeBSD 4.6 RELEASE
-	perl 5.6.1   on Redhat Linux 7.2 (postfix)
-	perl 5.00503 on Redhat Linux 6.2 (sendmail8.11.6)
+	perl 5.00503 on FreeBSD 4.7 RELEASE-p3
+	perl 5.6.1   on Redhat Linux 7.2 (postfix)		*
+	perl 5.00503 on Redhat Linux 6.2 (sendmail8.11.6)	*
 			smrsh はリンク張る必要はあります。
 
 	(postfix + perl 5.6.1   on Solaris 7)
+
+		[注意]
+		  * 新 installer がうまく動いている OS 
 
 3章
 	[TODO] ＭＬサーバの理論をかく
@@ -428,4 +433,4 @@ VIII部　付録
 
 
 ---
-$FML: STATUS.txt,v 1.19 2002/12/20 04:01:12 fukachan Exp $
+$FML: STATUS.txt,v 1.20 2003/01/29 13:33:58 fukachan Exp $
