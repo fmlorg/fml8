@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.30 2004/02/15 04:38:35 fukachan Exp $
+# $FML: Adapter.pm,v 1.31 2004/04/10 07:40:01 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -496,6 +496,66 @@ sub find
     $show_all ? \@buf : $x;
 }
 
+
+=head1 SEQUENCE NUMBER OPERATION
+
+methods suitable for sequence id operation. 
+
+=head2 sequence_increment()
+
+increment map content by one and return the result (incrmented vlaue).
+
+=head2 sequence_replace($seq)
+
+set the sequence value to $seq.
+that is, overwrite sequence value by number $seq.
+
+=cut
+
+
+# Descriptions: increment map content by one and return the result
+#               (incrmented vlaue).
+#    Arguments: OBJ($self)
+# Side Effects: create $map if needed or possible
+# Return Value: NUM(> 1, 0 is failure)
+sub sequence_increment
+{
+    my ($self) = @_;
+    my $type   = $self->{ _type };
+
+    if ($type eq 'file') {
+	my $r = $self->SUPER::sequence_increment( { file => $self->{_file} } );
+	return $r;
+    }
+    else {
+	return 0;
+    }
+}
+
+
+# Descriptions: replace map content by the specified one.
+#    Arguments: OBJ($self) NUM($seq)
+# Side Effects: create $map if needed or possible
+# Return Value: NUM(> 1, 0 is failure)
+sub sequence_replace
+{
+    my ($self, $seq) = @_;
+    my $type = $self->{ _type };
+
+    if ($type eq 'file') {
+	my $r = $self->SUPER::sequence_replace( {
+	    file  => $self->{_file},
+	    value => $seq,
+	} );
+	return $r;
+    }
+    else {
+	return 0;
+    }
+}
+
+
+=head1 DESTRUCTOR
 
 =head2 DESTROY
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.53 2004/03/17 06:58:43 fukachan Exp $
+# $FML: File.pm,v 1.54 2004/04/10 07:40:02 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -569,6 +569,161 @@ sub _simple_funlock
     }
 
     return 0;
+}
+
+
+=head1 SEQUENCE FILE OPERATION
+
+=head2 sequence_increment($args)
+
+For example, to get a new (incremented) sequence number of mailing
+list article:
+
+    sub get_sequence_id
+    {
+	... lock ...;
+
+	my $obj = new IO::Adapter $map;
+	my $id  = $obj->sequence_increment();
+	unless ($obj->error()) {
+	    return $id;
+	}
+	else {
+	    print $obj->error(), "\n";
+	}
+
+	... unlock ...;
+    }
+
+=head2 sequence_replace($args)
+
+For example, to set sequence number to the specified value $new_id:
+
+    sub set_sequence_id
+    {
+	my ($self, $new_id) = @_;
+
+	... lock ...;
+
+	my $obj = new IO::Adapter $map;
+	my $id  = $obj->sequence_replace($new_id);
+	unless ($obj->error()) {
+	    return "ok";
+	}
+	else {
+	    print $obj->error(), "\n";
+	    return "fail";
+	}
+
+	... unlock ...;
+    }
+
+=cut
+
+
+# Descriptions: increment value in the specified file.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: create a file if needed.
+# Return Value: none
+sub sequence_increment
+{
+    my ($self, $args) = @_;
+    my $file = $args->{ file };
+    my $id   = 0;
+
+    unless (-f $file) { $self->touch();}
+
+    use IO::Adapter::AtomicFile;
+    my ($rh, $wh) = IO::Adapter::AtomicFile->rw_open($file);
+
+    # read the current sequence number
+    if (defined $rh) {
+	$id = $self->_read_one_word($rh);
+	$rh->close;
+    }
+    else {
+	$self->error_set("cannot open the sequence file");
+	return 0;
+    }
+
+    # increment
+    if ($id =~ /^\d+$/ || $id eq '') {
+	$id++;
+    }
+    else {
+	$self->error_set("file contains not a number");
+	return 0;
+    }
+
+    # save $id
+    if (defined $wh) {
+	print $wh $id, "\n";
+	$wh->close;
+    }
+    else {
+	$self->error_set("cannot save id");
+    }
+
+    return $id;
+}
+
+
+# Descriptions: replace value with the specified one.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: create a file if needed.
+# Return Value: none
+sub sequence_replace
+{
+    my ($self, $args) = @_;
+    my $file   = $args->{ file };
+    my $new_id = $args->{ value };
+
+    unless (-f $file) { $self->touch();}
+
+    use IO::Adapter::AtomicFile;
+    my ($rh, $wh) = IO::Adapter::AtomicFile->rw_open($file);
+    if (defined $rh) { $rh->close();}
+
+    # save $id
+    if (defined $wh) {
+	print $wh $new_id, "\n";
+	$wh->close;
+    }
+    else {
+	$self->error_set("cannot save id");
+    }
+
+    # verify if the value is writtern.
+    {
+	use IO::Adapter::AtomicFile;
+	my ($rh, $wh) = IO::Adapter::AtomicFile->rw_open($file);
+	if (defined $rh) { 
+	    my $id = $self->_read_one_word($rh);
+	    unless ($new_id == $id) {
+		$self->error_set("fail to save id");	    
+	    }
+	    $rh->close();
+	}
+    }
+}
+
+
+# Descriptions: read the first line from $rh handle and return it.
+#    Arguments: OBJ($self) HANDLE($rh)
+# Side Effects: none
+# Return Value: NUM
+sub _read_one_word
+{
+    my ($self, $rh) = @_;
+    my $id = 0;
+
+    if (defined $rh) {
+	$id = $rh->getline() || 0;
+	$id =~ s/^[\s\r\n]*//;
+	$id =~ s/[\s\r\n]*$//;
+    }
+
+    return $id;
 }
 
 
