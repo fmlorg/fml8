@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.32 2002/06/24 09:43:25 fukachan Exp $
+# $FML: Kernel.pm,v 1.33 2002/06/24 11:06:12 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -388,8 +388,40 @@ sub run_cgi_help
 
     print "<B>\n";
     print "<CENTER>fml CGI interface for \@$domain ML's</CENTER><BR>\n";
-    print "help<BR>\n";
     print "</B>\n";
+
+    # top level help message
+    my $buf = $curproc->message_nl("cgi.top");
+    print $buf;
+}
+
+
+=head2 run_cgi_command_help($args)
+
+command_help.
+
+=cut
+
+
+# Descriptions: show command_dependent help
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
+sub run_cgi_command_help
+{
+    my ($curproc, $args) = @_;
+    my $buf          = '';
+    my $navi_command = $curproc->safe_param_navi_command();
+    my $command      = $curproc->safe_param_command();
+
+    if ($navi_command) {
+	$buf = $curproc->message_nl("cgi.$navi_command");
+    }
+    elsif ($command) {
+	$buf = $curproc->message_nl("cgi.$command");
+    }
+
+    print $buf;
 }
 
 
@@ -407,8 +439,6 @@ log.
 sub run_cgi_log
 {
     my ($curproc, $args) = @_;
-
-    print "log";
 }
 
 
@@ -426,8 +456,6 @@ dummy.
 sub run_cgi_dummy
 {
     my ($curproc, $args) = @_;
-
-    print "dummy\n";
 }
 
 
@@ -447,26 +475,6 @@ sub run_cgi_date
     my ($curproc, $args) = @_;
 
     print `date`;
-}
-
-
-=head2 run_cgi_command_help($args)
-
-command_help.
-
-=cut
-
-
-# Descriptions: show command_dependent help
-#    Arguments: OBJ($curproc) HASH_REF($args)
-# Side Effects: none
-# Return Value: none
-sub run_cgi_command_help
-{
-    my ($curproc, $args) = @_;
-    my $buf = $curproc->message_nl("cgi.top");
-
-    print $buf;
 }
 
 
