@@ -3,7 +3,7 @@
 # Copyright (C) 2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.3 2003/08/23 04:35:28 fukachan Exp $
+# $FML: Spool.pm,v 1.4 2003/12/30 08:22:36 fukachan Exp $
 #
 
 package FML::Article::Spool;
@@ -80,15 +80,15 @@ sub convert
     my ($self, $curproc, $command_args) = @_;
     my $wh       = $command_args->{ _output_channel } || \*STDOUT;
     my $article  = $self->{ _article };
-    my $src_dir  = $command_args->{ _src_dir };
-    my $dst_dir  = $command_args->{ _dst_dir };
+    my $src_dir  = $command_args->{ _src_dir } || '';
+    my $dst_dir  = $command_args->{ _dst_dir } || '';
     my $ml_name  = $command_args->{ ml_name };
     my $channel  = $self->get_lock_channel_name();
     my $use_link = 0;
 
     $curproc->lock($channel);
 
-    print $wh "convert spool of $ml_name ML.\n\n";
+    print $wh "convert $ml_name ML spool.\n\n";
 
     # XXX-TODO: more restricted checks.
     if ($src_dir eq $dst_dir) {
@@ -185,7 +185,7 @@ sub status
 }
 
 
-# Descriptions: return directory information
+# Descriptions: return directory information.
 #    Arguments: OBJ($self) STR($dir)
 # Side Effects: none
 # Return Value: ARRAY(NUM, NUM)
