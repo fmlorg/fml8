@@ -8,15 +8,6 @@
 	XXX
 
 
-○	配送ルーチンでの自動分割ってできる？
-
-	んー某、メール爆撃なあれ？
-		あれは、いけてませんなぁー
-
-	text/plain をてきとうにぶったぎる？
-		んーよめなくなりそー	
-
-
 ○	File::CachdDir と Tie::JournaledDir
 
 	どうつかいわける？
@@ -54,44 +45,12 @@
 	0700 とかハードコードされてるじょ
 
 
-○	[DOC] Delivered-To をけそう tips
-
-
-○	subject でふぉわーどさきをかえる tips をしこもう
-
-
-○	コマンド拡張の仕方
-
-
-○	メッセージの拡張の仕方
-
-
-○	フィルタ
-
-   * filter statistics
-	統計をとりたい
-	統計をみせろ コマンド
-	それをするためのデータベースを最初から用意すること
-
-   * MTI
-	fmltreadで使っているDBをうまく利用できないものでしょうか？
-
-
-○	RFC 3282
-
-        Title:	    Content Language Headers
-        Status:	    Standards Track
-
-
 ○	auto-responses
 
 	http://www.cs.utk.edu/~moore/internet-drafts/draft-moore-auto-email-response-00.txt
 
 
 ○	Mail::Message::*Code は日本語依存過ぎじゃない？
-
-
-○	CGI で xxx-admin さんをかすたまいずしたい？
 
 
 ○	remove $msg->{ next }
@@ -424,4 +383,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.42 2002/08/03 10:34:16 fukachan Exp $
+$FML: 00_MEMO,v 1.43 2002/08/07 14:34:17 fukachan Exp $
