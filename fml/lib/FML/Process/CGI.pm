@@ -46,6 +46,9 @@ use CGI qw/:standard/;
 @ISA = qw(FML::Process::Kernel Exporter);
 
 
+# XXX now we re-evaluate $ml_home_dir and @cf again.
+# XXX but we need the mechanism to re-evaluate $args passed from
+# XXX libexec/loader.
 sub new
 {
     my ($self, $args) = @_;
@@ -85,7 +88,16 @@ sub prepare
 }
 
 
-# dummy methods
+=head2 C<verify_request()>
+
+a dummy method
+
+=head2 C<finish()>
+
+dummy method
+
+=cut
+
 sub verify_request { 1;}
 sub finish { 1;}
 
@@ -95,51 +107,12 @@ sub run
 {
     my ($curproc, $args) = @_;
     my $config = $curproc->{ config };
-    my $title  = $config->{ ticket_cgi_title }   || 'ticket system interface';
-    my $color  = $config->{ ticket_cgi_bgcolor } || '#E6E6FA';
 
-    # ticket object
-    my $ticket = $curproc->_load_ticket_model_module($args);
+    # model specific ticket object
+    my $module = 'FML::Ticket::Model::'.$config->{ ticket_model };
+    my $ticket = $curproc->load_module($args, $module);
     $ticket->mode({ mode => 'html' });
-
-    # o.k start html
-    print start_html(-title=>$title,-BGCOLOR=>$color), "\n";
-
-    # menu at the top of scrren
-    $ticket->cgi_top_menu($curproc, $args);
-
-    # show summary
-    $ticket->mode({ mode => 'html' });
-    $ticket->show_summary($curproc, $args);
-
-    # o.k. end of html
-    print end_html;
-    print "\n";
-}
-
-
-
-=head2 C<_load_ticket_model_module($args)>
-
-load model dependent module.
-
-=cut
-
-sub _load_ticket_model_module
-{
-    my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
-    my $model  = $config->{ ticket_model };
-    my $pkg    = "FML::Ticket::Model::$model";
-
-    # fake use() to do "use FML::Ticket::$model;"
-    eval qq{ require $pkg; $pkg->import();};
-    unless ($@) {
-	return $pkg->new($curproc, $args);
-    }
-    else {
-	Log($@);
-    }
+    $ticket->run_cgi($curproc, $args);
 }
 
 
