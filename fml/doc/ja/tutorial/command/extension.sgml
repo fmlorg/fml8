@@ -1,10 +1,10 @@
 <!--
-   $FML$
+   $FML: extension.sgml,v 1.1 2001/10/13 08:47:54 fukachan Exp $
 -->
 
 
 <sect1 id="fml.command.hack.example0">
-   <title> コマンドの拡張の仕方の例 </title>
+   <title> コマンドの拡張の仕方 (予定) </title>
 
 
    <sect2>

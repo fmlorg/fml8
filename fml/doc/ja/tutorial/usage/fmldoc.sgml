@@ -1,0 +1,22 @@
+<!--
+	$FML: fmldoc.sgml,v 1.2 2001/04/26 11:02:39 fukachan Exp $
+-->
+
+<sect1 id="usage.fmldoc">
+
+<title> モジュールのドキュメントを表示する (fmldoc) </title>
+
+<para>
+fmldoc の使い方は perldoc と同様です。
+fml の任意のモジュールに対し、そのドキュメントを表示します。
+実のところ perldoc への wrapper です。
+</para>
+
+<para>
+例えば、FML::Process::Kernel のドキュメントが見たい場合、
+<screen>
+% fmldoc FML::Process::Kernel
+</screen>
+</para>
+
+</sect1>

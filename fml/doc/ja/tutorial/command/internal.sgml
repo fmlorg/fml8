@@ -1,10 +1,10 @@
 <!--
-   $FML$
+   $FML: internal.sgml,v 1.1.1.1 2001/10/12 11:00:20 fukachan Exp $
 -->
 
-<sect1 id="fml.command.overview">
+<sect1 id="fml.command.interal.change">
 	<title>
-	コマンド処理の概要:
+	議論:
 	『4.0 と 5.0 のコードの書き方はどのくらい違うか？』 
 	</title>
 

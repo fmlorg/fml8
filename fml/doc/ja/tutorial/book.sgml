@@ -2,7 +2,7 @@
 This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
 to generate various output formats.
 
-$FML: book.sgml,v 1.19 2001/11/19 14:55:15 fukachan Exp $
+$FML: book.sgml,v 1.20 2001/11/23 15:00:46 fukachan Exp $
 -->
 
 <!doctype book public "-//FML//DTD DocBook V3.1-Based Extension//EN" [
@@ -41,11 +41,6 @@ $FML: book.sgml,v 1.19 2001/11/19 14:55:15 fukachan Exp $
   </part>
 
 
-	<!--
-	&chapter.available;
-	は第 2 部に移して、分離するべきかな？
-	-->
-
   <part>
 	<title> 各論およびカスタマイズ </title>
 	<partintro>
@@ -54,8 +49,12 @@ $FML: book.sgml,v 1.19 2001/11/19 14:55:15 fukachan Exp $
 	</para>
 	</partintro>
 
-	&chapter.available;
-	&chapter.programs;
+	&chapter.usage.post;
+	&chapter.usage.command;
+	&chapter.usage.onhost;
+
+	<!-- スレッド追跡システム -->
+	&chapter.threadtrack.usage;
   </part>
 
 
@@ -84,10 +83,6 @@ $FML: book.sgml,v 1.19 2001/11/19 14:55:15 fukachan Exp $
 	<!-- 記事の配送とコマンドの処理 -->
         &chapter.delivery;
         &chapter.replybyfml;
-	&chapter.fmlcommand;
-
-	<!-- スレッド追跡システム -->
-	&chapter.threadtrack.usage;
   </part>
 
 
@@ -101,11 +96,12 @@ $FML: book.sgml,v 1.19 2001/11/19 14:55:15 fukachan Exp $
 
 	&chapter.module.io.adapter;
 	&chapter.module.mail.message;
+	&chapter.module.nl;
   </part>
 
 
   <!-- 
-	***** ここから後は付録 *****
+	*************** ここから後は付録 **************
   -->
   <part>
 	<title> 付録 </title>

@@ -1,5 +1,5 @@
 <!--
-   $FML: bootloader.sgml,v 1.2 2001/05/10 03:11:43 fukachan Exp $
+   $FML: post.sgml,v 1.1.1.1 2001/11/23 15:47:37 fukachan Exp $
 -->
 
 <chapter id="usage.post">
@@ -20,7 +20,7 @@ fml.pl はメールを標準入力から受けとり、
 
 <sect1>
 	<title>
-	ＭＬとして処理するべきこと
+	fml.pl が ＭＬとして処理するべきこと
 	</title>
 
 
@@ -29,7 +29,7 @@ subject のタグをつける、もしくは記事番号などを更新するなど
 <screen>
 Subject: [elena:00100] えれなさん素敵
 </screen>
- (デフォルトではつけません)
+(デフォルトではつけません)
 </para>
 
 <para>
@@ -54,7 +54,7 @@ Subject: [elena:00100] えれなさん素敵
 
 
 <sect1>
-   <title> 備考: ブートしていく様子 </title>
+   <title> 解説: ブートしていく様子 </title>
 
 <para>
 <link linkend="bootloader">

@@ -1,34 +1,21 @@
 <!--
-	$FML: chapter.sgml,v 1.2 2001/10/12 11:14:19 fukachan Exp $
+   $FML$
 -->
-
-<chapter id="fml.command.op">
-	<title>
-	コマンド: fml をメールで操作する
-	</title>
-
-<para>
-fml にメールで文字列(コマンド)を送り込むことで、fml に特定の処理をして
-もらうことができます。例えば、メンバーの登録、削除や、過去の記事を取り
-寄せるなどの処理です。
-</para>
-
-<para>
-fml 5.0  では
-<screen>
-メールによるコマンド処理
-makefml によるコマンド処理
-CGI でのコマンド処理
-</screen>
-これらすべての機能が FML::Command:: クラスのモジュールを使うように
-設計されています。
-</para>
 
 
 <sect1 id="fml.command.module.hierarchy">
 	<title>
-	FML::Command クラス以下の構成
+	コマンドが使うモジュール
 	</title>
+
+<para>
+5.0 では、
+コマンドメール、makefml そして CGI が使うモジュール
+は共有されています。
+ただし、その権限の差異によって、
+ユーザ用のモジュールと管理者用のモジュールの2つに分かれています。
+以下、これらのモジュール群の構成について解説します。
+</para>
 
 <para>
 FML::Command:: クラスは以下のような構成になっています。
@@ -37,7 +24,7 @@ FML::Command.pm		FML::Command クラス以下への入口
 FML::Command::ACL	ACL
 FML::Command::Utils	よもやまの定義
 FML::Command::User	ユーザ用コマンド群
-FML::Command::Admin	ユーザ用コマンド群
+FML::Command::Admin	管理者用コマンド群
 </screen>
 例えば、(メールでの)ユーザ用のコマンドの場合
 FML::Command.pm を経由して
@@ -104,14 +91,3 @@ FML::Command::Admin::コマンド.pm
 
 
 </sect1>
-
-
-<!-- コマンドの例 -->
-&sect.command.internal;
-
-
-<!-- コマンドの拡張例 -->
-&sect.command.extension;
-
-
-</chapter>

@@ -1,0 +1,46 @@
+<!--
+	$FML: makefml.sgml,v 1.4 2001/10/13 08:47:58 fukachan Exp $
+-->
+
+<chapter id="usage.onhost">
+	<title>
+	ＭＬ管理者にできること (ＭＬサーバのホスト上)
+	</title>
+
+
+<sect1>
+	<title>
+	ホスト上でできること
+	</title>
+
+<para>
+ＭＬサーバのホストに入ることができる(例: slogin してシェルが取れる)
+人は、通常ＭＬにとって最強の人を意味します。
+</para>
+
+<para>
+ファイルを直接編集することで、どんなことでもできるわけですから、
+無敵です。
+</para>
+
+<para>
+しかしながら、人間間違いを犯すもので、ついフォーマットを
+間違えるといったことがあります。
+</para>
+
+<para>
+そのため、通常は makefml ( /usr/local/bin/makefml )を
+使うことで、fml を操作して下さい。
+</para>
+
+</sect1>
+
+
+&sect.usage.makefml;
+&sect.usage.fmlconf;
+&sect.usage.fmldoc;
+&sect.usage.fmlthread;
+&sect.usage.fmlhtmlify;
+
+
+</chapter>

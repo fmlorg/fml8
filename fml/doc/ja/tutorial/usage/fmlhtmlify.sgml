@@ -1,0 +1,16 @@
+<!--
+	$FML: fmlhtmlify.sgml,v 1.2 2001/04/26 11:02:39 fukachan Exp $
+-->
+
+<sect1 id="usage.fmlhtmlify">
+
+<title> 記事を HTML 化する (fmlhtmlify) </title>
+
+<para>
+<screen>
+% fmlhtmlify ＭＬ名
+</screen>
+
+</para>
+
+</sect1>

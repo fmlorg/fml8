@@ -1,5 +1,5 @@
 <!--
-	$FML: chapter.sgml,v 1.4 2001/11/19 14:55:16 fukachan Exp $
+	$FML: chapter.sgml,v 1.5 2001/11/23 15:00:48 fukachan Exp $
 -->
 
 <chapter id="overview"> 
@@ -51,9 +51,7 @@
 
 	<para>
 		(デフォルトでは)インストーラは /usr/local/bin に 
-		<link linkend="available">
 		fmldoc fmlconf fmlthread makefml fmlhtmlify fmlsch
-		</link>
 		などをインストールします。
 	</para>
 

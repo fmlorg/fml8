@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.19 2001/10/22 11:08:05 fukachan Exp $
+	$FML: chapters.ent,v 1.20 2001/11/19 14:55:16 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -21,27 +21,36 @@
 <!entity sect.terms SYSTEM "include/terms.sgml">
 
 
-<!-- overview: introduction 〜 インストール、テストまで -->
-<!entity chapter.overview    SYSTEM "overview/chapter.sgml">
-<!entity chapter.download    SYSTEM "overview/download.sgml">
-<!entity chapter.available   SYSTEM "overview/available.sgml">
-<!entity chapter.install     SYSTEM "install/chapter.sgml">
+<!-- パート I: introduction 〜 インストール、テストまで -->
+<!entity chapter.overview        SYSTEM "overview/chapter.sgml">
+<!entity chapter.download        SYSTEM "overview/download.sgml">
+<!entity chapter.install         SYSTEM "install/chapter.sgml">
+
+
+<!-- パート II: 使い方の例とカスタマイズについて -->
+<!entity chapter.usage.post      SYSTEM "usage/post.sgml">
+<!entity chapter.usage.command   SYSTEM "usage/command.sgml">
+<!entity chapter.usage.onhost    SYSTEM "usage/onhost.sgml">
+<!entity sect.usage.makefml      SYSTEM "usage/makefml.sgml">
+<!entity sect.usage.fmlconf      SYSTEM "usage/fmlconf.sgml">
+<!entity sect.usage.fmldoc       SYSTEM "usage/fmldoc.sgml">
+<!entity sect.usage.fmlthread    SYSTEM "usage/fmlthread.sgml">
+<!entity sect.usage.fmlhtmlify   SYSTEM "usage/fmlhtmlify.sgml">
 
 
 <!-- コマンド -->
-<!entity chapter.fmlcommand     SYSTEM "command/chapter.sgml">
-<!entity sect.command.internal  SYSTEM "command/internal.sgml">
-<!entity sect.command.extension SYSTEM "command/extension.sgml">
+<!entity sect.command.internal   SYSTEM "command/internal.sgml">
+<!entity sect.command.extension  SYSTEM "command/extension.sgml">
+<!entity sect.command.module     SYSTEM "command/module.sgml">
 
 
 <!-- う〜ん、分類は…？;-) -->
-<!entity chapter.db          SYSTEM "internals/db.sgml">
-<!entity chapter.dbms        SYSTEM "internals/dbms.sgml">
+<!entity chapter.db              SYSTEM "internals/db.sgml">
+<!entity chapter.dbms            SYSTEM "internals/dbms.sgml">
 
 
 <!-- 配送 -->
-<!entity chapter.delivery   SYSTEM "delivery/chapter.sgml">
-<!entity chapter.replybyfml SYSTEM "delivery/reply.sgml">
+<!entity chapter.delivery        SYSTEM "delivery/chapter.sgml">
 
 
 <!-- 内部構造 -->
@@ -50,38 +59,31 @@
 <!entity chapter.programingstyle SYSTEM "internals/style.sgml">
 <!entity chapter.design          SYSTEM "internals/design.sgml">
 <!entity chapter.config.cf       SYSTEM "internals/config.cf.sgml">
-<!entity chapter.message         SYSTEM "internals/message.sgml">
-<!entity chapter.nl              SYSTEM "internals/nativelanguage.sgml">
+
+
+<!-- メッセージの取り扱い -->
+<!entity chapter.message         SYSTEM "message/chapter.sgml">
 <!entity chapter.message.nl      SYSTEM "message/language.sgml">
+<!entity chapter.replybyfml      SYSTEM "message/reply.sgml">
 
 
 <!-- 開発 -->
-<!entity chapter.cvstree SYSTEM "devel/cvstree.sgml">
-<!entity chapter.cvstags SYSTEM "devel/cvstags.sgml">
-<!entity chapter.docbook SYSTEM "devel/docbook.sgml">
-<!entity chapter.inet6   SYSTEM "devel/inet6.sgml">
+<!entity chapter.cvstree         SYSTEM "devel/cvstree.sgml">
+<!entity chapter.cvstags         SYSTEM "devel/cvstags.sgml">
+<!entity chapter.docbook         SYSTEM "devel/docbook.sgml">
+<!entity chapter.inet6           SYSTEM "devel/inet6.sgml">
 
 
 <!-- misc -->
-<!entity chapter.ticket.usage		SYSTEM "ticketsystem/chapter.sgml">
-<!entity chapter.ticket.tools		SYSTEM "ticketsystem/tools.sgml">
 <!entity chapter.threadtrack.usage	SYSTEM "threadtrack/chapter.sgml">
 <!entity chapter.threadtrack.tools	SYSTEM "threadtrack/tools.sgml">
 
 
-<!-- プログラムの説明 -->
-<!entity chapter.programs SYSTEM "programs/chapter.sgml">
-<!entity sect.fmlconf     SYSTEM "programs/fmlconf.sgml">
-<!entity sect.fmldoc      SYSTEM "programs/fmldoc.sgml">
-<!entity sect.fmlticket   SYSTEM "programs/fmlticket.sgml">
-<!entity sect.fmlthread   SYSTEM "programs/fmlthread.sgml">
-<!entity sect.makefml     SYSTEM "programs/makefml.sgml">
-
-
 <!-- Appendix -->
-<!entity chapter.glossary SYSTEM "glossary.sgml">
+<!entity chapter.glossary         SYSTEM "glossary.sgml">
 
 
 <!-- modules -->
 <!entity chapter.module.io.adapter   SYSTEM "module/IO::Adapter.sgml">
 <!entity chapter.module.mail.message SYSTEM "module/Mail::Message.sgml">
+<!entity chapter.module.nl           SYSTEM "module/nativelanguage.sgml">

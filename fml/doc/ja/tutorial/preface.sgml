@@ -1,5 +1,5 @@
 <!--
-   $FML: preface.sgml,v 1.10 2001/11/19 14:55:15 fukachan Exp $
+   $FML: preface.sgml,v 1.11 2001/11/23 15:00:46 fukachan Exp $
 -->
 
 
@@ -267,7 +267,7 @@ fml 5.0 用に作られたモジュールを fml 4.0 へ輸入する予定です。
 
     <listitem>
 	<para>
-	<link linkend="io.adapter">
+	<link linkend="module.io.adapter">
 	抽象化 IO 層
 	</link>
 	メンバーファイルをファイル、/etc/group, NIS, MySQL 
@@ -275,12 +275,6 @@ fml 5.0 用に作られたモジュールを fml 4.0 へ輸入する予定です。
 	</para>
     </listitem>
     </itemizedlist>
-
-詳細は
-<link linkend="available"> 
-『&fml5; の実行形式プログラム』の章
-</link>
-を参照して下さい。
 </para>
 
 </sect1>

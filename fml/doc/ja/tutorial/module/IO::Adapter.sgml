@@ -1,8 +1,8 @@
 <!--
-   $FML: ioadapter.sgml,v 1.1 2001/09/17 13:04:25 fukachan Exp $
+   $FML: IO::Adapter.sgml,v 1.1 2001/09/30 23:08:59 fukachan Exp $
 -->
 
-<chapter id="io.adapter">
+<chapter id="module.io.adapter">
 	<title>
 	IO::Adapter
 	</title>

@@ -1,9 +1,9 @@
 <!--
-	$FML: message.sgml,v 1.6 2001/09/30 23:09:39 fukachan Exp $	
+	$FML: message.sgml,v 1.7 2001/10/13 08:47:57 fukachan Exp $	
 -->
 
 <chapter id="mail.manipulation">
-   <title> メールの操作 </title>
+   <title> メッセージ(メール)の操作 </title>
 
 <para>
 メール(オブジェクト)を扱う関数の詳細については

@@ -1,0 +1,21 @@
+<!--
+	$FML: fmlconf.sgml,v 1.2 2001/04/26 11:02:39 fukachan Exp $
+-->
+
+<sect1 id="usage.fmlconf">
+
+<title> 設定を表示する (fmlconf) </title>
+
+<para>
+fmlconf (/usr/local/bin/fmlconf) 
+は引数にＭＬ名をとり、そのＭＬの変数一覧を表示します。
+-n をつけるとデフォルトと異なる変数のみを表示します。
+
+<screen>
+% fmlconf elena
+% fmlconf -n elena
+</screen>
+
+</para>
+
+</sect1>
