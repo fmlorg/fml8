@@ -1,6 +1,12 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/07/12
+
+   procmailrc のサンプルもつくってみやう
+	newml/rmml コマンドが procmailrc のテンプレートを生成/削除する
+	ようにする
+
 2002/07/11
 
    FML::MTAControl::Qmail 
@@ -2717,4 +2723,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.85 2002/07/11 15:09:12 fukachan Exp $
+$FML: CHANGES.txt,v 1.86 2002/07/11 15:12:27 fukachan Exp $
