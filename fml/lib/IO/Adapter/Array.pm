@@ -9,12 +9,10 @@
 #
 
 package IO::Adapter::Array;
+
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-
-require Exporter;
-@ISA = qw(Exporter);
 
 
 sub new

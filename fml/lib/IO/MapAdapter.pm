@@ -13,9 +13,6 @@ use vars qw(@ISA);
 use strict;
 use Carp;
 
-require Exporter;
-@ISA = qw(Exporter);
-
 BEGIN {}
 END   {}
 
