@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: array_map.pl,v 1.3 2001/05/04 14:32:34 fukachan Exp $
+# $FML: array_map.pl,v 1.4 2001/08/19 16:12:25 fukachan Exp $
 #
 
 use Carp;
@@ -19,7 +19,7 @@ if ($obj->error) { croak( $obj->error );}
 
 my $x;
 my @recipients = ();
-while ($x = $obj->get_recipient) { push(@recipients, $x); }
+while ($x = $obj->get_next_key) { push(@recipients, $x); }
 $obj->close;
 
 my $ok = 0;

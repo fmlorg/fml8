@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.26 2001/12/24 07:40:56 fukachan Exp $
+# $FML: File.pm,v 1.27 2001/12/24 07:44:35 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -192,14 +192,35 @@ sub getline
 }
 
 
-# Descriptions: get string for new line after
-#               clean up for fml
+# Descriptions: return the next key
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub get_next_key
+{
+    my ($self) = @_;
+    $self->_get_next_xxx('key');
+}
+
+
+# Descriptions: return value(s) for the next key
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
 sub get_next_value
 {
     my ($self) = @_;
+    $self->_get_next_xxx('value');
+}
+
+
+# Descriptions: get data and return key or value by $mode.
+#    Arguments: OBJ($self) STR($mode)
+# Side Effects: none
+# Return Value: STR
+sub _get_next_xxx
+{
+    my ($self, $mode) = @_;
 
     my ($buf) = '';
     my $fh = $self->{_fh};
@@ -218,9 +239,14 @@ sub get_next_value
 	}
 
 	if (defined $buf) {
-	    my @buf = split(/\s+/, $buf);
-	    $buf    = $buf[0];
-	    $buf    =~ s/[\r\n]*$//o;
+	    $buf =~ s/[\r\n]*$//o;
+	    my ($key, $value) = split(/\s+/, $buf, 2);
+	    if ($mode eq 'key') {
+		$buf = $key;
+	    }
+	    elsif ($mode eq 'value') {
+		$buf = $value;
+	    }
 	    $ec++;
 	}
 	return $buf;
@@ -421,7 +447,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

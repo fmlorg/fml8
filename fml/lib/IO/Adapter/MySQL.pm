@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: MySQL.pm,v 1.17 2001/12/22 09:21:13 fukachan Exp $
+# $FML: MySQL.pm,v 1.18 2001/12/24 07:40:57 fukachan Exp $
 #
 
 
@@ -145,7 +145,7 @@ sub setpos
     }
 
     # discard
-    while ($i-- > 0) { $self->get_next_value();}
+    while ($i-- > 0) { $self->get_next_key();}
 }
 
 
@@ -193,7 +193,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

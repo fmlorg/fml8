@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DBI.pm,v 1.11 2002/01/27 09:21:52 fukachan Exp $
+# $FML: DBI.pm,v 1.12 2002/01/27 09:25:24 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -179,17 +179,39 @@ same as C<getline()> now.
 sub getline
 {
     my ($self, $args) = @_;
-    $self->get_next_value($args);
+    $self->get_next_key($args);
 }
 
 
-# Descriptions: get from DBI map
-#    Arguments: OBJ($self) HASH_REF($args)
+# Descriptions: return key from DBI map
+#    Arguments: OBJ($self) HASH_REF($args) STR($mode)
+# Side Effects: none
+# Return Value: STR
+sub get_next_key
+{
+    my ($self, $args) = @_;
+    $self->_get_next_xxx($args, 'key');
+}
+
+
+# Descriptions: return value(s) from DBI map
+#    Arguments: OBJ($self) HASH_REF($args) STR($mode)
 # Side Effects: none
 # Return Value: STR
 sub get_next_value
 {
     my ($self, $args) = @_;
+    $self->_get_next_xxx($args, 'value');
+}
+
+
+# Descriptions: get from DBI map
+#    Arguments: OBJ($self) HASH_REF($args) STR($mode)
+# Side Effects: none
+# Return Value: STR
+sub _get_next_xxx
+{
+    my ($self, $args, $mode) = @_;
 
     # for the first time
     unless ($self->{ _res }) {
@@ -213,7 +235,16 @@ sub get_next_value
 
 	my @row = $self->{ _res }->fetchrow_array;
 	$self->{ _row_pos }++;
-	join(" ", @row);
+	if ($mode eq 'key') {
+	    $row[0];
+	}
+	elsif ($mode eq 'value') {
+	    shift @row;
+	    join(" ", @row);
+	}
+	else {
+	    warn("invalid option");
+	}
     }
     else {
 	$self->error_set( $DBI::errstr );

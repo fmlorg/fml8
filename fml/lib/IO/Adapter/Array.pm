@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Array.pm,v 1.20 2001/12/22 09:21:12 fukachan Exp $
+# $FML: Array.pm,v 1.21 2001/12/24 07:40:56 fukachan Exp $
 #
 
 package IO::Adapter::Array;
@@ -22,15 +22,22 @@ IO::Adapter::Array - base class for IO emulation for the ARRAY
 
     use IO::Adapter::Array;
 
-    $map = [ 1, 2, 3 ];
+    $map = [ 'rudo', 'kenken', 'hitomi' ];
     $obj = new IO::Adapter::Array $map;
     $obj->open;
-    while ($x = $obj->get_next_value) { print $x;}
+    while ($x = $obj->get_next_key) { print $x;}
     $obj->close;
 
 =head1 DESCRIPTION
 
 emulate IO operation for the ARRAY.
+One array is similar to a set of primary keys without optional values
+such as a file:
+
+    rudo
+    kenken
+    hitomi
+      ...
 
 =head1 METHODS
 
@@ -103,30 +110,42 @@ sub open
 
 the same as get_next_value().
 
-=item C<get_next_value()>
+=item C<get_next_key()>
 
 return the next element of the array
+
+=item C<get_next_value()>
+
+undef. ambigous in array case.
 
 =cut
 
 
-# Descriptions: forwarded to get_next_value()
+# Descriptions: forwarded to get_next_key()
+#               XXX getline() == get_next_key() is valid in this case.
+#               XXX since this map has only key and no value. 
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: increment the counter in the object
 # Return Value: STR(the next element)
-sub getline { get_next_value(@_);}
+sub getline { get_next_key(@_);}
 
 
 # Descriptions: return the next element of the array
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: increment the counter in the object
 # Return Value: STR(the next element)
-sub get_next_value
+sub get_next_key
 {
     my ($self, $args) = @_;
     my $i  = $self->{_counter}++;
     my $ra = $self->{_elements};
     defined $$ra[ $i ] ? $$ra[ $i ] : undef;
+}
+
+
+sub get_next_value
+{
+    return undef;
 }
 
 
@@ -203,7 +222,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

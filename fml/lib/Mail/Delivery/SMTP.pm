@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.11 2002/01/13 07:01:28 fukachan Exp $
+# $FML: SMTP.pm,v 1.12 2002/01/16 13:34:03 fukachan Exp $
 #
 
 
@@ -674,7 +674,7 @@ sub _send_recipient_list_by_recipient_map
 
 	# XXX $obj->get_recipient returns a mail address.
       RCPT_INPUT:
-	while (defined ($rcpt = $obj->get_recipient)) {
+	while (defined ($rcpt = $obj->get_next_key)) {
 	    $num_recipients++;
 	    $self->_send_command("RCPT TO:<$rcpt>");
 	    $self->_read_reply;

@@ -1,0 +1,57 @@
+		諸問題
+
+
+○ 問題: getline() と get_XXX() メソッドについて
+
+ファイルとそれ以外では事情がかなり異なることに留意することが重要である。
+
+* ファイル(スペース区切り)では
+
+	key1
+	key2	value2
+	key3	value3a value3b
+
+というデータ構造が多い。これは
+
+	ファイル = {
+		key1 => undef,
+		key2 => [ value2 ],
+		key3 => [ value3a, value3b ], 
+	};
+
+という perl のデータ構造に相当するだろう。
+
+
+* 一方、/etc/group は : と , 区切りと
+
+	key:value1, value2
+
+いう点を考えると、上のファイルと一見同様だが、
+
+	$obj = new IO::Adapter 'unix.group:wheel';
+
+という場合は、
+
+	wheel グループ = {
+
+		root	=> undef,
+		だれか  => undef,
+			....
+
+	};
+
+もしくは
+
+	wheel グループ = [
+
+		root	=> undef,
+		だれか  => undef,
+			....
+
+	];
+
+
+だが、汎用性を考えればハッシュにあわせるべきだろう。
+
+----------
+$FML$
