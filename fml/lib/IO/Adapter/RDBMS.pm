@@ -13,10 +13,9 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
-
 =head1 NAME
 
-IO::Adapter::RDBMS.pm - IO with SQL databases
+IO::Adapter::RDBMS - IO with SQL servers
 
 =head1 SYNOPSIS
 
@@ -26,15 +25,42 @@ IO::Adapter::RDBMS.pm - IO with SQL databases
 
 ... not yet ...
 
+=head1 METHODS
+
+=head2 C<configure($args)>
+
+It forwards request to the specified subclass or DBI base class.
+
+    new({
+	driver => 'IO::Model::MySQL::toymodel',
+	});
+
 =cut
 
 
-sub new
+# Descriptions: configure the detail between SQL servers
+#               all requests are forwarded to the specified sub-class.
+#    Arguments: $self $args
+# Side Effects: none
+# Return Value: subclass object
+sub configure
 {
-    my ($self) = @_;
-    my ($type) = ref($self) || $self;
-    my $me     = {};
-    return bless $me, $type;
+    my ($self, $args) = @_;
+    my $type   = $args->{ _type   };
+    my $schema = $args->{ _schema };
+
+    $type = 'MySQL'      if $type eq 'mysql';
+    $type = 'PostgreSQL' if $type eq 'postgresql';
+    my $driver = "IO::Adapter::${type}::${schema}";
+
+    # forward the request to the specified subclass or DBI base class
+    eval qq{ require $driver; $driver->import();};
+    unless ($@) {
+	@ISA = ($driver);
+    }
+    else {
+	return undef;
+    }
 }
 
 

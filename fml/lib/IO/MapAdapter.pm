@@ -120,10 +120,17 @@ sub new
 	    $me->{_type} = 'nis.group';
 	    $pkg         = 'IO::Adapter::NIS';
 	}
-	elsif ($map =~ /(ldap|mysql|postgresql):(\S+)/) {
+	elsif ($map =~ /(mysql|postgresql):(\S+)/i) {
 	    $me->{_type}   = $1;
 	    $me->{_schema} = $2;
 	    $me->{_type}   =~ tr/A-Z/a-z/; # lowercase the '_type' syntax
+	    $pkg         = 'IO::Adapter::RDBMS';
+	}
+	elsif ($map =~ /(ldap):(\S+)/i) {
+	    $me->{_type}   = $1;
+	    $me->{_schema} = $2;
+	    $me->{_type}   =~ tr/A-Z/a-z/; # lowercase the '_type' syntax
+	    $pkg         = 'IO::Adapter::LDAP';
 	}
 	else {
 	    my $s = "IO::MapAdapter::new: args='$map' is unknown.";
