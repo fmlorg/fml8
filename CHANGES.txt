@@ -1,7 +1,50 @@
 		CHANGES
 		Last Modified: $Date$
 
-   *** clean up, audit キャンペーン中 *** 
+2002/04/10
+
+   2002/03 分クリーンアップおわり
+
+   FML::Filter クラスによるフィンルタリングを有効にする
+	FML::Filter:: のバグ修正
+
+   FML::Process::Distribute Kernel.pm 
+	enable filtering.
+	implement access methods to control filtering.
+	o $curproc->refuse_further_processing()
+	o $curproc->is_refused()
+
+2002/04/07
+
+   variables
+	define $primary_admin_member_password_map
+	rename $admin_member_passwd_maps -> $admin_member_password_maps
+
+   FML::Command::Admin::chaddr 
+	chaddr over all maps
+	
+   FML::Command::Admin::get 
+	clean up variable names to be easy for your eyes
+	
+   FML::Command::Admin::htmlify 
+	doc::remove makefml description
+	add --dstdir=DIR
+	FNF-ify
+	
+   FML::Command::Admin::list 
+	show all maps in $xxx_maps
+	
+   FML::Command::Admin::log 
+	fix::add comments
+	use HTML::FromText class to espace metchars
+	
+   FML::Process::Calender 
+	clean up documents, comments
+	use $curproc not $self if appropriate
+	
+   FML::Process::DocViewer 
+	remove AUTOLOAD()
+	clean up
 
 2002/04/06
 
@@ -1928,4 +1971,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.63 2002/04/01 14:54:30 fukachan Exp $
+$FML: CHANGES.txt,v 1.64 2002/04/06 14:53:38 fukachan Exp $
