@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.84 2003/01/26 05:57:11 fukachan Exp $
+# $FML: Switch.pm,v 1.85 2003/01/31 15:01:25 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -164,7 +164,7 @@ sub main::Bootstrap2
 	main_cf        => $main_cf,
 
 	# options
-	need_ml_name   => _ml_name_is_required($myname),
+	need_ml_name   => 0,         # defined in _module_we_use()
     };
 
     # get the object. The suitable module is speculcated by $0.
@@ -240,7 +240,7 @@ C<$args> is like this:
 	main_cf        => $main_cf,
 
 	# options
-	need_ml_name   => _ml_name_is_required($myname),
+	need_ml_name   => _ml_name_is_required($args, $myname),
     };
 
     # get the object. The suitable module is speculcated by $0.
@@ -371,34 +371,10 @@ sub _module_specific_options
 # Return Value: NUM(1 (require ml name always) or 0)
 sub _ml_name_is_required
 {
-    my ($myname) = @_;
+    my ($args) = @_;
+    my $opt = $args->{ module_info }->{ options } || '';
 
-    if ($myname eq 'fmldoc') {
-	return 0;
-    }
-    elsif ($myname eq 'fmlsch' || $myname eq 'fmlsch.cgi') {
-	return 0;
-    }
-    elsif ($myname eq 'makefml' || $myname eq 'fml') {
-	return 0;
-    }
-    elsif ($myname eq 'fmladdr') {
-	return 0;
-    }
-    elsif ($myname eq 'fmlalias') {
-	return 0;
-    }
-    elsif ($myname eq 'fmlhtmlify') {
-	return 0;
-    }
-    elsif ($myname eq 'menu.cgi'   ||
-	   $myname eq 'config.cgi' ||
-	   $myname eq 'thread.cgi') {
-	return 0;
-    }
-    else {
-	return 1;
-    }
+    return($opt =~ /\$ml/o ? 1 : 0);
 }
 
 
@@ -408,85 +384,50 @@ sub _ml_name_is_required
 # Return Value: STR(FML::Process::SOMETHING module name)
 sub _module_we_use
 {
-    my ($args) = @_;
-    my $name   = $args->{ myname };
-    my $pkg    = '';
+    my ($args)  = @_;
+    my $main_cf = $args->{ main_cf }; 
+    my $name    = $args->{ myname };
+    my $modules = $main_cf->{ default_module_maps };
+    my $pkg     = undef;
+    my $pkgopts = undef;
 
-    if (($name eq 'fml.pl' && $args->{ options }->{ ctladdr }) ||
-	$name eq 'command' ||
-	($name eq 'loader' && $args->{ options }->{ ctladdr })) {
-	$pkg = 'FML::Process::Command';
+    if (defined $args->{ options }->{ ctladdr } && 
+	$args->{ options }->{ ctladdr }) {
+	$name .= "__--ctladdr";
     }
-    elsif ($name eq 'fml.pl' || $name eq 'distribute' || $name eq 'loader') {
-	$pkg = 'FML::Process::Distribute';
-    }
-    elsif ($name eq 'mead' || $name eq 'error') {
-	$pkg = 'FML::Process::Error';
-    }
-    elsif ($name eq 'digest') {
-	$pkg = 'FML::Process::Digest';
-    }
-    elsif ($name eq 'fmlserv') {
-	$pkg = 'FML::Process::ListServer';
-    }
-    elsif ($name eq 'fmldoc') {
-	$pkg = 'FML::Process::DocViewer';
-    }
-    elsif ($name eq 'fmlconf') {
-	$pkg = 'FML::Process::ConfViewer';
-    }
-    elsif ($name eq 'makefml' || $name eq 'fml') {
-	$pkg = 'FML::Process::Configure';
-    }
-    elsif ($name eq 'fmladdr') {
-	$pkg = 'FML::Process::Addr';
-    }
-    elsif ($name eq 'fmlalias') {
-	$pkg = 'FML::Process::Alias';
-    }
-    elsif ($name eq 'fmlsummary') {
-	$pkg = 'FML::Process::Summary';
-    }
-    elsif ($name eq 'fmlthread') {
-	$pkg = 'FML::Process::ThreadTrack';
-    }
-    elsif ($name eq 'fmlthread.cgi' ||
-	   $name eq 'thread.cgi'    ||
-	   $name eq 'threadview.cgi') {
-	$pkg = 'FML::CGI::ThreadTrack';
-    }
-    elsif ($name eq 'qmail-ext') {
-	$pkg = 'FML::Process::QMail';
-    }
-    elsif ($name eq 'menu.cgi') {
-	$pkg = 'FML::CGI::Admin::Menu';
-    }
-    elsif ($name eq 'config.cgi') {
-	$pkg = 'FML::CGI::Admin::Menu';
-    }
-    elsif ($name eq 'fmlsch') {
-	$pkg = 'FML::Process::Calendar';
-    }
-    elsif ($name eq 'fmlsch.cgi') {
-	$pkg = 'FML::CGI::Calendar';
-    }
-    elsif ($name eq 'fmlhtmlify') {
-	$pkg = 'FML::Process::HTMLify';
-    }
-    elsif ($name eq 'fmlspool') {
-	$pkg = 'FML::Process::Spool';
-    }
-    elsif ($name eq 'fmlsuper') {
-	$pkg = 'FML::Process::Super';
-    }
-    elsif ($name eq 'fmlerror') {
-	$pkg = 'FML::Process::ErrorViewer';
+
+    use FileHandle;
+    my $fh = new FileHandle $modules;
+    if (defined $fh) {
+	my $buf;
+      LINE:
+	while ($buf = <$fh>) {
+	    next LINE if $buf =~ /^\#/o;
+	    chomp $buf;
+
+	    if (defined $buf && $buf) {
+		my ($program, $class, $opts) = split(/\s+/, $buf, 3);
+		if ($program eq $name) {
+		    $pkg     = $class;
+		    $pkgopts = $opts;
+		    last LINE;
+		}
+	    }
+	}
+	$fh->close();
     }
     else {
-	return '';
+	croak("cannot open module_map");
     }
 
     print STDERR "module = $pkg (for $0)\n" if $debug;
+
+    # saved info
+    $args->{ module_info } = {
+	class   => $pkg,
+	options => $pkgopts,
+    };
+    $args->{ need_ml_name } = _ml_name_is_required($args);
 
     return $pkg;
 }
