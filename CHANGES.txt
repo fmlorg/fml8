@@ -1,6 +1,122 @@
 		CHANGES
 		Last Modified: $Date$
 
+2004/01/01
+
+	*** 2003 年末 〜 2004 年初め オーバホールキャンペーン中 ***
+
+2003/12/31
+
+   2003 年末 〜 2004 年初め オーバホールキャンペーン
+
+   変数
+   FML::ML::Control 
+	*_private_dirs -> *_private_directories
+	
+   FML::Command::Admin::newdomain newml rmdomain rmml 
+   FML::Process::Addr Alias 
+   FML::ML::Control HomePrefix 
+   FML::MTA::Control 
+   FML::MTA::Control::Postfix Procmail Qmail Sendmail Utils 
+	clean up class hierarchy.
+	o FML::HomeDir::Prefix -> FML::ML::HomePrefix;
+	o FML::MTAControl      -> FML::MTA::Control
+	o move main codes in newml and rmml to FML::ML::Control class.
+	
+   FML::Process::Switch 
+	bug fix initialization.
+	update comments.
+	clarify function role by renaming::ProcessSwitch() -> load_module()
+	Process::Switch
+	sort.
+	
+   FML::Process::Kernel 
+	save incoming_message cache file path on memory for later use.
+	import $default_ml_home_prefix from main.cf name space.
+
+   FML::Process::Utils 
+	implement {get,set}_incoming_message_cache_file_path().
+	bug fix get_incoming_message_cache_file_path()
+	
+   FML::Process::Fake 
+	experimental implementation done.
+	
+   Mail::Delivery::Queue 
+	define *_file_path() methods.
+	bug fix use of *_{dir,file}_path() functions.
+	validate $value (ARRAY_REF).
+	update comments.
+	
+   Mail::Delivery::Net::INET6 
+	fix label name
+	
+   File::CacheDir 
+	implement cache_file_path()
+	
+   FML::Cache::Journal 
+	import $directory_private_mode if could
+	
+   FML::Error 
+	update comments.
+	clean up.
+	use methods not direct editing of $self as could as possible.
+	use $curproc->{ credential }
+	reset address comparison level after main routine.
+	
+   FML::Header::MessageID 
+	get() return null string if the value is undefined
+	
+   FML::Command::Auth 
+	validate $address input as data.
+	$cred = $curproc->{ credential };
+	update comments.
+	
+   FML::Command::Admin::addadmin 
+	update comments.
+	define and use $maplist.
+	
+   FML::Command::Admin::addmoderator 
+	update comments.
+	define and use $maplist.
+	
+   FML::Command::Admin::check 
+	update comments.
+	implement check_ml_home_dir() and modify rules.
+	
+   FML::Command::Admin::edit 
+	update comments.
+	use $curproc->ml_*() methods if could.
+	reset $ENV{'PATH'} while running editor.
+	
+   FML::Command::Admin::mailq 
+	update comments.
+	more readable method and variable names.
+	
+   FML::Command::Admin::rmml 
+	update comments.
+	use $curproc->ml_*() methods if could.
+	modify local variable names to be more readble.
+	
+   FML::Command::Admin::list 
+	update comments.
+	clean up.
+	modify routine names to be more readable.
+	remove not used variables.
+	bug fix cgi_menu() initialization phase.
+	
+   FML::Command::User::chaddr confirm digest off on unsubscribe 
+	update comments on $primary_*_map use.
+	use $curproc->{ credential } not call "use FML::Credential ...".
+	
+   FML::Command::User::digest 
+	update comments::messages.
+	use $curproc->{ credential }
+	
+   FML::Command::User::chaddr subscribe 
+	update comments.
+	use $curproc->{ credential }
+	reset address comparison level after main routine runs.
+
 2003/12/25
 
    FML::Process::Utils 
@@ -5883,4 +5999,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.176 2003/11/29 14:45:48 fukachan Exp $
+$FML: CHANGES.txt,v 1.177 2003/12/26 14:56:45 fukachan Exp $
