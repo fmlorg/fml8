@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.103 2004/01/24 15:37:03 fukachan Exp $
+# $FML: Utils.pm,v 1.104 2004/02/15 04:38:34 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1523,7 +1523,9 @@ sub set_charset
 }
 
 
-# Descriptions: get the current charset.
+# Descriptions: get the current charset defined by fml8 in this context.
+#               This value is NOT one speculated by Content-Type: et.al.
+#               but use information of Accept-Language field if could.
 #               The default value is given by $template_file_charset.
 #    Arguments: OBJ($curproc) STR($category)
 # Side Effects: none
@@ -1566,6 +1568,7 @@ sub get_charset
 	}
     }
 
+    $charset ||= $default;
     $curproc->log("debug: category=$category charset=$charset");
     return $charset;
 }
