@@ -13,6 +13,70 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2005/01/19
+
+   FML::Merge::FML4::RULES.txt 
+   FML::Merge::FML4::Rules 
+	
+	update rules
+	
+   FML::Process::QueueManager 
+	logwarn() -> logdebug() for "... try later." message.
+
+2005/01/01
+
+   FML::Header 
+	handle X-Stardate::and Precedence: header field
+	
+   FML::Process::Error 
+	override Reply-To::and Errors-To: header fields to rewrite the address
+	the error message sent to in forwarding.
+	
+   FML::Process::Kernel 
+	enhanced general reply message system.
+	o add X-Stardate:, Precedence::and Errors-To: header fields.
+	o enhance Reply-To::field handling.
+	
+   FML::Merge::FML4::config_ph 
+	system_timezone = +0900
+	
+2004/12/30
+
+   variables	
+	define $outgoing_mail_header_x_ml_name
+	
+   FML::Header 
+	rewrite_errors_to use $outgoing_mail_header_errors_to to rewrite
+	Errors-To: header field ($maintainer by default).
+
+   FML::Merge 
+	cosmetic changes: $VARIABLE format, "\n".
+	
+   FML::Merge::FML4::RULES.txt 
+   FML::Merge::FML4::Rules 
+	fix definitions
+	
+   FML::Merge::FML4::config_ph 
+	enhanced to handle variables properly.
+	o Errors-To:
+	o time zone.
+	o handle old definitions e.g. subject tag, old variables in fml 2 age.
+	o "ignore" operation print out comments.
+	o fix content of *_dir and *_map variables.
+
+2004/12/29
+
+   FML::Process::Kernel 
+	verify config.{cf,ph} existence
+	
+   FML::Merge::FML4::config_ph 
+	handle use_fml8_value definitions.
+	translate outgoing_address.
+
+   FML::Merge::FML4::RULES.txt and FML::Merge::FML4::Rules
+	convert OUTGOING_ADDRESS
+	care for a few old configurations
+
 2004/12/23
 
    FML::CGI::Calendar 
@@ -8018,4 +8082,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.235 2004/12/23 21:44:45 fukachan Exp $
+$FML: CHANGES.txt,v 1.236 2004/12/25 13:55:23 fukachan Exp $
