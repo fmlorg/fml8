@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.8 2002/12/18 04:24:26 fukachan Exp $
+# $FML: Error.pm,v 1.9 2003/01/03 03:49:30 fukachan Exp $
 #
 
 package FML::Error;
@@ -119,8 +119,7 @@ sub remove_bouncers
 
     use FML::Restriction::Base;
     my $safe    = new FML::Restriction::Base;
-    my $regexp  = $safe->basic_variable();
-    my $addrreg = $regexp->{ address };
+    my $addrreg = $safe->regexp( 'address' );
 
   ADDR:
     for my $addr (@$list) {
@@ -161,8 +160,7 @@ sub deluser
 
     use FML::Restriction::Base;
     my $safe    = new FML::Restriction::Base;
-    my $regexp  = $safe->basic_variable();
-    my $addrreg = $regexp->{ address };
+    my $addrreg = $safe->regexp( 'address' );
 
     # check if $address is a safe string.
     if ($address =~ /^($addrreg)$/) {
