@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.41 2002/03/30 11:08:36 fukachan Exp $
+# $FML: Command.pm,v 1.42 2002/04/08 12:44:25 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -248,6 +248,7 @@ sub _is_valid_command
 
     # 2. use of this command is allowed in FML::Config or not ?
     unless ($config->has_attribute("available_commands_for_$mode", $comname)) {
+	Log("available_commands_for_$mode has no $comname");
 	$curproc->reply_message("\n$prompt $command");
 	$curproc->reply_message_nl('command.not_command',
 				   "not command, ignored.");
@@ -468,9 +469,15 @@ sub _evaluate_command
 		}
 	    }
 	    else {
-		LogError("command from not member.");
-		LogError("command processing stop.");
-		last COMMAND;
+		$opts = { comname => $comname, command => $command };
+		if ($curproc->_is_valid_command($args, "stranger", $opts)) {
+		    $mode = 'user';
+		}
+		else {
+		    LogError("command from not member.");
+		    LogError("command processing stop.");
+		    last COMMAND;
+		}
 	    }
 	}
 
