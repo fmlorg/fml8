@@ -1,11 +1,10 @@
 		雑多なメモ
 		Last Modified: $Date$
 
-	XXX 作業したら TODO/STATUS.txt もアップデートしてね XXX
-
-	XXX
-	XXX fml 4.0 と同じディレクトリ名は使わないように    XXX
-	XXX
+	XXX fml 4.0 と同じディレクトリ名は使わないように
+	XXX 作業したら TODO/STATUS.txt もアップデートしてね
+	XXX このファイルは、なる早で解決する/bug fix するべきもの
+        XXX 遠大なビジョンやとりあえず後まわしでよいものは STATUS.txt へ
 
 
 [TODO]	変数のクラス構造を再構成
@@ -323,4 +322,4 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 ----------
-$FML: 00_MEMO,v 1.99 2003/11/27 04:26:38 fukachan Exp $
+$FML: 00_MEMO,v 1.100 2003/11/30 04:44:59 fukachan Exp $
