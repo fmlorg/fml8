@@ -231,6 +231,12 @@
 
 
 
+○	FML::Process::Scheduler って？
+
+	うーん、なかみがない。予約だけされてるモジュールやね
+	mkdir するだけ？ :-)
+
+
 ○	mail-message-0-2 タグの後に付け加えられたコードについて再考
 
 	s/content/data/g;
@@ -265,4 +271,4 @@
 
 
 ----------
-$FML: 00_MEMO,v 1.64 2003/02/16 13:15:33 fukachan Exp $
+$FML: 00_MEMO,v 1.65 2003/03/02 16:38:17 fukachan Exp $
