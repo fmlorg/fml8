@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: bounce.pl,v 1.6 2001/04/15 13:29:28 fukachan Exp $
+# $FML: bounce.pl,v 1.7 2001/05/05 06:21:12 fukachan Exp $
 #
 
 use strict;
@@ -41,6 +41,11 @@ for my $f (@ARGV) {
 	print " reason: ";
 	print $bouncer->reason( $a );
 	print "\n";
+
+	print "  hints: ";
+	print $bouncer->hints( $a );
+	print "\n";
+
 	print "\n";
     }
 }
