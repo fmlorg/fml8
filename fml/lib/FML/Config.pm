@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.90 2004/02/01 06:38:34 fukachan Exp $
+# $FML: Config.pm,v 1.91 2004/02/15 04:38:25 fukachan Exp $
 #
 
 package FML::Config;
@@ -761,6 +761,19 @@ sub __expand_special_macros
 
 	$config->{ $x } =~ s/READ_ONLY\((.*)\)/$v/;
     }
+
+    if ($config->{ $x } =~ /\$\{([a-z0-9_]+):-([a-z0-9_]+)\}/) {
+	my ($var, $default) = ($1, $2);
+
+	print STDERR "\${$var:-$default} => " if $debug;
+
+	$config->{$x} =~
+	    s/\$\{([a-z0-9_]+):-([a-z0-9_]+)\}/(defined $config->{$1} ?
+						$config->{$1} : 
+						$default)/ge;
+
+	print STDERR $config->{$x}, "\n" if $debug;
+    }
 }
 
 
@@ -826,8 +839,8 @@ sub yes
 {
     my ($self, $key) = @_;
 
-    if (defined $_fml_config{$key}) {
-	$_fml_config{$key} =~ /^yes$/i ? 1 : 0;
+    if (defined $_fml_config_result{$key}) {
+	$_fml_config_result{$key} =~ /^yes$/i ? 1 : 0;
     }
     else {
 	0;
@@ -843,8 +856,8 @@ sub no
 {
     my ($self, $key) = @_;
 
-    if (defined $_fml_config{$key}) {
-	$_fml_config{$key} =~ /^no$/i ? 1 : 0;
+    if (defined $_fml_config_result{$key}) {
+	$_fml_config_result{$key} =~ /^no$/i ? 1 : 0;
     }
     else {
 	0;
