@@ -36,6 +36,18 @@ See L<FML::Process::Flow> for flow methods details.
 
 C<FML::CGI::TicketSystem> is a subclass of C<FML::Process::CGI>.
 
+             FML::Process::Kernel
+                       |
+                       A
+             FML::Process::CGI
+                       |
+                       A
+            -----------------------
+           |           |           |
+           A           A           A
+     FML::CGI::TicketSystem
+
+
 =head1 METHODS
 
 Almost methods are forwarded to C<FML::Process::CGI> base class.
