@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.36 2002/07/25 11:34:02 fukachan Exp $
+# $FML: File.pm,v 1.37 2002/08/19 15:06:35 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -377,20 +377,20 @@ sub add
 }
 
 
-=head2 C<delete($regexp)>
+=head2 C<delete($key)>
 
-delete lines which matches $regexp from this map.
+delete lines with key $key from this map.
 
 =cut
 
 
 # Descriptions: delete address(es) matching $reexp from map
-#    Arguments: OBJ($self) STR($regexp)
+#    Arguments: OBJ($self) STR($key)
 # Side Effects: update map
 # Return Value: same as close()
 sub delete
 {
-    my ($self, $regexp) = @_;
+    my ($self, $key) = @_;
 
     $self->open("w");
 
@@ -400,7 +400,7 @@ sub delete
     if (defined $fh) {
       FILE_IO:
 	while (<$fh>) {
-	    next FILE_IO if /$regexp/;
+	    next FILE_IO if /^$key\s+\S+|^$key\s*$/;
 	    print $wh $_;
 	}
 	$fh->close;

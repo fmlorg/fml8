@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: delete.pl,v 1.4 2001/08/19 16:12:25 fukachan Exp $
+# $FML: delete.pl,v 1.5 2002/04/01 23:41:14 fukachan Exp $
 #
 
 use strict;
@@ -14,14 +14,17 @@ my $org_file = "/etc/passwd";
 my $file     = "/tmp/passwd";
 my $tmpf     = "/tmp/passwd.tmp";
 my $map      = "file:". $file;
-my $buffer   = '^root';
+my $buffer   = 'root';
 
 ### MAIN ###
 print "${map}->delete() ";
 
 # prepare
-system "head -1 $org_file > $tmpf";
-system "cp $org_file /tmp/";
+system "head -1 $org_file | tr ':' ' ' > $tmpf";
+system "cat $org_file | tr ':' ' ' > $file";
+
+# orignal
+my $orgbuf   = GetContent($file);
 
 # append
 use IO::Adapter;
@@ -31,15 +34,13 @@ if ($obj->error) { croak( $obj->error );}
 
 # verify the result
 # assemble the original from the deleted line and modified file itself.
-my $orgbuf   = GetContent($org_file);
 my $buf      = GetContent($tmpf) . GetContent($file);
 
 if ($buf eq $orgbuf) {
     print " ... ok\n";
 }
 else {
-    print " ... fail\n";
-    system "diff -ub $org_file $file";
+    print " ... fail <$buf> ne <$orgbuf>\n";
 }
 
 
