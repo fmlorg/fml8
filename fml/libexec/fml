@@ -30,7 +30,8 @@ sub main::ProcessSwitch
     my ($args) = @_;
 
     # 1. create process
-    my $pkg     = _package_we_use($args);
+    my $pkg = _package_we_use($args);
+    croak("$args->{ myname } is unknown program\n") unless ($pkg);
 
     eval qq{ require $pkg; }; # XXX require() needs bare words.
     croak($@) if $@;
@@ -59,7 +60,7 @@ sub _package_we_use
     my $name   = $args->{ myname };
     my $pkg    = '';
 
-    if ($name eq 'fml.pl' || $name eq 'distribute') {
+    if ($name eq 'fml.pl' || $name eq 'distribute' || $name eq 'fmlwrapper') {
 	$pkg = 'FML::Process::Distribute';
     }
     elsif (( $name eq 'fml.pl' && $args->{ options }->{ ctladdr }) || 
@@ -72,6 +73,11 @@ sub _package_we_use
     elsif ($name eq 'mead') {
 	$pkg = 'FML::Process::Mead';
     }
+    else {
+	return '';
+    }
+
+    return $pkg;
 }
 
 
