@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: JournaledDir.pm,v 1.3 2001/08/22 23:27:29 fukachan Exp $
+# $FML: JournaledDir.pm,v 1.4 2001/10/18 03:39:33 fukachan Exp $
 #
 
 package Tie::JournaledDir;
@@ -125,8 +125,8 @@ sub _file_name
 	$fn = $unit * int(time / $unit) - ($i * $unit);
     }
     elsif ($unit eq 'day') {
-	use FML::Date;
-	my $date = new FML::Date time;
+	use Mail::Message::Date;
+	my $date = new Mail::Message::Date time;
 	$fn = $date->YYYYMMDD();
     }
 

@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000 Ken'ichi Fukamachi
 #
-# $FML: Log.pm,v 1.11 2001/05/27 14:27:53 fukachan Exp $
+# $FML: Log.pm,v 1.12 2001/07/15 08:20:25 fukachan Exp $
 #
 
 package FML::Log;
@@ -13,8 +13,8 @@ require Exporter;
 
 use strict;
 use Carp;
+use Mail::Message::Date;
 use FML::Config;
-use FML::Date;
 use FML::Credential;
 
 =head1 NAME
@@ -88,7 +88,7 @@ sub Log
     $mesg || return undef ;
 
     # reference to "date" object
-    my $rdate = new FML::Date;
+    my $rdate = new Mail::Message::Date;
 
     # open the $file by using FileHandle.pm
     use FileHandle;
@@ -134,7 +134,7 @@ sub LogError
 
 =head1 SEE ALSO
 
-L<FML::Date>, 
+L<Mail::Message::Date>, 
 L<FML::Config>,
 L<FML::Credential>,
 
