@@ -497,6 +497,20 @@ spool_dir	= $ml_home_dir/spool
 #     Examples:
 spool_type	= plane
 
+=head1	記事を HTML 化する
+
+# Descriptions: 記事を HTML 化するか否か
+#      History:
+#        Value: yes / no
+#     Examples:
+use_html_archive		=	yes
+
+# Descriptions: ヘッダ情報を根拠にしたフィルタリングをするか？
+#      History:
+#        Value: yes / no
+#     Examples:
+html_archive_dir		=	$public_html_dir/mlarchive/$ml_name
+
 =head1	コマンドの定義
 
 #
