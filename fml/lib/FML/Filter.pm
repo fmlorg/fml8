@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.18 2002/12/20 03:36:44 fukachan Exp $
+# $FML: Filter.pm,v 1.19 2003/01/11 06:58:44 fukachan Exp $
 #
 
 package FML::Filter;
@@ -107,7 +107,7 @@ sub _apply_article_header_filter
 	# overwrite filter rules based on FML::Config
 	my $rules = $config->get_as_array_ref('article_header_filter_rules');
 
-	# ovewrite rules
+	# overwrite rules
 	if (defined $rules) {
 	    $obj->rules( $rules );
 	}
