@@ -44,3 +44,13 @@ available_commands		=	help
 					remove
 					resign
 					unsubscribe
+
+
+available_commands_for_stranger	=	guide
+					subscribe
+					confirm
+
+
+
+
+confirm_keyword			=	confirm

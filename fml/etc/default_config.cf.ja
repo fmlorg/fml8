@@ -203,7 +203,7 @@ system_message_charset	=	$default_charset
 #      History:
 #        Value:
 #     Examples:
-template_file_charset	=	$default_charset
+template_file_charset	=	euc-jp
 
 
 # Descriptions:
@@ -468,6 +468,16 @@ available_commands		=	help
 					remove
 					resign
 					unsubscribe
+
+
+available_commands_for_stranger	=	guide
+					subscribe
+					confirm
+
+
+
+
+confirm_keyword			=	confirm
 
 =head1	チケットシステム
 

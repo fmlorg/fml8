@@ -18,7 +18,7 @@ system_message_charset	=	$default_charset
 #      History:
 #        Value:
 #     Examples:
-template_file_charset	=	$default_charset
+template_file_charset	=	euc-jp
 
 
 # Descriptions:
