@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: html2sgml.pl,v 1.3 2001/04/24 13:46:31 fukachan Exp $
+# $FML: html2sgml.pl,v 1.1 2001/04/30 11:43:34 fukachan Exp $
 #
 
 use strict;
@@ -67,8 +67,8 @@ sub convert
 	s@</A>@\n</ulink>\n@gi;
 
 	# PRE
-	s@<PRE>@<programlisting>@gi;
-	s@</PRE>@</programlisting>@gi;
+	s@<PRE>@<screen>@gi;
+	s@</PRE>@</screen>@gi;
 
 	# UL
 	s@<UL>@<itemizedlist>@gi;
