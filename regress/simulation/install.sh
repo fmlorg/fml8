@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML: install.sh,v 1.12 2002/04/22 04:43:58 fukachan Exp $
+# $FML: install.sh,v 1.13 2003/01/28 09:06:07 fukachan Exp $
 #
 
 if [ ! -f .this_is_a_test_machine ];then
@@ -24,10 +24,10 @@ if [ -d /var/spool/ml/elena ];then
 	cp config.cf /var/spool/ml/elena/config.cf
 fi
 
-(cd ../../fml/etc/;sh .gen.sh)
+( cd ../../fml/etc/; sh .gen.sh )
 sudo rm -f /etc/fml/main.cf 
 sudo rm -f /etc/fml/site_default_config.cf 
 sudo rm -f /usr/local/libexec/fml/loader
-(cd ../..; sudo ./install.pl fml/etc/install.cf )
+( cd ../..; sudo make install )
 
 sudo -v
