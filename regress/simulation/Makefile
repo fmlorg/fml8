@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.42 2001/08/24 11:55:55 fukachan Exp $
+# $FML: Makefile,v 1.43 2001/09/14 06:12:39 fukachan Exp $
 #
 
 all: link
@@ -11,7 +11,7 @@ clean:
 allclean: clean clean_link
 
 clean_link:
-	for file in * ; do  test -h $$file && rm -f $$file || echo '' ; done
+	for file in * ; do  test -h $$file && rm -f $$file || true ; done
 
 scan:
 	@ (cd ../..; make scan 2>&1) |tee __scan__ || echo 'nothing changed'
@@ -23,25 +23,27 @@ update:
 check:
 	@ (cd ../../fml; make check 2>&1 ) | grep -v OK || echo ''
 
-link:
-	rm -f ja-doc; ln -s ../../fml/doc/ja ja-doc
-	rm -f en-doc; ln -s ../../fml/doc/en en-doc
-	rm -f etc; ln -s ../../fml/etc
-	rm -f lib; ln -s ../../fml/lib
-	rm -f FML; ln -s ../../fml/lib/FML
-	rm -f Ticket; ln -s ../../fml/lib/FML/Ticket
-	rm -f CGI; ln -s ../../fml/lib/FML/CGI
-	rm -f Process; ln -s ../../fml/lib/FML/Process
-	rm -f Command/Admin; ln -s ../../fml/lib/FML/AdminCommand
-	rm -f Command/User;  ln -s ../../fml/lib/FML/UserCommand
-	rm -f IO; ln -s ../../fml/lib/IO
-	rm -f File; ln -s ../../fml/lib/File
-	rm -f Tie; ln -s ../../fml/lib/Tie
-	rm -f Mail; ln -s ../../fml/lib/Mail
-	rm -f libexec; ln -s ../../fml/libexec
-	rm -f log; ln -s /var/spool/ml/elena/log
-	rm -f doc-devel; ln -s ../../cpan/doc doc-devel
-	rm -f tutorial; ln -s ../../fml/doc/ja/tutorial tutorial
+link: clean_link _link
+
+_link:
+	ln -s ../../fml/doc/ja ja-doc
+	ln -s ../../fml/doc/en en-doc
+	ln -s ../../fml/etc
+	ln -s ../../fml/lib
+	ln -s ../../fml/lib/FML
+	ln -s ../../fml/lib/FML/Ticket
+	ln -s ../../fml/lib/FML/CGI
+	ln -s ../../fml/lib/FML/Process
+	ln -s ../../fml/lib/FML/Command/Admin AdminCommand
+	ln -s ../../fml/lib/FML/Command/User UserCommand
+	ln -s ../../fml/lib/IO
+	ln -s ../../fml/lib/File
+	ln -s ../../fml/lib/Tie
+	ln -s ../../fml/lib/Mail
+	ln -s ../../fml/libexec
+	ln -s /var/spool/ml/elena/log
+	ln -s ../../cpan/doc doc-devel
+	ln -s ../../fml/doc/ja/tutorial tutorial
 
 
 diff:
