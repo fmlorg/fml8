@@ -2,6 +2,18 @@ all: link
 
 clean:
 	@ (cd ../..; make clean)
+	rm -f doc
+	rm -f etc
+	rm -f lib
+	rm -f FML
+	rm -f Ticket
+	rm -f Process
+	rm -f IO
+	rm -f Tie
+	rm -f Dialect
+	rm -f MailingList
+	rm -f libexec
+	rm -f log
 
 scan:
 	@ (cd ../..; make scan)
