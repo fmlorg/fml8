@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Japanese.pm,v 1.6 2002/09/11 23:18:23 fukachan Exp $
+# $FML: Japanese.pm,v 1.7 2002/09/22 14:57:02 fukachan Exp $
 #
 
 #
@@ -58,6 +58,23 @@ See C<Mail::Bounce> for more details.
 
   あなたが送ろうとしたアドレス「*********」は、登録されていません。
   もう一度確認して、送信しなおして下さい。
+
+=head2 freeserve.ne.jp
+
+    To: nospam-ml-admin@ffs.fml.org
+    Message-Id: <200308051027.h75ARXb26220@fbe.freeserve.ne.jp>
+    X-Loop: erroraddress@fbe.freeserve.ne.jp
+    From: support@freeserve.ne.jp
+    Subject: 【freeserve管理メール】メールを受け取ることが出来ませんでした。
+
+   【このメールはfreeserveシステムから自動的に送信されています】
+
+    freeserveではメールボックスに容量制限があります。
+    あなた様がメールを送ったfreeserveユーザーのメールボックスが制限値に達してお
+    り、お送りになったメールを受け取ることが出来ませんでした。
+
+    http://www.freeserve.ne.jp/
+    support@freeserve.ne.jp
 
 =cut
 

@@ -4,9 +4,12 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Freeserve.pm,v 1.9 2002/12/20 03:49:16 fukachan Exp $
+# $FML: Freeserve.pm,v 1.1 2003/08/05 10:45:17 tmu Exp $
 #
 
+#
+# *** CAUTION: THIS FILE CODE IS JAPANESE EUC. ***
+#
 
 package Mail::Bounce::Freeserve;
 
@@ -32,16 +35,17 @@ See C<Mail::Bounce> for more details.
     Message-Id: <200308051027.h75ARXb26220@fbe.freeserve.ne.jp>
     X-Loop: erroraddress@fbe.freeserve.ne.jp
     From: support@freeserve.ne.jp
-    Subject: 【freeserve管理メール】メールを受け取ることが出来ませんでした。
+    Subject: ... Japanese message ...
 
-   【このメールはfreeserveシステムから自動的に送信されています】
-
-    freeserveではメールボックスに容量制限があります。
-    あなた様がメールを送ったfreeserveユーザーのメールボックスが制限値に達してお
-    り、お送りになったメールを受け取ることが出来ませんでした。
+	... Japanese message ...
 
     http://www.freeserve.ne.jp/
     support@freeserve.ne.jp
+
+X-Loop contains the address which causes this error.
+
+See L<Mail::Bounce::Language::Japanese> module for the Japanese
+message. 
 
 =cut
 
@@ -53,7 +57,7 @@ See C<Mail::Bounce> for more details.
 sub analyze
 {
     my ($self, $msg, $result) = @_;
-    my $hdr  = $msg->whole_message_header();
+    my $hdr   = $msg->whole_message_header();
     my $xloop = $hdr->get('x-loop');
 
     if ($xloop =~ /^X-Loop:\s+([^\s\@]+@\S+\.freeserve\.ne\.jp)$/) {
