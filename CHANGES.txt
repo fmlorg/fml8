@@ -1,6 +1,15 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/02/18
+
+   FML::Error 
+   FML::Process::Error 
+	use FML::Error->db_open() not FML::Error::Cache for cache db open.
+
+   FML::Filter 
+	fix typo
+	
 2003/02/16
 
    clean up campaign of codes
@@ -4361,4 +4370,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.129 2003/02/13 15:08:36 fukachan Exp $
+$FML: CHANGES.txt,v 1.130 2003/02/16 13:20:16 fukachan Exp $
