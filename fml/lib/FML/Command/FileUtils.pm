@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: FileUtils.pm,v 1.5 2002/09/11 23:18:05 fukachan Exp $
+# $FML: FileUtils.pm,v 1.6 2002/09/22 14:56:43 fukachan Exp $
 #
 
 package FML::Command::FileUtils;
@@ -23,6 +23,10 @@ FML::Command::FileUtils - utilities to handle files
 =head1 DESCRIPTION
 
 =head1 METHODS
+
+=head2 new()
+
+standard constructor.
 
 =cut
 
@@ -43,6 +47,19 @@ sub new
 
     return bless $me, $type;
 }
+
+
+=head2 delete($curproc, $command_args, $du_aregs)
+
+same as remove() below.
+
+=head2 remove($curproc, $command_args, $du_aregs)
+
+remove files specified in $du_args->{ options } 
+if the file exsits and the file name matches safe file regexp defined 
+in FML::Restriction class.
+
+=cut
 
 
 # Descriptions: remove files
@@ -71,9 +88,9 @@ sub remove
     # regexp
     my $basic_variable = $self->{ _basic_variable };
     my $file_regexp    = $basic_variable->{ file };
-    my $ml_home_dir    = $config->{ ml_home_dir };
 
     # chdir $ml_home_dir firstly. return ASAP if failed.
+    my $ml_home_dir    = $config->{ ml_home_dir };
     chdir $ml_home_dir || croak("cannot chdir \$ml_home_dir");
 
     for my $file (@$argv) {

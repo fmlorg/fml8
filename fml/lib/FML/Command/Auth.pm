@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.14 2002/09/11 23:18:04 fukachan Exp $
+# $FML: Auth.pm,v 1.15 2002/09/22 14:56:42 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -32,7 +32,7 @@ FML::Command::Auth - authentication functions
 
 =head2 reject()
 
-return 0 :-) (dummy)
+dummy :-)
 
 =cut
 
@@ -51,7 +51,7 @@ sub new
 
 
 # Descriptions: virtual reject handler, just return 0 :-)
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: STR (__LAST__, a special upcall)
 sub reject
@@ -63,7 +63,7 @@ sub reject
 
 
 # Descriptions: permit anyone
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: NUM
 sub permit_anyone
@@ -94,7 +94,7 @@ sub permit_admin_member_maps
 }
 
 
-# Descriptions: virtual reject handler, just return 0 :-)
+# Descriptions: reject if the mail address looks like system accounts.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: NUM or STR (__LAST__, a special upcall)
@@ -116,7 +116,7 @@ sub reject_system_accounts
 
 =head2 check_admin_member_password($curproc, $args, $optargs)
 
-check the password if it is valid or not.
+check the password if it is valid or not as an administrator.
 
 =cut
 
@@ -182,10 +182,6 @@ sub check_admin_member_password
     return 0;
 }
 
-
-=head1 CODING STYLE
-
-See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 CODING STYLE
 
