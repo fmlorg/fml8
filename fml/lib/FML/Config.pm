@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.80 2003/02/01 13:48:45 fukachan Exp $
+# $FML: Config.pm,v 1.81 2003/02/09 12:31:39 fukachan Exp $
 #
 
 package FML::Config;
@@ -259,21 +259,22 @@ sub load_file
     my ($self, $file) = @_;
     my $config = \%_fml_config;
 
-    # XXX-TODO: check if -f $file here.
-    # read configuration file
-    $self->_read_file({
-	file   => $file,
-	config => $config,
-    });
+    if (-f $file) {
+	# read configuration file
+	$self->_read_file({
+	    file   => $file,
+	    config => $config,
+	});
 
-    # At the first time, save $config to another hash, which is used
-    # as a default value at variable comparison.
-    unless (%_default_fml_config) {
-	%_default_fml_config = %_fml_config;
+	# At the first time, save $config to another hash, which is used
+	# as a default value at variable comparison.
+	unless (%_default_fml_config) {
+	    %_default_fml_config = %_fml_config;
+	}
+
+	# flag on: we need $config->{ key } needs variable expansion
+	$need_expansion_variables = 1;
     }
-
-    # flag on: we need $config->{ key } needs variable expansion
-    $need_expansion_variables = 1;
 }
 
 
@@ -448,15 +449,20 @@ sub _evaluate
     my ($config, $key, $mode, $value, $name_space) = @_;
     my @buf = ();
 
-    # XXX-TODO: we need apply s/\s*//; ?
     if ($name_space) {
 	if (defined $config->{ $name_space }->{ $key }) {
-	    @buf = split(/\s+/, $config->{ $name_space }->{ $key });
+	    my $x = $config->{ $name_space }->{ $key };
+	    $x    =~ s/^\s*//;
+	    $x    =~ s/\s*$//;
+	    @buf  = split(/\s+/, $x);
 	}
     }
     else {
 	if (defined $config->{ $key }) {
-	    @buf = split(/\s+/, $config->{ $key });
+	    my $x = $config->{ $key };
+	    $x    =~ s/^\s*//;
+	    $x    =~ s/\s*$//;
+	    @buf  = split(/\s+/, $x);
 	}
     }
 
@@ -831,9 +837,8 @@ sub yes
 {
     my ($self, $key) = @_;
 
-    # XXX-TODO: case-sensitive ?
     if (defined $_fml_config{$key}) {
-	$_fml_config{$key} eq 'yes' ? 1 : 0;
+	$_fml_config{$key} =~ /^yes$/i ? 1 : 0;
     }
     else {
 	0;
@@ -849,9 +854,8 @@ sub no
 {
     my ($self, $key) = @_;
 
-    # XXX-TODO: case-sensitive ?
     if (defined $_fml_config{$key}) {
-	$_fml_config{$key} eq 'no' ? 1 : 0;
+	$_fml_config{$key} =~ /^no$/i ? 1 : 0;
     }
     else {
 	0;
@@ -872,7 +876,6 @@ sub has_attribute
     return 0 unless defined $attribute;
 
     if (defined $_fml_config_result{$key}) {
-	# XXX-TODO: nuke \s* here ?
 	my (@attribute) = split(/\s+/, $_fml_config_result{$key});
 
       ATTR:
@@ -1071,7 +1074,7 @@ sub FETCH
 {
     my ($self, $key) = @_;
 
-    # XXX-TODO: how to handle next level ?
+    # XXX-TODO: how to handle the next level ?
 
     if ($need_expansion_variables) {
 	$self->expand_variables();
@@ -1105,7 +1108,7 @@ sub STORE
 {
     my ($self, $key, $value) = @_;
 
-    # XXX-TODO: how to handle next level ?
+    # XXX-TODO: how to handle the next level ?
 
     # inform fml we need to expand variable again when FETCH() is
     # called.
@@ -1127,7 +1130,7 @@ sub DELETE
 {
     my ($self, $key) = @_;
 
-    # XXX-TODO: handle the next level.
+    # XXX-TODO: how to handle the next level ?
     delete $_fml_config_result{$key};
     delete $_fml_config{$key};
 }
@@ -1153,13 +1156,14 @@ sub CLEAR
 sub FIRSTKEY
 {
     my ($self) = @_;
-    my @keys = keys %_fml_config_result;
-    $self->{ '_keys' } = \@keys;
+
+    $self->expand_variables();
+
+    my (%keys) = %_fml_config_result;
+    $self->{ '_keys' } = \%keys;
 
     my $keys = $self->{ _keys };
-
-    # XXX-TODO: BUG: return each()
-    shift @$keys;
+    return each %$keys;
 }
 
 
@@ -1172,8 +1176,22 @@ sub NEXTKEY
     my ($self) = @_;
     my $keys = $self->{ '_keys' };
 
-    # XXX-TODO: BUG: return each()
-    shift @$keys;
+    return each %$keys;
+}
+
+
+#
+# debug
+#
+if ($0 eq __FILE__) {
+    my %db     = () ;
+    my $config = new FML::Config;
+    $config->load_file( "etc/default_config.cf.ja" );
+
+    tie %db, 'FML::Config';
+    for my $k (keys %db) {
+	printf "%30s => %s\n", $k, $db{ $k };
+    }
 }
 
 
