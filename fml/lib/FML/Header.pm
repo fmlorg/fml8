@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML: Header.pm,v 1.30 2001/04/14 15:35:37 fukachan Exp $
+# $FML: Header.pm,v 1.31 2001/04/14 15:41:05 fukachan Exp $
 #
 
 package FML::Header;
@@ -311,16 +311,37 @@ sub delete_unsafe_header_fields
 
 remove subject tag like string in C<$string>.
 
+=head2 C<extract_message_id_references()>
+
+return message-id list (ARRAY REFERENCE) from the header (self).
+It extracts message-id(s) from In-Reply-To: and References: fields.
+
 =cut
 
 
 sub delete_subject_tag_like_string
 {
-    my ($self, $str) = @_;
+    my ($header, $str) = @_;
     $str =~ s/\W[-\w]+.\s*\d+\W//g;
     $str =~ s/\s+/ /g;
     $str =~ s/^\s*//g;
     $str;
+}
+
+
+sub extract_message_id_references
+{
+    my ($header) = @_;
+    my $buf = 
+	$header->get('in-reply-to') ."\n". $header->get('references');
+
+    use Mail::Address;
+    my @addrs = Mail::Address->parse($buf);
+
+    my @r = ();
+    foreach my $addr (@addrs) { push(@r, $addr->address);}
+
+    \@r;
 }
 
 
@@ -347,33 +368,30 @@ C<address_for_post> address.
 sub verify_message_id_uniqueness
 {
     my ($header, $config, $args) = @_;    
-    my $dir = $config->{ 'message_id_cache_dir' };
-    my $id  = $header->get('message-id');
+    my $dir = $config->{ 'message_id_cache_dir' },
+    my $mid = $header->get('message-id');
     my $dup = 0;
 
-    $id = $header->address_clean_up($id);
-    if ($id) {
-	if (-d $dir) {
-	    use File::CacheDir;
-	    my $obj = new File::CacheDir {
-		directory  => $dir, 
-		cache_type => 'temporal',
-		expires_in => 14,
-	    };
+    $mid = $header->address_clean_up($mid);
+    if ($mid) {
+	use FML::Header::MessageID;
+	my $xargs = { directory => $dir };
+	my $obj   = FML::Header::MessageID->new->open_cache($xargs);
 
+	if (defined $obj) {
 	    my $fh = $obj->open;
 
-	    # check duplication
-	    $dup = $obj->find($id);
+	    # we can tind the $mid in the past message-id cache ?
+	    $dup = $obj->find($mid);
+	    Log( "message-id duplicated" ) if $dup;
 
 	    # save the current id
-	    print $fh $id, "\t", $id, "\n";
+	    print $fh $mid, "\t", $mid, "\n";
 
 	    $fh->close;
 	}
     }
 
-    Log( "message-id duplicated" ) if $dup;
     return $dup;
 }
 
