@@ -1,0 +1,191 @@
+draft-meyer-reqbehaviors-manager-00.txt                     Mike Meyer
+Category: Informational                               Meyer Consulting
+Expires: September, 2002                                   March, 2002
+
+           Required behaviors for mail list managers
+
+Status of this Memo
+
+       This document is an Internet-Draft and is subject to        
+       all provisions of Section 10 of RFC2026.
+
+       Internet-Drafts are working documents of the Internet 
+       Engineering Task Force (IETF), its areas, and its 
+       working groups.  Note that other groups may also 
+       distribute working documents as Internet-Drafts.
+
+       Internet-Drafts are draft documents valid for a maximum 
+       of six months and may be updated, replaced, or obsoleted 
+       by other documents at any time.  It is inappropriate to 
+       use Internet-Drafts as reference material or to cite 
+       them other than as "work in progress."
+
+       The list of current Internet-Drafts can be accessed at     
+       http://www.ietf.org/1id-abstracts.html
+
+       The list of Internet-Draft Shadow Directories can be 
+       accessed at http://www.ietf.org/shadow.html
+
+Abstract
+
+       The behavior of mail lists on the Internet has become 
+       much more sophisticated than the alias expanders 
+       discussed in the standards for Internet messages 
+       formats. The lack of standard behavior for this part of 
+       the Internet messaging system creates confusion among 
+       users, resulting in misdirected or inappropriately 
+       duplicated messages. This document lists required 
+       behaviors for mail list managers derived from [RFC2821] 
+       and [RFC2822] in hopes of reducing the confusion, 
+       misdirected and duplicated mail, while at the same time 
+       simplifying the configuration process for mail list 
+       managers.
+
+1. Introduction
+
+1.1. Scope
+
+       Mail list managers - henceforth MLMs - have become 
+       complex software programs, with a multitude of 
+       configuration options that can result in behavior that 
+       subscribers may find confusing, undesirable, and 
+       possibly even hostile when considered as a whole.
+
+       This standard specifies how the headers defined in 
+       [RFC2822] and the envelope specified in [RFC2821] should 
+       be used by mail list managers to provide flexibility in 
+       the MLM configuration while avoiding the behaviors 
+       mentioned above. Justification for these requirements is 
+       also provided where it is deemed necessary.
+
+1.2. Requirements Notation
+
+       This document occasionally uses terms that appear in 
+       capital letters. When the terms "MUST", "SHOULD", 
+       "RECOMMENDED", "MUST NOT", "SHOULD NOT", and "MAY" 
+       appear capitalized, they are being used to indicate 
+       particular requirements of this specification.  A 
+       discussion of the meanings of these terms appears in 
+       [RFC2119].
+
+1.3 Structure of this document
+
+       This section, section 1, is a short introduction to the 
+       document.
+
+       Section 2 covers the use of envelope information 
+       described in [RFC2821].
+
+       Section 3 covers the various mail headers that MLMs 
+       change, when and how they may be changed, and what 
+       requirements are placed on an MLM when it changes those 
+       headers.
+
+       Section 4 and 5 provide references and contact 
+       information, respectively.
+
+2. Envelope return path
+
+       The envelope return path MUST be set to the address of a 
+       manager of the mail list in question. This behavior is 
+       specified in 3.10.2 of [RFC2821], and the reasons for 
+       doing so may be found there.
+
+3. Message headers
+
+3.1 Relays
+
+       If the MLM relays the message body unaltered, then it is 
+       acting as a simple alias expander, and section 3.10 
+       "Mailing Lists and Aliases" of [RFC2821] specifies that 
+       the headers MUST be left unchanged, except for the 
+       addition of "Received" headers and loop detection, as 
+       per section 3.7 "Relaying" of [RFC2821].
+
+3.2 MLMs that change the content
+
+       Few modern MLMs simply relay the body of the message 
+       unaltered. Most of them add information to the body, and 
+       possibly add headers to the existing headers, tag the 
+       subject line, and otherwise modify the message.
+
+       This action has two effects according to [RFC2822]. 
+       First, it makes the message a collaborative effort 
+       between the original author and the MLM. Second, it 
+       means this is a new message.
+
+       By becoming a collaborator on the message, the MLM 
+       becomes an originator of the message, and can thus 
+       legitimately change the originator fields listed in 
+       section 3.6.2 "Originator fields" of [RFC2822]. Those 
+       fields are the "From", "Sender" and "Reply-To" fields. 
+       According to [RFC2822], a collaborative effort normally 
+       lists all authors in the "From" field, and the actual 
+       sender in the "Sender" field. Few, if any, MLMs do this. 
+       Many leave these three fields untouched, or add a 
+       "Sender" field if one wasn't present. Others add a 
+       "Reply-To" field containing the list address.
+
+       Since an [RFC2822] "Message-id" field refers to a 
+       particular version of a particular message, the new 
+       message created by the MLM should get a new "Message-id" 
+       field.
+
+       Given these three sets of behaviors, the following two 
+       options are provided for MLMs to meet the requirements 
+       of this RFC.
+
+3.2.1 Enhanced mail relay
+
+       The MLM may consider itself to be nothing more than an 
+       enhanced mail relay. In this case, all messages going to 
+       a list MUST receive the same modifications. The only 
+       header modifications allowed are that an MLM MAY add a 
+       "Sender" field if one is not already present, and MAY 
+       add a tag to the "Subject" field. If added, the field 
+       should refer to the manager of the list the message is 
+       passing through. The MLM MUST NOT alter either "From" or 
+       "Reply-To" in any way, and MUST NOT add them if they are 
+       not present.
+
+3.2.2 Collaborative list manager
+
+       The MLM may consider itself a collaborator of the 
+       message for purposes of the originator fields. To 
+       operate in this mode, the MLM MUST create a new 
+       "Message-id" field for the message. If a "Message-id" 
+       field is already present, the message ID in it SHOULD be 
+       copied to the "References" field as per section 3.6.5 
+       "Identification Fields" of [RFC2822]. If there is no 
+       "Sender" field, the MLM SHOULD add the list owner as the 
+       sender of the message. The MLM MAY create a "Reply-to" 
+       field that refers to the original list. If there is 
+       already a "Reply-to" field, it MAY add the list to that 
+       field, but it MUST NOT remove any addresses from the 
+       existing "Reply-to" field. It SHOULD leave the "From" 
+       field unmodified.
+
+4. References
+
+       [RFC2119]  Bradner, S., "Key words for use in RFCs to 
+                  Indicate Requirement Levels", BCP 14, RFC 
+                  2119, March 1997.
+
+       [RFC2821]  Klensin, J., Editor, "Simple Mail Transfer 
+                  Protocol", RFC 2821, April 2001.
+
+       [RFC2822]  Resnick, P., Editor, "Internet Message 
+                  Format", RFC 2822, April 2001.
+
+                     2821, March 2001.
+
+5. Author's Contact Information
+
+       Mike Meyer                       Phone: +1 405 326 6665
+       288 E. Chestnut Rd.              EMail: mwm@mired.org
+       Goldsby, OK 73093-9108
+       USA
+
+--
+Mike Meyer <mwm@mired.org>			http://www.mired.org/home/mwm/
+Independent WWW/Perforce/FreeBSD/Unix consultant, email for more information.
