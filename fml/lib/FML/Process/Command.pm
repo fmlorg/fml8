@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Command.pm,v 1.12 2001/10/10 03:12:51 fukachan Exp $
+# $FML: Command.pm,v 1.13 2001/10/10 10:08:06 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -138,7 +138,7 @@ sub _evaluate_command
     my @body    = split(/\n/, $body);
     my $prompt  = $config->{ command_prompt } || '>>>';
 
-    $curproc->reply_message("result for your command requests follows:\n");
+    $curproc->reply_message("result for your command requests follows:");
 
   COMMAND:
     for my $command (@body) { 
@@ -163,13 +163,31 @@ sub _evaluate_command
 	use FML::Command;
 	my $obj = new FML::Command;
 	if (defined $obj) {
-	    $curproc->reply_message("$prompt $command");
+	    $curproc->reply_message("\n$prompt $command");
 	    eval q{
 		$obj->$comname($curproc, $optargs);
 	    };
-	    if ($@) {
-		LogError("fail to exec ${command}");
-		LogError($@);
+
+	    unless ($@) {
+		$curproc->reply_message_nl('general.success', "ok.");
+	    }
+	    else {
+		$curproc->reply_message_nl('general.fail', "fail.");
+		LogError("command ${comname} fail");
+		if ($@ =~ /^(.*)at/) {
+		    my $reason = $1;
+		    my $nlinfo = $obj->error_nl();
+
+		    if (defined $nlinfo) {
+			my $class = $nlinfo->{ class };
+			my $args  = $nlinfo->{ args };
+			$curproc->reply_message_nl($class, $reason, $args);
+		    }
+		    else {
+			$curproc->reply_message($reason);
+		    }
+		    Log($reason); # pick up reason
+		}
 	    }
 	}
 

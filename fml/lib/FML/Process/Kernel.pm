@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.53 2001/10/08 20:25:53 fukachan Exp $
+# $FML: Kernel.pm,v 1.54 2001/10/10 03:15:19 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -523,6 +523,25 @@ sub reply_message
 	$msg    .= "\n" unless /\n$/;
 	$pcb->set($category, 'text', $msg0.$msg);
     }
+}
+
+
+=head2 C<reply_message_nl($class, $default_msg, $args)>
+
+This is a wrapper for C<reply_message()> with natural language support.
+The message in natural language corresponding with C<$class> is sent.
+If translation fails, $default_msg, English by default, is used.
+
+We need parameters in some cases. 
+They are stored in $args if needed.
+
+=cut
+
+
+sub reply_message_nl
+{
+    my ($curproc, $class, $default_msg, $args) = @_;
+    $curproc->reply_message($default_msg);
 }
 
 
