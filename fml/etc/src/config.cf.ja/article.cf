@@ -21,6 +21,42 @@ article_sequence_file	= $sequence_file
 post_restrictions_reject_notice_data_type	=	string
 
 
+=head2	サイズ制限
+
+
+# Descriptions: 投稿された記事のヘッダの上限値
+#               (MTA から fml が受けとる際の記事のヘッダサイズの上限値)
+#      History:
+#        Value: NUM
+#     Examples: 102400
+incoming_article_header_size_limit	= $default_mail_header_size_limit
+
+
+# Descriptions: 投稿された記事の本文の上限値
+#               (MTA から fml が受けとる際の記事の本文サイズの上限値)
+#      History:
+#        Value: NUM
+#     Examples: 10240000
+incoming_article_body_size_limit	= $default_mail_body_size_limit
+
+
+# Descriptions: 投稿された記事の(配送時の)ヘッダの上限値
+#               (fml から MTA へ渡す際の記事のヘッダサイズの上限値)
+#		(ごめん、この機能は未実装;-)
+#      History:
+#        Value: NUM
+#     Examples: 102400
+outgoing_article_header_size_limit	= $default_mail_header_size_limit
+
+
+# Descriptions: 投稿された記事の(配送時の)本文の上限値
+#               (fml から MTA へ渡す際の記事の本文サイズの上限値)
+#		(ごめん、この機能は未実装;-)
+#        Value: NUM
+#     Examples: 10240000
+outgoing_article_body_size_limit	= $default_mail_body_size_limit
+
+
 =head2	フィルタ
 
 
@@ -35,10 +71,31 @@ use_article_filter	= 	yes
 #      History:
 #        Value:
 #     Examples:
-article_filter_functions	=	article_header_filter
+article_filter_functions	=	article_size_filter
+					article_header_filter
 					article_non_mime_filter
 					article_mime_component_filter
 					article_text_plain_filter
+
+
+=head2	サイズ制限ベースのフィルタ
+
+
+# Descriptions: サイズ情報を根拠にしたフィルタリングをするか？
+#      History:
+#        Value: yes / no
+#     Examples:
+use_article_size_filter	=	yes
+
+
+# Descriptions: フィルタリングのルール。
+#               どのルールにもマッチしないなら、記事の投稿は認められる。
+#      History:
+#        Value:
+#     Examples:
+article_size_filter_rules	=	check_header_size
+					check_body_size
+					permit
 
 
 =head2	ヘッダ情報ベースのフィルタ

@@ -10,6 +10,76 @@
 use_command_mail_program	=	yes
 
 
+=head2	サイズ制限
+
+
+# Descriptions: MTA から fml が受けとる際のコマンドメールのヘッダサイズの上限値
+#      History:
+#        Value: NUM
+#     Examples: 102400
+incoming_command_mail_header_size_limit	= $default_mail_header_size_limit
+
+
+# Descriptions: MTA から fml が受けとる際のコマンドメールの本文サイズの上限値
+#      History:
+#        Value: NUM
+#     Examples: 10240000
+incoming_command_mail_body_size_limit	= $default_mail_body_size_limit
+
+
+# Descriptions: fml から MTA へ渡す際のコマンドメールのヘッダサイズの上限値
+#		(ごめん、この機能は未実装;-)
+#      History:
+#        Value: NUM
+#     Examples: 102400
+outgoing_command_mail_header_size_limit	= $default_mail_header_size_limit
+
+
+# Descriptions: fml から MTA へ渡す際のコマンドメールの本文サイズの上限値
+#		(ごめん、この機能は未実装;-)
+#      History:
+#        Value: NUM
+#     Examples: 10240000
+outgoing_command_mail_body_size_limit	= $default_mail_body_size_limit
+
+
+=head2	フィルタ
+
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+use_command_mail_filter	= 	yes
+ 
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+command_mail_filter_functions	=	command_mail_size_filter
+
+
+=head2	サイズ制限ベースのフィルタ
+
+
+# Descriptions: サイズ情報を根拠にしたフィルタリングをするか？
+#      History:
+#        Value: yes / no
+#     Examples:
+use_command_mail_size_filter	=	yes
+
+
+# Descriptions: フィルタリングのルール。
+#               どのルールにもマッチしないなら、記事の投稿は認められる。
+#      History:
+#        Value:
+#     Examples:
+command_mail_size_filter_rules	=	check_header_size
+					check_body_size
+					permit
+
+
 =head2	コマンドの定義
 
 #
@@ -177,3 +247,28 @@ listinfo_dir	= $listinfo_base_dir/$ml_domain/$ml_name
 newml_command_template_files 	=	config.cf
 
 
+
+=head2	フィルタで弾かれたことを教える
+
+
+# Descriptions: フィルタで弾かれたことを教える
+#      History: 4.0 ではハードコードだったような…
+#        Value: yes / no
+#     Examples: yes
+use_command_mail_filter_reject_notice	=	yes
+
+
+# Descriptions: エラーのお知らせの受信者
+#      History: 4.0 ではハードコードだったような…
+#        Value: maintainer | sender
+#     Examples: maintainer sender
+command_mail_filter_reject_notice_recipients	=	maintainer
+							sender
+
+
+# Descriptions: 弾いたメールをどのようにフォワードするか？
+#               ウィルスなどを考慮すると、文字列がいいとおもう
+#      History: 4.0 では文字列で、これはハードコーディングされていた。
+#        Value: multipart / string
+#     Examples: string
+command_mail_filter_reject_notice_data_type	=	string

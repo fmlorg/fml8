@@ -1,0 +1,18 @@
+=head1	サイズの制限
+
+=head2	デフォルト値
+
+
+# Descriptions: ヘッダサイズの上限のデフォルト値
+#      History:
+#        Value: NUM
+#     Examples: 102400
+default_mail_header_size_limit	=	102400
+
+
+# Descriptions: 本文サイズの上限のデフォルト値
+#      History:
+#        Value: NUM
+#     Examples: 10240000
+default_mail_body_size_limit	=	10240000
+

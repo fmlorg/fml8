@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.27 2003/05/13 03:49:55 fukachan Exp $
+# $FML: Filter.pm,v 1.28 2003/05/13 04:26:47 fukachan Exp $
 #
 
 package FML::Filter;
@@ -88,6 +88,44 @@ sub article_filter
     }
 
     return undef;
+}
+
+
+# Descriptions: size based filtering
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args) OBJ($mesg)
+# Side Effects: none
+# Return Value: STR(reason) or 0 (not trapped, ok)
+sub _apply_article_size_filter
+{
+    my ($self, $curproc, $args, $mesg) = @_;
+    my $config = $curproc->config();
+
+    use FML::Filter::Size;
+    my $obj = new FML::Filter::Size $curproc;
+
+    if (defined $obj) {
+	$obj->set_class('incoming_article');
+
+	# overwrite filter rules based on FML::Config
+	my $rules = $config->get_as_array_ref('article_size_filter_rules');
+
+	# overwrite rules
+	if (defined $rules) {
+	    $obj->rules( $rules );
+	}
+
+	# go check
+	$obj->size_check($mesg);
+	if ($obj->error()) {
+	    my $x = $obj->error();
+	    $x =~ s/\s*at .*$//;
+	    $x =~ s/[\n\s]*$//m;
+	    $self->error_set($x);
+	    return $x;
+	}
+    }
+
+    return 0;
 }
 
 
@@ -244,16 +282,39 @@ send back message on rejection, with reason if could.
 sub article_filter_reject_notice
 {
     my ($self, $curproc, $msg_args) = @_;
+    $self->_filter_reject_notice($curproc, $msg_args, "article");
+}
+
+
+# Descriptions: send back message on rejection, with reason if could.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($msg_args)
+# Side Effects: update reply message queue
+# Return Value: none
+sub command_mail_filter_reject_notice
+{
+    my ($self, $curproc, $msg_args) = @_;
+    $self->_filter_reject_notice($curproc, $msg_args, "command_mail");
+}
+
+
+# Descriptions: send back message on rejection, with reason if could.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($msg_args) STR($class)
+# Side Effects: update reply message queue
+# Return Value: none
+sub _filter_reject_notice
+{
+    my ($self, $curproc, $msg_args, $class) = @_;
     my $cred   = $curproc->{ credential };
     my $config = $curproc->config();
     my $msg    = $curproc->incoming_message();
     my $r      = $msg_args->{ _arg_reason } || 'unknown';
-    my $type   = $config->{article_filter_reject_notice_data_type} || 'string';
+    my $type   = $config->{ "${class}_filter_reject_notice_data_type" } || 
+	'string';
     my $size   = 2048;
 
     # recipients
     my $list  =
-	$config->get_as_array_ref('article_filter_reject_notice_recipients');
+	$config->get_as_array_ref("${class}_filter_reject_notice_recipients");
     my $rcpts = $curproc->convert_to_mail_address($list);
     $msg_args->{ recipient }    = $rcpts;
     $msg_args->{ _arg_address } = $cred->sender();
@@ -284,8 +345,87 @@ sub article_filter_reject_notice
 	$curproc->reply_message(sprintf("\n\n%s", $s), $msg_args);
     }
     else {
-	LogError("unknown article_filter_reject_notice_data_type: $type");
+	LogError("unknown ${class}_filter_reject_notice_data_type: $type");
     }
+}
+
+
+=head1 COMMAND MAIL
+
+=cut
+
+# Descriptions: entry point for FML::Filter::* modules
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: STR or UNDEF, error reason (string). return undef if ok.
+sub command_mail_filter
+{
+    my ($self, $curproc, $args) = @_;
+    my $message = $curproc->incoming_message();
+    my $config  = $curproc->config();
+
+    if (defined $message) {
+	my $functions = 
+	    $config->get_as_array_ref('command_mail_filter_functions');
+	my $status    = 0;
+
+      FUNCTION:
+	for my $function (@$functions) {
+	    if ($config->yes( "use_${function}" )) {
+		Log("filter(debug): check by $function");
+		my $fp = "_apply_$function";
+		$status = $self->$fp($curproc, $args, $message);
+	    }
+	    else {
+		Log("filter(debug): not check by $function");
+	    }
+
+	    last FUNCTION if $status;
+	}
+
+	return $status if $status;
+    }
+
+    return undef;
+}
+
+
+# Descriptions: size based filtering
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args) OBJ($mesg)
+# Side Effects: none
+# Return Value: STR(reason) or 0 (not trapped, ok)
+sub _apply_command_mail_size_filter
+{
+    my ($self, $curproc, $args, $mesg) = @_;
+    my $config = $curproc->config();
+
+    use FML::Filter::Size;
+    my $obj = new FML::Filter::Size $curproc;
+
+    if (defined $obj) {
+	$obj->set_class('incoming_command_mail');
+
+	# overwrite filter rules based on FML::Config
+	my $rules = 
+	    $config->get_as_array_ref('command_mail_size_filter_rules');
+
+	# overwrite rules
+	if (defined $rules) {
+	    $obj->rules( $rules );
+	}
+
+	# go check
+	$obj->size_check($mesg);
+	if ($obj->error()) {
+	    my $x = $obj->error();
+	    $x =~ s/\s*at .*$//;
+	    $x =~ s/[\n\s]*$//m;
+	    $self->error_set($x);
+	    return $x;
+	}
+    }
+
+    return 0;
 }
 
 

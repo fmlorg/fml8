@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.84 2003/03/05 15:07:31 fukachan Exp $
+# $FML: Command.pm,v 1.85 2003/03/15 09:03:52 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -119,8 +119,49 @@ sub verify_request
 
     $curproc->verify_sender_credential();
 
+    unless ($curproc->is_refused()) {
+	$curproc->_check_filter($args);
+    }
+
     $eval = $config->get_hook( 'command_verify_request_end_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+}
+
+
+# Descriptions: filter
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: set flag to ignore this process if it should be filtered.
+# Return Value: none
+sub _check_filter
+{
+    my ($curproc, $args) = @_;
+    my $config = $curproc->config();
+
+    eval q{
+	use FML::Filter;
+	my $filter = new FML::Filter;
+	my $r = $filter->command_mail_filter($curproc, $args);
+
+	# filter traps this message.
+	if ($r = $filter->error()) {
+	    if ($config->yes('use_command_mail_filter_reject_notice')) {
+		my $msg_args = {
+		    _arg_reason => $r,
+		};
+
+		Log("(debug) filter: inform rejection");
+		$filter->command_mail_filter_reject_notice($curproc,$msg_args);
+	    }
+	    else {
+		Log("filter: not inform rejection");
+	    }
+
+	    # we should stop this process ASAP.
+	    $curproc->stop_this_process();
+	    Log("rejected by filter due to $r");
+	}
+    };
+    Log($@) if $@;
 }
 
 
