@@ -86,7 +86,7 @@ sub add_fml_ml_name
 {
     my ($header, $config, $args) = @_;
 
-    $header->add('X-ML-Name', $config->{ ml_name });
+    $header->add('X-ML-Name', $config->{ x_ml_name });
 }
 
 
@@ -142,7 +142,7 @@ sub add_x_sequence
 {
     my ($header, $config, $args) = @_;
 
-    $header->add('X-Sequence',  "$config->{ ml_name } $args->{ id }");
+    $header->add('X-Sequence',  "$config->{ x_ml_name } $args->{ id }");
 }
 
 
