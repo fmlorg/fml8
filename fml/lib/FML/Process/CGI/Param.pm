@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Param.pm,v 1.5 2001/11/11 23:34:00 fukachan Exp $
+# $FML: Param.pm,v 1.6 2001/11/13 03:43:07 fukachan Exp $
 #
 
 package FML::Process::CGI::Param;
@@ -43,9 +43,10 @@ It provides basic functions and flow.
 
 my %allow_regexp = 
     (
-     'address'    => '[-a-z0-9_]@[-A-Z0-9\.]+',
+     'address'    => '[-a-z0-9_]+\@[-A-Za-z0-9\.]+',
      'ml_name'    => '[-a-z0-9_]+',
      'action'     => '[-a-z_]+',
+     'command'    => '[-a-z_]+',
      'user'       => '[-a-z0-9_]+',
      'article_id' => '\d+',
      );
@@ -65,19 +66,25 @@ sub safe_param
 {
     my ($self, $key) = @_;
 
-    if (defined param($key) && defined $allow_regexp{ $key }) {
-	my $value  = param($key);
-	my $filter = $allow_regexp{ $key };
+    if (defined $allow_regexp{ $key }) {
+	if (defined param($key)) {
+	    my $value  = param($key);
+	    my $filter = $allow_regexp{ $key };
 
-	if ($value =~ /^$filter$/) {
-	    return $value;
+	    if ($value =~ /^$filter$/) {
+		return $value;
+	    }
+	    else {
+		croak("CGI parameter $key has invalid character");
+	    }
 	}
 	else {
-	    croak("parameter $key has invalid character");
+	    # accpeptable but not defined, so return undef anyway
+	    return undef;
 	}
     }
     else {
-	croak("parameter $key not permitted under CGI");
+	croak("CGI parameter $key is undefined");
     }
 }
 
