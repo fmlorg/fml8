@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HTMLify.pm,v 1.1 2002/04/20 05:02:28 fukachan Exp $
+# $FML: HTMLify.pm,v 1.2 2002/04/21 04:54:30 fukachan Exp $
 #
 
 package FML::Command::HTMLify;
@@ -54,7 +54,9 @@ sub convert
         }
 
 	if ($is_subdir_exists) {
-	    for my $xdir (sort {$a <=> $b} @$subdirs) {
+	    my (@x) = sort _sort_subdirs @$subdirs;
+	    print STDERR "subdirs; @x \n";		
+	    for my $xdir (sort _sort_subdirs @$subdirs) {
 		eval q{
 		    use Mail::Message::ToHTML;
 		    &Mail::Message::ToHTML::htmlify_dir($xdir, {
@@ -79,6 +81,20 @@ sub convert
     }
 }
 
+
+# Descriptions: sort subdirs by the last dirname
+#    Arguments: implicit ($a, $b)
+# Side Effects: none
+# Return Value: NUM(-1, 0, 1)
+sub _sort_subdirs
+{
+    my ($xa, $xb);
+
+    if ($a =~ /(\d+)$/) { $xa = $1;}
+    if ($b =~ /(\d+)$/) { $xb = $1;}
+
+    $xa <=> $xb;
+}
 
 # Descriptions: check wheter $src_dir has sub-directories in it
 #    Arguments: STR($src_dir)
