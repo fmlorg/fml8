@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.26 2004/05/16 05:00:30 fukachan Exp $
+# $FML: SMTP.pm,v 1.27 2004/05/16 05:08:21 fukachan Exp $
 #
 
 
@@ -20,6 +20,10 @@ use Mail::Delivery::Net::INET6;
 
 BEGIN {}
 END   {}
+
+# STATUS CODE
+my $MAP_DONE     = 'DONE';
+my $MAP_NOT_DONE = 'NOT DONE';
 
 
 =head1 NAME
@@ -124,11 +128,12 @@ sub new
     #     _recipient_limit: maximum recipients in one smtp session.
     #  _default_io_timeout: basic timeout parameter for smtp session
     #        _log_function: pointer to the log() function
-    $me->{_recipient_limit}    = $args->{recipient_limit}    || 1000;
-    $me->{_default_io_timeout} = $args->{default_io_timeout} || 10;
-    $me->{_log_function}       = $args->{log_function}       || undef;
-    $me->{_smtp_log_function}  = $args->{smtp_log_function}  || undef;
-    $me->{_smtp_log_handle}    = $args->{smtp_log_handle}    || undef;
+    $me->{ _recipient_limit }    = $args->{recipient_limit}    || 1000;
+    $me->{ _default_io_timeout } = $args->{default_io_timeout} || 10;
+    $me->{ _log_function }       = $args->{log_function}       || undef;
+    $me->{ _smtp_log_function }  = $args->{smtp_log_function}  || undef;
+    $me->{ _smtp_log_handle }    = $args->{smtp_log_handle}    || undef;
+    $me->{ _num_recipients }     = 0;
 
     _initialize_delivery_session($me, $args);
 
@@ -226,6 +231,8 @@ sub _read_reply
 
     if ($@ =~ /$id retry/) {
 	$self->{'_error_action'} = "retry";
+	Log("need smtp retry");
+	$self->error_set("need smtp retry");
     }
 
     if ($@ =~ /$id socket timeout/) {
@@ -256,7 +263,7 @@ sub _connect
 
     # 1. try to connect(2) $args->{ _mta } by IPv6 if we can use Socket6.
     if ($self->is_ipv6_ready($args)) {
-	Log("try mta=$args->{_mta} by IPv6");
+	Log("debug: try mta=$args->{_mta} by IPv6");
 	$self->connect6($args);
 	my $socket = $self->{_socket};
 	return $socket if defined $socket;
@@ -272,11 +279,11 @@ sub _connect
     #    XXX if $args->{ _mta } looks [$ipv6_addr]:$port style,
     #    XXX we do not try to connect the host by IPv4.
     if ( $self->is_ipv6_mta_syntax($mta) ) {
-	Log("(debug) not try MTA $args->{_mta}");
+	Log("debug: not try MTA $args->{_mta}");
 	return undef;
     }
     else {
-	Log("try mta=$args->{_mta} by IPv4");
+	Log("debug: try mta=$args->{_mta} by IPv4");
 	return $self->connect4($args);
     }
 }
@@ -407,6 +414,8 @@ sub deliver
     # recipient limit
     $self->{_recipient_limit} = $args->{recipient_limit} || 1000;
 
+    Log("debug: recipient_limit = $self->{_recipient_limit}");
+
     # temporary hash to check whether the map/mta is used already.
     my %used_mta = ();
     my %used_map = ();
@@ -444,7 +453,7 @@ sub deliver
 	}
 
 	$self->set_target_map($map);
-	$self->set_map_status($map, 'not done');
+	$self->set_map_status($map, $MAP_NOT_DONE);
 	$self->set_map_position($map, 0);
 
 	# XXX-TODO: correct $max_loop_count evaluation ?
@@ -472,7 +481,7 @@ sub deliver
 		$n_mta++;
 
 		# o.k. try to deliver mail by using $mta.
-		Log("use $mta for map=$map");
+		Log("debug: use $mta for map=$map");
 		$args->{ _mta } = $mta;
 		$self->_deliver($args);
 
@@ -486,23 +495,23 @@ sub deliver
 	    } # end of MTA: loop
 
 	    # end of MTA_RETRY_LOOP: loop
-	    if ($self->get_map_status($map) eq 'done') {
+	    if ($self->get_map_status($map) eq $MAP_DONE) {
 		last MTA_RETRY_LOOP;
 	    }
 
 	    # NO effective mta in this inter loop. It impiles that
 	    # we used all MTA candidates. We reuse @mta again.
 	    if ($n_mta == 0) {
-		Log("(debug) we used all MTA candidates. reuse \$mta");
+		Log("debug: we used all MTA candidates. reuse \$mta");
 		my (@c) = keys %used_mta;
-		Log("(debug) candidates = (@c)");
+		Log("debug: candidates = (@c)");
 		undef %used_mta;
 		next MTA_RETRY_LOOP;
 	    }
 	}
     }
 
-    # clean up recipient_map information after "all delivery"
+    # clean up recipient_map information after "all delivery".
     # CAUTION: this mapinfo tracks the delivery status.
     $self->reset_mapinfo;
 
@@ -545,8 +554,13 @@ sub _deliver
     my $socket       = $self->_connect($args);
     my $is_connected = $self->socket_is_connected($socket);
     unless (defined($socket) && $is_connected) {
-	Log("cannot connected");
+	my $mta = $args->{_mta} || 'unknown';
+	Log("cannot connected to $mta");
 	return undef;
+    }
+    else {
+	my $mta = $args->{_mta} || 'unknown';
+	Log("connected to $mta");
     }
 
     # 1. receive the first "220 .." message
@@ -591,6 +605,14 @@ sub _deliver
     $self->_send_command("QUIT");
     $self->_read_reply;
     if ($self->error) { $self->_reset_smtp_transaction; return;}
+
+    # o.k. succeded to deliver.
+    my $n = $self->{ _num_recipients_in_this_transaction } || 0;
+    if ($n) {
+	my $mta = $args->{ _mta } || 'unknown';
+	Log("sent num=$n mta=$mta");
+	$self->{ _num_recipients } += $n;
+    }
 }
 
 
@@ -698,14 +720,14 @@ sub _send_recipient_list_by_recipient_map
 
 	# done.
 	if ($obj->eof) {
-	    $self->set_map_status($map, 'done');
+	    $self->set_map_status($map, $MAP_DONE);
 	}
 
 	# ends
 	$obj->close;
 
 	# count up the total number of recipients
-	$self->{ _num_recipients } += $num_recipients;
+	$self->{ _num_recipients_in_this_transaction } = $num_recipients;
 
 	unless ($num_recipients) {
 	    Log("Error: no recipients for $map");
@@ -829,7 +851,7 @@ sub _reset_smtp_transaction
     my ($self, $args) = @_;
     $self->_send_command("RSET");
     $self->_read_reply;
-    Log("Info: reset smtp transcation");
+    Log("reset smtp transcation");
 }
 
 
