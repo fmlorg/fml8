@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.69 2002/04/10 09:00:08 fukachan Exp $
+# $FML: Distribute.pm,v 1.70 2002/04/12 11:54:38 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -461,12 +461,22 @@ sub htmlify
     my $article_id     = $pcb->get('article', 'id');
     my $article_file   = $article->filepath($article_id);
 
+    $curproc->set_umask_as_public();
+
     eval q{
 	use Mail::Message::ToHTML;
-	use File::Utils qw(mkdirhier);
     };
     unless ($@) {
-	mkdirhier($html_dir) unless -d $html_dir;
+	unless (-d $html_dir) {
+	    eval q{
+		use File::Path;
+		mkpath($html_dir, 0, 0755);
+		Log("mkdir $html_dir") if -d $html_dir;
+		LogError("fail to mkdir $html_dir") unless -d $html_dir;
+	    };
+	    if ($@) { LogError($@);}
+	}
+
 	&Mail::Message::ToHTML::htmlify_file($article_file, {
 	    directory => $html_dir,
 	});
@@ -474,6 +484,8 @@ sub htmlify
     else {
 	Log($@) if $@;
     }
+
+    $curproc->reset_umask();
 }
 
 
