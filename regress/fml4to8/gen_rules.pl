@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML$
+# $FML: gen_rules.pl,v 1.1 2004/12/09 03:45:12 fukachan Exp $
 #
 
 use strict;
@@ -92,6 +92,12 @@ sub _preamble
 print q!
 package FML::Merge::FML4::Rules;
 
+
+# Descriptions: translate fml4 rule to the corresponding fml8 one.
+#    Arguments: OBJ($self)
+#               HASH_REF($dispatch) HASH_REF($diff) STR($key) STR($value)
+# Side Effects: none
+# Return Value: STR
 sub translate
 {
     my ($self, $dispatch, $diff, $key, $value) = @_;
