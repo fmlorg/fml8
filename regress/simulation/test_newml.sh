@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML: test_newml.sh,v 1.6 2003/04/18 15:58:57 fukachan Exp $
+# $FML: test_newml.sh,v 1.7 2003/11/16 11:54:46 fukachan Exp $
 #
 
 SHOW () {
@@ -33,7 +33,7 @@ SHOW () {
 	sh reset_lib.sh 
 
 	printf "\n*** newdomain *** \n\n"
-	makefml newdomain - nuinui.net /tmp/nuinui
+	makefml newdomain nuinui.net /tmp/nuinui
 
 	printf "\n*** newml *** \n\n"
 
@@ -52,7 +52,7 @@ SHOW () {
 	makefml rmml rudo@nuinui.net 
 
 	printf "\n*** rmdomain *** \n\n"
-	makefml rmdomain - nuinui.net
+	makefml rmdomain nuinui.net
 
 	printf "\n\n\n" > /dev/stderr 
 	SHOW

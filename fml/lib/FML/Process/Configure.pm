@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.55 2003/08/29 15:34:07 fukachan Exp $
+# $FML: Configure.pm,v 1.56 2003/09/13 13:01:40 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -203,6 +203,10 @@ Usage:
    fml     \$ml_name \$command [command_options]
    makefml \$command \$ml_name [command_options]
 
+ * newdomain and rmdomain commands are irregular.
+   fml     \$ml_domain \$command
+   makefml \$command \$ml_domain
+
 _EOF_
 }
 
@@ -294,6 +298,11 @@ sub _makefml
 	ml_name      => $ml_name,
 	options      => \@options,
 	argv         => $argv,
+	canon_argv   => {           # saved for {new,rm}domain commands.
+	    ml_name  => $argv_ml_name,
+	    method   => $method,
+	    options  => \@options,
+	},
 	args         => $args,
     };
 

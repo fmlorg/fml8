@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newdomain.pm,v 1.1 2003/11/15 03:09:44 fukachan Exp $
+# $FML: newdomain.pm,v 1.2 2003/11/16 11:53:18 fukachan Exp $
 #
 
 package FML::Command::Admin::newdomain;
@@ -55,9 +55,9 @@ sub need_lock { 0;}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $options = $command_args->{ options };
-    my $domain  = $options->[ 0 ];
-    my $prefix  = $options->[ 1 ];
+    my $canon_argv = $command_args->{ canon_argv };
+    my $domain     = $canon_argv->{ ml_name };
+    my $prefix     = $canon_argv->{ options }->[ 0 ];
 
     use FML::HomeDir::Prefix;
     my $ml_home_prefix = new FML::HomeDir::Prefix $curproc;
