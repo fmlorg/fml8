@@ -1,6 +1,35 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/02/24
+
+   update /etc: define the following variables
+	$fml_owner $fml_group $syscon_dir $mailconf_dir
+	$mail_aliases_file
+	
+   FML::Process::Utils 
+	define fml_owner(), fml_group() and mail_aliases().
+	
+   FML::Config::Convert 
+	replace $fml_owner and $ml_home_dir.
+	
+   FML::Config 
+	set(key, value) and update() informs FML::Config to expand variables.
+	
+   FML::Command::Admin::newml 
+	install aliases when makefml newml runs.
+
+2002/02/23
+
+   FML::Command::SendFile 
+   FML::Command::Admin::get 
+	fix filename in mime header
+	
+   FML::Process::Command and etc/
+	validate if the requested admin command is permited or not.
+	define $available_commands_for_privileged_user
+	rename $available_commands -> $available_commands_for_user
+
 2002/02/20
 
    File::Sequence
@@ -1595,4 +1624,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.52 2002/02/17 14:00:09 fukachan Exp $
+$FML: CHANGES.txt,v 1.53 2002/02/20 14:20:18 fukachan Exp $
