@@ -2,6 +2,21 @@
 		Last Modified: $Date$
 
 
+○	入力
+
+	FML/Restriction/00_CHECK_INPUT.txt
+
+
+○	newml のときに aliases をどうするの？
+
+	案１
+	/etc/fml/ドメイン名/aliases
+
+	案２ (prefix は virtual_maps でドメインごとに定義されているの
+		で一意に定まる)
+	/var/spool/ml/etc/mail/aliases
+
+
 ○	$curproc->{ main_cf } のパラメータをむやみに/気軽によびだしてはいけない。
 	きちんとしたアクセスメソッドを用意するべきである。
 
@@ -380,4 +395,4 @@ TODO
 
 
 ----------
-$FML: 00_MEMO,v 1.1 2002/02/02 07:03:27 fukachan Exp $
+$FML: 00_MEMO,v 1.2 2002/02/04 14:16:44 fukachan Exp $
