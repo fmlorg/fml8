@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.97 2003/09/19 01:03:41 fukachan Exp $
+# $FML: Switch.pm,v 1.98 2003/09/20 04:32:51 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -399,9 +399,9 @@ sub _module_we_use
 }
 
 
-# Descriptions: 
+# Descriptions: return the longest match-ed entry in $def_file file.
 #    Arguments: STR($def_file) STR($name) STR($fullname)
-# Side Effects: 
+# Side Effects: none
 # Return Value: ARRAY
 sub _find_longest_matched_entry
 {
