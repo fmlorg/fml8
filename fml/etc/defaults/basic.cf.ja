@@ -4,6 +4,11 @@
 # fqdn		= mx0.fml.org
 
 
+=head2	£Í£Ì¤Î´ÉÍý¼Ô
+
+maintainer	=	fukachan@sapporo.iij.ad.jp
+
+
 =head2	default modes
 
 default_file_mode	=	0600
