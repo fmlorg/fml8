@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.48 2001/08/05 13:55:05 fukachan Exp $
+# $FML: Kernel.pm,v 1.49 2001/09/13 11:55:05 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -28,7 +28,7 @@ FML::Process::Kernel - provide fml core functions
 
 This modules is the base class of fml processes.
 It provides basic core functions.
-See L<FML::Process::Flow> on where and how each function is used 
+See L<FML::Process::Flow> on where and how each function is used
 in the process flow.
 
 =head1 METHODS
@@ -36,7 +36,7 @@ in the process flow.
 =head2 C<new($args)>
 
 1. import variables such as C<$ml_home_dir> via C<libexec/loader>
-   
+
 2. determine C<$fml_version> for further library loading
 
 3. initialize current process struct C<$curproc> such as
@@ -48,7 +48,7 @@ in the process flow.
 For example, this C<main_cf> provides the pointer to /etc/fml/main.cf
 parameters.
 
-4. load and evaluate configuration files 
+4. load and evaluate configuration files
    e.g. C</var/spool/ml/elena/config.cf> for C<elena> mailing list.
 
 5. initialize signal handlders
@@ -97,7 +97,7 @@ sub new
 	unless ($cfargs->{ ml_home_dir }) {
 	    croak("specify ml_home_dir or ml_name");
 	}
-    } 
+    }
 
     # import $fml_version
     if (defined $args->{ fml_version }) {
@@ -124,8 +124,8 @@ sub new
     $curproc->_signal_init;
 
     # debug
-    if ($0 =~ /loader/) { 
-	eval q{ 
+    if ($0 =~ /loader/) {
+	eval q{
 	    require Data::Dumper; Data::Dumper->import();
 	    print Dumper( $curproc );
 	    sleep 3;
@@ -175,7 +175,7 @@ sub prepare
 
 =head2 C<lock($args)>
 
-locks the current process. 
+locks the current process.
 It is a giant lock now.
 
 =head2 C<unlock($args)>
@@ -185,9 +185,9 @@ It is a giant lock now.
 
 =cut
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub lock
 {
@@ -203,8 +203,8 @@ sub lock
 	use File::Path;
 	mkpath($lock_dir, 0, 0755);
     }
-    
-    unless (-f $lock_file) { 
+
+    unless (-f $lock_file) {
 	use FileHandle;
 	my $fh = new FileHandle $lock_file, "a";
 	if (defined $fh) {
@@ -230,9 +230,9 @@ sub lock
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub unlock
 {
@@ -259,9 +259,9 @@ If valid, it sets the adddress within $curproc->{ credential } object.
 
 =cut
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub verify_sender_credential
 {
@@ -344,7 +344,7 @@ sub load_config_files
 {
     my ($curproc, $files) = @_;
 
-    # load configuration variables from given files e.g. /some/where.cf 
+    # load configuration variables from given files e.g. /some/where.cf
     # XXX overload variables from each $cf
     for my $cf (@$files) {
       $curproc->{ config }->overload( $cf );
@@ -359,7 +359,7 @@ sub load_config_files
 =head2 C<parse_incoming_message($args)>
 
 C<preapre()> method calls this to
-parse the message to a set of header and body. 
+parse the message to a set of header and body.
 $curproc->{'incoming_message'} holds the parsed message
 which consists of a set of
 
@@ -400,7 +400,7 @@ sub parse_incoming_message
 
 =head2 C<premit_post($args)>
 
-permit posting. 
+permit posting.
 The restriction rules follows the order of C<post_restrictions>.
 
 =head2 C<premit_command($args)>
@@ -535,10 +535,10 @@ Prepare the message and queue it in by C<Mail::Delivery::Queue>.
 #                      OR
 #               multipart/mixed if both "text" and "queue" is defined.
 #               $r  = get(message, queue)
-#               msg = header + "text" + $r->[0] + $r->[1] + ... 
+#               msg = header + "text" + $r->[0] + $r->[1] + ...
 #
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub inform_reply_messages
 {
@@ -591,7 +591,7 @@ sub queue_in
 
 
     #
-    # start building a message 
+    # start building a message
     #
     use Mail::Message::Compose;
 
@@ -655,7 +655,7 @@ sub _add_info_on_header
     $msg->attr('X-ML-Name' => $ml_name);
 
     use FML::Header;
-    my $args = { 
+    my $args = {
 	type    => 'MIME::Lite',
 	message => $msg,
     };
@@ -697,7 +697,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
