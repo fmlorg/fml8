@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: upgrade.sgml,v 1.1 2002/04/23 12:55:53 fukachan Exp $
 -->
 
 <chapter id="upgrade">
@@ -74,17 +74,19 @@
 	% mkdir /var/spool/ml.old
 	% rsync -av fml@old:/var/spool/ml/ /var/spool/ml.old/
 	</screen>
+	</para>
 
+	<para>
 	ケース 1: (subdir なしの)スプールを作る場合
-
 	<screen>
 	% cp -pr /var/spool/ml.old/elena/spool /var/spool/ml/elena
 	% cp     /var/spool/ml.old/elena/seq   /var/spool/ml/elena
 	</screen>
-	でよいです。一方
+	でよいです。
+	</para>
 
-	ケース 2: (subdir ありの)スプールを作る場合
-
+	<para>
+	ケース 2: (subdir ありの)スプールを作る場合。
 	@fml.org 全体で subdir をデフォルトにするなら
 	/etc/fml/site_default_config.cf に
 	<screen>
