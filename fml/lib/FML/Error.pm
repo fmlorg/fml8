@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.5 2002/01/18 15:37:38 fukachan Exp $
+# $FML: Error.pm,v 1.1 2002/08/07 15:06:58 fukachan Exp $
 #
 
 package FML::Error;
@@ -66,6 +66,7 @@ sub analyze
 #           error_string_2, ... 
 #    ]
 # };
+
 sub md_analyze
 {
     my ($self, $curproc, $data) = @_;
@@ -89,13 +90,17 @@ sub md_analyze
 }
 
 
+# Descriptions: delete addresses analyze() determines as bouncers
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: none
 sub remove_bouncers
 {
     my ($self) = @_;
     my $list = $self->{ _remove_addr_list };
 
     for my $addr (@$list) {
-	Log("error.remove $addr");
+	$self->deluser( $addr );
     }
 }
 
@@ -118,10 +123,10 @@ sub deluser
 
     # check if $address is a safe string.
     if ($address =~ /^($addrreg)$/) {
-	Log("deluser: ok <$address>");
+	Log("deluser <$address>");
     }
     else {
-	Log("deluser: invalid address");
+	LogError("deluser: invalid address");
 	return;
     }
 
