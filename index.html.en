@@ -10,9 +10,9 @@ fml8 project home page
 
 <FRAMESET COLS="25%,*" BORDERSPACING=0 FRAMEBORDER=0 BODER=0 BORDERCOLOR="#E6E6FA">
      	<FRAME SRC="fml/doc/en/htdocs/menubar.html" NAME="left">
-      	<FRAME SRC="fml/doc/en/htdocs/menu.html" NAME="right">
+	<FRAME SRC="Documentation/en/tutorial/index.html" NAME="right">
   <NOFRAMES>
-	<A HREF="fml/doc/en/htdocs/menu.html">
+	<A HREF="Documentation/en/tutorial/index.html">
 	fml8 project (fml/doc/)
 	</A>
 	(if your browser not support frameset).
