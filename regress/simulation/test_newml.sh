@@ -1,12 +1,13 @@
 #!/bin/sh
 #
-# $FML$
+# $FML: test_newml.sh,v 1.3 2002/12/26 14:55:50 fukachan Exp $
 #
 
 SHOW () {
 	head -30 /tmp/nuinui/*rudo/include* \
 		/tmp/nuinui/etc/mail/aliases \
 		/tmp/nuinui/etc/postfix/virtual \
+		/tmp/nuinui/etc/sendmail/virtusertable \
 		/tmp/nuinui/etc/qmail/virtualdomains 
 }
 
