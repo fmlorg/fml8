@@ -32,12 +32,12 @@ sub new
     # import variables
     my (@import_vars) = qw(ml_home_prefix ml_home_dir);
     for my $var (@import_vars) {
-	if ($args->{ $var }) {
+	if (defined $args->{ $var }) {
 	    $cfargs->{ $var } = $args->{ $var };
 	}
 	else {
-	    if ($var eq 'ml_home_dir' && (not $args->{ need_ml_name })) {
-		next;
+	    if ($var eq 'ml_home_dir') {
+		next unless $args->{ need_ml_name };
 	    }
 
 	    croak "variable $var is not defined.\n";
