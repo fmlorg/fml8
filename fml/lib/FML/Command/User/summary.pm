@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: summary.pm,v 1.3 2001/10/12 00:00:57 fukachan Exp $
+# $FML: summary.pm,v 1.1 2001/10/13 12:17:53 fukachan Exp $
 #
 
 package FML::Command::User::summary;
@@ -31,18 +31,18 @@ See C<FML::Command> for more details.
 
 =head1 METHODS
 
-=head2 C<process($curproc, $optargs)>
+=head2 C<process($curproc, $command_args)>
 
 =cut
 
 
 sub process
 {
-    my ($self, $curproc, $optargs) = @_;
+    my ($self, $curproc, $command_args) = @_;
     my $config = $curproc->{ config };
 
-    $optargs->{ _file_to_send } = $config->{ "summary_file" };
-    $self->send_file($curproc, $optargs);
+    $command_args->{ _file_to_send } = $config->{ "summary_file" };
+    $self->send_file($curproc, $command_args);
 }
 
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: subscribe.pm,v 1.4 2001/10/11 23:59:03 fukachan Exp $
+# $FML: subscribe.pm,v 1.5 2001/10/13 02:39:30 fukachan Exp $
 #
 
 package FML::Command::User::subscribe;
@@ -30,20 +30,20 @@ See C<FML::Command> for more details.
 
 =head1 METHODS
 
-=head2 C<process($curproc, $optargs)>
+=head2 C<process($curproc, $command_args)>
 
 =cut
 
 
 sub process
 {
-    my ($self, $curproc, $optargs) = @_;
+    my ($self, $curproc, $command_args) = @_;
     my $config        = $curproc->{ config };
     my $member_map    = $config->{ primary_member_map };
     my $recipient_map = $config->{ primary_recipient_map };
     my $cache_dir     = $config->{ db_dir };
     my $keyword       = $config->{ confirm_keyword };
-    my $command       = $optargs->{ command };
+    my $command       = $command_args->{ command };
     my $address       = $curproc->{ credential }->sender();
 
     # fundamental check

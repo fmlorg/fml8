@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: confirm.pm,v 1.3 2001/10/10 14:50:03 fukachan Exp $
+# $FML: confirm.pm,v 1.1 2001/10/11 23:57:37 fukachan Exp $
 #
 
 package FML::Command::User::confirm;
@@ -30,21 +30,21 @@ See C<FML::Command> for more details.
 
 =head1 METHODS
 
-=head2 C<process($curproc, $optargs)>
+=head2 C<process($curproc, $command_args)>
 
 =cut
 
 
 sub process
 {
-    my ($self, $curproc, $optargs) = @_;
+    my ($self, $curproc, $command_args) = @_;
     my $config        = $curproc->{ config };
     my $member_map    = $config->{ primary_member_map };
     my $recipient_map = $config->{ primary_recipient_map };
     my $cache_dir     = $config->{ db_dir };
     my $keyword       = $config->{ confirm_keyword };
     my $expire_limit  = $config->{ confirm_expire_limit } || 14*24*3600;
-    my $command       = $optargs->{ command };
+    my $command       = $command_args->{ command };
 
     my ($class, $id);
 
@@ -66,7 +66,7 @@ sub process
     if ($found = $confirm->find($id)) { # if request is found
 	unless ($confirm->is_expired($found, $expire_limit)) {
 	    my $address = $confirm->get_address($id);
-	    $self->_switch_command($class, $address, $curproc, $optargs);
+	    $self->_switch_command($class, $address, $curproc, $command_args);
 	}
 	else { # if req is expired
 	    croak("request is expired");
@@ -80,7 +80,7 @@ sub process
 
 sub _switch_command
 {
-    my ($self, $class, $address, $curproc, $optargs) = @_;
+    my ($self, $class, $address, $curproc, $command_args) = @_;
 
     # lower case 
     $class =~ tr/A-Z/a-z/;
@@ -91,9 +91,9 @@ sub _switch_command
     if ($class eq 'subscribe'   || 
 	$class eq 'unsubscribe' || 
 	$class eq 'chaddr') {
-	$optargs->{ address }      = $address;
-	$optargs->{ command_mode } = 'Admin';
-	$obj->$class($curproc, $optargs);
+	$command_args->{ address }      = $address;
+	$command_args->{ command_mode } = 'Admin';
+	$obj->$class($curproc, $command_args);
     }
     else {
 	croak("no such rule");
