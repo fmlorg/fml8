@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.100 2002/05/21 15:06:38 fukachan Exp $
+# $FML: Kernel.pm,v 1.101 2002/05/27 08:55:43 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1080,17 +1080,32 @@ sub _append_rfc822_message
     my $tmpfile = $curproc->temp_file_path();
 
     my $wh = new FileHandle "> $tmpfile";
-    $msg_in->print($wh);
-    $wh->close;
+    if (defined $wh) {
+	$msg_in->print($wh);
+	$wh->close;
+    }
+    else {
+	LogError("_append_rfc822_message: cannot create \$tmpfile");
+    }
 
-    my $rh = new FileHandle $tmpfile;
-    $msg_out->attach(Type     => 'message/rfc822',
-		     Path     => $tmpfile,
-		     Filename => "original_message",
-		     );
-    $rh->close;
+    if (-f $tmpfile) {
+	my $rh = new FileHandle $tmpfile;
+	if (defined $rh) {
+	    $msg_out->attach(Type     => 'message/rfc822',
+			     Path     => $tmpfile,
+			     Filename => "original_message",
+			     );
+	    $rh->close;
+	}
+	else {
+	    LogError("_append_rfc822_message: cannot open \$tmpfile");
+	}
 
-    $curproc->add_into_clean_up_queue( $tmpfile );
+	$curproc->add_into_clean_up_queue( $tmpfile );
+    }
+    else {
+	LogError("_append_rfc822_message: \$tmpfile not found");
+    }
 }
 
 
