@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Switch.pm,v 1.21 2001/10/08 15:49:20 fukachan Exp $
+# $FML: Switch.pm,v 1.22 2001/11/03 11:49:20 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -334,7 +334,7 @@ sub _module_specific_options
 	$myname eq 'loader' ) { 
 	return qw(ctladdr! debug! params=s -c=s);
     }
-    elsif ($myname eq 'fmlticket'|| $myname eq 'fmlticket.cgi') {
+    elsif ($myname eq 'fmlthread'|| $myname eq 'fmlticket.cgi') {
 	return qw(debug! params=s -c=s -A=s -R=s);
     }
     elsif ($myname eq 'fmlconf') {
@@ -416,7 +416,7 @@ sub _module_we_use
     elsif ($name eq 'fmlticket.cgi') {
 	$pkg = 'FML::CGI::TicketSystem';
     }
-    elsif ($name eq 'fmlticket') {
+    elsif ($name eq 'fmlthread') {
 	$pkg = 'FML::Process::ThreadTrack';
     }
     elsif ($name eq 'mead') {

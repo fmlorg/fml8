@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: INSTALL.sh,v 1.25 2001/04/28 14:41:03 fukachan Exp $
+# $FML: INSTALL.sh,v 1.26 2001/06/28 05:03:27 fukachan Exp $
 #
 
 # Run this from the top-level fml source directory.
@@ -83,7 +83,7 @@ echo update $libexec_dir/$fml_version/
 cp -pr fml/libexec/*	$libexec_dir/$fml_version/
 
 echo update /usr/local/bin/
-for prog in fmldoc fmlticket fmlconf makefml fmlsch
+for prog in fmldoc fmlthread fmlconf makefml fmlsch
 do
 	echo update /usr/local/bin/$prog
 	cp fml/bin/$prog /usr/local/bin/$prog.new
@@ -92,7 +92,7 @@ done
 
 PROGRAMS="fml.pl distribute command ";
 PROGRAMS="$PROGRAMS fmlserv mead fmlconf fmldoc"
-PROGRAMS="$PROGRAMS fmlticket fmlticket.cgi"
+PROGRAMS="$PROGRAMS fmlthread fmlticket.cgi"
 PROGRAMS="$PROGRAMS makefml makefml.cgi"
 PROGRAMS="$PROGRAMS fmlsch fmlsch.cgi"
 
@@ -115,7 +115,7 @@ if [ ! -f $libexec_dir/loader ];then
 		ln -s loader $x && echo -n "$x "
 
 		i=`expr $i + 1`
-		if [ $i -ge 7 ];then
+		if [ $i -ge 6 ];then
 			echo ""
 			echo -n "                   "
 			i=0
