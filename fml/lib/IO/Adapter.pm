@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Adapter.pm,v 1.5 2001/06/29 05:57:33 fukachan Exp $
+# $FML: Adapter.pm,v 1.6 2001/08/05 11:56:01 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -231,6 +231,23 @@ sub open
     }
     else {
 	$self->error_set("Error: type=$self->{_type} is unknown type.");
+    }
+}
+
+
+=head2 C<touch()>
+
+create a file if not exists. 
+This method is avaialble for file: type.
+
+=cut
+
+sub touch
+{
+    my ($self) = @_;
+
+    if ($self->{'_type'} eq 'file') {
+	$self->SUPER::touch( { file => $self->{_file} } );
     }
 }
 

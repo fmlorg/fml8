@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: File.pm,v 1.22 2001/05/04 14:32:33 fukachan Exp $
+# $FML: File.pm,v 1.23 2001/05/30 14:35:10 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -126,8 +126,26 @@ sub _rw_open
 }
 
 
+=head2 C<touch()>
+
+create a file if not exists. 
+
+=cut
+
+sub touch
+{
+    my ($self, $flag) = @_;
+    my $file = $self->{_file};
+
+    use IO::File;
+    my $fh = new IO::File;
+    $fh->open($file, "a");
+    $fh->close;
+}
+
+
 # debug tools
-my $c = 0;
+my $c  = 0;
 my $ec = 0;
 sub line_count { my ($self) = @_; return "${ec}/${c}";}
 
