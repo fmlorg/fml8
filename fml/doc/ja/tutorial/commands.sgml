@@ -1,0 +1,33 @@
+<!--
+	$FML$
+-->
+
+<chapter id="commands">
+
+<title>	コマンド </title>
+
+<sect1>
+   <title>	コマンドの拡張の仕方の例 </title>
+
+
+   <sect2>
+	<title> 独自コマンドを作る。 </title>
+
+	<para>
+	例えばコマンド uja を作りたいなら、FML::Command をぱくって
+
+	/usr/local/lib/fml/site_local/FML/Command/uja.pm
+
+	というファイルを置けば OK (いいのか、それで?)。
+	</para>
+
+	<para>
+	いや、うそかも… 許可するコマンドリストに追加して始めて
+	有効になるようにしないといけないと思う。
+	</para>
+   </sect2>
+
+
+</sect1>
+
+</chapter>

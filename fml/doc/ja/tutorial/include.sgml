@@ -1,5 +1,5 @@
 <!--
-	$FML: include.sgml,v 1.8 2001/04/24 11:40:58 fukachan Exp $
+	$FML: include.sgml,v 1.9 2001/04/24 13:16:25 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -17,6 +17,8 @@
 <!entity install   SYSTEM "install.sgml">
 <!entity main.cf   SYSTEM "main.cf.sgml">
 
+<!entity commands     SYSTEM "commands.sgml">
+
 <!entity design     SYSTEM "design.sgml">
 <!entity bootloader   SYSTEM "bootloader.sgml">
 <!entity programingstyle  SYSTEM "programing_style.sgml">
@@ -24,6 +26,8 @@
 
 
 <!entity cvstree     SYSTEM "cvstree.sgml">
+<!entity cvstags     SYSTEM "cvstags.sgml">
+
 
 <!-- ポインタ -->
 <!entity fmlbible    "『fml バイブル』(オライリージャパン刊)">
