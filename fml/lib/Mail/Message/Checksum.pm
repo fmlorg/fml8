@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Checksum.pm,v 1.8 2003/07/21 10:40:06 fukachan Exp $
+# $FML: Checksum.pm,v 1.9 2003/08/23 04:35:46 fukachan Exp $
 #
 
 package Mail::Message::Checksum;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
@@ -213,7 +212,7 @@ sub cksum2
         $crc = ($crc & 0xffff) + ($crc >> 16);
     }
     else {
-        Log("ERROR: no such file $file");
+        croak("ERROR: no such file $file");
     }
 
     return ($crc, $total);
