@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.3 2001/10/14 00:54:16 fukachan Exp $
+# $FML: SendFile.pm,v 1.4 2001/10/17 03:05:12 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -31,7 +31,7 @@ not yet implemented
 
 send back articles.
 
-used in 
+used in
 C<FML::Command::User>
 and
 C<FML::Command::Admin>
@@ -145,7 +145,7 @@ send back file specified as C<$command_args->{ _file_to_send }>.
 
 =cut
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $curproc $command_args
 # Side Effects: none
 # Return Value: none
@@ -161,7 +161,7 @@ sub send_file
 	src         => $what_file,
 	charset_out => $charset,
     };
-    my $xxxx_template = $curproc->prepare_file_to_return( $params ); 
+    my $xxxx_template = $curproc->prepare_file_to_return( $params );
 
     if (-f $xxxx_template) {
 	$curproc->reply_message( {
@@ -187,7 +187,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

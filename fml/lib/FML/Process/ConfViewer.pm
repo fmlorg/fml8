@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
-#          All rights reserved. 
+#          All rights reserved.
 #
-# $FML: ConfViewer.pm,v 1.4 2001/11/27 11:40:30 fukachan Exp $
+# $FML: ConfViewer.pm,v 1.5 2001/11/27 15:56:55 fukachan Exp $
 #
 
 package FML::Process::ConfViewer;
@@ -82,14 +82,14 @@ sub verify_request
 
 =head2 C<run($args)>
 
-the top level dispatcher for C<fmlconf> and C<makefml>. 
+the top level dispatcher for C<fmlconf> and C<makefml>.
 
-It kicks off internal function 
-C<_fmlconf($args)> for C<fmlconf> 
-    and 
+It kicks off internal function
+C<_fmlconf($args)> for C<fmlconf>
+    and
 C<_makefml($args)> for makefml.
 
-NOTE: 
+NOTE:
 C<$args> is passed from parrent libexec/loader.
 See <FML::Process::Switch()> on C<$args> for more details.
 
@@ -130,7 +130,7 @@ print <<"_EOF_";
 Usage: $name [-n] \$ml_name
 
           show all configuration variables
- 
+
 -n        show only difference from default
 
 _EOF_
@@ -157,7 +157,7 @@ run dump_variables of C<FML::Config>.
 # Return Value: none
 sub _fmlconf
 {
-    my ($curproc, $args) = @_;    
+    my ($curproc, $args) = @_;
     my $config = $curproc->{ config };
     my $mode   = $args->{ options }->{ n } ? 'difference_only' : 'all';
 
@@ -174,7 +174,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

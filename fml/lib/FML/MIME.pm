@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MIME.pm,v 1.13 2001/06/28 05:03:59 fukachan Exp $
+# $FML: MIME.pm,v 1.14 2001/10/27 04:11:30 fukachan Exp $
 #
 
 package FML::MIME;
@@ -44,8 +44,8 @@ decode a base64/quoted-printable encoded string to a plain message.
 The encoding method is automatically detected.
 
 C<$options> is a HASH REFERENCE.
-You can specify the charset of the string to return 
-by $options->{ charset }. 
+You can specify the charset of the string to return
+by $options->{ charset }.
 
 =cut
 
@@ -56,12 +56,12 @@ sub decode_mime_string
 
     if ($charset eq 'euc-japan') {
 	use MIME::Base64;
-	if ($str =~ /=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/i) { 
+	if ($str =~ /=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/i) {
 	    $str =~ s/=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/decode_base64($1)/gie;
 	}
 
 	use MIME::QuotedPrint;
-	if ($str =~ /=\?ISO\-2022\-JP\?Q\?(\S+\=*)\?=/i) { 
+	if ($str =~ /=\?ISO\-2022\-JP\?Q\?(\S+\=*)\?=/i) {
 	    $str =~ s/=\?ISO\-2022\-JP\?Q\?(\S+\=*)\?=/decode_qp($1)/gie;
 	}
     }
@@ -78,7 +78,7 @@ encode the C<string> by the encoder $options->{ encode }.
 The encode is base64 by default.
 
 C<options> is a HASH REFERENCE.
-You can specify the charset of string to return 
+You can specify the charset of string to return
 by $options->{ charset }.
 
 =cut
@@ -135,7 +135,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

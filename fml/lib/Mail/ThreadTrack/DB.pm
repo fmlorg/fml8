@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.15 2001/11/20 09:43:21 fukachan Exp $
+# $FML: DB.pm,v 1.16 2001/12/21 07:34:06 tmu Exp $
 #
 
 package Mail::ThreadTrack::DB;
@@ -50,9 +50,9 @@ my @kind_of_databases = qw(thread_id date status sender articles
                            message_id);
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub db_open
 {
@@ -89,9 +89,9 @@ sub db_open
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub db_clear
 {
@@ -106,15 +106,15 @@ sub db_clear
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $directory
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _db_clear
 {
     my ($db_dir) = @_;
 
-    eval q{ 
+    eval q{
 	use DirHandle;
 	use File::Spec;
 	my $dh = new DirHandle $db_dir;
@@ -136,16 +136,16 @@ sub _db_clear
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub db_close
 {
     my ($self) = @_;
 
     for my $db (@kind_of_databases) {
-        my $str = qq{ 
+        my $str = qq{
             my \$${db} = \$self->{ _hash_table }->{ _$db };
 	    untie \%\$${db};
         };
@@ -168,7 +168,7 @@ sub db_mkdb
     my ($self, $min_id, $max_id) = @_;
     my $config     = $self->{ _config };
     my $spool_dir  = $config->{ spool_dir };
-    my $saved_args = $self->{ _saved_args }; # original $args 
+    my $saved_args = $self->{ _saved_args }; # original $args
 
     return undef unless (defined $min_id && defined $max_id);
 
@@ -202,7 +202,7 @@ sub db_mkdb
 
 =head2 db_dump([$type])
 
-dump hash as text. 
+dump hash as text.
 dump status database if $type is not specified.
 
 =cut
@@ -251,7 +251,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

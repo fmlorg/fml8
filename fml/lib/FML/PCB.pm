@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: PCB.pm,v 1.7 2001/12/22 09:11:56 fukachan Exp $
 #
 
 package FML::PCB;
@@ -47,7 +47,7 @@ Typically, $curproc is composed like this:
 
 =head2 C<new( $args )>
 
-initialize the C<pcb> memory area. 
+initialize the C<pcb> memory area.
 If $args HASH REFERENCE is specified, initialize C<pcb> area by it.
 
 =cut
@@ -117,7 +117,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

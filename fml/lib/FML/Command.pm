@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.13 2001/11/08 03:37:33 fukachan Exp $
+# $FML: Command.pm,v 1.14 2001/11/27 11:22:09 fukachan Exp $
 #
 
 package FML::Command;
@@ -37,7 +37,7 @@ ordinary constructor.
 
 =head2 C<AUTOLOAD()>
 
-dispatcher. 
+dispatcher.
 It hooks up the C<command> request and loads the module
 C<FML::Command::command>.
 
@@ -101,7 +101,7 @@ sub AUTOLOAD
 	    if ($command->error()) { Log($command->error());}
 	}
 	else {
-	    LogError("${pkg} has no process method");	    
+	    LogError("${pkg} has no process method");
 	}
     }
     else {
@@ -146,7 +146,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.2 2001/07/31 14:19:42 fukachan Exp $
+# $FML: Utils.pm,v 1.3 2001/09/23 11:34:42 fukachan Exp $
 #
 
 package FML::Language::Japanese::Utils;
@@ -29,7 +29,7 @@ Utilities for Japanse string
 
 =head2 <is_iso2022jp_string($string)>
 
-check whether $string looks Japanese. 
+check whether $string looks Japanese.
 return 1 if it looks so.
 
 =cut
@@ -81,13 +81,13 @@ sub _look_not_iso2022jp_string
 
 =head2 C<compare_euc_string($buf, $pat)>
 
-search $pat in EUC string $buf. 
+search $pat in EUC string $buf.
 return 1 if found or 0 if not.
 
 =cut
 
 
-# XXX fml 4.0: EUCCompare($buf, $pat) 
+# XXX fml 4.0: EUCCompare($buf, $pat)
 # XXX          where $pat should be $& (matched pattern)
 sub compare_euc_string
 {
@@ -137,7 +137,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

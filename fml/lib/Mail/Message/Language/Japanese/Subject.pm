@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.2 2001/11/09 10:39:05 fukachan Exp $
+# $FML: Subject.pm,v 1.3 2001/12/16 14:06:41 fukachan Exp $
 #
 
 
@@ -43,7 +43,7 @@ my $CUT_OFF_RERERE_HOOK    = '';
 
 
 # subjec reply pattern
-# apply patch from OGAWA Kunihiko <kuni@edit.ne.jp> 
+# apply patch from OGAWA Kunihiko <kuni@edit.ne.jp>
 #            fml-support:7626 7653 07666
 #            Re: Re2:   Re[2]:     Re(2):     Re^2:    Re*2:
 # i-mode ? (PR fml-help: 00157 by OGAWA Kunihiko)
@@ -84,7 +84,7 @@ within C<Subject:>.
 # fml-support: 07507
 # sub CutOffRe
 # {
-#    いままでどおりの Re: とかとっぱらう 
+#    いままでどおりの Re: とかとっぱらう
 #
 #   if ($LANGUAGE eq 'Japanese') {
 #	日本語処理依存ライブラリへ飛ぶ
@@ -113,7 +113,7 @@ sub cut_off_reply_tag
     # $subject =~ s/^((\s*|(　)*)*($pattern)\s*)+/Re: /oi;
     $subject =~ s/^((\s|(　))*($pattern)\s*)+/Re: /oi;
 
-    if ($CUT_OFF_RERERE_HOOK) { 
+    if ($CUT_OFF_RERERE_HOOK) {
 	eval($CUT_OFF_RERERE_HOOK);
 	&Log($@) if $@;
     }
@@ -132,7 +132,7 @@ sub cut_off_reply_tag
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

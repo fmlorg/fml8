@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: confirm.pm,v 1.1 2001/10/11 23:57:37 fukachan Exp $
+# $FML: confirm.pm,v 1.2 2001/10/14 00:32:29 fukachan Exp $
 #
 
 package FML::Command::User::confirm;
@@ -48,7 +48,7 @@ sub process
 
     my ($class, $id);
 
-    # get class and id from buffer, for example,  
+    # get class and id from buffer, for example,
     # "confirm subscribe 813f42fa2aa84bbba500ed3d2781dea6"
     if ($command =~ /$keyword\s+(\w+)\s+([\w\d]+)/) {
 	($class, $id) = ($1, $2);
@@ -82,14 +82,14 @@ sub _switch_command
 {
     my ($self, $class, $address, $curproc, $command_args) = @_;
 
-    # lower case 
+    # lower case
     $class =~ tr/A-Z/a-z/;
 
     use FML::Command;
     my $obj = new FML::Command;
 
-    if ($class eq 'subscribe'   || 
-	$class eq 'unsubscribe' || 
+    if ($class eq 'subscribe'   ||
+	$class eq 'unsubscribe' ||
 	$class eq 'chaddr') {
 	$command_args->{ address }      = $address;
 	$command_args->{ command_mode } = 'Admin';
@@ -110,7 +110,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

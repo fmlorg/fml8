@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Bounce.pm,v 1.14 2001/09/18 03:31:31 fukachan Exp $
+# $FML: Bounce.pm,v 1.15 2001/10/19 13:14:27 fukachan Exp $
 #
 
 package Mail::Bounce;
@@ -48,13 +48,13 @@ try to analyze the given error message, which is a Mail::Message
 object.
 
 For non DSN pattern,
-try to analyze it by using modules in C<Mail::Bounce::> 
+try to analyze it by using modules in C<Mail::Bounce::>
 which can recognize MTA specific and domian specific patterns.
 
 For example,
 
   Mail::Bounce
-      
+
                 $msg
               --------> Mail::Bounce::DSN::analyze()
               <--------
@@ -102,11 +102,11 @@ sub new
 
 =head2 C<analyze($msg)>
 
-C<$msg> is a C<Mail::Message> object.  
-This routine is a top level switch which provides the entrance 
+C<$msg> is a C<Mail::Message> object.
+This routine is a top level switch which provides the entrance
 for C<Mail::Bounce::> modules, for example, C<Mail::Bounce::DSN>.
 
-C<Mail::Bounce::$model::analyze( \$msg, \$result )> 
+C<Mail::Bounce::$model::analyze( \$msg, \$result )>
 method in each module is the actual model specific analyzer.
 C<$result> has an answer of analyze if the error message pattern is
 already known.
@@ -126,22 +126,22 @@ sub analyze
     }
 
     for my $pkg (
-		 'DSN', 
-		 'Postfix19991231', 
-		 'Qmail', 
+		 'DSN',
+		 'Postfix19991231',
+		 'Qmail',
 		 'Exim',
 		 'GOO',
-		 'SimpleMatch', 
+		 'SimpleMatch',
 		 ) {
 	my $module = "Mail::Bounce::$pkg";
 	print STDERR "\n   --- module: $module\n" if $debug;
-	eval qq { 
+	eval qq {
 	    require $module; $module->import();
 	    $module->analyze( \$msg , \$result );
 	};
 	croak($@) if $@;
 
-	if (keys %$result) { 
+	if (keys %$result) {
 	    print STDERR "\n   match $module\n" if $debug;
 	    last;
 	}
@@ -173,12 +173,12 @@ sub address_list
 =head2 C<status($addr)>
 
 return status (string) for C<$addr>.
-The status is extracted from C<result> analyze() method gives. 
+The status is extracted from C<result> analyze() method gives.
 
 =head2 C<reason($addr)>
 
 return error reason (string) for C<$addr>.
-It is extracted from C<result> analyze() method gives. 
+It is extracted from C<result> analyze() method gives.
 
 =cut
 
@@ -198,7 +198,7 @@ sub reason
     my ($self, $addr) = @_;
     my $reason = $self->{ _result }->{ $addr }->{ 'Diagnostic-Code' };
     $reason =~ s/\s+/ /g;
-    $reason =~ s/\s*$//; 
+    $reason =~ s/\s*$//;
     $reason;
 }
 
@@ -263,7 +263,7 @@ sub address_clean_up
 
     # nuke predecing and trailing strings around user@domain pattern
     my $prev_addr = $addr;
-    do { 
+    do {
 	$prev_addr = $addr;
 	print STDERR "    address_clean_up.in: $prev_addr\n" if $debug;
 
@@ -293,7 +293,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Exim.pm,v 1.2 2001/04/11 15:51:55 fukachan Exp $
+# $FML: Exim.pm,v 1.3 2001/07/30 14:42:34 fukachan Exp $
 #
 
 
@@ -41,7 +41,7 @@ See C<Mail::Bounce> for more details.
 
 
 # need to guess MTA as "exim" ???
-#	if (/^Message-ID:\s+\<[\w\d]+\-[\w\d]+\-[\w\d]+\@/i) { 
+#	if (/^Message-ID:\s+\<[\w\d]+\-[\w\d]+\-[\w\d]+\@/i) {
 #	    $MTA = "exim";
 #	}
 
@@ -70,7 +70,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

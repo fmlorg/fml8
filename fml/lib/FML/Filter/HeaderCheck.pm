@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HeaderCheck.pm,v 1.5 2001/09/23 09:30:28 fukachan Exp $
+# $FML: HeaderCheck.pm,v 1.6 2001/10/14 22:25:31 fukachan Exp $
 #
 
 package FML::Filter::HeaderCheck;
@@ -107,7 +107,7 @@ sub is_valid_message_id
     my ($self, $msg, $args) = @_;
     my $mid = $msg->get('message-id');
 
-    if ($mid !~ /\@/) { 
+    if ($mid !~ /\@/) {
 	croak "invalid Message-Id";
     }
 }
@@ -122,7 +122,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

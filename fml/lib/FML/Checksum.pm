@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Checksum.pm,v 1.11 2001/04/03 09:45:40 fukachan Exp $
+# $FML: Checksum.pm,v 1.12 2001/05/29 16:21:15 fukachan Exp $
 #
 
 package FML::Checksum;
@@ -27,7 +27,7 @@ FML::Checksum - utilities for check sum
 
 =head2 C<new()>
 
-the constructor. 
+the constructor.
 It checks we can use MD5 perl module or we need to use external programs
 such as C<md5>, C<cksum>, et.al.
 
@@ -65,7 +65,7 @@ sub _init
 	my $prog = search_program('md5') || search_program('md5sum');
 	if (defined $prog) {
 	    $self->{ _program } = $prog;
-	} 
+	}
     }
 }
 
@@ -121,7 +121,7 @@ sub _md5_by_program
 
     if (defined $self->{ _program }) {
 	my $program = $self->{ _program };
-	
+
 	use FileHandle;
 	my ($rh, $wh) = FileHandle::pipe;
 
@@ -231,7 +231,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

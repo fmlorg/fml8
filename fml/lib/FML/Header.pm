@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.36 2001/05/19 14:15:20 fukachan Exp $
+# $FML: Header.pm,v 1.37 2001/05/27 14:27:53 fukachan Exp $
 #
 
 package FML::Header;
@@ -42,7 +42,7 @@ C<combine()>, C<get()>, C<delete()>, C<count()>, C<print()>,
 C<as_string()>, C<fold_length()>, C<tags()>, C<dup()>, C<cleanup()>,
 C<unfold()>.
 
-CAUTION: Pay attention! 
+CAUTION: Pay attention!
 C<FML::Header> overloads C<get()> to remove the trailing "\n".
 
 =head2 C<new()>
@@ -280,9 +280,9 @@ sub add_rfc2369
 	$msg->attr('List-Owner' => "<mailto:${maintainer}>") if $maintainer;
 	if ($command) {
 	    $msg->attr('List-Help' =>  "<mailto:${command}?body=help>");
-	    $msg->attr('List-Subscribe' =>  
+	    $msg->attr('List-Subscribe' =>
 		       "<mailto:${command}?body=subscribe>");
-	    $msg->attr('List-UnSubscribe' =>  
+	    $msg->attr('List-UnSubscribe' =>
 		       "<mailto:${command}?body=unsubscribe>");
 	}
     }
@@ -293,9 +293,9 @@ sub add_rfc2369
 
 	if ($command) {
 	    $header->add('List-Help', "<mailto:${command}?body=help>");
-	    $header->add('List-Subscribe', 
+	    $header->add('List-Subscribe',
 			 "<mailto:${command}?body=subscribe>");
-	    $header->add('List-UnSubscribe', 
+	    $header->add('List-UnSubscribe',
 			 "<mailto:${command}?body=unsubscribe>");
 	}
     }
@@ -312,7 +312,7 @@ sub add_x_sequence
 
 =head2 C<rewrite_subject_tag($config, $args)>
 
-add subject tag like [elena:00010]. 
+add subject tag like [elena:00010].
 The actual function definitions exist in C<FML::Header::Subject>.
 
 =head2 C<rewrite_reply_to>
@@ -398,7 +398,7 @@ sub delete_subject_tag_like_string
 sub extract_message_id_references
 {
     my ($header) = @_;
-    my $buf = 
+    my $buf =
 	$header->get('in-reply-to') ."\n". $header->get('references');
 
     use Mail::Address;
@@ -406,7 +406,7 @@ sub extract_message_id_references
 
     my @r    = ();
     my %uniq = ();
-    foreach my $addr (@addrs) { 
+    foreach my $addr (@addrs) {
 	my $a = $addr->address;
 	unless ($uniq{ $a }) {
 	    push(@r, $addr->address);
@@ -441,7 +441,7 @@ C<address_for_post> address.
 
 sub verify_message_id_uniqueness
 {
-    my ($header, $config, $args) = @_;    
+    my ($header, $config, $args) = @_;
     my $dir = $config->{ 'message_id_cache_dir' },
     my $mid = $header->get('message-id');
     my $dup = 0;
@@ -485,7 +485,7 @@ sub verify_x_ml_info_uniqueness
 
 sub verify_list_post_uniqueness
 {
-    my ($header, $config, $args) = @_;    
+    my ($header, $config, $args) = @_;
     my $buf  = $header->get('list-post')  || undef;
     my $addr = $config->{ addr_for_post } || undef;
 
@@ -513,7 +513,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: TinyScheduler.pm,v 1.13 2001/12/11 16:13:03 fukachan Exp $
+# $FML: TinyScheduler.pm,v 1.14 2001/12/22 07:16:35 fukachan Exp $
 #
 
 package TinyScheduler;
@@ -23,7 +23,7 @@ TinyScheduler - scheduler with minimal functions
 
     $schedule->parse;
 
-    # show table by w3m :-) 
+    # show table by w3m :-)
     my $tmp = $schedule->tmpfile;
     my $fh  = new FileHandle $tmp, "w";
     $schedule->print($fh);
@@ -46,7 +46,7 @@ HTML TABLE by default. To see it, you need WWW browser e.g. "w3m".
 
 =head2 new($args)
 
-standard constructor. 
+standard constructor.
 
 It speculates C<user> by $args->{ user } or $ENV{'user'} or uid
 and determine path for ~user/.schedule/.
@@ -54,7 +54,7 @@ and determine path for ~user/.schedule/.
 $args can take the following variables:
 
    $args = {
-       schedule_dir   => DIR, 
+       schedule_dir   => DIR,
        schedule_file  => FILE,
        mode           => MODE,
    };
@@ -144,7 +144,7 @@ sub tmpfile
 	croak("$dir is not writable\n") unless -w $dir;
     }
 
-    eval q{ 
+    eval q{
 	use File::Spec;
 	$self->{ _tmpfile } = File::Spec->catfile($tmpdir, ".tmp.$$.html");
     };
@@ -295,13 +295,13 @@ sub print
 =head2 C<print_specific_month($fh, $n)>
 
 print range specified by C<$n>.
-C<$n> is number or string among C<this>, C<next> and C<last>.   
+C<$n> is number or string among C<this>, C<next> and C<last>.
 
 =cut
 
 
 # Descriptions: print calender for specific month as HTML
-#    Arguments: OBJ($self) HANDLE($fd) STR($month) [STR($year)] 
+#    Arguments: OBJ($self) HANDLE($fd) STR($month) [STR($year)]
 # Side Effects: none
 # Return Value: none
 sub print_specific_month
@@ -311,7 +311,7 @@ sub print_specific_month
     my $default_year  = 1900 + $year_now;
     my $default_month = $month_now + 1;
     my ($thismonth, $thisyear) = ($default_month, $default_year);
-    
+
     if ($month =~ /^\d+$/) {
 	$thismonth = $month;
 	$thisyear  = $year if defined $year;
@@ -320,7 +320,7 @@ sub print_specific_month
 	if ($default_month == 1) {
 	    $thismonth =  2 if $month eq 'next';
 	    $thismonth = 12 if $month eq 'last';
-	} 
+	}
 	elsif ($default_month == 12) {
 	    $thismonth =  1 if $month eq 'next';
 	    $thismonth = 11 if $month eq 'last';
@@ -343,7 +343,7 @@ show mode (string).
 
 =head2 set_mode( $mode )
 
-override mode. 
+override mode.
 The mode is either of 'text' or 'html'.
 
 XXX: The mode is not used in this module itsef.
@@ -351,7 +351,7 @@ XXX: The mode is not used in this module itsef.
 
 =cut
 
-# Descriptions: show the current $mode 
+# Descriptions: show the current $mode
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: string or undef
@@ -362,7 +362,7 @@ sub get_mode
 }
 
 
-# Descriptions: overwrite $mode 
+# Descriptions: overwrite $mode
 #    Arguments: OBJ($self) STR($mode)
 # Side Effects: update $self object
 # Return Value: none
@@ -382,7 +382,7 @@ Ken'chi Fukamachi
 Copyright (C) 2001 Ken'chi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
-#          All rights reserved. 
+#          All rights reserved.
 #
-# $FML: HTMLify.pm,v 1.4 2001/11/17 04:01:54 fukachan Exp $
+# $FML: HTMLify.pm,v 1.5 2001/11/27 11:40:30 fukachan Exp $
 #
 
 package FML::Process::HTMLify;
@@ -53,9 +53,9 @@ sub new
 }
 
 
-# Descriptions: dummy to avoid to take data from STDIN 
+# Descriptions: dummy to avoid to take data from STDIN
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub prepare
 {
@@ -86,7 +86,7 @@ sub run
     print STDERR "htmlify\t$src_dir =>\n\t\t$dst_dir\n" if $ENV{'debug'};
 
     # prepend $opt_I as @INC
-    if (defined $options->{ I }) { 
+    if (defined $options->{ I }) {
 	print STDERR "\t\tprepend $options->{ I } (\@INC)\n" if $ENV{'debug'};
 	unshift(@INC, $options->{ I });
     }
@@ -146,7 +146,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

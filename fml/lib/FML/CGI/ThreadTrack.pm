@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ThreadTrack.pm,v 1.10 2001/11/17 04:03:36 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.11 2001/11/19 11:36:47 fukachan Exp $
 #
 
 package FML::CGI::ThreadTrack;
@@ -69,7 +69,7 @@ sub html_end
 {
     my ($curproc, $args) = @_;
 
-    print "<HR>\n"; 
+    print "<HR>\n";
     $curproc->_show_guide($args);
 
     # o.k. end of html
@@ -99,7 +99,7 @@ sub run_cgi
 	$thread->show($tid);
     }
     elsif ($action eq 'change_status') {
-	# fmlthread.cgi is for administorator, so you can change status. 
+	# fmlthread.cgi is for administorator, so you can change status.
 	if ($myname eq 'fmlthread.cgi') {
 	    my $list = $curproc->safe_paramlist2_threadcgi_change_status();
 	    for my $param (@$list) {
@@ -146,7 +146,7 @@ sub _build_param
     };
 
     # import some variables
-    for my $varname (qw(base_url msg_base_url)) { 
+    for my $varname (qw(base_url msg_base_url)) {
 	if (defined $option->{ $varname }) {
 	    $ttargs->{ $varname } = $option->{ $varname };
 	}
@@ -189,7 +189,7 @@ sub _show_guide
 
 L<CGI>,
 L<FML::Process::CGI>
-and 
+and
 L<FML::Process::Flow>
 
 =head1 AUTHOR
@@ -201,7 +201,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.46 2001/11/25 07:47:32 fukachan Exp $
+# $FML: Switch.pm,v 1.47 2001/11/27 04:00:19 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -34,14 +34,14 @@ C<Bootstrap2()> loads main.cf,
 analyzes the command arguments
 and call C<ProcessSwitch()> finally.
 
-C<ProcessSwitch()> emulates "use $package" to load 
+C<ProcessSwitch()> emulates "use $package" to load
 the corresponding library with the arguments.
 The fml flow bifurcates here through C<ProcessSwitch()>.
 
 The flow details of program exists in FML::Process:: class.
 For example, libexec/distribute (fml.pl) runs in this way.
 
-       functions                class   
+       functions                class
        ----------------------------------------
 
        main::Bootstrap()        libexec/loader
@@ -67,7 +67,7 @@ array variable.
 We pass it to C<ProcessSwitch()> later.
 
     @cf = (
-	   /etc/fml/defaults/$VERSION/default_config.cf 
+	   /etc/fml/defaults/$VERSION/default_config.cf
 	   /etc/fml/site_default_config.cf (required ?)
 	   /etc/fml/domains/$DOMAIN/default_config.cf
 	   /var/spool/ml/elena/config.cf
@@ -114,7 +114,7 @@ sub main::Bootstrap2
     }
 
     # 2.1 analyze main.cf and get the result in $main_cf
-    #     removed. 
+    #     removed.
 
     # 2.2 parse @ARGV and get a list of configuration files
     #     XXX $main_cf{ ml_home_dir } (e.g. /var/spool/ml/elena) is defined
@@ -126,14 +126,14 @@ sub main::Bootstrap2
     # 2.3 prepare @$cf
     #     XXX hmm, .. '/etc/fml/site_default_config.cf' is good ???
     use File::Spec;
-    my $sitedef = 
+    my $sitedef =
       File::Spec->catfile($main_cf->{ config_dir }, 'site_default_config.cf');
     unshift(@$cf, $sitedef);
     unshift(@$cf, $main_cf->{ default_paths_cf });
     unshift(@$cf, $main_cf->{ default_config_cf });
 
-    # 3.1 set up @INC 
-    unshift(@INC, split(/\s+/, $main_cf->{ lib_dir }));	    
+    # 3.1 set up @INC
+    unshift(@INC, split(/\s+/, $main_cf->{ lib_dir }));
     unshift(@INC, split(/\s+/, $main_cf->{ local_lib_dir }));
 
     # 3.2 useful for e.g. "fmldoc"
@@ -153,12 +153,12 @@ sub main::Bootstrap2
     # 5. o.k. here we go!
     my $args = {
 	fml_version    => $main_cf->{ fml_version },
-	
+
 	myname         => $myname,
 	program_name   => $myname,
 	ml_home_prefix => $main_cf->{ ml_home_prefix },
 	ml_home_dir    => $main_cf->{ ml_home_dir },
-	
+
 	cf_list        => $cf,
 	options        => \%options,
 
@@ -182,8 +182,8 @@ sub main::Bootstrap2
 	my $reason = $@;
 	if ($obj->can('help')) { eval $obj->help();};
 
-	if ($ENV{'debug'} || 
-	    defined( $main_cf->{ debug } ) || 
+	if ($ENV{'debug'} ||
+	    defined( $main_cf->{ debug } ) ||
 	    defined $options{debug}) {
 	    croak($reason);
 	}
@@ -229,7 +229,7 @@ sub _usual_parse_argv
 	    if (-d $x && -f "$x/config.cf") {
 		$found_cf = 1;
 		$ml_home_dir = $x;
-		push(@cf, "$x/config.cf"); 
+		push(@cf, "$x/config.cf");
 	    }
 	}
 
@@ -286,23 +286,23 @@ sub _makefml_parse_argv
 }
 
 
-=head2 C<ProcessSwitch($args)> 
+=head2 C<ProcessSwitch($args)>
 
 load the library and prepare environment to use it.
 C<ProcessSwitch($args)> return process object C<$obj>.
 
-To start the process, we pass C<$obj> with C<$args> to 
+To start the process, we pass C<$obj> with C<$args> to
 C<FML::Process::Flow::ProcessStart($obj, $args)>.
 
 C<$args> is like this:
 
     my $args = {
 	fml_version    => $main_cf->{ fml_version },
-	
+
 	myname         => $myname,
 	ml_home_prefix => $main_cf->{ ml_home_prefix },
 	ml_home_dir    => $main_cf->{ ml_home_dir },
-	
+
 	cf_list        => $cf,
 	options        => \%options,
 
@@ -325,7 +325,7 @@ C<$args> is like this:
 
 
 # Descriptions: top level process switch
-#               emulates "use $package" but $package is dynamically 
+#               emulates "use $package" but $package is dynamically
 #               determined by e.g. $0.
 #    Arguments: $args
 #               XXX non OO interface
@@ -336,7 +336,7 @@ sub ProcessSwitch
 {
     my ($args) = @_;
 
-    # Firstly, create process 
+    # Firstly, create process
     # $pkg is a  package name, for exampl,e "FML::Process::Distribute".
     my $pkg = _module_we_use($args);
     unless (defined $pkg) {
@@ -364,14 +364,14 @@ sub _module_specific_options
     # XXX Caution!
     # XXX xxx.cgi SHOULD NOT ACCPET the same options as command line
     # XXX program xxx does.
-    if ($myname eq 'fml.pl'     || 
-	$myname eq 'distribute' || 
-	$myname eq 'command'    || 
-	$myname eq 'loader' ) { 
+    if ($myname eq 'fml.pl'     ||
+	$myname eq 'distribute' ||
+	$myname eq 'command'    ||
+	$myname eq 'loader' ) {
 	return qw(ctladdr! debug! help! params=s -c=s);
     }
     elsif ($myname eq 'fmlthread') {
-	return qw(debug! help! 
+	return qw(debug! help!
 		  article_id_max=i
 		  spool_dir=s
 		  base_url=s
@@ -392,7 +392,7 @@ sub _module_specific_options
 	return qw(debug! help! params=s -c=s v! t! u! m! l!);
     }
     elsif ($myname eq 'makefml') {
-	return qw(debug! help! params=s -c=s);	
+	return qw(debug! help! params=s -c=s);
     }
     elsif ($myname eq 'makefml.cgi') {
 	return ();
@@ -442,11 +442,11 @@ sub _ml_name_is_required
 # Return Value: FML::Process::SOMETHING module name
 sub _module_we_use
 {
-    my ($args) = @_;    
+    my ($args) = @_;
     my $name   = $args->{ myname };
     my $pkg    = '';
 
-    if (($name eq 'fml.pl' && $args->{ options }->{ ctladdr }) || 
+    if (($name eq 'fml.pl' && $args->{ options }->{ ctladdr }) ||
 	$name eq 'command' ||
 	($name eq 'loader' && $args->{ options }->{ ctladdr })) {
 	$pkg = 'FML::Process::Command';

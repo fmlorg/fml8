@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
-#          All rights reserved. 
+#          All rights reserved.
 #
-# $FML: Configure.pm,v 1.32 2001/11/27 11:40:30 fukachan Exp $
+# $FML: Configure.pm,v 1.33 2001/12/08 14:32:08 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -31,12 +31,12 @@ FML::Process::Configure -- fmlconf and makefml main functions
 
 =head1 DESCRIPTION
 
-FML::Process::Configure provides the main function for 
+FML::Process::Configure provides the main function for
 C<fmlconf>
- and 
+ and
 C<makefml>.
 
-These programs, 
+These programs,
 C<fmlconf> and C<makefml>,
 bootstrap by using these modules in this order.
 
@@ -97,14 +97,14 @@ sub verify_request
 
 =head2 C<run($args)>
 
-the top level dispatcher for C<fmlconf> and C<makefml>. 
+the top level dispatcher for C<fmlconf> and C<makefml>.
 
-It kicks off internal function 
-C<_fmlconf($args)> for C<fmlconf> 
-    and 
+It kicks off internal function
+C<_fmlconf($args)> for C<fmlconf>
+    and
 C<_makefml($args)> for makefml.
 
-NOTE: 
+NOTE:
 C<$args> is passed from parrent libexec/loader.
 See <FML::Process::Switch()> on C<$args> for more details.
 
@@ -125,7 +125,7 @@ sub run
 }
 
 
-sub finish { 1;} 
+sub finish { 1;}
 
 
 =head2 help()
@@ -161,12 +161,12 @@ _EOF_
 =head2 C<_makefml($args)> (INTERNAL USE)
 
 switch of C<makefml> command.
-It kicks off <FML::Command::$command> corrsponding with 
+It kicks off <FML::Command::$command> corrsponding with
 C<@$argv> ( $argv = $args->{ ARGV } ).
 
 C<Caution:>
 C<$args> is passed from parrent libexec/loader.
-We construct a new struct C<$command_args> here to pass parameters 
+We construct a new struct C<$command_args> here to pass parameters
 to child objects.
 C<FML::Command::$command> object takes them as arguments not pure
 C<$args>. It is a little mess. Pay attention.
@@ -178,7 +178,7 @@ See <FML::Process::Switch()> on C<$args> for more details.
 
 # Descriptions: makefml top level dispacher
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _makefml
 {
@@ -233,7 +233,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

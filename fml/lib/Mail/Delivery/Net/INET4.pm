@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: INET4.pm,v 1.1.1.1 2001/04/03 09:53:30 fukachan Exp $
+# $FML: INET4.pm,v 1.2 2001/06/17 08:57:12 fukachan Exp $
 #
 
 package Mail::Delivery::Net::INET4;
@@ -70,17 +70,17 @@ IPv4. This is a typical socket program.
 
 =item C<connect4()>
 
-try L<connect(2)>. 
-If it succeeds, returned 
+try L<connect(2)>.
+If it succeeds, returned
 $self->{ _socket } has true value.
-If not, 
-$self->{ _socket } is undef. 
+If not,
+$self->{ _socket } is undef.
 
 Avaialble arguments follows:
 
     connect4( { _mta => $mta });
 
-$mta is a hostname or [raw_ipv4_addr]:port form, for example, 
+$mta is a hostname or [raw_ipv4_addr]:port form, for example,
 127.0.0.1:25.
 
 =head1 SEE ALSO
@@ -99,7 +99,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.8 2001/09/17 11:28:31 fukachan Exp $
+# $FML: Adapter.pm,v 1.9 2001/09/17 11:59:23 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -54,17 +54,17 @@ statements.
 
 This is "Adapter" (or "Wrapper") C<design pattern>.
 This is a wrapper of IO for
-e.g. file, 
-unix group, 
-NIS (Network Information System), 
+e.g. file,
+unix group,
+NIS (Network Information System),
 RDBMS (Relational DataBase Management System)
 et. al.
-Once you create and open a C<map>, 
+Once you create and open a C<map>,
 you can use the same methods as usual file IO.
 
 =head2 MAP
 
-C<map> specifies the type of the database we read/write.  
+C<map> specifies the type of the database we read/write.
 
 For example, C<file> map implies we hold our data in a file.
 The format is one line for one entry in a lot of cases.
@@ -74,11 +74,11 @@ The format is one line for one entry in a lot of cases.
 
 To get one entry is to read one line or a part of one line.
 
-This wrapper provides IO like a usual file for the specified C<$map>. 
+This wrapper provides IO like a usual file for the specified C<$map>.
 
 =head2 MAP TYPES
 
-   map name        descriptions or examples        
+   map name        descriptions or examples
    ---------------------------------------------------
    file            file:$file_name
                    For example, file:/var/spool/ml/elena/recipients
@@ -178,13 +178,13 @@ sub new
 }
 
 
-=head2 
+=head2
 
 =item C<open([$flag])>
 
-open IO operation for the map. 
+open IO operation for the map.
 C<$flag> is passed to SUPER CLASS open()
-when "file:" map is specified. 
+when "file:" map is specified.
 C<open()> is a dummy function in other maps now.
 
 =cut
@@ -220,7 +220,7 @@ sub open
 
 =head2 C<touch()>
 
-create a file if not exists. 
+create a file if not exists.
 This method is avaialble for file: type.
 
 =cut
@@ -244,9 +244,9 @@ In other maps, it is the same as C<get_next_value()> method below.
 
 =item C<get_next_value()>
 
-get the next value from the specified database (map). 
+get the next value from the specified database (map).
 For example, this function returns the first column in the next line
-for C<file> map. 
+for C<file> map.
 It return the next element of the array,
 in C<array_reference>, C<unix.group>, C<nis.grouop> maps.
 
@@ -289,9 +289,9 @@ replace lines which matches $regexp with $value.
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $address
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub add
 {
@@ -307,9 +307,9 @@ sub add
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $address
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub delete
 {
@@ -325,9 +325,9 @@ sub delete
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $regexp $value
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub replace
 {
@@ -367,7 +367,7 @@ sub find
     my (@buf, $x);
 
     # forward the request to SUPER class (md = map dependent)
-    if ($self->SUPER::can('md_find')) { 
+    if ($self->SUPER::can('md_find')) {
 	return $self->md_find($regexp, $args);
     }
 
@@ -390,7 +390,7 @@ sub find
 		last if $x =~ /$regexp/i;
 	    }
 	}
-    }	   
+    }
 
     $self->close;
 
@@ -398,7 +398,7 @@ sub find
 }
 
 
-=head2 C<DESTROY> 
+=head2 C<DESTROY>
 
 =cut
 
@@ -457,7 +457,7 @@ Ken'ichi Fukamchi
 Copyright (C) 2001 Ken'ichi Fukamchi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: GOO.pm,v 1.1 2001/04/11 16:36:19 fukachan Exp $
+# $FML: GOO.pm,v 1.2 2001/07/30 14:42:34 fukachan Exp $
 #
 
 
@@ -34,7 +34,7 @@ See C<Mail::Bounce> for more details.
    Message-Id: <E12pMyv-0003Q7-00@mail.goo.ne.jp>
    Date: Wed, 10 May 2000 12:16:17 +0900
    X-UIDL: 326069d2d4e53c677fa3443428c80788
-   
+
      ... Japanese message ...
 
 =cut
@@ -68,7 +68,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

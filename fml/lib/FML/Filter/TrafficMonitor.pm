@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.1 2001/08/07 12:23:48 fukachan Exp $
+# $FML: TrafficMonitor.pm,v 1.1 2001/12/02 02:09:52 fukachan Exp $
 #
 
 package FML::Filter::TrafficMonitor;
@@ -51,7 +51,7 @@ sub _open_cache
 
     if ($dir) {
         my $obj = new File::CacheDir {
-            directory  => $dir, 
+            directory  => $dir,
             cache_type => $mode,
             expires_in => $days,
         };
@@ -91,7 +91,7 @@ sub _get_hostinfo
     my $info = {};
 
     # Analizeing Received:
-    # XXX $status = &MTI::GetHostInfo(*hostinfo)); 
+    # XXX $status = &MTI::GetHostInfo(*hostinfo));
 
     return $info;
 }
@@ -101,15 +101,15 @@ sub _save_addrinfo
 {
     my ($self, $addrinfo, $db) = @_;
 
-    # cache on address with the current time; also, 
+    # cache on address with the current time; also,
     # expire the address cache automatically by File::CacheDir
     my %uniq = ();
     for my $field (qw(from return-path sender x-sender)) {
   	next unless $info->{ $field };
 	next if $uniq{$field}; $uniq{$field} = 1; # ensure uniqueness
-	
+
 	next if $MTI{$_} =~ /$time:/; # unique;
-    
+
 	$MTI{$_} .= " $time:$date";
     }
 }
@@ -119,7 +119,7 @@ sub _save_hostinfo
 {
 
     ## UNDER CURRENT IMPLEMENTATION, HOST INFO IS JUST ADDITONAL FYI.
-    ## cache host info with Date: or Received: 
+    ## cache host info with Date: or Received:
     if (%hostinfo) {
 	local($host, $rdate);
 	while (($host, $rdate) = each %hostinfo) {
@@ -155,7 +155,7 @@ sub analyze
     $self->_open_cache($db, $args);
 
     # CHECK ROUTINES to average traffic
-    # if (($mode eq 'distribute' && $MTI_DISTRIBUTE_TRAFFIC_MAX) || 
+    # if (($mode eq 'distribute' && $MTI_DISTRIBUTE_TRAFFIC_MAX) ||
     # ($mode eq 'command' && $MTI_COMMAND_TRAFFIC_MAX)) {
     # for (keys %addrinfo) {
     # &MTIProbe(*MTI, $_, "${mode}:max_traffic");	# open, close;
@@ -206,13 +206,13 @@ sub MTIDBMOpen
     ### DBM OPEN ###
     # perl 5 tie
     if ($MTI_TIE_TYPE) {
-	eval "use $MTI_TIE_TYPE;"; 
+	eval "use $MTI_TIE_TYPE;";
 	&Log($@) if $@;
 
 	local($_) =  q#;
-	tie(%MTI, $MTI_TIE_TYPE, $MTI_DB) || 
+	tie(%MTI, $MTI_TIE_TYPE, $MTI_DB) ||
 	    ($error++, &Log("MTI[$$]: cannot tie \%MTI as $MTI_TIE_TYPE"));
-	tie(%HI, $MTI_TIE_TYPE, $MTI_HI_DB) || 
+	tie(%HI, $MTI_TIE_TYPE, $MTI_HI_DB) ||
 	    ($error++, &Log("MTI[$$]: cannot tie \%HI as $MTI_TIE_TYPE"));
 	#;
 
@@ -222,15 +222,15 @@ sub MTIDBMOpen
     # perl 4 (default)
     else {
 	if ($USE_FML_WITH_FMLSERV) {
-	    dbmopen(%MTI, $MTI_DB, 0660) || 
+	    dbmopen(%MTI, $MTI_DB, 0660) ||
 		($error++, &Log("MTI[$$]: cannot bind \%MTI"));
-	    dbmopen(%HI,  $MTI_HI_DB, 0660) || 
+	    dbmopen(%HI,  $MTI_HI_DB, 0660) ||
 		($error++, &Log("MTI[$$]: cannot bind \%HI"));
 	}
 	else {
-	    dbmopen(%MTI, $MTI_DB, 0600) || 
+	    dbmopen(%MTI, $MTI_DB, 0600) ||
 		($error++, &Log("MTI[$$]: cannot bind \%MTI"));
-	    dbmopen(%HI,  $MTI_HI_DB, 0600) || 
+	    dbmopen(%HI,  $MTI_HI_DB, 0600) ||
 		($error++, &Log("MTI[$$]: cannot bind \%HI"));
 	}
     }
@@ -291,9 +291,9 @@ sub MTIGabageCollect
 {
     local(*MTI, $time) = @_;
     local($k, $v);
-    while (($k, $v) = each %MTI) { 
+    while (($k, $v) = each %MTI) {
 	&MTICleanUp(*MTI, $k, $time);
-	undef $MTI{$k} unless $MTI{$k}; 
+	undef $MTI{$k} unless $MTI{$k};
     }
 }
 
@@ -304,7 +304,7 @@ sub MTICleanUp
     local($mti, $t);
 
     $MTI_EXPIRE_UNIT = $MTI_EXPIRE_UNIT || 3600;
-    
+
     for (split(/\s+/, $MTI{$addr})) {
 	next unless $_;
 	($t) = (split(/:/, $_))[0];
@@ -345,10 +345,10 @@ sub MTIWarn
 	    = stat($MTI_WARN_LASTLOG);
 
 	# ignore until the next waning time.
-	if ((time - $mtime) < $MTI_WARN_INTERVAL) { 
+	if ((time - $mtime) < $MTI_WARN_INTERVAL) {
 	    return 0;
 	}
-	elsif ((time - $mtime) < 2*$MTI_WARN_INTERVAL) { 
+	elsif ((time - $mtime) < 2*$MTI_WARN_INTERVAL) {
 	    $cont = 1;
 	    &Append2(time, $MTI_WARN_LASTLOG);
 	}
@@ -411,7 +411,7 @@ sub MTIHintOut
 
     # logs $addr to $DIR/spamlist (FML level)
     if ($addr && $MTI_APPEND_TO_REJECT_ADDR_LIST) {
-	&Append2($addr, $REJECT_ADDR_LIST); 
+	&Append2($addr, $REJECT_ADDR_LIST);
     }
 }
 
@@ -419,13 +419,13 @@ sub MTIHintOut
 ######################################################################
 package MTI;
 
-sub Log { &main::Log(@_);} 
+sub Log { &main::Log(@_);}
 sub ABS { $_[0] < 0 ? - $_[0] : $_[0];}
 
 # should we try ?
-#    if ($buf =~ /\@localhost.*by\s+(\S+).*;(.*)/) { 
-#    elsif ($buf =~ /from\s+(\S+).*;(.*)/) { 
-#    elsif ($buf =~ /^\s*by\s+(\S+).*;(.*)/) { 
+#    if ($buf =~ /\@localhost.*by\s+(\S+).*;(.*)/) {
+#    elsif ($buf =~ /from\s+(\S+).*;(.*)/) {
+#    elsif ($buf =~ /^\s*by\s+(\S+).*;(.*)/) {
 sub GetHostInfo
 {
     local(*hostinfo, *e) = @_;
@@ -440,7 +440,7 @@ sub GetHostInfo
 
     for (split(/\n\w+:/, $buf)) {
 	undef $host; undef $rdate;
-	
+
 	s/\n/ /g;
 	s/\(/ \(/g;
 	s/by\s+($host_pat).*(\;.*)/$host = $1, $rdate = $2/e;
@@ -471,9 +471,9 @@ sub main::MTISimpleBomberP
     local($soft_limit, $hard_limit, $es, $addr);
     local($cr, $scr);
 
-    # BOMBER OR NOT: the limit is 
+    # BOMBER OR NOT: the limit is
     # "traffic over sequential 5 mails with 1 mail for each 5s".
-    $soft_limit = $main::MTI_BURST_SOFT_LIMIT || (5/5);  
+    $soft_limit = $main::MTI_BURST_SOFT_LIMIT || (5/5);
     $hard_limit = $main::MTI_BURST_HARD_LIMIT || (2*5/5);
 
     # GLOBAL in this Name Space; against divergence
@@ -481,17 +481,17 @@ sub main::MTISimpleBomberP
 
     # addresses
     for $addr (keys %addrinfo) {
-	($cr, $scr)  = &SumUp($MTI{$addr});	# CorRelation 
+	($cr, $scr)  = &SumUp($MTI{$addr});	# CorRelation
 
 	if (($cr > 0) && $main::debug_mti) {
-	    &Log("MTI[$$]: SumUp ". 
+	    &Log("MTI[$$]: SumUp ".
 		 sprintf("src_cr=%2.4f dst_cr=%2.4f", $scr, $cr));
 	}
 
 	# soft limit: scr > cr : busrt in src host not dst host
 	# hard limit: cf > hard_limit or scr > hard_limit
 	if ((&MTI_GE($scr, $cr) && ($scr > $soft_limit)) ||
-	    ($scr > $hard_limit) || 
+	    ($scr > $hard_limit) ||
 	    ($cr  > $hard_limit)) {
 	    &Log("MTI[$$]: <$addr> must be a bomber;");
 	    &Log("MTI[$$]:".
@@ -509,7 +509,7 @@ sub main::MTISimpleBomberP
 
 sub MTI_GE
 {
-    if ($_[0] >= $_[1]) { 
+    if ($_[0] >= $_[1]) {
 	return 1;
     }
     # within 3 %
@@ -520,7 +520,7 @@ sub MTI_GE
     0;
 }
 
-sub COST 
+sub COST
 {
     &ABS($_[0]) < $Threshold ? $Threshold : &ABS($_[0]);
 }
@@ -560,7 +560,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

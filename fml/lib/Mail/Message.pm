@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.34 2001/10/27 16:42:50 fukachan Exp $
+# $FML: Message.pm,v 1.35 2001/10/29 13:54:20 fukachan Exp $
 #
 
 package Mail::Message;
@@ -15,7 +15,7 @@ use Carp;
 my $debug = $ENV{'debug'} ? $ENV{'debug'} : 0;
 
 # virtual content-type
-my %virtual_data_type = 
+my %virtual_data_type =
     (
      'preamble'        => 'multipart.preamble',
      'delimiter'       => 'multipart.delimiter',
@@ -35,7 +35,7 @@ To parse the stdin and print it,
     my $m = Mail::Message->parse({ fh => \*STDIN });
     $m1->print;
 
-to parse file C<$filename>, 
+to parse file C<$filename>,
 
     use Mail::Message;
     my $m = Mail::Message->parse({ file => $filename });
@@ -76,14 +76,14 @@ C<Mail::Message> object holds them and other control information such
 as the reference to the next C<Mail::Message> object, et. al.
 
 C<Mail::Message> provides useful functions to analyze a mail message.
-such as to analyze MIME information, 
+such as to analyze MIME information,
 to check and get information on message (part) size et. al.
-It can handle MIME multipart. 
+It can handle MIME multipart.
 
 C<Mail::Message> also can compose a multipart message in primitive
 way.
 It is useful for you to use C<Mail::Message::Compose> class to handle
-MIME multipart in more clever way.  
+MIME multipart in more clever way.
 It is an adapter for C<MIME::Lite> class.
 
 =head2 INTERNAL REPRESENTATION
@@ -101,7 +101,7 @@ such as
     undef -> mesg1 -> mesg2 -> mesg3 -> undef
           <-       <-       <-       <-
 
-To describe such a chain, a message object consists of 
+To describe such a chain, a message object consists of
 bi-directional object chains.
 
 Described below, C<MIME delimiter> is also treated as a virtual
@@ -137,7 +137,7 @@ message for convenience.
 
 Only rfc822/message type uses C<data_info> field.
 C<header> holds MIME content header of the corresponding message.
-                                       
+
 The default value for each key follows:
 
    key              value
@@ -221,8 +221,8 @@ It is useful to treate the message header and body in separate
 way when we compose the message by sequential attachments.
 
 If you build a message by scratch, you must compose a header
-object.  
-When you C<parse()> to a mail, 
+object.
+When you C<parse()> to a mail,
 you will get the whole set of a chain and a body message.
 
 =cut
@@ -261,7 +261,7 @@ sub new
 #
 #               In almost cases, _build_message() is used to make a
 #               message body part object. We use this to make a header object
-#               by specifying { 
+#               by specifying {
 #                           data_type => text/rfc822-headers,
 #                           data      => Mail::Header or FML::Header object,
 #               } in $args.
@@ -277,7 +277,7 @@ sub _build_message
     $self->_set_up_template($args);
 
     # parse the non multipart mail and build a chain
-    if (defined( $args->{ data_type } ) && 
+    if (defined( $args->{ data_type } ) &&
 	$args->{ data_type } =~ /multipart/i) {
 	$self->parse_and_build_mime_multipart_chain($args);
     }
@@ -310,7 +310,7 @@ sub _set_up_template
     # information on data and the type for the message.
     $self->{'mime_version'}   = $args->{'mime_version'}   || 1.0;
     $self->{'data_type'}      = $args->{'data_type'}      || 'text/plain';
-    $self->{'base_data_type'} = 
+    $self->{'base_data_type'} =
 	$args->{'base_data_type'} || $self->{'data_type'} || undef;
 
     # default print out mode
@@ -366,11 +366,11 @@ sub __build_message
 
 =head2 C<dup_header()>
 
-duplicate a message chain. 
-Precisely speaking, it duplicates only the header object 
+duplicate a message chain.
+Precisely speaking, it duplicates only the header object
 but not duplicate body part.
-So, the next object of the duplicated header, 
-C<dup_header0> in the following figure, 
+So, the next object of the duplicated header,
+C<dup_header0> in the following figure,
 is the first body part C<part1> of the origianl chain.
 
     header0 ----> part1 -> part2 -> ...
@@ -385,7 +385,7 @@ sub dup_header
 {
     my ($self) = @_;
 
-    # if the head object is rfc822 header, dup the header. 
+    # if the head object is rfc822 header, dup the header.
     if ($self->{ data_type } eq 'text/rfc822-headers') {
 	my $dupmsg  = new Mail::Message; # make a new object
 	my $dupmsg2 = new Mail::Message; # make a new object
@@ -417,7 +417,7 @@ sub dup_header
 read data from file descriptor C<$fd> and parse it to the mail header
 and the body.
 
-    parse({ 
+    parse({
 	fd => $fd,
     });
 
@@ -451,7 +451,7 @@ sub parse
     my $result = {};
     $me->_parse($fd, $result);
 
-    # make a Mail::Messsage object for the (whole) mail header 
+    # make a Mail::Messsage object for the (whole) mail header
     # $me becomes a Mail::Message;
     $me->_parse_header($result);
     $me->_build_header_object($args, $result);
@@ -472,9 +472,9 @@ sub parse
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _parse
 {
@@ -484,7 +484,7 @@ sub _parse
 
     while ($p = sysread($fd, $_, 1024)) {
 	$total_buffer_size += $p;
-	$buf .= $_; 
+	$buf .= $_;
 	if (($p = index($buf, "\n\n", 0)) > 0) {
 	    $header      = substr($buf, 0, $p + 1);
 	    $header_size = $p + 1;
@@ -514,9 +514,9 @@ sub _parse
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _parse_header
 {
@@ -536,9 +536,9 @@ sub _parse_header
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _build_header_object
 {
@@ -548,7 +548,7 @@ sub _build_header_object
     my $header_obj;
 
     eval qq{ require $pkg; $pkg->import();
-	     \$header_obj = new $pkg \$ha, Modify => 0; 
+	     \$header_obj = new $pkg \$ha, Modify => 0;
 	 };
     croak($@) if $@;
 
@@ -564,9 +564,9 @@ sub _build_header_object
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _build_body_object
 {
@@ -627,7 +627,7 @@ sub rfc822_message_body
 
 return the first C<Mail::Message> object with the specified attrribute.
 You can specify C<data_type> in C<$args> HASH REFERENCE.
-For example, 
+For example,
 
     $m = $msg->find( { data_type => 'text/plain' } );
 
@@ -731,13 +731,13 @@ sub _header_data_type
 
 =head2 C<head_message()>
 
-no argument. 
+no argument.
 It return the head object of a chain of C<Mail::Message> objects.
 Usually it is the header part.
 
 =head2 C<last_message()>
 
-no argument. 
+no argument.
 It return the last object of a chain of C<Mail::Message> objects.
 Usually it is the last message in the body part.
 
@@ -750,7 +750,7 @@ sub head_message
     my $m = $self;
 
     while (1) {
-	if (defined $m->{ prev }) { 
+	if (defined $m->{ prev }) {
 	    $m = $m->{ prev };
 	}
 	else {
@@ -853,9 +853,9 @@ sub set_print_mode
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _print
 {
@@ -888,7 +888,7 @@ sub _is_head_message
 {
     my ($self, $msg) = @_;
     my $hm = $self->head_message;
-    ($hm eq $self) ? 1 : 0; 
+    ($hm eq $self) ? 1 : 0;
 }
 
 
@@ -906,7 +906,7 @@ sub _print_messsage_on_memory
 
     # \n -> \r\n
     my $raw_print_mode = 1 if $self->{ _print_mode } eq 'raw';
-    
+
     # set up offset for the buffer
     my $data  = $self->{ data };
     my $type  = $self->{ data_type } || croak("no data_type");
@@ -924,7 +924,7 @@ sub _print_messsage_on_memory
     else {
 	$header = $self->{header};
     }
-		
+
     if (defined $header) {
 	$header =~ s/\n/\r\n/g unless (defined $raw_print_mode);
 	print $fd $header;
@@ -933,7 +933,7 @@ sub _print_messsage_on_memory
 
     # skip the first rfc822 header (which is the real header for delivery).
     return if ($type eq 'text/rfc822-headers') && $self->_is_head_message();
-    
+
 
     # 2. print content body: write each line in buffer
     my ($p, $len, $buf, $pbuf);
@@ -948,7 +948,7 @@ sub _print_messsage_on_memory
 	print STDERR "try to print(p=$p pp=$pp < $p_end)\n" if $debug > 1;
 
 	# handle buffer (MIME part) without trailing "\n".
-	# index("\n") can pick up both 
+	# index("\n") can pick up both
 	#     the last "\n" of the MIME part
 	# and
 	#     "\n" of MIME delimiter string "CRLF delimiter"
@@ -959,7 +959,7 @@ sub _print_messsage_on_memory
 
 	$len = $p - $pp + 1;
 
-	# handle buffer wihtout trailing "\n" 
+	# handle buffer wihtout trailing "\n"
 	if ($p == $p_end && substr($$data, $p-1, 1) ne "\n") {
 	    $len = $p_end - $pp;
 	}
@@ -974,7 +974,7 @@ sub _print_messsage_on_memory
 	    print STDERR "print($pp,$len){$buf}\n";
 	}
 
-	# do nothing, get away from here 
+	# do nothing, get away from here
 	last SMTP_IO if $len == 0;
 
 	unless (defined $raw_print_mode) {
@@ -995,9 +995,9 @@ sub _print_messsage_on_memory
 
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _print_messsage_on_disk
 {
@@ -1051,14 +1051,14 @@ sub _print_messsage_on_disk
 =head2 C<build_mime_multipart_chain($args)>
 
 build a mime message by scratch.
-This may be obsolete since 
+This may be obsolete since
 we use C<MIME::Lite> to build a mime message now.
 
 =cut
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub build_mime_multipart_chain
 {
@@ -1113,7 +1113,7 @@ C<new()> calls this routine if the message looks MIME multipart.
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #              CAUTION: $args must be the same as it of new().
 #
 #                      ... preamble ...
@@ -1134,7 +1134,7 @@ C<new()> calls this routine if the message looks MIME multipart.
 #                                           [CRLF epilogue]
 #
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub parse_and_build_mime_multipart_chain
 {
@@ -1191,9 +1191,9 @@ sub parse_and_build_mime_multipart_chain
     my $preamble = "\n".substr($$data, 0, length($delimeter) - 1);
     my $no_preamble = 1 if $preamble eq $delimeter;
 
-    # 
+    #
     # HERE WE GO but debug firstly :)
-    # 
+    #
     print "\tmpb($mpb_begin, $mpb_end)\n\t----------\n\n" if $debug;
     print "\tno preamble\n" if $debug && $no_preamble;
 
@@ -1229,7 +1229,7 @@ sub parse_and_build_mime_multipart_chain
 
 	    my $default;
 	    if ($i == 0) {
-		$default = $no_preamble ? 'text/plain': 
+		$default = $no_preamble ? 'text/plain':
 		    $virtual_data_type{'preamble'};
 	    }
 
@@ -1370,9 +1370,9 @@ make a fundamental mime header fields and return it.
 
 =cut
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub build_mime_header
 {
@@ -1399,9 +1399,9 @@ sub build_mime_header
 #     {Content-Type: ...
 #
 #       ... body ...}
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _alloc_new_part
 {
@@ -1413,9 +1413,9 @@ sub _alloc_new_part
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _next_part_pos
 {
@@ -1443,9 +1443,9 @@ sub _next_part_pos
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _get_pos
 {
@@ -1454,9 +1454,9 @@ sub _get_pos
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _set_pos
 {
@@ -1480,9 +1480,9 @@ return this message has empty content or not.
 
 my $total = 0;
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub size
 {
@@ -1510,9 +1510,9 @@ sub size
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub is_empty
 {
@@ -1556,7 +1556,7 @@ sub get_encoding_mechanism
 =head2 C<get_offset()>
 
 return offset information in the data.
-return value is ARRAY 
+return value is ARRAY
 
    ($offset_begin, $offset_end)
 
@@ -1607,9 +1607,9 @@ mail message.
 
 =cut
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub get_data_type
 {
@@ -1627,22 +1627,22 @@ return the number of paragraphs in the message ($self).
 
 =head2 C<nth_paragraph($n)>
 
-return the string of C<$n>-th paragraph. 
+return the string of C<$n>-th paragraph.
 For example, C<nth_paragraph(1)> returns the 1st paragraph.
 The syntax is usual not C language flabour.
 
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub num_paragraph
 {
     my ($self) = @_;
 
-    # exit ASAP if the message is empty. 
+    # exit ASAP if the message is empty.
     return 0 if $self->is_empty();
 
     my $pmap = $self->_evaluate_pmap();
@@ -1679,7 +1679,7 @@ sub _evaluate_pmap
 
     # skip "\n" in the first and end of the buffer
     while (substr($$data, $p, 1) eq "\n") { $p++;}
-    while (substr($$data, $pe -1, 1) eq "\n") { $pe--;} 
+    while (substr($$data, $pe -1, 1) eq "\n") { $pe--;}
 
     my (@pmap) = ($pb);
   LINE:
@@ -1689,7 +1689,7 @@ sub _evaluate_pmap
 	    $pp >= $pe ) { # over the end of buffer boundary
 
 	    push(@pmap, $pe); # the end of the last paragraph
-	    last LINE; 
+	    last LINE;
 	}
 	else {
 	    # skip trailing "\n" after "\n\n"
@@ -1708,7 +1708,7 @@ sub _evaluate_pmap
 	    my $pp = $pmap[ $i + 1 ];
 	    print STDERR "($p,$pp)<", substr($$data, $p, $pp - $p) , ">\n";
 	}
-	print STDERR "( @pmap )\n"; 
+	print STDERR "( @pmap )\n";
     }
 
     return \@pmap;
@@ -1756,9 +1756,9 @@ If C<$size> is specified, return the first $size bytes in the body.
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub header_in_body_part
 {
@@ -1767,9 +1767,9 @@ sub header_in_body_part
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub data_in_body_part
 {
@@ -1779,7 +1779,7 @@ sub data_in_body_part
     my ($pos, $pos_begin, $msglen);
 
     # if the content is undef, do nothing.
-    return undef unless $data; 
+    return undef unless $data;
 
     if ($base_data_type =~ /multipart/i) {
 	$pos_begin = $self->{ offset_begin };
@@ -1811,9 +1811,9 @@ where $body is the mail body (string).
 
 =cut
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub get_first_plaintext_message
 {
@@ -1824,8 +1824,8 @@ sub get_first_plaintext_message
     # Let's go along the chain of message objects.
     # This routine return the first reference to the message with the
     # type = ' plain/text'
-    for ($mp = $self; 
-	 defined $mp->{ data } || defined $mp->{ 'next' }; 
+    for ($mp = $self;
+	 defined $mp->{ data } || defined $mp->{ 'next' };
 	 $mp = $mp->{ 'next' }) {
 	my $type = $mp->get_data_type;
 
@@ -1846,7 +1846,7 @@ internal use. set CODE REFERENCE to the log function
 
 # Descriptions: set log function pointer (CODE REFERNCE)
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub set_log_function
 {
@@ -1864,7 +1864,7 @@ This is defined for debug and removed in the future.
 
 # Descriptions: XXX debug, remove this in the future
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub get_data_type_list
 {
@@ -1876,7 +1876,7 @@ sub get_data_type_list
 	$i++;
 	my $data = $m->{'data'};
 	if ($debug) {
-	    push(@buf, sprintf("type[%2d]: %-25s | %s", 
+	    push(@buf, sprintf("type[%2d]: %-25s | %s",
 			       $i, $m->{'data_type'}, $m->{'base_data_type'}));
 	}
 	else {
@@ -1890,7 +1890,7 @@ sub get_data_type_list
 =head1 METHODS to make a whole mail message
 
 Please use C<Mail::Message::Compose> class.
-This is an adapter for C<MIME::Lite>, so  
+This is an adapter for C<MIME::Lite>, so
 your request is forwarded to C<MIME::Lite> class :-)
 
     use Mail::Message::Compose;

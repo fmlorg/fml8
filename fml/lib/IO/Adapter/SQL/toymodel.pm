@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
-#          All rights reserved. 
+#          All rights reserved.
 #
-# $FML: toymodel.pm,v 1.3 2001/08/05 12:07:23 fukachan Exp $
+# $FML: toymodel.pm,v 1.4 2001/09/17 11:31:51 fukachan Exp $
 #
 
 
@@ -38,7 +38,7 @@ sub add
 
     print STDERR "add( $addr )\n" if $ENV{'debug'};
 
-    my $query = $self->_build_sql_query({ 
+    my $query = $self->_build_sql_query({
 	query   => 'add',
 	address => $addr,
     });
@@ -52,7 +52,7 @@ sub delete
 
     print STDERR "delete( $addr )\n" if $ENV{'debug'};
 
-    my $query = $self->_build_sql_query({ 
+    my $query = $self->_build_sql_query({
 	query   => 'delete',
 	address => $addr,
     });
@@ -64,7 +64,7 @@ sub fetch_all
 {
     my ($self, $args) = @_;
 
-    my $query = $self->_build_sql_query({ 
+    my $query = $self->_build_sql_query({
 	query   => 'get_next_value',
     });
     $self->execute({ query => $query });
@@ -78,7 +78,7 @@ sub md_find
     my $show_all       = $args->{ all } ? 1 : 0;
     my (@buf, $x);
 
-    my $query = $self->_build_sql_query({ 
+    my $query = $self->_build_sql_query({
 	query  => 'search',
 	regexp => $regexp,
     });
@@ -115,7 +115,7 @@ sub md_find
 }
 
 
-# Descriptions: 
+# Descriptions:
 #
 #                   $args = {
 #               	query   => 'add',
@@ -125,9 +125,9 @@ sub md_find
 #               	    file    => 'actives',
 #               	},
 #                   }
-#   
+#
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _build_sql_query
 {

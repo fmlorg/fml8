@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ThreadTrack.pm,v 1.21 2001/11/19 11:37:05 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.22 2001/11/26 09:12:38 fukachan Exp $
 #
 
 package Mail::ThreadTrack;
@@ -152,7 +152,7 @@ sub _mkdirhier
     $mode = defined $mode ? $mode : 0700;
 
     # XXX $mode (e.g. 0755) should be a numeric not a string
-    eval q{ 
+    eval q{
         use File::Path;
         mkpath($dir, 0, $mode);
     };
@@ -161,7 +161,7 @@ sub _mkdirhier
 }
 
 
-# Descriptions: set up directory which is taken from 
+# Descriptions: set up directory which is taken from
 #               $self->{ _db_dir }
 #    Arguments: $self $curproc $args
 # Side Effects: create a "_db_dir" directory if needed
@@ -188,7 +188,7 @@ sub _init_dir
 
 =head2 C<increment_id(file)>
 
-increment thread number which is taken up from C<file> 
+increment thread number which is taken up from C<file>
 and save its new number to C<file>.
 
 =cut
@@ -196,7 +196,7 @@ and save its new number to C<file>.
 
 # Descriptions: increment thread number $id holded in $seq_file
 #    Arguments: $self $seq_file
-# Side Effects: increment id holded in $seq_file 
+# Side Effects: increment id holded in $seq_file
 # Return Value: number
 sub increment_id
 {
@@ -213,7 +213,7 @@ sub increment_id
 	return $rh->{ _info }->{ sequence };
     }
     else {
-	$seq = $rh->{ _info }->{ sequence } = 1; 
+	$seq = $rh->{ _info }->{ sequence } = 1;
     }
 
     $self->db_close();
@@ -224,14 +224,14 @@ sub increment_id
 
 =head2 list_up_thread_id()
 
-return @thread_id ARRAY 
+return @thread_id ARRAY
 
 =cut
 
 
 # Descriptions: return @thread_id ARRAY
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub list_up_thread_id
 {
@@ -267,12 +267,12 @@ sub list_up_thread_id
 =head2 set_mode($mode)
 
 specify output format by $mode string.
-"text" and "html" are available. 
+"text" and "html" are available.
 "text" by default.
 
 =head2 get_mode()
 
-get output format. 
+get output format.
 
 =cut
 
@@ -352,9 +352,9 @@ sub set_order
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $string
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub exist
 {
@@ -367,7 +367,7 @@ sub exist
 
     if (defined $rh->{ _articles }) {
 	my $a = $rh->{ _articles };
-	$r = (defined $a->{ $id } ? 1 : 0);	
+	$r = (defined $a->{ $id } ? 1 : 0);
     }
 
     $self->db_close();
@@ -408,9 +408,9 @@ C<set_status()> calls db_open() an db_close() automatically within it.
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $curproc $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub set_status
 {
@@ -424,9 +424,9 @@ sub set_status
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _set_status
 {
@@ -451,7 +451,7 @@ sub add_filter
 
     # update filter list
     my ($k, $v);
-    while (($k, $v) = each %$hash) { 
+    while (($k, $v) = each %$hash) {
 	$self->{ _filterlist }->{ $k } = $v;
     }
 }
@@ -461,9 +461,9 @@ sub add_filter
 
 =cut
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub log
 {
@@ -488,7 +488,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

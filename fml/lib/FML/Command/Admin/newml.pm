@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.5 2001/12/09 14:52:34 fukachan Exp $
+# $FML: newml.pm,v 1.6 2001/12/11 15:38:01 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -59,7 +59,7 @@ sub process
     croak("\$ml_name is not specified")    unless $ml_name;
 
     unless (-d $ml_home_dir) {
-	eval q{ 
+	eval q{
 	    use File::Utils qw(mkdirhier);
 	    use File::Spec;
 	};
@@ -87,7 +87,7 @@ sub _install
 {
     my ($src, $dst, $config) = @_;
 
-    eval q{ 
+    eval q{
 	use FileHandle;
 	use FML::Config::Convert;
     };
@@ -122,7 +122,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

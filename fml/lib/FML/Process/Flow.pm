@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Flow.pm,v 1.10 2001/05/29 16:21:16 fukachan Exp $
+# $FML: Flow.pm,v 1.11 2001/11/25 05:15:36 fukachan Exp $
 #
 
 package FML::Process::Flow;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Process::Flow - describe process flow 
+FML::Process::Flow - describe process flow
 
 =head1 SYNOPSIS
 
@@ -26,7 +26,7 @@ C<$args> is HASH REFERENCE.
 
 =head1 DESCRIPTION
 
-This module describes the fml program flow. 
+This module describes the fml program flow.
 Each function is implemented in each module of FML::Process classes.
 
     # create a new process object
@@ -48,7 +48,7 @@ Each function is implemented in each module of FML::Process classes.
 
 =cut
 
-# Descriptions: drives basic flow 
+# Descriptions: drives basic flow
 #               1. initialize processes and load configurations from *.cf
 #                  switch to each process according with $0 and @ARGV.
 #               2. parse the incoming message(mail)
@@ -56,7 +56,7 @@ Each function is implemented in each module of FML::Process classes.
 #                  lock, execute main routine, unlock
 #               4. inform error messages, clean up and more ...
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 #               ProcessSwtich() is exported to main:: Name Space.
 # Return Value: none
 sub ProcessStart
@@ -67,7 +67,7 @@ sub ProcessStart
     my $process = $pkg->new($args);
 
     # XXX private method to show help ASAP
-    # XXX we need to trap here since $process object is clarified after 
+    # XXX we need to trap here since $process object is clarified after
     # XXX $pkg->new() above.
     $process->_trap_help($args);
 
@@ -96,7 +96,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

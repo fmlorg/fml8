@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.17 2001/10/13 03:03:43 fukachan Exp $
+# $FML: Credential.pm,v 1.18 2001/12/22 09:11:55 fukachan Exp $
 #
 
 package FML::Credential;
@@ -79,15 +79,15 @@ ambiguity.  The ambiguity is defined by the following rules:
          c.d.jp
            ......
 
-By default we compare the last (top) C<3> level. 
+By default we compare the last (top) C<3> level.
 For example, consider these two addresses:
 
-            rudo@nuinui.net   
+            rudo@nuinui.net
             rudo@sapporo.nuinui.net
 
 These addresses differs. But
 
-            rudo@fml.nuinui.net   
+            rudo@fml.nuinui.net
             rudo@sapporo.fml.nuinui.net
 
 are same since the last 3 top level domains are same.
@@ -122,7 +122,7 @@ sub is_same_address
 	if ("\L$xdomain\E" eq "\L$ydomain\E") { $level++;}
     }
 
-    if ($level >= $max_level) { return 1;} 
+    if ($level >= $max_level) { return 1;}
 
     # fail
     return 0;
@@ -214,9 +214,9 @@ sub has_address_in_map
 =head2 C<match_system_accounts($curproc, $args)>
 
 C<sender> ( == $self->sender() ) matches a system account or not.
-The system accounts are given as 
+The system accounts are given as
 
-     $curproc->{ config }->{ system_accounts }. 
+     $curproc->{ config }->{ system_accounts }.
 
 =cut
 
@@ -315,7 +315,7 @@ sub get_compare_level
 sub get
 {
     my ($self, $key) = @_;
-    $self->{ $key };	
+    $self->{ $key };
 }
 
 
@@ -339,7 +339,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

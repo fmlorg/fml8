@@ -2,15 +2,15 @@
 #
 #  Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.2 2001/04/08 00:40:53 fukachan Exp $
+# $FML: Utils.pm,v 1.3 2001/04/08 13:25:41 fukachan Exp $
 #
 
 package Mail::Delivery::Utils;
 
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK 
+use vars qw(@ISA @EXPORT @EXPORT_OK
 	    $LogFunctionPointer $SmtpLogFunctionPointer);
 use Carp;
 use Mail::Delivery::ErrorStatus qw(error_set error error_clear);
@@ -25,11 +25,11 @@ require Exporter;
 	     $LogFunctionPointer
 	     $SmtpLogFunctionPointer
 
-	     error_set 
-	     error 
-	     error_clear 
+	     error_set
+	     error
+	     error_clear
 
-	     _set_status_code 
+	     _set_status_code
 	     _get_status_code
 
 	     _set_target_map
@@ -69,7 +69,7 @@ several utility functions for C<Mail::Delivery> sub classes.
 
 =head2 C<Log($buf)>
 
-Logging interface. 
+Logging interface.
 send C<$buf> (the log message) to the function specified as
 C<$LogFunctionPointer> (CODE REFERENCE).
 C<$LogFunctionPointer> is expected to set up at
@@ -107,7 +107,7 @@ sub Log
 smtp logging interface as the same as C<Log()> but for smtp
 transcation log.
 If the real log function pointer is not specified at
-C<Mail::Delivery::Delivery::new()>, 
+C<Mail::Delivery::Delivery::new()>,
 C<$buf> is sent to C<STDERR>.
 
 =cut
@@ -242,7 +242,7 @@ get the current C<$position> for C<$map> IO.
 sub _set_map_status
 {
     my ($self, $map, $status) = @_;
-    $self->{ _mapinfo }->{ $map }->{prev_status} = 
+    $self->{ _mapinfo }->{ $map }->{prev_status} =
 	$self->{ _mapinfo }->{ $map }->{status} || 'not done';
     $self->{ _mapinfo }->{ $map }->{status}      = $status;
 }
@@ -250,7 +250,7 @@ sub _set_map_status
 sub _set_map_position
 {
     my ($self, $map, $position) = @_;
-    $self->{ _mapinfo }->{ $map }->{prev_position} = 
+    $self->{ _mapinfo }->{ $map }->{prev_position} =
 	$self->{ _mapinfo }->{ $map }->{position} || 0;
     $self->{ _mapinfo }->{ $map }->{position}   = $position;
 }
@@ -325,7 +325,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HTML.pm,v 1.6 2001/11/11 13:37:42 fukachan Exp $
+# $FML: HTML.pm,v 1.7 2001/11/17 04:03:38 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::HTML;
@@ -182,8 +182,8 @@ sub __print_thread_summary
     my $name    = "change_status.$tid";
     my $values  = ["open", "analyzed", "closed"];
     my $default = $status;
-    print radio_group(-name      => $name, 
-		      -values    => $values, 
+    print radio_group(-name      => $name,
+		      -values    => $values,
 		      -default   => $default,
 		      -linebreak => 'true',
 		      );

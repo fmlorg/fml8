@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.21 2001/11/26 08:41:36 fukachan Exp $
+# $FML: Subject.pm,v 1.22 2001/11/27 11:22:13 fukachan Exp $
 #
 
 package FML::Header::Subject;
@@ -118,7 +118,7 @@ sub regexp_compile
 {
     my ($self, $string) = @_;
     _regexp_compile($string);
-}    
+}
 
 
 # Descriptions: create regexp for a subject tag, for example
@@ -189,7 +189,7 @@ sub _cut_off_reply
     my $pkg = 'Mail::Message::Language::Japanese::Subject';
     eval qq{ require $pkg; $pkg->import();};
     unless ($@) {
-	$$r_subject = 
+	$$r_subject =
 	    &Mail::Message::Language::Japanese::Subject::cut_off_reply_tag($$r_subject);
     }
     else  {
@@ -207,7 +207,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

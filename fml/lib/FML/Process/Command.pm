@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
-#          All rights reserved. 
+#          All rights reserved.
 #
-# $FML: Command.pm,v 1.23 2001/11/25 07:53:57 fukachan Exp $
+# $FML: Command.pm,v 1.24 2001/11/27 11:40:30 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -34,8 +34,8 @@ See L<FML::Process::Flow> for details of fml process flow.
 
 C<FML::Process::Command> is a command wrapper and top level
 dispatcher for commands.
-It kicks off corresponding 
-C<FML::Command>->C<$command($curproc,$args)> 
+It kicks off corresponding
+C<FML::Command>->C<$command($curproc,$args)>
 for the given C<$command>.
 
 =head1 METHODS
@@ -96,7 +96,7 @@ C<command>.
 sub run
 {
     my ($curproc, $args) = @_;
-    $curproc->_evaluate_command($args); 
+    $curproc->_evaluate_command($args);
 }
 
 
@@ -168,7 +168,7 @@ sub _can_accpet_command
     unless ( FML::Filter::Utils::is_secure_command_string( $command ) ) {
 	LogError("insecure command: $command");
 	$curproc->reply_message("\n$prompt $command");
-	$curproc->reply_message_nl('command.insecure', 
+	$curproc->reply_message_nl('command.insecure',
 				   "insecure, so ignored.");
 	return 0;
     }
@@ -179,11 +179,11 @@ sub _can_accpet_command
 	$curproc->reply_message_nl('command.not_command',
 				   "not command, ignored.");
 	return 0;
-    }		
-    
+    }
+
     # 3. Even new comer need to use commands [ guide, subscirbe, confirm ].
     unless ($cred->is_member($curproc, $args)) {
-	unless ($config->has_attribute("available_commands_for_stranger", 
+	unless ($config->has_attribute("available_commands_for_stranger",
 				       $comname)) {
 	    $curproc->reply_message("\n$prompt $command");
 	    $curproc->reply_message_nl('command.deny',
@@ -199,7 +199,7 @@ sub _can_accpet_command
 }
 
 
-# Descriptions: parse command buffer to make 
+# Descriptions: parse command buffer to make
 #               argument vector after command name
 #    Arguments: ($string_to_parse, $string_command_name)
 # Side Effects: none
@@ -258,7 +258,7 @@ sub _evaluate_command
 	    # we can accpet this command ?
 	    my $opts = { comname => $comname, command => $command };
 	    unless ($curproc->_can_accpet_command($args, $opts)) {
-		# no, we do not accept this command. 
+		# no, we do not accept this command.
 		Log("invalid command = $command");
 		next COMMAND;
 	    }
@@ -294,7 +294,7 @@ sub _evaluate_command
 	    unless ($@) {
 		$curproc->reply_message_nl('command.ok', "ok.");
 	    }
-	    else { # error trap 
+	    else { # error trap
 		$curproc->reply_message_nl('command.fail', "fail.");
 		LogError("command ${comname} fail");
 		if ($@ =~ /^(.*)\s+at\s+/) {
@@ -316,7 +316,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
-#          All rights reserved. 
+#          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.56 2001/11/27 11:40:30 fukachan Exp $
+# $FML: Distribute.pm,v 1.57 2001/12/18 12:56:05 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -179,13 +179,13 @@ sub finish
 #    Arguments: $self $args
 # Side Effects: header rewrite
 #               the article sequence number is incremanted
-#               article spooling. 
+#               article spooling.
 # Return Value: none
 sub _distribute
 {
     my ($curproc, $args) = @_;
     my $config = $curproc->{ config };
-    
+
     # XXX   $ah is "article handler" object.
     # XXX   $ah != $curproc->{ article } (which is just a key)
     # XXX   $curproc->{ article } is prepared as a side effect.
@@ -279,7 +279,7 @@ sub _deliver_article
     my $message = $curproc->{ article }->{ message }; # Mail::Message object
     my $header  = $curproc->{ article }->{ header };  # FML::Header   object
     my $body    = $curproc->{ article }->{ body };    # Mail::Message object
-	
+
     unless ( $config->yes( 'use_article_delivery' ) ) {
 	return;
     }
@@ -340,7 +340,7 @@ sub _deliver_article
 # Return Value: none
 sub _thread_check
 {
-    my ($curproc, $args) = @_;    
+    my ($curproc, $args) = @_;
     my $config = $curproc->{ config };
     my $pcb    = $curproc->{ pcb };
     my $myname = $curproc->myname();
@@ -363,7 +363,7 @@ sub _thread_check
 
     my $msg = $curproc->{ article }->{ message };
 
-    eval q{ 
+    eval q{
 	use Mail::ThreadTrack;
 	my $thread = new Mail::ThreadTrack $ttargs;
 	$thread->analyze($msg);
@@ -375,7 +375,7 @@ sub _thread_check
 
 sub htmlify
 {
-    my ($curproc, $args) = @_;    
+    my ($curproc, $args) = @_;
     my $config = $curproc->{ config };
     my $pcb    = $curproc->{ pcb };
     my $myname = $curproc->myname();
@@ -388,13 +388,13 @@ sub htmlify
     use File::Spec;
     my $article_file   = File::Spec->catfile($spool_dir, $article_id);
 
-    eval q{ 
+    eval q{
 	use Mail::HTML::Lite;
 	use File::Utils qw(mkdirhier);
     };
     unless ($@) {
 	mkdirhier($html_dir) unless -d $html_dir;
-	&Mail::HTML::Lite::htmlify_file($article_file, { 
+	&Mail::HTML::Lite::htmlify_file($article_file, {
 	    directory => $html_dir,
 	});
     }
@@ -412,7 +412,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

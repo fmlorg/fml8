@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HeaderRewrite.pm,v 1.6 2001/11/10 13:20:56 fukachan Exp $
+# $FML: HeaderRewrite.pm,v 1.7 2001/11/20 07:29:27 fukachan Exp $
 #
 
 package Mail::ThreadTrack::HeaderRewrite;
@@ -31,18 +31,18 @@ C<$msg> is Mail::Message object.
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 =head2 rewrite_header($msg)
 
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $msg
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub rewrite_header
 {
@@ -83,7 +83,7 @@ sub rewrite_header
 
 # Descriptions: prepare header information
 #    Arguments: $self $msg
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub prepare_history_info
 {
@@ -105,7 +105,7 @@ sub prepare_history_info
 
 	use Mail::Message::Date;
 	$when = Mail::Message::Date->new($when)->mail_header_style();
-	
+
 	$buf .= "\t\n";
 	$buf .= "\tthis thread is opended at article $aid[0]\n";
 	$buf .= "\tby $sender\n";
@@ -125,7 +125,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

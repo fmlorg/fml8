@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ISO2022JP.pm,v 1.1.1.1 2001/07/31 14:13:08 fukachan Exp $
+# $FML: ISO2022JP.pm,v 1.2 2001/07/31 14:19:41 fukachan Exp $
 #
 
 package FML::Language::ISO2022JP;
@@ -62,7 +62,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

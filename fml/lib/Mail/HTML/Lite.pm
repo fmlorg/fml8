@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.30 2001/11/17 04:01:54 fukachan Exp $
+# $FML: Lite.pm,v 1.31 2001/11/17 15:21:18 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -15,7 +15,7 @@ use Carp;
 my $debug = $ENV{'debug'} ? 1 : 0;
 my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::HTML::Lite</A>";
 
-my $version = q$FML: Lite.pm,v 1.30 2001/11/17 04:01:54 fukachan Exp $;
+my $version = q$FML: Lite.pm,v 1.31 2001/11/17 15:21:18 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -26,10 +26,10 @@ Mail::HTML::Lite - mail to html converter
 
 =head1 SYNOPSIS
 
-  ... lock by something ... 
+  ... lock by something ...
 
   use Mail::HTML::Lite;
-  my $obj = new Mail::HTML::Lite { 
+  my $obj = new Mail::HTML::Lite {
       charset   => "euc-jp",
       directory => "/var/www/htdocs/ml/elena",
   };
@@ -39,10 +39,10 @@ Mail::HTML::Lite - mail to html converter
       src => "/var/spool/ml/elena/spool/1",
   });
 
-  ... unlock by something ... 
+  ... unlock by something ...
 
 This module itself provides no lock function.
-please use flock() built in perl or CPAN lock modules for it. 
+please use flock() built in perl or CPAN lock modules for it.
 
 =head1 DESCRIPTION
 
@@ -51,9 +51,9 @@ please use flock() built in perl or CPAN lock modules for it.
 HTML-fied message has following structure.
 something() below is method name.
 
-                               for example 
+                               for example
     -------------------------------------------------------------------
-    html_begin()               <HTML><HEAD> ... </HEAD><BODY> 
+    html_begin()               <HTML><HEAD> ... </HEAD><BODY>
     mhl_preamble()             <!-- comment used by this module -->
     mhl_separator()            <HR>
 
@@ -67,7 +67,7 @@ something() below is method name.
 
     mhl_separator()            <HR>
     mhl_footer()               <!-- comment used by this module -->
-    html_end()                 </BODY></HTML> 
+    html_end()                 </BODY></HTML>
 
 =head1 METHODS
 
@@ -83,9 +83,9 @@ stored.
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub new
 {
@@ -118,12 +118,12 @@ where C<$path> is file path.
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
 #               $args = { id => $id, path => $path };
 #                  $id    identifier (e.g. "1" (article id))
 #                  $src_path  file path  (e.g. "/some/where/1");
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub htmlfy_rfc822_message
 {
@@ -147,8 +147,8 @@ sub htmlfy_rfc822_message
     my $body = $msg->rfc822_message_body;
 
     # save information for index.html and thread.html
-    $self->cache_message_info($msg, { id => $id, 
-				      src => $src, 
+    $self->cache_message_info($msg, { id => $id,
+				      src => $src,
 				      dst => $dst,
 				  } );
 
@@ -171,7 +171,7 @@ sub htmlfy_rfc822_message
 	last CHAIN if $type eq 'multipart.close-delimiter'; # last of multipart
 	next CHAIN if $type =~ /^multipart/;
 
-	unless ($type =~ /^\w+\/[-\w\d\.]+$/) { 
+	unless ($type =~ /^\w+\/[-\w\d\.]+$/) {
 	    warn("invalid type={$type}");
 	    next CHAIN;
 	}
@@ -214,7 +214,7 @@ sub htmlfy_rfc822_message
 	}
 	# text/plain case.
 	elsif ($type eq 'text/plain') {
-	    $self->_text_safe_print({ 
+	    $self->_text_safe_print({
 		fh   => $wh,
 		data => $m->data_in_body_part(),
 	    });
@@ -228,7 +228,7 @@ sub htmlfy_rfc822_message
 	    my $enc     = $m->get_encoding_mechanism;
 	    my $msginfo = { message => $m };
 
-	    # e.g. text/xxx case (e.g. text/html case) 
+	    # e.g. text/xxx case (e.g. text/html case)
 	    if ($type =~ /^text/) {
 		my $tmpf = $self->_create_temporary_filename();
 		$msginfo->{ file } = $tmpf;
@@ -291,9 +291,9 @@ sub _disable_html_tag_in_file
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub message_filename
 {
@@ -308,9 +308,9 @@ sub message_filename
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub message_filepath
 {
@@ -326,9 +326,9 @@ sub message_filepath
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _init_htmlfy_rfc822_message
 {
@@ -366,9 +366,9 @@ sub _init_htmlfy_rfc822_message
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub html_begin
 {
@@ -384,7 +384,7 @@ sub html_begin
 	$title = $self->_decode_mime_string( $hdr->get('subject') );
     }
 
-    print $wh 
+    print $wh
 	q{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">};
     print $wh "\n";
     print $wh "<HTML>\n";
@@ -416,9 +416,9 @@ sub html_begin
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub html_end
 {
@@ -428,9 +428,9 @@ sub html_end
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub mhl_separator
 {
@@ -445,9 +445,9 @@ my $footer_begin   = "<!-- __FOOTER_BEGIN__ by Mail::HTML::Lite -->";
 my $footer_end     = "<!-- __FOOTER_END__   by Mail::HTML::Lite -->";
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub mhl_preamble
 {
@@ -457,9 +457,9 @@ sub mhl_preamble
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub mhl_footer
 {
@@ -469,9 +469,9 @@ sub mhl_footer
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _set_output_channel
 {
@@ -490,9 +490,9 @@ sub _set_output_channel
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _create_temporary_filename
 {
@@ -503,15 +503,15 @@ sub _create_temporary_filename
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _create_temporary_file_in_raw_mode
 {
     my ($self, $msg) = @_;
     my $tmpf = $self->_create_temporary_filename();
-    
+
     use FileHandle;
     my $wh = new FileHandle "> $tmpf";
     if (defined $wh) {
@@ -528,9 +528,9 @@ sub _create_temporary_file_in_raw_mode
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _relative_path
 {
@@ -542,9 +542,9 @@ sub _relative_path
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _print_inline_object_link
 {
@@ -571,9 +571,9 @@ sub _print_inline_object_link
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _gen_attachment_filename
 {
@@ -588,11 +588,11 @@ sub _gen_attachment_filename
 
 
 # default header to show
-my @header_field = qw(From To Cc Subject Date 
+my @header_field = qw(From To Cc Subject Date
 		      X-ML-Name X-Mail-Count X-Sequence);
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
 # Side Effects: none
 #               XXX print return value (str) in raw mode later.
@@ -612,7 +612,7 @@ sub _format_safe_header
 	    $buf .= "${field}: ";
 	    $buf .= "</SPAN>\n";
 
-	    my $xbuf = $hdr->get($field); 
+	    my $xbuf = $hdr->get($field);
 	    $xbuf = $self->_decode_mime_string($xbuf) if $xbuf =~ /=\?iso/i;
 	    $buf .= "<SPAN CLASS=${field}-value>\n";
 	    $buf   .= _sprintf_safe_str($xbuf);
@@ -638,9 +638,9 @@ return $str;
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _text_safe_print
 {
@@ -657,9 +657,9 @@ sub _text_safe_print
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _text_raw_print
 {
@@ -684,9 +684,9 @@ sub _text_raw_print
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _binary_print
 {
@@ -751,9 +751,9 @@ See section C<Internal Data Presentation> for more detail.
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub cache_message_info
 {
@@ -768,7 +768,7 @@ sub cache_message_info
     # XXX update max id only under the top level operation
     unless ($self->{ _is_attachment }) {
 	if (defined $db->{ _info }->{ id_max }) {
-	    $db->{_info}->{id_max} = 
+	    $db->{_info}->{id_max} =
 		$db->{_info}->{id_max} < $id ? $id : $db->{_info}->{id_max};
 	}
 	else {
@@ -802,9 +802,9 @@ sub cache_message_info
     __add_value_to_array($db, '_monthly_idlist', $month, $id);
 
     # Subject:
-    $db->{ _subject }->{ $id } = 
+    $db->{ _subject }->{ $id } =
 	$self->_decode_mime_string( $hdr->get('subject') );
-	
+
     # From:
     my $ra = _address_clean_up( $hdr->get('from') );
     $db->{ _from }->{ $id } = $ra->[0];
@@ -857,7 +857,7 @@ sub cache_message_info
 	my $idp = 0;
 	if (defined $in_reply_to) {
 	    # XXX idp (id pointer) = id1 by _list_head( (id1 id2 id3 ...)
-	    $idp = _list_head( $db->{ _msgidref }->{ $in_reply_to } ); 
+	    $idp = _list_head( $db->{ _msgidref }->{ $in_reply_to } );
 	}
 	# 2. if not found, try to use References: "in reverse order"
 	elsif (@$ref_ra) {
@@ -908,8 +908,8 @@ sub __str2array
 
     return undef unless defined $str;
 
-    $str =~ s/^\s*//; 
-    $str =~ s/\s*$//; 
+    $str =~ s/^\s*//;
+    $str =~ s/\s*$//;
     my (@a) = split(/\s+/, $str);
     return \@a;
 }
@@ -921,7 +921,7 @@ sub __add_value_to_array
     my $found = 0;
     my $ra = __str2array($db->{ $dbname }->{ $key });
 
-    for (@$ra) { 
+    for (@$ra) {
 	$found = 1 if ($value =~ /^\d+$/) && ($_ == $value);
 	$found = 1 if ($value !~ /^\d+$/) && ($_ eq $value);
     }
@@ -997,9 +997,9 @@ update link relation around C<$id>.
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub update_relation
 {
@@ -1016,7 +1016,7 @@ sub update_relation
     $self->_update_relation($id);
     push(@$list, $id);
 
-    # rewrite links of files for 
+    # rewrite links of files for
     #      prev/next id (article id) and
     #      prev/next by thread
     my $db = $self->{ _db };
@@ -1042,9 +1042,9 @@ sub update_relation
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _update_relation
 {
@@ -1093,9 +1093,9 @@ sub _update_relation
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub evaluate_relation
 {
@@ -1156,7 +1156,7 @@ sub evaluate_relation
 	link_next_id        => $link_next_id,
 	link_prev_thread_id => $link_prev_thread_id,
 	link_next_thread_id => $link_next_thread_id,
-	subject             => $subject, 
+	subject             => $subject,
     };
     _PRINT_DEBUG_DUMP_HASH( $args );
 
@@ -1166,9 +1166,9 @@ sub evaluate_relation
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub evaluate_safe_preamble
 {
@@ -1205,7 +1205,7 @@ sub evaluate_safe_preamble
 	    $preamble .= "[No Prev Thread]\n";
 	}
     }
-    
+
     if (defined $link_next_thread_id) {
 	$preamble .= "<A HREF=\"$link_next_thread_id\">[Next by Thread]</A>\n";
     }
@@ -1225,9 +1225,9 @@ sub evaluate_safe_preamble
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub evaluate_safe_footer
 {
@@ -1296,7 +1296,7 @@ At least we need two relations:
 
 1. to speculate [Next by Thread]
 
-   message-id => ( id1 id2 id3 ... )   
+   message-id => ( id1 id2 id3 ... )
 
 where C<id1> is the message itself.
 
@@ -1304,10 +1304,10 @@ where C<id1> is the message itself.
 
    id         => message-id of replied message (e.g. In-Reply-To:)
 
-hashes. 
+hashes.
 
-BTW, the end message of the thread has no next message, 
-and the top of the thread has no previous message. 
+BTW, the end message of the thread has no next message,
+and the top of the thread has no previous message.
 We arrange apporopviate link to another thread.
 Also we need this relation for C<thread.html>.
 
@@ -1339,7 +1339,7 @@ my @kind_of_databases = qw(from date subject message_id references
 			   who info);
 
 
-# 1. Hmm, what database is needed for 
+# 1. Hmm, what database is needed for
 #    {Prev,Next} by Article ID
 #    {Prev,Next} by Thread
 #
@@ -1375,9 +1375,9 @@ sub _db_open
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _db_close
 {
@@ -1388,7 +1388,7 @@ sub _db_close
     _PRINT_DEBUG("_db_close()");
 
     for my $db (@kind_of_databases) {
-	my $str = qq{ 
+	my $str = qq{
 	    my \$${db} = \$self->{ _db }->{ _$db };
 	    untie \%\$${db};
 	};
@@ -1405,9 +1405,9 @@ update index.html.
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _print_index_begin
 {
@@ -1428,9 +1428,9 @@ sub _print_index_begin
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _print_index_end
 {
@@ -1455,9 +1455,9 @@ sub _print_index_end
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub update_id_index
 {
@@ -1488,7 +1488,7 @@ sub update_id_index
 	$self->_print_li_filename($wh, $db, $id, $code);
     }
     $self->_print_end_of_ul($wh, $db, $code);
-    
+
     $self->_db_close();
     $self->_print_index_end( $htmlinfo );
 }
@@ -1537,9 +1537,9 @@ sub update_id_monthly_index
     $self->_update_id_montly_index_master($args);
 }
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _update_id_montly_index_master
 {
@@ -1585,7 +1585,7 @@ sub _update_id_montly_index_master
 	}
     }
     _print_raw_str($wh, "</TABLE>", $code);
-    
+
     $self->_db_close();
     $self->_print_index_end( $htmlinfo );
 }
@@ -1616,9 +1616,9 @@ sub __sort_yyyymm
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _update_id_monthly_index
 {
@@ -1652,7 +1652,7 @@ sub _update_id_monthly_index
 	$self->_print_li_filename($wh, $db, $id, $code);
     }
     $self->_print_end_of_ul($wh, $db, $code);
-    
+
     $self->_db_close();
     $self->_print_index_end( $htmlinfo );
 }
@@ -1665,9 +1665,9 @@ update thread.html.
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub update_thread_index
 {
@@ -1781,9 +1781,9 @@ sub _print_thread
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _charset_to_code
 {
@@ -1807,9 +1807,9 @@ sub _charset_to_code
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _print_raw_str
 {
@@ -1878,7 +1878,7 @@ sub __sprintf_safe_str
 }
 
 
-# $url$trailor => $url $trailor for text2html() incomplete regexp 
+# $url$trailor => $url $trailor for text2html() incomplete regexp
 # based on fml 4.0-current (2001/10/28)
 sub _separete_url
 {
@@ -1901,7 +1901,7 @@ sub _separete_url
     if ($url =~ /(\&\w{2}\;|\;|\?|\:|\@|\&|\=|\+|\#|\%|\<|\>|\")+$/) {
         my $pat  = $1;
         $trailor = $pat . $trailor;
-        $url     =~ s/${pat}$//; 
+        $url     =~ s/${pat}$//;
     }
 
     return "$url $trailor";
@@ -2047,12 +2047,12 @@ sub _decode_mime_string
 	($str =~ /=\?ISO\-2022\-JP\?[BQ]\?/i) &&
 	($code eq 'euc' || $code eq 'jis')) {
         use MIME::Base64;
-        if ($str =~ /=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/i) { 
+        if ($str =~ /=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/i) {
             $str =~ s/=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/decode_base64($1)/gie;
         }
 
         use MIME::QuotedPrint;
-        if ($str =~ /=\?ISO\-2022\-JP\?Q\?(\S+\=*)\?=/i) { 
+        if ($str =~ /=\?ISO\-2022\-JP\?Q\?(\S+\=*)\?=/i) {
             $str =~ s/=\?ISO\-2022\-JP\?Q\?(\S+\=*)\?=/decode_qp($1)/gie;
         }
 
@@ -2071,7 +2071,7 @@ sub _decode_mime_string
 
 =head2 C<htmlify_file($file, $args)>
 
-try to convert rfc822 message C<$file> to HTML. 
+try to convert rfc822 message C<$file> to HTML.
 
     $args = {
 	directory => "destination directory",
@@ -2088,9 +2088,9 @@ try to convert all rfc822 messages to HTML in C<$dir> directory.
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub htmlify_file
 {
@@ -2101,7 +2101,7 @@ sub htmlify_file
     my $id = basename($file);
     my $html = new Mail::HTML::Lite {
 	charset   => "euc-jp",
-	directory => $dst_dir, 
+	directory => $dst_dir,
     };
 
     if (defined $ENV{'debug'}) {
@@ -2128,9 +2128,9 @@ sub htmlify_file
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub htmlify_dir
 {
@@ -2180,18 +2180,18 @@ if ($0 eq __FILE__) {
 
    expiration
 
-   sub directory? 
+   sub directory?
 
 =head1 AUTHOR
 
-Ken'ichi Fukamachi 
+Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi 
+Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

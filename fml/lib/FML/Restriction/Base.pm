@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
 # Copyright (C) 2001 Ken'ichi Fukamachi
-#          All rights reserved. 
+#          All rights reserved.
 #
-# $FML: Base.pm,v 1.1.1.1 2001/11/25 11:26:04 fukachan Exp $
+# $FML: Base.pm,v 1.2 2001/11/27 11:41:49 fukachan Exp $
 #
 
 package FML::Restriction::Base;
@@ -78,7 +78,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

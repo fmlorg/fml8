@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command::Attribute.pm,v 1.1 2001/08/26 05:45:50 fukachan Exp $
+# $FML: Attribute.pm,v 1.1 2001/10/17 10:24:26 fukachan Exp $
 #
 
 package FML::Command::Attribute;
@@ -13,10 +13,10 @@ use vars qw($FML_USER_COMMAND $FML_ADMIN_COMMAND);
 
 $FML_USER_COMMAND = {
     '__default__' => {
-	'require_lock' => 1,	 
+	'require_lock' => 1,
     },
 
-    'newml' => { 
+    'newml' => {
 	'require_lock' => 0,
     },
 };
@@ -76,7 +76,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

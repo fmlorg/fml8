@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.3 2001/09/13 14:45:46 fukachan Exp $
+# $FML: get.pm,v 1.4 2001/10/14 00:44:13 fukachan Exp $
 #
 
 package FML::Command::Admin::get;
@@ -48,7 +48,7 @@ sub process
 	$self->send_file($curproc, $command_args);
     }
     else {
-	$curproc->reply_message_nl('error.no_such_file', 
+	$curproc->reply_message_nl('error.no_such_file',
 				   "no such file $file",
 				   {
 				       _arg_file => $f,
@@ -67,7 +67,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

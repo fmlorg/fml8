@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledDir.pm,v 1.4 2001/10/18 03:39:33 fukachan Exp $
+# $FML: JournaledDir.pm,v 1.5 2001/11/27 15:19:40 fukachan Exp $
 #
 
 package Tie::JournaledDir;
@@ -96,7 +96,7 @@ sub new
     my $me     = {};
 
     my $dir   = $args->{ 'dir' };
-    my $unit  = $args->{ 'unit' }  || 'day'; # 1 day 
+    my $unit  = $args->{ 'unit' }  || 'day'; # 1 day
     my $limit = $args->{ 'limit' } || 90;
 
     # reverse order file list to search
@@ -159,11 +159,11 @@ sub FETCH
     my $x     = '';
 
   FILES_LOOP:
-    for my $f (@$files) { 
+    for my $f (@$files) {
 	if (-f $f) {
-	    my $obj = new Tie::JournaledFile { 
-		'last_match' => 1, 
-		'file'       => $f, 
+	    my $obj = new Tie::JournaledFile {
+		'last_match' => 1,
+		'file'       => $f,
 	    };
 
 	    if (defined $obj) {
@@ -178,7 +178,7 @@ sub FETCH
 
 
 # Descriptions: add { $key => $value } to the latest file
-#               by Tie::JournaledFile.  
+#               by Tie::JournaledFile.
 #    Arguments: $self $key $value
 # Side Effects: none
 # Return Value: Tie::JournaledFile->STORE() operation return value
@@ -187,9 +187,9 @@ sub STORE
     my ($self, $key, $value) = @_;
     my $f = $self->{ 'files' }->[ 0 ]; # XXX [0] is the latest file.
 
-    my $obj = new Tie::JournaledFile { 
-	'last_match' => 1, 
-	'file'       => $f, 
+    my $obj = new Tie::JournaledFile {
+	'last_match' => 1,
+	'file'       => $f,
     };
 
     return $obj->STORE($key, $value);
@@ -212,7 +212,7 @@ sub __find_key
 	my $x   = $obj->NEXTKEY();
 
 	if (defined $x) {
-	    print STDERR "NEXTKEY: $x\n" if $debug; 
+	    print STDERR "NEXTKEY: $x\n" if $debug;
 	    return $x;
 	}
 	else {
@@ -220,7 +220,7 @@ sub __find_key
 	}
     }
 
-    # 1. for the first time 
+    # 1. for the first time
     # 2. no more valid keys in the file ( _key_files_obj object )
     # so try to read the first/next file
   FILES:
@@ -230,10 +230,10 @@ sub __find_key
 
 	# try to open the next file
 	if (-f $f) {
-	    print STDERR "open $f\n" if $debug; 
-	    my $obj = new Tie::JournaledFile { 
-		'last_match' => 1, 
-		'file'       => $f, 
+	    print STDERR "open $f\n" if $debug;
+	    my $obj = new Tie::JournaledFile {
+		'last_match' => 1,
+		'file'       => $f,
 	    };
 
 	    if (defined $obj) {
@@ -245,13 +245,13 @@ sub __find_key
 
 		# save object if this file has valid value(s).
 		if (defined $x) {
-		    print STDERR "FIRSTKEY: $x\n" if $debug; 
+		    print STDERR "FIRSTKEY: $x\n" if $debug;
 		    $self->{ '_key_files_obj' } = $obj;
 		    return $x;
 		}
-		# skip this file if this file has no valid value. 
+		# skip this file if this file has no valid value.
 		else {
-		    print STDERR "FIRSTKEY: not found\n" if $debug; 
+		    print STDERR "FIRSTKEY: not found\n" if $debug;
 		    next FILES;
 		}
 	    }
@@ -341,7 +341,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

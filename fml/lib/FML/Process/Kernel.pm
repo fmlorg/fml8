@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.64 2001/12/18 12:55:47 fukachan Exp $
+# $FML: Kernel.pm,v 1.65 2001/12/22 03:20:39 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -563,7 +563,7 @@ This is a wrapper for C<reply_message()> with natural language support.
 The message in natural language corresponding with C<$class> is sent.
 If translation fails, $default_msg, English by default, is used.
 
-We need parameters in some cases. 
+We need parameters in some cases.
 They are stored in $args if needed.
 
 	$curproc->reply_message_nl('kern.not_member',
@@ -593,7 +593,7 @@ sub reply_message_nl
 
     if (defined $buf) {
 	use FML::Language::ISO2022JP qw(STR2JIS);
-	if ($buf =~ /\$/) { 
+	if ($buf =~ /\$/) {
 	    $config->expand_variable_in_buffer(\$buf, $args);
 	}
 	$curproc->reply_message( STR2JIS( $buf ) );
@@ -822,7 +822,7 @@ sub prepare_file_to_return
 
     use FileHandle;
     my $rh = new FileHandle $src_file;
-    my $wh = new FileHandle "> $tmpf"; 
+    my $wh = new FileHandle "> $tmpf";
 
     use FML::Language::ISO2022JP qw(STR2JIS);
     if (defined($rh) && defined($wh)) {

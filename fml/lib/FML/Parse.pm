@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Parse.pm,v 1.16 2001/05/27 14:27:54 fukachan Exp $
+# $FML: Parse.pm,v 1.17 2001/12/22 09:11:56 fukachan Exp $
 #
 
 package FML::Parse;
@@ -27,13 +27,13 @@ FML::Parse - parse the incoming message
 
 =head1 DESCRIPTION
 
-FML::Parse parses the incoming message. 
-C<new()> analyses the data injected from STDIN channel and 
+FML::Parse parses the incoming message.
+C<new()> analyses the data injected from STDIN channel and
 split it to a set of mail header and body.
 C<new()> returns a set of hash references.
 
-The returned C<$r_header> is the reference to a header object, 
-which is C<Mail::Header> object. 
+The returned C<$r_header> is the reference to a header object,
+which is C<Mail::Header> object.
 C<$r_body> is reference to the scalar mail body variable, which is
 C<Mail::Message> object.
 
@@ -41,7 +41,7 @@ C<Mail::Message> object.
 
 =item new( fd )
 
-C<fd> is the file handle. 
+C<fd> is the file handle.
 Normally C<fd> is the handle for STDIN channel.
 
 =cut
@@ -108,7 +108,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

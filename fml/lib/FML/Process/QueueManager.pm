@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.3 2001/05/29 16:21:16 fukachan Exp $
+# $FML: QueueManager.pm,v 1.4 2001/09/13 14:43:28 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -57,7 +57,7 @@ sub new
 }
 
 
-=head2 C<send($curproc, $id)> 
+=head2 C<send($curproc, $id)>
 
 try to send all mails in the queue.
 If queue id C<$id> is specified, send queue for C<$id>.
@@ -73,8 +73,8 @@ sub send
     my $queue = new Mail::Delivery::Queue { directory => $queue_dir };
     my $ra    = defined $id ? [ $id ] : $queue->list();
 
-    for my $qid (@$ra) { 
-	my $q = new Mail::Delivery::Queue { 
+    for my $qid (@$ra) {
+	my $q = new Mail::Delivery::Queue {
 	    id        => $qid,
 	    directory => $queue_dir,
 	};
@@ -134,7 +134,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

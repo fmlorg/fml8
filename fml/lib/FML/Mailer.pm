@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Mailer.pm,v 1.4 2001/05/19 03:29:57 fukachan Exp $
+# $FML: Mailer.pm,v 1.5 2001/05/28 16:17:13 fukachan Exp $
 #
 
 package FML::Mailer;
@@ -27,7 +27,7 @@ FML::Mailer - Utilities to send mails
 	message   => $message,
     });
 
-where C<$message> is a C<Mail::Message> object to send. 
+where C<$message> is a C<Mail::Message> object to send.
 If you want to sent plural recipinets, specify ARRAY HASH of the
 recipients as a C<recipient> parameter.
 
@@ -69,14 +69,14 @@ sub new
 
 =head2 C<send($args)>
 
-send the given C<message>. 
+send the given C<message>.
 $args can take the following arguments:
 
    ----------------------------------
    sender             string
-   recipient          string 
+   recipient          string
    recipients         HASH ARRAY
-   message            Mail::Message object 
+   message            Mail::Message object
    file               string
 
 =cut
@@ -150,7 +150,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

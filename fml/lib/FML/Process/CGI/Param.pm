@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Param.pm,v 1.8 2001/11/25 09:12:58 fukachan Exp $
+# $FML: Param.pm,v 1.9 2001/11/25 11:29:33 fukachan Exp $
 #
 
 package FML::Process::CGI::Param;
@@ -43,9 +43,9 @@ It provides basic functions and flow.
 my $debug = defined $ENV{'debug'} ? 1 : 0;
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 #      History: fml 4.0's SecureP()
 # Return Value: none
 sub safe_param
@@ -82,9 +82,9 @@ sub safe_param
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 #      History: fml 4.0's SecureP()
 # Return Value: none
 sub safe_paramlist
@@ -122,7 +122,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

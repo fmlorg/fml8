@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: CacheDir.pm,v 1.7 2001/06/17 08:57:11 fukachan Exp $
+# $FML: CacheDir.pm,v 1.8 2001/08/22 10:30:59 fukachan Exp $
 #
 
 package File::CacheDir;
@@ -34,16 +34,16 @@ File::CacheDir - IO operations to ring buffer which consists of files
 The buffer directory has files with the name C<0>, C<1>, ...
 You can specify C<file_name> parameter.
 
-   $obj = new File::CacheDir { 
+   $obj = new File::CacheDir {
        directory => '/some/where',
        file_name => '_smtplog',
    };
 
-If so, the file names become _smtplog.0, _smtplog.1, ... 
+If so, the file names become _smtplog.0, _smtplog.1, ...
 
 The C<File::CacheDir> described above is limited by size.
 You can use File::CacheDir based on not size but time, so with time
-based expiretion. If you so, 
+based expiretion. If you so,
 
    $obj = new File::CacheDir {
        directory  => '/some/where',
@@ -57,17 +57,17 @@ C<cache_type> is C<cyclic> by default.
 =head1 DESCRIPTION
 
 To log messages but up to some limit, it may be useful to use filenames
-in cyclic way. 
+in cyclic way.
 The file to write is chosen among a set of files allocated as a buffer.
 
 Consider several files under a directory C<ring/>
 where the unit of the ring is 5 here.
-C<ring/> may have 5 files in it. 
+C<ring/> may have 5 files in it.
 
    0 1 2 3 4
 
 To log a message is to write it to one of them.
-At the first time the message is logged to the file C<0>, 
+At the first time the message is logged to the file C<0>,
 and next time to C<1> and so on.
 If all 5 files are used, it reuses and overwrites the oldest one C<0>.
 
@@ -233,7 +233,7 @@ sub get_latest_value
     my $buf  = $self->_search($file, $key);
 
     # return cache
-    return $buf if $buf; 
+    return $buf if $buf;
 
     my $dir = $self->{ _directory };
     return '' unless $dir;
@@ -314,7 +314,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

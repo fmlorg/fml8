@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
-#          All rights reserved. 
+#          All rights reserved.
 #
-# $FML: MySQL.pm,v 1.15 2001/08/05 12:07:22 fukachan Exp $
+# $FML: MySQL.pm,v 1.16 2001/09/17 11:35:21 fukachan Exp $
 #
 
 
@@ -23,7 +23,7 @@ IO::Adapter::MySQL - interface to talk with a MySQL server
 =head1 SYNOPSIS
 
    use IO::Adapter;
-   
+
    my $map        = 'mysql:toymodel';
    my $map_params = {
        $map => {
@@ -38,7 +38,7 @@ IO::Adapter::MySQL - interface to talk with a MySQL server
    	},
        },
    };
-   
+
    my $obj = new IO::Adapter ($map, $map_params);
    $obj->open();
    $obj->add( 'rudo@nuinui.net' );
@@ -50,12 +50,12 @@ This module is a top level driver to talk with a MySQL server in SQL
 (Structured Query Language).
 
 The model dependent SQL statement is expected to be holded in
-C<IO::Adapter::SQL::> modules. 
+C<IO::Adapter::SQL::> modules.
 
 You can specify your own module name at $args->{ driver } in
-new($args). 
+new($args).
 It is expected to provdie C<add()>, C<delete()> and
-C<get_next_value()> method. 
+C<get_next_value()> method.
 
 
 =head1 METHODS
@@ -88,7 +88,7 @@ sub configure
 	database   =>  $me->{ _database },
 	host       =>  $me->{ _sql_server },
     });
-    
+
     # load model specific library
     my $pkg = $config->{ driver } || 'IO::Adapter::SQL::toymodel';
     eval qq{ require $pkg; $pkg->import();};
@@ -179,7 +179,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

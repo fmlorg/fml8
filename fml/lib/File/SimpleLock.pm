@@ -1,8 +1,8 @@
-#-*- perl -*- 
-# 
-# Copyright (C) 2000,2001 Ken'ichi Fukamachi 
-# 
-# $FML: SimpleLock.pm,v 1.7 2001/04/08 13:25:39 fukachan Exp $ 
+#-*- perl -*-
+#
+# Copyright (C) 2000,2001 Ken'ichi Fukamachi
+#
+# $FML: SimpleLock.pm,v 1.8 2001/05/28 16:17:14 fukachan Exp $
 #
 
 package File::SimpleLock;
@@ -36,7 +36,7 @@ File::SimpleLock module provides simple lock using flock(2).
 
 flock(2) for $args->{ file };
 
-=head2 C<unlock($args)> 
+=head2 C<unlock($args)>
 
 unlock flock(2) for $args->{ file };
 
@@ -44,7 +44,7 @@ unlock flock(2) for $args->{ file };
 
 
 # constants
-use POSIX qw(EAGAIN ENOENT EEXIST O_EXCL O_CREAT O_RDONLY O_WRONLY); 
+use POSIX qw(EAGAIN ENOENT EEXIST O_EXCL O_CREAT O_RDONLY O_WRONLY);
 sub LOCK_SH {1;}
 sub LOCK_EX {2;}
 sub LOCK_NB {4;}
@@ -89,7 +89,7 @@ sub _simple_flock
     if (defined $fh) {
 	$LockedFileHandle{ $file } = $fh;
 
-	my $r = 0; # return value 
+	my $r = 0; # return value
 	eval q{
 	    $r = flock($fh, &LOCK_EX);
 	};
@@ -117,7 +117,7 @@ sub _simple_funlock
 
     my $fh = $LockedFileHandle{ $file };
 
-    my $r = 0; # return value 
+    my $r = 0; # return value
     eval q{
 	$r = flock($fh, &LOCK_UN);
     };
@@ -147,7 +147,7 @@ Ken'ichi Fukamachi <F<fukachan@fml.org>>
 Copyright (C) 2000,2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
-#          All rights reserved. 
+#          All rights reserved.
 #
-# $FML: ThreadTrack.pm,v 1.16 2001/11/20 07:32:37 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.17 2001/11/27 11:40:30 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -53,9 +53,9 @@ sub new
 }
 
 
-# Descriptions: dummy to avoid to take data from STDIN 
+# Descriptions: dummy to avoid to take data from STDIN
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub prepare
 {
@@ -125,7 +125,7 @@ sub run
     elsif ($command eq 'db_update') {
 	my $last_id = $curproc->_speculate_last_id($thread);
 	print STDERR "db_update: $last_id -> $max_id\n";
-	$thread->db_mkdb($last_id, $max_id);	
+	$thread->db_mkdb($last_id, $max_id);
     }
     elsif ($command eq 'db_rebuild') {
 	print STDERR "\$thread->db_mkdb(1, $max_id);\n" if $ENV{'debug'};
@@ -200,8 +200,8 @@ sub _speculate_max_id
 	    return $max_id;
 	}
 	else {
-	    eval q{ 
-		use FML::Article; 
+	    eval q{
+		use FML::Article;
 		push(@ISA, 'FML::Article');
 		$max_id = $curproc->speculate_max_id($spool_dir);
 	    };
@@ -359,7 +359,7 @@ sub _exec
     }
     elsif ($command eq 'show') {
 	for my $id (@argv) {
-	    if ($id =~ /^\d+$/) { 
+	    if ($id =~ /^\d+$/) {
 		my $xid = $thread->_create_thread_id_strings($id);
 		use FileHandle;
 		my $wh = new FileHandle "| less";
@@ -390,8 +390,8 @@ sub _exec
 # commands
 #
 
-sub help 
-{ 
+sub help
+{
     print "Usage: $0\n\n";
 
     print "list         show thread summary (without article summary)\n";
@@ -417,7 +417,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

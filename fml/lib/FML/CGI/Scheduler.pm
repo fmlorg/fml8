@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Scheduler.pm,v 1.5 2001/11/07 14:11:46 fukachan Exp $
+# $FML: Scheduler.pm,v 1.6 2001/11/13 15:18:31 fukachan Exp $
 #
 
 package FML::CGI::Scheduler;
@@ -73,7 +73,7 @@ sub html_end
 {
     my ($curproc, $args) = @_;
 
-    print "<HR>\n"; 
+    print "<HR>\n";
 
     $curproc->_show_guide($args);
 
@@ -111,7 +111,7 @@ sub run_cgi
 
 L<CGI>,
 L<FML::Process::CGI>
-and 
+and
 L<FML::Process::Flow>
 
 =head1 AUTHOR
@@ -123,7 +123,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

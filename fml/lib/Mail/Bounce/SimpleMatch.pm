@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SimpleMatch.pm,v 1.22 2001/07/31 14:07:00 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.23 2001/09/18 03:31:33 fukachan Exp $
 #
 
 
@@ -164,10 +164,10 @@ sub analyze
     # variables to hold current states
     my $args = {
 	state  => 0,
-	result => $result, 
+	result => $result,
     };
 
-    # skip the first header part and search "text/*" in the body part(s). 
+    # skip the first header part and search "text/*" in the body part(s).
     $m = $msg->rfc822_message_body_head;
     $m = $m->find( { data_type_regexp => 'text' } );
 
@@ -188,7 +188,7 @@ sub analyze
 		$self->_address_match($args);
 	    }
 
-	    # we found the mark of "end of error message part". 
+	    # we found the mark of "end of error message part".
 	    last if $self->_reach_end($args);
 	}
     }
@@ -218,7 +218,7 @@ sub _reach_end
 }
 
 # XXX
-# XXX our state check is applied to each paragraph not the whole body. 
+# XXX our state check is applied to each paragraph not the whole body.
 # XXX
 sub _address_match
 {
@@ -231,7 +231,7 @@ sub _address_match
 	    next unless $mta_type;
 
 	    my $start_regexp = $address_trap_regexp->{ $mta_type }->{'start'};
-	    if ($$rbuf =~ /$start_regexp/) { 
+	    if ($$rbuf =~ /$start_regexp/) {
 		$args->{ mta_type  } = $mta_type;
 		$args->{ state }     = 1;
 	    }
@@ -245,7 +245,7 @@ sub _address_match
     my $mta_type    = $args->{ mta_type };
     my $end_regexp  = $address_trap_regexp->{ $mta_type }->{ 'end' };
     my $addr_regexp = $address_trap_regexp->{ $mta_type }->{ 'regexp' };
-    
+
     # 1.1 o.k. we've found the start pattern !!
     if ($args->{ state } == 1) {
 	my @buf = split(/\n/, $$rbuf);
@@ -266,7 +266,7 @@ sub _address_match
 		}
 	    }
 
-	    if (/$addr_regexp/) { 
+	    if (/$addr_regexp/) {
 		my $addr = $self->address_clean_up($mta_type, $1);
 		if ($addr) {
 		    $result->{ $addr }->{ 'Final-Recipient' } = $addr;
@@ -288,7 +288,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

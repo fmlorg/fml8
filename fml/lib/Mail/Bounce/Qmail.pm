@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Qmail.pm,v 1.2 2001/04/10 11:52:59 fukachan Exp $
+# $FML: Qmail.pm,v 1.3 2001/07/30 14:42:34 fukachan Exp $
 #
 
 
@@ -71,7 +71,7 @@ sub analyze
 			$result->{ $addr }->{ 'Status' }          = $status;
 			$result->{ $addr }->{ 'hints' }           = 'qmail';
 		    }
-		} 
+		}
 	    }
 	}
 
@@ -91,7 +91,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

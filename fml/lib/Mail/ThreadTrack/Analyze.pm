@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.18 2001/11/27 11:21:46 fukachan Exp $
+# $FML: Analyze.pm,v 1.19 2001/12/21 07:34:05 tmu Exp $
 #
 
 package Mail::ThreadTrack::Analyze;
@@ -77,10 +77,10 @@ sub _is_reply
 }
 
 
-# Descriptions: assign a new thread id or 
+# Descriptions: assign a new thread id or
 #               extract the existing thread-id from the subject
 #    Arguments: $self $msg
-#                  $msg = Mail::Message object 
+#                  $msg = Mail::Message object
 # Side Effects: a new thread_id may be assigned
 # Return Value: none
 sub assign
@@ -93,7 +93,7 @@ sub assign
     # 1. try to extract $thread_id from header
     my $thread_id = $self->_extract_thread_id_in_subject($header);
     unless ($thread_id) {
-	# we fail to pick up thread id from subject 
+	# we fail to pick up thread id from subject
 	# but we try to speculate id from other fields in header.
 	$thread_id = $self->_speculate_thread_id_from_header($header);
 	if ($thread_id) {
@@ -106,7 +106,7 @@ sub assign
 	}
     }
 
-    # 2. check "X-Thread-Pragma:" field, 
+    # 2. check "X-Thread-Pragma:" field,
     #    we ignore this mail if the pragma is specified as "ignore".
     if (defined $header->get('x-thread-pragma')) {
 	my $pragma = $header->get('x-thread-pragma') || '';
@@ -116,8 +116,8 @@ sub assign
 	    return undef;
 	}
     }
-    
-    # 3. if the header has some thread_id, 
+
+    # 3. if the header has some thread_id,
     #    we do not rewrite the subject but save the extracted $thread_id.
     if ($is_reply && $thread_id) {
 	$self->log("reply message with thread_id=$thread_id");
@@ -135,7 +135,7 @@ sub assign
 
 	my $id = $self->_assign_new_thread_id_number();
 
-	# side effect: 
+	# side effect:
 	# define $self->{ _thread_subject_tag } and $self->{ _thread_id }
 	my $thread_id = $self->_create_thread_id_strings($id);
 	$self->set_thread_id($thread_id);
@@ -144,9 +144,9 @@ sub assign
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self
-# Side Effects: 
+# Side Effects:
 # Return Value: number
 sub _assign_new_thread_id_number
 {
@@ -186,9 +186,9 @@ sub _append_thread_status_info
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub get_thread_status
 {
@@ -197,9 +197,9 @@ sub get_thread_status
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub set_thread_status
 {
@@ -214,9 +214,9 @@ sub set_thread_status
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub update_thread_status
 {
@@ -248,7 +248,7 @@ sub update_thread_status
     $pragma     = $header->get('x-thread-pragma') || $pragma || '';
 
     if ($pragma  =~ /close/     ||
-	$content =~ /^\s*close/ || 
+	$content =~ /^\s*close/ ||
 	$subject =~ /^\s*close/) {
 	$self->set_thread_status("close");
 	$self->_append_thread_status_info("closed");
@@ -293,9 +293,9 @@ sub _is_ignore
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub get_thread_id
 {
@@ -304,9 +304,9 @@ sub get_thread_id
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub set_thread_id
 {
@@ -364,7 +364,7 @@ sub _extract_message_id_references
 	push(@addrs, Mail::Address->parse($buf));
     }
 
-    for my $addr (@addrs) { 
+    for my $addr (@addrs) {
         my $a = $addr->address;
         unless ($uniq{ $a }) {
 	    # RFC822 says msg-id = "<" addr-spec ">" ; Unique message id
@@ -377,9 +377,9 @@ sub _extract_message_id_references
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _extract_thread_id_in_subject
 {
@@ -415,7 +415,7 @@ sub _extract_thread_id_in_subject
 
 # For example, consider a posting to both elena ML and rudo (DM) from kenken.
 #
-#     From: kenken 
+#     From: kenken
 #     To: elena-ml
 #     Cc: rudo
 #
@@ -442,7 +442,7 @@ sub _speculate_thread_id_from_header
 	my $rh = $self->{ _hash_table };
 
       MSGID_LIST:
-	for my $mid (@$midlist) { 
+	for my $mid (@$midlist) {
 	    $result = $rh->{ _message_id }->{ $mid };
 	    last MSGID_LIST if $result;
 	}
@@ -455,7 +455,7 @@ sub _speculate_thread_id_from_header
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $id_num
 # Side Effects: update $self->{ _thread_subject_tag }
 # Return Value: thread_id string
@@ -479,9 +479,9 @@ sub _create_thread_id_strings
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub update_db
 {
@@ -522,9 +522,9 @@ sub _speculate_time
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _update_db
 {
@@ -532,7 +532,7 @@ sub _update_db
     my $config     = $self->{ _config };
     my $article_id = $config->{ article_id };
     my $thread_id  = $self->get_thread_id();
-    
+
     # 0. logging
     $self->log("article_id=$article_id thread_id=$thread_id");
 
@@ -545,7 +545,7 @@ sub _update_db
 	return;
     }
 
-    # 1. 
+    # 1.
     $rh->{ _thread_id }->{ $article_id }  = $thread_id;
     $rh->{ _date      }->{ $article_id }  = _speculate_time($msg);
     $rh->{ _articles  }->{ $thread_id  } .= $article_id . " ";
@@ -581,7 +581,7 @@ sub _update_db
 # Descriptions: register myself to index_db for further reference
 #               among mailing lists
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _update_index_db
 {
@@ -607,7 +607,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

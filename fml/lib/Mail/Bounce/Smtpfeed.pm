@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Smtpfeed.pm,v 1.1 2001/04/10 16:02:07 fukachan Exp $
+# $FML: Smtpfeed.pm,v 1.2 2001/07/30 14:42:34 fukachan Exp $
 #
 
 
@@ -51,11 +51,11 @@ sub analyze
     my $header = $m->nth_paragraph( 1 );
     my $addr;
 
-    # 
+    #
     # XXX code below is correct ?
-    # 
+    #
 
-    if ($header =~ 
+    if ($header =~
 	/^To: \(original recipient in envelope at \S+\) <(\S+)>/) {
 	$addr = $1;
     }
@@ -76,7 +76,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

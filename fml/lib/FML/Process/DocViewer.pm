@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
-#          All rights reserved. 
+#          All rights reserved.
 #
-# $FML: DocViewer.pm,v 1.8 2001/11/27 11:40:30 fukachan Exp $
+# $FML: DocViewer.pm,v 1.9 2001/12/08 14:53:18 fukachan Exp $
 #
 
 package FML::Process::DocViewer;
@@ -32,7 +32,7 @@ FML::Process::DocViewer -- fmldoc wrapper
 =head1 DESCRIPTION
 
 FML::Process::DocViewer is the main routine of C<fmldoc> program.
-It wrapps C<perldoc>. 
+It wrapps C<perldoc>.
 
 See C<FML::Process::Flow> for program flow.
 
@@ -147,7 +147,7 @@ _EOF_
 # Return Value: none
 sub _fmldoc
 {
-    my ($curproc, $args) = @_;    
+    my ($curproc, $args) = @_;
     my $config  = $curproc->{ config };
     my $myname  = $curproc->myname();
     my $argv    = $curproc->command_line_argv();
@@ -182,7 +182,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

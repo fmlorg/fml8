@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
-#          All rights reserved. 
+#          All rights reserved.
 #
-# $FML: DBI.pm,v 1.7 2001/08/05 03:24:44 fukachan Exp $
+# $FML: DBI.pm,v 1.8 2001/09/17 11:35:21 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -52,7 +52,7 @@ sub make_dsn
 
 execute sql query.
 
-    $args->{ 
+    $args->{
 	query => sql_query_statment,
     };
 
@@ -100,9 +100,9 @@ close connection to SQL server specified by C<dsn>.
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub open
 {
@@ -127,7 +127,7 @@ sub open
 
     # try to connect
     my $dbh = DBI->connect($dsn, $user, $password);
-    unless (defined $dbh) { 
+    unless (defined $dbh) {
 	$self->error_set( $DBI::errstr );
 	return undef;
     }
@@ -136,12 +136,12 @@ sub open
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub close
-{ 
+{
     my ($self, $args) = @_;
     my $res = $self->{ _res };
     my $dbh = $self->{ _dbh };
@@ -244,7 +244,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

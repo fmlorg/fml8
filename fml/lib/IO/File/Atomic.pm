@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Atomic.pm,v 1.9 2001/04/03 09:45:46 fukachan Exp $
+# $FML: Atomic.pm,v 1.10 2001/05/27 14:27:55 fukachan Exp $
 #
 
 package IO::File::Atomic;
@@ -53,7 +53,7 @@ You can use this method to open $file for both read and write.
     use IO::File::Atomic;
     my ($rh, $wh) = IO::File::Atomic->rw_open($file);
     while (<$rh>) {
-        print $wh "new/updated things ...";    
+        print $wh "new/updated things ...";
     }
     $wh->close;
     $rh->close;
@@ -65,14 +65,14 @@ To copy from $src to $dst,
 
 =head1 DESCRIPTION
 
-library to wrap atomic IO operations. 
+library to wrap atomic IO operations.
 The C<atomic> feature is based on C<rename(2)> system call.
 
 =head1 METHODS
 
 =head2 C<new()>
 
-The ordinary constructor. 
+The ordinary constructor.
 The request is forwarded to SUPER CLASS's new().
 
 =cut
@@ -94,7 +94,7 @@ sub new
 
 =head2 C<open(file[, mode])>
 
-open C<file> with C<mode>. 
+open C<file> with C<mode>.
 If C<mode> is not specified, open C<file> with writable mode by default.
 
 Actually this method opens a new temporary file for write.
@@ -125,7 +125,7 @@ sub open
 {
     my ($self, $file, $mode) = @_;
 
-    # get an instance 
+    # get an instance
     ref($self) or $self = $self->new;
 
     # default mode is "w"
@@ -188,7 +188,7 @@ sub close
 
 =head2 C<copy(src, dst)>
 
-copy from C<src> file to C<dst> file in atomic way by using 
+copy from C<src> file to C<dst> file in atomic way by using
 C<IO::File::Atomic::rw_open>.
 
 =cut
@@ -260,13 +260,13 @@ sub rollback
 
 
 # Descriptions: destructor
-#               forward the request to rollback() in this class 
+#               forward the request to rollback() in this class
 #    Arguments: $self
 #               XXX $self is blessed file handle.
 # Side Effects: none
 # Return Value: the same as rollback()
-sub DESTROY 
-{ 
+sub DESTROY
+{
     my ($self) = @_;
     $self->rollback;
 }
@@ -281,7 +281,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

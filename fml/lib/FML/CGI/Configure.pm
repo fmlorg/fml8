@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Configure.pm,v 1.5 2001/11/13 15:18:31 fukachan Exp $
+# $FML: Configure.pm,v 1.6 2001/11/17 04:03:36 fukachan Exp $
 #
 
 package FML::CGI::Configure;
@@ -86,7 +86,7 @@ sub html_end
 {
     my ($curproc, $args) = @_;
 
-    print "<HR>\n"; 
+    print "<HR>\n";
 
     $curproc->_show_guide($args);
 
@@ -168,9 +168,9 @@ sub _show_menu
 			'subscribe',
 			'unsubscribe',
 			];
-    
+
     print start_form(-action=>$action, -target=>$target);
-    
+
     print "ML: ";
     print popup_menu(-name => 'ml_name', -values => $ml_list);
 
@@ -199,7 +199,7 @@ sub _show_menu
 
 L<CGI>,
 L<FML::Process::CGI>
-and 
+and
 L<FML::Process::Flow>
 
 =head1 AUTHOR
@@ -211,7 +211,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

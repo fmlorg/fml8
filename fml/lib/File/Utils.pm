@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.6 2001/05/27 14:27:55 fukachan Exp $
+# $FML: Utils.pm,v 1.7 2001/08/26 08:39:51 fukachan Exp $
 #
 
 package File::Utils;
@@ -28,8 +28,8 @@ File::Utils - utilities to handle files or directories
 
 =head1 DESCRIPTION
 
-this module provides utility functions to handle files, 
-for example, 
+this module provides utility functions to handle files,
+for example,
 C<mkdirhier>,
 C<touch>,
 C<search_program>
@@ -71,7 +71,7 @@ sub mkdirhier
     error_clear();
 
     # XXX $mode (e.g. 0755) should be a numeric not a string
-    eval q{ 
+    eval q{
 	use File::Path;
 	mkpath($dir, 0, $mode);
     };
@@ -122,23 +122,23 @@ sub touch
 
 =head2 C<search_program($file [, $path_list ])>
 
-search C<$file>. 
+search C<$file>.
 C<$path_list> is the hash array.
 It searches it among C<$path_list> if specified.
 
-The default search path list is 
+The default search path list is
 
-  ('/usr/bin', '/bin', '/sbin', ' /usr/local/bin', 
+  ('/usr/bin', '/bin', '/sbin', ' /usr/local/bin',
    '/usr/gnu/bin', '/usr/pkg/bin')
 
 =cut
 
 # Descriptions: file $file executable
 #    Arguments: file [path_list]
-#               The "path_list" is an ARRAY_REFERENCE. 
-#               For example, 
-#               search_program('md5'); 
-#               search_program('md5', [ '/bin', '/sbin' ]); 
+#               The "path_list" is an ARRAY_REFERENCE.
+#               For example,
+#               search_program('md5');
+#               search_program('md5', [ '/bin', '/sbin' ]);
 # Side Effects: none
 # Return Value: pathname if found, undef if not
 sub search_program
@@ -146,11 +146,11 @@ sub search_program
     my ($file, $path_list) = @_;
 
     my $default_path_list = [
-			     '/usr/bin', 
-			     '/bin', 
-			     '/sbin', 
-			     '/usr/local/bin', 
-			     '/usr/gnu/bin', 
+			     '/usr/bin',
+			     '/bin',
+			     '/sbin',
+			     '/usr/local/bin',
+			     '/usr/gnu/bin',
 			     '/usr/pkg/bin'
 			     ];
 
@@ -201,7 +201,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

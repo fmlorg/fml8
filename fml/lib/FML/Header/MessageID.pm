@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MessageID.pm,v 1.1 2001/04/15 05:01:58 fukachan Exp $
+# $FML: MessageID.pm,v 1.2 2001/04/15 13:30:49 fukachan Exp $
 #
 
 package FML::Header::MessageID;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Header::MessageID - manupulate message-id 
+FML::Header::MessageID - manupulate message-id
 
 =head1 SYNOPSIS
 
@@ -77,7 +77,7 @@ sub open_cache
 
     if ($dir) {
 	my $obj = new File::CacheDir {
-	    directory  => $dir, 
+	    directory  => $dir,
 	    cache_type => $mode,
 	    expires_in => $days,
 	};
@@ -149,7 +149,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

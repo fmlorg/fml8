@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
-#          All rights reserved. 
+#          All rights reserved.
 #
-# $FML: Scheduler.pm,v 1.8 2001/11/25 14:53:41 fukachan Exp $
+# $FML: Scheduler.pm,v 1.9 2001/11/27 11:40:30 fukachan Exp $
 #
 
 package FML::Process::Scheduler;
@@ -32,7 +32,7 @@ See C<FML::Process::Flow> for each method definition.
 
 =head2 MODULES
 
-These programs, 
+These programs,
 C<fmlconf> and C<makefml>,
 bootstrap by using these modules in this order.
 
@@ -74,7 +74,7 @@ sub run
     my $mode   = 'text';
 
     # -h or --help
-    if (defined $option->{ h } || defined $option->{ help }) { 
+    if (defined $option->{ h } || defined $option->{ help }) {
 	return $self->help();
     }
 
@@ -118,7 +118,7 @@ sub run
 	system "w3m -dump $tmpf";
     }
     else {
-	system "cat $tmpf";	
+	system "cat $tmpf";
     }
 
     unlink $tmpf if -f $tmpf;
@@ -131,8 +131,8 @@ sub help
     my ($self) = @_;
 
     my $name = $0;
-    eval q{ use File::Basename; 
-	    $name = basename($0); 
+    eval q{ use File::Basename;
+	    $name = basename($0);
 	    if ($name =~ /(\w+)$/) { $name = $1;}
 	};
 
@@ -163,7 +163,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

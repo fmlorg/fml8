@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DSN.pm,v 1.10 2001/09/18 03:31:32 fukachan Exp $
+# $FML: DSN.pm,v 1.11 2001/10/27 04:50:40 fukachan Exp $
 #
 
 
@@ -40,38 +40,38 @@ See C<Mail::Bounce> for more details.
    Content-Type: multipart/report; report-type=delivery-status;
    	boundary="C687D866E0.986737575/ahodori.fml.org"
    Message-Id: <20010408134615.F1DD786658@ahodori.fml.org>
-   
+
    This is a MIME-encapsulated message.
-   
+
    --C687D866E0.986737575/ahodori.fml.org
    Content-Description: Notification
    Content-Type: text/plain
-   
+
    This is the Postfix program at host ahodori.fml.org.
 
        ... reason ...
-   
+
    --C687D866E0.986737575/ahodori.fml.org
    Content-Description: Delivery error report
    Content-Type: message/delivery-status
-   
+
    Reporting-MTA: dns; ahodori.fml.org
    Arrival-Date: Sun, 25 Mar 2001 22:34:15 +0900 (JST)
-   
+
    Final-Recipient: rfc822; rudo@nuinui.net
    Action: failed
    Status: 4.0.0
    Diagnostic-Code: X-Postfix; connect to sv.nuinui.net[210.161.170.173]:
        Connection refused
-   
+
    --C687D866E0.986737575/ahodori.fml.org
    Content-Description: Undelivered Message
    Content-Type: message/rfc822
-   
+
        ... original message ...
-   
+
    -- rudo's mabuachi
-   
+
    --C687D866E0.986737575/ahodori.fml.org--
 
 =cut
@@ -95,7 +95,7 @@ sub analyze
 	    }
 	}
 
-	if ($debug) { 
+	if ($debug) {
 	    print STDERR "\t * no recipient information\n" unless %$result;
 	}
     }
@@ -120,29 +120,29 @@ sub _parse_dsn_format
     use Mail::Header;
     my @h      = split(/\n/, $buf);
     my $header = new Mail::Header \@h;
-    my $addr   = $header->get('Original-Recipient') || 
+    my $addr   = $header->get('Original-Recipient') ||
 	$header->get('Final-Recipient');
 
     if ($addr =~ /.*;\s*(\S+\@\S+\w+)/) { $addr = $1;}
     $addr = $self->address_clean_up($self, $addr);
 
     # gives $addr itself as a hint of fixing broken address
-    # domain part of $addr may match someting e.g. nifty.ne.jp, webtv.ne.jp. 
+    # domain part of $addr may match someting e.g. nifty.ne.jp, webtv.ne.jp.
     $addr = $self->address_clean_up($addr, $addr);
-    
-    if ($debug) { 
+
+    if ($debug) {
 	print STDERR "\t *** valid address is not found\n" unless $addr;
     }
 
     # set up return buffer
     if ($addr =~ /\@/) {
 	$result->{ $addr }->{ 'Final-Recipient' } = $addr;
-	for ('Final-Recipient', 
+	for ('Final-Recipient',
 	     'Original-Recipient',
-	     'Action', 
-	     'Status', 
+	     'Action',
+	     'Status',
 	     'Diagnostic-Code',
-	     'Reporting-MTA', 
+	     'Reporting-MTA',
 	     'Received-From-MTA') {
 	    $result->{ $addr }->{ $_ } = $header->get($_) || undef;
 	}
@@ -159,7 +159,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

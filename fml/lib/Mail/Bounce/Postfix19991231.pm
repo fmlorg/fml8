@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix19991231.pm,v 1.8 2001/05/27 14:27:56 fukachan Exp $
+# $FML: Postfix19991231.pm,v 1.9 2001/07/30 14:42:34 fukachan Exp $
 #
 
 
@@ -35,17 +35,17 @@ sub class used in C<Mail::Bounce>.
    Subject: Undelivered Mail Returned to Sender
    To: fukachan@fml.org
    Message-Id: <19990129060506.816AD5B33D@katri.fml.org>
-   
+
    This is the Postfix program at host katri.fml.org.
 
-       ... reason ...    
-   
+       ... reason ...
+
    	--- Delivery error report follows ---
-   
+
    <rudo@nuinui.net>: mail to command is restricted
-   
+
    	--- Undelivered message follows ---
-   
+
    ... original message ...
 
 =cut
@@ -92,7 +92,7 @@ sub _analyze_plaintext
 		    if ($data =~ /\<(\S+\@\S+\w+)\>:\s*(.*)/) {
 			$self->_parse_address($data, $result);
 		    }
-		} 
+		}
 	    }
 	}
 
@@ -150,7 +150,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Text.pm,v 1.3 2001/11/11 00:57:36 fukachan Exp $
+# $FML: Text.pm,v 1.4 2001/11/19 08:47:01 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::Text;
@@ -78,14 +78,14 @@ sub __print_thread_summary
     my $articles  = $optargs->{ articles };
     my $aid       = (split(/\s+/, $articles))[0];
 
-    printf($fd $format, $thread_id, $date, $age, $status, 
+    printf($fd $format, $thread_id, $date, $age, $status,
 	   _format_list(25, $articles));
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub __end_thread_summary
 {
@@ -166,7 +166,7 @@ sub _cost_to_indicator
     my ($cost) = @_;
     my $how_bad = 0;
 
-    if ($cost =~ /(\w+)\-(\d+)/) { 
+    if ($cost =~ /(\w+)\-(\d+)/) {
 	$how_bad += $2;
 	$how_bad += 2 if $1 =~ /open/;
 	$how_bad  = "!" x ($how_bad > 6 ? 6 : $how_bad);

@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sort.pm,v 1.3 2001/11/09 15:09:03 fukachan Exp $
+# $FML: Sort.pm,v 1.4 2001/11/10 08:50:41 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::Sort;
@@ -18,9 +18,9 @@ use Carp;
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub sort_thread_id
 {
@@ -31,7 +31,7 @@ sub sort_thread_id
     $self->{ _age }  = $age;
     $self->{ _cost } = $cost;
 
-    @$thread_id_list = sort { 
+    @$thread_id_list = sort {
 	$cost->{$b} <=> $cost->{$a}
     } @$thread_id_list;
 
@@ -45,9 +45,9 @@ my $status_cost = {
 };
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _calculate_age
 {

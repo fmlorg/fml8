@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Array.pm,v 1.18 2001/04/08 13:25:40 fukachan Exp $
+# $FML: Array.pm,v 1.19 2001/05/30 14:35:10 fukachan Exp $
 #
 
 package IO::Adapter::Array;
@@ -57,7 +57,7 @@ sub new
 
 =item C<open($args)>
 
-open IO for the array. $args is a hash reference. 
+open IO for the array. $args is a hash reference.
 The option follows:
 
    $args = {
@@ -110,7 +110,7 @@ return the next element of the array
 =cut
 
 # Descriptions: forwarded to get_next_value()
-sub getline { get_next_value(@_);} 
+sub getline { get_next_value(@_);}
 
 
 # Descriptions: return the next element of the array
@@ -174,7 +174,7 @@ end of IO operation. It is a dummy.
 # Descriptions: whether end of the array is not now
 #    Arguments: $self
 # Side Effects: none
-# Return Value: 1 or 0. 
+# Return Value: 1 or 0.
 #               return 1 if the element reaches the end of the array.
 sub eof
 {
@@ -202,7 +202,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

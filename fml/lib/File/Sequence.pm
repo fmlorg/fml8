@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.11 2001/11/20 07:27:38 fukachan Exp $
+# $FML: Sequence.pm,v 1.12 2001/11/27 15:55:23 fukachan Exp $
 #
 
 package File::Sequence;
@@ -19,7 +19,7 @@ File::Sequence - maintain the sequence number
 
 =head1 SYNOPSIS
 
-To get the latest $article_id, 
+To get the latest $article_id,
 
    use File::Sequence;
    my $sfh = new File::Sequence { sequence_file => $seq_file };
@@ -35,7 +35,7 @@ to increment $article_id and get it
 
 If you divide the $id by some modulus, use
 
-   my $sfh = new File::Sequence { 
+   my $sfh = new File::Sequence {
        sequence_file => $seq_file,
        modulus       => $modules,
    };
@@ -43,7 +43,7 @@ If you divide the $id by some modulus, use
 
 For example, if you do new() with modulus 3,
 
-   my $sfh = new File::Sequence { 
+   my $sfh = new File::Sequence {
        sequence_file => $seq_file,
        modulus       => 3,
    };
@@ -52,7 +52,7 @@ $id becomes 0, 1, 2, 0, 1, 2...
 
 =head1 DESCRIPTION
 
-File::Sequence module maintains the sequence number for something, 
+File::Sequence module maintains the sequence number for something,
 for example, the article number typically.
 
 As an extension, you can generate a cyclic number by this module.
@@ -94,7 +94,7 @@ sub new
 
 # Descriptions: increment sequence
 #    Arguments: OBJ($self) [STR($file)]
-#               If $file is not specified, 
+#               If $file is not specified,
 #               the sequence_file parameter in new().
 # Side Effects: the number holded in $file is incremented
 # Return Value: number (sequence number)
@@ -149,7 +149,7 @@ sub increment_id
 
 # Descriptions: get sequence
 #    Arguments: OBJ($self) [STR($file)]
-#               If $file is not specified, 
+#               If $file is not specified,
 #               the sequence_file parameter in new().
 # Side Effects: the number holded in $file is incremented
 # Return Value: number (sequence number)
@@ -241,7 +241,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

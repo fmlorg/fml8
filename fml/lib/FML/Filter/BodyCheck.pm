@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: BodyCheck.pm,v 1.9 2001/10/27 04:50:38 fukachan Exp $
+# $FML: BodyCheck.pm,v 1.10 2001/11/25 15:02:48 fukachan Exp $
 #
 
 package FML::Filter::BodyCheck;
@@ -93,7 +93,7 @@ sub body_check
 {
     my ($self, $msg, $args) = @_;
 
-    ## 0. preparation 
+    ## 0. preparation
     # local scope after here
     local($*) = 0;
 
@@ -169,7 +169,7 @@ sub reject_null_mail_body
 
 # Descriptions: virus check against some types of M$ products
 #               Even if Multipart, evaluate all blocks agasint virus checks.
-#     
+#
 #             [HISTORY]
 #             research by Yoshihiro Kawashima <katino@kyushu.iij.ad.jp>
 #             helps me to speculate the virus family?
@@ -177,7 +177,7 @@ sub reject_null_mail_body
 #             Thanks hama@sunny.co.jp on M$ GUID pattern.
 #
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub reject_ms_guid
 {
@@ -199,7 +199,7 @@ sub _probe_guid
 
 
     # M$ GUID pattern ; thank hama@sunny.co.jp
-    my $guid_pat = 
+    my $guid_pat =
 	'\{([0-9A-F]{8}\-[0-9A-F]{4}\-[0-9A-F]{4}\-[0-9A-F]{4}\-[0-9A-F]{12})\}';
 
     my $window_size = 1024; # at lease 32*2
@@ -239,20 +239,20 @@ sub _decode_mime_buffer
     elsif ($encoding eq 'quoted-printable') {
 	use MIME::QuotedPrint;
 	$buf = decode_qp($buf);
-    }	    
+    }
 
     return $buf;
 }
 
 
 # Descriptions: e.g. "unsubscribe", "help", ("subscribe" in some case)
-#               XXX DO NOT INCLUDE ".", "?" (I think so ...)! 
-#               XXX but we need "." for mail address syntax 
+#               XXX DO NOT INCLUDE ".", "?" (I think so ...)!
+#               XXX but we need "." for mail address syntax
 #               XXX e.g. "chaddr a@d1 b@d2".
-#               If we include them, 
+#               If we include them,
 #               we cannot identify a command or an English phrase ;D
 # Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub reject_one_line_message
 {
@@ -267,12 +267,12 @@ sub reject_one_line_message
 }
 
 
-# Descriptions: 
-#              XXX fml 4.0: fml.pl (distribute) should not accpet commands 
+# Descriptions:
+#              XXX fml 4.0: fml.pl (distribute) should not accpet commands
 #              XXX: "# command" is internal represention
 #              XXX: but to reject the old compatible syntaxes.
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub reject_old_fml_command_syntax
 {
@@ -280,7 +280,7 @@ sub reject_old_fml_command_syntax
     my $buf = $first_msg->data_in_body_part;
 
     if ($buf =~ /^[\s\n]*(\#\s*[\w\d\:\-\s]+)[\n\s]*$/) {
-	my $r = $1; 
+	my $r = $1;
 	$r =~ s/\n//g;
 	$r = "avoid to distribute commands [$r]";
 	croak $r;
@@ -305,10 +305,10 @@ sub reject_invalid_fml_command_syntax
 #                EUC 2-bytes "A-Z" (243[301-332])+
 #                EUC 2-bytes "a-z" (243[341-372])+
 #                e.g. reject "SUBSCRIBE" : octal code follows:
-#                243 323 243 325 243 302 243 323 243 303 
+#                243 323 243 325 243 302 243 323 243 303
 #                243 322 243 311 243 302 243 305
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub reject_japanese_command_syntax
 {
@@ -342,7 +342,7 @@ sub need_one_line_check
 	return 1;
     }
     elsif ($np == 2) {
-	# if the seconda paragraph looks signature, 
+	# if the seconda paragraph looks signature,
 	# this message has only one effective message (paragraph).
 	if ($self->is_signature($m->nth_paragraph(2))) {
 	    return 1;
@@ -379,14 +379,14 @@ sub is_citation
 }
 
 
-# XXX fml 4.0 assumes: 
+# XXX fml 4.0 assumes:
 # XXX If the paragraph has @ or ://, it must be signature.
 # trap special keyword like tel:011-123-456789 ...
 sub is_signature
 {
     my ($self, $data) = @_;
 
-    if ($data =~ /\@/ || 
+    if ($data =~ /\@/ ||
 	$data =~ /TEL:/i ||
 	$data =~ /FAX:/i ||
 	$data =~ /:\/\// ) {
@@ -443,7 +443,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledFile.pm,v 1.9 2001/08/21 08:37:04 fukachan Exp $
+# $FML: JournaledFile.pm,v 1.10 2001/08/21 10:04:10 fukachan Exp $
 #
 
 package Tie::JournaledFile;
@@ -31,7 +31,7 @@ or access in hash style
    tie %db, 'Tie::JournaledFile', { file => 'cache.txt' };
    print $db{ rudo }, "\n";
 
-where the format of "cache.txt" is 
+where the format of "cache.txt" is
 
    key value
 
@@ -140,7 +140,7 @@ sub FIRSTKEY
 	# negative cache
 	$self->{ '_key_negative_cache' }->{ $key } = 1;
 
-	print STDERR "   File.FIRSTKEY: $key (return)\n" if $debug;	
+	print STDERR "   File.FIRSTKEY: $key (return)\n" if $debug;
 	return $key;
     }
     else {
@@ -198,7 +198,7 @@ sub NEXTKEY
 
 =head2 C<find(key)>
 
-return the array of line(s) with the specified C<key>. 
+return the array of line(s) with the specified C<key>.
 
 The line is either first or last mached line.
 The maching strategy is determined by C<last_match> or C<first_match>
@@ -248,7 +248,7 @@ sub _fetch
     while (<$fh>) {
 	next SEARCH if /^\#*$/;
 	next SEARCH if /^\s*$/;
-	next SEARCH unless /^$prekey/i; 
+	next SEARCH unless /^$prekey/i;
 	next SEARCH unless /^$keytrap/i;
 
 	chop;
@@ -258,7 +258,7 @@ sub _fetch
 	    $value = $xvalue; # save the value for $key
 
 	    if ($mode eq 'array') {
-		push(@values, $value);  
+		push(@values, $value);
 	    }
 	    if ($mode eq 'scalar') {
 		# firstmatch: exit loop ASAP if the $key is found.
@@ -267,7 +267,7 @@ sub _fetch
 		}
 	    }
 	}
-    }	
+    }
     close($fh);
 
     if ($mode eq 'scalar') {
@@ -275,7 +275,7 @@ sub _fetch
     }
     elsif ($mode eq 'array') {
 	return \@values;
-    }    
+    }
 }
 
 
@@ -331,7 +331,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

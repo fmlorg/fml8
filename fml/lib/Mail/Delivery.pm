@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Delivery.pm,v 1.2 2001/05/05 12:54:02 fukachan Exp $
+# $FML: Delivery.pm,v 1.3 2001/05/31 11:02:33 fukachan Exp $
 #
 
 package Mail::Delivery;
@@ -52,24 +52,24 @@ Mail::Delivery - mail delivery system interface
     if ($service->error) { Log($service->error); return;}
 
 This class provides the entrance for sub classes.
-Actually implementation of this class is 
+Actually implementation of this class is
 almost C<Mail::Delivery::SMTP> class.
 Please see it for more details.
 
 =head1 DESCRIPTION
 
-In C<Mail::Delivery> class, 
+In C<Mail::Delivery> class,
 C<Delivery> is an adapter to
 C<SMTP>
 C<ESMTP>
-C<LMTP> classes. 
-For example, we use 
+C<LMTP> classes.
+For example, we use
 C<Delivery>
-as an entrance into 
-actual delivery routines in 
+as an entrance into
+actual delivery routines in
 C<SMTP>
 C<ESMTP>
-C<LMTP> classes. 
+C<LMTP> classes.
 
                      SMTP
                       |
@@ -96,7 +96,7 @@ sub new
 
     # char's of the protocol name is aligned to upper case.
     $protocol =~ tr/a-z/A-Z/;
- 
+
     if ($protocol eq 'SMTP') {
 	$pkg = 'Mail::Delivery::SMTP';
     }
@@ -132,7 +132,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

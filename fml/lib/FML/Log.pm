@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000 Ken'ichi Fukamachi
 #
-# $FML: Log.pm,v 1.12 2001/07/15 08:20:25 fukachan Exp $
+# $FML: Log.pm,v 1.13 2001/11/27 15:19:39 fukachan Exp $
 #
 
 package FML::Log;
@@ -31,7 +31,7 @@ To import Log(),
 or specify arguments in the hash reference
 
    use FML::Log qw(Log LogWarn LogError);
-   &Log( $log_message , { 
+   &Log( $log_message , {
        log_file => $log_file,
        priority => $priority,
        facility => $facility,
@@ -134,7 +134,7 @@ sub LogError
 
 =head1 SEE ALSO
 
-L<Mail::Message::Date>, 
+L<Mail::Message::Date>,
 L<FML::Config>,
 L<FML::Credential>,
 
@@ -147,7 +147,7 @@ Ken'ichi Fukamachi <F<fukachan@fml.org>>
 Copyright (C) 2000,2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Confirm.pm,v 1.1 2001/10/11 23:57:38 fukachan Exp $
+# $FML: Confirm.pm,v 1.2 2001/12/22 09:11:55 fukachan Exp $
 #
 
 package FML::Confirm;
@@ -161,7 +161,7 @@ save id into databse with comment if specified.
 # Side Effects: update database
 # Return Value: none
 sub store_id
-{    
+{
     my ($self, $id, $comment) = @_;
     my $class = $self->{ _class };
     my $addr  = $self->{ _address };
@@ -188,7 +188,7 @@ find database value for $id
 # Return Value: STR
 sub find
 {
-    my ($self, $id) = @_;    
+    my ($self, $id) = @_;
     my $db = $self->_open_db();
 
     my $found = $db->{ $id };
@@ -213,7 +213,7 @@ get value for request id $id.
 # Return Value: STR
 sub get_request
 {
-    my ($self, $id) = @_;    
+    my ($self, $id) = @_;
     my $db = $self->_open_db();
 
     my $found = $db->{ "request-$id" } || undef;
@@ -227,7 +227,7 @@ sub get_request
 
 get address for $id.
 
-=cut 
+=cut
 
 
 # Descriptions: get address for $id
@@ -236,7 +236,7 @@ get address for $id.
 # Return Value: STR
 sub get_address
 {
-    my ($self, $id) = @_;    
+    my ($self, $id) = @_;
     my $db = $self->_open_db();
 
     my $found = $db->{ "address-$id" } || undef;
@@ -281,7 +281,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

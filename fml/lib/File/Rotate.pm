@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Rotate.pm,v 1.6 2001/05/28 16:17:14 fukachan Exp $
+# $FML: Rotate.pm,v 1.7 2001/06/02 12:38:20 fukachan Exp $
 #
 
 package File::Rotate;
@@ -29,7 +29,7 @@ File::Rotate - file rotatation utilities
 
 =head1 DESCRIPTION
 
-Utility functions for file rotate operations. 
+Utility functions for file rotate operations.
 It turns over the given C<file> by some condition.
 Typical condition is given as the number of files or how old they are.
 
@@ -43,7 +43,7 @@ C<rotation> renames and rearranges files like this:
     mv file   file.0
 
 In old age, shell script does this but
-in modern unix, 
+in modern unix,
 some programs such as /usr/bin/newsyslog (MIT athena project) do.
 
 =head1 METHODS
@@ -84,7 +84,7 @@ sub new
 
 =head2 C<is_time_to_rotate()>
 
-C<stat()> the file correspoinding to the object and 
+C<stat()> the file correspoinding to the object and
 determine whether the time to do comes or not.
 
 =cut
@@ -135,7 +135,7 @@ sub rotate
     if (-f $maxfile) { unlink $maxfile;}
 
     # mv var/log/file.3 -> var/log/file.4 ...;
-    do { 
+    do {
 	my $old = "$file.".($max - 1 > 0 ? $max - 1 : 0);
 	my $new = "$file.".($max);
 	print STDERR "rename($old, $new)" if -f $old;
@@ -185,7 +185,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

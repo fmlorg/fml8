@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.5 2001/05/31 11:02:33 fukachan Exp $
+# $FML: Queue.pm,v 1.6 2001/08/24 00:15:49 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -24,7 +24,7 @@ Mail::Delivery::Queue - hashed directory holding queue files
     use Mail::Delivery::Queue;
     my $queue = new Mail::Delivery::Queue { directory => "/some/where" };
 
-    # queue in a new message 
+    # queue in a new message
     # "/some/where/new/$queue_id" is created.
     $queue->in( $msg ) || croak("fail to queue in");
 
@@ -53,7 +53,7 @@ method.
 
    $queue_dir/new/$qid  --->  $queue_dir/active/$qid
 
-The actual delivery is done by other modules such as 
+The actual delivery is done by other modules such as
 C<Mail::Delivery>.
 C<Mail::Delivery::Queue> manipulats only queue around things.
 
@@ -90,7 +90,7 @@ sub new
     $me->{ _info }->{ sender }     = "$dir/info/sender/$id";
     $me->{ _info }->{ recipients } = "$dir/info/recipients/$id";
 
-    for ($dir, 
+    for ($dir,
 	 "$dir/active", "$dir/new", "$dir/deferred",
 	 "$dir/info", "$dir/info/sender", "$dir/info/recipients") {
 	-d $_ || _mkdirhier($_);
@@ -233,7 +233,7 @@ sub getidinfo
 
 =cut
 
-use POSIX qw(EAGAIN ENOENT EEXIST O_EXCL O_CREAT O_RDONLY O_WRONLY); 
+use POSIX qw(EAGAIN ENOENT EEXIST O_EXCL O_CREAT O_RDONLY O_WRONLY);
 use FileHandle;
 
 sub LOCK_SH {1;}
@@ -246,10 +246,10 @@ sub lock
 {
     my ($self, $args) = @_;
     my $fh   = new FileHandle $self->{ _active_qf };
-    my $wait = defined $args->{ wait } ? $args->{ wait } : 10; 
+    my $wait = defined $args->{ wait } ? $args->{ wait } : 10;
 
     eval {
-	local($SIG{ALRM}) = sub { croak("lock timeout");}; 
+	local($SIG{ALRM}) = sub { croak("lock timeout");};
         alarm( $wait );
 	flock($fh, &LOCK_EX);
 	$self->{ _lock }->{ _fh } = $fh;
@@ -269,16 +269,16 @@ sub unlock
 
 =head2 C<in($msg)>
 
-C<in()> creates a queue file in C<new/> directory 
+C<in()> creates a queue file in C<new/> directory
 (C<queue_directory/new/>.
 
 C<$msg> is C<Mail::Message> object by default.
-If C<$msg> object has print() method, 
+If C<$msg> object has print() method,
 arbitrary C<$msg> is acceptable.
 
 REMEMBER YOU MUST DO C<setrunnable()> for the queue to deliver.
 If you not C<setrunnable()> it, the queue file is removed by
-C<DESTRUCTOR>. 
+C<DESTRUCTOR>.
 
 =cut
 
@@ -337,7 +337,7 @@ sub set
 =head2 C<setrunnable()>
 
 set the status of the queue assigned to this object C<$self>
-deliverable. 
+deliverable.
 This file is scheduled to be delivered.
 
 In fact, setrunnable() C<rename>s the queue id file from C<new/>
@@ -346,7 +346,7 @@ directory to C<active/> directory like C<postfix> queue strategy.
 =cut
 
 
-# Descriptions: set this object queue to be deliverable 
+# Descriptions: set this object queue to be deliverable
 #    Arguments: $self $args
 # Side Effects: move $queue_id file from new/ to active/
 # Return Value: 1 (success) or 0 (fail)
@@ -424,7 +424,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

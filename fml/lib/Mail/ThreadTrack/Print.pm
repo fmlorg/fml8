@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Print.pm,v 1.18 2001/11/19 09:56:33 fukachan Exp $
+# $FML: Print.pm,v 1.19 2001/11/19 11:26:26 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print;
@@ -25,21 +25,21 @@ Mail::ThreadTrack::Print - print out thread relation
 
 =head2 summary()
 
-show the thread summary. 
-Each row that C<show_summary()> returns has a set of 
-C<date>, C<age>, C<status>, C<thread-id> and 
+show the thread summary.
+Each row that C<show_summary()> returns has a set of
+C<date>, C<age>, C<status>, C<thread-id> and
 C<articles>, which is a list of articles with the thread-id.
 
 summary show entries by the thread_id order. For example,
 
        date    age status  thread id             articles
  ------------------------------------------------------------
- 2001/02/07    3.6  going  elena_#00000450       807 808 809 
- 2001/02/07    3.1   open  elena_#00000451       810 
- 2001/02/07    3.0   open  elena_#00000452       812 
- 2001/02/07    3.0   open  elena_#00000453       813 
- 2001/02/07    3.0  going  elena_#00000454       814 815 
- 2001/02/10    0.1   open  elena_#00000456       821 
+ 2001/02/07    3.6  going  elena_#00000450       807 808 809
+ 2001/02/07    3.1   open  elena_#00000451       810
+ 2001/02/07    3.0   open  elena_#00000452       812
+ 2001/02/07    3.0   open  elena_#00000453       813
+ 2001/02/07    3.0  going  elena_#00000454       814 815
+ 2001/02/10    0.1   open  elena_#00000456       821
 
 =head2 review()
 
@@ -105,14 +105,14 @@ sub _load_library
 
     require Mail::ThreadTrack::Print::Message;
     require Mail::ThreadTrack::Print::Sort;
-    my @list = 
+    my @list =
 	qw(Mail::ThreadTrack::Print::Message Mail::ThreadTrack::Print::Sort);
 
-    if ($mode eq 'text') { 
+    if ($mode eq 'text') {
 	require Mail::ThreadTrack::Print::Text;
 	push(@list, 'Mail::ThreadTrack::Print::Text');
     }
-    elsif ($mode eq 'html') { 
+    elsif ($mode eq 'html') {
 	require Mail::ThreadTrack::Print::HTML;
 	push(@list, 'Mail::ThreadTrack::Print::HTML');
     }
@@ -160,7 +160,7 @@ sub __do_summary
 	$thread->sort_thread_id($thread_id_list);
 
 	# reverse order (first thread is the latest one) if reverse mode
-	if ($config->{ reverse_order }) { 
+	if ($config->{ reverse_order }) {
 	    @$thread_id_list = reverse @$thread_id_list;
 	}
 
@@ -174,9 +174,9 @@ sub __do_summary
 
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _print_thread_summary
 {
@@ -232,7 +232,7 @@ sub _print_message_summary
 
 # Descriptions: show brief summary chain of messages in the thread
 #    Arguments: $self $string $min_num $max_num
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _do_review
 {
@@ -299,11 +299,11 @@ sub _do_review
 
 =cut
 
-    
+
 sub show
 {
     my ($self, $tid) = @_;
-    
+
     $self->_load_library();
     $self->db_open();
     $self->show_articles_in_thread($tid);

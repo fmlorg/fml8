@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.23 2001/05/30 14:35:10 fukachan Exp $
+# $FML: File.pm,v 1.24 2001/08/26 05:52:08 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -43,9 +43,9 @@ To delete it
 =head1 DESCRIPTION
 
 This module provides real IO functions for a file used in
-C<IO::Adapter>. 
+C<IO::Adapter>.
 The map is the fully path-ed file name or a file name with 'file:/'
-prefix. 
+prefix.
 
 =head1 METHODS
 
@@ -67,7 +67,7 @@ sub new
 
 =head2 C<open($args)>
 
-$args HASH REFERENCE must have two parameters. 
+$args HASH REFERENCE must have two parameters.
 C<file> is the target file to open.
 C<flag> is the mode of open().
 
@@ -128,7 +128,7 @@ sub _rw_open
 
 =head2 C<touch()>
 
-create a file if not exists. 
+create a file if not exists.
 
 =cut
 
@@ -218,7 +218,7 @@ sub getpos
 {
     my ($self) = @_;
     my $fh = $self->{_fh};
-    defined $fh ? tell($fh) : undef;    
+    defined $fh ? tell($fh) : undef;
 }
 
 
@@ -367,7 +367,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

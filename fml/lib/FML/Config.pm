@@ -1,7 +1,7 @@
 #-*- perl -*-
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.45 2001/10/13 13:11:34 fukachan Exp $
+# $FML: Config.pm,v 1.46 2001/10/27 04:11:30 fukachan Exp $
 #
 
 package FML::Config;
@@ -64,7 +64,7 @@ mail message. It composes of header, body and several information.
 	r_header => \$header,p
 	r_body   => \$body,
 	info   => {
-	    mime-version => 1.0, 
+	    mime-version => 1.0,
 	    content-type => {
 		charset      => ISO-2022-JP,
 	    },
@@ -98,7 +98,7 @@ Internally this method uses C<tie()> to get and set a key to a value.
 For example, C<get()> and C<set()> described below is a wrapper for
 tie() IO.
 
-C<NOTE:> 
+C<NOTE:>
 pseudo variable C<_pid> is reserved for process id reference.
 
 =cut
@@ -118,7 +118,7 @@ sub new
     # import variables
     if (defined $args) {
 	my ($k, $v);
-	while (($k, $v) = each %$args) { 
+	while (($k, $v) = each %$args) {
 	    print "set($me, $k, $v)\n" if $0 =~ /loader/; # debug
 	    set($me, $k, $v);
 	}
@@ -140,7 +140,7 @@ sub new
 sub get
 {
     my ($self, $key) = @_;
-    $self->{ $key };	
+    $self->{ $key };
 }
 
 
@@ -170,7 +170,7 @@ them to %_fml_config.
 =cut
 
 
-sub overload 
+sub overload
 {
     my ($self, $file) = @_;
     $self->load_file($file);
@@ -183,8 +183,8 @@ sub load_file
     my $config        = \%_fml_config;
 
     # read configuration file
-    $self->_read_file({ 
-	file   => $file, 
+    $self->_read_file({
+	file   => $file,
 	config => $config,
     });
 
@@ -215,7 +215,7 @@ sub _read_file
 {
     my ($self, $args) = @_;
     my $file    = $args->{ 'file' };
-    my $config  = $args->{ 'config' }  || {}; 
+    my $config  = $args->{ 'config' }  || {};
     my $comment = $args->{ 'comment' } || {};
     my $order   = $args->{ 'order' }   || [];
     my $mode    = defined $args->{ 'mode' } ? $args->{ 'mode' } : 'default';
@@ -232,11 +232,11 @@ sub _read_file
 	#    var = key1 key2    (case 1.)
 	#    var = key1         (case 1.)
 	#          key2         (case 2.)
-	# 
+	#
 	while (<$fh>) {
 	    last if /^=cut/; # end of postfix format
 	    next if /^=/;    # ignore special keywords of pod formats
-	    
+
 	    if ($mode eq 'raw') { # save comment buffer
 		if (/^\s*\#/) { $comment_buffer .= $_;}
 	    }
@@ -254,7 +254,7 @@ sub _read_file
 		$curkey = $key;
 
 		if ($xmode) {
-		    $config->{ $key } = 
+		    $config->{ $key } =
 			_evaluate($config, $key, $xmode, $value);
 		}
 		else { # by default
@@ -262,7 +262,7 @@ sub _read_file
 		}
 
 		# save variable order for re-construction e.g. used in write()
-		if ($mode eq 'raw') { 
+		if ($mode eq 'raw') {
 		    $comment->{ $key } = $comment_buffer;
 		    undef $comment_buffer;
 
@@ -316,8 +316,8 @@ sub _evaluate
 
 =head2 C<read(file)>
 
-read configuration from the specified file. 
-Internally it holds configuration and comment information in 
+read configuration from the specified file.
+Internally it holds configuration and comment information in
 appearing order.
 
 =head2 C<write(file)>
@@ -328,9 +328,9 @@ appearing order.
 my $config_hold_space = {};
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub read
 {
@@ -339,8 +339,8 @@ sub read
     my $comment = {};
     my $order   = [];
 
-    $self->_read_file({ 
-	file    => $file, 
+    $self->_read_file({
+	file    => $file,
 	config  => $config,
 	comment => $comment,
 	order   => $order,
@@ -368,9 +368,9 @@ sub read
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub write
 {
@@ -406,7 +406,7 @@ sub write
 	    print $fh join("\n\t", split(/\s+/, $config->{$k}));
 	    print $fh "\n";
 	    print $fh "\n";
-	}    
+	}
 	$fh->close;
     }
     else {
@@ -464,15 +464,15 @@ sub _expand_variables
     for my $x ( @order ) {
 	next KEY if $config->{ $x } !~ /\$/o;
 
-	# we need a loop to expand nested variables, for example, 
+	# we need a loop to expand nested variables, for example,
 	# "a = $x/y" and "b = $a/c/0" would be "b = $x/y/c/0"
 
 	$max = 0;
       EXPANSION_LOOP:
 	while ($max++ < 16) {
 	    $org = $config->{ $x };
-	    
-	    $config->{$x} =~ 
+
+	    $config->{$x} =~
 		s/\$([a-z_]+[a-z0-9])/(defined $config->{$1} ? $config->{$1} : '')/ge;
 
 	    last EXPANSION_LOOP if $config->{ $x } !~ /\$/o;
@@ -485,7 +485,7 @@ sub _expand_variables
 
 	if ($max >= 16) {
 	    croak("variable expansion of $x causes infinite loop\n");
-	} 
+	}
     }
 }
 
@@ -496,7 +496,7 @@ expand $varname to $config->{ varname } in C<$rbuf>.
 
 =cut
 
-# Descriptions: expand $varname to $config->{ varname } 
+# Descriptions: expand $varname to $config->{ varname }
 #    Arguments: $config $ref_buffer
 # Side Effects: $ref_buffer is rewritten.
 # Return Value: none
@@ -536,7 +536,7 @@ useful method to return 1 or 0 according the value to the given key.
 =head2 C<has_attribute( key, attribute )>
 
 Some types of C<key> has a list as a value.
-If C<key> has the C<attribute> in the list, return 1. 
+If C<key> has the C<attribute> in the list, return 1.
 return 0 if not.
 
 =cut
@@ -593,7 +593,7 @@ sub dump_variables
 
     $self->expand_variables();
 
-    for $k (keys %_fml_config_result) { 
+    for $k (keys %_fml_config_result) {
 	$len = $len > length($k) ? $len : length($k);
     }
 
@@ -724,7 +724,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.1 2001/08/07 12:23:48 fukachan Exp $
+# $FML: Utils.pm,v 1.5 2001/10/11 04:16:39 fukachan Exp $
 #
 
 package FML::Filter::Utils;
@@ -26,9 +26,9 @@ collection of utility functions
 
 =cut
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects:
 #      History: fml 4.0's SecureP()
 # Return Value: none
 sub is_secure_command_string
@@ -44,7 +44,7 @@ sub is_secure_command_string
        return 1;
    }
 
-   # 2. allow 
+   # 2. allow
    #           command = \w+
    #      mail address = [-_\w]+@[\w\-\.]+
    #   command options = last:30
@@ -67,7 +67,7 @@ sub is_valid_mail_address
 {
     my ($s) = @_;
 
-    ($s !~ /\s|\033\$[\@B]|\033\([BJ]/ && 
+    ($s !~ /\s|\033\$[\@B]|\033\([BJ]/ &&
      $s =~ /^[\0-\177]+\@[\0-\177]+$/) ? 1 : 0;
 }
 
@@ -81,7 +81,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

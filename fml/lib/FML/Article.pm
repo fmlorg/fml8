@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.25 2001/11/18 06:40:16 fukachan Exp $
+# $FML: Article.pm,v 1.26 2001/11/27 11:22:09 fukachan Exp $
 #
 
 package FML::Article;
@@ -28,9 +28,9 @@ FML::Article - manipulate ML article
 
 =head1 DESCRIPTION
 
-C<$article> object is just a container which holds 
+C<$article> object is just a container which holds
 C<header> and C<body> object as hash keys.
-The C<header> is an C<FML::Header> object 
+The C<header> is an C<FML::Header> object
 and
 the C<body> is a C<Mail::Message> object.
 
@@ -84,10 +84,10 @@ sub _setup_article_template
 
 =head2 C<increment_id()>
 
-increment the sequence number of this article C<$self> and 
+increment the sequence number of this article C<$self> and
 save it to C<$sequence_file>.
 
-This routine uses C<File::Sequence> module. 
+This routine uses C<File::Sequence> module.
 
 =cut
 
@@ -128,7 +128,7 @@ return the current article sequence number.
 sub id
 {
     my ($self) = @_;
-    my $curproc = $self->{ curproc };    
+    my $curproc = $self->{ curproc };
     my $pcb     = $curproc->{ pcb };
     return $pcb->get('article', 'id');
 }
@@ -144,7 +144,7 @@ If the variable C<$use_spool> is 'yes', this routine works.
 
 # Descriptions: spool in the article
 #    Arguments: OBJ($self) NUM($id)
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub spool_in
 {
@@ -199,7 +199,7 @@ sub speculate_max_id
     my $dh = new DirHandle $spool_dir;
     if (defined $dh) {
 	my $max = 0;
-	my $fn  = ''; # file name 
+	my $fn  = ''; # file name
 
 	while (defined($fn = $dh->read)) {
 	    next unless $fn =~ /^\d+$/;
@@ -222,7 +222,7 @@ sub speculate_max_id
 
 =head2 Data IN
 
-    $curproc 
+    $curproc
 
 =head2 Data OUT
 
@@ -244,7 +244,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

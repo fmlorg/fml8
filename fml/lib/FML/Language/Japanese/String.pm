@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2000 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: String.pm,v 1.1.1.1 2001/07/31 14:13:08 fukachan Exp $
+# $FML: String.pm,v 1.2 2001/07/31 14:19:41 fukachan Exp $
 #
 
 package FML::Language::Japanese::String;
@@ -39,7 +39,7 @@ convert CHARSET of the given string to SJIS.
 
 
 require Exporter;
-@ISA       = qw(Exporter); 
+@ISA       = qw(Exporter);
 @EXPORT_OK = qw(STR2JIS STR2EUC STR2SJIS);
 
 use Jcode;
@@ -78,7 +78,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
 # Copyright (C) 2001 Ken'ichi Fukamachi
-#          All rights reserved. 
+#          All rights reserved.
 #
-# $FML: CGI.pm,v 1.1.1.1 2001/11/25 11:26:04 fukachan Exp $
+# $FML: CGI.pm,v 1.2 2001/11/27 11:41:49 fukachan Exp $
 #
 
 package FML::Restriction::CGI;
@@ -42,7 +42,7 @@ REFERENCE via the following access method:
 =cut
 
 
-my %cgi_methond = 
+my %cgi_methond =
     (
      'threadcgi_change_status' => 'change_status\.(__ml_name_regexp__)\/(\d+)',
      );
@@ -50,14 +50,14 @@ my %cgi_methond =
 
 
 sub param_regexp
-{ 
+{
     my ($self) = @_;
     return $self->basic_variable();
 }
 
 
 sub method_regexp
-{ 
+{
     my ($self) = @_;
     my $basic_variable = $self->basic_variable();
 
@@ -89,7 +89,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

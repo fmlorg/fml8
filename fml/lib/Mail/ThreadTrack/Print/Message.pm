@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.3 2001/11/10 09:04:28 fukachan Exp $
+# $FML: Message.pm,v 1.4 2001/11/19 03:01:26 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::Message;
@@ -103,7 +103,7 @@ sub _delete_subject_tag_like_string
 {
     my ($str) = @_;
 
-    if (defined $str) {	
+    if (defined $str) {
 	use Mail::Message::Utils;
 	return Mail::Message::Utils::remove_subject_tag_like_string($str);
     }
@@ -125,7 +125,7 @@ sub header_summary
 	$subject = decode_mime_string($subject, { charset => 'euc-japan' });
 	$subject =~ s/\n/ /g;
 	$subject = _delete_subject_tag_like_string($subject);
-	$subject =~ s/[\s\n]*$//g;    
+	$subject =~ s/[\s\n]*$//g;
     }
 
     if (defined $from) {
@@ -151,7 +151,7 @@ sub _who_of_address
 
     for my $addr (@addrs) {
         if (defined( $addr->phrase() )) {
-            my $phrase = decode_mime_string( $addr->phrase(), { 
+            my $phrase = decode_mime_string( $addr->phrase(), {
 		charset => 'euc-japan',
 	    });
 
