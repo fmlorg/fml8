@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.20 2002/03/30 11:08:35 fukachan Exp $
+# $FML: newml.pm,v 1.21 2002/03/31 12:10:42 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -345,6 +345,7 @@ sub _setup_listinfo
       FILE:
 	while (defined($file = $dh->read)) {
 	    next FILE if $file =~ /^\./;
+	    next FILE if $file =~ /^CVS/;
 
 	    use File::Spec;
 	    my $src   = File::Spec->catfile($template_dir, $file);
