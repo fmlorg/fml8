@@ -2,7 +2,7 @@
 	$FML
 -->
 
-<chapter id="cvs.dirhier">
+<appendix id="cvs.dirhier">
 	<title>
 	cvs repository の構造
 	</title>
@@ -185,4 +185,4 @@ CPAN/dist/ はオリジナルを保存する場所なので、変更してはいけません。
 	
 </sect1>
 
-</chapter>
+</appendix>

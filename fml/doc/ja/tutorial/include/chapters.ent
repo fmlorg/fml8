@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.21 2001/11/24 03:22:54 fukachan Exp $
+	$FML: chapters.ent,v 1.22 2001/11/24 06:54:46 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -67,7 +67,8 @@
 
 <!-- メッセージの取り扱い -->
 <!entity chapter.message         SYSTEM "message/chapter.sgml">
-<!entity chapter.message.nl      SYSTEM "message/language.sgml">
+<!entity sect.message.nl         SYSTEM "message/language.sgml">
+<!entity sect.message.discuss    SYSTEM "message/discussion.sgml">
 <!entity chapter.replybyfml      SYSTEM "message/reply.sgml">
 
 

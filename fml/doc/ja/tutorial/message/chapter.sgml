@@ -1,5 +1,5 @@
 <!--
-	$FML: message.sgml,v 1.7 2001/10/13 08:47:57 fukachan Exp $	
+	$FML: chapter.sgml,v 1.1 2001/11/24 03:22:55 fukachan Exp $	
 -->
 
 <chapter id="mail.manipulation">
@@ -104,5 +104,10 @@ MIME::Lite クラスへ
 </para>
 
 </sect1>
+
+
+<!-- 他国語化について -->
+&sect.message.nl;
+&sect.message.discuss;
 
 </chapter>

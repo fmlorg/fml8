@@ -1,0 +1,170 @@
+<!--
+   $FML$
+-->
+
+<sect1>
+   <title> 議論: エラーメッセージを返す </title>
+
+<para>
+適宜、エラーメッセージを送信者に返す必要があります。
+それもエラーメッセージは言語依存です。
+何らかの形で言語変換をしてから送り出すわけです。
+</para>
+
+
+<!-- ===================================================== -->
+<sect2>
+   <title> fml 4.0 の場合 </title>
+
+<para>
+fml 4.0 では
+<screen> 
+   Mesg(*e, キーワード, デフォルトのメッセージ, 変換に使う引数);
+</screen> 
+の形で呼び出します。
+</para>
+
+<para>
+/usr/local/fml/messages/Japanese/ 
+以下にあるファイル群に対して、
+キーワード検索を行ないます。
+各ファイルにはカテゴリごとに分類されたキーワードとメッセージが
+定義されています。
+つまり各ファイルに複数のキーワードが定義されています。
+</para>
+
+<para>
+例えば、キーワードが not_found の場合、
+/usr/local/fml/messages/Japanese/kern
+の not_found という欄が該当します。 
+</para>
+
+</sect2>
+
+
+
+<!-- ===================================================== -->
+<sect2>
+   <title> fml 5.0 はどうするべきか？ </title>
+
+<para>
+一つのファイルに一つのキーワードを持つのと、
+カテゴリごとに複数のキーワードを持つのとどちらが
+カスタマイズしやすいのでしょうか？
+僕には良くわかりません。
+</para>
+
+<sect3>
+   <title>
+    X/Open Portability Guide Issue 4 Version 2 (``XPG4.2'')
+   </title>
+
+<para>
+XPG (X/Open の規格)を使う場合は
+<screen>
+catgets(catd, set_id, msg_id, char *s);
+</screen>
+で、LOCALE_○○ で指定された言語へ変換しています。
+	<footnote>
+	<para>
+	ここで s はデフォルトのメッセージとなります。
+	</para>
+	</footnote>
+例えば、次のような使い方をします。
+<screen>
+printf(catgets(catd, 30,  4,  "%s: Internal match error.\n"), progname);
+</screen>
+この時、
+locale の定義ファイル(
+例: /usr/pkg/share/nls/ja_JP.EUC/プログラム名.cat
+)
+の中の se 30、エントリ 4 のメッセージに変換してくれます。
+</para>
+
+</sect3>
+
+<sect3>
+   <title>
+   fml 5.0: とりあえずの方針     
+   </title>
+
+<para>
+問題の一つは locale に対応するか？という問題です。
+makefml を筆頭に、各種コマンド群のエラーメッセージの日本語化
+を考えると、
+locale を考えておくのも悪くはないのかとも思います。
+この場合は locale ぽくするために
+<screen>
+/usr/local/lib/fml/バージョン/messages/ja_JP.EUC/kern 
+
+1: %s は見つかりません
+2: %s は %d のエラーです
+</screen>
+といったものにしておくと後で便利そうです。
+</para>
+
+<para>
+逆に、一つのキーワードごとに別のファイルにしておく構成も可能です。
+これは特定の一つのキーワードだけ変えたい場合に便利そうです。
+</para>
+
+<para>
+もし、後者の方法を試してみることにすると、
+<screen>
+FML::Message::ja::キーワード
+</screen>
+というクラスをじゃんじゃん作るような作り方になるでしょう。
+例えば
+<screen>
+FML::Message::ja::not_found
+</screen>
+などと2、300個のファイルが作られることになります（まじか？）。
+</para>
+
+<para>
+この方法の問題点は
+<itemizedlist>
+   <listitem>
+	<para>
+        ファイルがバラバラになる
+        (逆に長所としてカスタマイズしやすくなる) 
+	</para>
+   </listitem>
+
+   <listitem>
+	<para>
+        ファイルがバラバラになることで locale ぽくなくなるが？
+        locale 対応を考えると面倒じゃないだろうか？
+	</para>
+   </listitem>
+
+</itemizedlist>
+あたりにあるでしょう。
+</para>
+
+
+<para>
+また、各メッセージテンプレートはどのようなものであるべきだろうか？
+後者の場合、
+<screen>
+sub not_found
+{
+   my ..  = @_;
+
+   return <<"_EOF_"
+$sender はどうーたら
+_EOF_
+}
+</screen>
+といった関数を一杯作ることもできます。
+つまり単なる引数ではなく意味の分かりやすいものにすることを考えたわけです。
+しかし、これは本当にカスタマイズしやすいでしょうか？
+locale 化を考えるなら、これはこれで面倒な気がするわけですが…
+</para>
+
+</sect3>
+
+
+</sect2>
+
+</sect1>

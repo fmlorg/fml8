@@ -2,7 +2,7 @@
 This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
 to generate various output formats.
 
-$FML: book.sgml,v 1.21 2001/11/24 03:22:52 fukachan Exp $
+$FML: book.sgml,v 1.22 2001/11/24 03:28:57 fukachan Exp $
 -->
 
 <!doctype book public "-//FML//DTD DocBook V3.1-Based Extension//EN" [
@@ -59,6 +59,19 @@ $FML: book.sgml,v 1.21 2001/11/24 03:22:52 fukachan Exp $
 
 
   <part>
+	<title> デザイン </title>
+	<partintro>
+	<para>
+	本パートではデザインの話をします。
+	</para>
+	</partintro>
+
+	&chapter.design;
+	&chapter.programingstyle; 
+  </part>
+
+
+  <part>
 	<title> 内部構造 </title>
 	<partintro>
 	<para>
@@ -66,22 +79,18 @@ $FML: book.sgml,v 1.21 2001/11/24 03:22:52 fukachan Exp $
 	</para>
 	</partintro>
 
-	<!-- 以下、各章が並ぶ -->
-	&chapter.design;
-	&chapter.cvstree;
-	&chapter.programingstyle; 
-        &chapter.message;
-        &chapter.message.nl;
-	&chapter.db;
-	&chapter.dbms;
-
-	<!-- 以下、各章が並ぶ -->
+	<!-- ブートの様子 -->
 	&chapter.bootloader;
         &chapter.config.cf;
 
 	<!-- 記事の配送とコマンドの処理 -->
         &chapter.delivery;
+        &chapter.message;
         &chapter.replybyfml;
+
+	<!-- その他 -->
+	&chapter.db;
+	&chapter.dbms;
   </part>
 
 
@@ -104,8 +113,9 @@ $FML: book.sgml,v 1.21 2001/11/24 03:22:52 fukachan Exp $
   -->
   <part>
 	<title> 付録 </title>
-	&chapter.glossary;
 
+	&chapter.glossary;
+	&chapter.cvstree;
 	&chapter.docbook;
 	&chapter.cvstags;
 	&chapter.inet6;
