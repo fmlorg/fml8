@@ -1,0 +1,43 @@
+<!--
+   $FML$
+-->
+
+<chapter id="cgi">
+	<title>
+	設定ツール: CGI 
+	</title>
+
+<para>
+CGI による設定ツールです。
+CGI で可能な項目は makefml のサブセットとなります。
+</para>
+
+<para>
+なお CGI プロセスのメソッドについては
+<link linkend="internal.cgi.method">
+<xref linkend="internal.cgi.method">
+</link>
+を参照して下さい。
+</para>
+
+
+<sect1>
+	<title>
+	画面の作りとメソッド 
+	</title>
+
+<para>
+<screen>
+          ヘッダ
+バー１    メニュー     バー２ 
+          フッタ
+</screen>
+なお、
+バー１の部分は navigation bar と、
+バー２の部分は navigation subbar
+と読んでいます。
+</para>
+
+</sect1>
+
+</chapter>
