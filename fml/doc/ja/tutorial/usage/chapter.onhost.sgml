@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.onhost.sgml,v 1.7 2003/04/13 04:36:13 fukachan Exp $
+   $FML: chapter.onhost.sgml,v 1.8 2003/04/15 14:51:46 fukachan Exp $
 -->
 
 <chapter id="usage.onhost">
@@ -16,7 +16,7 @@ makefml の基本的な使い方は &fml4; の makefml と同様です。
 </para>
 
 
-<sect1>
+<sect1 id="usage.onhost.priviledge">
 	<title>
 	ホスト上でできること、その権限について
 	</title>
@@ -148,6 +148,32 @@ fmlhtmlify [-I DIR] $src_dir $dst_dir
 
 </sect2>
 
+
+</sect1>
+
+
+<sect1 id="usage.command.line.options">
+	<title>
+	共通のコマンドラインオプション
+	</title>
+
+<para>
+libexec/ と bin/ にあるプログラム群(.cgi は除く)すべてに共通する
+コマンドラインオプションは
+<screen>
+--debug
+--help
+-c file
+-o key=value
+</screen>
+の４つです。
+-c はデフォルトではない main.cf のパスを指定する際に使います。
+また、-o により変数(config.cfで指定する変数)の上書きが可能です。
+-o は複数回、使っても問題ありません。
+<screen>
+-o key1=value1 -o key2=value2
+</screen>
+</para>
 
 </sect1>
 
