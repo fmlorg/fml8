@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: dir.pm,v 1.15 2004/01/01 23:52:12 fukachan Exp $
+# $FML: dir.pm,v 1.16 2004/01/02 14:45:04 fukachan Exp $
 #
 
 package FML::Command::Admin::dir;
@@ -59,29 +59,38 @@ sub need_lock { 0;}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config   = $curproc->config();
-    my $log_file = $config->{ log_file };
-    my $options  = $command_args->{ options };
-    my $du_args  = {};
-    my @argv     = ();
+    my $config    = $curproc->config();
+    my $options   = $command_args->{ options };
+    my $du_args   = {};
+    my @argv      = ();
+    my $recipient = '';
 
     use FML::Restriction::Base;
     my $safe = new FML::Restriction::Base;
 
-    # analyze ...
-    # XXX-TODO: "admin ls -i -a tmp" ignores "tmp" but not inform the error.
+    # XXX-TODO analyze arguments. ???
     for my $x (@$options) {
 	# XXX-TODO: correct? we restrict the "ls" option pattern here.
 	if ($safe->regexp_match('directory', $x)) {
-	    $du_args->{ opt_ls } = $1;
+	    $du_args->{ opt_ls } = $x;
 	}
 	else {
 	    push(@argv, $x);
 	}
     }
 
-    # XXX-TODO: $du_args->{ options } is used later for what ?
-    # $du_args->{ options } = \@argv;
+    if ($curproc->is_cui_process()) {
+	$recipient = $curproc->command_specific_recipient() || '';
+	$command_args->{ _recipient } = $recipient;
+    }
+
+    if (@argv) {
+	my $buf = join(" ", @argv);
+	my $rm_args = { _arg_argv => $buf };
+	$curproc->reply_message_nl("error.ignore", 
+				   "\"buf\" ignored.", 
+				   $rm_args);
+    }
 
     # XXX-TODO: $dir = new FML::Command::DirUtils $dir_string; $dir->list(). ?
     use FML::Command::DirUtils;
@@ -90,7 +99,7 @@ sub process
 }
 
 
-# Descriptions: cgi menu (dummy)
+# Descriptions: cgi menu (dummy).
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none
