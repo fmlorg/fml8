@@ -1,5 +1,5 @@
 <!--
-   $FML: fml.sgml,v 1.5 2004/04/07 11:07:10 fukachan Exp $
+   $FML: fml.sgml,v 1.6 2004/10/06 09:07:41 fukachan Exp $
 -->
 
 
@@ -65,8 +65,10 @@
 	『<xref linkend="changes.cui">』
 	</link>
 	を参照して下さい。
+	なお、CUI による設定変更は、まだ予備的な段階ですが、動きます。
 	</para>
     </listitem>
+
 
     <listitem>
 	<para>
@@ -76,7 +78,7 @@
 		リモート管理者の登録/削除、
 		ログを見る、
 		メンバーリストを見る。
-	設定ファイルの編集機能が未実装です。
+		設定ファイルの編集機能が未実装です。
 	</para>
     </listitem>
 
@@ -90,6 +92,7 @@
     </listitem>
 
     <listitem>
+
 	<para>
 	<link linkend="usage.user">
 	コマンドメール(一般ユーザ)
@@ -100,6 +103,7 @@
 		ログを見る、
 	</para>
     </listitem>
+
 
     <listitem>
 	<para>
@@ -163,6 +167,19 @@
 	fmldoc
 	makefml
 	fml
+	</para>
+    </listitem>
+
+
+    <listitem>
+	<para>
+	fml4 エミュレーション: fml4 の fml.pl と fml8 の fml.pl を入れ
+	換えるだけで fml8 に移行できるようにした。
+	</para>
+
+	<para>
+	注意: ただし、代表的な機能だけで、全ての変数の互換性があるわけ
+	ではない。
 	</para>
     </listitem>
 
