@@ -1,0 +1,12 @@
+o msg_time() は、Utils へ？
+
+
+o set_article_file_path() / get_article_file_path() ?
+
+
+o set_article_html_file_path() / get_article_html_file_path() ?
+
+
+	# need month database to determine subdir for the html file
+	$db->{ _filename }->{ $id } = $self->html_filename($id);
+	$db->{ _filepath }->{ $id } = $dst;

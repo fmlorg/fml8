@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #
-# $FML: MH.pm,v 1.13 2003/01/26 03:23:10 fukachan Exp $
+# $FML$
 #
 
 package Mail::Message::MH;

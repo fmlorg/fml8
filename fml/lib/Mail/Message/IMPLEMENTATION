@@ -1,0 +1,33 @@
+  Mail::Message::DB
+	new Mail::Message::DB { ml_name => , seq => }
+	add( $msg )
+	get($table, $key)
+	set($table, $key, 4value)
+
+		thread_summary($key)
+
+ $msg ---> Mail::Message::ToHTML
+                |     A
+                |     |
+        new()   |     |
+    add($msg)   |     | thread_summary() 
+    set()       |     | get()
+                |     |
+                V     |
+            Mail::Message::DB =========== tie() ===> AnyDBM
+            A      + update .db files via tie()
+  add($msg) |      + thread analyze
+            | 
+            |      +===============================> cache with time limit
+            |      ||
+            |      ||
+            FML::UDB ? << unified cache database interface >>
+              A
+              |
+          FML::*::* modules
+
+
+
+  $msg  Mail::Message OBJECT
+  ===>  method using tie()
+  --->  method not Tie::*
