@@ -4,25 +4,25 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Queue.pm,v 1.2 2001/05/06 13:28:07 fukachan Exp $
+# $FML: Queue.pm,v 1.3 2001/05/08 14:14:26 fukachan Exp $
 #
 
-package Mail::Message::Queue;
+package Mail::Delivery::Queue;
 use strict;
 use Carp;
 use vars qw($Counter);
 
 =head1 NAME
 
-Mail::Message::Queue - hashed directory holding queue files
+Mail::Delivery::Queue - hashed directory holding queue files
 
 =head1 SYNOPSIS
 
     use Mail::Message;
     $msg = new Mail::Message;
 
-    use Mail::Message::Queue;
-    my $queue = new Mail::Message::Queue { directory => "/some/where" };
+    use Mail::Delivery::Queue;
+    my $queue = new Mail::Delivery::Queue { directory => "/some/where" };
 
     # queue in a new message 
     # "/some/where/new/$queue_id" is created.
@@ -33,7 +33,7 @@ Mail::Message::Queue - hashed directory holding queue files
 
 =head1 DESCRIPTION
 
-C<Mail::Message::Queue> provides basic manipulation of mail queue.
+C<Mail::Delivery::Queue> provides basic manipulation of mail queue.
 
 =head1 DIRECTORY STRUCTURE
 
@@ -75,7 +75,7 @@ sub new
     $me->{ _new_qf }    = "$dir/new/$id";
     $me->{ _active_qf } = "$dir/active/$id";
 
-    for ($dir, "$dir/active", "$dir/new", "$dir/deferred") {
+    for ($dir, "$dir/active", "$dir/new", "$dir/deferred", "$dir/info") {
 	-d $_ || _mkdirhier($_);
     }
 
@@ -134,19 +134,6 @@ If you not C<setrunnable()> it, the queue file is removed by
 C<DESTRUCTOR>. 
 REMEMBER YOU MUST SET THE QUEUE C<setrunnable()>.
 
-=head2 C<setrunnable()>
-
-set the status of the queue assigned to this object C<$self>
-deliverable. 
-This file is scheduled to be delivered (in near future).
-
-In fact setrunnable() C<rename>s the queue id file from C<new/>
-directory to C<active/> directory like C<postfix> queue strategy.
-
-=head2 C<remove()>
-
-remove all queue assigned to this object C<$self>.
-
 =cut
 
 sub in
@@ -166,11 +153,34 @@ sub in
 }
 
 
-# Descriptions: deliverable this object queue
+=head2 C<info($args)>
+
+   $args = {
+	sender     => $sender,
+	recipients => [ $recipient ],
+   }
+
+=head2 C<setrunnable()>
+
+set the status of the queue assigned to this object C<$self>
+deliverable. 
+This file is scheduled to be delivered (in near future).
+
+In fact setrunnable() C<rename>s the queue id file from C<new/>
+directory to C<active/> directory like C<postfix> queue strategy.
+
+=head2 C<remove()>
+
+remove all queue assigned to this object C<$self>.
+
+=cut
+
+
+# Descriptions: set this object queue to be deliverable 
 #    Arguments: $self $args
 # Side Effects: move $queue_id file from new/ to active/
 # Return Value: 1 (success) or 0 (fail)
-sub deliverable
+sub setrunnable
 {
     my ($self) = @_;
     rename( $self->{ _new_qf }, $self->{ _active_qf } );
@@ -205,7 +215,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Mail::Message::Queue appeared in fml5 mailing list driver package.
+Mail::Delivery::Queue appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

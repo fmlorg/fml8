@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: send2.pl,v 1.2 2001/05/06 13:28:46 fukachan Exp $
+# $FML: send2.pl,v 1.3 2001/05/08 14:14:25 fukachan Exp $
 #
 
 use strict;
@@ -39,8 +39,8 @@ $msg->attach(Type => 'text/plain; charset=us-ascii',
 
 print "-" x 60; print "\n";
 
-use Mail::Message::Queue;
-my $obj = new Mail::Message::Queue { directory => "/tmp" };
+use Mail::Delivery::Queue;
+my $obj = new Mail::Delivery::Queue { directory => "/tmp" };
 $obj->in( $msg ) || croak("fail to queue in");
 $obj->setrunnable() || croak("fail to activate queue");
 
