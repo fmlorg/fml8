@@ -3,6 +3,7 @@ admin
 bye
 chaddr
 confirm
+digest
 get
 guide
 help
