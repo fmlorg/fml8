@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.13 2002/04/24 03:47:51 fukachan Exp $
+# $FML: Utils.pm,v 1.14 2002/07/02 12:52:10 fukachan Exp $
 #
 
 package File::Utils;
@@ -190,7 +190,7 @@ sub search_program
 =head2 copy($src, $dst)
 
 copy C<$src> to C<$dst> in atomic way.
-This routine uses C<IO::File::Atomic> module.
+This routine uses C<IO::Adapter::AtomicFile> module.
 
 =cut
 
@@ -202,7 +202,7 @@ This routine uses C<IO::File::Atomic> module.
 sub copy
 {
     my ($src, $dst) = @_;
-    my $pkg = 'IO::File::Atomic';
+    my $pkg = 'IO::Adapter::AtomicFile';
 
     eval qq{ require $pkg; $pkg->import();};
     unless ($@) {

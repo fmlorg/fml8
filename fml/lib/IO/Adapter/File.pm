@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.34 2002/07/24 11:05:50 fukachan Exp $
+# $FML: File.pm,v 1.35 2002/07/25 00:11:23 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -130,8 +130,8 @@ sub _rw_open
     my $file = $args->{ file };
     my $flag = $args->{ flag };
 
-    require IO::File::Atomic;
-    my ($rh, $wh)  = IO::File::Atomic->rw_open($file);
+    use IO::Adapter::AtomicFile;
+    my ($rh, $wh)  = IO::Adapter::AtomicFile->rw_open($file);
     $self->{ _fh } = $rh;
     $self->{ _wh } = $wh;
     $rh;

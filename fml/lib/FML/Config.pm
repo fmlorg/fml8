@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.66 2002/07/23 13:25:29 fukachan Exp $
+# $FML: Config.pm,v 1.67 2002/07/23 13:37:47 fukachan Exp $
 #
 
 package FML::Config;
@@ -549,10 +549,10 @@ sub write
 
     # 1. check whether I can open $file or not in atomic way.
     #    XXX get handle to update $file
-    my $fh = IO::File::Atomic->open($file);
+    my $fh = IO::Adapter::AtomicFile->open($file);
 
     # 2. back up config.cf firstly
-    my $status = IO::File::Atomic->copy($file, $file.".bak");
+    my $status = IO::Adapter::AtomicFile->copy($file, $file.".bak");
     unless ($status) {
 	croak "cannot backup $file";
     }

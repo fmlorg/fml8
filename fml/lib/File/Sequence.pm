@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.23 2002/04/08 12:44:26 fukachan Exp $
+# $FML: Sequence.pm,v 1.24 2002/07/02 12:51:39 fukachan Exp $
 #
 
 package File::Sequence;
@@ -124,8 +124,8 @@ sub increment_id
 	};
     };
 
-    use IO::File::Atomic;
-    my ($rh, $wh) = IO::File::Atomic->rw_open($seq_file);
+    use IO::Adapter::AtomicFile;
+    my ($rh, $wh) = IO::Adapter::AtomicFile->rw_open($seq_file);
 
     # read the current sequence number
     if (defined $rh) {
@@ -189,8 +189,8 @@ sub get_id
 	return 0;
     };
 
-    use IO::File::Atomic;
-    my ($rh, $wh) = IO::File::Atomic->rw_open($seq_file);
+    use IO::Adapter::AtomicFile;
+    my ($rh, $wh) = IO::Adapter::AtomicFile->rw_open($seq_file);
 
     # read the current sequence number
     if (defined $rh) {

@@ -4,10 +4,10 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Atomic.pm,v 1.15 2002/06/01 03:01:55 fukachan Exp $
+# $FML: Atomic.pm,v 1.16 2002/06/01 04:56:42 fukachan Exp $
 #
 
-package IO::File::Atomic;
+package IO::Adapter::AtomicFile;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
@@ -19,12 +19,12 @@ END   {}
 
 =head1 NAME
 
-IO::File::Atomic - atomic IO operation
+IO::Adapter::AtomicFile - atomic IO operation
 
 =head1 SYNOPSIS
 
-    use IO::File::Atomic;
-    my $wh = IO::File::Atomic->open($file);
+    use IO::Adapter::AtomicFile;
+    my $wh = IO::Adapter::AtomicFile->open($file);
     if (defined $wh) {
 	print $wh "new/updated things ...";
 	$wh->close unless $wh->error;
@@ -36,13 +36,13 @@ Updating is defered until C<close()>.
 In usual cases, you use this module in the following way.
 
     use FileHandle;
-    use IO::File::Atomic;
+    use IO::Adapter::AtomicFile;
 
     # get read handle for $file
     my $rh = new FileHandle $file;
 
     # get  handle to update $file
-    my $wh = IO::File::Atomic->open($file);
+    my $wh = IO::Adapter::AtomicFile->open($file);
     if (defined $rh && defined $wh) {
 	while (<$rh>) {
 	    print $wh "new/updated things ...";
@@ -53,8 +53,8 @@ In usual cases, you use this module in the following way.
 
 You can use this method to open $file for both read and write.
 
-    use IO::File::Atomic;
-    my ($rh, $wh) = IO::File::Atomic->rw_open($file);
+    use IO::Adapter::AtomicFile;
+    my ($rh, $wh) = IO::Adapter::AtomicFile->rw_open($file);
     if (defined $rh && defined $wh) {
 	while (<$rh>) {
 	    print $wh "new/updated things ...";
@@ -65,7 +65,7 @@ You can use this method to open $file for both read and write.
 
 To copy from $src to $dst,
 
-    IO::File::Atomic->copy($src, $dst) || croak("fail to copy");
+    IO::Adapter::AtomicFile->copy($src, $dst) || croak("fail to copy");
 
 
 =head1 DESCRIPTION
@@ -205,7 +205,7 @@ sub close
 =head2 copy(src, dst)
 
 copy from C<src> file to C<dst> file in atomic way by using
-C<IO::File::Atomic::rw_open>.
+C<IO::Adapter::AtomicFile::rw_open>.
 
 =cut
 
@@ -301,7 +301,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-IO::File::Atomic appeared in fml5 mailing list driver package.
+IO::Adapter::AtomicFile appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
