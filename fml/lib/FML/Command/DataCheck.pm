@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DataCheck.pm,v 1.11 2003/09/08 15:06:04 fukachan Exp $
+# $FML: DataCheck.pm,v 1.12 2004/01/02 14:42:43 fukachan Exp $
 #
 
 package FML::Command::DataCheck;
@@ -64,7 +64,7 @@ sub parse_command_buffer
 sub parse_command_arguments
 {
     my ($self, $command, $comname) = @_;
-    my $found = 0;
+    my $found     = 0;
     my (@options) = ();
 
     # XXX-TODO: $comname matches exactly.
@@ -85,7 +85,7 @@ sub parse_command_arguments
 
 
 # Descriptions: check the message of the current process to find
-#               whether it contais some special keyword e.g. "confirm".
+#               whether it contains some special keyword e.g. "confirm".
 #    Arguments: OBJ($self) OBJ($curproc) ARRAY_REF($ra_data)
 # Side Effects: none
 # Return Value: HASH_REF
@@ -134,6 +134,8 @@ sub find_commands_for_stranger
     my $commands = $config->get_as_array_ref('commands_for_stranger');
     my $body     = $curproc->incoming_message_body();
     my $msg      = $body->find_first_plaintext_message();
+
+    # XXX-TODO: use message_text_as_array_ref().
     my (@body)   = split(/\n/, $msg->message_text );
     my $comname  = '';
 

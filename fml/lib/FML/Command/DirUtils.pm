@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DirUtils.pm,v 1.14 2003/08/23 07:24:42 fukachan Exp $
+# $FML: DirUtils.pm,v 1.15 2003/08/29 15:33:57 fukachan Exp $
 #
 
 package FML::Command::DirUtils;
@@ -29,7 +29,7 @@ FML::Command::DirUtils - utilities for directory handlings
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: standard constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -49,7 +49,7 @@ sub new
 # XXX-TODO: if we can find CPAN module for dir listing, use it.
 #
 
-# Descriptions: show the result by executing "ls"
+# Descriptions: show the result by executing "ls".
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($command_args) HASH_REF($du_args)
 # Side Effects: none
@@ -72,6 +72,7 @@ sub dir
 	}
 	else {
 	    $curproc->logwarn("deny ls options '$opt'");
+	    $opt_ls = '';
 	}
     }
 
@@ -79,7 +80,7 @@ sub dir
     my $safe = $self->{ _safe };
 
     # chdir the ml's home dir
-    my $ml_home_dir    = $config->{ ml_home_dir };
+    my $ml_home_dir = $config->{ ml_home_dir };
     chdir $ml_home_dir || croak("cannot chdir \$ml_home_dir");
 
     # build safe arguments
@@ -122,7 +123,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

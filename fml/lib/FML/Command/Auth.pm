@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.31 2004/01/01 23:52:10 fukachan Exp $
+# $FML: Auth.pm,v 1.32 2004/01/02 14:50:30 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -145,6 +145,7 @@ sub check_admin_member_password
     my $address  = $optargs->{ address };
     my $password = $optargs->{ password };
     unless ($address && $password) {
+	# XXX-TODO: please return error message.
 	return 0;
     }
 

@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Install.pm,v 1.9 2003/12/21 14:39:05 fukachan Exp $
+# $FML: Install.pm,v 1.10 2003/12/26 14:51:37 fukachan Exp $
 #
 
 package FML::Install;
@@ -244,7 +244,7 @@ install sample .cf files:
 # Return Value: none
 sub install_sample_cf_files
 {
-    my ($self) = @_;
+    my ($self)     = @_;
     my $config     = $self->{ _config };
     my $config_dir = $self->path( 'config_dir' );
     my $samples    = $config->get_as_array_ref('sample_cf_files');
@@ -301,6 +301,7 @@ sub install_default_config_files
 	# always override.
 	$self->convert($src, $dst, 0644);
 
+	# XXX-TODO: fix tricky installation of default_config.cf.
 	# always override.
 	# XXX we need install default_config.cf too! (caution: mandatory)
 	if ($dst =~ /\.$nl_language$/) {
@@ -331,7 +332,7 @@ sub install_default_config_files
 sub install_mtree_dir
 {
     my ($self) = @_;
-    my $config  = $self->{ _config };
+    my $config = $self->{ _config };
 
     # XXX src = relative path, dst = absolute path
     my $dst_dir = File::Spec->catfile($self->path( 'default_config_dir' ),
@@ -364,7 +365,7 @@ install files under fml/share/.
 # Return Value: none
 sub install_lib_dir
 {
-    my ($self) = @_;
+    my ($self)  = @_;
     my $config  = $self->{ _config };
     my $dst_dir = $self->path( 'lib_dir' );
     my $src_dir = '';
@@ -758,9 +759,9 @@ return the absolute directory path for the specified type C<$dir>.
 sub path
 {
     my ($self, $dir) = @_;
-    my $config     = $self->{ _config };
-    my $version    = $self->get_version();
-    my $config_dir = $config->{ config_dir };
+    my $config       = $self->{ _config };
+    my $version      = $self->get_version();
+    my $config_dir   = $config->{ config_dir };
 
     if ($dir eq 'prefix'      ||
 	$dir eq 'exec_prefix' ||
@@ -1027,7 +1028,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003 Ken'ichi Fukamachi
+Copyright (C) 2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

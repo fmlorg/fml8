@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: FileUtils.pm,v 1.13 2003/08/23 07:24:42 fukachan Exp $
+# $FML: FileUtils.pm,v 1.14 2003/08/29 15:33:57 fukachan Exp $
 #
 
 package FML::Command::FileUtils;
@@ -73,8 +73,8 @@ sub delete
 
 
 # Descriptions: remove files
-#    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($command_args)
-#               HASH_REF($du_args)
+#    Arguments: OBJ($self) 
+#               OBJ($curproc) HASH_REF($command_args) HASH_REF($du_args)
 # Side Effects: none
 # Return Value: none
 sub remove
@@ -88,7 +88,7 @@ sub remove
     my $safe = $self->{ _safe };
 
     # chdir $ml_home_dir firstly. return ASAP if failed.
-    my $ml_home_dir    = $config->{ ml_home_dir };
+    my $ml_home_dir = $config->{ ml_home_dir };
     chdir $ml_home_dir || croak("cannot chdir \$ml_home_dir");
 
     for my $file (@$argv) {
@@ -141,7 +141,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
