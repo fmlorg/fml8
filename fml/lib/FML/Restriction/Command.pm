@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.7 2001/12/23 13:46:14 fukachan Exp $
+# $FML: Command.pm,v 1.1 2002/02/11 12:29:27 fukachan Exp $
 #
 
 package FML::Restriction::Command;
@@ -14,33 +14,39 @@ use Carp;
 
 =head1 NAME
 
-FML::Restriction::Command - useful subroutines for filtering
+FML::Restriction::Command - filter rules for command input
 
 =head1 SYNOPSIS
 
-collection of utility functions
+collection of utility functions used in command routines.
 
 =head1 DESCRIPTION
 
 =head1 METHODS
 
+=head2 is_secure_command_string($str)
+
+check if $str string looks secure ?
+return 1 if secure.
+
 =cut
+
 
 # Descriptions: $s looks secure ?
 #    Arguments: STR($s)
 # Side Effects: none
 #      History: fml 4.0's SecureP()
-# Return Value: 1 or 0
+# Return Value: NUM(1 or 0)
 sub is_secure_command_string
 {
    my ($s) = @_;
 
    # 0. clean up
-   $s =~ s/^\s*\#\s*//; # remove ^#
+   $s =~ s/^\s*\#\s*//o; # remove ^#
 
    # 1. trivial case
    # 1.1. empty
-   if ($s =~ /^\s*$/) {
+   if ($s =~ /^\s*$/o) {
        return 1;
    }
 
@@ -48,7 +54,7 @@ sub is_secure_command_string
    #           command = \w+
    #      mail address = [-_\w]+@[\w\-\.]+
    #   command options = last:30
-   if ($s =~/^[\s\w\_\-\.\,\@\:]+$/) {
+   if ($s =~/^[\s\w\_\-\.\,\@\:]+$/o) {
        return 1;
    }
 
@@ -58,7 +64,8 @@ sub is_secure_command_string
 
 =head2 C<is_valid_mail_address($string)>
 
-1. check C<$strings> contains no Japanese string.
+check if C<$strings> contains no Japanese string.
+return 1 if $string looks valid email address.
 
 =cut
 
