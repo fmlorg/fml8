@@ -1,0 +1,12 @@
+<!entity versin "1.1">
+
+<!-- include する SGML ファイル群 -->
+<!entity appendix  SYSTEM "appendix.sgml">
+<!entity docbook   SYSTEM "docbook.sgml">
+<!entity terms     SYSTEM "terms.sgml">
+<!entity intro     SYSTEM "intro.sgml">
+<!entity install   SYSTEM "install.sgml">
+<!entity reference SYSTEM "reference.sgml">
+
+<!-- 画像 -->
+<!entity architecture SYSTEM "architecture.gif" ndata gif>
