@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.124 2002/08/08 03:09:48 fukachan Exp $
+# $FML: Kernel.pm,v 1.125 2002/08/14 03:31:56 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1201,14 +1201,22 @@ sub reply_message_nl
 sub message_nl
 {
     my ($curproc, $class, $default_msg, $args) = @_;
-    my $config = $curproc->{ config };
-    my $dir    = $config->{ message_template_dir };
-    my $buf    = '';
+    my $config    = $curproc->{ config };
+    my $dir       = $config->{ message_template_dir };
+    my $local_dir = $config->{ ml_local_message_template_dir };
+    my $charset   = $config->{ template_file_charset } || 'en';
+    my $buf       = '';
 
     use File::Spec;
     $class =~ s@\.@/@g; # XXX replace the first "." only
-    my $file = File::Spec->catfile($dir, $class);
 
+    my $local_file = File::Spec->catfile($local_dir, $charset, $class);
+    my $file       = File::Spec->catfile($dir,       $charset, $class);
+
+    # override message: replace default one with ml local message template 
+    if (-f $local_file) { $file = $local_file;}
+
+    # import message template
     if (-f $file) {
 	use FileHandle;
 	my $fh = new FileHandle $file;
