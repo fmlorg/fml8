@@ -1,6 +1,30 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/07/14
+
+   いくつかのコマンドの結果やエラーメールは管理者へも送るようにする
+	登録/削除についてのログ
+	メンバー以外からの投稿/コマンドメールなど
+
+   FML::Process::Utils 
+	implement which_message_nl()
+	
+   FML::Command 
+   FML::Command::UserControl 
+   FML::Command::User::confirm 
+   FML::Process::Command Distribute.pm Kernel.pm 
+	copy message and send it to $maintainer too
+	use reply_message*() with $msg_args to copy the message if needed where
+	$msg_args = { always_cc => $maintainer } or
+	$msg_args = { recipient => $maintinaer } pertinently.
+	
+   FML::Command::UserControl 
+	use message_nl( {add,del}_{ok,fail} ... ) as a reply
+	
+   FML::Process::Kernel 
+	disabled makefml NOT TO USE reply_message() now
+
 2002/07/13
 
    コマンドシンタックスの見直し
@@ -2746,4 +2770,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.87 2002/07/12 15:16:57 fukachan Exp $
+$FML: CHANGES.txt,v 1.88 2002/07/13 14:28:09 fukachan Exp $
