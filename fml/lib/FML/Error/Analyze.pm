@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.1 2002/08/16 00:59:34 fukachan Exp $
+# $FML: Analyze.pm,v 1.2 2002/08/16 03:09:59 fukachan Exp $
 #
 
 package FML::Error::Analyze;
@@ -94,12 +94,12 @@ sub simple_count
 sub error_continuity
 {
     my ($self, $curproc, $data) = @_;
-    my ($addr, $bufarray, $count);
+    my ($addr, $bufarray, $count, $i);
     my ($time, $status, $reason);
     my @removelist = ();
     my $summary    = {};
     my $config     = $curproc->config();
-    my $limit      = $config->{ error_analyzer_simple_count_limit } || 5;
+    my $limit      = $config->{ error_analyzer_simple_count_limit } || 14;
 
     while (($addr, $bufarray) = each %$data) {
 	$count = 0;
@@ -108,15 +108,25 @@ sub error_continuity
 		($time, $status, $reason) = split(/\s+/, $buf);
 
 		if ($buf =~ /status=5/i) {
-		    my $i = int( (time - $time ) / (24*3600) );
-
 		    unless (defined $summary->{ $addr }) {
-			$summary->{ $addr } = [ ];
+			$summary->{ $addr } = [ 0 ];
 		    }
 
-		    if ($i <= $limit) {
-			$summary->{ $addr }->[ $i ] = 1;
-		    }
+		    # count up the folloging distribution function.
+		    #     *
+		    #    ***
+
+		    # center of distribution function
+		    $i = int( (time - $time ) / (24*3600) );
+		    $summary->{ $addr }->[ $i ] += 2;
+
+		    # +delta
+		    $i = int( (time - $time + 12*3600) / (24*3600) );
+		    $summary->{ $addr }->[ $i ] += 1;
+
+		    # -delta
+		    $i = int( (time - $time - 12*3600) / (24*3600) );
+		    $summary->{ $addr }->[ $i ] += 1 if $i >= 0;
 		}
 	    }
 	}
@@ -124,9 +134,16 @@ sub error_continuity
 
     # debug info
     {
-	my ($addr, $ra);
+	my ($addr, $ra, $sum);
 	while (($addr, $ra) = each %$summary) {
-	    Log("summary: $addr = (@$ra) points");
+	    $sum = 0;
+	    for my $v (@$ra) {
+		$sum += 1 if $v >= 4;
+	    }
+
+	    Log("summary: $addr sum=$sum (@$ra)");
+
+	    push(@removelist, $addr) if $sum >= $limit;
 	}
     }
 
