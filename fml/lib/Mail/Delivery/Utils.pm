@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2000-2001 Ken'ichi Fukamachi
+#  Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.3 2001/04/08 13:25:41 fukachan Exp $
+# $FML: Utils.pm,v 1.4 2001/12/22 09:21:17 fukachan Exp $
 #
 
 package Mail::Delivery::Utils;
@@ -80,6 +80,10 @@ the logging message is forwarded to STDERR channel.
 =cut
 
 
+# Descriptions: log by specified function pointer or into STDERR
+#    Arguments: STR($buf)
+# Side Effects: none
+# Return Value: none
 sub Log
 {
     my ($buf) = @_;
@@ -112,12 +116,22 @@ C<$buf> is sent to C<STDERR>.
 
 =cut
 
+
+# Descriptions: log by specified function pointer or into STDERR
+#    Arguments: OBJ($self) STR($buf)
+# Side Effects: none
+# Return Value: none
 sub smtplog
 {
     my ($self, $buf) = @_;
     _smtplog($buf);
 }
 
+
+# Descriptions: log by specified function pointer or into STDERR
+#    Arguments: STR($buf)
+# Side Effects: none
+# Return Value: none
 sub _smtplog
 {
     my ($buf) = @_;
@@ -171,6 +185,10 @@ get the latest status code.
 =cut
 
 
+# Descriptions: get current status code
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
 sub _get_status_code
 {
     my ($self) = @_;
@@ -178,6 +196,10 @@ sub _get_status_code
 }
 
 
+# Descriptions: set current status code
+#    Arguments: OBJ($self) STR($value)
+# Side Effects: update object
+# Return Value: STR
 sub _set_status_code
 {
     my ($self, $value) = @_;
@@ -206,6 +228,11 @@ where C<map> is a name usable at C<recipient_maps>
 
 =cut
 
+
+# Descriptions: set target map
+#    Arguments: OBJ($self) STR($map)
+# Side Effects: update object
+# Return Value: STR
 sub _set_target_map
 {
     my ($self, $map) = @_;
@@ -213,6 +240,10 @@ sub _set_target_map
 }
 
 
+# Descriptions: get current target map
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
 sub _get_target_map
 {
     my ($self) = @_;
@@ -239,6 +270,11 @@ get the current C<$position> for C<$map> IO.
 
 =cut
 
+
+# Descriptions: set map status
+#    Arguments: OBJ($self) STR($map) STR($status)
+# Side Effects: update object
+# Return Value: STR
 sub _set_map_status
 {
     my ($self, $map, $status) = @_;
@@ -247,6 +283,11 @@ sub _set_map_status
     $self->{ _mapinfo }->{ $map }->{status}      = $status;
 }
 
+
+# Descriptions: set map position
+#    Arguments: OBJ($self) STR($map) STR($position)
+# Side Effects: update object
+# Return Value: STR
 sub _set_map_position
 {
     my ($self, $map, $position) = @_;
@@ -255,12 +296,22 @@ sub _set_map_position
     $self->{ _mapinfo }->{ $map }->{position}   = $position;
 }
 
+
+# Descriptions: get map status
+#    Arguments: OBJ($self) STR($map)
+# Side Effects: update object
+# Return Value: STR
 sub _get_map_status
 {
     my ($self, $map) = @_;
     $self->{ _mapinfo }->{ $map }->{status};
 }
 
+
+# Descriptions: get map position
+#    Arguments: OBJ($self) STR($map)
+# Side Effects: update object
+# Return Value: STR
 sub _get_map_position
 {
     my ($self, $map) = @_;
@@ -280,6 +331,11 @@ clear information around the latest map operation.
 
 =cut
 
+
+# Descriptions: rollback IO for current map
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: none
 sub _rollback_map_position
 {
     my ($self) = @_;
@@ -306,6 +362,10 @@ sub _rollback_map_position
 }
 
 
+# Descriptions: reset info for the current map
+#    Arguments: OBJ($self)
+# Side Effects: clear info in object
+# Return Value: none
 sub _reset_mapinfo
 {
     my ($self) = @_;
@@ -322,7 +382,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
