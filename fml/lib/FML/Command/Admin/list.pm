@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: list.pm,v 1.4 2002/04/07 05:01:33 fukachan Exp $
+# $FML: list.pm,v 1.5 2002/06/25 03:53:31 fukachan Exp $
 #
 
 package FML::Command::Admin::list;
@@ -126,21 +126,31 @@ sub _show_list
 sub cgi_menu
 {
     my ($self, $curproc, $args, $command_args) = @_;
-    my $options = [ 'member' ];
-    my $r = '';
-
-    # navigation bar
-    print "<p> \"@$options\" address list\n";
-    print "<hr>\n";
+    my $map_default  = $curproc->safe_param_map() || 'member';
+    my $options = [ $map_default ];
+    my $ml_name = $curproc->cgi_try_get_ml_name($args);
+    my $r       = '';
 
     # declare CGI mode
     $command_args->{ is_cgi } = 1;
+
+    # navigation bar
+      eval q{
+	use FML::CGI::Admin::List;
+	my $obj = new FML::CGI::Admin::List;
+	$obj->cgi_menu($curproc, $args, $command_args);
+    };
+    if ($r = $@) {
+	print $r;
+	croak($r);
+    }
+
+    print "<hr>\n";
 
     eval q{
 	$self->_show_list($curproc, $command_args, $options);
     };
     if ($r = $@) {
-	print $r;
 	croak($r);
     }
 }
