@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML: Switch.pm,v 1.16 2001/04/03 09:45:43 fukachan Exp $
+# $FML: Switch.pm,v 1.17 2001/04/05 08:30:27 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -87,6 +87,10 @@ sub main::Bootstrap2
 
     use File::Basename;
     my $myname            = basename($0); # inspect my name from $0
+
+    # 0.1
+    print STDERR "\nsetuid is not set $< != $>\n\n" if $< != $>;
+    print STDERR "\nsetgid is not set $( != $)\n\n" if $( ne $);
 
     # 1.1 parse command line options (preliminary)
     use Getopt::Long;
