@@ -1,0 +1,120 @@
+<!--
+   $FML$
+   $jaFML: create.sgml,v 1.2 2003/04/15 14:51:42 fukachan Exp $
+-->
+
+<chapter id="module.create">
+	<title>
+	Execise: create a new program
+	</title>
+
+
+<para>
+Consider creation of a simple scheduler listing tool in the &fml8;
+framework. Here the program name is fmlsch and the cgi is fmlsch.cgi.
+</para>
+
+
+<sect1>
+	<title>
+	Case study: create a fmlsch
+	</title>
+
+
+<sect2>
+	<title>
+	step 1: add fmlsch into installer configuration
+	</title>
+
+<para>
+add fmlsch into $bin_programs in fml/etc/install.cf.in.
+Run configreu to re-create fml/etc/install.cf.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	step 2: build a module
+	</title>
+
+
+<para>
+Write fml/lib/Calender/Lite.pm for the main functions of fmlsch.
+</para>
+
+<para>
+Import libraries if needed. 
+For fmlsch we import
+HTML-CalendarMonthSimple-1.02.tar.gz
+from CPAN.
+</para>
+
+<para>
+Also, install Date-Calc if your system has not it.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	step 3: modify FML::Process:: class
+	</title>
+
+<para>
+Calender::Lite works mainly but we build the machanism how &fml8;
+loads and runs it. We modify FML::Process:: for &fml8; bootloader to
+call Calender::Lite.
+</para>
+
+<para>
+Firstly, write mandatory methods for fmlsch process in
+fml/lib/FML/Process/Calender.pm. You need to create this module.
+</para>
+
+<para>
+Secondary, set up boot loader configuration. In the case of fmlsch,
+the bootloader loads FML::Process::Calender. Define it in
+fml/etc/modules. Set up fml/etc/command_line_options properly.
+"command_line_options" file has a map between a command and the
+command line options parsed by Getopt::Long().
+</para>
+
+
+<para>
+Create FML::Process::Calender module by copy-and-pasting other
+FML::Process:: modules :-) However fmlsch has least functions, you
+need to write FML::Process::Calender::run() method.  For undefined
+methods, fml loads FML::Process::Kernel functions (inheritence).
+</para>
+
+</sect2>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	case study: fmlsch.cgi
+	</title>
+
+
+<para>
+The hacking is similar to fmlsch. The differnce is that the target to
+modify is FML::CGI:: class. FML::CGI::Calender is a sub-class of
+FML::Process::CGI.
+</para>
+
+<para>
+If undefined method is called, fml loads it from FML::Process::CGI or
+FML::Process::Kernel. FML::Process::CGI uses CGI.pm to create a http
+header et.al. If FML::Process::CGI functions are not enough,
+FML::CGI:: module should support the lack.
+</para>
+
+</sect1>
+
+
+</chapter>

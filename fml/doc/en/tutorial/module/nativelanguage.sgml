@@ -1,0 +1,48 @@
+<!--
+   $FML$
+   $jaFML: nativelanguage.sgml,v 1.3 2003/04/15 14:51:43 fukachan Exp $
+-->
+
+<chapter>
+	<title>
+	Language dependent functions
+	</title>
+
+<para>
+fml needs language dependent functions internally. Especially, JIS
+to/from EUC conversion is used anywhere since. Japanese messages are
+written in JIS code but programs are easy to use string in EUC-JP.
+</para>
+
+<para>
+See
+<link linkend="message.nl">
+message internationalization
+</link>
+for the language dependence handling in messages.
+</para>
+
+
+<sect1>
+	<title>
+	Something::Language::
+	</title>
+
+<para>
+Language dependent module locates at Something::Language.
+</para>
+
+<para>
+For example, there are
+<screen>
+FML::Language::Japanese::String
+Mail::Bounce::Language::Japanese
+</screen>
+The former provides Japanese dependent string functions.
+The latter provides Japanese dependent error mail analyzer functions.
+</para>
+
+</sect1>
+
+
+</chapter>

@@ -1,0 +1,110 @@
+<!--
+   $FML$
+   $jaFML: chapter.sgml,v 1.5 2003/04/15 14:51:42 fukachan Exp $
+-->
+
+<chapter id="mail.manipulation">
+	<title>
+	manipulate message (mail)
+	</title>
+
+<para>
+See
+<link linkend="module.mail.message">
+Mail::Message class
+</link>
+for the mail message object handling. Mail::Message class provides
+fundamental methods. Several message related modules e.g.
+Mail::Bounce, Mail::Delivery depend on this class.  
+</para>
+
+
+<!-- ======================================= -->
+<sect1>
+	<title>
+	Mail::Message class
+	</title>
+
+<para>
+A mail consists of one header and one body.
+A multipart mail consists of several parts.
+</para>
+
+<para>
+The mail delivery needs no detai of a message.
+But the filter system needs to know the structure of the message.
+</para>
+
+<para>
+These modules depend
+<link linkend="module.mail.message">
+Mail::Message class
+</link>
+to know the message structure.
+For eample,  Mail::Bounce, Mail::Delivery et.al. uses this.
+</para>
+
+<para>
+THe usage is as follows:
+<screen>
+    my $fh  = new FileHandle $file;
+    my $msg = Mail::Message->parse( { fd => $fh } );
+
+    use FML::Mailer;
+    my $obj = new FML::Mailer;
+    $obj->send( {
+	sender    => $sender,
+	recipient => $rcpt,
+	message   => $msg,
+    });
+</screen>
+</para>
+
+</sect1>
+
+
+<!-- ======================================= -->
+<sect1>
+	<title>
+	Mail::Message::Parse class
+	</title>
+
+<para>
+dummy.
+</para>
+
+<para>
+The real functions are within
+	<link linkend="module.mail.message">
+	Mail::Message
+	</link>
+class.
+</para>
+
+</sect1>
+
+
+<!-- ======================================= -->
+<sect1>
+	<title>
+	Mail::Message::Compose class
+	</title>
+
+<para>
+dummy.
+This is an adapter for MIME::Lite class.
+All thre request is forwarded to MIME::Lite class.
+</para>
+
+<para>
+See MIME::Lite class for the usage details.
+</para>
+
+</sect1>
+
+
+<!-- internationalization -->
+&sect.message.nl;
+&sect.message.discuss;
+
+</chapter>

@@ -1,0 +1,158 @@
+<!--
+   $FML$
+   $jaFML: chapter.sgml,v 1.3 2003/04/15 14:51:39 fukachan Exp $
+-->
+
+<chapter id="digest">
+	<title>
+	digest
+	</title>
+
+<para>
+run
+<screen>
+/usr/local/libexec/fml/digest $ml_name
+</screen>
+periodically for digest delivery.
+</para>
+
+<warning>
+<para>
+simple version yet now.
+</para>
+</warning>
+
+
+<sect1 id="digest.config.files">
+	<title>
+	files userd by digest delivery
+	</title>
+
+<para>
+This program uses the following files under $ml_home_dir.
+<screen>
+seq-digest
+members-digest 
+recipients-digest
+</screen>
+</para>
+
+<para>
+seq-digest holds the last sequence delivered as digest.
+</para>
+
+<para>
+members-digest is dummy.
+recipients-digest is a recipient list.
+</para>
+
+<para>
+The argument of $digest_recipient_maps is IO::Adapter, so you can use
+mysql here.
+</para>
+
+</sect1>
+
+
+<sect1 id="digest.command">
+	<title>
+	idea: digest related commands
+	</title>
+
+
+<!--
+   XXX-TODO digest related commands
+-->
+
+
+<para>
+Idea on digest commands (references: fml-devel:313).
+</para>
+
+<para>
+Hmm, how about the further extension?
+</para>
+
+
+<sect2>
+	<title>
+	makefml command
+	</title>
+
+<para>
+<screen>
+makefml digest    $ml $address on
+makefml digeston  $ml $address
+
+makefml digest    $ml $address off
+makefml digestoff $ml $address
+</screen>
+(These commnds are implemented already).
+</para>
+
+<para>
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	admin command mail
+	</title>
+
+<para>
+<screen>
+admin digest $address on
+admin digest $address off
+</screen>
+(These commnds are implemented already).
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	user level command mail ?
+	</title>
+
+<para>
+(not implemented).
+<screen>
+digest on
+digest off
+</screen>
+Enforce confirmation ?
+</para>
+
+<para>
+The confirmation is needed ? Yes, we should need it to unify the fml
+fundamental design. We should restrict address manipulation functions
+as could as possible.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	CGI
+	</title>
+
+<para>
+(not yet implemented).
+<screen>
+digeston
+digestoff
+</screen>
+?
+</para>
+
+</sect2>
+
+
+</sect1>
+
+
+</chapter>
