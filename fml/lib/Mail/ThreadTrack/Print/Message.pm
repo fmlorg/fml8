@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Message.pm,v 1.1 2001/11/09 11:30:31 fukachan Exp $
+# $FML: Message.pm,v 1.2 2001/11/09 13:30:38 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::Message;
@@ -110,6 +110,7 @@ sub _delete_subject_tag_like_string
 sub header_summary
 {
     my ($self, $args) = @_;
+    my $date    = $args->{ header }->get('date');
     my $from    = $args->{ header }->get('from');
     my $subject = $args->{ header }->get('subject');
     my $padding = $args->{ padding };
@@ -117,18 +118,46 @@ sub header_summary
     $subject = decode_mime_string($subject, { charset => 'euc-japan' });
     $subject =~ s/\n/ /g;
     $subject = _delete_subject_tag_like_string($subject);
-
-    $from    = decode_mime_string($from, { charset => 'euc-japan' });
+    $subject =~ s/[\s\n]*$//g;    
+    $from    = $self->_who_of_address( $from );
     $from    =~ s/\n/ /g;
-
-    my $br = $self->get_mode eq 'html' ? '<BR>' : '';
+    $from    =~ s/[\s\n]*$//g;
 
     # return buffer
-    my $r = '';
-    $r .= STR2EUC( $padding. "   From: ". $from ."$br\n" );
-    $r .= STR2EUC( $padding. "Subject: ". $subject ."$br\n" );
+    my $r = $padding. $date;
+    $r   .= $padding. "$subject, $from\n";
+    return STR2EUC( $r );
+}
 
-    return $r;
+
+sub _who_of_address
+{
+    my ($self, $address) = @_;
+    my ($user);
+
+    use Mail::Address;
+    my (@addrs) = Mail::Address->parse($address);
+
+    for my $addr (@addrs) {
+        if (defined( $addr->phrase() )) {
+            my $phrase = decode_mime_string( $addr->phrase(), { 
+		charset => 'euc-japan',
+	    });
+
+            if ($phrase) {
+                return($phrase);
+            }
+        }
+
+        $user = $addr->user();
+    }
+
+    if ($self->get_mode() eq 'html') {
+	return( $user ? "$user\@xxx.xxx.xxx.xxx" : $address );
+    }
+    else {
+	return $address;
+    }
 }
 
 

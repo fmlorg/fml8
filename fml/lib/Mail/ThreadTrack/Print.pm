@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Print.pm,v 1.12 2001/11/09 12:08:45 fukachan Exp $
+# $FML: Print.pm,v 1.13 2001/11/09 15:09:03 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print;
@@ -113,23 +113,21 @@ sub _load_library
 
 sub _do_summary
 {
-    my ($self) = @_;
-    my ($tid, $status, $thread_id);
-    my $mode = $self->get_mode || 'text';
-    my $fd   = $self->{ _fd } || \*STDOUT;
+    my ($thread) = @_;
+    my $mode = $thread->get_mode || 'text';
 
-    # rh: thread id list, which is ARRAY REFERENCE tied to db_dir/*db's
-    $thread_id = $self->list_up_thread_id();
+    # rh: thread id list picked at status databsae.
+    my $thread_id_list = $thread->list_up_thread_id();
 
-    if (@$thread_id) {
+    if (@$thread_id_list) {
 	# sort the thread output order by cost and
 	# print the thread summary in that order.
-	$self->sort_thread_id($thread_id);
-	$self->_print_thread_summary($thread_id);
+	$thread->sort_thread_id($thread_id_list);
+	$thread->_print_thread_summary($thread_id_list);
 
 	# show short summary for each message
 	unless ($mode eq 'html') {
-	    $self->_print_message_summary($thread_id);
+	    $thread->_print_message_summary($thread_id_list);
 	}
     }
 }
@@ -143,18 +141,20 @@ sub _print_thread_summary
     my $rh_age = $self->{ _age } || {};
     my $fd     = $self->{ _fd } || \*STDOUT;
     my $rh     = $self->{ _hash_table };
-    my $format = "%10s  %5s %8s  %-20s  %s\n";
+    my $format = "%-20s %10s %5s %8s %s\n";
 
     if ($mode eq 'text') {
-	printf($fd $format, 'date', 'age', 'status', 'thread id', 'articles');
+	printf($fd $format, 'id', 'date', 'age', 'status', 'articles');
 	print $fd "-" x60;
 	print $fd "\n";
     }
     else {
 	print $fd "<TABLE BORDER=4>\n";
-	print "<TD>action\n";
-	print "<TD>date\n"."<TD>age\n"."<TD>status\n"."<TD>thread id\n";
-	print "<TD>article summary\n";
+	print $fd "<TD>id\n";
+	print $fd "<TD>summary\n";
+	print $fd "<TD>age\n";
+	print $fd "<TD>status\n";
+	print $fd "<TD>action\n";
     }
 
     my ($tid, @article_id, $article_id, $date, $age, $status) = ();
@@ -177,16 +177,41 @@ sub _print_thread_summary
 		use Mail::ThreadTrack::Print::HTML;
 		push(@ISA, qw(Mail::ThreadTrack::Print::HTML));
 	    };
+	    $self->_show_thread_by_html_table({
+		date     => $date,
+		age      => $age,
+		status   => $status,
+		tid      => $tid,
+		articles => $rh->{ _articles }->{ $tid },
+	    });
 	}
 	else {
-	    printf($fd $format, 
-		   $date, $age, $status, $tid, $rh->{ _articles }->{ $tid });
+	    printf($fd $format, $tid, $date, $age, $status, 
+		   _format_list(25, $rh->{ _articles }->{ $tid }));
 	}
     }
 
     if ($mode eq 'html') {
 	print $fd "</TABLE>\n";
     }
+}
+
+
+sub _format_list
+{
+    my ($max, $str) = @_;
+    my (@idlist) = split(/\s+/, $str);
+    my $r = '';
+
+    for (@idlist) {
+	$r .= $_ . " ";
+	if (length($r) > $max) {
+	    $r .= "...";
+	    last;
+	}
+    }
+
+    return $r;
 }
 
 
@@ -232,7 +257,7 @@ sub _print_message_summary
 		$aid  = $aid[0];
 		$file = File::Spec->catfile($spool_dir, $aid);
 		if (-f $file) {
-		    print $fd $self->message_summary($file);
+		    $self->print(  $self->message_summary($file) );
 		}
 	    }
 	}
@@ -290,13 +315,48 @@ sub _do_review
 
 		    my $file = File::Spec->catfile($spool_dir, $aid);
 		    if (-f $file) {
-			print $fd $self->message_summary($file);
+			$self->print(  $self->message_summary($file) );
 			print $fd "\n";
 		    }
 		}
 	    }
 	}
     }
+}
+
+
+=head2 print()
+
+=cut
+
+
+sub print
+{
+    my ($self, $str) = @_;
+    my $mode = $self->get_mode || 'text';
+    my $fd   = $self->{ _fd } || \*STDOUT;
+
+    if ($mode eq 'text') {
+	print $fd $str;
+    }
+    elsif ($mode eq 'html') {
+	$str = &_quote($str);
+	$str =~ s/\n/<BR>\n/g;
+	print $fd $str;
+    }
+}
+
+
+sub _quote
+{
+    my ($str) = @_;
+
+    $str =~ s/&/&amp;/g;
+    $str =~ s/</&lt;/g;
+    $str =~ s/>/&gt;/g;
+    $str =~ s/\"/&quot;/g;
+
+    return $str;
 }
 
 
