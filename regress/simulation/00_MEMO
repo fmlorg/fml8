@@ -17,7 +17,22 @@
 	値をよろしく変換する （←ここがむずかしー）
 
 
-[TODO]	「このＭＬはもうありません」
+[TODO]	libexec/error の改良
+
+   「エラーメールのフォワードについて改良せな」
+
+	X-Sequence: fml-devel 451
+
+	maintainer_recipient_maps は実装しました。デフォルトは未定義な
+	ので、エラーメールのフォワードィングは行なわれません。
+
+	あと、単にフォワーディングしてるだけ == 中身が message/rfc822 
+	一通だけのかなーり無意味な mime/multipart です。
+
+	ヘッダ情報＋そのエラーメールのアドレスの分析レポートとかなんか
+	付けてやれやーとかちょっと思っているっす。
+
+   「このＭＬはもうありません」
 
 	libexec/relocated , Process/Relocated とかじゃだめだね。
 	libexec/ の下の全部のプログラム全部が対応するべきのような…
@@ -26,6 +41,12 @@
 		ml-ctl
 	宛に来たもの両方に返事を返すべきだろう。
 	でも、ml-error はちがうだろうなぁ
+
+	！じゃ、こんなコマンドは？
+		makefml disable elena
+		makefml enable  elena
+
+	このコマンドは…ファイルでも作るの？
 
 
 [TODO]	フィルタの拡張機能？
@@ -48,6 +69,7 @@
 
 
 [TODO]	fml $ml spool {status,convert}: --srcdir= とか必要じゃない？
+
 
 		コマンドラインオプションは、OK？
 
@@ -373,4 +395,4 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 ----------
-$FML: 00_MEMO,v 1.76 2003/05/04 07:07:28 fukachan Exp $
+$FML: 00_MEMO,v 1.77 2003/05/04 07:16:46 fukachan Exp $
