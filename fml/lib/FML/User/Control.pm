@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.3 2003/11/25 14:13:15 fukachan Exp $
+# $FML: Control.pm,v 1.4 2003/11/26 09:17:46 fukachan Exp $
 #
 
 package FML::User::Control;
@@ -371,15 +371,18 @@ sub print_userlist
 
 	if (defined $obj) {
 	    my $x = '';
+	    my $buf;
 	    $obj->open;
-	    while ($x = $obj->get_next_key()) {
+	    while ($x = $obj->get_key_values_as_array_ref()) {
+		$buf = join(" ", @$x) if ref($x) eq 'ARRAY';
+
 		if ($style eq 'html') {
 		    # XXX-TODO: html-ify address ?
-		    print $wh $x, "<br>\n";
+		    print $wh $buf, "<br>\n";
 		}
 		# we assume text mode by default.
 		else {
-		    print $wh $x, "\n";
+		    print $wh $buf, "\n";
 		}
 	    }
 	    $obj->close;
