@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Summary.pm,v 1.6 2002/12/01 13:46:12 fukachan Exp $
+# $FML: Summary.pm,v 1.7 2002/12/10 12:00:48 fukachan Exp $
 #
 
 package FML::Article::Summary;
@@ -26,10 +26,12 @@ FML::Article::Summary - generate article summary
 
 =head2 C<new()>
 
+standard constructor.
+
 =cut
 
 
-# Descriptions: usual constructor.
+# Descriptions: standard constructor.
 #    Arguments: OBJ($self) OBJ($curproc)
 # Side Effects:
 # Return Value: none
@@ -55,6 +57,9 @@ sub print
     my $curproc = $self->{ _curproc };
     my $config  = $curproc->config();
     my $file    = $config->{ 'summary_file' };
+
+    # XXX last resort == STDOUT.
+    $wh ||= \*STDOUT;
 
     if (defined $wh) {
 	my $info = $self->_prepare_info($id);
@@ -86,7 +91,7 @@ sub _prepare_info
 	$article = new FML::Article $curproc;
     }
 
-    my $file  = $article->filepath($id);
+    my $file = $article->filepath($id);
     if (-f $file) {
 	use Mail::Message;
 	my $msg      = new Mail::Message->parse( { file => $file } );
@@ -97,17 +102,20 @@ sub _prepare_info
 
 	# extract the first 15 bytes of user@domain part
 	# from From: header field.
+	# XXX-TODO "15" bytes is hard-coded.
 	use FML::Header;
 	my $hdrobj = new FML::Header;
 	$address = substr($hdrobj->address_clean_up( $address ), 0, 15);
 
-	# fold "\n"
+	# fold "\n".
+	# XXX-TODO $subject->clean_up() (object flavour?)
 	use FML::Header::Subject;
 	my $obj     = new FML::Header::Subject;
 	my $subject = $obj->clean_up($header->get('subject'), $tag);
 	$subject =~ s/\s*\n/ /g;
 	$subject =~ s/\s+/ /g;
 
+	# XXX-TODO "jis-jp" and "euc-jp" is hard-coded.
 	use Mail::Message::Encode;
 	my $enc  = new Mail::Message::Encode;
 	$subject = $enc->convert($subject, "jis-jp", "euc-jp");
