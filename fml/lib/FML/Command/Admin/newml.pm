@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.39 2002/06/01 05:02:32 fukachan Exp $
+# $FML: newml.pm,v 1.40 2002/06/01 05:09:23 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -70,8 +70,8 @@ sub process
     my $config         = $curproc->{ 'config' };
     my $ml_name        = $config->{ ml_name };
     my $ml_domain      = $config->{ ml_domain };
-    my $ml_home_prefix = $config->{ ml_home_prefix };
-    my $ml_home_dir    = $config->{ ml_home_dir };
+    my $ml_home_prefix = $curproc->ml_home_prefix();
+    my $ml_home_dir    = $curproc->ml_home_dir($ml_name);
     my $params         = {
 	fml_owner         => $curproc->fml_owner(),
 	executable_prefix => $curproc->executable_prefix(),
@@ -92,7 +92,7 @@ sub process
     # already exists.
     unless (defined $options->{ force } ) {
 	if (-d $ml_home_dir) {
-	    warn("$ml_name already exists");
+	    warn("$ml_name already exists ($ml_home_dir)");
 	    return ;
 	}
     }

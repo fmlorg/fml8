@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.9 2002/04/23 09:32:35 fukachan Exp $
+# $FML: Menu.pm,v 1.13 2002/04/25 04:15:19 fukachan Exp $
 #
 
 package FML::CGI::Admin::Menu;
@@ -107,10 +107,14 @@ sub html_end
 sub run_cgi_main
 {
     my ($curproc, $args) = @_;
+    my $config  = $curproc->{ config };
     my $command = $curproc->safe_param_command() || '';
     my $address = $curproc->cgi_try_get_address($args);
     my $ml_name = $curproc->cgi_try_get_ml_name($args);
 
+    # update config on memory
+    $config->set('ml_name', $ml_name);
+    
     if (($command eq 'newml' && $ml_name) ||
 	($command eq 'rmml'  && $ml_name)) {
 	my $command_args = {
@@ -122,6 +126,7 @@ sub run_cgi_main
 	    argv         => undef,
 	    args         => undef,
 	};
+
 	$curproc->cgi_execute_command($args, $command_args);
 
 	print hr;
