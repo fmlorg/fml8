@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.182 2003/09/19 13:30:34 tmu Exp $
+# $FML: Kernel.pm,v 1.183 2003/09/27 06:55:11 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -2359,35 +2359,38 @@ sub _finalize_stderr_channel
     my $config    = $curproc->config();
     my $option    = $curproc->command_line_options();
     my $pcb       = $curproc->pcb();
-    my $tmpfile   = $pcb->get("stderr", "logfile");
-    my $is_logdup = $pcb->get("stderr", "use_log_dup") || 0;
 
-    # avoid duplicated calls.
-    return unless $is_logdup;
+    if (defined $pcb) {
+	my $tmpfile   = $pcb->get("stderr", "logfile");
+	my $is_logdup = $pcb->get("stderr", "use_log_dup") || 0;
 
-    if ($curproc->is_cgi_process()       ||
-	$curproc->is_under_mta_process() ||
-	defined $option->{ quiet }  || defined $option->{ q } ||
-	$config->yes('use_log_dup') || $option->{ 'log-dup' } ) {
+	# avoid duplicated calls.
+	return unless $is_logdup;
 
-	close(STDERR);
-	open(STDERR, ">&STDOUT");
+	if ($curproc->is_cgi_process()       ||
+	    $curproc->is_under_mta_process() ||
+	    defined $option->{ quiet }  || defined $option->{ q } ||
+	    $config->yes('use_log_dup') || $option->{ 'log-dup' } ) {
 
-	if (-s $tmpfile) {
-	    use FileHandle;
-	    my $fh = new FileHandle $tmpfile;
-	    if (defined $fh) {
-		my $buf;
-		while ($buf = <$fh>) {
-		    chomp $buf;
-		    $curproc->logwarn($buf);
+	    close(STDERR);
+	    open(STDERR, ">&STDOUT");
+
+	    if (-s $tmpfile) {
+		use FileHandle;
+		my $fh = new FileHandle $tmpfile;
+		if (defined $fh) {
+		    my $buf;
+		    while ($buf = <$fh>) {
+			chomp $buf;
+			$curproc->logwarn($buf);
+		    }
+		    $fh->close();
 		}
-		$fh->close();
 	    }
 	}
-    }
 
-    $pcb->set("stderr", "use_log_dup", 0);
+	$pcb->set("stderr", "use_log_dup", 0);
+    }
 }
 
 
