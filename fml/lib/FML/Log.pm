@@ -47,7 +47,7 @@ for example, log files, syslog() (not yet implemented).
 
 =head2 Log( $message [, $args])
 
-The argument is the message to log.
+The required argument is the message to log.
 You can specify C<log_file>, C<facility> and C<level> as an optional.
 
     $args = {
@@ -55,6 +55,10 @@ You can specify C<log_file>, C<facility> and C<level> as an optional.
        facility => $facility,
        level    => $level,
    };
+
+This routine depends on C<FML::Config> and C<FML::Credential>.
+$config->{ log_format_type } defines the format sytle.
+C<sender> to log is taken from C<FML::Credential> object.
 
 =cut
 
@@ -88,7 +92,7 @@ sub Log
     my $sender = FML::Credential->sender;
 
     if (defined $fh) {
-	if ($style eq 'traditional') {
+	if ($style eq 'fml4_compatible') {
 	    print $fh $rdate->{'log_file_style'}, " ", $mesg;
 	    print $fh " ($sender)" if defined $sender;
 	    print $fh "\n";
@@ -109,7 +113,8 @@ sub Log
 =head1 SEE ALSO
 
 L<FML::Date>, 
-L<FML::Config>
+L<FML::Config>,
+L<FML::Credential>,
 
 =head1 AUTHOR
 
