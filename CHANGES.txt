@@ -1,6 +1,11 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/06/06
+
+   Mail::Message::MH 
+	against longloop for underrun and overrun
+
 2003/06/04
 
   import im-145
@@ -4887,4 +4892,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.145 2003/06/01 12:38:17 fukachan Exp $
+$FML: CHANGES.txt,v 1.146 2003/06/04 15:20:53 fukachan Exp $
