@@ -28,64 +28,27 @@ The number of messages in recipient's mailbox exceeded the local limit.
 ----_Biglobe120310/24105.biglobe.ne.jp
 Content-Type: message/rfc822
 
-Received: from rcpt-impgw.biglobe.ne.jp by biglobe.ne.jp (RCPT_GW)
-	id MAA24105; Fri, 23 Mar 2001 12:03:09 +0900 (JST)
-Received: from ahodori.fml.org (ahodori.fml.org [202.232.137.17])
-	by rcpt-impgw.biglobe.ne.jp (8.9.3+3.2W/3.7W-01032209) with SMTP id MAA24093
-	for <rudo@xxx.biglobe.ne.jp>; Fri, 23 Mar 2001 12:03:09 +0900 (JST)
-Received: (qmail 2133 invoked from network); 23 Mar 2001 03:02:42 -0000
-Received: from localhost (HELO albatros.fml.org) (127.0.0.1)
-  by localhost with SMTP; 23 Mar 2001 03:02:42 -0000
-Received: from beth.sapporo.iij.ad.jp (ahodori.fml.org [202.232.137.17])
-	by ahodori.fml.org (Postfix) with ESMTP id 5FE73866B7
-	for <fml-help@ffs.fml.org>; Fri, 23 Mar 2001 12:02:24 +0900 (JST)
-Received: from sapporo.iij.ad.jp (beth.sapporo.iij.ad.jp [192.168.148.3])
-	by beth.sapporo.iij.ad.jp (Postfix) with ESMTP id 3BBE7A6822
-	for <fml-help@ffs.fml.org>; Fri, 23 Mar 2001 12:02:10 +0900 (JST)
-Delivered-To: fml-help@ffs.fml.org
-Date: Fri, 23 Mar 2001 12:02:27 +0900
-X-Posted: Fri, 23 Mar 2001 12:02:10 +0900
-From: "Ken'ichi Fukamachi" <fukachan@sapporo.iij.ad.jp>
-Reply-To: fml-help@ffs.fml.org
-Subject: Re: pull up request to 4.0.1
-To: fml-help@ffs.fml.org
-Message-Id: <20010323030211.3BBE7A6822@beth.sapporo.iij.ad.jp>
-In-Reply-To: your message of "Fri, 23 Mar 2001 01:54:58 +0900."
-             <20010322165449.DC7DDA6822@beth.sapporo.iij.ad.jp>
-X-ML-Name: fml-help
-X-Mail-Count: 00048
-X-MLServer: fml [fml 4.0A  (20010311)]; post only (only members can post)
-X-Stardate: [-30]6370.63
-X-ML-Info: If you have a question, send e-mail with the body
-	"help" (without quotes) to the address fml-help-ctl@ffs.fml.org;
-	help=<mailto:fml-help-ctl@ffs.fml.org?body=help>
+Return-Path: <fukachan@fml.org>
+Received: from hikari.fml.org (hikari.fml.org [192.168.1.6])
+	by elena.fml.org (Postfix) with ESMTP id C995C1D8C9
+	for <mailbox@elena.fml.org>; Tue,  2 Jan 2001 17:08:05 +0900 (JST)
+Received: by hikari.fml.org (8.9.3/3.4W6+Hikari-2.1) with ESMTP id RAA17788 for <caesar@fml.org>; Tue, 2 Jan 2001 17:08:04 +0900 (JST)
+Received: by iris.fml.org (Postfix, from userid 0)
+	id 1BCBE15024; Tue,  2 Jan 2001 17:08:03 +0900 (JST)
+From: fukachan@sapporo.iij.ad.jp (Ken'ichi Fukamachi)
+To: elena@nuinui.net
+Reply-To: rudo@nuinui.net
+Subject: [elena:00300] test 01
+	appended_mesg
+Message-Id: <20010102080803.1BCBE15024@iris.fml.org>
+Date: Tue,  2 Jan 2001 17:08:03 +0900 (JST)
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-2022-jp"
+Content-Type: text/plain; charset=ISO-2022-JP
 Content-Transfer-Encoding: 7bit
-Precedence: bulk
-Lines: 16
-List-Software: fml [fml 4.0A  (20010311)]
-List-Post: <mailto:fml-help@ffs.fml.org>
-List-Owner: <mailto:fml-help-admin@ffs.fml.org>
-List-Help: <mailto:fml-help-ctl@ffs.fml.org?body=help>
-List-Unsubscribe: <mailto:fml-help-ctl@ffs.fml.org?body=unsubscribe>
 
-in fml-help ML's Count: 00047
-I wrote:
->パッチ(fml-support: 09336)あてました _o_ 
->4.0.1 へマージするリスト update
+test message
 
-done.
-
->fml/proc/libamctl.pl
->	new revision: 2.46; previous revision: 2.45
->
->	apply patch by shigetoshi hirano (fml-support: 09336)
->
->	登録時の重複チェックが抜けている ( DBMS を使う場合のみ )
->	＃デバッグする時にあとまわしにしてそのまま忘れたんだと思う
-
-深町％さっぽろ＠IIJ
+-- rudo's mabuachi
 
 ----_Biglobe120310/24105.biglobe.ne.jp--
 

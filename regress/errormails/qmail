@@ -69,62 +69,27 @@ I'm not going to try again; this message has been in the queue too long.
 
 --- Below this line is a copy of the message.
 
-Return-Path: <fml-help-admin@ffs.fml.org>
-Received: (qmail 7869 invoked from network); 1 Apr 2001 23:52:46 -0000
-Received: from localhost (HELO albatros.fml.org) (10.20.30.74)
-  by localhost with SMTP; 1 Apr 2001 23:52:46 -0000
-Return-Path: <fml-help-admin@ffs.fml.org>
-Received: from eve.fml.org (eve.fml.org [10.20.30.77])
-	by ahodori.fml.org (Postfix) with ESMTP
-	id 8767D86661; Mon,  2 Apr 2001 08:52:31 +0900 (JST)
-Received: by eve.fml.org; id IAA00756; Mon, 2 Apr 2001 08:52:31 +0900 (JST)
-Received: from katri.fml.org(10.20.30.81) by eve.fml.org via smap (V4.2)
-	id xma000741; Mon, 2 Apr 01 08:51:39 +0900
-Received: by katri.fml.org (Postfix, from userid 1106)
-	id C44165B39A; Mon,  2 Apr 2001 08:51:35 +0900 (JST)
-Delivered-To: fml-help@ffs.fml.org
-Date: Mon, 2 Apr 2001 08:52:35 +0900
-X-Posted: Mon,  2 Apr 2001 08:51:35 +0900 (JST)
-From: fukachan@cvs.fml.org
-Reply-To: fml-help@ffs.fml.org
-Subject: fml cvs weekly changes (20010402)
-Sender: fukachan@katri.fml.org
-To: fml-users@ffs.fml.org, fml-help@ffs.fml.org
-Message-Id: <20010401235135.C44165B39A@katri.fml.org>
-X-ML-Name: fml-help
-X-Mail-Count: 00085
-X-MLServer: fml [fml 4.0A  (20010323)]; post only (only members can post)
-X-ML-Info: If you have a question, send e-mail with the body
-	"help" (without quotes) to the address fml-help-ctl@ffs.fml.org;
-	help=<mailto:fml-help-ctl@ffs.fml.org?body=help>
-Precedence: bulk
-Lines: 23
-List-Software: fml [fml 4.0A  (20010323)]
-List-Post: <mailto:fml-help@ffs.fml.org>
-List-Owner: <mailto:fml-help-admin@ffs.fml.org>
-List-Help: <mailto:fml-help-ctl@ffs.fml.org?body=help>
-List-Unsubscribe: <mailto:fml-help-ctl@ffs.fml.org?body=unsubscribe>
+Return-Path: <fukachan@fml.org>
+Received: from hikari.fml.org (hikari.fml.org [192.168.1.6])
+	by elena.fml.org (Postfix) with ESMTP id C995C1D8C9
+	for <mailbox@elena.fml.org>; Tue,  2 Jan 2001 17:08:05 +0900 (JST)
+Received: by hikari.fml.org (8.9.3/3.4W6+Hikari-2.1) with ESMTP id RAA17788 for <caesar@fml.org>; Tue, 2 Jan 2001 17:08:04 +0900 (JST)
+Received: by iris.fml.org (Postfix, from userid 0)
+	id 1BCBE15024; Tue,  2 Jan 2001 17:08:03 +0900 (JST)
+From: fukachan@sapporo.iij.ad.jp (Ken'ichi Fukamachi)
+To: elena@nuinui.net
+Reply-To: rudo@nuinui.net
+Subject: [elena:00300] test 01
+	appended_mesg
+Message-Id: <20010102080803.1BCBE15024@iris.fml.org>
+Date: Tue,  2 Jan 2001 17:08:03 +0900 (JST)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
 
+test message
 
-Updating fml tree:
-U CHANGES
-U Makefile
-U Makefile.local
-U doc/Japanese/internals/overview.wix
-U doc/devel/OS_and_Perl.txt
-U doc/ri/CHANGES-4.0.1.wix
-U doc/ri/INSTALL_with_POSTFIX.wix
-U doc/ri/TODO.wix
-U kern/Makefile
-U messages/Japanese/amctl
-U proc/libamctl.pl
+-- rudo's mabuachi
 
-Updating stable fml tree (fml-4-0-maint):
-U doc/Japanese/internals/overview.wix
-U doc/ri/CHANGES-4.0.1.wix
-U doc/ri/INSTALL_with_POSTFIX.wix
-U kern/Makefile
-U messages/Japanese/amctl
-U proc/libamctl.pl
 
 -- fukachan@cvs.fml.org
