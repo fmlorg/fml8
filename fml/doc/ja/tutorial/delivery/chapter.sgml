@@ -1,20 +1,21 @@
 <!--
-    $FML: chapter.sgml,v 1.3 2001/08/26 05:55:52 fukachan Exp $
+    $FML: chapter.sgml,v 1.4 2001/10/13 08:47:54 fukachan Exp $
 -->
 
 <chapter id="delivery">
 
-   <TITLE> fml5 のメール配送システム </TITLE>
+   <TITLE> &fmldevel; のメール配送システム </TITLE>
 
 <sect1 id="fml5-delivery">
 
    <title> 
-           fml4 と fml5 の相違点
+           &fml4; と &fmldevel; の相違点
    </title>
 
 <para>
-fml5 の最大の目的の一つは、メンバーリストの取得と操作の統合と抽象化です。
-配送には抽象化された Mail::Delivery クラスを次のように使います。
+&fmldevel; の最大の目的の一つは、メンバーリストの取得と操作の統合と抽
+象化です。配送には抽象化された Mail::Delivery クラスを次のように使いま
+す。
 </para>
 
 <para>
