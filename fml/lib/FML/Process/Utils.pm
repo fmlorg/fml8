@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.63 2003/03/14 03:49:09 fukachan Exp $
+# $FML: Utils.pm,v 1.64 2003/03/16 10:52:09 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1057,23 +1057,10 @@ sub get_address_list
     my $config = $curproc->{ config };
     my $list   = $config->get_as_array_ref( $map );
 
-    eval q{ use IO::Adapter;};
+    eval q{ use FML::Command::UserControl;};
     unless ($@) {
-	my $r = [];
-
-	for my $map (@$list) {
-	    my $io  = new IO::Adapter $map, $config;
-	    my $key = '';
-	    if (defined $io) {
-		$io->open();
-		while (defined($key = $io->get_next_key())) {
-		    push(@$r, $key);
-		}
-		$io->close();
-	    }
-	}
-
-	return $r;
+	my $obj = new FML::Command::UserControl;
+	return $obj->get_user_list($curproc, $list);
     }
 
     return [];
