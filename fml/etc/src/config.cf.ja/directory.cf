@@ -78,3 +78,12 @@ tmp_dir		= $ml_home_dir/tmp
 #        Value: directory
 #     Examples: /var/spool/ml/elena/var/db
 db_dir		= $var_dir/db
+
+
+=head2 スケジューラ
+
+# Descriptions: スケジューラのキューディレクトリ
+#      History: none
+#        Value: directory
+#     Examples: /var/spool/ml/elena/var/scheduler
+scheduler_queue_dir	= $var_dir/scheduler/queue
