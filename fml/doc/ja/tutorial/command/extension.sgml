@@ -1,36 +1,175 @@
 <!--
-   $FML: extension.sgml,v 1.4 2002/07/02 10:39:30 fukachan Exp $
+   $FML: extension.sgml,v 1.5 2002/09/28 12:45:52 fukachan Exp $
 -->
 
 
-<sect1 id="fml.command.hack.example0">
+<!--
+	コマンドメールの拡張
+	makefml の拡張
+	CGI の拡張
+-->
+
+
+<sect1 id="fml.command.hack.commandmail">
 	<title>
-	コマンドの拡張
+	コマンドの拡張: コマンドメール
 	</title>
+
+
+<warning>
+<para>
+このホスト全ての ML で有効にする場合、
+拡張するモジュールを
+<screen>
+/usr/local/lib/fml/site_local/
+</screen>
+以下に配置して下さい。
+一方、特定のＭＬだけを拡張する場合は、各ＭＬのホーム以下
+<screen>
+/var/spool/ml/elena/local/lib/
+</screen>
+以下において下さい。
+</para>
+
+<para>
+以下では、このホスト全ての ML で有効にする場合を考えます。
+</para>
+</warning>
 
 
 <sect2>
 	<title> 
-	コマンドメールの拡張: 一般ユーザ用の独自コマンドを作る。
+	一般ユーザ用の独自コマンドを作る。
 	</title>
 
-	<para>
-	&fmldevel; では、
-	例えばユーザ向けのコマンド uja を作りたい場合、
-	FML::Command 以下から適当に cut & paste して
+<para>
+ユーザ向けのコマンド uja を作りたい場合、
+FML::Command 以下から適当に cut and paste して
 <screen>
 /usr/local/lib/fml/site_local/FML/Command/User/uja.pm
 </screen>
-	というファイルを置けば OK にしようとしています。
-	</para>
-
-<para>
-TODO:
-これだけではだめで、許可するコマンドリストに追加して始めて有効になるよ
-うにしないといけないでしょう。
-このあたりはまだ未定です。
+というファイルを置き、
+.cf に許可するコマンドリストに追加して始めて有効になるようにしてくださ
+い。
+<screen>
+commands_for_user += uja
+</screen>
 </para>
 
 </sect2>
+
+
+<sect2>
+	<title> 
+	admin uja コマンドを作る。
+	</title>
+
+
+<para>
+admin 向けのコマンド uja を作りたい場合、
+FML::Command 以下から適当に cut and paste して
+<screen>
+/usr/local/lib/fml/site_local/FML/Command/Admin/uja.pm
+</screen>
+というファイルを置き、
+.cf に許可するコマンドリストに追加して始めて有効になるようにしてくださ
+い。
+<screen>
+commands_for_privileged_user += uja
+</screen>
+</para>
+
+</sect2>
+
+</sect2>
+
+
+</sect1>
+
+
+
+<sect1 id="fml.command.hack.makefml">
+	<title>
+	コマンドの拡張: makefml
+	</title>
+
+
+<warning>
+<para>
+このホスト全ての ML で有効にする場合、
+拡張するモジュールを
+<screen>
+/usr/local/lib/fml/site_local/
+</screen>
+以下に配置して下さい。
+一方、特定のＭＬだけを拡張する場合は、各ＭＬのホーム以下
+<screen>
+/var/spool/ml/elena/local/lib/
+</screen>
+以下において下さい。
+</para>
+
+<para>
+以下では、このホスト全ての ML で有効にする場合を考えます。
+</para>
+</warning>
+
+
+<para>
+makefml でコマンド uja を作いたい場合、
+FML::Command 以下から適当に cut and paste して
+<screen>
+/usr/local/lib/fml/site_local/FML/Command/Admin/uja.pm
+</screen>
+というファイルを置けば有効になります。
+commands_for_ 系の変数の設定変更は不要です。
+</para>
+
+
+</sect1>
+
+
+
+<sect1 id="fml.command.hack.makefml">
+	<title>
+	コマンドの拡張: CGI
+	</title>
+
+
+<warning>
+<para>
+このホスト全ての ML で有効にする場合、
+拡張するモジュールを
+<screen>
+/usr/local/lib/fml/site_local/
+</screen>
+以下に配置して下さい。
+一方、特定のＭＬだけを拡張する場合は、各ＭＬのホーム以下
+<screen>
+/var/spool/ml/elena/local/lib/
+</screen>
+以下において下さい。
+</para>
+
+<para>
+以下では、このホスト全ての ML で有効にする場合を考えます。
+</para>
+</warning>
+
+
+<para>
+admin 向けのコマンド uja を作りたい場合、
+FML::Command 以下から適当に cut and paste して
+<screen>
+/usr/local/lib/fml/site_local/FML/Command/Admin/uja.pm
+</screen>
+というファイルを置き、
+.cf に許可するコマンドリストに追加して始めて有効になるようにしてくださ
+い。
+<screen>
+commands_for_admin_cgi += uja
+</screen>
+</para>
+
 
 </sect1>
