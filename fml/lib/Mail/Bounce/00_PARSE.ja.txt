@@ -1,24 +1,6 @@
-### VERY FUNDAMENTAL CONFIG ###
-$ErrorCodePat = '55\d|5\.\d\.\d';
-$TrapWord     = 'unknown \S+|\S+ unknown|\S+ not known| not found';
-
-# regexp
-$RE_SJIS_C = '[\201-\237\340-\374][\100-\176\200-\374]';
-$RE_SJIS_S = "($RE_SJIS_C)+";
-$RE_EUC_C  = '[\241-\376][\241-\376]';
-$RE_EUC_S  = "($RE_EUC_C)+";
-$RE_JIN    = '\033\$[\@B]';
-$RE_JOUT   = '\033\([BJ]';
-###############################
-
-
 sub Parse
 {
-    $new_block = 1;
-    $gobble    = 0;
-    $curf      = $NULL;
     $first_header_part = 1;
-
 
     my ($msgbufp, $msgbufp1);
     for ($msgbufp = 0; $msgbufp <= $pmax; ) {
@@ -27,103 +9,12 @@ sub Parse
 	$_        = substr($MessageBuffer, $msgbufp, $msgbufp1 - $msgbufp);
 	$msgbufp  = $msgbufp1 + 1;
 
-	# reread input buffer since this buffer ends incomletely.
-	# we ends it up with "\n" correctly.
-	$SavedBuffer .= $_."\n" if $InputLines++ < 1024;
-
-	# ignore the first header
-	# we should ignore header for <maintainer>
-	$first_header_part = 0 if /^$/;
-
-	# save excursion
-	$PrevLine = $CurLine;
-	$CurLine  = $_;
-
-	# check the current block
-	if (/^Content-Type:\s*(.*)/i) { 
-	    &Debug("<<< $_ >>>");
-	    $mp_block = $1;
-	}
-
-	if (/^(Content-Description:\s*Notification).*/i) { 
-	    &Debug("<<< $_ >>>");
-	    $mp_block = $1;
-	}
-
-	# Store Received: field 
-	if (! $first_header_part) {
-	    if (/^([-A-Za-z]+):(.*)/) {
-		$curf  = $1;
-		$value = $2;
-		$Received .= "\n".$value if $curf =~ /Received/i;
-	    }
-	    elsif (/^\s+(.*)/) {
-		$value = $1;
-		$Received .= $value if $curf =~ /Received/i;
-	    }
-	}
-
-	$new_block = 1 if /^\s*$/;
-
-	if (/^From:.*mailer-daemon/i || /^From:.*postmaster/) {
-	    undef %return_addr;
-	    $original_mail = $found = 0;
-	    undef $MTA;
-	    undef $CurAddr;
-	}
-
-	# guess MTA ...
-	if (/^Message-ID:\s+\<[\w\d]+\-[\w\d]+\-[\w\d]+\@/i) { 
-	    $MTA = "exim";
-	    next;
-	}
-
-
-	# get returned addresses
-	if ($first_header_part) {
-	    if (/^(To|Cc):.*/i) {
-		if ($new_block && $gabbble == 0) {
-		    &Debug("$new_block, $gobble> rset \%return_addr\n") if $debug;
-		    undef %return_addr;
-		}
-
-		$new_block = 0;
-		$gabbble = 1;
-
-		&ExtractAddr($_);
-		next;
-	    }
-	    elsif (/^X\-MLServer:/i) { # this is the commnd mail from fml.
-		$NotSavedBuffer = 1;
-	    }
-	    # 822 folding
-	    elsif (/^\s+/ && $gobble) {
-		&ExtractAddr($_);
-		next;	
-	    }
-	}
-
-
-	# smtpfeed -1 -F hack
-	if (/^To: \(original recipient in envelope at \S+\) <(\S+)>/) {
-	    &PickUpHint($1);
-	}
-
-
 	if ($MTA eq 'exim' || $MTA eq 'qmail') {
 	    /^\s*(\S+\@\S+):\s*$/ && ($CurAddr = $1);
 	    $CurAddr =~ s/[\<\>]//g;
 	    $CurAddr =~ s/\s*//g;
 	    &Debug("CurAddr => $CurAddr") if $debug && $CurAddr;
 	}
-
-	$gobble = 0;
-
-	# ignore Japanese strings.
-	next if /$RE_JIN/;
-	next if /$RE_JOUT/;
-	next if /$RE_SJIS_S/;
-	next if /$RE_EUC_S/;
 
 	### unknown MTA  ###
 	if (/(\S+\@[-A-Z0-9\.]+)/i) {
@@ -132,7 +23,6 @@ sub Parse
 	    $P_CurAddr =~ s/\s*//g;
 	    &Debug("P_CurAddr => $P_CurAddr") if $debug && $P_CurAddr;
 	}
-
 
 	##### TRAP CODE #####
 	if (/fatal error/i) { $fatal++;}
@@ -145,20 +35,6 @@ sub Parse
 	if (/$TrapWord/i && $P_CurAddr) {
 	    &AnalyzeErrorWord($_, $P_CurAddr); 
 	    $found++;	
-	}
-
-	### postfix
-	if (/$TrapWord/i && $MTA eq 'postfix') { 
-	    &AnalyzeErrorWord($_, $CurAddr); 
-	    $found++;
-	} 
-
-	###
-	### exim
-	###
-	if (/$TrapWord/i && $MTA eq 'exim') { 
-	    &AnalyzeErrorWord($_, $CurAddr); 
-	    $found++;
 	}
 
 	# EXIM pattern
@@ -179,9 +55,7 @@ sub Parse
 	    $found++;
 	}
 
-	###
 	### sendmail
-	###
 	if ($fatal) {
 	    local($a);
 	    /^\s*(\S+\@\S+)/ && ($a = $1);
