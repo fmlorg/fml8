@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Standalone.pm,v 1.5 2001/04/24 03:50:25 fukachan Exp $
+# $FML: Standalone.pm,v 1.6 2001/05/29 16:21:17 fukachan Exp $
 #
 
 
@@ -109,8 +109,10 @@ sub _expand_variables
     # check whether the variable definition is recursive.
     # For example, definition "var_a = $var_a/b/c" causes a loop.
     for my $x ( @order ) {
-	if ($config->{ $x } =~ /\$$x/) {
-	    croak("loop1: definition of $x is recursive\n");
+	if ((defined $x) && defined ($config->{ $x })) {
+		if ($config->{ $x } =~ /\$$x/) {
+		    croak("loop1: definition of $x is recursive\n");
+		}
 	}
     }
 
@@ -119,6 +121,7 @@ sub _expand_variables
     my $max = 0;
   KEY:
     for my $x ( @order ) {
+	next KEY unless defined($config->{ $x });
 	next KEY if $config->{ $x } !~ /\$/o;
 
 	# we need a loop to expand nested variables, for example, 
