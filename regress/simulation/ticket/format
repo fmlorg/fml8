@@ -1,0 +1,96 @@
+#!/usr/local/bin/perl
+#
+# $Id$
+#
+
+use strict;
+use Carp;
+use vars qw(%article %options);
+use Getopt::Long;
+use lib qw(./fml/lib ./cpan/lib);
+use Jcode;
+use MIME::Base64;
+
+GetOptions(\%options, qw(debug! -D=s));
+
+my $ml_home_dir = $options{ D } || croak("-D directory");
+
+while (<>) {
+    print ;
+    my ($date, $status, $ticket_id, @articles) = split;
+    $article{ $ticket_id } = $articles[0];
+}
+
+if (%article) {
+    print "\n";
+    ShowSummary( \%article );
+}
+
+exit 0;
+
+sub ShowSummary
+{
+    my ($article) = @_;
+    my ($k, $v);
+    my $f;
+
+    while (($k, $v) = each %$article) {
+	$f = "$ml_home_dir/spool/$v";
+	printf "\n%-10s  %s\n", $k;
+	print _summary($f);
+    }
+}
+
+
+sub _summary
+{
+    my ($f) = @_;
+    use FileHandle;
+    
+    my $buf;
+    my $subject;
+    my $padding = '   > ';
+    my $line = 5;
+    my $fh = new FileHandle $f;
+    my $zform_is_found = 0;
+    if (defined $fh) {
+	while (<$fh>) {
+	    if (1 ../^$/) {
+		if (/^(Subject:.*)=\?ISO\S+B\?(\S+)=\?=/) { 
+		    my ($x, $y) = ($1, $2);
+		    $y = decode_base64($y);
+		    $buf .= $padding;
+		    $buf .= $x. Jcode::convert(\$y, 'euc')."\n";
+		    $buf .= $padding."\n";
+		}
+		elsif (/^(Subject:.*)/) {
+		    $buf .= $padding. $_;
+		    $buf .= $padding."\n";
+		}
+		next;
+	    }
+
+	    # looks zform ?
+	    if (/^DTD:/) {
+		$zform_is_found = 1;
+		next;
+	    }
+
+	    # nuke useless lines
+	    next if /^\s*$/;
+	    next if /^\>/;
+	    next if /^\-/;
+	    next if /^[-\w]+:/ && (! $zform_is_found);
+
+	    # pick up effetive the first $line lines
+	    if ($line--> 0) {
+		$buf .= $padding. $_;
+	    }
+	    else {
+		last;
+	    }
+	}
+    }
+
+    $buf;
+}
