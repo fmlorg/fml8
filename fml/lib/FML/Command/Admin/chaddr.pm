@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.11 2002/02/20 14:10:37 fukachan Exp $
+# $FML: chaddr.pm,v 1.1 2002/03/17 05:47:27 fukachan Exp $
 #
 
 package FML::Command::Admin::chaddr;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::chaddr - chaddr a new member
+FML::Command::Admin::chaddr - change the subscribed address
 
 =head1 SYNOPSIS
 
@@ -22,11 +22,13 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-chaddr a new address.
+change address from old one to new one.
 
 =head1 METHODS
 
 =head2 C<process($curproc, $command_args)>
+
+change address from old one to new one.
 
 =cut
 
@@ -51,19 +53,19 @@ sub new
 sub need_lock { 1;}
 
 
-# Descriptions: chaddr a new user
+# Descriptions: change address from old one to new one
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config        = $curproc->{ config };
-    my $member_map    = $config->{ primary_member_map };
-    my $recipient_map = $config->{ primary_recipient_map };
-    my $options       = $command_args->{ options };
-    my $old_address   = '';
-    my $new_address   = '';
+    my $config         = $curproc->{ config };
+    my $member_maps    = $config->get_as_array_ref( 'member_maps' );
+    my $recipient_maps = $config->get_as_array_ref( 'recipient_maps' );
+    my $options        = $command_args->{ options };
+    my $old_address    = '';
+    my $new_address    = '';
 
     if (defined $command_args->{ command_data }) {
 	my $x = $command_args->{ command_data };
@@ -80,14 +82,18 @@ sub process
     unless ($old_address && $new_address) {
 	croak("chaddr: invalid arguments");
     }
-    croak("\$member_map is not specified")    unless $member_map;
-    croak("\$recipient_map is not specified") unless $recipient_map;
+    croak("\$member_maps is not specified")    unless $member_maps;
+    croak("\$recipient_maps is not specified") unless $recipient_maps;
 
     use IO::Adapter;
     use FML::Credential;
     use FML::Log qw(Log LogWarn LogError);
 
-    for my $map ($member_map, $recipient_map) {
+    # change all maps
+    my (@maps) = ();
+    push(@maps, @$member_maps);
+    push(@maps, @$recipient_maps);
+    for my $map (@maps) {
 	my $cred = new FML::Credential;
 
 	# the current member/recipient file must have $old_address
