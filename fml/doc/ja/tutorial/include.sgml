@@ -1,5 +1,5 @@
 <!--
-	$FML: include.sgml,v 1.10 2001/04/24 15:19:14 fukachan Exp $
+	$FML: include.sgml,v 1.11 2001/04/25 02:55:56 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -8,7 +8,8 @@
 <!entity bookinfo  SYSTEM "bookinfo.sgml">
 <!entity preface  SYSTEM "preface.sgml">
 
-<!entity appendix  SYSTEM "appendix.sgml">
+
+<!entity available   SYSTEM "available.sgml">
 <!entity docbook   SYSTEM "docbook.sgml">
 <!entity download   SYSTEM "download.sgml">
 <!entity install   SYSTEM "install.sgml">
@@ -24,6 +25,8 @@
 <!entity programingstyle  SYSTEM "programing_style.sgml">
 <!entity reference SYSTEM "reference.sgml">
 
+
+<!entity appendix  SYSTEM "appendix.sgml">
 <!entity glossary     SYSTEM "glossary.sgml">
 <!entity cvstree     SYSTEM "cvstree.sgml">
 <!entity cvstags     SYSTEM "cvstags.sgml">

@@ -1,0 +1,208 @@
+<!--
+	$FML$
+-->
+
+<chapter id="available">
+
+	<title>	fml-devel の機能 </title>
+
+<para>
+/usr/local/bin 以下にインストールされるものと、
+/usr/local/libexec/fml 以下にインストールされるものと両方あります。
+</para>
+
+<para>
+/usr/local/bin 以下にインストールされるものも、
+実体は /usr/local/libexec/fml 以下の同名のファイルです。
+そして、
+/usr/local/libexec/fml 以下のファイルは
+/usr/local/libexec/fml/loader へのリンクです。
+起動される時の名前で振舞いが変わります。
+</para>
+
+<para>
+注意: fml5 ではすべてのプログラムは /usr/local/libexec/fml/loader を経
+由して起動されます。バージョン依存性を処理するために、つねにこの 
+loader を通して起動していくことになっています。
+</para>
+
+
+<!-- 
+	###########################
+ -->
+<sect1 id="usr.local.libexec.fml">
+
+	<title> /usr/local/libexec/fml/ のプログラム </title>
+
+
+<!-- ================================================== -->
+<sect2>
+
+	<title>	/usr/local/libexec/fml/distribute </title>
+
+<para>
+配送処理をする。
+subject を書き換える。
+スプールに記事として溜める。
+IPv6 をしゃべる。
+チケット番号をふる。
+et. al. 
+</para>
+
+</sect2>
+
+
+<!-- ================================================== -->
+<sect2>
+
+	<title>	/usr/local/libexec/fml/fml.pl </title>
+
+<para>
+distribute と同じ。
+</para>
+
+</sect2>
+
+
+<!-- ================================================== -->
+<sect2>
+
+	<title>	/usr/local/libexec/fml/command </title>
+
+<para>
+command は fml.pl --ctladdr と同じです。
+</para>
+
+<para>  
+プログラム自体は動きますが、
+機能するコマンドはまだないです。
+</para>
+
+</sect2>
+
+
+<!-- ================================================== -->
+<sect2>
+
+	<title>	/usr/local/libexec/fml/makefml.cgi </title>
+
+<para>
+makefml の CGI インターフェイス。
+うごくけど、まだプロトタイプ。
+動く機能は makefml と同等のものです。
+それは最終的に makefml と同じ関数を呼び出しているからです。
+</para>
+
+<programlisting>
+例:
+/cgi-bin/makefml.cgi?ml_name=elena&amp;method=bye&amp;address=rudo@nuinui.net
+</programlisting>
+
+</sect2>
+
+
+<!-- ================================================== -->
+<sect2>
+
+	<title>	/usr/local/libexec/fml/fmlticket.cgi </title>
+
+
+<para>  
+fmlticket の CGI 版。
+チケットを close する。
+あるチケットに該当する記事群を表示する。
+</para>
+</sect2>
+		
+
+<!-- ================================================== -->
+<sect2>
+
+	<title>	/usr/local/libexec/fml/mead </title>
+
+<para>  
+ま〜だだよ
+</para>
+
+</sect2>
+
+
+<!-- ================================================== -->
+<sect2>
+
+	<title>	/usr/local/libexec/fml/fmlserv </title>
+
+<para>  
+ま〜だだよ
+</para>
+
+</sect2>
+
+
+</sect1>
+<!-- 
+	###########################
+ -->
+<sect1 id="usr.local.bin">
+
+	<title> /usr/local/bin/ のプログラム </title>
+
+
+<!-- ================================================== -->
+<sect2>
+
+	<title>	/usr/local/bin/makefml </title>
+
+
+<para>  
+登録と削除関係、および最低限のＭＬの作成だけは動きます
+(add subscribe bye unsubscribe resign remove そして newml)。
+</para>  
+
+<para>  
+使い方は fml 4.0 と一緒です。
+<screen>
+% makefml add elena アドレス
+% makefml bye elena アドレス
+% makefml newml elena
+</screen>
+</para>
+
+</sect2>
+
+
+<!-- ================================================== -->
+<sect2>
+
+	<title>	/usr/local/bin/fmlconf	</title>
+
+<para>  変数一覧を表示します</para>
+</sect2>
+   
+
+<!-- ================================================== -->
+<sect2>
+	<title>	/usr/local/bin/fmldoc	</title>
+
+<para>
+モジュールのマニュアルを表示する
+perldoc への wrapper です。
+</para>
+
+</sect2>
+
+
+<!-- ================================================== -->
+<sect2>
+	<title>	/usr/local/bin/fmlticket	</title>
+
+<para>  
+現在のチケットシステムのサマリを表示する。
+チケットの close をする。
+</para>
+</sect2>
+
+</sect1>
+
+
+</chapter>
