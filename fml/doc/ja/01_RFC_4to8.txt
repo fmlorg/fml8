@@ -93,6 +93,16 @@
 	cf -> .fml4rc/cf (移動)
 
 
+  解釈の仕方
+
+	ターゲットのＭＬconfig.phを読む
+		＃libloadconfig にある関数コールが問題;_;
+
+	$s = sprintf("package config%03d;require \"%s\";\n\npackage main;\n", 
+			$i, $f);
+	eval $s;
+	print $@ if $@;
+
 
 *)	config.txt をどうする？
 
@@ -134,4 +144,4 @@
 
 
 ------------------------------------------------------------
-$FML$
+$FML: 01_RFC_4to8.txt,v 1.1 2004/03/12 14:49:08 fukachan Exp $
