@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: INSTALL.sh,v 1.55 2002/08/28 15:07:52 fukachan Exp $
+# $FML: INSTALL.sh,v 1.56 2002/09/09 23:18:20 fukachan Exp $
 #
 
 # Run this from the top-level fml source directory.
@@ -88,6 +88,11 @@ fi
 if [ ! -f $config_dir/site_default_config.cf ];then
    echo creating $config_dir/site_default_config.cf
    cp fml/etc/site_default_config.cf $config_dir/site_default_config.cf
+fi
+
+if [ ! -f $config_dir/mime_component_filter ];then
+   echo creating $config_dir/mime_component_filter
+   cp fml/etc/mime_component_filter $config_dir/mime_component_filter
 fi
 
 echo updating $default_config_dir/
