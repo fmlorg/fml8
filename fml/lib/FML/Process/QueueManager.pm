@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.22 2004/08/13 11:48:23 fukachan Exp $
+# $FML: QueueManager.pm,v 1.23 2004/08/13 13:24:54 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -79,11 +79,16 @@ sub send
     my ($self, $id) = @_;
     my $curproc     = $self->{ _curproc };
     my $queue_dir   = $self->{ _directory };
+    my $max_count   = 2;
+    my $count       = 0;
+    my $count_ok    = 0;
+    my $count_err   = 0;
 
     use Mail::Delivery::Queue;
     my $queue = new Mail::Delivery::Queue { directory => $queue_dir };
     my $ra    = defined $id ? [ $id ] : $queue->list();
 
+  QUEUE:
     for my $qid (@$ra) {
 	my $q = new Mail::Delivery::Queue {
 	    id        => $qid,
@@ -92,7 +97,11 @@ sub send
 
 	if ( $q->lock() ) {
 	    if ( $q->valid_active_queue() ) {
-		$self->_send($curproc, $q) && $q->remove();
+		$self->_send($curproc, $q) && do {
+		    $q->remove();
+		    $count_ok++;
+		};
+		$count++;
 	    }
 	    else {
 		# XXX-TODO: $q->remove() if invalid queue ?
@@ -103,6 +112,13 @@ sub send
 	else {
 	    $curproc->log("qmgr: qid=$qid is locked. retry");
 	}
+
+	# upper limit of processing done on one process.
+	last QUEUE if $count >= $max_count;
+    }
+
+    if ($count) {
+	$curproc->log("qmgr: $count requests processed: ok=$count_ok/$count");
     }
 }
 
