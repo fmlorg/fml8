@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: find_bad_style.pl,v 1.2 2003/01/03 10:16:33 fukachan Exp $
+# $FML: find_bad_style.pl,v 1.3 2003/01/03 11:49:58 fukachan Exp $
 #
 
 use strict;
@@ -90,6 +90,7 @@ while (<>) {
 	_check_args( $ARGV, $_ );
     }
     $fnf_args = '' if /^\}/;
+    $fnf_args = '' if /^sub .*\}/;
 
     # 
     # last resort: logging buffer
@@ -208,6 +209,8 @@ sub _check_args
     $fnf =~ s/\n/    /g;
 
     for (split(/\s+/, $fnf)) {
+	s/\[//g;
+	s/\]//g;
 	if (/^\w+\((\S+)\)/) {
 	    push(@fnf, $1);
 	}
