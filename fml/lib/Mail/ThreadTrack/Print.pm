@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Print.pm,v 1.14 2001/11/10 09:04:27 fukachan Exp $
+# $FML: Print.pm,v 1.15 2001/11/11 00:57:35 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print;
@@ -254,6 +254,22 @@ sub _do_review
 	    }
 	}
     }
+}
+
+
+=head2 show()
+
+=cut
+
+    
+sub show
+{
+    my ($self, $tid) = @_;
+    
+    $self->_load_library();
+    $self->db_open();
+    $self->show_articles_in_thread($tid);
+    $self->db_close();
 }
 
 

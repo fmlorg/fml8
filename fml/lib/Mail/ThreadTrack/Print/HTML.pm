@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Sort.pm,v 1.4 2001/11/10 08:50:41 fukachan Exp $
+# $FML: HTML.pm,v 1.4 2001/11/11 00:57:36 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::HTML;
@@ -21,7 +21,7 @@ use Mail::ThreadTrack::Print::Utils qw(decode_mime_string STR2EUC);
 #    Arguments: $self $str
 # Side Effects: none
 # Return Value: none
-sub show_articles_for_thread
+sub show_articles_in_thread
 {
     my ($self, $thread_id) = @_;
     my $mode      = $self->get_mode || 'text';
@@ -68,14 +68,43 @@ sub show_articles_for_thread
 sub __start_thread_summary
 {
     my ($self, $args) = @_;
-    my $fd = $self->{ _fd } || \*STDOUT;
+    my $config  = $self->{ _config };
+    my $ml_name = $config->{ ml_name };
+    my $fd      = $self->{ _fd } || \*STDOUT;
+    my $action  = "fmlthread.cgi";
+    my $target  = "ResultsWindow";
+
+    # statistics
+    if (defined $self->{ _ticket_id_stat }) {
+	my $stat = $self->{ _ticket_id_stat };
+	for my $key ('open', 'analyzed', 'closed') {
+	    print $fd "$key: ";
+	    print $fd defined $stat->{ $key } ? $stat->{ $key } : 0;
+	    print $fd ", ";
+	}
+	print $fd br, "\n";
+    }
+
+    print $fd start_form(-action=>$action, -target=>$target);
+    print $fd submit(-name => 'submit');
+    print $fd reset(-name => 'reset');
+    print $fd "\n";
+
+    print $fd hidden(-name    => 'ml_name',
+		     -default => [ $ml_name ],
+		     ), "\n";
+
+    param('action', 'change_status'); # we need to override
+    print $fd hidden(-name    => 'action',
+		     -default => [ 'change_status ' ],
+		     ), "\n";
 
     print $fd "<TABLE BORDER=4>\n";
     print $fd "<TD>id\n";
+    print $fd "<TD>change\n";
     print $fd "<TD>summary\n";
     print $fd "<TD>age\n";
     print $fd "<TD>status\n";
-    print $fd "<TD>change\n";
 }
 
 
@@ -90,6 +119,10 @@ sub __end_thread_summary
     my $fd = $self->{ _fd } || \*STDOUT;
 
     print $fd "</TABLE>\n";
+
+    print submit(-name => 'submit');
+    print reset(-name => 'reset');
+    print $fd end_form;
 }
 
 
@@ -119,18 +152,35 @@ sub __print_thread_summary
 
     # <FORM ACTION=> ..>
     my $xtid = CGI::escape($tid);
-    $action  = "${action}?ml_name=${ml_name}";
-    $action .= "&thread_id=$xtid&article_id=$aid";
+    $action  = "${action}?ml_name=${ml_name}&article_id=$aid";
+
+    $self->{ _table_count } = 1 unless defined $self->{ _table_count };
+    if (($self->{ _table_count }++ % 5) == 0) {
+	print "<TR>\n<TD>\n";
+	print submit(-name => 'submit'), reset(-name => 'reset');
+    }
 
     print "<TR>\n";
+
+    # thread id
     print "<TD>";
-    print "<A HREF=\"$action&action=show\"\n\tTARGET=\"$target.show\">";
+    print "<A HREF=\"$action&action=show\" TARGET=\"lower\">\n";
     print $tid;
     print "\n</A>\n";
 
+    # action
     print "<TD>";
+    my $name    = "change_status.$tid";
+    my $values  = ["open", "analyzed", "closed"];
+    my $default = $status;
+    print radio_group(-name      => $name, 
+		      -values    => $values, 
+		      -default   => $default,
+		      -linebreak => 'true',
+		      );
 
-    # summary
+    # message (article) brief summary
+    print "<TD>";
     if (defined $articles) {
 	$aid = (split(/\s+/, $articles))[0];
 	my $f = File::Spec->catfile($spool_dir, $aid);
@@ -140,20 +190,9 @@ sub __print_thread_summary
 	}
     }
 
+    # addional information: age, status
     print "<TD>$age\n";
     print "<TD>$status\n";
-    print "<TD>";
-    my $name    = "change-status=$tid";
-    my $values  = ['open', 'analyzed', 'closed'];
-    my $default = $status;
-    print checkbox_group(-name=>$name, 
-			 -values=>$values, 
-			 -defaults=>$default,
-			 -linebreak=>'true',
-			 );
-
-    # print "<A HREF=\"$action&action=close\" TARGET=\"$target.close\">";
-    # print "[close]</A>\n";
 
     print "\n\n";
 }

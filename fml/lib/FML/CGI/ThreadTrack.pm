@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: ThreadTrack.pm,v 1.2 2001/11/11 01:12:44 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.3 2001/11/11 02:46:42 fukachan Exp $
 #
 
 package FML::CGI::ThreadTrack;
@@ -90,13 +90,28 @@ sub run_cgi
     my $thread = new Mail::ThreadTrack $ttargs;
     $thread->set_mode('html');
 
+    # for (param()) { print "PARAM(debug): $_ => ", param($_), "<BR>\n";}
+
     if ($action eq 'list') {
 	$thread->summary();
     }
-    elsif ($action eq 'close') {
-	my $id  = $curproc->safe_param_article_id();
+    elsif ($action eq 'show') {
+	my $id = $curproc->safe_param_article_id();
 	my $tid = $thread->_create_thread_id_strings($id);
-	$thread->close($tid);
+	$thread->show($tid);
+    }
+    elsif ($action eq 'change_status') {
+	my (@id);
+	for my $param (param()) {
+	    my $req = param($param);
+	    if ($req eq 'closed') {
+		if ($param =~ /^change_status\.(\S+)\/(\d+)$/) {
+		    my $tid = $thread->_create_thread_id_strings($2);
+		    print "closed $tid\n"; print br;
+		    $thread->close($tid);
+		}
+	    }
+	}
 	$thread->summary();
     }
     else {

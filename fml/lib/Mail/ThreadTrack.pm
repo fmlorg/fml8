@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: ThreadTrack.pm,v 1.14 2001/11/09 15:07:51 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.15 2001/11/11 00:58:44 fukachan Exp $
 #
 
 package Mail::ThreadTrack;
@@ -228,15 +228,26 @@ sub list_up_thread_id
     my ($tid, $status, @thread_id);
     my $rh_status = $self->{ _hash_table }->{ _status };
     my $mode      = 'default';
+    my $stat      = {};
 
   TICEKT_LIST:
     while (($tid, $status) = each %$rh_status) {
+	if ($status =~ /close/o) {
+	    $stat->{ 'closed' }++;
+	}
+	else {
+	    $stat->{ $status }++;
+	}
+
 	if ($mode eq 'default') {
 	    next TICEKT_LIST if $status =~ /close/o;
 	}
 
 	push(@thread_id, $tid);
     }
+
+    # save statistics
+    $self->{ _ticket_id_stat } = $stat;
 
     \@thread_id;
 }
