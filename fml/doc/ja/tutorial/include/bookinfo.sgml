@@ -1,11 +1,11 @@
 <!--
-   $FML: bookinfo.sgml,v 1.3 2002/04/01 23:41:02 fukachan Exp $
+   $FML: bookinfo.sgml,v 1.4 2002/04/13 10:59:03 fukachan Exp $
 -->
 
 <bookinfo>
   <bookbiblio>
      <title>
- 	fml-devel (次世代 fml) チュートリアル
+	fml 8 (fml-devel, 次世代 fml) チュートリアル
      </title>
 
      <author>
