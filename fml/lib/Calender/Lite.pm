@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.9 2002/12/12 04:57:10 fukachan Exp $
+# $FML: Lite.pm,v 1.10 2003/01/11 16:05:09 fukachan Exp $
 #
 
 package Calender::Lite;
@@ -98,13 +98,11 @@ sub new
     my $pw       = getpwnam($user);
     my $home_dir = $pw->dir;
 
-    # XXX-TODO AUDIT (we should use FML::Restriction ?)
     # simple check (not enough mature).
     # This code is not for security but to avoid -T (taint mode) error ;)
-    if ($home_dir =~ /^([-\w\d\.\/_]+)$/) {
-	$home_dir = $1;
-    }
-    else {
+    use FML::Restriction::Base;
+    my $safe = new FML::Restriction::Base;
+    unless ($safe->regexp_match('fullpath', $home_dir)) {
 	croak("invalid home directory string");
     }
 

@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Base.pm,v 1.17 2003/01/03 07:04:08 fukachan Exp $
+# $FML: Base.pm,v 1.18 2003/01/25 09:14:06 fukachan Exp $
 #
 
 package FML::Restriction::Base;
@@ -164,6 +164,9 @@ return 1 or undef.
 	... do something ...
     }
 
+C<regexp_match> can handle some special class not based on regexp:
+C<fullpath>.
+
 =cut
 
 
@@ -175,20 +178,55 @@ sub regexp_match
 {
     my ($self, $class, $string) = @_;
 
-    if (defined $basic_variable{ $class }) {
-	my $regexp = $basic_variable{ $class };
+    if (defined $class && defined $string) {
+	if ($class eq 'fullpath') { 
+	    return $self->_regexp_match_fullpath($string);
+	}
 
-	if ($string =~ /^($regexp)$/) {
-	    return 1;
+	if (defined $basic_variable{ $class }) {
+	    my $regexp = $basic_variable{ $class };
+
+	    if ($string =~ /^($regexp)$/) {
+		return 1;
+	    }
+	    else {
+		return undef;
+	    }
+
 	}
 	else {
 	    return undef;
 	}
+    }
 
+    return undef;
+}
+
+
+# Descriptions: return allowed regexp for full path.
+#               XXX special handling of fully path-ed directory.
+#    Arguments: OBJ($self) STR($string)
+# Side Effects: none
+# Return Value: 1 or UNDEF
+sub _regexp_match_fullpath
+{
+    my ($self, $string) = @_;
+    my $regexp = $basic_variable{ 'directory' };
+    my $level  = 0;
+    my $ok     = 0;
+
+    # remove volume of M$-DOS style.
+    $string =~ s/^[A-Za-z]://;
+
+    for my $dir (split(/\/|\\/, $string)) {
+	$level++;
+
+	if ($dir =~ /^($regexp)$/ || $dir =~ /^\s*$/o) {
+	    $ok++;
+	}
     }
-    else {
-	return undef;
-    }
+
+    return( $level == $ok ? 1 : undef );
 }
 
 
