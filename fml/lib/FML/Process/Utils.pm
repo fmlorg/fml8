@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Utils.pm,v 1.2 2001/11/05 13:01:00 fukachan Exp $
+# $FML: Utils.pm,v 1.3 2001/11/07 04:07:40 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -106,7 +106,12 @@ sub article_id_max
 	$fh->close();
     }
 
-    return( $id =~ /^\d+$/ ? $id : 0 );
+    if (defined $id) {
+	return( $id =~ /^\d+$/ ? $id : 0 );
+    }
+    else {
+	return 0;
+    }
 }
 
 
