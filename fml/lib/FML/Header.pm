@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.38 2001/12/22 09:21:01 fukachan Exp $
+# $FML: Header.pm,v 1.39 2001/12/23 09:20:41 fukachan Exp $
 #
 
 package FML::Header;
@@ -458,7 +458,7 @@ sub delete_subject_tag_like_string
 #               In-Reply-To: and References: fields.
 #    Arguments: OBJ($header)
 # Side Effects: none
-# Return Value: HASH_ARRAY
+# Return Value: ARRAY_REF
 sub extract_message_id_references
 {
     my ($header) = @_;

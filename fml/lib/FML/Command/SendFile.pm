@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.14 2002/03/30 13:48:26 fukachan Exp $
+# $FML: SendFile.pm,v 1.15 2002/04/07 12:13:03 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -102,7 +102,7 @@ sub send_article
 # Descriptions: check the argument and expand it if needed
 #    Arguments: OBJ($self) OBJ($curproc) STR($fn)
 # Side Effects: none
-# Return Value: HASH_ARRAY as [ $fist .. $last ]
+# Return Value: ARRAY_REF as [ $fist .. $last ]
 sub _is_valid_argument
 {
     my ($self, $curproc, $fn) = @_;
@@ -149,7 +149,7 @@ sub _is_valid_argument
 #               This array is composed of article numbers.
 #    Arguments: NUM($first_number) NUM($last_number)
 # Side Effects: none
-# Return Value: HASH_ARRAY as [ $first .. $last ]
+# Return Value: ARRAY_REF as [ $first .. $last ]
 sub _expand_range
 {
     my ($first, $last) = @_;

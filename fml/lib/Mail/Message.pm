@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.48 2002/02/01 12:03:59 fukachan Exp $
+# $FML: Message.pm,v 1.49 2002/04/07 14:51:15 tmu Exp $
 #
 
 package Mail::Message;
@@ -534,7 +534,7 @@ sub _parse
 #               get reverse_path if possible.
 #    Arguments: OBJ($self) HASH_REF($r)
 # Side Effects: update $r
-# Return Value: HASH_ARRAY
+# Return Value: ARRAY_REF
 sub _parse_header
 {
     my ($self, $r) = @_;
@@ -1816,7 +1816,7 @@ sub nth_paragraph
 # Descriptions: analyze paragraph position map in this object
 #    Arguments: OBJ($self)
 # Side Effects: none
-# Return Value: HASH_ARRAY
+# Return Value: ARRAY_REF
 sub _evaluate_pmap
 {
     my ($self) = @_;

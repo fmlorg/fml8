@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.21 2002/02/27 09:20:34 tmu Exp $
+# $FML: Sequence.pm,v 1.22 2002/04/03 11:33:00 fukachan Exp $
 #
 
 package File::Sequence;
@@ -79,7 +79,7 @@ get the sequence number from specified C<$file>.
 =cut
 
 
-# Descriptions: constructor
+# Descriptions: ordinary constructor
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: object itself holds a few local _variables
 # Return Value: OBJ
@@ -94,7 +94,7 @@ sub new
 }
 
 
-# Descriptions: increment sequence
+# Descriptions: increment the sequence number
 #    Arguments: OBJ($self) [STR($file)]
 #               If $file is not specified,
 #               the sequence_file parameter in new().

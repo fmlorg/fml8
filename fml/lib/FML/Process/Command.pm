@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.40 2002/03/23 12:22:03 fukachan Exp $
+# $FML: Command.pm,v 1.41 2002/03/30 11:08:36 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -11,11 +11,9 @@ package FML::Process::Command;
 use vars qw($debug @ISA @EXPORT @EXPORT_OK);
 use strict;
 use Carp;
-
-use FML::Process::Kernel;
 use FML::Log qw(Log LogWarn LogError);
 use FML::Config;
-
+use FML::Process::Kernel;
 @ISA = qw(FML::Process::Kernel);
 
 
@@ -228,7 +226,7 @@ sub _pre_scan
 #               syntax check, permission of command use et. al.
 #    Arguments: OBJ($self) HASH_REF($args) HASH_REF($opts)
 # Side Effects: none
-# Return Value: 1 or 0
+# Return Value: NUM(1 or 0)
 sub _is_valid_command
 {
     my ($curproc, $args, $mode, $opts) = @_;
@@ -264,7 +262,7 @@ sub _is_valid_command
 #               argument vector after command name
 #    Arguments: STR($command) STR($comname)
 # Side Effects: none
-# Return Value: HASH_ARRAY
+# Return Value: ARRAY_REF
 sub _parse_command_options
 {
     my ($command, $comname) = @_;
@@ -297,6 +295,10 @@ sub _get_command_name
 }
 
 
+# Descriptions: authenticate the currrent process sender as an admin
+#    Arguments: OBJ($curproc) HASH_REF($args) HASH_REF($optargs)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
 sub _auth_admin
 {
     my ($curproc, $args, $optargs) = @_;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.12 2002/01/30 15:50:31 fukachan Exp $
+# $FML: Queue.pm,v 1.13 2002/04/07 12:25:26 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -190,7 +190,7 @@ where C<$qid> is like this: 990157187.20792.1
 # Descriptions: return queue file list
 #    Arguments: OBJ($self)
 # Side Effects: none
-# Return Value: HASH_ARRAY
+# Return Value: ARRAY_REF
 sub list
 {
     my ($self) = @_;

@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000-2001,2002 Ken'ichi Fukamachi
+# Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: HTMLify.pm,v 1.12 2002/03/17 06:24:31 fukachan Exp $
+# $FML: HTMLify.pm,v 1.13 2002/03/31 03:39:14 fukachan Exp $
 #
 
 package FML::Process::HTMLify;

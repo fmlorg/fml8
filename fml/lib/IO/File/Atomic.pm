@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Atomic.pm,v 1.12 2002/01/13 06:13:41 fukachan Exp $
+# $FML: Atomic.pm,v 1.13 2002/02/02 08:04:54 fukachan Exp $
 #
 
 package IO::File::Atomic;
@@ -12,7 +12,6 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
 use IO::File;
-
 @ISA = qw(IO::File);
 
 BEGIN {}
@@ -77,7 +76,7 @@ The request is forwarded to SUPER CLASS's new().
 
 =cut
 
-# Descriptions: constructor
+# Descriptions: ordinary constructor
 #               forward new() request to superclass (IO::File)
 #               XXX returned object $self is blessed file handle.
 #    Arguments: OBJ($self)
@@ -171,7 +170,7 @@ After the file is closed, the file is renamed to the original file name.
 #               XXX $self is blessed file handle.
 # Side Effects: rename the temporary file to the original file
 #               save the error message in ${ *$fh }
-# Return Value: 1 if succeeded, 0 if failed
+# Return Value: NUM(1 if succeeded, 0 if failed)
 sub close
 {
     my ($self) = @_;
@@ -203,7 +202,7 @@ C<IO::File::Atomic::rw_open>.
 # Descriptions: copy file, which ensures atomic operation
 #    Arguments: OBJ($self) STR($src) STR($dst)
 # Side Effects: $dst's file mode becomes the same as $src
-# Return Value: NUM or UNDEF
+# Return Value: NUM
 sub copy
 {
     my ($self, $src, $dst) = @_;

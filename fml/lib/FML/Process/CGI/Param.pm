@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Param.pm,v 1.12 2002/03/18 13:52:20 fukachan Exp $
+# $FML: Param.pm,v 1.13 2002/03/19 07:59:52 fukachan Exp $
 #
 
 package FML::Process::CGI::Param;
@@ -78,16 +78,16 @@ sub safe_param
 
 =head2 safe_paramlist($self, $numregexp, $key)
 
-return HASH_ARRAY for $key.
+return ARRAY_REF for $key.
 
 =cut
 
 
-# Descriptions: return HASH_ARRAY for key if the value is appropriate.
+# Descriptions: return ARRAY_REF for key if the value is appropriate.
 #    Arguments: OBJ($self) NUM($numregexp) STR($key)
 # Side Effects: none
 #      History: similar to fml 4.0's SecureP() and libcgi_cleanup.pl
-# Return Value: HASH_ARRAY
+# Return Value: ARRAY_REF
 sub safe_paramlist
 {
     my ($self, $numregexp, $key) = @_;

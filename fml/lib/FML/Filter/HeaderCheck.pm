@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HeaderCheck.pm,v 1.11 2002/01/16 13:43:19 fukachan Exp $
+# $FML: HeaderCheck.pm,v 1.12 2002/02/01 12:03:56 fukachan Exp $
 #
 
 package FML::Filter::HeaderCheck;
@@ -65,7 +65,7 @@ overwrite rules by specified C<@$rules> ($rules is HASH ARRAY).
 
 
 # Descriptions: access method to overwrite rule
-#    Arguments: OBJ($self) HASH_ARRAY($rarray)
+#    Arguments: OBJ($self) ARRAY_REF($rarray)
 # Side Effects: overwrite info in object
 # Return Value: none
 sub rules

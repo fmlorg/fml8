@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.60 2002/04/01 23:41:13 fukachan Exp $
+# $FML: Switch.pm,v 1.61 2002/04/07 12:25:25 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -13,6 +13,7 @@ use strict;
 use Carp;
 use vars qw($debug);
 use File::Spec;
+
 
 =head1 NAME
 
@@ -197,7 +198,7 @@ sub main::Bootstrap2
 # Descriptions: analyze argument vector
 #    Arguments: STR($myname) HASH_REF($main_cf)
 # Side Effects: none
-# Return Value: HASH_ARRAY (list of config.cf's)
+# Return Value: ARRAY_REF (list of config.cf's)
 sub _parse_argv
 {
     my ($myname, $main_cf) = @_;
@@ -214,7 +215,7 @@ sub _parse_argv
 # Descriptions: analyze argument vector
 #    Arguments: STR($myname) HASH_REF($main_cf)
 # Side Effects: none
-# Return Value: HASH_ARRAY (list of config.cf's)
+# Return Value: ARRAY_REF (list of config.cf's)
 sub _usual_parse_argv
 {
     my ($myname, $main_cf) = @_;
@@ -264,7 +265,7 @@ sub _usual_parse_argv
 # Descriptions: analyze argument vector
 #    Arguments: STR($myname) HASH_REF($main_cf)
 # Side Effects: none
-# Return Value: HASH_ARRAY (list of config.cf's)
+# Return Value: ARRAY_REF (list of config.cf's)
 sub _makefml_parse_argv
 {
     my ($myname, $main_cf) = @_;
@@ -435,7 +436,7 @@ sub _module_specific_options
 # Descriptions: this program ($0) requires ML name always or not?
 #    Arguments: STR($myname)
 # Side Effects: none
-# Return Value: 1 (require ml name always) or 0
+# Return Value: NUM(1 (require ml name always) or 0)
 sub _ml_name_is_required
 {
     my ($myname) = @_;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.10 2002/01/13 06:59:50 fukachan Exp $
+# $FML: Utils.pm,v 1.11 2002/01/13 13:35:25 fukachan Exp $
 #
 
 package File::Utils;
@@ -146,7 +146,7 @@ The default search path list is
 
 
 # Descriptions: search executable named as $file
-#    Arguments: STR($file) HASH_ARRAY($path_list)
+#    Arguments: STR($file) ARRAY_REF($path_list)
 #               The "path_list" is an ARRAY_REFERENCE.
 #               For example,
 #               search_program('md5');
