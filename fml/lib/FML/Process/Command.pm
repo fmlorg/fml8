@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.80 2003/01/11 06:58:45 fukachan Exp $
+# $FML: Command.pm,v 1.81 2003/02/03 12:25:58 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -146,6 +146,10 @@ sub run
 {
     my ($curproc, $args) = @_;
     my $pcb = $curproc->{ pcb };
+    my $config = $curproc->{ config };
+
+    my $eval = $config->get_hook( 'command_run_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
     unless ($curproc->is_refused()) {
 	# permit_xxx() sets the error reason at "check_restriction" in pcb.
@@ -177,6 +181,11 @@ sub run
 	    Log("deny command. reason=$reason");
 	}
     }
+    else {
+	LogError("ignore this request.");
+    }
+    $eval = $config->get_hook( 'command_run_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 }
 
 
