@@ -4,12 +4,12 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: __template.pm,v 1.5 2001/04/03 09:45:39 fukachan Exp $
+# $FML: MessageID.pm,v 1.1 2001/04/15 05:01:58 fukachan Exp $
 #
 
 package FML::Header::MessageID;
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD $Counter);
 use Carp;
 
 =head1 NAME
@@ -46,10 +46,6 @@ FML::Header::MessageID - manupulate message-id
 
 usual constructor.
 
-=head2 C<open_cache($args)>
-
-open cache and return C<File::CacheDir> object.
-
 =cut
 
 
@@ -65,6 +61,12 @@ sub new
     return bless $me, $type;
 }
 
+
+=head2 C<open_cache($args)>
+
+open cache and return C<File::CacheDir> object.
+
+=cut
 
 sub open_cache
 {
@@ -118,6 +120,23 @@ sub set
     }
 
     undef;
+}
+
+
+=head2 C<gen_id($curproc, $args)>
+
+return a new message-id.
+
+=cut
+
+
+sub gen_id
+{
+    my ($self, $curproc, $args) = @_;
+    my $config = $curproc->{ config };
+
+    $Counter++;
+    time.".$$.$Counter\@" . $config->{ address_for_post };
 }
 
 
