@@ -91,12 +91,13 @@ sub _date
 		$WDay[$wday], $mday, $Month[$mon], 
 		1900 + $year, $hour, $min, $sec, $TimeZone);
 
+    $date->{'YYYY'} = sprintf("%04d", 1900 + $year);
+    $date->{'MM'}   = sprintf("%02d", $mon + 1);
+    $date->{'DD'}   = sprintf("%02d", $mday);
+
     $date->{'YYYYMMDD'} = 
 	sprintf("%04d%02d%02d", 1900 + $year, $mon + 1, $mday);
 
-    $date->{'YYYY/MM/DD'} = 
-	sprintf("%04d/%02d/%02d", 1900 + $year, $mon + 1, $mday);
-		
     $date->{'current_time'} = 
 	sprintf("%04d%02d%02d%02d%02d", 
 		1900 + $year, $mon + 1, $mday, $hour, $min);
@@ -133,11 +134,13 @@ sub YYYYMMDD
 }
 
 
-sub YYYY_MM_DD
+sub YYYYxMMxDD
 {
-    my ($self, $time) = @_;
-    my $p = _date($time || time);
-    $p->{'YYYY/MM/DD'};
+    my ($self, $time, $sep) = @_;
+    my $date = _date($time || time);
+
+    $sep ||= '/'; # 1999/09/13 by default
+    $date->{ YYYY }. $sep . $date->{ MM }. $sep. $date->{ DD };
 }
 
 

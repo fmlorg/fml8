@@ -48,18 +48,21 @@ sub assign
     my $subject = $header->get('subject');
 
     use FML::Header::Subject;
-    my $replied_message = FML::Header::Subject->is_reply( $subject );
-
-    # ticket-id
-    my $ticket_id = $self->_extract_ticket_id($header, $config);
+    my $is_reply      = FML::Header::Subject->is_reply( $subject );
+    my $has_ticket_id = $self->_extract_ticket_id($header, $config);
     
     # if the header carries "Subject: Re: ..." with ticket-id, 
     # we do not rewrite the subject but save the extracted $ticket_id.
-    if ($replied_message && $ticket_id) {
-	Log("extracted ticket_id=$ticket_id");
-	$self->{ _ticket_id } = $ticket_id;
+    if ($is_reply && $has_ticket_id) {
+	Log("reply message with extracted ticket_id=$has_ticket_id");
+	$self->{ _ticket_id } = $has_ticket_id;
+    }
+    elsif ($has_ticket_id) {
+	Log("usual message but with extracted ticket_id=$has_ticket_id");
+	$self->{ _ticket_id } = $has_ticket_id;
     }
     else {
+	# assign a new ticket number for a new message
 	# call SUPER class's FML::Ticket::System::increment_id()
 	my $id = $self->increment_id( $config->{ ticket_sequence_file } );
 
@@ -197,21 +200,24 @@ sub list_up
 
     $self->_open_db($curproc, $args);
 
-    # prepare hash table tied to db_dir/*db's
-    my $rh_ticket_id = $self->{ _hash_table }->{ _ticket_id };
-    my $rh_date      = $self->{ _hash_table }->{ _date };
-    my $rh_status    = $self->{ _hash_table }->{ _status };
-    my $rh_articles  = $self->{ _hash_table }->{ _articles };
-
+    # XXX $dh: date object handle
     use FML::Date;
     my $dh = new FML::Date;
 
+    # XXX $rh = Reference to Hash table, which is tied to db_dir/*db's
+    my $rh             = $self->{ _hash_table };
+    my $rh_status      = $rh->{ _status };
     my ($tid, $status) = ();
     while (($tid, $status) = each %$rh_status) {
-	my ($aid) = split(/\s+/, $rh_articles->{ $tid });
-	my $date  = $dh->YYYYMMDD( $rh_date->{ $aid } );
-	printf "%8d  %5s  %-20s  %s\n", 
-	$date, $status, $tid, $rh_articles->{ $tid };
+	my ($aid) = split(/\s+/, $rh->{ _articles }->{ $tid });
+	# we get the date by the form 1999/09/13
+	my $date  = $dh->YYYYxMMxDD( $rh->{ _date }->{ $aid } , '/');
+	printf("%10s  %5s  %-20s  %s\n", 
+	       $date,
+	       $status,
+	       $tid,
+	       $rh->{ _articles }->{ $tid }
+	       );
     }
 
     $self->_close_db($curproc, $args);
@@ -237,9 +243,9 @@ sub _open_db
 	eval q{
 	    use Fcntl;
 	    tie %ticket_id, $db_type, $ticket_id_file, O_RDWR|O_CREAT, 0644;
-	    tie %date,      $db_type, $date_file, O_RDWR|O_CREAT, 0644;
-	    tie %status,    $db_type, $status_file, O_RDWR|O_CREAT, 0644;
-	    tie %articles,  $db_type, $articles_file, O_RDWR|O_CREAT, 0644;
+	    tie %date,      $db_type, $date_file,      O_RDWR|O_CREAT, 0644;
+	    tie %status,    $db_type, $status_file,    O_RDWR|O_CREAT, 0644;
+	    tie %articles,  $db_type, $articles_file,  O_RDWR|O_CREAT, 0644;
 	};
 	unless ($@) {
 	    $self->{ _hash_table }->{ _ticket_id } = \%ticket_id;
