@@ -1,5 +1,5 @@
 #
-# $FML: RULES.txt,v 1.6 2004/12/29 10:30:00 fukachan Exp $
+# $FML: RULES.txt,v 1.7 2004/12/30 04:36:34 fukachan Exp $
 #     BASED ON fml/cf/MANIFEST 1.104
 #
 #	.convert		よろしく変換して頑張る
@@ -432,10 +432,15 @@
 # # value: 1/0
 # AUTO_REGISTERED_UNDELIVER_P:  1
 .if AUTO_REGISTERED_UNDELIVER_P == 1
-	.ignore
+	.fml8_default
 
 .if AUTO_REGISTERED_UNDELIVER_P == 0
 	.ignore
+
+# TYPO
+.if AUTO_REGISTERD_UNDELIVER_P == 1
+	.fml8_default
+
 
 
 # AUTO_REGISTRATION_LINES_LIMIT:  0
@@ -491,6 +496,10 @@
 
 	use_admin_command_mail_fucntion = yes
 
+
+.if REMOTE_ADMINISTRATION_REQUIRE_PASSWORD == 1
+
+	admin_command_mail_restrictions += check_admin_member_password
 
 
 # # Of course, the remote control requires some kind of authentication.
@@ -1247,10 +1256,11 @@
 # # value: 1/0
 # APPEND_STARDATE:
 .if APPEND_STARDATE == 1
-	.not_yet_implemented
+	.fml8_default
 
 .if APPEND_STARDATE == 0
-	.not_yet_implemented
+
+	article_header_rewrite_rules -= rewrite_stardate
 
 
 # # RFC2369 e.g. list-post: ..
@@ -1515,7 +1525,7 @@
 
 
 # SLEEPTIME:		60
-.if SLEEPTIME == 60
+.if SLEEPTIME
 	.ignore
 
 
