@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.15 2002/04/07 12:13:03 fukachan Exp $
+# $FML: SendFile.pm,v 1.16 2002/04/08 12:44:24 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -31,14 +31,15 @@ L<FML::Command::Admin::get>..
 
 =head1 DESCRIPTION
 
-This module provides several utility functions to send back article
-and file in C<$ml_home_dir>.
+This module provides several utility functions to send back article(s)
+and file(s) in C<$ml_home_dir>.
 
 =head1 METHODS
 
 =head2 C<send_article($curproc, $command_args)>
 
-send back articles.  This is used in C<FML::Command::User> and
+send back articles where C<article> is a file named as /^\d+$/ in the
+ml spool $spool_dir.  This is used in C<FML::Command::User> and
 C<FML::Command::Admin> modules.
 
 =cut
@@ -68,8 +69,8 @@ sub send_article
 	if (defined $filelist) {
 	    for my $filename (@$filelist) {
 		use FML::Article;
-		my $article = new FML::Article $curproc;
-		my $filepath    = $article->filepath($filename);
+		my $article  = new FML::Article $curproc;
+		my $filepath = $article->filepath($filename);
 		if (-f $filepath) {
 		    Log("send back article $filename");
 		    $curproc->reply_message( {
@@ -86,7 +87,7 @@ sub send_article
 	}
 	# invalid argument
 	else {
-	    Log("send_article: invalid target: $fn");
+	    LogError("send_article: invalid argument $fn");
 	    $is_error = 1;
 	}
     }
@@ -106,6 +107,11 @@ sub send_article
 sub _is_valid_argument
 {
     my ($self, $curproc, $fn) = @_;
+
+    # cheap sanity
+    unless (defined $fn) {
+	return [];
+    }
 
     use File::Sequence;
     my $config   = $curproc->{ config };
