@@ -9,6 +9,12 @@
 	fml-devel-20040303 が、このコマンドメールの変更が"入っていない"
 	最後のスナップショットです。
 
+2004/03/12
+
+   variables
+	rename $reply_message_* -> $report_mail_*
+	change default vale of $log_command_tail_starting_location
+
 2004/03/04
 
    コマンドメールのコードを全面的に書き直した。
@@ -6348,4 +6354,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.184 2004/03/04 09:42:58 fukachan Exp $
+$FML: CHANGES.txt,v 1.185 2004/03/11 15:48:21 fukachan Exp $
