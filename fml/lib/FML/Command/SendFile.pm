@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.5 2001/12/22 09:21:03 fukachan Exp $
+# $FML: SendFile.pm,v 1.6 2001/12/23 09:20:42 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -57,11 +57,13 @@ sub send_article
     my $ml_name   = $config->{ ml_name };
     my $spool_dir = $config->{ spool_dir };
     my $charset   = $config->{ template_file_charset };
+    my $is_error  = 0;
 
     # command buffer = get 1
     # command buffer = get 1,2,3
     # command buffer = get last:3
     my (@files) = split(/\s+/, $command);
+    shift @files; # remove get
     for my $fn (@files) {
 	my $filelist = $self->_is_valid_argument($curproc, $fn);
 	if (defined $filelist) {
@@ -81,6 +83,17 @@ sub send_article
 		}
 	    }
 	}
+	# invalid argument
+	else {
+	    Log("send_article: invalid target: $fn");
+	    $is_error = 1;
+	}
+    }
+
+    if ($is_error) {
+	$curproc->reply_message_nl('command.get.invalid.args',
+				   "invalid argument");
+	croak("send_article() fails");
     }
 }
 
