@@ -23,6 +23,14 @@ my $CUT_OFF_RERERE_PATTERN;
 my $CUT_OFF_RERERE_HOOK;
 
 
+# subjec reply pattern
+# apply patch from OGAWA Kunihiko <kuni@edit.ne.jp> 
+#            fml-support:7626 7653 07666
+#            Re: Re2:   Re[2]:     Re(2):     Re^2:    Re*2:
+my $pattern  = 'Re:|Re\d+:|Re\[\d+\]:|Re\(\d+\):|Re\^\d+:|Re\*\d+:';
+   $pattern .= '|(手慨|手|ＲＥ|Ｒｅ)(\s*:|¨)';
+
+
 sub new
 {
     my ($self) = @_;
@@ -58,11 +66,6 @@ sub cut_off_reply_tag
 	Jcode::convert(*CUT_OFF_RERERE_PATTERN, 'euc');
     }
 
-    # apply patch from OGAWA Kunihiko <kuni@edit.ne.jp> 
-    #            fml-support:7626 7653 07666
-    #            Re: Re2:   Re[2]:     Re(2):     Re^2:    Re*2:
-    $pattern  = 'Re:|Re\d+:|Re\[\d+\]:|Re\(\d+\):|Re\^\d+:|Re\*\d+:';
-    $pattern .= '|(手慨|手|ＲＥ|Ｒｅ)(\s*:|¨)';
     $pattern .= '|' . $CUT_OFF_RERERE_PATTERN if ($CUT_OFF_RERERE_PATTERN);
 
     # fixed by OGAWA Kunihiko <kuni@edit.ne.jp> (fml-support: 07815)
@@ -76,6 +79,14 @@ sub cut_off_reply_tag
 
     Jcode::convert(*x, 'jis');
     $x;
+}
+
+
+sub is_reply
+{
+    my ($self, $x) = @_;
+    &Jcode::convert(\$x, 'euc');
+    return ($x =~ /^((\s|(　))*($pattern)\s*)+/ ? 1 : 0);
 }
 
 

@@ -77,10 +77,19 @@ sub _regexp_compile
 }
 
 
-sub is_reply_message
+sub is_reply
 {
     my ($self, $subject) = @_;
-    $subject =~ /Re:/i ? 1 : 0; 
+
+    return 1 if $subject =~ /^\s*Re:/i;
+
+    my $pkg = 'Dialect::Japanese::Subject';
+    eval qq{ require $pkg; $pkg->import();};
+    unless ($@) {
+	return 1 if &Dialect::Japanese::Subject::is_reply($subject);
+    };
+
+    return 0;
 }
 
 

@@ -35,11 +35,10 @@ sub add_ticket
     my $subject = $header->get('subject');
 
     use FML::Header::Subject;
-    my $hh = new FML::Header::Subject;
 
     # if the header carries "Subject: Re: ...", 
     # out ticket system does nothing.
-    unless ( $hh->is_reply_message( $subject ) ) {
+    unless ( FML::Header::Subject->is_reply( $subject ) ) {
 	Log( "seq: ". $config->{ ticket_sequence_file } );
 	my $id = $self->increment_id( $config->{ ticket_sequence_file } );
 	unless ($self->error) {
