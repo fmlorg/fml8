@@ -2,22 +2,23 @@
 		Last Modified: $Date$
 
 
+○	メッセージオブジェクト
+
+	メッセージオブジェクトに返送先が bind されないといけない
+
+
 ○	コマンド clean up キャンペーン
 
    * user
 
-	deny 		？ とりよせられてもしょうがないだろー
 	chaddr		Admin::chaddr が未実装 ;)
 
+	chaddr の両方のアドレスに返してないぞ
 
    * admin
 
 	chaddr		未実装 ;)
-	htmlify		admin こまんどでじっこうできちゃいかんだろー
 	(send)		この名前でいいかしら？
-	(mget)		動くけど変だぞ filename= とかも
-	get		動くけど変だぞ filename= とかも
-
 
 
 ○	newml のときに aliases をどうするの？
@@ -28,6 +29,12 @@
 	案２ (prefix は virtual_maps でドメインごとに定義されているの
 		で一意に定まる)
 	/var/spool/ml/etc/mail/aliases
+
+
+○	makefml get ???
+
+	ところで、誰に送信するんじゃ？ :-) って、そうか、makefml じゃ
+	なくて admin コマンドの時は考えなくてもいいからだな、それは …
 
 
 ○	ドキュメンテーションのチェック 2001 last 
@@ -45,14 +52,6 @@
 	IO::Adapter::LDAP
 
 
-○	FML::Command::Admin::get はこわれてる
-
-	半分直した
-
-	ところで、誰に送信するんじゃ？ :-) って、そうか、makefml じゃ
-	なくて admin コマンドの時は考えなくてもいいからだな、それは …
-
-
 ○ 	未完成だ
 
 	(perl -cw に引っかかる)
@@ -60,11 +59,6 @@
 	FML/Filter/BodyCheck.pm
 	FML/Filter/TrafficMonitor.pm
 	../img/lib/IM/EncDec.pm
-
-
-○	まちがってない？
-
-	 Mail::Delivery::ESMTP の new()
 
 
 ○	FML::Language:: はどうよ
@@ -319,4 +313,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.4 2002/02/17 07:13:58 fukachan Exp $
+$FML: 00_MEMO,v 1.5 2002/02/20 14:42:22 fukachan Exp $
