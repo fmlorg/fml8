@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Procmail.pm,v 1.13 2003/09/12 04:37:15 fukachan Exp $
+# $FML: Procmail.pm,v 1.14 2003/09/13 09:17:00 fukachan Exp $
 #
 
 package FML::MTAControl::Procmail;
@@ -136,7 +136,7 @@ sub procmail_find_key_in_alias_maps
     my $addr = sprintf("%s\@%s", $params->{ ml_name }, $params->{ ml_domain });
 
     for my $map (@$maps) {
-	$curproc->ui_message( "scan key = $key, map = $map\n" if $debug);
+	$curproc->ui_message( "scan key = $key, map = $map") if $debug;
 
 	if (-f $map) {
 	    use FileHandle;
@@ -179,7 +179,7 @@ sub procmail_get_aliases_as_hash_ref
     }
 
     for my $map (@$maps) {
-	$curproc->ui_message( "scan key = $key, map = $map\n" if $debug);
+	$curproc->ui_message( "scan key = $key, map = $map") if $debug;
 
 	use FileHandle;
 	my $fh = new FileHandle $map;
