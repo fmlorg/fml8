@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: SimpleMatch.pm,v 1.3 2001/04/11 16:59:53 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.4 2001/04/12 03:30:30 fukachan Exp $
 #
 
 
@@ -44,19 +44,30 @@ When we trap C<end>,   the state changes from l to 0.
 my $debug = $ENV{'debug'} ? 1 : 0;
 
 my $address_trap_regexp = {
+
     'biglobe.ne.jp' => {
 	'start' => '----- The following addresses had delivery problems -----',
 	'end'   => '----- Non-delivered information -----',
     },
 
+
     'caiwireless.net' => {
 	'start' => 'the following recipients did not receive this message:',
     },
+
 
     'compuserve.net' => {
 	'start'  => 'your message could not be delivered',
 	'regexp' => 'Invalid receiver address: (\S+\@\S+)',
     },
+
+
+    'nifty.ne.jp' => {
+	'start'  => '----- Unsent reason follows --',
+	'end'    => '----- Unsent message follows --',
+	'regexp' => '(\S+) could not receive a mail that you had sent',
+    },
+
 
     'smail' => {
 	'start' => 'Failed addresses follow:',
@@ -96,13 +107,24 @@ sub analyze
 sub _address_match
 {
     my ($self, $result, $rbuf) = @_;
-    my ($start_regexp, $end_regexp, $which, $state);
+    my ($match, $state);
 
-    for $which (keys %$address_trap_regexp) {
-	$start_regexp = $address_trap_regexp->{ $which }->{ 'start' };
-	$end_regexp   = $address_trap_regexp->{ $which }->{ 'end' };
-	if ($$rbuf =~ /$start_regexp/) { $state = 1;}
+    for my $which (keys %$address_trap_regexp) {
+	next unless $which;
+
+	my $start_regexp = $address_trap_regexp->{ $which }->{ 'start' };
+	if ($$rbuf =~ /$start_regexp/) { 
+	    $match = $which;
+	    $state = 1;
+	}
     }
+
+    # not found
+    return unless $match;
+
+    # found
+    my $end_regexp  = $address_trap_regexp->{ $match }->{ 'end' };
+    my $addr_regexp = $address_trap_regexp->{ $match }->{ 'regexp' };
 
     # 1.1 o.k. we've found the start pattern !!
     if ($state == 1) {
@@ -114,13 +136,33 @@ sub _address_match
 	    last SCAN if /$end_regexp/;
 
 	    if (/(\S+\@\S+)/) { 
-		my $addr = $1;
-		$addr =~ s/^<//;
-		$addr =~ s/>$//;
+		my $addr = $self->_clean_up($match, $1);
+		$result->{ $addr }->{ 'Final-Recipient' } = $addr;
+		$result->{ $addr }->{ 'Status'} = '5.x.y';
+	    }
+
+	    if (/$addr_regexp/) { 
+		my $addr = $self->_clean_up($match, $1);
 		$result->{ $addr }->{ 'Final-Recipient' } = $addr;
 		$result->{ $addr }->{ 'Status'} = '5.x.y';
 	    }
 	}
+    }
+}
+
+
+sub _clean_up
+{
+    my ($self, $type, $addr) = @_;
+
+    $addr =~ s/^<//;
+    $addr =~ s/>$//;
+
+    if ($type eq 'nifty.ne.jp') {
+	return $addr .'@nifty.ne.jp';
+    }
+    else {
+	$addr;
     }
 }
 
