@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: objective.pm,v 1.11 2004/04/23 04:10:32 fukachan Exp $
+# $FML: objective.pm,v 1.12 2004/04/23 04:15:58 fukachan Exp $
 #
 
 package FML::Command::User::objective;
@@ -17,7 +17,7 @@ use FML::Command::SendFile;
 
 =head1 NAME
 
-FML::Command::User::objective - send back ML's objective file
+FML::Command::User::objective - send back ML's objective message.
 
 =head1 SYNOPSIS
 
@@ -34,7 +34,7 @@ See C<FML::Command> for more details.
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -47,14 +47,14 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 0;}
 
 
-# Descriptions: send back objective file by FML::Command::SendFile.
+# Descriptions: send back objective message via FML::Command::SendFile.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: none
 # Return Value: none

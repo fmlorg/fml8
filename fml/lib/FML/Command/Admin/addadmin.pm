@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: addadmin.pm,v 1.18 2004/02/15 04:38:27 fukachan Exp $
+# $FML: addadmin.pm,v 1.19 2004/04/28 04:10:35 fukachan Exp $
 #
 
 package FML::Command::Admin::addadmin;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::addadmin - add a new remote administrator
+FML::Command::Admin::addadmin - add a new remote administrator.
 
 =head1 SYNOPSIS
 
@@ -32,7 +32,7 @@ add a new remote administrator mail address.
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -45,14 +45,14 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
 
 
-# Descriptions: lock channel
+# Descriptions: lock channel.
 #    Arguments: none
 # Side Effects: none
 # Return Value: STR
@@ -73,9 +73,9 @@ sub verify_syntax
 }
 
 
-# Descriptions: addadmin a new user
+# Descriptions: add a new remote administrator mail address.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
-# Side Effects: update $member_map $recipient_map
+# Side Effects: update proper $member_map and $recipient_map.
 # Return Value: none
 sub process
 {
@@ -86,11 +86,12 @@ sub process
 
     # XXX We should always add/rewrite only $primary_*_map maps via
     # XXX command mail, CUI and GUI.
-    # XXX Rewriting of maps not $primary_*_map is
+    # XXX Rewriting of maps excluding $primary_*_map is
     # XXX 1) may be not writable.
-    # XXX 2) ambigous and dangerous
+    # XXX 2) ambiguous and dangerous
     # XXX    since the map is under controlled by other module.
-    # XXX    for example, one of member_maps is under admin_member_maps.
+    # XXX    For example, one of $member_maps is $primary_admin_member_map.
+    # XXX    So $member_maps contains two different regions.
     my $member_map    = $config->{ primary_admin_member_map };
     my $recipient_map = $config->{ primary_admin_recipient_map };
 
@@ -119,7 +120,7 @@ sub process
 }
 
 
-# Descriptions: cgi menu to add a new user
+# Descriptions: cgi menu to add a new remote administrator.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none

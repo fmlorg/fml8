@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.21 2004/04/23 04:10:32 fukachan Exp $
+# $FML: get.pm,v 1.22 2004/04/23 04:15:58 fukachan Exp $
 #
 
 package FML::Command::User::get;
@@ -17,7 +17,7 @@ use FML::Command::SendFile;
 
 =head1 NAME
 
-FML::Command::User::get - send back article(s)
+FML::Command::User::get - send back article(s).
 
 =head1 SYNOPSIS
 
@@ -32,7 +32,7 @@ send back article(s).
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -45,23 +45,18 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
 
 
-# Descriptions: lock channel
+# Descriptions: lock channel.
 #    Arguments: none
 # Side Effects: none
 # Return Value: STR
 sub lock_channel { return 'article_spool_modify';}
-
-
-=head2 check_limit($curproc, $command_args)
-
-=cut
 
 
 # Descriptions: check the limit specific to this command.
@@ -103,11 +98,6 @@ sub check_limit
 	return 0;
     }
 }
-
-
-=head2 process()
-
-=cut
 
 
 # Descriptions: send articles (filename =~ /^\d+/$) by FML::Command::SendFile.

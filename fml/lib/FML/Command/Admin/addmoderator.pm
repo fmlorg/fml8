@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: addmoderator.pm,v 1.13 2004/02/15 04:38:27 fukachan Exp $
+# $FML: addmoderator.pm,v 1.14 2004/04/28 04:10:35 fukachan Exp $
 #
 
 package FML::Command::Admin::addmoderator;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::addmoderator - add a new moderator
+FML::Command::Admin::addmoderator - add a new moderator.
 
 =head1 SYNOPSIS
 
@@ -32,7 +32,7 @@ add a new moderator address.
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -45,14 +45,14 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
 
 
-# Descriptions: lock channel
+# Descriptions: lock channel.
 #    Arguments: none
 # Side Effects: none
 # Return Value: STR

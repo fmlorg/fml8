@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: deladmin.pm,v 1.17 2004/02/15 04:38:28 fukachan Exp $
+# $FML: deladmin.pm,v 1.18 2004/04/28 04:10:36 fukachan Exp $
 #
 
 package FML::Command::Admin::deladmin;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::deladmin - remove the specified remote administrator
+FML::Command::Admin::deladmin - remove the specified remote administrator.
 
 =head1 SYNOPSIS
 
@@ -32,7 +32,7 @@ remove the specified remote administrator.
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -45,14 +45,14 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
 
 
-# Descriptions: lock channel
+# Descriptions: lock channel.
 #    Arguments: none
 # Side Effects: none
 # Return Value: STR
@@ -88,7 +88,7 @@ sub process
     # XXX 1) may be not writable.
     # XXX 2) ambigous and dangerous
     # XXX    since the map is under controlled by other module.
-    # XXX    for example, one of member_maps is under admin_member_maps.
+    # XXX    For example, $member_maps contains different classes.
     my $member_map    = $config->{ 'primary_admin_member_map' };
     my $recipient_map = $config->{ 'primary_admin_recipient_map' };
     my $options       = $command_args->{ options };
@@ -121,7 +121,7 @@ sub process
 }
 
 
-# Descriptions: show cgi menu to remove the remote administrator.
+# Descriptions: show cgi menu to remove the specified remote administrator.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none

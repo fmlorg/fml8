@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: error.pm,v 1.12 2004/04/20 03:32:47 fukachan Exp $
+# $FML: error.pm,v 1.13 2004/05/22 06:19:51 fukachan Exp $
 #
 
 package FML::Command::Admin::error;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::error - show error status
+FML::Command::Admin::error - show statics/status of error mails.
 
 =head1 SYNOPSIS
 
@@ -29,7 +29,7 @@ show error status.
 
 =head2 process($curproc, $command_args)
 
-call error status list generator.
+call error status generator.
 
 =cut
 
@@ -47,21 +47,21 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
 
 
-# Descriptions: lock channel
+# Descriptions: return lock channel.
 #    Arguments: none
 # Side Effects: none
 # Return Value: STR
 sub lock_channel { return undef;}
 
 
-# Descriptions: list up status of error messages
+# Descriptions: list up status of error messages.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $recipient_map
 # Return Value: none
@@ -110,7 +110,7 @@ sub _fmlerror
 }
 
 
-# Descriptions: 
+# Descriptions: show result by the specified analyzer.
 #    Arguments: OBJ($self) OBJ($curproc) OBJ($error) STR($fp)
 # Side Effects: none
 # Return Value: none

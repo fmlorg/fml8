@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: file.pm,v 1.16 2004/01/01 08:48:39 fukachan Exp $
+# $FML: file.pm,v 1.17 2004/01/01 23:52:12 fukachan Exp $
 #
 
 package FML::Command::Admin::file;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::file - functions for file operations
+FML::Command::Admin::file - functions for file operations.
 
 =head1 SYNOPSIS
 
@@ -45,28 +45,28 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
 
 
-# Descriptions: lock channel
+# Descriptions: lock channel.
 #    Arguments: none
 # Side Effects: none
 # Return Value: STR
 sub lock_channel { return 'command_serialize';}
 
 
-# Descriptions: needs "command subcommand parameters" style or not
+# Descriptions: needs "command subcommand parameters" style or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub is_subcommand_style { 1;}
 
 
-# Descriptions: wrapper for file operations
+# Descriptions: dispatcher of file subcommand operations.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: file is created, renamed and removed
 # Return Value: none
@@ -75,7 +75,7 @@ sub process
     my ($self, $curproc, $command_args) = @_;
     my $config   = $curproc->config();
     my $log_file = $config->{ log_file };
-    my $options  = $command_args->{ options };
+    my $options  = $command_args->{ options } || [];
     my $du_args  = {};
     my @argv     = ();
 
@@ -90,6 +90,7 @@ sub process
 	$subcommand eq 'unlink') {
 	for my $x (@args) {
 	    if ($safe->regexp_match('file', $x)) {
+		# XXX-TODO: we shoul allow plural ?
 		push(@argv, $x);
 	    }
 	}
@@ -105,7 +106,7 @@ sub process
 }
 
 
-# Descriptions: show cgi menu (dummy)
+# Descriptions: show cgi menu (dummy).
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none

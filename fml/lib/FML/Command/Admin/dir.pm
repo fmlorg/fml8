@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: dir.pm,v 1.16 2004/01/02 14:45:04 fukachan Exp $
+# $FML: dir.pm,v 1.17 2004/06/24 11:31:25 fukachan Exp $
 #
 
 package FML::Command::Admin::dir;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::dir - show "ls -l" results
+FML::Command::Admin::dir - show "ls -l" results.
 
 =head1 SYNOPSIS
 
@@ -32,7 +32,7 @@ show "ls -l" results.
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -45,16 +45,16 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 0;}
 
 
-# Descriptions: show the result by "ls -l"
+# Descriptions: show the result by "ls -l".
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
-# Side Effects: update $member_map $recipient_map
+# Side Effects: update $member_map and $recipient_map.
 # Return Value: none
 sub process
 {
@@ -72,6 +72,7 @@ sub process
     for my $x (@$options) {
 	# XXX-TODO: correct? we restrict the "ls" option pattern here.
 	if ($safe->regexp_match('directory', $x)) {
+	    # XXX-TODO: allow plural options ?
 	    $du_args->{ opt_ls } = $x;
 	}
 	else {
@@ -80,6 +81,7 @@ sub process
     }
 
     if ($curproc->is_cui_process()) {
+	# --send-to option.
 	$recipient = $curproc->command_specific_recipient() || '';
 	$command_args->{ _recipient } = $recipient;
     }

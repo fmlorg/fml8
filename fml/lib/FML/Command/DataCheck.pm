@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DataCheck.pm,v 1.14 2004/03/12 11:45:48 fukachan Exp $
+# $FML: DataCheck.pm,v 1.15 2004/04/23 04:10:30 fukachan Exp $
 #
 
 package FML::Command::DataCheck;
@@ -13,9 +13,14 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
 
+#
+# XXX-TODO: rename DataCheck -> Parse ?
+#
+
+
 =head1 NAME
 
-FML::Command::DataCheck - parse, clean up et.al. for command buffer
+FML::Command::DataCheck - parse, clean up et.al. command buffer.
 
 =head1 SYNOPSIS
 
@@ -28,7 +33,7 @@ FML::Command::DataCheck - parse, clean up et.al. for command buffer
 =cut
 
 
-# Descriptions: ordinary constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: OBJ
@@ -83,6 +88,11 @@ sub parse_command_arguments
 }
 
 
+#
+# XXX-TODO: find_special_keyword() NOT USED ?
+#
+
+
 # Descriptions: check the message of the current process to find
 #               whether it contains some special keyword e.g. "confirm".
 #    Arguments: OBJ($self) OBJ($curproc) ARRAY_REF($ra_data)
@@ -119,6 +129,11 @@ sub find_special_keyword
 	admin_keyword   => $admin_found,
     };
 }
+
+
+#
+# XXX-TODO: find_anonymous_command_mail_allowed_commands() NOT USED?
+#
 
 
 # Descriptions: check the message of the current process to find

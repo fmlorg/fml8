@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: confirm.pm,v 1.31 2004/04/22 10:37:35 fukachan Exp $
+# $FML: confirm.pm,v 1.32 2004/04/23 04:10:31 fukachan Exp $
 #
 
 package FML::Command::User::confirm;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::User::confirm - allow action after confirmation
+FML::Command::User::confirm - allow action after confirmation.
 
 =head1 SYNOPSIS
 
@@ -31,7 +31,7 @@ execute the actual corresponding process if the confirmation succeeds.
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -44,21 +44,21 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
 
 
-# Descriptions: lock channel
+# Descriptions: lock channel.
 #    Arguments: none
 # Side Effects: none
 # Return Value: STR
 sub lock_channel { return 'command_serialize';}
 
 
-# Descriptions: addresses to inform a message copy to
+# Descriptions: addresses to inform a message copy to.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: none
 # Return Value: ARREY_REF
@@ -103,8 +103,8 @@ sub process
 
     # get class and id from buffer, for example,
     # "confirm subscribe 813f42fa2aa84bbba500ed3d2781dea6"
-    # XXX $keyword not starts at the begining of this line.
-    # XXX for example, "confirm", "> confirm" and "xxx> confirm ..."
+    # XXX $keyword may not start at the begining of this line.
+    # XXX For example, "confirm", "> confirm" and "xxx> confirm ..."
     # XXX-TODO: we should move this check to FML::Command::__SOME_WHERE__ ?
     if ($command =~ /$keyword\s+(\w+)\s+([\w\d]+)/) {
 	($class, $id) = ($1, $2);

@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: mailq.pm,v 1.6 2003/09/13 09:16:59 fukachan Exp $
+# $FML: mailq.pm,v 1.7 2003/12/31 03:53:31 fukachan Exp $
 #
 
 package FML::Command::Admin::mailq;
@@ -45,14 +45,14 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 0;}
 
 
-# Descriptions: change delivery mode from real time to digest.
+# Descriptions: show outgoing mail queue.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $recipient_map
 # Return Value: none
@@ -64,7 +64,7 @@ sub process
 }
 
 
-# Descriptions: open mail queue and list up.
+# Descriptions: show outgoing mail queue.
 #    Arguments: OBJ($self) OBJ($curproc)
 # Side Effects: none
 # Return Value: none
@@ -112,7 +112,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003 Ken'ichi Fukamachi
+Copyright (C) 2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.4 2004/02/01 14:52:49 fukachan Exp $
+# $FML: Filter.pm,v 1.5 2004/04/23 04:10:30 fukachan Exp $
 #
 
 package FML::Command::Filter;
@@ -19,7 +19,7 @@ my $lock_channel = "auth_map_modify";
 
 =head1 NAME
 
-FML::Command::Filter - command mail specific filters
+FML::Command::Filter - command mail specific filters.
 
 =head1 SYNOPSIS
 
@@ -29,9 +29,11 @@ FML::Command::Filter - command mail specific filters
 
 =head2 new()
 
+constructor.
+
 =head2 reject()
 
-dummy :-)
+dummy.
 
 =cut
 
@@ -49,7 +51,7 @@ sub new
 }
 
 
-# Descriptions: virtual reject handler, just return __LAST__ :-)
+# Descriptions: virtual reject handler, just return __LAST__ :-).
 #    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: none
 # Return Value: STR (__LAST__, a special upcall)
@@ -61,10 +63,10 @@ sub reject
 }
 
 
-# Descriptions:
+# Descriptions: check the number of command requests in one mail.
 #    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: admin password modified.
-# Return Value: NUM
+# Return Value: STR( NULL if fail )
 sub check_command_limit
 {
     my ($self, $msg) = @_;
@@ -89,10 +91,10 @@ sub check_command_limit
 }
 
 
-# Descriptions:
+# Descriptions: check the length of one command request (one line).
 #    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: admin password modified.
-# Return Value: NUM
+# Return Value: STR( NULL if fail )
 sub check_line_length_limit
 {
     my ($self, $msg) = @_;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: on.pm,v 1.19 2004/04/30 13:38:05 fukachan Exp $
+# $FML: addmember.pm,v 1.1 2004/05/01 05:02:04 fukachan Exp $
 #
 
 package FML::Command::Admin::addmember;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::addmember - add member (member only)
+FML::Command::Admin::addmember - add member (member only).
 
 =head1 SYNOPSIS
 
@@ -32,7 +32,7 @@ change delivery mode from digest to real time.
 =cut
 
 
-# Descriptions: constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -45,14 +45,14 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
 
 
-# Descriptions: lock channel
+# Descriptions: lock channel.
 #    Arguments: none
 # Side Effects: none
 # Return Value: STR
@@ -87,18 +87,18 @@ sub process
 
     # XXX We should always add/rewrite only $primary_*_map maps via
     # XXX command mail, CUI and GUI.
-    # XXX Rewriting of maps not $primary_*_map is
+    # XXX Rewriting of maps excluding $primary_*_map is
     # XXX 1) may be not writable.
     # XXX 2) ambigous and dangerous
     # XXX    since the map is under controlled by other module.
-    # XXX    for example, one of member_maps is under admin_member_maps.
+    # XXX    for example, $member_maps contains different classes.
     my $member_map = $config->{ primary_member_map };
 
     # fundamental check
-    croak("address not defined")           unless defined $address;
-    croak("\$member_map not defined")   unless defined $member_map;
-    croak("address not specified")         unless $address;
-    croak("\$member_map not specified") unless $member_map;
+    croak("address not defined")      unless defined $address;
+    croak("member_map not defined")   unless defined $member_map;
+    croak("address not specified")    unless $address;
+    croak("member_map not specified") unless $member_map;
 
     # FML::User::Control specific parameters
     my $uc_args = {
@@ -108,7 +108,7 @@ sub process
     my $r = '';
 
     # diag: $member_map should not have this user.
-    my $msg_args       = {
+    my $msg_args = {
 	_arg_address => $address,
     };
     if ($cred->has_address_in_map($member_map, $config, $address)) {
@@ -131,7 +131,7 @@ sub process
 }
 
 
-# Descriptions: show cgi menu for on
+# Descriptions: show cgi menu for adding a member.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $member_map
 # Return Value: none

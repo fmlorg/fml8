@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.8 2004/01/01 07:29:27 fukachan Exp $
+# $FML: flushq.pm,v 1.1 2004/05/19 13:48:21 fukachan Exp $
 #
 
 package FML::Command::Admin::flushq;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::flushq - what is this
+FML::Command::Admin::flushq - flush outgoing mail queue.
 
 =head1 SYNOPSIS
 
@@ -39,14 +39,14 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 0;}
 
 
-# Descriptions: change delivery mode from real time to digest.
+# Descriptions: flush outgoing mail queue.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $recipient_map
 # Return Value: none

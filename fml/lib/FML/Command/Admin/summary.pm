@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: summary.pm,v 1.6 2004/01/01 08:42:22 fukachan Exp $
+# $FML: summary.pm,v 1.7 2004/01/01 08:48:40 fukachan Exp $
 #
 
 package FML::Command::Admin::summary;
@@ -47,14 +47,14 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
 
 
-# Descriptions: lock channel
+# Descriptions: lock channel.
 #    Arguments: none
 # Side Effects: none
 # Return Value: STR
@@ -73,7 +73,7 @@ sub process
 }
 
 
-# Descriptions: fmlsummary top level dispacher
+# Descriptions: fmlsummary top level dispacher.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: load FML::Command::command module and execute it.
 # Return Value: none
@@ -82,7 +82,7 @@ sub _summary
     my ($self, $curproc, $command_args) = @_;
     my $config  = $curproc->config();
     my $max_id  = $curproc->article_max_id();
-    my $options = $command_args->{ options };
+    my $options = $command_args->{ options } || [];
 
     use FML::Article::Summary;
     my $summary = new FML::Article::Summary $curproc;
@@ -95,6 +95,7 @@ sub _summary
 	$summary->rebuild(1, $max_id);
     }
     else {
+	# XXX-TODO: STDOUT hard coded. ok?
 	my $wh = \*STDOUT;
 	$summary->dump($wh);
     }

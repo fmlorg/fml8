@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.29 2004/02/15 04:38:30 fukachan Exp $
+# $FML: chaddr.pm,v 1.30 2004/04/23 04:10:31 fukachan Exp $
 #
 
 package FML::Command::User::chaddr;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::User::chaddr - change subscribed address
+FML::Command::User::chaddr - change subscribed address.
 
 =head1 SYNOPSIS
 
@@ -37,7 +37,7 @@ address in the mail header, "Reply-To" is ignored.
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -50,14 +50,14 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
 
 
-# Descriptions: lock channel
+# Descriptions: lock channel.
 #    Arguments: none
 # Side Effects: none
 # Return Value: STR
@@ -81,7 +81,7 @@ sub process
     # XXX 1) may be not writable.
     # XXX 2) ambigous and dangerous
     # XXX    since the map is under controlled by other module.
-    # XXX    for example, one of member_maps is under admin_member_maps.
+    # XXX    for example, $member_maps contains different classes.
     my $member_map    = $config->{ primary_member_map };
     my $recipient_map = $config->{ primary_recipient_map };
     my $cache_dir     = $config->{ db_dir };
@@ -128,7 +128,8 @@ sub process
     if ($cred->is_member($old_addr) || $cred->is_member($new_addr)) {
 	$curproc->log("chaddr request, try confirmation");
 
-	# XXX-TODO: should be FML::Confirm { ... address => [ @addr ] } ?
+	# XXX-TODO: no confirmation case ?
+	# XXX-TODO: change arg ? FML::Confirm { ... address => [ @addr ] }
 	use FML::Confirm;
 	my $confirm = new FML::Confirm $curproc, {
 	    keyword   => $keyword,
@@ -141,7 +142,7 @@ sub process
 	$curproc->reply_message_nl('command.confirm', '', $optargs);
 	$curproc->reply_message("\n$id\n", $optargs);
     }
-    # try confirmation before chaddr
+    # try confirmation before chaddr.
     else {
 	$curproc->reply_message_nl('error.not_member', '', $optargs);
 	$cred->set_compare_level( $compare_level );

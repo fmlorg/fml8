@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: check.pm,v 1.12 2004/02/24 14:36:52 fukachan Exp $
+# $FML: check.pm,v 1.13 2004/04/23 04:10:29 fukachan Exp $
 #
 
 package FML::Command::Admin::check;
@@ -28,7 +28,7 @@ cheap diagnostic check.
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -41,11 +41,13 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 0;}
+
+
 
 # check rules
 my @rules =  qw(
@@ -97,7 +99,7 @@ sub check_ml_home_dir
 }
 
 
-# Descriptions: check spool permission
+# Descriptions: check spool permission.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: fix permission
 # Return Value: none
@@ -130,7 +132,7 @@ sub check_spool_dir
 
 
 
-# Descriptions: check html_archive permission
+# Descriptions: check html_archive permission.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: fix permission
 # Return Value: none
@@ -146,20 +148,20 @@ sub check_html_archive_dir
 }
 
 
-# Descriptions: return directory mode
+# Descriptions: return directory mode.
 #    Arguments: STR($dir)
 # Side Effects: none
 # Return Value: NUM(%o)
 sub _dir_mode
 {
     my ($dir) = @_;
-    my ($dev,$ino,$mode) = stat($dir);
+    my ($dev, $ino, $mode) = stat($dir);
 
     return ($mode & 0777);
 }
 
 
-# Descriptions: check if $dir mode is 0700
+# Descriptions: check if $dir mode is 0700.
 #    Arguments: STR($dir)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
@@ -173,7 +175,7 @@ sub _is_700
 }
 
 
-# Descriptions: check if $dir mode is 0770
+# Descriptions: check if $dir mode is 0770.
 #    Arguments: STR($dir)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
@@ -187,7 +189,7 @@ sub _is_770
 }
 
 
-# Descriptions: check if $dir mode is 0777
+# Descriptions: check if $dir mode is 0777.
 #    Arguments: STR($dir)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
@@ -201,7 +203,7 @@ sub _is_777
 }
 
 
-# Descriptions: check if $dir mode is 0755
+# Descriptions: check if $dir mode is 0755.
 #    Arguments: STR($dir)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
