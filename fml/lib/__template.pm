@@ -8,10 +8,25 @@
 # $FML$
 #
 
-package FML::__HERE_IS_YOUR_MODULE_NAME__;
+package FML::__MODULE_NAME__;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+
+=head1 NAME
+
+FML::__MODULE_NAME__ - what is this
+
+=head1 SYNOPSIS
+
+=head1 DESCRIPTION
+
+=head1 METHODS
+
+=head2 C<new()>
+
+=cut
+
 
 require Exporter;
 @ISA = qw(Exporter);
@@ -26,22 +41,6 @@ sub new
 }
 
 
-=head1 NAME
-
-FML::__HERE_IS_YOUR_MODULE_NAME__ - what is this
-
-=head1 SYNOPSIS
-
-=head1 DESCRIPTION
-
-=head1 CLASSES
-
-=head1 METHODS
-
-=item C<new()>
-
-... what is this ...
-
 =head1 AUTHOR
 
 __YOUR_NAME__
@@ -55,9 +54,10 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::__HERE_IS_YOUR_MODULE_NAME__ appeared in fml5 mailing list driver package.
+FML::__MODULE_NAME__ appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
+
 
 1;

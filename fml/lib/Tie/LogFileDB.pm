@@ -14,9 +14,49 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
+=head1 NAME
+
+Tie::LogFileDB - hash emulation for a log structered file
+
+=head1 SYNOPSIS
+
+   use Tie::LogFileDB;
+   $db = new Tie::LogFileDB { file => 'cache.txt' };
+
+   # all entries with the key = 'rudo'
+   @values = $db->grep( rudo );
+
+or
+
+   use Tie::LogFileDB;
+   tie %db, 'Tie::LogFileDB', { file => 'cache.txt' };
+   print $db{ rudo }, "\n";
+
+where cache file "cache.txt" format is "key value" for each line.
+For example
+
+     rudo   teddy bear
+     kenken north fox
+     .....
+
+By default, FETCH() returns the first value with the key.
+
+   use Tie::LogFileDB;
+   tie %db, 'Tie::LogFileDB', { first_match => 1, file => 'cache.txt' };
+   print $db{ rudo }, "\n";
+
+if you find the latest value (so at the later line somewhere in the
+file) for the $key
+
+   use Tie::LogFileDB;
+   tie %db, 'Tie::LogFileDB', { last_match => 1, file => 'cache.txt' };
+   print $db{ rudo }, "\n";
+
+=cut
+
+
 require Exporter;
 @ISA = qw(Exporter);
-
 
 sub new
 {
@@ -140,50 +180,6 @@ sub _fetch
     }    
 }
 
-
-=head1 NAME
-
-Tie::LogFileDB.pm - hash emulation for a log structered file
-
-=head1 SYNOPSIS
-
-   use Tie::LogFileDB;
-   $db = new Tie::LogFileDB { file => 'cache.txt' };
-
-   # all entries with the key = 'rudo'
-   @values = $db->grep( rudo );
-
-or
-
-   use Tie::LogFileDB;
-   tie %db, 'Tie::LogFileDB', { file => 'cache.txt' };
-   print $db{ rudo }, "\n";
-
-where cache file "cache.txt" format is "key value" for each line.
-For example
-
-     rudo   teddy bear
-     kenken north fox
-     .....
-
-By default, FETCH() returns the first value with the key.
-
-   use Tie::LogFileDB;
-   tie %db, 'Tie::LogFileDB', { first_match => 1, file => 'cache.txt' };
-   print $db{ rudo }, "\n";
-
-if you find the latest value (so at the later line somewhere in the
-file) for the $key
-
-   use Tie::LogFileDB;
-   tie %db, 'Tie::LogFileDB', { last_match => 1, file => 'cache.txt' };
-   print $db{ rudo }, "\n";
-
-
-
-=head1 DESCRIPTION
-
-... not yet ...
 
 =head1 AUTHOR
 

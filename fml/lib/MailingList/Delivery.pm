@@ -15,41 +15,6 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
 use IO::Socket;
 
-require Exporter;
-@ISA = qw(Exporter);
-
-
-sub new
-{
-    my ($self, $args) = @_;
-    my $protocol =  $args->{ protocol } || 'SMTP';
-    my $pkg      = 'MailingList::SMTP';
- 
-    if ($protocol eq 'SMTP') {
-	$pkg = 'MailingList::SMTP';
-    }
-    elsif ($protocol eq 'ESMTP') {
-	$pkg = 'MailingList::EMTP';
-    }
-    elsif ($protocol eq 'LMTP') {
-	$pkg = 'MailingList::LMTP';
-    }
-    else {
-	croak("unknown protocol=$protocol");
-	return undef;
-    }
-
-    unshift(@ISA, $pkg);
-    eval qq{require $pkg; $pkg->import();};
-    unless ($@) {
-	$self->SUPER::new($args);
-    }
-    else {
-	croak("fail to load $pkg");
-	return undef;
-    }
-}
-
 
 =head1 NAME
 
@@ -104,12 +69,49 @@ C<LMTP> classes.
   Delivery --> ESMTP       LMTP
 
 
-=head1 METHOD
+=head1 METHODS
 
-=item C<new()>
+=item C<new($args)>
 
-constructor as an adapter. 
-The request is forwarded up to SUPER class.
+constructor. The request is forwarded up to SUPER class.
+
+=cut
+
+
+require Exporter;
+@ISA = qw(Exporter);
+
+
+sub new
+{
+    my ($self, $args) = @_;
+    my $protocol =  $args->{ protocol } || 'SMTP';
+    my $pkg      = 'MailingList::SMTP';
+ 
+    if ($protocol eq 'SMTP') {
+	$pkg = 'MailingList::SMTP';
+    }
+    elsif ($protocol eq 'ESMTP') {
+	$pkg = 'MailingList::EMTP';
+    }
+    elsif ($protocol eq 'LMTP') {
+	$pkg = 'MailingList::LMTP';
+    }
+    else {
+	croak("unknown protocol=$protocol");
+	return undef;
+    }
+
+    unshift(@ISA, $pkg);
+    eval qq{require $pkg; $pkg->import();};
+    unless ($@) {
+	$self->SUPER::new($args);
+    }
+    else {
+	croak("fail to load $pkg");
+	return undef;
+    }
+}
 
 
 =head1 AUTHOR
