@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.181 2003/09/14 04:05:46 fukachan Exp $
+# $FML: Kernel.pm,v 1.182 2003/09/19 13:30:34 tmu Exp $
 #
 
 package FML::Process::Kernel;
@@ -1679,7 +1679,7 @@ sub message_nl
     my $buf       = '';
 
     use File::Spec;
-    $class =~ s@\.@/@g; # XXX replace the first "." only
+    $class =~ s@\.@/@g; # XXX . -> / 
 
     my $local_file = File::Spec->catfile($local_dir, $charset, $class);
     my $file       = File::Spec->catfile($dir,       $charset, $class);
@@ -1701,7 +1701,14 @@ sub message_nl
 	$curproc->logwarn("no such file: $file");
     }
 
-    return $buf;
+    if (defined $buf) {
+	my $config = $curproc->config();
+        if ($buf =~ /\$/o) {
+            $config->expand_variable_in_buffer(\$buf, $args);
+        }
+    }
+
+    return( $buf || $default_msg || '' );
 }
 
 
