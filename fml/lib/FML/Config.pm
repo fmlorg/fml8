@@ -16,7 +16,7 @@ sub new
 {
     my ($self, $args) = @_;
 
-    unless (defined %_fml_config) { %_fml_config = ();}
+    unless (defined %_fml_config) { %_fml_config = ( pid => $$ );}
     my $me = \%_fml_config;
 
     # import variables
