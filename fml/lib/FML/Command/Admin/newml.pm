@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.75 2004/01/01 23:52:12 fukachan Exp $
+# $FML: newml.pm,v 1.76 2004/01/02 14:45:04 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -68,6 +68,8 @@ sub process
     my ($self, $curproc, $command_args) = @_;
     my $options        = $curproc->command_line_options();
     my $config         = $curproc->config();
+
+    # XXX-TODO: can we here use $curproc->ml_*() ?
     my $ml_name        = $config->{ ml_name };
     my $ml_domain      = $config->{ ml_domain };
     my $ml_home_prefix = $curproc->ml_home_prefix($ml_domain);
@@ -115,6 +117,7 @@ sub process
     # already exists.
     unless (defined $options->{ force } ) {
 	if (-d $ml_home_dir) {
+	    # XXX-TODO: $curproc->logwarn() ?
 	    warn("$ml_name ml_home_dir($ml_home_dir) already exists");
 	    return ;
 	}
@@ -126,6 +129,7 @@ sub process
     # XXX on all unix plathomes.
     if ($control->is_mta_alias_maps_has_ml_entry($curproc,$params,$ml_name)) {
 	unless (defined $options->{ force } ) {
+	    # XXX-TODO: $curproc->logwarn() ?
 	    warn("$ml_name already exists (somewhere in MTA aliases)");
 	    return ;
 	}
@@ -149,7 +153,7 @@ sub process
 }
 
 
-# Descriptions: show cgi menu for newml
+# Descriptions: show cgi menu for newml command.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: create home directories, update aliases, ...
 # Return Value: none

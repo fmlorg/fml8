@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: htmlify.pm,v 1.23 2004/01/02 10:23:55 fukachan Exp $
+# $FML: htmlify.pm,v 1.24 2004/01/02 14:45:04 fukachan Exp $
 #
 
 package FML::Command::Admin::htmlify;
@@ -24,7 +24,7 @@ See C<FML::Command> for more detaihtmlify.
 
 =head1 DESCRIPTION
 
-show user htmlify(s).
+convert text articles to html style.
 
 =cut
 
@@ -49,7 +49,7 @@ sub new
 sub need_lock { 0;}
 
 
-# Descriptions: convert article format from text to html.
+# Descriptions: convert article(s) from text to html format.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: forward request to dir module
 # Return Value: none
@@ -57,6 +57,8 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
     my $config  = $curproc->config();
+
+    # XXX-TODO: $spool_dir -> $article_spool_dir ?
     my $src_dir = $config->{ spool_dir };
     my $dst_dir = $config->{ html_archive_dir };
     my $debug   = 0;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.33 2003/10/15 01:03:29 fukachan Exp $
+# $FML: SendFile.pm,v 1.34 2003/10/15 11:57:02 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -24,7 +24,7 @@ FML::Command::SendFile - utility functions to send back file(s)
 =head1 SYNOPSIS
 
 For example, See L<FML::Command::User::get> and
-L<FML::Command::Admin::get>..
+L<FML::Command::Admin::get> on the usage detail.
 
    sub process
    {
@@ -62,7 +62,7 @@ sub num_files_in_send_article_args
     # command buffer = get 1,2,3
     # command buffer = get last:3
     my (@files) = split(/\s+/, $command);
-    shift @files; # remove get
+    shift @files; # remove prepended "get" string.
     for my $fn (@files) {
 	my $filelist = $self->_get_valid_article_list($curproc, $fn);
 	if (defined $filelist) {
@@ -74,7 +74,7 @@ sub num_files_in_send_article_args
 }
 
 
-# Descriptions: send back articles
+# Descriptions: send back articles.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: none
 # Return Value: none
