@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DataCheck.pm,v 1.1 2002/04/26 09:20:17 fukachan Exp $
+# $FML: DataCheck.pm,v 1.2 2002/04/26 10:29:12 fukachan Exp $
 #
 
 package FML::Command::DataCheck;
@@ -59,12 +59,12 @@ sub parse_command_buffer
 
 # Descriptions: parse command buffer to make
 #               argument vector after command name
-#    Arguments: OBJ($STR) STR($command) STR($comname)
+#    Arguments: OBJ($self) STR($command) STR($comname)
 # Side Effects: none
 # Return Value: ARRAY_REF
 sub parse_command_arguments
 {
-    my ($command, $comname) = @_;
+    my ($self, $command, $comname) = @_;
     my $found = 0;
     my (@options) = ();
 
