@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.36 2002/09/22 15:01:20 fukachan Exp $
+# $FML: Credential.pm,v 1.37 2002/12/20 03:35:41 fukachan Exp $
 #
 
 package FML::Credential;
@@ -12,6 +12,10 @@ use strict;
 use Carp;
 use vars qw(%Credential @ISA @EXPORT @EXPORT_OK);
 use ErrorStatus qw(errstr error error_set error_clear);
+
+#
+# XXX-TODO: methods of FML::Credential validates input always ?
+#
 
 my $debug = 0;
 
