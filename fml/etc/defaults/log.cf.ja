@@ -1,8 +1,7 @@
 =head1	ログのとり方
 
-# Descriptions: enable logging function
-#               ログとり機能を有効にする
-#      History: 
+# Descriptions: ログとり機能を有効にする
+#      History: fml 4.0 では有無を言わさずログをとる
 #        Value: yes / no
 #     Examples:
 use_log		=	yes
@@ -13,17 +12,33 @@ use_log		=	yes
 #     Examples:
 log_file	=	$ml_home_dir/log
 
-# Descriptions: ログとりのタイプ
+# Descriptions: ログとりのタイプ (syslog は未実装)
 #      History: fml 5.0 new
 #        Value: file / syslog
 #     Examples:
 log_type	=	file
 
-# log message format
+# Descriptions: log message format
+#      History:
+#        Value: fml4_compatible
+#     Examples: fml4_compatible の例
+#               01/01/28 00:53:57 IPv6 is ready (fukachan@fml.org)
 log_format_type	=	fml4_compatible
 
+# Descriptions: ログファイル
+#      History:
+#        Value: filename
+#     Examples:
 log_dir		=	$var_dir/log
 
+# Descriptions: ログファイルがおかれるディレクトリ
+#      History:
+#        Value: directory
+#     Examples:
 smtp_log_dir	=	$log_dir
 
+# Descriptions: メールサーバとのやりとりを記録するファイル
+#      History: fml 4.0 の $SMTP_LOG
+#        Value: filename
+#     Examples:
 smtp_log_file	=	$smtp_log_dir/_smtplog

@@ -1,10 +1,11 @@
 =head1	プログラムのパス名
 
 # 
-# 注意: デフォールトは NetBSD 1.5 リリース
+# 注意: デフォルトのパス名は NetBSD 1.5 リリース準拠です。
 # 
 
-path_md5	=	/usr/bin/md5
+
+=head2	メールサーバ
 
 path_sendmail	=	/usr/sbin/sendmail
 
@@ -37,6 +38,11 @@ path_ci		=	/usr/bin/ci
 path_co		=	/usr/bin/co
 
 path_cvs	=	
+
+
+=head2	認証
+
+path_md5	=	/usr/bin/md5
 
 
 =head2	非対称暗号

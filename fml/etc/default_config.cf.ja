@@ -178,20 +178,34 @@ x_ml_name			=	$ml_name
 
 =head1	ロック
 
+# Descriptions: ロックをするか？
+#      History:
+#        Value: yes /no 
 use_lock	= yes
 
+# Descriptions: ロックファイルを置くディレクトリ
+#      History:
+#        Value: directory
+#     Examples: /var/spool/ml/elena/var/lock
 lock_dir	= $var_dir/lock
 
+# Descriptions: ロックファイル (ジャイアントロック用のファイル）
+#      History: fml 4.0 ではスプールディレクトリ $SPOOL_DIR
+#               をロックしていた。
+#        Value: filename
+#     Examples: /var/spool/ml/elena/var/lock/giantlock
 lock_file	= $lock_dir/giantlock
 
+# Descriptions: ロックのタイプ
+#      History: fml 4.0 の $USE_FLOCK
+#        Value: flock
+#     Examples:
 lock_type	= flock
-
 
 =head1	ログのとり方
 
-# Descriptions: enable logging function
-#               ログとり機能を有効にする
-#      History: 
+# Descriptions: ログとり機能を有効にする
+#      History: fml 4.0 では有無を言わさずログをとる
 #        Value: yes / no
 #     Examples:
 use_log		=	yes
@@ -202,34 +216,68 @@ use_log		=	yes
 #     Examples:
 log_file	=	$ml_home_dir/log
 
-# Descriptions: ログとりのタイプ
+# Descriptions: ログとりのタイプ (syslog は未実装)
 #      History: fml 5.0 new
 #        Value: file / syslog
 #     Examples:
 log_type	=	file
 
-# log message format
+# Descriptions: log message format
+#      History:
+#        Value: fml4_compatible
+#     Examples: fml4_compatible の例
+#               01/01/28 00:53:57 IPv6 is ready (fukachan@fml.org)
 log_format_type	=	fml4_compatible
 
+# Descriptions: ログファイル
+#      History:
+#        Value: filename
+#     Examples:
 log_dir		=	$var_dir/log
 
+# Descriptions: ログファイルがおかれるディレクトリ
+#      History:
+#        Value: directory
+#     Examples:
 smtp_log_dir	=	$log_dir
 
+# Descriptions: メールサーバとのやりとりを記録するファイル
+#      History: fml 4.0 の $SMTP_LOG
+#        Value: filename
+#     Examples:
 smtp_log_file	=	$smtp_log_dir/_smtplog
 
 =head1	記事および記事のスプール
 
-# 記事を配送する
+# Descriptions: 記事を配送する機能を使うか否か？
+#      History:
+#        Value: yes / no
+#     Examples:
 use_article_delivery	=	yes
 
-# 記事をスプールディレクトリに保存する
-use_spool		= 	yes
+# Descriptions: 記事をスプールディレクトリに保存する
+#      History: 4.0 の $NOT_USE_SPOOL
+#        Value: yes / no
+#     Examples:
+use_spool	= 	yes
 
-# 記事番号
+# Descriptions: 記事番号を保存するファイル
+#      History: $SEQ_FILE
+#        Value: filename
+#     Examples:
 sequence_file	= $ml_home_dir/seq
 
+# Descriptions: 記事を保存するディレクトリ
+#      History: 4.0 の $SPOOL_DIR
+#        Value: directory
+#     Examples:
 spool_dir	= $ml_home_dir/spool
 
+# Descriptions: スプールのタイプ
+#               デフォルトでは平面的にファイルを配置する
+#      History:
+#        Value: plane
+#     Examples:
 spool_type	= plane
 
 =head1	コマンドの定義
@@ -329,10 +377,11 @@ cgi_charset		=	$cgi_default_charset
 =head1	プログラムのパス名
 
 # 
-# 注意: デフォールトは NetBSD 1.5 リリース
+# 注意: デフォルトのパス名は NetBSD 1.5 リリース準拠です。
 # 
 
-path_md5	=	/usr/bin/md5
+
+=head2	メールサーバ
 
 path_sendmail	=	/usr/sbin/sendmail
 
@@ -365,6 +414,11 @@ path_ci		=	/usr/bin/ci
 path_co		=	/usr/bin/co
 
 path_cvs	=	
+
+
+=head2	認証
+
+path_md5	=	/usr/bin/md5
 
 
 =head2	非対称暗号

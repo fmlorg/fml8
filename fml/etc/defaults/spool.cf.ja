@@ -1,14 +1,32 @@
 =head1	記事および記事のスプール
 
-# 記事を配送する
+# Descriptions: 記事を配送する機能を使うか否か？
+#      History:
+#        Value: yes / no
+#     Examples:
 use_article_delivery	=	yes
 
-# 記事をスプールディレクトリに保存する
-use_spool		= 	yes
+# Descriptions: 記事をスプールディレクトリに保存する
+#      History: 4.0 の $NOT_USE_SPOOL
+#        Value: yes / no
+#     Examples:
+use_spool	= 	yes
 
-# 記事番号
+# Descriptions: 記事番号を保存するファイル
+#      History: $SEQ_FILE
+#        Value: filename
+#     Examples:
 sequence_file	= $ml_home_dir/seq
 
+# Descriptions: 記事を保存するディレクトリ
+#      History: 4.0 の $SPOOL_DIR
+#        Value: directory
+#     Examples:
 spool_dir	= $ml_home_dir/spool
 
+# Descriptions: スプールのタイプ
+#               デフォルトでは平面的にファイルを配置する
+#      History:
+#        Value: plane
+#     Examples:
 spool_type	= plane
