@@ -1,5 +1,5 @@
 <!--
-   $FML: cgi.admin.sgml,v 1.1 2002/07/04 10:59:01 fukachan Exp $
+   $FML: cgi.admin.sgml,v 1.2 2002/07/04 15:27:26 fukachan Exp $
 -->
 
 <chapter id="setup.cgi">
@@ -25,7 +25,7 @@ apache で suexec を使うことを前提としています。
 
 <sect1 id="setup.cgi.overview">
 	<title>
-	CGI 
+	makefml newml は CGI を用意する
 	</title>
 
 <para>
@@ -45,13 +45,28 @@ CGI による設定ツールがデフォルトで用意されています。
 例えば、elena@fml.org ＭＬを作成すると
 fml.org の全ＭＬを管理する CGI
 <screen>
+http://lists.fml.org/~fml/cgi-bin/fml/ドメイン/admin/config.cgi
+
+例
 http://lists.fml.org/~fml/cgi-bin/fml/fml.org/admin/config.cgi
 </screen>
 と elena ML だけを管理する CGI
 <screen>
+http://lists.fml.org/~fml/cgi-bin/fml/ドメイン/ml-admin/ＭＬ名/config.cgi
+
+例
 http://lists.fml.org/~fml/cgi-bin/fml/fml.org/ml-admin/elena/config.cgi
 </screen>
 の両方が makefml により用意されます。
+</para>
+
+<para>
+デフォルトでは、
+<screen>
+http://lists.fml.org/~fml/cgi-bin/fml/fml.org/.htaccess
+</screen>
+というファイルが作られ、アクセス制限がかかっています。
+この .htaccess を適切なものに書き換えて下さい。
 </para>
 
 </sect1>
