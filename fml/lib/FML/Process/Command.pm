@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.82 2003/02/05 03:11:03 fukachan Exp $
+# $FML: Command.pm,v 1.83 2003/02/09 12:31:44 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -176,6 +176,9 @@ sub run
 	    # as the reference.
 	    my $msg = $curproc->incoming_message();
 	    $curproc->reply_message( $msg );
+
+	    # add header info.
+	    $curproc->reply_message_add_header_info();
 
 	    unless (defined $reason) { $reason = 'unknown';}
 	    Log("deny command. reason=$reason");

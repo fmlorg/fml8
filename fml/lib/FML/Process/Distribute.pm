@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.105 2003/02/16 08:33:09 fukachan Exp $
+# $FML: Distribute.pm,v 1.106 2003/03/05 13:54:26 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -233,6 +233,9 @@ sub run
 				       "post from not a member",
 				       $msg_args);
 	    $curproc->reply_message( $msg, $msg_args );
+
+	    # add header info.
+	    $curproc->reply_message_add_header_info();
 	}
     }
     else {
