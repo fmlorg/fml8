@@ -88,6 +88,17 @@ default_file_mode	=	0600
 default_directory_mode	=	0755
 
 
+# Descriptions: ディレクトリを作成する時のデフォルトモード
+#      History:
+#        Value:
+#     Examples:
+default_directory_mode	=	0755
+
+directory_public_mode	=	0755
+
+directory_private_mode	=	0700
+
+
 # Descriptions:
 #      History:
 #        Value:
