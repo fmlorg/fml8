@@ -1,0 +1,776 @@
+<para>
+<table>
+<title> table description </title>
+<tgroup cols=3><thead>
+<row>
+<entry>
+variable name</entry>
+<entry>
+descrition</entry>
+<entry>
+default value(s)</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>
+article_header_rewrite_rules</entry>
+<entry>
+ 記事のヘッダを書き換えるルール群</entry>
+<entry>
+delete_unsafe_header_fields
+   rewrite_subject_tag
+   rewrite_reply_to
+   add_software_info
+   add_fml_ml_name
+   add_fml_traditional_article_id
+   add_fml_article_id
+   add_x_sequence
+   add_rfc2369
+   </entry>
+</row>
+<row>
+<entry>
+available_commands</entry>
+<entry>
+ 有効なコマンド一覧を書く</entry>
+<entry>
+help
+   get
+   mget
+   get
+   mget
+   subscribe
+   bye
+   remove
+   resign
+   unsubscribe
+   chaddr
+   confirm
+   guide
+   info
+   </entry>
+</row>
+<row>
+<entry>
+body_cksum_cache_dir</entry>
+<entry>
+ Message-ID のキャッシュを格納するディレクトリ</entry>
+<entry>
+$db_dir/body_cksum
+   </entry>
+</row>
+<row>
+<entry>
+body_filter_rules</entry>
+<entry>
+ フィルタリングのルール</entry>
+<entry>
+reject_not_iso2022jp_japanese_string
+   reject_null_mail_body
+   reject_one_line_message
+   reject_old_fml_command_syntax
+   reject_invalid_fml_command_syntax
+   reject_japanese_command_syntax
+   reject_ms_guid
+   </entry>
+</row>
+<row>
+<entry>
+body_loop_check_rules</entry>
+<entry>
+ ヘッダに対するループチェックのルール群</entry>
+<entry>
+verify_body_cksum_uniqueness
+   </entry>
+</row>
+<row>
+<entry>
+cgi_charset</entry>
+<entry>
+ CGI の表示の CHARSET </entry>
+<entry>
+$cgi_default_charset
+   </entry>
+</row>
+<row>
+<entry>
+cgi_default_charset</entry>
+<entry>
+ デフォルトの CHARSET </entry>
+<entry>
+euc-jp
+   </entry>
+</row>
+<row>
+<entry>
+command_chaddr_type</entry>
+<entry>
+ chaddr コマンドで confirmation 認証(コールバック認証)</entry>
+<entry>
+confirmation
+   </entry>
+</row>
+<row>
+<entry>
+command_prompot</entry>
+<entry>
+ command prompt in message reply</entry>
+<entry>
+>>>
+   </entry>
+</row>
+<row>
+<entry>
+command_restrictions</entry>
+<entry>
+ コマンドへの制限</entry>
+<entry>
+reject_system_accounts
+   permit_members_only
+   reject
+   </entry>
+</row>
+<row>
+<entry>
+command_unsubscribe_type</entry>
+<entry>
+ unsubscribe コマンドで confirmation 認証(コールバック認証)</entry>
+<entry>
+confirmation
+   </entry>
+</row>
+<row>
+<entry>
+database_method</entry>
+<entry>
+ データベース管理システムとの通信方法</entry>
+<entry>
+mysql
+   </entry>
+</row>
+<row>
+<entry>
+database_model</entry>
+<entry>
+ データベース管理システムとの通信方法が</entry>
+<entry>
+SQL::Schema::toymodel
+   </entry>
+</row>
+<row>
+<entry>
+db_dir</entry>
+<entry>
+ 各種データファイルを置くディレクトリ</entry>
+<entry>
+$var_dir/db
+   </entry>
+</row>
+<row>
+<entry>
+default_directory_mode</entry>
+<entry>
+ ディレクトリを作成する時のデフォルトモード</entry>
+<entry>
+0755
+   </entry>
+</row>
+<row>
+<entry>
+default_file_mode</entry>
+<entry>
+ ファイルを作成する時のデフォルトモード</entry>
+<entry>
+0600
+   </entry>
+</row>
+<row>
+<entry>
+digest_header_rewrite_rules</entry>
+<entry>
+ 記事のまとめおくりのヘッダを書き換えるルール群</entry>
+<entry>
+add_software_info
+   add_rfc2369
+   </entry>
+</row>
+<row>
+<entry>
+guide_file</entry>
+<entry>
+ ヘルプファイル</entry>
+<entry>
+$message_template_dir/guide
+   </entry>
+</row>
+<row>
+<entry>
+has_alarm</entry>
+<entry>
+ alarm(2) があるか？</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+has_getpwgid</entry>
+<entry>
+ getpwgid(2) があるか？</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+has_getpwuid</entry>
+<entry>
+ getpwuid(2) があるか？</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+has_select</entry>
+<entry>
+ select(2) があるか？</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+header_filter_rules</entry>
+<entry>
+ フィルタリングのルール</entry>
+<entry>
+is_valid_message_id
+   </entry>
+</row>
+<row>
+<entry>
+header_loop_check_rules</entry>
+<entry>
+ ヘッダに対するループチェックのルール群</entry>
+<entry>
+verify_message_id_uniqueness
+   verify_x_ml_info_uniqueness
+   verify_list_post_uniqueness
+   </entry>
+</row>
+<row>
+<entry>
+help_file</entry>
+<entry>
+ ヘルプファイル</entry>
+<entry>
+$message_template_dir/help
+   </entry>
+</row>
+<row>
+<entry>
+ldap_query_filter</entry>
+<entry>
+ LDAP のフィルタ</entry>
+<entry>
+(objectclass=*)
+   </entry>
+</row>
+<row>
+<entry>
+lock_dir</entry>
+<entry>
+ ロックファイルを置くディレクトリ</entry>
+<entry>
+$var_dir/lock
+   </entry>
+</row>
+<row>
+<entry>
+lock_file</entry>
+<entry>
+ ロックファイル (ジャイアントロック用のファイル）</entry>
+<entry>
+$lock_dir/giantlock
+   </entry>
+</row>
+<row>
+<entry>
+lock_type</entry>
+<entry>
+ ロックのタイプ</entry>
+<entry>
+flock
+   </entry>
+</row>
+<row>
+<entry>
+log_dir</entry>
+<entry>
+ ログファイル</entry>
+<entry>
+$var_dir/log
+   </entry>
+</row>
+<row>
+<entry>
+log_file</entry>
+<entry>
+ ログファイル</entry>
+<entry>
+$ml_home_dir/log
+   </entry>
+</row>
+<row>
+<entry>
+log_format_type</entry>
+<entry>
+ log message format</entry>
+<entry>
+fml4_compatible
+   </entry>
+</row>
+<row>
+<entry>
+log_type</entry>
+<entry>
+ ログとりのタイプ (syslog は未実装)</entry>
+<entry>
+file
+   </entry>
+</row>
+<row>
+<entry>
+member_maps</entry>
+<entry>
+ メンバーかどうか認証する際に検索するすべてのメンバーリスト </entry>
+<entry>
+$primary_member_map
+   </entry>
+</row>
+<row>
+<entry>
+message_id_cache_dir</entry>
+<entry>
+ Message-ID のキャッシュを格納するディレクトリ</entry>
+<entry>
+$db_dir/message_id
+   </entry>
+</row>
+<row>
+<entry>
+message_message_dir</entry>
+<entry>
+ message template (paragraph)</entry>
+<entry>
+$fml_share_dir/message/$template_file_charset
+   </entry>
+</row>
+<row>
+<entry>
+message_template_dir</entry>
+<entry>
+ message template (file)</entry>
+<entry>
+$fml_share_dir/template/$template_file_charset
+   </entry>
+</row>
+<row>
+<entry>
+mqueue_dir</entry>
+<entry>
+ mail queue のディレクトリ</entry>
+<entry>
+$var_dir/mqueue
+   </entry>
+</row>
+<row>
+<entry>
+objective_file</entry>
+<entry>
+ ヘルプファイル</entry>
+<entry>
+$message_template_dir/objective
+   </entry>
+</row>
+<row>
+<entry>
+post_restrictions</entry>
+<entry>
+ 投稿への制限</entry>
+<entry>
+reject_system_accounts
+   permit_members_only
+   reject
+   </entry>
+</row>
+<row>
+<entry>
+primary_member_map</entry>
+<entry>
+ 登録などの際に対象となるメンバーリスト</entry>
+<entry>
+file:$ml_home_dir/members
+   </entry>
+</row>
+<row>
+<entry>
+primary_recipient_map</entry>
+<entry>
+ 登録などの際に対象とする受信者のリスト</entry>
+<entry>
+file:$ml_home_dir/actives
+   </entry>
+</row>
+<row>
+<entry>
+recipient_limit</entry>
+<entry>
+ ひとつの SMTP トランザクションで MTA に渡す受信者の数の上限</entry>
+<entry>
+1000
+   </entry>
+</row>
+<row>
+<entry>
+recipient_maps</entry>
+<entry>
+ すべての受信者のリスト</entry>
+<entry>
+$primary_recipient_map
+   file:$ml_home_dir/recipients
+   </entry>
+</row>
+<row>
+<entry>
+sequence_file</entry>
+<entry>
+ 記事番号を保存するファイル</entry>
+<entry>
+$ml_home_dir/seq
+   </entry>
+</row>
+<row>
+<entry>
+shared_db_dir</entry>
+<entry>
+ ML 間でシェアするデータベースをおくホームディレクトリ</entry>
+<entry>
+$ml_home_prefix/@db@
+   </entry>
+</row>
+<row>
+<entry>
+smtp_log_dir</entry>
+<entry>
+ ログファイルがおかれるディレクトリ</entry>
+<entry>
+$log_dir
+   </entry>
+</row>
+<row>
+<entry>
+smtp_log_file</entry>
+<entry>
+ メールサーバとのやりとりを記録するファイル</entry>
+<entry>
+$smtp_log_dir/_smtplog
+   </entry>
+</row>
+<row>
+<entry>
+smtp_sender</entry>
+<entry>
+ SMTP の MAIL FROM:<$smtp_sender> で使うパラメータ</entry>
+<entry>
+$maintainer
+   </entry>
+</row>
+<row>
+<entry>
+smtp_servers</entry>
+<entry>
+ デフォールトの MTA は自分自身( localhost ) </entry>
+<entry>
+[::1]:25
+   127.0.0.1:25
+   </entry>
+</row>
+<row>
+<entry>
+spool_dir</entry>
+<entry>
+ 記事を保存するディレクトリ</entry>
+<entry>
+$ml_home_dir/spool
+   </entry>
+</row>
+<row>
+<entry>
+spool_type</entry>
+<entry>
+ スプールのタイプ</entry>
+<entry>
+plane
+   </entry>
+</row>
+<row>
+<entry>
+sql_database_name</entry>
+<entry>
+ データベースの名前</entry>
+<entry>
+fml
+   </entry>
+</row>
+<row>
+<entry>
+sql_user</entry>
+<entry>
+ SQL サーバにログインするためのユーザ名</entry>
+<entry>
+fml
+   </entry>
+</row>
+<row>
+<entry>
+subject_tag</entry>
+<entry>
+ Subject: のタグ </entry>
+<entry>
+[$ml_name:%05d]
+   </entry>
+</row>
+<row>
+<entry>
+subject_tag_name</entry>
+<entry>
+ Subject: につけるタグの制御</entry>
+<entry>
+$ml_name
+   </entry>
+</row>
+<row>
+<entry>
+summary_file</entry>
+<entry>
+ ヘルプファイル</entry>
+<entry>
+$message_template_dir/summary
+   </entry>
+</row>
+<row>
+<entry>
+system_accounts</entry>
+<entry>
+ OS が使っているようなアカウントや自動プログラムのリスト</entry>
+<entry>
+root
+   postmaster
+   MAILER-DAEMON
+   msgs
+   nobody
+   news
+   majordomo
+   listserv
+   listproc
+   \S+\-help
+   \S+\-subscribe
+   \S+\-unsubscribe
+   </entry>
+</row>
+<row>
+<entry>
+thread_db_dir</entry>
+<entry>
+ チケット関連データを保存するディレクトリ</entry>
+<entry>
+$shared_db_dir/thread
+   </entry>
+</row>
+<row>
+<entry>
+thread_id_syntax</entry>
+<entry>
+ チケット番号のシンタックス</entry>
+<entry>
+$ml_name/%d
+   </entry>
+</row>
+<row>
+<entry>
+thread_sequence_file</entry>
+<entry>
+ チケット番号を保存するファイル</entry>
+<entry>
+$ml_home_dir/thread.seq
+   </entry>
+</row>
+<row>
+<entry>
+thread_subject_tag</entry>
+<entry>
+ Subject につけるチケット番号のシンタックス</entry>
+<entry>
+[$thread_id_syntax]
+   </entry>
+</row>
+<row>
+<entry>
+thread_subject_tag_location</entry>
+<entry>
+ Subject につけるチケット番号のシンタックスの場所</entry>
+<entry>
+appended
+   </entry>
+</row>
+<row>
+<entry>
+thread_subject_tag_name</entry>
+<entry>
+ チケットにつけるＭＬ名</entry>
+<entry>
+$ml_name
+   </entry>
+</row>
+<row>
+<entry>
+tmp_dir</entry>
+<entry>
+ 一時的な中間ファイルを置くディレクトリ</entry>
+<entry>
+$ml_home_dir/tmp
+   </entry>
+</row>
+<row>
+<entry>
+unsafe_header_fields</entry>
+<entry>
+ あぶないタグを消す</entry>
+<entry>
+Return-Receipt-To
+   </entry>
+</row>
+<row>
+<entry>
+use_article_delivery</entry>
+<entry>
+ 記事を配送する機能を使うか否か？</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_body_filter</entry>
+<entry>
+ ヘッダ情報を根拠にしたフィルタリングをするか？</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_body_loop_check</entry>
+<entry>
+ ヘッダ情報を根拠にしたループチェックをするか？</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_database</entry>
+<entry>
+ データベース管理システムを使うか？</entry>
+<entry>
+no
+   </entry>
+</row>
+<row>
+<entry>
+use_header_filter</entry>
+<entry>
+ ヘッダ情報を根拠にしたフィルタリングをするか？</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_header_loop_check</entry>
+<entry>
+ ヘッダ情報を根拠にしたループチェックをするか？</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_header_rewrite</entry>
+<entry>
+ ヘッダ書換えの操作をするか？</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_lock</entry>
+<entry>
+ ロックをするか？</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_log</entry>
+<entry>
+ ログとり機能を有効にする</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_spool</entry>
+<entry>
+ 記事をスプールディレクトリに保存する</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_thread_track</entry>
+<entry>
+ チケットシステムを使うか</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+var_dir</entry>
+<entry>
+ さまざまな目的につかう</entry>
+<entry>
+$ml_home_dir/var
+   </entry>
+</row>
+<row>
+<entry>
+x_ml_name</entry>
+<entry>
+ X-ML-Name: および X-Sequence にあらわれる ML 名</entry>
+<entry>
+$ml_name
+   </entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>

@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.20 2001/11/19 14:55:16 fukachan Exp $
+	$FML: chapters.ent,v 1.21 2001/11/24 03:22:54 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -59,6 +59,10 @@
 <!entity chapter.programingstyle SYSTEM "internals/style.sgml">
 <!entity chapter.design          SYSTEM "internals/design.sgml">
 <!entity chapter.config.cf       SYSTEM "internals/config.cf.sgml">
+
+<!-- variables -->
+<!entity table.list.variables    SYSTEM "internals/list.variables.sgml">
+
 
 
 <!-- メッセージの取り扱い -->

@@ -1,0 +1,12 @@
+#
+# $FML$
+#
+
+FORMATER = ../../../utils/bin/varlist.pl
+SOURCE   =  ../../../etc/default_config.cf.ja
+
+VARLIST  = internals/list.variables.sgml
+
+$(VARLIST): $(SOURCE)
+	$(FORMATER) -sgml $(SOURCE) > $(VARLIST).new
+	mv $(VARLIST).new $(VARLIST)
