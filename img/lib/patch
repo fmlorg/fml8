@@ -1,0 +1,18 @@
+IM:: LOCAL PATCH
+
+Reference: 
+	fml-help@ffs.fml.org: 00607
+	patch by OGAWA Kunihiko <kuni@edit.ne.jp>
+
+
+--- IM/Iso2022jp.pm	Mon Feb 28 12:54:21 2000
++++ IM/Iso2022jp.pm	Sun Aug 19 11:39:50 2001
+@@ -432,7 +432,7 @@
+ 	    }
+ 	    $word_out .= $Jp_out;
+ 	}
+-	if ($word_in) {
++	if ($word_in ne '') {
+ 	    $word_out .= "\n\t";
+ 	}
+ 	$size = $main::Folding_length;

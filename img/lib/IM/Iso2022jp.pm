@@ -432,7 +432,7 @@ sub word_iso2022jp_mimefy ($$$$) {
 	    }
 	    $word_out .= $Jp_out;
 	}
-	if ($word_in) {
+	if ($word_in ne '') {
 	    $word_out .= "\n\t";
 	}
 	$size = $main::Folding_length;
