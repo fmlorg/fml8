@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Digest.pm,v 1.3 2002/11/17 14:07:33 fukachan Exp $
+# $FML: Digest.pm,v 1.4 2002/11/18 13:52:22 fukachan Exp $
 #
 
 package FML::Process::Digest;
@@ -223,9 +223,9 @@ sub finish
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: OBJ($curproc) HASH_REF($args)
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _digest
 {

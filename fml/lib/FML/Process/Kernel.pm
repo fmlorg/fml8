@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.143 2002/11/26 10:27:20 fukachan Exp $
+# $FML: Kernel.pm,v 1.144 2002/11/26 10:43:41 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -572,8 +572,8 @@ sub resolve_ml_specific_variables
 
     # 1. virtual domain or not ?
     # 1.1 search ml@domain syntax arg in @ARGV
-    if ($myname eq 'makefml' || 
-	$myname eq 'fmlthread' || 
+    if ($myname eq 'makefml' ||
+	$myname eq 'fmlthread' ||
 	$myname eq 'fmlsummary') {
 	my $default_domain = $curproc->default_domain();
 	($command, $ml_name, @options) = @ARGV;
@@ -1169,7 +1169,7 @@ sub reply_message
 	$msg .= "\n" unless $msg =~ /\n$/;
     }
 
-    $curproc->_append_message_into_queue($msg, $args, 
+    $curproc->_append_message_into_queue($msg, $args,
 					 $recipient, $recipient_maps,
 					 $hdr);
 
@@ -1188,7 +1188,7 @@ sub reply_message
 
 	if (_array_is_different($sent, $recipient)) {
 	    Log("cc: [ @$recipient ]");
-	    $curproc->_append_message_into_queue($msg, $args, 
+	    $curproc->_append_message_into_queue($msg, $args,
 						 $recipient, $recipient_maps,
 						 $hdr);
 	}
@@ -1562,7 +1562,7 @@ sub queue_in
 	for my $m ( @$mesg_queue ) {
 	    my $q = $m->{ message };
 	    my $t = $m->{ type };
-	    my $r = _gen_recipient_key($m->{ recipient }, 
+	    my $r = _gen_recipient_key($m->{ recipient },
 				       $m->{ recipient_maps } );
 
 	    # pick up only messages returned to specified $rcptkey
@@ -1586,7 +1586,7 @@ sub queue_in
 	for my $m ( @$mesg_queue ) {
 	    my $q = $m->{ message };
 	    my $t = $m->{ type };
-	    my $r = _gen_recipient_key($m->{ recipient }, 
+	    my $r = _gen_recipient_key($m->{ recipient },
 				       $m->{ recipient_maps } );
 
 	    next QUEUE unless $r eq $rcptkey;

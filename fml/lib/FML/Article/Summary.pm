@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Summary.pm,v 1.5 2002/12/01 06:13:14 fukachan Exp $
+# $FML: Summary.pm,v 1.6 2002/12/01 13:46:12 fukachan Exp $
 #
 
 package FML::Article::Summary;
@@ -31,7 +31,7 @@ FML::Article::Summary - generate article summary
 
 # Descriptions: usual constructor.
 #    Arguments: OBJ($self) OBJ($curproc)
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub new
 {
@@ -95,7 +95,7 @@ sub _prepare_info
 	my $date     = $header->get( 'date' );
 	my $unixtime = Mail::Message::Date::date_to_unixtime( $date );
 
-	# extract the first 15 bytes of user@domain part 
+	# extract the first 15 bytes of user@domain part
 	# from From: header field.
 	use FML::Header;
 	my $hdrobj = new FML::Header;
@@ -105,7 +105,7 @@ sub _prepare_info
 	use FML::Header::Subject;
 	my $obj     = new FML::Header::Subject;
 	my $subject = $obj->clean_up($header->get('subject'), $tag);
-	$subject =~ s/\s*\n/ /g;   
+	$subject =~ s/\s*\n/ /g;
 	$subject =~ s/\s+/ /g;
 
 	use Mail::Message::Encode;
@@ -167,7 +167,7 @@ sub _fml4_compatible_style_one_line_summary
 
     if (defined $rdate) {
 	my $date   = $rdate->{ 'log_file_style' };
-	my $format = "%s [%d:%s] %s\n"; 
+	my $format = "%s [%d:%s] %s\n";
 	my $id     = $info->{ id };
 	my $addr   = $info->{ address };
 	my $subj   = $info->{ subject };

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digest.pm,v 1.1 2002/11/19 16:11:22 tmu Exp $
+# $FML: digest.pm,v 1.2 2002/11/23 13:12:47 fukachan Exp $
 #
 
 package FML::Command::Admin::digest;
@@ -67,27 +67,27 @@ sub process
     my $primary_recipient_map = $config->{ primary_recipient_map };
     my $recipient_maps        = $config->get_as_array_ref('recipient_maps');
     my $digest_recipient_map  = $config->{ primary_digest_recipient_map };
-    my $digest_recipient_maps = 
+    my $digest_recipient_maps =
 	$config->get_as_array_ref('digest_recipient_maps');
 
     # fundamental check
     croak("address is not specified")   unless defined $address;
-    croak("primary_recipient_map not defined") 
+    croak("primary_recipient_map not defined")
 	unless defined $primary_recipient_map;
     croak("recipient_maps not defined") unless defined $recipient_maps;
-    croak("digest_recipient_map not defined") 
+    croak("digest_recipient_map not defined")
 	unless defined $digest_recipient_map;
-    croak("digest_recipient_maps not definde") 
+    croak("digest_recipient_maps not definde")
 	unless defined $digest_recipient_maps;
 
     my $digest_args = {
 	address => $address,
 	mode    => $mode,
-	primary_recipient_map        => $primary_recipient_map, 
-	recipient_maps               => $recipient_maps, 
+	primary_recipient_map        => $primary_recipient_map,
+	recipient_maps               => $recipient_maps,
 	primary_digest_recipient_map => $digest_recipient_map,
 	digest_recipient_maps        => $digest_recipient_maps,
-    };        
+    };
 
     if ($mode) {
 	$mode =~ tr/A-Z/a-z/;

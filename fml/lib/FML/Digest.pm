@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Digest.pm,v 1.2 2002/11/17 14:07:33 fukachan Exp $
+# $FML: Digest.pm,v 1.3 2002/11/18 13:53:09 fukachan Exp $
 #
 
 package FML::Digest;
@@ -29,9 +29,9 @@ FML::Digest - create digest, a subset of articles.
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub new
 {
@@ -137,9 +137,9 @@ sub set_digest_id
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: OBJ($self) HASH_REF($optargs)
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub create_multipart_message
 {
@@ -161,7 +161,7 @@ sub create_multipart_message
 	    'to'       => $ml_addr,
 	    'reply-to' => $ml_addr,
 	}
-    }; 
+    };
 
     Log("send back articles range=$range");
 

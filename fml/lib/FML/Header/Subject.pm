@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.32 2002/10/28 09:51:21 fukachan Exp $
+# $FML: Subject.pm,v 1.33 2002/11/26 10:31:35 fukachan Exp $
 #
 
 package FML::Header::Subject;
@@ -91,9 +91,9 @@ sub rewrite_article_subject_tag
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub clean_up
 {
@@ -103,9 +103,9 @@ sub clean_up
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub decode
 {
@@ -136,9 +136,9 @@ sub decode
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub delete_subject_tag
 {
