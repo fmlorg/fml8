@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.19 2004/02/15 04:38:34 fukachan Exp $
+# $FML: QueueManager.pm,v 1.20 2004/05/25 03:34:31 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Process::QueueManager - provide queue manipulation functions
+FML::Process::QueueManager - provide queue manipulation functions.
 
 =head1 SYNOPSIS
 
@@ -47,7 +47,7 @@ constructor.
 # XXX-TODO: new FML::Process::QueueManager $curproc
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($qm_args)
 # Side Effects: none
 # Return Value: OBJ
@@ -96,18 +96,18 @@ sub send
 	    }
 	    else {
 		# XXX-TODO: $q->remove() if invalid queue ?
-		$curproc->log("$qid is invalid");
+		$curproc->log("qmgr: qid=$qid is invalid");
 	    }
 	    $q->unlock();
 	}
 	else {
-	    $curproc->log("$qid is locked. retry");
+	    $curproc->log("qmgr: qid=$qid is locked. retry");
 	}
     }
 }
 
 
-# Descriptions: send message object $q
+# Descriptions: send message object $q.
 #    Arguments: OBJ($self) OBJ($curproc) OBJ($q)
 # Side Effects: queue flush-ed
 # Return Value: STR
@@ -125,6 +125,7 @@ sub _send
     use FML::Mailer;
     my $obj = new FML::Mailer $curproc;
 
+    # XXX-TODO: ? no lock for recipient maps here ???
     # XXX queue is already locked and need no lock for recipient maps here.
     my $r   = $obj->send({
 	sender     => $info->{ sender },
