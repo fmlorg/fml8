@@ -8,14 +8,14 @@
 # $FML$
 #
 
-package FML::MemberControl;
+package FML::Command::add;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
 =head1 NAME
 
-FML::MemberControl - controller
+FML::Command::add - add a new member
 
 =head1 SYNOPSIS
 
@@ -27,17 +27,40 @@ FML::MemberControl - controller
 
 =cut
 
-use FML::Command::add;
-use FML::Command::delete;
-
-@ISA = qw(FML::Command::add FML::Command::delete);
-
 sub new
 {
     my ($self) = @_;
     my ($type) = ref($self) || $self;
     my $me     = {};
+
+    print STDERR " FML::Comand::add::new() \n";
+
     return bless $me, $type;
+}
+
+
+=head2 C<add( $address )>
+
+=cut
+
+
+sub add
+{
+    my ($self, $curproc, $address) = @_;
+    my $config        = $curproc->{ config };
+    my $member_map    = $config->{ primary_member_map };
+    my $recipient_map = $config->{ primary_recipient_map };
+
+    # fundamental check
+    croak("\$member_map is not specified")    unless $member_map;
+    croak("\$recipient_map is not specified") unless $recipient_map;
+
+    use IO::MapAdapter;
+    my $obj = new IO::MapAdapter $member_map;
+    $obj->add( $address );
+
+    $obj = new IO::MapAdapter $recipient_map;
+    $obj->add( $address );
 }
 
 

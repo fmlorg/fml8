@@ -8,14 +8,14 @@
 # $FML$
 #
 
-package FML::MemberControl;
+package FML::Command::newml;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
 =head1 NAME
 
-FML::MemberControl - controller
+FML::Command::newml - make a new mailing list
 
 =head1 SYNOPSIS
 
@@ -27,17 +27,31 @@ FML::MemberControl - controller
 
 =cut
 
-use FML::Command::add;
-use FML::Command::delete;
-
-@ISA = qw(FML::Command::add FML::Command::delete);
-
 sub new
 {
     my ($self) = @_;
     my ($type) = ref($self) || $self;
     my $me     = {};
     return bless $me, $type;
+}
+
+
+=head2 C<newml( $ml_name )>
+
+=cut
+
+
+sub newml
+{
+    my ($self, $curproc, $ml_name) = @_;
+    my $config        = $curproc->{ config };
+    my $member_map    = $config->{ primary_member_map };
+    my $recipient_map = $config->{ primary_recipient_map };
+
+    # fundamental check
+    croak("\$ml_name is not specified")    unless $ml_name;
+
+    my $ml_home_prefix = $curproc->{ ml_home_prefix };
 }
 
 
