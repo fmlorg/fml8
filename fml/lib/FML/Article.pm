@@ -110,7 +110,7 @@ sub spool_in
 	if (defined $fh) {
 	    $curproc->{ article }->{ header }->print($fh);
 	    print $fh "\n";
-	    $curproc->{ article }->{ body }->print($fh);
+	    $curproc->{ article }->{ body }->raw_print($fh);
 	    $fh->close;
 	    Log("Article $id");
 	}

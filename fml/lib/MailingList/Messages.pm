@@ -153,6 +153,16 @@ If $fd is not specified, STDOUT is used.
 
 =cut
 
+sub raw_print
+{
+    my ($self, $fd) = @_;
+
+    $self->{ _raw_print } = 1;
+    $self->print($fd);
+    delete $self->{ _raw_print };
+}
+
+
 sub print
 {
     my ($self, $fd) = @_;
@@ -163,7 +173,14 @@ sub print
     
   MSG:
     while (1) {
-	$self->_print($fd, $msg->{ content });
+	if (defined $self->{ _raw_print }) {
+	    my $r_body = $msg->{ content };
+	    print $fd $$r_body;
+	}
+	else {
+	    $self->_print($fd, $msg->{ content });
+	}
+
 	last MSG unless $msg->{ next };
 	$msg = $self->{ next };
     }
