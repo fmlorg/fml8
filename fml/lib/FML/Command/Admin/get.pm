@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.10 2002/02/23 10:04:03 fukachan Exp $
+# $FML: get.pm,v 1.11 2002/02/23 10:22:18 fukachan Exp $
 #
 
 package FML::Command::Admin::get;
@@ -26,7 +26,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-get arbitrary file in $ml_home_dir
+get arbitrary file(s) in $ml_home_dir
 
 =head1 METHODS
 
@@ -53,7 +53,7 @@ sub new
 sub need_lock { 1;}
 
 
-# Descriptions: send arbitrary file in $ml_home_dir by
+# Descriptions: send arbitrary file(s) in $ml_home_dir by
 #               FML::Command::SendFile.
 #               XXX we permit arbitrary file for administrator to retrieve.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
@@ -72,25 +72,25 @@ sub process
     # command syntax. $options is raw command as ARRAY_REF such as
     #     $options = [ 'get:3', 1, 100 ];
     # send_file() called below can parse MH style argument.
-    for my $f (@$options) {
+    for my $filename (@$options) {
 	use File::Spec;
-	my $file = File::Spec->catfile($ml_home_dir, $f);
+	my $filepath = File::Spec->catfile($ml_home_dir, $filename);
 
-	if (-f $file) {
-	    Log("send back $f");
-	    $command_args->{ _filename_to_send } = $f;
-	    $command_args->{ _file_to_send }     = $file;
+	if (-f $filepath) {
+	    Log("send back $filename");
+	    $command_args->{ _filename_to_send } = $filename;
+	    $command_args->{ _file_to_send }     = $filepath;
 	    $self->send_file($curproc, $command_args);
 	    delete $command_args->{ _filename_to_send };
 	    delete $command_args->{ _file_to_send };
 	}
 	else {
 	    $curproc->reply_message_nl('error.no_such_file',
-				       "no such file $file",
+				       "no such file $filename",
 				       {
-					   _arg_file => $f,
+					   _arg_file => $filename,
 				       });
-	    croak("no such file $file");
+	    croak("no such file $filepath");
 	}
     }
 }
