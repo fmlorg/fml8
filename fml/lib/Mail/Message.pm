@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.15 2001/04/12 15:11:13 fukachan Exp $
+# $FML: Message.pm,v 1.16 2001/04/12 16:44:44 fukachan Exp $
 #
 
 package Mail::Message;
@@ -1029,11 +1029,11 @@ sub parse_and_build_mime_multipart_chain
     $self->_set_pos( $pe + 1 );
 
     # fix the end of multipart block against broken MIME/multipart
+    my $broken_close_delimiter = 1 if $mpb_end < 0;
     {
-	print "   ($mpb_begin, $mpb_end)\n" if $debug; 
 	# oops, no delimiter is not found !!!
 	if ($mpb_begin < 0) {
-	    print "   * broken multipart message.\n" if $debug;
+	    print "   *** broken multipart message.\n" if $debug;
 	    my $args = {
 		offset_begin => 0,
 		offset_end   => $data_end,
@@ -1043,15 +1043,18 @@ sub parse_and_build_mime_multipart_chain
 	    return next_message($self, $m);
 	}
 	# close-delimiter is not found.
-	elsif ($mpb_end < 0) { 
-	    $mpb_end = ($data_end - 1);
+	elsif ($mpb_end < 0) {
+	    print "   * broken close-delimiter multipart message.\n" if $debug;
+	    $mpb_end = $data_end;
 	}
     }
+    print "\t($mpb_begin, $mpb_end)\n\t----------\n\n" if $debug; 
 
 
     # prepare lexical variables
     my ($msg, $next_part, $prev_part, @m);
     my $i = 0; # counter to indicate the $i-th message
+
     do {
 	# 2. analyze the region for the next part in $data
 	#     we should check the condition "$pe > $pb" here
@@ -1059,7 +1062,13 @@ sub parse_and_build_mime_multipart_chain
 	# XXX this function is not called
 	# XXX if there is not the prededing preamble.
 	if ($pe > $pb) { # XXX not effective region if $pe <= $pb
+	    print "   new block ($pb, $pe) " if $debug;
+
 	    my ($header, $pb) = _get_mime_header($data, $pb);
+	    if ($debug) {
+		my $type; $header =~ /(\w+\/\w+)/ && ($type = $1);
+		print "type=$type\n";
+	    }
 
 	    my $args = {
 		boundary       => $boundary,
@@ -1077,33 +1086,57 @@ sub parse_and_build_mime_multipart_chain
 
 	# 3. where is the region for the next part?
 	($pb, $pe) = $self->_next_part_pos($data, $delimeter);
+	if ($debug) {
+	    print "\tnext block:";
+	    print "   ($pb, $pe)\t$mpb_begin<->$mpb_end/$data_end\n";
+	    print "   {", substr($$data, $pb, $pe-$pb), "}\n" if 0;
+	    print "\n";
+	}
 
 	# 4. insert a multipart delimiter
 	#    XXX we malloc(), "my $tmpbuf", to store the delimeter string.
 	if ($pe > $mpb_end) { # check the closing of the blocks or not
-	    my $buf = $close_delimeter."\n";
-	    $m[ $i++ ] = $self->_alloc_new_part({
-		data           => \$buf,
-		data_type      => $virtual_data_type{'close-delimiter'},
-		base_data_type => $base_data_type,
-	    });
+	    if ($broken_close_delimiter) {
+		; # not close multipart ;)
+	    }
+	    else {
+		print "   close-delimiter\n" if $debug;
 
+		my $buf = $close_delimeter."\n";
+		$m[ $i++ ] = $self->_alloc_new_part({
+		    data           => \$buf,
+		    data_type      => $virtual_data_type{'close-delimiter'},
+		    base_data_type => $base_data_type,
+		});
+	    }
 	}
 	else {
-	    my $buf = $delimeter."\n";
-	    $m[ $i++ ] = $self->_alloc_new_part({
-		data           => \$buf,
-		data_type      => $virtual_data_type{'delimiter'},
-		base_data_type => $base_data_type,
-	    });
+	    if ($pb == $pe) {
+		print "   *** broken condition pb=$pb pe=$pe ***\n" if $debug;
+	    }
+	    else {
+		print "   delimiter\n" if $debug;
+
+		my $buf = $delimeter."\n";
+		$m[ $i++ ] = $self->_alloc_new_part({
+		    data           => \$buf,
+		    data_type      => $virtual_data_type{'delimiter'},
+		    base_data_type => $base_data_type,
+		});
+	    }
 	}
 
-    } while ($pe <= $mpb_end);
+    } while ($pe <= $mpb_end && ( abs($pe - $pb) > 0));
 
     # check the trailor after multipart blocks exists or not.
-    {
+    if ($broken_close_delimiter) {
+	; # not close multipart ;)
+    }
+    else {
 	my $p = index($$data, "\n", $mpb_end + length($close_delimeter)) +1;
 	if (($data_end - $p) > 0) {
+	    print "   trailor\n" if $debug;
+
 	    $m[ $i++ ] = $self->_alloc_new_part({
 		boundary       => $boundary,
 		offset_begin   => $p,
@@ -1123,12 +1156,6 @@ sub parse_and_build_mime_multipart_chain
 	}
 	if (($j > 1) && defined $m[ $j - 1 ]) {
 	    prev_message( $m[ $j ], $m[ $j - 1 ] );
-	}
-
-	if (0) { # debug
-	    printf STDERR "%d: %-30s %-30s\n", $j,
-		$m[ $j]->{ base_data_type },
-		$m[ $j]->{ data_type };
 	}
     }
 
@@ -1235,10 +1262,16 @@ sub _next_part_pos
     $self->_set_pos( $p + 1 );
 
     # determine the begin and end of the next block without delimiter
+    print "\t_next_part_pos( p=$p pp=$pp maxlen=$maxlen )\n" if $debug;
+
     $len = $p > 0 ? ($p - $pp) : ($maxlen - $pp);
     $pb  = $pp + length($delimeter);
     $pe  = $pb + $len - length($delimeter);
 
+    # but broken if $p == $pp == 0 !!!
+    if ($pp == 0) { $pb = $pe = $maxlen;}
+
+    print "\t_next_part_pos(* len=$len, $pb, $pe)\n" if $debug && ($p<=0);
     return ($pb, $pe);
 }
 
