@@ -10,6 +10,85 @@
 	fml-devel-20040313 では、変数命名のルールが大きく変わりました。
 	気をつけてください。
 
+2004/08/15
+
+   キューイングシステムの拡張
+	e.g. 遅延の場合 exponentail back off をおこなう
+
+   FML::Process::QueueManager 
+   Mail::Delivery::Queue SMTP 
+	implement voluntary sleep::wakeup queue mode switching.
+	o implement queue management utilities.
+	o move queue from active to deferred if delivery failed.
+	o rename *_strategy to *_policy
+	o overhaul::clean up internal style.
+	
+   FML::Process::QueueManager 
+	specify queue strategy to get proper queue list.
+	currently we use "fair-queue".
+	bug fix condition that empty queue or not
+	
+   Mail::Delivery::SMTP 
+	log $recipient_limit info if limit != 1000
+	
+   Mail::Delivery::Queue 
+	implement basic queue management strategy.
+	
+   FML::Article 
+	log more info in failing over.
+	
+   FML::Process::Distribute 
+	warn "not queue flush due to MTA fatal error.".
+	
+2004/08/14
+
+   キューイングシステムをいろいろと微修正
+
+   FML::Process::Kernel 
+	clean up mail queue periodically.
+	ensure initial value to be defined.
+	
+   FML::Process::QueueManager 
+	process 2 requests in one process (temporary solution).
+	XXX-TODO::enhance qmgr more cleverly.
+	
+	change arguemnts for new() and send().
+	implement template of cleanup() method.
+	
+	change cleanup() logic:
+	get all queue id list and remove too old invalid queue.
+	
+   Mail::Delivery::Queue 
+	clean up new().
+	
+	list() can take an argument for $class if needed.
+	
+	implement is_valid_queue() and get_class_list() methods.
+	
+	implement list_all(), last_modified_time().
+	remove get_class_list().
+	
+   FML::Filter::External 
+   FML::Process::{Distribute,State}
+	temporal failure when external filter process timeouts.
+	
+	if external filter process timeouts, notify it to $curproc layer, and
+	distribution process exit(75) for temporal failure.
+	
+	implement filter_state_{set,get}_tempfail_request().
+	
+   FML::Command::Admin::mailq 
+	show number of requests if requests > 0
+	
+   IO::Adapter::File 
+	back up sequence file before operation.
+	rollback file itself in emergency if could.
+
+2004/08/12
+
+   FML::Process::Kernel 
+	define default subject used if unspecified
+	
 2004/07/27
 
    FML::Install 
@@ -7572,4 +7651,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.219 2004/07/27 14:54:57 fukachan Exp $
+$FML: CHANGES.txt,v 1.220 2004/07/31 09:32:58 fukachan Exp $
