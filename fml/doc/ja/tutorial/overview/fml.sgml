@@ -1,25 +1,11 @@
 <!--
-   $FML: chapter.sgml,v 1.10 2002/04/01 23:41:06 fukachan Exp $
+   $FML: fml.sgml,v 1.1 2002/07/02 10:39:37 fukachan Exp $
 -->
 
 <chapter id="overview">
 	<title>
 	&fmldevel; の概要
 	</title>
-
-<important>
-
-<para>
-&fmldevel; は &fml4; 相当のものを完全に一から書き直すプロジェクトです。
-使い方の見かけは &fml4; に"似せて"います。
-主な注意点は
-root での作業、
-configure の使用、
-そして /usr/local/etc/fml/ 以下のファイル、
-特に /usr/local/etc/fml/main.cf というグローバルな設定ファイルの編集です。
-</para>
-
-</important>
 
 
 <!-- ======================================================== -->
@@ -40,7 +26,21 @@ configure の使用、
 
     <listitem>
 	<para>
-	postfix スタイルの設定ファイル
+	設定ファイル形式が新しくなりました。
+	postfix スタイルの設定ファイルです。
+	</para>
+    </listitem>
+
+
+    <listitem>
+	<para>
+	makefml によるＭＬの作成/削除、メンバーの登録/削除など
+	</para>
+    </listitem>
+
+    <listitem>
+	<para>
+	CGI によるＭＬの作成/削除、メンバーの登録/削除など
 	</para>
     </listitem>
 
@@ -49,38 +49,8 @@ configure の使用、
 	<para>
 	配送、
 	ヘッダの書き換え、
-	フィルタ( 4.0 の Envelope Filter に相当するもの )
-	</para>
-    </listitem>
-
-    <listitem>
-	<para>
-	MTA が起動するメインのプログラム:
-	fml.pl distribute command
-	</para>
-    </listitem>
-
-
-    <listitem>
-	<para>
-	いくつかのユーティリティ:
-	fmlconf
-	fmldoc
-	fmlhtmlify
-	fmlsch
-	fmlthread
-	fmlspool
-	makefml
-	</para>
-    </listitem>
-
-
-    <listitem>
-	<para>
-	CGI :
-	fmlsch.cgi
-	fmlthread.cgi
-	makefml.cgi
+	フィルタ( 4.0 の Envelope Filter と Content Filter に相当するもの )、
+	エラーメール解析
 	</para>
     </listitem>
 
@@ -110,6 +80,28 @@ configure の使用、
 
     <listitem>
 	<para>
+	MTA が起動するメインのプログラム:
+	fml.pl distribute command
+	</para>
+    </listitem>
+
+
+    <listitem>
+	<para>
+	いくつかのユーティリティ:
+	fmlconf
+	fmldoc
+	fmlhtmlify
+	fmlsch
+	fmlthread
+	fmlspool
+	makefml
+	</para>
+    </listitem>
+
+
+    <listitem>
+	<para>
 	<link linkend="module.io.adapter">
 	抽象化 IO 層
 	</link>
@@ -129,16 +121,21 @@ configure の使用、
 	インストール作業の概略
 	</title>
 
+
+<important>
+
 <para>
-以下で、特に触れていない概念(例: ＭＬとは？)については &fml4; と同様です。
-くわしくは &fml4; の資料(
-	<ulink url="http://www.fml.org/fml/">
-	http://www.fml.org/fml/
-	</ulink>
-	や
-	&fmlbible;
-)を適宜、参照して下さい。
+&fmldevel; は &fml4; 相当のものを完全に一から書き直すプロジェクトです。
+使い方の見かけは &fml4; に"似せて"います。
+インストールにおける主な注意点は
+root での作業、
+configure の使用、
+そして /usr/local/etc/fml/ 以下のファイル、
+特に /usr/local/etc/fml/main.cf というグローバルな設定ファイルの編集です。
 </para>
+
+</important>
+
 
 <para>
 さて、いつものように elena ＭＬの作成過程を例にとりましょう。
@@ -158,12 +155,14 @@ configure の使用、
    <listitem>
 	<para>
 	<link linkend="install.fml.unix">
-	ユーザ root でインストールをする。
-	まず、ユーザ fml とグループ fml を作成し、
+	ユーザ root でインストールをします。
+	ユーザ root になり、
+	まず、ユーザ fml とグループ fml を作成します。
+	その後、
 	<link linkend="install.fml.unix.configure">
 	configure
 	</link>
-	および make を実行して下さい。
+	および make install を実行して下さい。
 	</link>
 <screen>
 % su root
@@ -260,15 +259,15 @@ elena@fml.org ＭＬを作るには
 </screen>
 とします。
 詳しくは
-<link linkend="usage.newml">
-<xref linkend="usage.newml">
+<link linkend="setup.newml">
+<xref linkend="setup.newml">
 </link>
 を参照してください。
 </para>
 
 <para>
 一方、バーチャルドメイン(nuinui.net)の場合は、
-アドレスを全部指定して下さい。
+ＭＬのアドレスを全部指定して下さい。
 elena@nuinui.net を作る場合は、次のように実行して下さい。
 <screen>
 % su fml
@@ -292,7 +291,7 @@ elena@nuinui.net を作る場合は、次のように実行して下さい。
 </screen>
 で構いません。
 一方、バーチャルドメイン(nuinui.net)の場合は、
-アドレスを全部指定して下さい。
+ＭＬのアドレスを全部指定して下さい。
 <screen>
 % su fml
 % makefml subscribe elena@nuinui.net fukachan@sapporo.iij.ad.jp
@@ -339,11 +338,40 @@ elena@nuinui.net を作る場合は、次のように実行して下さい。
 </warning>
 
 
+<sect2>
+	<title>
+	そのホスト共通の設定
+	</title>
+
 <para>
-elena ＭＬの設定のカスタマイズは /var/spool/ml/elena/config.cf を編集
-して下さい。
-フォーマットは postfix の設定ファイルと同様というとわかりやすいでしょう。
-(&fml4; の config.ph よりは cf にやや近いですが)
+/usr/local/etc/fml/site_default_config.cf
+はこのホストで動く fml すべてに影響を与えます。
+<footnote>
+<para>
+これは &fml4; の site_init.ph に相当するものです。
+</para>
+</footnote>
+</para>
+
+<para>
+フォーマットは、config.cf (後述)と同様で、
+指定できる変数も config.cf と同じです。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	elena ＭＬの設定
+	</title>
+
+<para>
+elena ＭＬの設定のカスタマイズは 
+/var/spool/ml/elena/config.cf
+を編集して下さい。
+フォーマットは postfix の設定ファイルと同様です(&fml4; の config.ph よ
+りは cf にやや近いですが)。わかりやすいでしょ？:-)
 </para>
 
 <para>
@@ -364,6 +392,8 @@ elena ＭＬの設定のカスタマイズは /var/spool/ml/elena/config.cf を編集
 この仕組みのおかげでアップグレードしても元に戻すのが簡単です。
 これは &fmldevel; の特徴です。
 </para>
+
+</sect2>
 
 </sect1>
 

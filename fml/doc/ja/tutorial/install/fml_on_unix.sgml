@@ -1,5 +1,5 @@
 <!--
-	$FML: chapter.sgml,v 1.11 2002/04/01 23:41:02 fukachan Exp $
+	$FML: fml_on_unix.sgml,v 1.1 2002/07/02 10:39:34 fukachan Exp $
 -->
 
 <chapter id="install.fml.unix">
@@ -8,10 +8,29 @@
 	</title>
 
 
+<sect1 id="install.fml.unix.prepare">
+	<title>
+	インストールの準備
+	</title>
+
+
+<para>
+configure を実行する(後述)前に、
+適宜、ユーザ fml とグループ fml を作ってください。
+<screen>
+% su root
+# groupadd fml
+# useradd -g fml -m fml
+</screen>
+</para>
+
+</sect1>
+
+
 <!-- ====================================================== -->
 <sect1 id="install.fml.unix.configure">
 	<title>
-	概要
+	fml のインストール: configure
 	</title>
 
 
@@ -52,6 +71,9 @@ oldincludedir   /usr/include
 infodir         ${prefix}/info
 mandir          ${prefix}/man
 </screen>
+</para>
+
+<para>
 また
 <screen>
 fmlconfdir      $sysconfidr/fml             /usr/local/etc/fml        
@@ -78,8 +100,29 @@ configure --help
 </para>
 
 
+<sect2>
+	<title>
+	例: configure の実行
+	</title>
+
 <para>
-サンプル
+例: NetBSD は /usr/pkg 以下だね 
+<screen>
+% ./configure --prefix=/usr/pkg
+</screen>
+</para>
+
+
+<para>
+例: FreeBSD は全部 /usr/local 以下でいい？
+<screen>
+% ./configure
+</screen>
+</para>
+
+<para>
+例:	main.cf の置き場所として
+	/etc/fml を使うなら、こうする(Debian だとこうするべし？)。
 <screen>
 # ./configure --with-fmlconfdir=/etc/fml
 loading cache ./config.cache
@@ -156,6 +199,8 @@ Now you must run "make install".
 </screen>
 </para>
 
+</sect2>
+
 </sect1>
 
 
@@ -227,10 +272,15 @@ Now you must run "make install".
 		/var/spool/ml
 	  </entry>
           <entry>
-		ＭＬのホームディレクトリ。fml 4 と同じ目的です。
+		ＭＬのホームディレクトリ(の prefix)。
+		fml 4 と同じ目的に使われます。
 
 		注意: /var/spool/ml のオーナは INSTALL.sh の
 		owner 変数(デフォルトはユーザ fml)に設定されます。
+
+		なお、ドメインごとに別の prefix を用意して下さい。
+		たとえば fml.org 用は /var/spool/ml で、
+		nuinui.net 用には /var/spool/nuinui.net などのように。
 	  </entry>
         </row>
       </tbody>
@@ -241,14 +291,136 @@ Now you must run "make install".
 </sect1>
 
 
-<!--
-    ======================================================
-	main.cf の例
-    ======================================================
--->
+<!-- ====================================================== -->
+<sect1 id="install.fml.unix.makeinstall">
+	<title>
+	fml のインストール: make install
+	</title>
+
+<para>
+configure を実行後、ユーザ root になり、make install を実行して下さい。 
+<screen>
+% su root
+# make install
+</screen>
+</para>
+
+<warning>
+<para>
+configure はユーザ root で実行する必要はありませんが、
+make install はユーザ root で実行して下さい。
+間違えないように、configure も root で実行しても構いません。 
+</para>
+</warning>
+
+</sect1>
+
+
+<sect1 id="install.fml.unix.edit.main.cf">
+	<title>
+	main.cf を編集する
+	</title>
+
+<para>
+必要なら /usr/local/etc/fml/main.cf を編集して下さい。
+configure があなたの環境に合わせて main.cf を書換えしているはずなので
+configure のオプション指定が正しければ、
+編集の必要はまずないです。 
+</para>
+
+<!-- main.cf の見本 -->
 &sect.main.cf;
 
+</sect1>
 
-<!-- ====================================================== -->
+
+<sect1 id="install.fml.unix.edit.site.default.config.cf">
+	<title>
+	site_default_config.cf を編集する
+	</title>
+
+<para>
+そのホスト共通の設定ファイルがあります。
+/usr/local/etc/fml/site_default_config.cf 
+<footnote>
+<para>
+これは &fml4; の site_init.ph に相当するものです。
+</para>
+</footnote>
+です。
+必要に応じて編集してください。
+</para>
+
+<para>
+もちろん、この設定より各ＭＬの設定(例: /var/spool/ml/elena/config.cf)
+が優先されます。
+</para>
+
+<para>
+デフォルトでは見本として:)
+subject のタグをつけない設定だけが入っています。
+<screen>
+# $FML: site_default_config.cf.in,v 1.2 2002/04/01 10:16:48 fukachan Exp $
+#
+#               site default_config.cf EXAMPLE
+#
+# fml-devel loads .cf files in this order for elena ML.
+#      1. /etc/fml/defaults/$VERSION/default_config.cf
+#      2. /etc/fml/site_default_config.cf
+#      3. /etc/fml/domains/$DOMAIN/default_config.cf
+#      4. /var/spool/ml/elena/config.cf
+#
+# This file overrides the default "default_config.cf" configurations
+# in the following way.
+#
+
+# We want to disable the subject tag in articles by default.
+article_header_rewrite_rules	-=	rewrite_article_subject_tag
+
+
+
+#
+# site specific options.
+#
+</screen>
+</para>
+
+</sect1>
+
+
+<sect1 id="install.fml.unix.edit.virtual">
+	<title>
+	バーチャルドメインの場合
+	</title>
+
+<para>
+/usr/local/etc/fml/main.cf の編集は必要ありませんが、
+/usr/local/etc/fml/virtual は編集して下さい。
+site_default_config.cf はドメインに関わらず適用されることに注意してく
+ださい。
+</para>
+
+<para>
+fml.org がデフォルトのドメインとすると、fml.org のＭＬ群は 
+/var/spool/ml 以下をデフォルトでは使います。そのため、別のドメイン 
+nuinui.net のＭＬ群は別のディレクトリ(例: /var/spool/nuinui.net)を使う
+必要があります。
+</para>
+
+<para>
+その「ドメイン→ディレクトリ」の対応関係を 
+/usr/local/etc/fml/virtual に定義して下さい。
+<screen>
+nuinui.net	/var/spool/nuinui.net
+</screen>
+</para>
+
+</sect1>
+
+
+<!-- メールサーバの設定 -->
+&sect.install.postfix;
+&sect.install.qmail;
+
 
 </chapter>

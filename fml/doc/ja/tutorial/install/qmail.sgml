@@ -1,0 +1,61 @@
+<!--
+   $FML$
+-->
+
+<sect1 id="install.qmail">
+	<title>
+	メールサーバの設定 (qmail)
+	</title>
+
+<para>
+makefml newml を実行するだけでＭＬが自動的に有効になるように、あらかじ
+め qmail の設定を変更しておいて下さい。
+</para>
+
+
+<sect2>
+	<title>
+	デフォルトのドメイン(例: fml.org)
+	</title>
+
+<para>
+<screen>
+/var/qmail/control/virtualdomains
+</screen>
+に、あらかじめ次のような設定を仕込んでおけば、
+makefml newml を実行するだけで 
+qmail でも自動的にＭＬが有効になります。
+<screen>
+fml.org:fml-fml.org
+</screen>
+</para>
+
+<para>
+この設定がうまく機能するかいなか？は
+makefml newml が作るファイル名に依存しています。
+詳細については
+<link linkend="setup.qmail.aliases">
+makefml newml の qmail に関する節
+</link>
+を参照してください。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	バーチャルドメイン(例: nuinui.net)
+	</title>
+
+<para>
+/usr/local/etc/fml/virtual の設定と合わせて下さい。
+<screen>
+nuinui.net:fml-nuinui.net
+</screen>
+</para>
+
+</sect2>
+
+
+</sect1>

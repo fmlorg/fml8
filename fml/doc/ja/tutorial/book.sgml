@@ -2,7 +2,7 @@
 This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
 to generate various output formats.
 
-$FML: book.sgml,v 1.34 2002/04/02 23:16:30 fukachan Exp $
+$FML: book.sgml,v 1.35 2002/07/02 10:39:28 fukachan Exp $
 -->
 
 <!doctype book public "-//FML//DTD DocBook V3.1-Based Extension//EN" [
@@ -52,13 +52,19 @@ $FML: book.sgml,v 1.34 2002/04/02 23:16:30 fukachan Exp $
 
 	<!-- unix -->
 	&chapter.install.fml.unix;
-	&chapter.usage.newml;
+	&chapter.setup.newml;
 
 	<!-- 2000/nt -->
 	&chapter.install.fml.nt;
 
 	<!-- misc around installation/setup -->
 	&chapter.upgrade;
+
+	<!-- CGI -->
+	&chapter.setup.cgi.admin;
+
+	<!-- テスト -->
+	&chapter.setup.test;
   </part>
 
 
@@ -77,9 +83,17 @@ $FML: book.sgml,v 1.34 2002/04/02 23:16:30 fukachan Exp $
 
 	<!-- スレッド追跡システム -->
 	&chapter.threadtrack.usage;
+  </part>
 
-	<!-- 設定ツール -->
-	&chapter.cgi;
+
+  <part>
+	<title> トラブルシューティング </title>
+	<partintro>
+	<para>
+	本パートではトラブルシューティングの話をします。
+	</para>
+	</partintro>
+
   </part>
 
 

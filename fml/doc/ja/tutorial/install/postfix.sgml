@@ -1,0 +1,52 @@
+<!--
+   $FML$
+-->
+
+<sect1 id="install.postfix">
+	<title>
+	メールサーバの設定 (postfix)
+	</title>
+
+<para>
+makefml newml を実行するだけでＭＬが自動的に有効になるように、あらかじ
+め postfix の設定を変更しておいて下さい。
+</para>
+
+
+<sect2>
+	<title>
+	デフォルトのドメイン(例: fml.org)
+	</title>
+
+
+<para>
+具体的には postfix の /etc/postfix/main.cf を次のようにしておきます。
+<screen>
+alias_maps	=	hash:/etc/mail/aliases
+			hash:/var/spool/ml/etc/mail/aliases
+</screen>
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	バーチャルドメイン(例: nuinui.net)
+	</title>
+
+
+<para>
+/usr/local/etc/fml/virtual の設定と合わせて下さい。
+<screen>
+alias_maps	=	hash:/etc/mail/aliases
+			hash:/var/spool/ml/etc/mail/aliases
+			hash:/var/spool/nuinui.net/etc/mail/aliases
+</screen>
+</para>
+
+
+</sect2>
+
+
+</sect1>
