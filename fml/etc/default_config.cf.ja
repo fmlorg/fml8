@@ -8,7 +8,7 @@
 
 # Descriptions: いわゆるＭＬの管理者、エラーメールの返る先
 #      History: fml 4.0 の $MAINTAINER
-#         Type: rfc822_address
+#        Value: rfc822_address
 maintainer	=
 
 
@@ -23,13 +23,13 @@ default_directory_mode	=	0755
 # Descriptions: ML のホームディレクトリ
 #               $ml_home_dir は FML::Process::Switch が決める
 #      History: fml 4.0 の $DIR にあたるもの
-#         Type: directory_string
+#        Value: directory_string
 #     Examples: /var/spool/ml/elena
 # ml_home_dir	=
 
 # Descriptions: ML 間でシェアするデータベースをおくホームディレクトリ
 #      History: fml 4.0 に該当するものはない
-#         Type: directory_string
+#        Value: directory_string
 shared_db_dir	= $ml_home_prefix/@db@
 
 var_dir		= $ml_home_dir/var
@@ -38,44 +38,73 @@ tmp_dir		= $ml_home_dir/tmp
 
 =head1	アクセス制御ルール
 
-# 投稿への制限
-# XXX fml 4.0 の PERMIT_POST_FROM と REJECT_ADDR を合体したもの
+# Descriptions: 投稿への制限
+#      History: fml 4.0 の PERMIT_POST_FROM と REJECT_ADDR を合体したもの
+#        Value: list of attributes
+#     Examples:
 post_restrictions	=	reject_system_accounts
 				permit_members_only
 				reject
 
-# コマンドへの制限
-# fml 4.0 の PERMIT_COMMAND_FROM と REJECT_ADDR を合体したもの
+# Descriptions: コマンドへの制限
+#      History: fml 4.0 の PERMIT_COMMAND_FROM と REJECT_ADDR を合体したもの
+#        Value: list of attributes
+#     Examples:
 command_restrictions	=	reject_system_accounts
 				permit_members_only
 				reject
 
+
 =head2 メンバーとみなされるのは誰か？
 
-
-# 登録などの際に対象となるメンバーリスト
-# XXX タイプによっては書き込みできないこともある(例: unix.group )
+# Descriptions: 登録などの際に対象となるメンバーリスト
+#               XXX map のタイプによっては書き込みできないこともある
+#               XXX (例: unix.group )
+#      History: fml 4.0 の $MEMBER_LIST
+#        Value: filename
+#     Examples: /var/spool/ml/elena/members
 primary_member_map	=	file:$ml_home_dir/members
 
-# メンバーかどうか認証する際に検索するすべてのメンバーリスト 
-# fml 4.0 の $MEMBER_LIST @MEMBER_LIST 相当
+
+# Descriptions: メンバーかどうか認証する際に検索するすべてのメンバーリスト 
+#      History: fml 4.0 の $MEMBER_LIST @MEMBER_LIST 相当
+#         Type:
+#     Examples:
 member_maps		=	$primary_member_map
 
 
 =head2 受信者のリスト
 
 
-# 登録などの際に対象とする受信者のリスト
-# XXX タイプによっては書き込みできないこともある(例: unix.group )
+# Descriptions: 登録などの際に対象とする受信者のリスト
+#               XXX map のタイプによっては書き込みできないこともある
+#               XXX (例: unix.group )
+#      History: fml 4.0 の $ACTIVE_LIST 
+#        Value: filename
+#     Examples: /var/spool/ml/elena/actives
 primary_recipient_map	=	 file:$ml_home_dir/actives
 
-# すべての受信者のリスト
-# fml 4.0 の $ACTIVE_LIST @ACTIVE_LIST 相当
+
+# Descriptions: すべての受信者のリスト
+#      History: fml 4.0 の $ACTIVE_LIST @ACTIVE_LIST 相当
+#        Value: a list of filenames
+#     Examples:
 recipient_maps		=	$primary_recipient_map
 				file:$ml_home_dir/recipients
 				unix.group:fml
 
-# system accounts
+
+=head2 アカウントベースのアクセス制限をかける
+
+# Descriptions: OS が使っているようなアカウントや自動プログラムのリスト
+#               これらのアカウントは
+#                 1. だれだか個人を特定できないようなアカウントである。
+#                 2. えてして自動プログラムなどになっており、
+#                    メールループなどをひきおこしうる。
+#               これらの理由により望ましくないアカウントたちと思われる。
+#      History: fml 4.0 の $REJECT_ADDR
+#        Value: a list of strings
+#     Examples: see below
 system_accounts		=	root
 				postmaster
 				MAILER-DAEMON
@@ -132,7 +161,7 @@ digest_header_rewrite_rules	=	add_software_info
 
 # Descriptions: あぶないタグを消す
 #      History: fml 4.0 の SKIP_FIELDS
-#         Type: strings
+#        Value: strings
 #     Examples:
 unsafe_header_fields		=	Return-Receipt-To
 
@@ -161,14 +190,23 @@ lock_type	= flock
 
 =head1	ログのとり方
 
-# enable logging function
+# Descriptions: enable logging function
+#               ログとり機能を有効にする
+#      History: 
+#        Value: yes / no
+#     Examples:
 use_log		=	yes
 
-# logfile
+# Descriptions: ログファイル
+#      History: fml 4.0 の $LOGFILE
+#        Value: filename
+#     Examples:
 log_file	=	$ml_home_dir/log
 
-# type of logging
-# value: file / syslog
+# Descriptions: ログとりのタイプ
+#      History: fml 5.0 new
+#        Value: file / syslog
+#     Examples:
 log_type	=	file
 
 # log message format
@@ -197,9 +235,20 @@ spool_type	= plane
 
 =head1	コマンドの定義
 
-# value: confirmation / 
+
+# Descriptions: chaddr コマンドで confirmation 認証(コールバック認証)
+#               を行なうか否か？
+#      History:
+#        Value:  confirmation / ""
+#     Examples:
 command_chaddr_type		=	confirmation
 
+
+# Descriptions: unsubscribe コマンドで confirmation 認証(コールバック認証)
+#               を行なうか否か？
+#      History:
+#        Value:  confirmation / ""
+#     Examples:
 command_unsubscribe_type	=	confirmation
 
 
@@ -347,10 +396,12 @@ has_getpwgid	=	yes
 has_alarm	=	yes
 
 
-=head1 フック
+=head1 フック's
 
-### default_config.cf file ends here.
-### fml 4.0's 現在の LOCAL_CONFIG で別れ目になる行
+###                                                          ###
+### default_config.cf file ends here.                        ###
+### fml 4.0's 現在の LOCAL_CONFIG で別れ目になる行に相当する ###
+###                                                          ###
 
 =cut
 
