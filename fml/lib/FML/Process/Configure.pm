@@ -17,18 +17,44 @@ use FML::Process::Kernel;
 use FML::Log qw(Log LogWarn LogError);
 use FML::Config;
 
+@ISA = qw(FML::Process::Kernel Exporter);
+
 
 =head1 NAME
 
-FML::Process::Configure -- fmlconf and makefml
+FML::Process::Configure -- fmlconf, fmldoc and makefml wrapper
 
 =head1 SYNOPSIS
 
+    use FML::Process::Configure;
+    $curproc = new FML::Process::Configure;
+    $curproc->run();
+
 =head1 DESCRIPTION
 
-=cut
+FML::Process::Configure is the wrapper for fmlconf, fmldoc and
+makefml.
+See C<FML::Process::Flow> for each method definition.
 
-@ISA = qw(FML::Process::Kernel Exporter);
+=head2 MODULES
+
+These programs, 
+C<fmlconf>, C<fmldoc> and C<makefml>,
+bootstrap by using these modules in this order.
+
+   libexec/loader -> FML::Process::Switch -> FML::Process::Configure
+
+=head1 METHODS
+
+=head2 C<new($args)>
+
+usual constructor.
+
+=head2 C<prepare($args)>
+
+dummy.
+
+=cut
 
 # Descriptions: constructor
 #    Arguments: $self $args
@@ -50,6 +76,14 @@ sub new
 sub prepare { ; }
 
 
+=head2 C<run($args)>
+
+the main top level dispatcher for C<fmlconf>, C<fmldoc> and C<makefml>. 
+For example, it kicks off internal function C<_fmlconf($args)> for
+C<fmlconf($args)>.
+
+=cut
+
 # Descriptions: just a switch
 #    Arguments: $self $args
 # Side Effects: none
@@ -62,16 +96,10 @@ sub run
     my $argv    = $args->{ ARGV };
 
     if ($myname eq 'fmlconf') {
-	$curproc->_show_conf($args);
+	$curproc->_fmlconf($args);
     }
     elsif ($myname eq 'fmldoc') {
-	my (@opts);
-	push(@opts, '-v') if $args->{ options }->{ v };
-	push(@opts, '-t') if $args->{ options }->{ t };
-	push(@opts, '-u') if $args->{ options }->{ u };
-	push(@opts, '-m') if $args->{ options }->{ m };
-	push(@opts, '-l') if $args->{ options }->{ l };
-	exec 'perldoc', @opts, @$argv;
+	$curproc->_fmldoc($args);
     }
     elsif ($myname eq 'makefml') {
 	$curproc->_makefml($args);
@@ -86,7 +114,7 @@ sub run
 #    Arguments: $self $args
 # Side Effects: none
 # Return Value: none
-sub _show_conf
+sub _fmlconf
 {
     my ($curproc, $args) = @_;    
     my $config = $curproc->{ config };
@@ -94,6 +122,28 @@ sub _show_conf
     my $argv   = $args->{ ARGV };
 
     $config->dump_variables({ mode => $mode });
+}
+
+
+# Descriptions: fmldoc wrapper / top level dispacher
+#    Arguments: $self $args
+# Side Effects: none
+# Return Value: none
+sub _fmldoc
+{
+    my ($curproc, $args) = @_;    
+    my $config  = $curproc->{ config };
+    my $myname  = $args->{ myname };
+    my $argv    = $args->{ ARGV };
+
+    my (@opts);
+    push(@opts, '-v') if $args->{ options }->{ v };
+    push(@opts, '-t') if $args->{ options }->{ t };
+    push(@opts, '-u') if $args->{ options }->{ u };
+    push(@opts, '-m') if $args->{ options }->{ m };
+    push(@opts, '-l') if $args->{ options }->{ l };
+
+    exec 'perldoc', @opts, @$argv;
 }
 
 
