@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.22 2002/09/11 23:18:15 fukachan Exp $
+# $FML: Error.pm,v 1.23 2002/09/22 14:56:52 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -265,7 +265,7 @@ sub finish
 
     if ($pcb->get("error", "found")) {
 	Log("error message found");
-	# inform ? 
+	# inform ?
     }
     else {
 	Log("error message not found");

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.43 2002/09/15 00:11:12 fukachan Exp $
+# $FML: Utils.pm,v 1.44 2002/09/22 14:56:54 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -254,7 +254,7 @@ sub _mkpath_num
     if ($mode =~ /^\d+$/) { # NUM 0700
 	eval q{ use File::Path;};
 	mkpath([ $dir ], 0, $mode);
-	chmod $mode, $dir; 
+	chmod $mode, $dir;
 	Log(sprintf("mkdir %s mode=0%o", $dir, $mode));
     }
     else {
@@ -271,7 +271,7 @@ sub _mkpath_str
 	eval qq{
 	    use File::Path;
 	    mkpath([ \$dir ], 0, $mode);
-	    chmod $mode, \$dir; 
+	    chmod $mode, \$dir;
 	    Log(\"mkdirhier $dir mode=$mode\");
 	};
 	LogError($@) if $@;

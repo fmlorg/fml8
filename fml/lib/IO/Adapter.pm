@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.22 2002/09/11 23:18:19 fukachan Exp $
+# $FML: Adapter.pm,v 1.23 2002/09/22 14:56:58 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -329,9 +329,9 @@ in C<array_reference>, C<unix.group>, C<nis.grouop> maps.
 
 add $address to the specified map.
 
-Optionally, you can add KEY=>VALUE structures such as 
+Optionally, you can add KEY=>VALUE structures such as
   $address => STR
-or 
+or
   $address => [ STR1, STR2, ... ].
 
 

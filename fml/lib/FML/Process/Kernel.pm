@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.136 2002/09/15 00:11:43 fukachan Exp $
+# $FML: Kernel.pm,v 1.137 2002/09/22 14:56:53 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -248,7 +248,7 @@ sub prepare
 
 =head2 lock( [$channel] )
 
-lock the specified channel. 
+lock the specified channel.
 lock a giant lock if the channel is not specified.
 
 =head2 unlock( [$channel] )
@@ -287,7 +287,7 @@ sub lock
 }
 
 
-# Descriptions: unlock the channel 
+# Descriptions: unlock the channel
 #    Arguments: OBJ($curproc) STR($channel)
 # Side Effects: none
 # Return Value: none
@@ -372,7 +372,7 @@ sub is_event_timeout
     my ($curproc, $channel) = @_;
     my $t = $curproc->get_event_timeout($channel);
 
-    if ($t) {	
+    if ($t) {
 	return (time > $t) ? 1 : 0;
     }
     else {
@@ -429,7 +429,7 @@ sub set_event_timeout
 sub _init_event_timeout
 {
     my ($curproc, $channel) = @_;
-    
+
     my $config = $curproc->config();
     my $dir    = $config->{ event_queue_dir };
 
@@ -613,7 +613,7 @@ sub resolve_ml_specific_variables
 	    my $pattern = $regexp->{ ml_name };
 
 	  ARGS:
-	    for my $arg (@ARGV) {	    
+	    for my $arg (@ARGV) {
 		last ARGS if $ml_addr;
 		next ARGS if $arg =~ /^-/o;
 
@@ -659,7 +659,7 @@ sub resolve_ml_specific_variables
 	    Log("(debug) parse @ARGV");
 
 	  ARGS:
-	    for my $arg (@ARGV) {	    
+	    for my $arg (@ARGV) {
 		last ARGS if $ml_addr;
 		next ARGS if $arg =~ /^-/o;
 
@@ -1298,7 +1298,7 @@ sub message_nl
     my $local_file = File::Spec->catfile($local_dir, $charset, $class);
     my $file       = File::Spec->catfile($dir,       $charset, $class);
 
-    # override message: replace default one with ml local message template 
+    # override message: replace default one with ml local message template
     if (-f $local_file) { $file = $local_file;}
 
     # import message template

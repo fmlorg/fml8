@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Encode.pm,v 1.6 2002/09/11 23:18:25 fukachan Exp $
+# $FML: Encode.pm,v 1.7 2002/09/22 14:57:04 fukachan Exp $
 #
 
 package Mail::Message::Encode;
@@ -130,7 +130,7 @@ sub convert_str_ref
 	# 2. try conversion ! (converted to 'euc' by default).
 	if ($in_code) {
 	    return $self->_jp_str_ref($str_ref, $out_code, $in_code);
-	}	
+	}
     }
     else {
 	croak("Mail::Message::Encode: unknown language");
@@ -157,13 +157,13 @@ sub _jp_str_ref
 	&Jcode::convert( $str_ref, $code, $in_code);
 
 	return 1;
-    }	
+    }
     elsif ($out_code =~ /^(iso2022jp|iso-2022-jp)$/i) {
 	use Jcode;
 	&Jcode::convert( $str_ref, 'jis', $in_code);
 
 	return 1;
-    }	
+    }
 
     return 0;
 }
@@ -171,7 +171,7 @@ sub _jp_str_ref
 
 # Descriptions: run $proc($s) after $s is converted to $out_code code
 #    Arguments: OBJ($self) CODE_REF($proc) STR($s) HASH_REF($args)
-#               STR($out_code) STR($in_code) 
+#               STR($out_code) STR($in_code)
 # Side Effects: none
 # Return Value: none
 sub run_in_code
@@ -401,7 +401,7 @@ sub decode_mime_string
 
 
 if ($0 eq __FILE__) {
-    $| = 1; 
+    $| = 1;
 
     my $obj = new Mail::Message::Encode;
     my $str = "ほえ といえばカードキャプターさくら KERO   ＫＥＲＯちゃん";
