@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.35 2004/04/23 04:10:30 fukachan Exp $
+# $FML: Auth.pm,v 1.36 2004/04/23 13:45:15 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -172,7 +172,8 @@ sub check_admin_member_password
     for my $map (@$maplist) {
 	use IO::Adapter;
 	my $obj   = new IO::Adapter $map, $config;
-	my $pwent = $obj->find( $user , { want => 'key,value', all => 1 });
+	my $_user = quotemeta($user);
+	my $pwent = $obj->find($_user , { want => 'key,value', all => 1 });
 
 	# if this $map has this $user entry,
 	# try to check { user => password } relation.
@@ -240,6 +241,7 @@ sub check_admin_member_password
 sub change_password
 {
     my ($self, $curproc, $command_args, $up_args) = @_;
+    my $cred     = $curproc->{ credential };
     my $map      = $up_args->{ map };
     my $address  = $up_args->{ address  };
     my $password = $up_args->{ password };
@@ -259,13 +261,24 @@ sub change_password
 	$obj->touch();
 
 	# delete
-	if ($obj->find( $address )) {
-	    $obj->delete( $address );
-	    if ($obj->error()) {
-		$curproc->logerror("cannot delete $address from=$map");
+	my ($addrs) = $obj->find( $address, { all => 1 });
+	if (@$addrs) {
+	    my $found = 0;
+	    for my $a (@$addrs) {
+		my ($user, $pwd, $encode) = split(/\s+/, $a);
+		if ($cred->is_same_address($user, $address)) {
+		    $found = 1;
+		}
 	    }
-	    else {
-		$curproc->log("delete $address from=$map");
+
+	    if ($found) {
+		$obj->delete( $address );
+		if ($obj->error()) {
+		    $curproc->logerror("cannot delete $address from=$map");
+		}
+		else {
+		    $curproc->log("delete $address from=$map");
+		}
 	    }
 	}
 	else {
