@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: BodyCheck.pm,v 1.7 2001/09/23 14:30:35 fukachan Exp $
+# $FML: BodyCheck.pm,v 1.8 2001/10/14 22:25:31 fukachan Exp $
 #
 
 package FML::Filter::BodyCheck;
@@ -272,7 +272,7 @@ sub reject_one_line_message
 sub reject_old_fml_command_syntax
 {
     my ($self, $msg, $args, $first_msg) = @_;
-    my $buf = $first_msg->data;
+    my $buf = $first_msg->data_in_body_part;
 
     if ($buf =~ /^[\s\n]*(\#\s*[\w\d\:\-\s]+)[\n\s]*$/) {
 	my $r = $1; 
@@ -286,7 +286,7 @@ sub reject_old_fml_command_syntax
 sub reject_invalid_fml_command_syntax
 {
     my ($self, $msg, $args, $first_msg) = @_;
-    my $buf = $first_msg->data;
+    my $buf = $first_msg->data_in_body_part;
 
     if ($buf =~ /^[\s\n]*\%\s*echo.*/i) {
 	croak "invalid command in the mail body";
@@ -308,7 +308,7 @@ sub reject_invalid_fml_command_syntax
 sub reject_japanese_command_syntax
 {
     my ($self, $msg, $args, $first_msg) = @_;
-    my $buf = $first_msg->data;
+    my $buf = $first_msg->data_in_body_part;
 
     if ($buf =~ /\033\044\102(\043[\101-\132\141-\172])/) {
 	# trap /JIS"2byte"[A-Za-z]+/

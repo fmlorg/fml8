@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: DSN.pm,v 1.9 2001/07/31 12:56:21 fukachan Exp $
+# $FML: DSN.pm,v 1.10 2001/09/18 03:31:32 fukachan Exp $
 #
 
 
@@ -85,7 +85,7 @@ sub analyze
 
     if (defined $m) {
 	# data in the part
-	my $data = $m->data;
+	my $data = $m->data_in_body_part;
 	my $n    = $m->num_paragraph;
 
 	for (my $i = 0; $i < $n; $i++) {

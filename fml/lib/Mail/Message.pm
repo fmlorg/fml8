@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.31 2001/10/21 15:08:50 fukachan Exp $
+# $FML: Message.pm,v 1.32 2001/10/21 15:29:20 fukachan Exp $
 #
 
 package Mail::Message;
@@ -1713,9 +1713,9 @@ sub _evaluate_pmap
 
 alias of C<header_in_body_part()>.
 
-=head2 C<data()>
+=head2 C<data( ... )>
 
-alias of C<body_in_body_part()>.
+alias of C<body_in_body_part( ... )>.
 
 =cut
 
@@ -1729,8 +1729,8 @@ sub header
 
 sub data
 {
-    my ($self) = @_;
-    $self->data_in_body_part(@_[1 .. $#_]);
+    my ($self, @args) = @_;
+    $self->data_in_body_part(@args);
 }
 
 

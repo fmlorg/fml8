@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.19 2001/10/22 16:09:12 fukachan Exp $
+# $FML: Lite.pm,v 1.20 2001/10/23 07:41:57 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -15,7 +15,7 @@ use Carp;
 my $debug = $ENV{'debug'} ? 1 : 0;
 my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::HTML::Lite</A>";
 
-my $version = q$FML: Lite.pm,v 1.19 2001/10/22 16:09:12 fukachan Exp $;
+my $version = q$FML: Lite.pm,v 1.20 2001/10/23 07:41:57 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -184,7 +184,7 @@ sub htmlfy_rfc822_message
 	elsif ($type eq 'text/plain') {
 	    $self->_text_print({ 
 		fh   => $wh,
-		data => $m->data,
+		data => $m->data_in_body_part(),
 	    });
 	}
 	# message/rfc822 case
