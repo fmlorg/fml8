@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.96 2003/09/14 04:05:47 fukachan Exp $
+# $FML: Switch.pm,v 1.97 2003/09/19 01:03:41 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -336,38 +336,20 @@ sub _overload_main_cf
 
 
 # Descriptions: return the suitable getopt options
-#    Arguments: HASH_REF($main_cf) STR($myname)
+#    Arguments: HASH_REF($main_cf) STR($name)
 # Side Effects: none
-# Return Value: ARRAY (getopt parameters)
+# Return Value: ARRAY_REF (getopt parameters)
 sub _module_specific_options
 {
-    my ($main_cf, $myname) = @_;
-    my $modules = $main_cf->{ default_command_line_option_config };
+    my ($main_cf, $name) = @_;
+    my $modconf  = $main_cf->{ default_command_line_option_config };
+    my $fullname = $0;
 
-    use FileHandle;
-    my $fh = new FileHandle $modules;
-    if (defined $fh) {
-	my $buf;
-      LINE:
-	while ($buf = <$fh>) {
-	    next LINE if $buf =~ /^\#/o;
-	    chomp $buf;
+    my (@opts) = _find_longest_matched_entry($modconf, $name, $fullname);
 
-	    if (defined $buf && $buf) {
-		my ($program, @opts) = split(/\s+/, $buf);
-		if ($program eq $myname) {
-		    return( \@opts || [] );
-		    last LINE;
-		}
-	    }
-	}
-	$fh->close();
-    }
-    else {
-	croak("cannot open comman_line_options config");
-    }
+    print STDERR "getopts: @opts\n" if $debug;
 
-    croak "no such program $myname.\n";
+    return \@opts;
 }
 
 
@@ -392,22 +374,46 @@ sub _module_we_use
 {
     my ($args)   = @_;
     my $main_cf  = $args->{ main_cf };
+    my $modconf  = $main_cf->{ default_module_config };
     my $name     = $args->{ myname };
-    my $modules  = $main_cf->{ default_module_config };
-    my $pkg      = undef;
-    my $pkgopts  = undef;
     my $fullname = $args->{ program_fullname };
 
     if (defined $args->{ options }->{ ctladdr } &&
 	$args->{ options }->{ ctladdr }) {
-	$name .= "__--ctladdr";
+	$name     .= "__--ctladdr";
+	$fullname .= "__--ctladdr";
     }
 
+    my ($pkg, @opts) = _find_longest_matched_entry($modconf, $name, $fullname);
+
+    print STDERR "module = $pkg (for $0)\n" if $debug;
+
+    # saved info
+    $args->{ module_info } = {
+	class   => $pkg,
+	options => join(" ", @opts),
+    };
+    $args->{ need_ml_name } = _ml_name_is_required($args);
+
+    return $pkg;
+}
+
+
+# Descriptions: 
+#    Arguments: STR($def_file) STR($name) STR($fullname)
+# Side Effects: 
+# Return Value: ARRAY
+sub _find_longest_matched_entry
+{
+    my ($def_file, $name, $fullname) = @_;
+    my $ret = [];
+
     use FileHandle;
-    my $fh = new FileHandle $modules;
+    my $fh = new FileHandle $def_file;
     if (defined $fh) {
 	my $max_match_level = 0;
 	my $buf;
+
       LINE:
 	while ($buf = <$fh>) {
 	    next LINE if $buf =~ /^\#/o;
@@ -415,13 +421,12 @@ sub _module_we_use
 
 	    if (defined $buf && $buf) {
 		my $n = 0;
-		my ($program, $class, $opts) = split(/\s+/, $buf, 3);
+		my ($program, @argv) = split(/\s+/, $buf);
 		if ($n = _program_match($program, $name, $fullname)) {
-		    print STDERR "class = $class, n = $n (for $0)\n" if $debug;
+		    print STDERR "match $program (@argv), n = $n\n" if $debug;
 		    if ($n > $max_match_level) {
 			$max_match_level = $n;
-			$pkg     = $class;
-			$pkgopts = $opts;
+			$ret             = \@argv;
 		    }
 		}
 	    }
@@ -432,16 +437,7 @@ sub _module_we_use
 	croak("cannot open module config");
     }
 
-    print STDERR "module = $pkg (for $0)\n" if $debug;
-
-    # saved info
-    $args->{ module_info } = {
-	class   => $pkg,
-	options => $pkgopts,
-    };
-    $args->{ need_ml_name } = _ml_name_is_required($args);
-
-    return $pkg;
+    return @$ret;
 }
 
 
@@ -450,7 +446,7 @@ sub _module_we_use
 #               $program   = entry in etc/modules
 #               $name      = basename($0)
 #               $fullname  = $0
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: STR($program) STR($name) STR($fullname)
 # Side Effects: none
 # Return Value: NUM
 sub _program_match
@@ -479,7 +475,7 @@ sub _program_match
 #               $fullname  = $0
 #
 #               return the number of matched path level.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: STR($program) STR($name) STR($fullname)
 # Side Effects: none
 # Return Value: NUM
 sub _program_subdir_match
