@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.67 2002/04/25 04:46:09 fukachan Exp $
+# $FML: Switch.pm,v 1.68 2002/05/19 09:44:00 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -183,6 +183,8 @@ sub main::Bootstrap2
 	my $reason = $@;
 	if ($obj->can('help')) { eval $obj->help();};
 
+	eval q{ __log($args, $reason);};
+
 	if (defined( $main_cf->{ debug } ) ||
 	    defined $options{debug}) {
 	    croak($reason);
@@ -192,6 +194,28 @@ sub main::Bootstrap2
 	    croak($reason);
 	}
     }
+}
+
+
+# Descriptions: try to save the error message
+#    Arguments: STR($s)
+# Side Effects: save message to log file if could
+# Return Value: none
+sub __log
+{
+    my ($args, $s) = @_;
+
+    eval q{
+	use File::Spec;
+	use FileHandle;
+	my $dir  = $args->{ ml_home_prefix }; 
+	my $logf = File::Spec->catfile($dir, '@log.crit@');
+	my $wh   = new FileHandle ">> $logf";
+	if (defined $wh) {
+	    print $wh time, "\t", $s, "\n";
+	    $wh->close;
+	}
+    };
 }
 
 
