@@ -144,9 +144,18 @@ sub update_status
 
     # entries to check
     my $subject = $header->get('subject');
-    my $message = $body->get_first_plaintext_message();
-    my $content = $message->get_content_body();
     my $pragma  = $header->get('x-ticket-pragma') || '';
+
+    my $content = '';
+    my $message = $body->get_first_plaintext_message();
+    if ( ref($message) eq 'MailingList::Messages' ) {
+	$content = $message->get_content_body();
+    }
+    else {
+	Log("Error: get_first_plaintext_message cannot get object");
+	Log("\$message = ". ref($message) );
+	Log("\$message is undef()") unless defined $message;
+    }
 
     if ($content =~ /^\s*close/ || 
 	$subject =~ /^\s*close/ || 
