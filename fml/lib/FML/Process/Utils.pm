@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.94 2003/11/23 03:54:46 fukachan Exp $
+# $FML: Utils.pm,v 1.95 2003/12/06 04:48:22 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -668,6 +668,18 @@ sub myname
     return $args->{ myname };
 }
 
+
+# Descriptions: check if $ml_name is mandatory in this process?
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub is_need_ml_name
+{
+    my ($curproc) = @_;
+    my $args = $curproc->{ __parent_args };
+
+    return( $args->{ need_ml_name } ? 1 : 0 );
+}
 
 # Descriptions: check $str with $class regexp defined in FML::Restriction.
 #    Arguments: OBJ($curproc) STR($class) STR($str)
