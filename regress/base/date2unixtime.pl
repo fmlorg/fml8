@@ -1,9 +1,9 @@
 #!/usr/bin/env perl
 #
-# $FML$
+# $FML: date2unixtime.pl,v 1.1 2001/07/08 14:02:02 fukachan Exp $
 #
 
-use FML::Date;
+use Mail::Message::Date;
 
 require 'ctime.pl';
 
@@ -12,7 +12,7 @@ my $date = ctime( $t );
 
 chop $date;
 
-my $tx =  FML::Date::date_to_unixtime( $date ), "\t";
+my $tx = Mail::Message::Date::date_to_unixtime( $date ), "\t";
 
 print "* date -> unixtime: $t => $date => $tx\n";
 
