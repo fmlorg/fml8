@@ -7,7 +7,7 @@
 # $FML: Menu.pm,v 1.26 2003/08/29 15:33:56 fukachan Exp $
 #
 
-package FML::CGI::Admin::Menu;
+package FML::CGI::MLAdmin::Menu;
 use strict;
 use Carp;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
@@ -19,11 +19,11 @@ use FML::CGI::Menu;
 
 =head1 NAME
 
-FML::CGI::Admin::Menu - provides CGI controll for the specific domain
+FML::CGI::MLAdmin::Menu - provides CGI controll for the specific domain
 
 =head1 SYNOPSIS
 
-    $obj = new FML::CGI::Admin::Menu;
+    $obj = new FML::CGI::MLAdmin::Menu;
     $obj->prepare();
     $obj->verify_request();
     $obj->run();
@@ -37,7 +37,7 @@ See L<FML::Process::Flow> for flow details.
 
 =head2 CLASS HIERARCHY
 
-C<FML::CGI::Admin::Menu> is a subclass of C<FML::Process::CGI>.
+C<FML::CGI::MLAdmin::Menu> is a subclass of C<FML::Process::CGI>.
 
              FML::Process::Kernel
                        |
@@ -54,7 +54,7 @@ C<FML::CGI::Admin::Menu> is a subclass of C<FML::Process::CGI>.
      FML::CGI::Menu          FML::CGI::Menu
            |                       |
            A                       A
- FML::CGI::Admin::Menu    FML::CGI::MLAdmin::Menu
+ FML::CGI::MLAdmin::Menu    FML::CGI::MLMLAdmin::Menu
 
 =head1 METHODS
 
@@ -87,7 +87,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::CGI::Admin::Menu first appeared in fml8 mailing list driver package.
+FML::CGI::MLAdmin::Menu first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

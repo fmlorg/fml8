@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.52 2003/08/29 15:34:09 fukachan Exp $
+# $FML: Kernel.pm,v 1.53 2003/09/13 09:08:12 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -18,7 +18,8 @@ use CGI qw/:standard/;
 
 use FML::Log qw(Log LogWarn LogError);
 use FML::Process::Kernel;
-@ISA = qw(FML::Process::Kernel);
+use FML::Process::CGI::Utils;
+@ISA = qw(FML::Process::CGI::Utils FML::Process::Kernel);
 
 
 =head1 NAME
@@ -402,9 +403,9 @@ show title.
 sub run_cgi_title
 {
     my ($curproc, $args) = @_;
-    my $myname  = $curproc->myname();
-    my $domain  = $curproc->ml_domain();
-    my $ml_name = $curproc->safe_param_ml_name();
+    my $myname  = $curproc->cgi_var_myname();
+    my $domain  = $curproc->cgi_var_ml_domain();
+    my $ml_name = $curproc->cgi_var_ml_name();
     my $role    = '';
     my $title   = '';
 
@@ -429,7 +430,7 @@ help.
 sub run_cgi_help
 {
     my ($curproc, $args) = @_;
-    my $domain = $curproc->ml_domain();
+    my $domain = $curproc->cgi_var_ml_domain();
 
     print "<B>\n";
     print "<CENTER>fml CGI interface for \@$domain ML's</CENTER><BR>\n";
@@ -544,7 +545,7 @@ show options.
 sub run_cgi_options
 {
     my ($curproc, $args) = @_;
-    my $domain = $curproc->ml_domain();
+    my $domain = $curproc->cgi_var_ml_domain();
     my $action = $curproc->safe_cgi_action_name();
 
     print "<P> <B> options </B>\n";
@@ -616,12 +617,12 @@ return input address after validating the input
 
 
 # Descriptions: return input address after validating the input
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: longjmp() if critical error occurs.
 # Return Value: STR
 sub cgi_try_get_address
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
     my $address = '';
     my $a = '';
 
@@ -669,12 +670,12 @@ return input address after validating the input
 
 
 # Descriptions: return input ml_name after validating the input
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: longjmp() if critical error occurs.
 # Return Value: STR
 sub cgi_try_get_ml_name
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
     my $ml_name = '';
     my $a = '';
 

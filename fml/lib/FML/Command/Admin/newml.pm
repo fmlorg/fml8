@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.68 2003/09/12 00:01:09 fukachan Exp $
+# $FML: newml.pm,v 1.69 2003/09/13 09:16:59 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -118,8 +118,10 @@ sub process
     # XXX we assume /etc/passwd exists for backword compatibility
     # XXX on all unix plathomes.
     if ($self->_is_mta_alias_maps_has_ml_entry($curproc, $params, $ml_name)) {
-	warn("$ml_name already exists (somewhere in MTA aliases)");
-	return ;
+	unless (defined $options->{ force } ) {
+	    warn("$ml_name already exists (somewhere in MTA aliases)");
+	    return ;
+	}
     }
 
     # 0. creat $ml_home_dir
@@ -426,17 +428,19 @@ sub _setup_cgi_interface
 	_install($src, $dst, $params);
     }
 
-    #
-    # 3. install admin/{menu,config,thread}.cgi
-    #
-    {
-	use File::Spec;
-	my $libexec_dir = $config->{ fml_libexec_dir };
-	my $src = File::Spec->catfile($libexec_dir, 'loader');
+    # 
+    # 3.  install *.cgi
+    # 
 
+    use File::Spec;
+    my $libexec_dir = $config->{ fml_libexec_dir };
+    my $src         = File::Spec->catfile($libexec_dir, 'loader');
+    my $ml_name     = $config->{ ml_name };
+    my $ml_domain   = $config->{ ml_domain };
+
+    # 3.1 install admin/{menu,config,thread}.cgi
+    {
 	# hints
-	my $ml_name   = $config->{ ml_name };
-	my $ml_domain = $config->{ ml_domain };
 	$params->{ __hints_for_fml_process__ } = qq{
 	    \$hints = {
 		cgi_mode  => 'admin',
@@ -458,9 +462,28 @@ sub _setup_cgi_interface
     }
 
     #
-    # 4. install ml-admin/
-    #
-    # XXX-TODO: install ml-admin/
+    # 3.2. install ml-admin/
+    {
+	# hints
+	$params->{ __hints_for_fml_process__ } = qq{
+	    \$hints = {
+		cgi_mode  => 'ml-admin',
+		ml_name   => '$ml_name',
+		ml_domain => '$ml_domain',
+	    };
+	};
+
+	use File::Spec;
+	for my $dst (
+		   File::Spec->catfile($ml_admin_cgi_dir, 'menu.cgi'),
+		   File::Spec->catfile($ml_admin_cgi_dir, 'config.cgi'),
+		   File::Spec->catfile($ml_admin_cgi_dir, 'thread.cgi')
+		     ) {
+	    $curproc->ui_message("creating $dst");
+	    _install($src, $dst, $params);
+	    chmod 0755, $dst;
+	}
+    }
 }
 
 
