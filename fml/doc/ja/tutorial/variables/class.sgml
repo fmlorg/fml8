@@ -676,7 +676,6 @@ _dir$ {
     ?     $commands_for_user
     ?     $file_default_mode
     ?     $list_addresses
-    ?     $n
     ?     $unsafe_header_fields
 </screen>
 </para>
