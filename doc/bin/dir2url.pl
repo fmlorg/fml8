@@ -40,7 +40,7 @@ sub Init
 
 sub Show
 {
-    print "<P> $ModulePrefix classes \n<BR>\n";
+    print "<CENTER><EM>$ModulePrefix class modules</EM></CENTER>\n<HR>\n";
     print ($TableMode ? "<TABLE BRODER=4>\n" : "<UL>\n");
     
     my $pathname = '';
