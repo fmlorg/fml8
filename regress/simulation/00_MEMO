@@ -285,14 +285,6 @@ FileHandle と IO::File 両方 use しちゃうからか？
 	   }
 
 
-[TODO]	IO::Adapter::LDAP
-
-
-[TODO]	IO::Adapter の SQL まわりの改良を？
-
-	ん？もういいのかな？
-
-
 [TODO]	makefml で動くもの、動かないものは何？
 
 			get	***disabled***
@@ -437,6 +429,13 @@ FileHandle と IO::File 両方 use しちゃうからか？
 	or PCB {category, key} list up in somewhere (fml/etc ?)
 
 
+[TODO]	IO::Adapter::LDAP
+
+
+[TODO]	IO::Adapter の SQL まわりの改良を？
+
+	ん？もういいのかな？
+
 
 ======================================================================
 ○	用意しただけ/途中も途中…
@@ -451,4 +450,4 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 ----------
-$FML: 00_MEMO,v 1.97 2003/11/25 11:36:10 fukachan Exp $
+$FML: 00_MEMO,v 1.98 2003/11/25 14:54:52 fukachan Exp $
