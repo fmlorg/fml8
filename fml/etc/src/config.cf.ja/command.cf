@@ -248,6 +248,15 @@ commands_for_admin_cgi	=		adduser
 					newml
 					rmml
 
+commands_for_ml_admin_cgi	=	adduser
+					deluser
+					addadmin
+					deladmin
+					digeston
+					digestoff
+					list
+					log
+
 
 # Descriptions: confirmation の返事を表す特別なコマンド
 #        Value: STR
