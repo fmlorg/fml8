@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MessageID.pm,v 1.21 2004/01/22 12:34:22 fukachan Exp $
+# $FML: MessageID.pm,v 1.22 2004/03/12 04:22:54 fukachan Exp $
 #
 
 package FML::Header::MessageID;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Header::MessageID - manupulate message-id
+FML::Header::MessageID - manupulate message-id.
 
 =head1 SYNOPSIS
 
@@ -39,12 +39,12 @@ manipulate Message-Id database.
 
 =head2 new($args)
 
-standard constructor.
+constructor.
 
 =cut
 
 
-# Descriptions: standard constructor.
+# Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: OBJ
@@ -66,7 +66,7 @@ open db and return HASH_REF for the db access.
 =cut
 
 
-# Descriptions: open message-id database
+# Descriptions: open message-id database.
 #    Arguments: OBJ($self) HASH_REF($db_args)
 # Side Effects: open database.
 # Return Value: HASH_ERF
@@ -94,7 +94,7 @@ sub db_open
 	return \%db;
     }
 
-    undef;
+    return undef;
 }
 
 
@@ -162,7 +162,7 @@ generate and return a new message-id.
 =cut
 
 
-# Descriptions: generate new message-id used in reply message
+# Descriptions: generate new message-id used in reply message.
 #    Arguments: OBJ($self) OBJ($config)
 # Side Effects: counter increment
 # Return Value: STR
