@@ -1,0 +1,21 @@
+<!--
+   $FML$
+-->
+
+<sect1 id="usage.user.help">
+	<title>
+	ＭＬのヘルプ: ＭＬの使い方を知りたい
+	</title>
+
+<para>
+elena@fml.org の場合、
+本文に 
+<screen>
+help
+</screen>
+と書いたメールを
+elena-ctl@fml.org  に送って下さい。
+ヘルプが送り返されます。
+</para>
+
+</sect1>

@@ -1,0 +1,24 @@
+<!--
+   $FML$
+-->
+
+<sect1 id="usage.user.chaddr">
+	<title>
+	メールアドレスを変更する
+	</title>
+
+<para>
+elena@fml.org の場合、
+本文に 
+<screen>
+chaddr 旧アドレス 新アドレス
+</screen>
+と書いたメールを
+elena-ctl@fml.org  に送って下さい。
+旧アドレス、新アドレス
+どちらのアドレスから送っても構いません。
+confirmatin が返送されます。
+その confirmation に返答すると登録されます。
+</para>
+
+</sect1>

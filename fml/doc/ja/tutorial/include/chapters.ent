@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.45 2002/07/28 06:26:57 fukachan Exp $
+	$FML: chapters.ent,v 1.46 2002/07/28 10:51:11 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -53,6 +53,11 @@
 <!entity chapter.customize.mlstyle  SYSTEM "customize/chapter.ml_style.sgml">
 <!entity chapter.customize.header   SYSTEM "customize/chapter.header.sgml">
 
+<!entity sect.usage.guide           SYSTEM "usage/guide.sgml">
+<!entity sect.usage.subscribe       SYSTEM "usage/subscribe.sgml">
+<!entity sect.usage.unsubscribe     SYSTEM "usage/unsubscribe.sgml">
+<!entity sect.usage.get             SYSTEM "usage/get.sgml">
+<!entity sect.usage.help            SYSTEM "usage/help.sgml">
 <!entity sect.usage.post            SYSTEM "usage/post.sgml">
 <!entity sect.usage.command         SYSTEM "usage/command.sgml">
 <!entity sect.usage.procmail        SYSTEM "setup/procmail.sgml">
