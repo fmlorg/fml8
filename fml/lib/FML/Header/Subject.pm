@@ -14,8 +14,26 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
 use FML::Log qw(Log);
 
-require Exporter;
-@ISA = qw(Exporter);
+=head1 NAME
+
+FML::Header::Subject - manipule the header subject
+
+=head1 SYNOPSIS
+
+    use FML::Header::Subject;
+    FML::Header::Subject->rewrite_subject_tag($header, $config, $args);
+
+=head1 DESCRIPTION
+
+a collection of functions to manipulate the header subject.
+
+=head1 METHODS
+
+=head2 C<new()>
+
+the usual constructor.
+
+=cut
 
 
 sub new
@@ -86,6 +104,13 @@ sub _regexp_compile
 }
 
 
+sub regexp_compile
+{
+    my ($self, $string) = @_;
+    _regexp_compile($string);
+}    
+
+
 sub is_reply
 {
     my ($self, $subject) = @_;
@@ -118,32 +143,9 @@ sub _cut_off_reply
 }
 
 
-sub execute_ticket_system
-{
-    my ($self, $header, $config, $args) = @_;
-    my $model = $config->{ ticket_model };
-    my $pkg   = "Ticket::Model::".$model;
-    eval qq {require $pkg; $pkg->import();};
-    
-    $pkg->increment_id( $config->{ ticket_sequence_file });
-}
-
-
-=head1 NAME
-
-FML::Header::Subject.pm - what is this
-
-
-=head1 SYNOPSIS
-
-=head1 DESCRIPTION
-
-=head2 new
-
-=item Function()
-
-
 =head1 AUTHOR
+
+Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 

@@ -233,7 +233,8 @@ sub _extract_ticket_id
     my $subject = $header->get('subject');
 
     use FML::Header::Subject;
-    my $regexp = FML::Header::Subject::_regexp_compile($tag);
+    my $obj    = new FML::Header::Subject;
+    my $regexp = $obj->regexp_compile($tag);
 
     if ($subject =~ /($regexp)\s*$/) {
 	my $id = $1;
