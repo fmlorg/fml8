@@ -1,5 +1,5 @@
 #
-# $Id: NoXS.pm,v 0.61 2000/11/15 05:45:25 dankogai Exp $
+# $Id: NoXS.pm,v 0.71 2001/05/18 05:14:38 dankogai Exp dankogai $
 #
 
 package Jcode::Unicode::NoXS;
@@ -7,8 +7,8 @@ package Jcode::Unicode::NoXS;
 use strict;
 use vars qw($RCSID $VERSION);
 
-$RCSID = q$Id: NoXS.pm,v 0.61 2000/11/15 05:45:25 dankogai Exp $;
-$VERSION = do { my @r = (q$Revision: 0.61 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
+$RCSID = q$Id: NoXS.pm,v 0.71 2001/05/18 05:14:38 dankogai Exp dankogai $;
+$VERSION = do { my @r = (q$Revision: 0.71 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
 
 use Carp;
 
@@ -55,7 +55,7 @@ sub _init_e2u{
 
 sub Jcode::ucs2_euc{
     my $thingy = shift;
-    my $r_str = _mkbuf($thingy);
+    my $r_str = ref $thingy ? $thingy : \$thingy;
     _init_u2e();
 
     $$r_str =~ s(
@@ -70,13 +70,13 @@ sub Jcode::ucs2_euc{
 
 sub Jcode::euc_ucs2{
     my $thingy = shift;
-    my $r_str = _mkbuf($thingy);
+    my $r_str = ref $thingy ? $thingy : \$thingy;
     _init_e2u();
 
     # 3 bytes
     $$r_str =~ s(
 		 ($RE{EUC_0212}|$RE{EUC_C}|$RE{EUC_KANA}|[\x00-\xff])
-	      )
+		 )
     {
 	exists $_E2U{$1} ? $_E2U{$1} : $CHARCODE{UNDEF_UNICODE};
     }geox;
@@ -86,21 +86,21 @@ sub Jcode::euc_ucs2{
 
 sub Jcode::euc_utf8{
     my $thingy = shift;
-    my $r_str = _mkbuf($thingy);
+    my $r_str = ref $thingy ? $thingy : \$thingy;
     &Jcode::euc_ucs2($r_str);
     &Jcode::ucs2_utf8($r_str);
 }
 
 sub Jcode::utf8_euc{
     my $thingy = shift;
-    my $r_str = _mkbuf($thingy);
+    my $r_str = ref $thingy ? $thingy : \$thingy;
     &Jcode::utf8_ucs2($r_str);
     &Jcode::ucs2_euc($r_str);
 }
 
 sub Jcode::ucs2_utf8{
     my $thingy = shift;
-    my $r_str = _mkbuf($thingy);
+    my $r_str = ref $thingy ? $thingy : \$thingy;
     my $result;
     for my $uc (unpack("n*", $$r_str)) {
         if ($uc < 0x80) {
@@ -123,7 +123,7 @@ sub Jcode::ucs2_utf8{
 
 sub Jcode::utf8_ucs2{
     my $thingy = shift;
-    my $r_str = _mkbuf($thingy);
+    my $r_str = ref $thingy ? $thingy : \$thingy;
     my $result;
     $$r_str =~ s/^[\200-\277]+//o;  # can't start with 10xxxxxx
     $$r_str =~ 
@@ -162,6 +162,8 @@ This module is called by Jcode.pm on demand.  This module is not intended for
 direct use by users.  This modules implements functions related to Unicode.  
 Following functions are defined here;
 
+=over 4
+
 =item Jcode::ucs2_euc();
 
 =item Jcode::euc_ucs2();
@@ -174,9 +176,13 @@ Following functions are defined here;
 
 =item Jcode::utf8_euc();
 
+=back
+
 =cut
 
 =head1 VARIABLES
+
+=over 4
 
 =item B<$Jcode::Unicode::PEDANTIC>
 
@@ -186,11 +192,17 @@ That is, '\' (chr(0x5c)) is converted to zenkaku backslash and
 
 By Default, Jcode::Unicode leaves ascii ([0x00-0x7f]) as it is.
 
+=back
+
 =head1 MODULES
+
+=over 4
 
 =item Jcode::Unicode::Constants
 
 Jumbo hash that contains UCS2-EUC conversion table is there.
+
+=back
 
 =head1 BUGS
 
@@ -201,7 +213,7 @@ Jumbo hash that contains UCS2-EUC conversion table is there.
 
 =head1 SEE ALSO
 
-=item http://www.unicode.org/
+http://www.unicode.org/
 
 =head1 COPYRIGHT
 

@@ -1,5 +1,5 @@
 #
-# $Id: H2Z.pm,v 0.61 2000/11/15 05:45:25 dankogai Exp $
+# $Id: H2Z.pm,v 0.70 2001/05/15 19:35:59 dankogai Exp $
 #
 
 package Jcode::H2Z;
@@ -7,8 +7,8 @@ package Jcode::H2Z;
 use strict;
 use vars qw($RCSID $VERSION);
 
-$RCSID = q$Id: H2Z.pm,v 0.61 2000/11/15 05:45:25 dankogai Exp $;
-$VERSION = do { my @r = (q$Revision: 0.61 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
+$RCSID = q$Id: H2Z.pm,v 0.70 2001/05/15 19:35:59 dankogai Exp $;
+$VERSION = do { my @r = (q$Revision: 0.70 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
 
 use Carp;
 
@@ -116,14 +116,14 @@ use vars qw(%_D2Z  $_PAT_D2Z
 
 # init only once;
 
-$_PAT_D2Z = join("|", keys %_D2Z);
-$_PAT_H2Z = join("|", keys %_H2Z);
+#$_PAT_D2Z = join("|", keys %_D2Z);
+#$_PAT_H2Z = join("|", keys %_H2Z);
 
 %_Z2H = reverse %_H2Z;
 %_Z2D = reverse %_D2Z;
 
-$_PAT_Z2H    = join("|", keys %_Z2H);
-$_PAT_Z2D    = join("|", keys %_Z2D);
+#$_PAT_Z2H    = join("|", keys %_Z2H);
+#$_PAT_Z2D    = join("|", keys %_Z2D);
 
 sub h2z {
     my $r_str = shift;
@@ -133,7 +133,7 @@ sub h2z {
 	$n = (
 	      $$r_str =~ s(
 			   ($RE{EUC_KANA}
-			    (:?\x8e[\xde\xdf])?)
+			    (?:\x8e[\xde\xdf])?)
 			   ){
 		  my $str = $1;
 		  $_D2Z{$str} || $_H2Z{$str} || 
@@ -157,7 +157,7 @@ sub z2h {
     my $r_str = shift;
     my $n = (
 	     $$r_str =~ s(
-			  ($RE{EUC_C}|$RE{EUC_KANA})
+			  ($RE{EUC_C})
 			  ){
 		 $_Z2D{$1} || $_Z2H{$1} || $1;
 		 }eogx

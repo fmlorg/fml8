@@ -31,12 +31,12 @@ my $file;
 
 my %mime = 
     (
-     "氾旦玄test匹允" =>
-     "=?ISO-2022-JP?B?GyRCJUYlOSVIGyhCdGVzdBskQiRHJDkbKEI=?=",
+     "期儂﹜市正市瓜﹜夫日互卅" =>
+     "=?ISO-2022-JP?B?GyRCNEE7eiEiJSslPyUrJUohIiRSJGkkLCRKGyhC?=",
      "foo bar" => 
      "foo bar",
-     "ㄟㄠㄡㄢㄣㄤㄥㄦㄧㄨㄟㄠㄡㄢㄣㄤㄥㄦㄧㄨㄟㄠㄡㄢㄣㄤㄥㄦㄧㄨㄟㄠㄡㄢㄣㄤㄥㄦㄧㄨㄟㄠㄡㄢㄣㄤㄥㄦㄧㄨ" =>
-     "=?ISO-2022-JP?B?GyRCIzAjMSMyIzMjNCM1IzYjNyM4IzkjMCMxIzIjMyM0IzUjNiM3GyhC?=\n =?ISO-2022-JP?B?GyRCIzgjOSMwIzEjMiMzIzQjNSM2IzcjOCM5IzAjMSMyIzMjNCM1GyhC?=\n =?ISO-2022-JP?B?GyRCIzYjNyM4IzkjMCMxIzIjMyM0IzUjNiM3IzgjORsoQg==?=",
+     "期儂﹜市正市瓜﹜夫日互卅及漁元勻凶Subject Header." =>
+     "=?ISO-2022-JP?B?GyRCNEE7eiEiJSslPyUrJUohIiRSJGkkLCRKJE46LiQ4JEMkPxsoQlN1?=\n =?ISO-2022-JP?B?YmplY3Q=?= Header.",
      );
 
 for my $k (keys %mime){
@@ -45,12 +45,17 @@ for my $k (keys %mime){
 
 for my $decoded (sort keys %mime){
     my ($ok, $out);
+
     my $encoded = $mime{$decoded};
     my $encoded_i = $encoded; $encoded_i =~ s/^(=\?ISO-2022-JP\?B\?)/lc($1)/eo;
+
     my $t_encoded = jcode($decoded)->mime_encode;
     my $t_decoded = jcode($encoded)->mime_decode;
     my $t_decoded_i = jcode($encoded_i)->mime_decode;
  
+    my $decoded_h = jcode($decoded)->h2z->euc;
+    my $t_encoded_h = jcode($decoded_h)->mime_encode;
+
    if ($t_decoded eq $decoded){
 	$ok = "ok";
     }else{
@@ -66,7 +71,7 @@ EOF
 
     if ($t_decoded_i eq $decoded){
 	$ok = "ok";
-	print $encoded_i, "\n";
+	#print $encoded_i, "\n";
     }else{
 	$ok = "not ok";
 	print <<"EOF";
@@ -88,6 +93,19 @@ EOF
     }
     profile(sprintf("MIME encode: %s -> %s %s %d\n", 
 		    $decoded, $encoded, $ok, ++$n ));
+
+    if ($t_encoded_h eq $encoded){
+	$ok = "ok";
+    }else{
+	$ok = "not ok";
+	print <<"EOF";
+E>$decoded_h<
+E>$t_encoded_h<
+EOF
+    }
+    profile(sprintf("MIME encode: %s -> %s %s %d\n", 
+		    $decoded_h, $t_encoded_h, $ok, ++$n ));
+
 }
 
 

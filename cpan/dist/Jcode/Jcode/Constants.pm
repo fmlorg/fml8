@@ -1,5 +1,5 @@
 #
-# $Id: Constants.pm,v 1.1 2000/11/15 05:44:53 dankogai Exp $
+# $Id: Constants.pm,v 1.2 2001/05/18 05:14:38 dankogai Exp dankogai $
 #
 
 package Jcode::Constants;
@@ -7,8 +7,8 @@ package Jcode::Constants;
 use strict;
 use vars qw($RCSID $VERSION);
 
-$RCSID = q$Id: Constants.pm,v 1.1 2000/11/15 05:44:53 dankogai Exp $;
-$VERSION = do { my @r = (q$Revision: 1.1 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
+$RCSID = q$Id: Constants.pm,v 1.2 2001/05/18 05:14:38 dankogai Exp dankogai $;
+$VERSION = do { my @r = (q$Revision: 1.2 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
 
 use Carp;
 
@@ -17,7 +17,7 @@ BEGIN {
     use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
     @ISA         = qw(Exporter);
     @EXPORT      = qw();
-    @EXPORT_OK   = qw(&_max &_mkbuf %CHARCODE %ESC %RE);
+    @EXPORT_OK   = qw(%CHARCODE %ESC %RE);
     %EXPORT_TAGS = ( 'all' => [ @EXPORT_OK, @EXPORT ] );
 }
 
@@ -58,31 +58,6 @@ my %_0208 = (
      SJIS_KANA => '[\xa1-\xdf]',
      UTF8      => '[\xc0-\xdf][\x80-\xbf]|[\xe0-\xef][\x80-\xbf][\x80-\xbf]'
      );
-
-#
-# Util. Functions
-#
-
-# Make buffer when and only when necessary
-
-sub _mkbuf {
-    my $thingy = shift;
-    if (ref $thingy){
-	return $thingy;
-    }
-    else{ 
-	my $buf = $thingy;
-	return \$buf;
-    }
-}
-
-sub _max {
-    my $result = shift;
-    for my $n (@_){
-	$result = $n if $n > $result;
-    }
-    return $result;
-}
 
 1;
 

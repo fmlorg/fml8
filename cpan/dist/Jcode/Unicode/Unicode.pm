@@ -1,5 +1,5 @@
 #
-# $Id: Unicode.pm,v 1.1 2000/11/15 05:44:53 dankogai Exp $
+# $Id: Unicode.pm,v 1.2 2001/05/18 05:14:38 dankogai Exp dankogai $
 #
 
 package Jcode::Unicode;
@@ -7,8 +7,8 @@ package Jcode::Unicode;
 use strict;
 use vars qw($RCSID $VERSION @ISA @EXPORT $PEDANTIC);
 
-$RCSID = q$Id: Unicode.pm,v 1.1 2000/11/15 05:44:53 dankogai Exp $;
-$VERSION = do { my @r = (q$Revision: 1.1 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
+$RCSID = q$Id: Unicode.pm,v 1.2 2001/05/18 05:14:38 dankogai Exp dankogai $;
+$VERSION = do { my @r = (q$Revision: 1.2 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
 
 use Carp;
 require Exporter;
@@ -20,43 +20,32 @@ $PEDANTIC ||= 0;
 
 bootstrap Jcode::Unicode $VERSION;
 
-sub _mkbuf{
-    my $thingy = shift;
-    if (ref $thingy){
-        return $thingy;
-    }
-    else{
-        my $buf = $thingy;
-        return \$buf;
-    }
-}
-
 # Merge these subs to Jcode
 
 sub Jcode::ucs2_euc{
     my ($thingy, $pedantic) = @_; $pedantic ||= 0;
-    my $r_str = _mkbuf($thingy);
+    my $r_str = ref $thingy ? $thingy : \$thingy;
     return
         $$r_str = Jcode::Unicode::ucs2_euc($$r_str, $pedantic);
 }
 
 sub Jcode::euc_ucs2{
     my ($thingy, $pedantic) = @_; $pedantic ||= 0;
-    my $r_str = _mkbuf($thingy);
+    my $r_str = ref $thingy ? $thingy : \$thingy;
     return
         $$r_str = Jcode::Unicode::euc_ucs2($$r_str, $pedantic);
 }
 
 sub Jcode::ucs2_utf8{
     my ($thingy, $pedantic) = @_;
-    my $r_str = _mkbuf($thingy);
+    my $r_str = ref $thingy ? $thingy : \$thingy;
     return
         $$r_str = Jcode::Unicode::ucs2_utf8($$r_str);
 }
 
 sub Jcode::utf8_ucs2{
     my ($thingy) = @_;
-    my $r_str = _mkbuf($thingy);
+        my $r_str = ref $thingy ? $thingy : \$thingy;
     return
         $$r_str = Jcode::Unicode::utf8_ucs2($$r_str);
 }
@@ -64,14 +53,14 @@ sub Jcode::utf8_ucs2{
 
 sub Jcode::euc_utf8{
     my $thingy = shift;
-    my $r_str = _mkbuf($thingy);
+    my $r_str = ref $thingy ? $thingy : \$thingy;
     &Jcode::euc_ucs2($r_str);
     &Jcode::ucs2_utf8($r_str);
 }
 
 sub Jcode::utf8_euc{
     my $thingy = shift;
-    my $r_str = _mkbuf($thingy);
+    my $r_str = ref $thingy ? $thingy : \$thingy;
     &Jcode::utf8_ucs2($r_str);
     &Jcode::ucs2_euc($r_str);
 }
@@ -95,6 +84,8 @@ This module is called by Jcode.pm on demand.  This module is not intended for
 direct use by users.  This modules implements functions related to Unicode.  
 Following functions are defined here;
 
+=over 4
+
 =item Jcode::ucs2_euc();
 
 =item Jcode::euc_ucs2();
@@ -107,9 +98,13 @@ Following functions are defined here;
 
 =item Jcode::utf8_euc();
 
+=back
+
 =cut
 
 =head1 VARIABLES
+
+=over 4
 
 =item B<$Jcode::Unicode::PEDANTIC>
 
@@ -119,6 +114,8 @@ That is, '\' (chr(0x5c)) is converted to zenkaku backslash and
 
 By Default, Jcode::Unicode leaves ascii ([0x00-0x7f]) as it is.
 
+=back
+
 =cut
 
 =head1 BUGS
@@ -127,7 +124,7 @@ If any, that is Unicode, Inc. to Blame (Especially JIS0201.TXT).
 
 =head1 SEE ALSO
 
-=item http://www.unicode.org/
+http://www.unicode.org/
 
 =head1 COPYRIGHT
 

@@ -1,14 +1,45 @@
 #
-# $Id: Constants.pm,v 1.1 2000/11/15 05:44:53 dankogai Exp $
+# $Id: Constants.pm,v 1.2 2001/05/18 05:14:38 dankogai Exp dankogai $
 #
 
 package Jcode::Unicode::Constants;
 
+=head1 NAME
+
+Jcode::Unicode::Constants -- UCS2-EUC conversion table
+
+=head1 SYNOPSIS
+
+NONE
+
+=head1 DESCRIPTION
+
+This module just contains a huge hash that converts UCS2 from/to EUC.
+
+=head1 SEE ALSO
+
+ftp://ftp.unicode.org/Public/MAPPINGS/EASTASIA/JIS/
+
+Unicode mapping data
+
+=head1 COPYRIGHT
+
+Copyright 1999 Dan Kogai <dankogai@dan.co.jp>
+
+This library is free software; you can redistribute it
+and/or modify it under the same terms as Perl itself.
+
+Unicode conversion table here is based on files at 
+ftp://ftp.unicode.org/Public/MAPPINGS/EASTASIA/JIS/, 
+Copyright (c) 1991-1994 Unicode, Inc.
+
+=cut
+
 use strict;
 use vars qw($RCSID $VERSION);
 
-$RCSID = q$Id: Constants.pm,v 1.1 2000/11/15 05:44:53 dankogai Exp $;
-$VERSION = do { my @r = (q$Revision: 1.1 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
+$RCSID = q$Id: Constants.pm,v 1.2 2001/05/18 05:14:38 dankogai Exp dankogai $;
+$VERSION = do { my @r = (q$Revision: 1.2 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
 
 use Carp;
 
@@ -13041,35 +13072,3 @@ for my $c (0x00..0x7f){
 %_E2U = ();
 
 1;
-
-
-=head1 NAME
-
-Jcode::Unicode::Constants -- UCS2-EUC conversion table
-
-=head1 SYNOPSIS
-
-NONE
-
-=head1 DESCRIPTION
-
-This module just contains a huge hash that converts UCS2 from/to EUC.
-
-=head1 SEE ALSO
-
-=item ftp://ftp.unicode.org/Public/MAPPINGS/EASTASIA/JIS/
-
-Unicode mapping data
-
-=head1 COPYRIGHT
-
-Copyright 1999 Dan Kogai <dankogai@dan.co.jp>
-
-This library is free software; you can redistribute it
-and/or modify it under the same terms as Perl itself.
-
-Unicode conversion table here is based on files at 
-ftp://ftp.unicode.org/Public/MAPPINGS/EASTASIA/JIS/, 
-Copyright (c) 1991-1994 Unicode, Inc.
-
-=cut
