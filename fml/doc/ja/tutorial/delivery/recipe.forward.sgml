@@ -1,0 +1,28 @@
+<qandaentry>
+<question>
+<para>
+本文の内容に応じて転送先を変えたい
+</para>
+</question>
+
+<answer>
+<para>
+転送先をファイルで指定して良いなら、簡単です。
+例えば、条件 A B C に応じて
+<screen>
+recipients.A
+recipients.B
+recipients.C
+</screen>
+が用意されているとしましょう。
+この場合は HOOK で条件をチェックしつつ
+<screen>
+if (条件 A にマッチした) {
+   $config->set( 'recipient_maps', "recipients.A");
+}
+</screen>
+のようなコードを書けば動きます。
+</para>
+</answer>
+
+</qandaentry>

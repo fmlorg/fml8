@@ -1,5 +1,5 @@
 <!--
-    $FML: chapter.sgml,v 1.9 2002/07/23 07:19:47 fukachan Exp $
+    $FML: chapter.sgml,v 1.10 2002/09/15 02:11:23 fukachan Exp $
 -->
 
 <chapter id="delivery">
@@ -110,6 +110,21 @@ FML::Mailer を呼ぶことはないかもしれない。
 将来、どうも使ってないようなら
  FML::Process::QueueManager に合併するべきかもしれない。
 </para>
+
+</sect1>
+
+
+<sect1 id="recipes.delivery">
+	<title>
+	配送に関する TIPS 	
+	</title>
+
+<qandaset>
+
+&recipe.delivery.forward;
+
+
+</qandaset>
 
 </sect1>
 
