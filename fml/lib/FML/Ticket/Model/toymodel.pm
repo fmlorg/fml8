@@ -153,7 +153,10 @@ sub _save_ticket_id_in_cache
     if (defined $fh) {
 	my $article_id = $pcb->get('article', 'id');
 	my $ticket_id  = $self->{ _ticket_id };
-	printf $fh "%-10d %s\n", $article_id, _quote_space( $ticket_id );
+	printf $fh "%-10d %-30s %10d\n",
+	$article_id, 
+	_quote_space( $ticket_id ),
+	time;
 	close($fh);
     }
 }
