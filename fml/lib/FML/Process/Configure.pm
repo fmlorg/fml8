@@ -65,7 +65,13 @@ sub run
 	$curproc->_show_conf($args);
     }
     elsif ($myname eq 'fmldoc') {
-	exec 'perldoc', @$argv;
+	my (@opts);
+	push(@opts, '-v') if $args->{ options }->{ v };
+	push(@opts, '-t') if $args->{ options }->{ t };
+	push(@opts, '-u') if $args->{ options }->{ u };
+	push(@opts, '-m') if $args->{ options }->{ m };
+	push(@opts, '-l') if $args->{ options }->{ l };
+	exec 'perldoc', @opts, @$argv;
     }
     elsif ($myname eq 'makefml') {
 	$curproc->_makefml($args);
