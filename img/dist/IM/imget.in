@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Jan 14, 1996
-### Revised: Oct 28, 2003
+### Revised: Jul  4, 2004
 ###
 
 BEGIN {
@@ -13,9 +13,15 @@ BEGIN {
     @im_src_siteperl@
 };
 
-my $VERSION = "imget version 20031028(IM146)";
-
 $Prog = 'imget';
+my $VERSION_DATE = "20040704";
+my $VERSION_NUMBER = "147";
+my $VERSION = "${Prog} version ${VERSION_DATE}(IM${VERSION_NUMBER})";
+my $VERSION_INFORMATION = "${Prog} (IM ${VERSION_NUMBER}) ${VERSION_DATE}
+Copyright (C) 1999 IM developing team
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+";
 
 ##
 ## Require packages
@@ -31,8 +37,8 @@ use vars qw($Prog $EXPLANATION @EnvConfig @OptConfig
 	    $INSECURE $SUIDROOT
 	    $opt_quiet $opt_noscan $opt_scaninboxonly $opt_form $opt_jissafe
 	    $opt_width $opt_lock $opt_count $opt_keep $opt_protokeep $opt_src
-	    $opt_dst $opt_mode $opt_assoc $opt_verbose $opt_debug $opt_help
-	    $opt_buffer);
+	    $opt_dst $opt_mode $opt_assoc $opt_verbose $opt_buffer
+	    $opt_debug $opt_help $opt_version);
 
 ##
 ## Environments
@@ -52,43 +58,45 @@ Usage: $Prog [OPTIONS]
 
 @OptConfig = (
     'src;s;;' =>
-	"Message source: 'local[:path_of_mbox]'\n" .
+	"Message source: 'local[:path_of_mailbox]'\n" .
 	"\t\t\t\t'pop[/APOP|/RPOP|/POP][:user][\@host]'\n" .
 	"\t\t\t\t'imap[/AUTH|/LOGIN][:user][\@host]'\n" .
+	"\t\t\t\t'imap%folder[//AUTH|//LOGIN][:user][\@host]'\n" .
 	"\t\t\t\t'nntp:group[\@host]' or\n" .
 	"\t\t\t\t'stdin'" ,
     'dst;s;;'    =>
-	'Message destination: "+folder" or "=locally.saved.news".',
-    'noscan;b;;'       => 'No scan listings.',
-    'scaninboxonly,o;b;;'=> 'Do not show scanned-lines if InboxFolder != dst.',
+	'Message destination: "+folder" or "=locally.saved.news"',
+    'noscan;b;;'       => 'No scan listings',
+    'scaninboxonly,o;b;;'=> 'Do not show scanned-lines if InboxFolder != dst',
     'form;s;;'	       => 'Scan format',
     'buffer;B;;'       => 'Make output data buffered',
     'jissafe;b;;'      => 'Safe manner for JIS',
-    'width;i;;'        => 'Width of result for scan listings.',
+    'width;i;;'        => 'Width of result for scan listings',
 #   'thread;b;;'       => 'Make threads',
 #   'indent;i;;'       => "Width of thread indent",
     'lock;s;flock;'    => 'Local mailbox locking style. (none,flock,file)',
     'rpath;s;append;'  => "Conversion of UNIX From line into Return-Path:\n" .
 	"\t\t(append, ignore, replace)",
-    'keep;i;0;'        => "Preserve messages.\n" .
+    'keep;i;0;'        => "Preserve messages\n" .
 	"\t\t(POP: in days; 0=delete immediately, -1=preserve forever)\n" .
 	"\t\t(otherwise: 0=delete immediately, non0=preserve forever)",
-    'protokeep;s;UIDL;'=> "Protocol type to use for keeping messages on POP.\n".
+    'protokeep;s;UIDL;'=> "Protocol type to use for keeping messages on POP\n".
 	"\t\t(UIDL, LAST, STATUS, MSGID)\n" .
-	"\t\tTimed out deletion is not supported with LAST.",
+	"\t\tTimed out deletion is not supported with LAST",
     'usecl;b;;Obey_CL' => "Use value of Content-Length header for delimitation".
-	".\n\t\t(effective only if source of messages is local)." ,
+	"\n\t\t(effective only if source of messages is local)" ,
     'count;i;;'        => 'Number of messages to be gotten in a process (NNTP)',
-    'mode;s;get;'      => 'Processing mode: "get", "from" or "check".',
+    'mode;s;get;'      => 'Processing mode: "get", "from" or "check"',
     'assoc;s;;'        => "Association list: dst1=src1;dst2=src2;...\n" .
-	"\t\tThis overrides --dst and --src options.",
+	"\t\tThis overrides --dst and --src options",
     'mimedecodequoted,x;b;;' => 'Decode broken mime-encoded strings',
     'SSHServer,S;s;localhost;SSH_server'
-		       => 'SSH port relay server.',
-    'quiet;b;;'        => 'Suppress informational messages.',
-    'verbose;b;;'      => 'With verbose messages.',
-    'debug;d;;'        => "With debug message.",
-    'help;b;;'         => 'Display this help message.',
+		       => 'SSH port relay server',
+    'quiet;b;;'        => 'Suppress informational messages',
+    'verbose;b;;'      => 'With verbose messages',
+    'debug;d;;'        => "With debug message",
+    'help;b;;'         => "Display this help and exit",
+    'version,V;b;;'      => "Output version information and exit",
     );
 
 ##
@@ -130,8 +138,8 @@ my $cnf_src = $opt_src; $opt_src = '';
 my $cnf_dst = $opt_dst; $opt_dst = '';
 my $cnf_assoc = $opt_assoc; $opt_assoc = '';
 read_opt(\@ARGV); # help?
+print("${VERSION_INFORMATION}") && exit $EXIT_SUCCESS if $opt_version;
 help($EXPLANATION) && exit $EXIT_SUCCESS if $opt_help;
-
 debug_option($opt_debug) if $opt_debug;
 
 ##
@@ -257,9 +265,9 @@ This command is provided by IM (Internet Message).
 
 =item I<-s, --src=STRING>
 
-Message source: 'local[:path_of_mbox]',
+Message source: 'local[:path_of_mailbox]',
 'pop[/APOP|/RPOP|/POP][:user][@host]',
-'imap[/AUTH|/LOGIN][:user][@host]',
+'imap[[/AUTH|/LOGIN]|%folder[//AUTH|//LOGIN]][:user][@host]',
 'nntp:group[@host]', or
 'stdin'.
 
@@ -357,6 +365,10 @@ Print debug messages when running.
 =item I<-h, --help>
 
 Display help message and exit.
+
+=item I<--version>
+
+Output version information and exit.
 
 =back
 

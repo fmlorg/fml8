@@ -1,3 +1,15 @@
+147 (2004/07/04)
+
+* imsetup.in, cnf.im/SiteConfig.in, dot.im/Config: Add `MsgIdUser'.
+* imput.in: New option `--msgiduser'.
+* dot.im/get.sbr.refile: New file.  A sample file for auto-refiling.
+* imsetup.in, cnf.im/SiteConfig.in, dot.im/Config: Add samples for using
+  `MboxFilter'.
+* New config variable `MboxFilter'. (Thanks to Jacques GARRIGUE)
+* im*.in: Accept `--version' option.
+* imsetup.in, cnf.im/SiteConfig.in, dot.im/Config: Add %INBOX for IMAP.
+* imget.in: Doc fix, describe how to set IMAP folder.
+
 146 (2003/10/28)
 
 * IM/TcpTransaction.pm, IM/Pop.pm, IM/Nntp.pm, IM/Imap.pm: Don't use $! as

@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Oct 28, 2003
+### Revised: Jul  4, 2004
 ###
 
 my $PM_VERSION = "IM::Config.pm version 20031028(IM146)";
@@ -37,7 +37,7 @@ use vars qw(@ISA @EXPORT);
     context_file getchksbr_file getsbr_file scansbr_file scan_header_pick
     address addresses_regex
     msgdbfile msgdbtype
-    mbox_style
+    mbox_style mbox_filter
     nntpservers nntphistoryfile nntpauthuser set_nntpauthuser
     popaccount pophistoryfile imapaccount httpproxy noproxy
     usepwagent pwagentport pwagent_tmp_dir pwagent_tmp_path usepwfiles pwfiles
@@ -127,7 +127,8 @@ BEGIN {
     'getsbr;s;;GetSbrFile'		=> 'Get hook subroutine script',
     'scansbr;s;;ScanSbrFile'		=> 'Scan hook subroutine script',
     'scanheaderpick;s;;ScanHeaderPick'  => 'Scan headers to pick up',
-    'mboxstyle;s;;MBoxStyle'		=> 'Style of local MBox format',
+    'mboxstyle;s;;MBoxStyle'		=> 'Style of local mailbox format',
+    'mboxfilter;s;;MboxFilter'		=> 'Filter for mbox file',
     'nntpservers;s;;NNTPservers'	=> 'List of NNTP servers',
     'nntphistory;s;;NNTPhistory'	=> 'Status file of NNTP access',
     'nntpauthuser;s;;NNTPauthuser'	=> 'User name for NNTP authentication',
@@ -873,6 +874,10 @@ sub mbox_style() {
     return $MBoxStyle;
 }
 
+sub mbox_filter() {
+    return $MboxFilter;
+}
+
 sub nntpservers() {
     return $NNTPservers;
 }
@@ -1150,7 +1155,7 @@ addrbook_file aliases_file petname_file mail_folders_file
 context_file getchksbr_file getsbr_file scansbr_file scan_header_pick
 address addresses_regex
 msgdbfile msgdbtype
-mbox_style
+mbox_style mbox_filter
 nntpservers nntphistoryfile nntpauthuser set_nntpauthuser
 popaccount pophistoryfile imapaccount httpproxy noproxy
 usepwagent pwagentport pwagent_tmp_dir pwagent_tmp_path usepwfiles pwfiles

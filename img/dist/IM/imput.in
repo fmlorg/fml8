@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Aug 31, 1995
-### Revised: Oct 28, 2003
+### Revised: Jul  4, 2004
 ###
 
 BEGIN {
@@ -13,9 +13,15 @@ BEGIN {
     @im_src_siteperl@
 };
 
-$VERSION = "imput version 20031028(IM146)";
-
 $Prog = 'imput';
+my $VERSION_DATE = "20040704";
+my $VERSION_NUMBER = "147";
+$VERSION = "${Prog} version ${VERSION_DATE}(IM${VERSION_NUMBER})";
+my $VERSION_INFORMATION = "${Prog} (IM ${VERSION_NUMBER}) ${VERSION_DATE}
+Copyright (C) 1999 IM developing team
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+";
 
 require 5.003;
 
@@ -40,7 +46,8 @@ use strict 'refs';
 use strict 'subs';
 use vars qw($DebugAll $QueueStatus $Subject $Ignore_Dot $Fcc_partial
 	    $News_severe_check $PreserveMessage $Queuing $Comment_Name
-	    $Help $JustQueuing $Me_too $Dcc_Address $PGP_Sign);
+	    $JustQueuing $Me_too $Dcc_Address $PGP_Sign
+	    $opt_verbose $Help $opt_version);
 
 $EXPLANATION = "$VERSION
 put mail/news message into networks
@@ -67,164 +74,168 @@ Usage: $Prog [OPTIONS] [MSG]
 
 @OptConfig = (
     # table of commandline options
+    'version,V;b;;opt_version'
+	=> "Output version information and exit",
     'Help;b;;Help'
-	=> 'Show this message.',
+	=> "Display this help and exit",
     'Debug;b;;DebugAll'
-	=> 'Set all debug options.',
+	=> 'Set all debug options',
     'DebugFlag;s;;DebugFlag'
-	=> "Set specific debug options (separated with ',').",
+	=> "Set specific debug options (separated with ',')",
     'Verbose;b;;opt_verbose'
-	=> 'Set verbose mode.',
+	=> 'Set verbose mode',
     ## late evaluated options
     'Require;s;;User_require'
-	=> 'User defined perl script to be required.',
+	=> 'User defined perl script to be required',
     'SMTPservers;s;localhost;Smtp_servers'
 	=> "List of SMTP servers (separated with ',')
 		Each element should be server[/remote_port][%local_port]",
     'EmgSMTPsvrs;s;;Emg_Smtp_servers'
-	=> 'List of SMTP servers for Emergency Use (i.e. error reporting).',
+	=> 'List of SMTP servers for Emergency Use (i.e. error reporting)',
     'TryNextOnFatal;b;;Smtp_fatal_next'
-	=> 'Try next SMTP server evenif permanent failure.',
+	=> 'Try next SMTP server evenif permanent failure',
     'NNTPservers;s;localhost;Nntp_servers'
 	=> "List of NNTP servers (separated with ',').
 		Each element should be server[/remote_port][%local_port]",
     'NNTPauthuser;s;;Nntp_authuser'
-	=> 'User name for NNTP authentication.',
+	=> 'User name for NNTP authentication',
     'ClientName;s;localhost;Client_name'
-	=> 'Name as a SMTP client (used for SMTP HELO).',
+	=> 'Name as a SMTP client (used for SMTP HELO)',
     'SSHServer;s;localhost;SSH_server'
-	=> 'SSH port relay server.',
+	=> 'SSH port relay server',
     'ObeyMTAdomain;b;;Obey_MTA_domain'
-	=> 'Do not qualify local addresses with default domain.',
+	=> 'Do not qualify local addresses with default domain',
     'FromDomain;s;;Default_from_domain_name'
-	=> 'Default domain name for sender.',
+	=> 'Default domain name for sender',
     'ToDomain;s;;Default_to_domain_name'
-	=> 'Default domain name for recipients.',
+	=> 'Default domain name for recipients',
+    'MsgIdUser;s;;Message_id_user_name'
+	=> 'A user name for Message-Id generation',
     'MsgIdDomain;s;;Message_id_domain_name'
-	=> 'Default domain name for Message-Id generation.',
+	=> 'A domain name for Message-Id generation',
     'NoMsgIdForNews;s;;NoMsgIdForNews'
-	=> 'Strip Message-Id when posting to news system.',
+	=> 'Strip Message-Id when posting to news system',
     'User;s;;User_name'
-	=> "Local part of the sender's address.",
+	=> "Local part of the sender's address",
     'Address;s;;Mail_Address'
 	=> 'Address used in From: header; equivalent to User@FromDomain',
     'Name;s;;Sender_name'
 	=> 'Commentary name for sender',
     'NameInComment;b;;Comment_Name'
-    	=> 'Show commentary name in () on From: header.',
+    	=> 'Show commentary name in () on From: header',
     'Org;s;;Organization'
-    	=> 'Name of organization for news posting.',
+    	=> 'Name of organization for news posting',
     'Subj;s;;Subject'
-    	=> 'A string for subject field.',
+    	=> 'A string for subject field',
     'NScmpl;b;;Cmpl_with_gethostbyname'
-    	=> 'Use domain-part completion with nameserver.',
+    	=> 'Use domain-part completion with nameserver',
     'ShowRcpts;b;1;Show_Rcpts_Header'
-    	=> 'Allow to show recipients in header as To: if no To: in original.',
+    	=> 'Allow to show recipients in header as To: if no To: in original',
     'MeToo;b;;Me_too'
-    	=> 'Request DCC to me.',
+    	=> 'Request DCC to me',
     'Dcc;s;;Dcc_Address'
-    	=> 'Supplemental DCC address.',
+    	=> 'Supplemental DCC address',
     'Fcc;s;;Fcc_folder'
-	=> 'Folder name to save FCC.',
+	=> 'Folder name to save FCC',
     'Receipt;b;;Dsn_success_report'
-    	=> 'Need a report of successful delivery.',
+    	=> 'Need a report of successful delivery',
     'Group;s;;Newsgroups'
-	=> 'Newsgroup names to be posted in.',
+	=> 'Newsgroup names to be posted in',
 ## if ISO2022JP
     'JPconv;b;;Iso2022jp_code_conversion'
-	=> 'Convert japanese character encoding from EUC/SJIS to JIS.',
+	=> 'Convert japanese character encoding from EUC/SJIS to JIS',
     'DefCode;s;8BIT;Default_code'
-	=> 'Default classification of japanese character code.' .
+	=> 'Default classification of japanese character code' .
 	      "\n\t\t(EUC/SJIS/8BIT)",
     'JPheader;b;1;Iso2022jp_header_mime_conv'
-	=> 'Encode japanese JIS characters to MIME style at header.',
+	=> 'Encode japanese JIS characters to MIME style at header',
     'HdrQEncoding;b;;HdrQEncoding'
-	=> 'Header encoding type: 0 is B; 1 is Q.',
+	=> 'Header encoding type: 0 is B; 1 is Q',
 ## endif
     'NoHdrFolding;b;;NoFolding'
-	=> 'Do not fold long header lines.',
+	=> 'Do not fold long header lines',
     'SortHeader;s;;HeaderSeq'
-	=> "Header sequence for sorting (labels separated with ',').",
+	=> "Header sequence for sorting (labels separated with ',')",
     '8to7;b;;Conv_8to7'
-	=> 'Convert 8bit body to 7bit by base64/quoted-printable encoding.',
+	=> 'Convert 8bit body to 7bit by base64/quoted-printable encoding',
     '8BitLabel;s;unknown-8bit;Unknown8bit_label'
-	=> 'Sub-type label for unknown 8bit body on Content-Type:.',
+	=> 'Sub-type label for unknown 8bit body on Content-Type:',
     'Lines;i;;Lines_to_partial'	# XXX
-	=> 'Line numbers for splitting into partial messages.',
+	=> 'Line numbers for splitting into partial messages',
     'Sleep;i;10;Partial_sleep'
-	=> 'Sleep interval for dispatching each splitted messages.',
+	=> 'Sleep interval for dispatching each splitted messages',
     'Log;s;putlog;Log_file'	# XXX
-	=> 'File name to write delivery log.',
+	=> 'File name to write delivery log',
     'Syslog;b;;'
-	=> 'Use SYSLOG feature instead of writing to a file directly.',
+	=> 'Use SYSLOG feature instead of writing to a file directly',
     'Report;b;1;Error_report_by_mail'
-    	=> 'Report errors via mail.',
+    	=> 'Report errors via mail',
     'MsgId;b;1;Generate_message_id'
-	=> 'Generate Message-Id header line.',
+	=> 'Generate Message-Id header line',
     'PidMsgId;b;;Message_id_PID'
-	=> 'Generate Message-Id with Process ID.',
+	=> 'Generate Message-Id with Process ID',
     'UidMsgId;b;;Message_id_UID'
-	=> 'Generate Message-Id with User ID instead of login name.',
+	=> 'Generate Message-Id with User ID instead of login name',
     'Date;b;1;Generate_date'
-    	=> 'Generate Date header line.',
+    	=> 'Generate Date header line',
     'NewsGMTdate;b;;NewsGMTdate'
-	=> 'Generate date field in GMT for posting news.',
+	=> 'Generate date field in GMT for posting news',
     'UseLines;b;1;UseLines'
-	=> 'Generate Lines header line.',
+	=> 'Generate Lines header line',
     'AliasesFile;s;;Mail_aliases'	# XXX
-	=> 'List of files for mail address aliasing.',
+	=> 'List of files for mail address aliasing',
     'Addrbook;s;;addrbooks'
-	=> 'List of Addrbook files.',
+	=> 'List of Addrbook files',
     'HostAliases;s;;Host_aliases'	# XXX
-	=> 'List of files for domain part completion.',
+	=> 'List of files for domain part completion',
     'FccPartial;b;;Fcc_partial'
-    	=> 'Save FCC with partial format.',
+    	=> 'Save FCC with partial format',
     'Dead;s;dead.letter;Dead_letter'	# XXX
-    	=> 'Path of file to save unsent message as a deadletter.',
+    	=> 'Path of file to save unsent message as a deadletter',
     'JustQueuing;b;;JustQueuing'
-	=> 'Just store message into queue without attempt of delivery.',
+	=> 'Just store message into queue without attempt of delivery',
     'Queuing;b;;Queuing'
-	=> 'Store message into queue on delivery failure.',
+	=> 'Store message into queue on delivery failure',
     'ProcessQueue;b;;ProcessQueue'
-	=> 'Process queued messages.',
+	=> 'Process queued messages',
     'QueueStatus;b;;QueueStatus'
-	=> 'Show list of queued messages.',
+	=> 'Show list of queued messages',
     'Folder;s;;Draft_folder'
-	=> 'Path of draft folder directory.',
+	=> 'Path of draft folder directory',
     'MIMEbcc;b;1;Mime_bcc'
-	=> 'Use MIME (message/rfc822) style BCC.',
+	=> 'Use MIME (message/rfc822) style BCC',
     'TrashMark;s;#;Trashmark'
-	=> 'Prefix character for draft message file renaming.',
+	=> 'Prefix character for draft message file renaming',
     'Preserve;b;;PreserveMessage'
-	=> 'Preserve draft message as is even if dispatched successfully.',
+	=> 'Preserve draft message as is even if dispatched successfully',
     'Message;s;;Draft_message'
-	=> 'Path/name of draft message.',
+	=> 'Path/name of draft message',
     'PGPsign;b;;PGP_Sign'
-	=> 'Generate PGP signature for body-part.',
+	=> 'Generate PGP signature for body-part',
     'MultipartAdd;s@;;Mulipart_messages'
-	=> 'Path/name of message to be added as a part of multipart message.',
+	=> 'Path/name of message to be added as a part of multipart message',
     'FilenameAdd;b;;Filename_Add'
-	=> 'Add filename field at Content-Disposition header.',
+	=> 'Add filename field at Content-Disposition header',
     'SMTP;b;;Smtp_input_mode'
-	=> 'Perform SMTP style input mode.',
+	=> 'Perform SMTP style input mode',
     'Annotate;b;;Anno_flag'
-	=> 'Annotate on the parent message (MsgDB required).',
+	=> 'Annotate on the parent message (MsgDB required)',
     'Dist;b;;Dist_flag'
-	=> 'Redistribution mode (using Resent-*:).',
+	=> 'Redistribution mode (using Resent-*:)',
     'DistMsg;s;;Dist_file'
-    	=> 'Path of message for redistribution.',
+    	=> 'Path of message for redistribution',
     'ObeyHeader;b;;Obey_header'
-	=> 'Collect recipients from message header.',
+	=> 'Collect recipients from message header',
     'IgnoreDot;b;;Ignore_Dot'
-	=> 'Ignore DOT for message termination.',
+	=> 'Ignore DOT for message termination',
     'NewsCheck;b;;News_severe_check'
-	=> 'No news posting if To, Cc header found evenif Newsgroups: exists.',
+	=> 'No news posting if To, Cc header found evenif Newsgroups: exists',
     'ESMTP;b;;Esmtp_flag'
-	=> 'Enforce ESMTP (always begins with EHLO).',
+	=> 'Enforce ESMTP (always begins with EHLO)',
     'NewsPost;b;1;News_flag'
-	=> 'Enable NNTP.',
+	=> 'Enable NNTP',
     'AddHeader;s@;;Add_headers'
-	=> 'Header lines to be added.',
+	=> 'Header lines to be added',
 );
 
 @CmpConfig = (
@@ -293,6 +304,7 @@ if ($selector ne '') {
     $error = 1 if (set_selector($selector) < 0);
 }
 read_opt(\@ARGV);
+print("${VERSION_INFORMATION}") && exit $EXIT_SUCCESS if $opt_version;
 help($EXPLANATION) && exit $EXIT_SUCCESS if $Help;
 
 ##
@@ -881,6 +893,13 @@ sub init_final {
 	}
     }
 
+    unless ($Message_id_user_name) {
+	if ($Message_id_UID) {
+	    $Message_id_user_name = $<;
+	} else {
+	    $Message_id_user_name = $Login;
+	}
+    }
     unless ($Message_id_domain_name) {
 	if ($Default_from_domain_name) {
 	    $Message_id_domain_name = $Default_from_domain_name;
@@ -2121,6 +2140,10 @@ Header generation by command line option not supported.
 
 =over 5
 
+=item I<--version>
+
+Output version information and exit.
+
 =item I<--help>
 
 Display help message and exit.
@@ -2185,9 +2208,13 @@ Default domain name for sender.
 
 Default domain name for recipients.
 
+=item I<--msgiduser=STRING>
+
+A user name for Message-Id generation.
+
 =item I<--msgiddomain=STRING>
 
-Default domain name for Message-Id generation.
+A domain name for Message-Id generation.
 
 =item I<--nomsgidfornews=STRING>
 

@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Oct 28, 2003
+### Revised: Jul  4, 2004
 ###
 
 my $PM_VERSION = "IM::Imap.pm version 20031028(IM146)";
@@ -157,10 +157,10 @@ sub imap_select($$$) {
     my($seq) = $ImapSeq++;
     my($resp, @field);
     if ($select) {
-	im_notice("select mbox $mbox and getting number of message.\n");
+	im_notice("select mailbox $mbox and getting number of message.\n");
 	$resp = &send_command($HANDLE, "im$seq SELECT $mbox", '');
     } else {
-	im_notice("examine mbox $mbox and getting number of message.\n");
+	im_notice("examine mailbox $mbox and getting number of message.\n");
 	$resp = &send_command($HANDLE, "im$seq EXAMINE $mbox", '');
     }
     my $msgs = -1;
@@ -584,7 +584,7 @@ sub imap_get_msg($$$$$) {
     }
 }
 
-# IMAP folder (--src=imap[%folder][//auth][:user][@server[/port]])
+# IMAP folder (--src=imap[/auth|%folder[//auth]][:user][@server[/port]])
 sub imap_spec($) {
     my $spec = shift;
 

@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Oct 28, 2003
+### Revised: Jul  4, 2004
 ###
 
 my $PM_VERSION = "IM::Message.pm version 20031028(IM146)";
@@ -735,14 +735,8 @@ sub gen_message_id($) {
     if ($main::Message_id_PID) {
 	$mid_rnd = "-".$$.$mid_rnd;
     }
-    my $mid_user;
-    if ($main::Message_id_UID) {
-	$mid_user = $<;
-    } else {
-	$mid_user = $main::Login;
-    }
     my($mid)
-      = "<$mid_time$mid_rnd.$mid_user\@$main::Message_id_domain_name>";
+      = "<$mid_time$mid_rnd.$main::Message_id_user_name\@$main::Message_id_domain_name>";
     $Mid_hist{$part} = $mid if ($part > 0);
     return $mid;
 }

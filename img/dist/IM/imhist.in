@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Jul  6, 1997
-### Revised: Oct 28, 2003
+### Revised: Jul  4, 2004
 ###
 
 BEGIN {
@@ -13,9 +13,15 @@ BEGIN {
     @im_src_siteperl@
 };
 
-my $VERSION = "imhist version 20031028(IM146)";
-
 $Prog = 'imhist';
+my $VERSION_DATE = "20040704";
+my $VERSION_NUMBER = "147";
+my $VERSION = "${Prog} version ${VERSION_DATE}(IM${VERSION_NUMBER})";
+my $VERSION_INFORMATION = "${Prog} (IM ${VERSION_NUMBER}) ${VERSION_DATE}
+Copyright (C) 1999 IM developing team
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+";
 
 ##
 ## Require packages
@@ -31,7 +37,7 @@ use strict;
 use vars qw($Prog $EXPLANATION @OptConfig
 	    @Hdr
 	    $opt_lookup $opt_remove $opt_msg $opt_dump $opt_add
-	    $opt_subfolders $opt_verbose $opt_debug $opt_help);
+	    $opt_subfolders $opt_verbose $opt_debug $opt_help $opt_version);
 
 ##
 ## Environments
@@ -44,15 +50,16 @@ Usage: imhist [OPTIONS]
 ";
 
 @OptConfig = (
-    'lookup;s;;'     => 'Look up an entry for specified message-id.',
-    'remove;s;;'     => 'Remove whole information on specified message-id.',
-    'msg;s;;'        => 'Message to be deleted if multiple in database.',
-    'dump;b;;'       => 'Dump database just for debugging.',
-    'add;f;;'        => 'Add information of messages in a specified folder.',
-    'subfolders;b;;' => 'Descend sub folders recursively (option for --add).',
-    'verbose;b;;'    => 'With verbose messages.',
-    'debug;d;;'      => "With debug message.",
-    'help;b;;'       => "Show this message.",
+    'lookup;s;;'     => 'Look up an entry for specified message-id',
+    'remove;s;;'     => 'Remove whole information on specified message-id',
+    'msg;s;;'        => 'Message to be deleted if multiple in database',
+    'dump;b;;'       => 'Dump database just for debugging',
+    'add;f;;'        => 'Add information of messages in a specified folder',
+    'subfolders;b;;' => 'Descend sub folders recursively (option for --add)',
+    'verbose;b;;'    => 'With verbose messages',
+    'debug;d;;'      => "With debug message",
+    'help;b;;'       => "Display this help and exit",
+    'version,V;b;;'    => "Output version information and exit",
     );
 
 ##
@@ -62,8 +69,8 @@ Usage: imhist [OPTIONS]
 init_opt(\@OptConfig);
 read_cfg();
 read_opt(\@ARGV); # help?
+print("${VERSION_INFORMATION}") && exit $EXIT_SUCCESS if $opt_version;
 help($EXPLANATION) && exit $EXIT_SUCCESS if $opt_help;
-
 debug_option($opt_debug) if $opt_debug;
 
 ##
@@ -251,6 +258,10 @@ Print debug messages when running.
 =item I<-h, --help>
 
 Display help message and exit.
+
+=item I<--version>
+
+Output version information and exit.
 
 =back
 

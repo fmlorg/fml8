@@ -6,7 +6,7 @@
 ### Author:  Shuichi Kitaguchi <kit@Mew.org>
 ###	Internet Message Group <img@mew.org>
 ### Created: Sep 23, 1999
-### Revised: Oct 28, 2003
+### Revised: Jul  4, 2004
 ###
 
 BEGIN {
@@ -14,17 +14,24 @@ BEGIN {
     @im_src_siteperl@
 };
 
-my $VERSION = "immknmz version 20031028(IM146)";
-
 $Prog = 'immknmz';
+my $VERSION_DATE = "20040704";
+my $VERSION_NUMBER = "147";
+my $VERSION = "${Prog} version ${VERSION_DATE}(IM${VERSION_NUMBER})";
+my $VERSION_INFORMATION = "${Prog} (IM ${VERSION_NUMBER}) ${VERSION_DATE}
+Copyright (C) 1999 IM developing team
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+";
 
 use IM::Config;
 use IM::Util;
 use IM::Folder;
 use IO::File;
 use strict;
-use vars qw($Prog $EXPLANATION @OptConfig $opt_help $opt_verbose
-	    @opt_src $opt_gcnmz $opt_timestamp);
+use vars qw($Prog $EXPLANATION @OptConfig
+	    @opt_src $opt_gcnmz $opt_timestamp $opt_verbose
+	    $opt_help $opt_version);
 
 $EXPLANATION = "$VERSION
 make namazu index for mail folders
@@ -33,16 +40,18 @@ Usage: $Prog [OPTIONS] [FOLDERS]
 ";
 
 @OptConfig = (
-	      'src;F@;;'    => 'Set source folders. (Mail/.folders file is used by default)',
-	      'gcnmz;b;;'   => "Use gcnmz after mknmz (Garbage Collection for Namazu index).",
-	      'timestamp;b;;' => "Use checking time stamp.",
-	      'verbose;b;;' => "With verbose messages.",
-	      'help;b;;'    => "Show this message.",
-	      );
+    'src;F@;;'    => 'Set source folders (Mail/.folders file is used by default)',
+    'gcnmz;b;;'   => "Use gcnmz after mknmz (Garbage Collection for Namazu index)",
+    'timestamp;b;;' => "Use checking time stamp",
+    'verbose;b;;' => "With verbose messages",
+    'help;b;;'    => "Display this help and exit",
+    'version,V;b;;' => "Output version information and exit",
+    );
 
 init_opt(\@OptConfig);
 read_cfg();
 read_opt(\@ARGV);
+print("${VERSION_INFORMATION}") && exit $EXIT_SUCCESS if $opt_version;
 help($EXPLANATION) && exit $EXIT_SUCCESS if $opt_help;
 
 my $lockdir = namazu_lock_path();
@@ -286,6 +295,10 @@ Use checking time stamp.
 =item I<-h, --help>
 
 Display help message and exit.
+
+=item I<--version>
+
+Output version information and exit.
 
 =back
 

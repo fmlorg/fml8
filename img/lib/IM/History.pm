@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Jul 6, 1997
-### Revised: Oct 28, 2003
+### Revised: Jul  4, 2004
 ###
 
 my $PM_VERSION = "IM::History.pm version 20031028(IM146)";

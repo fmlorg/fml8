@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: May 7, 1997
-### Revised: Oct 28, 2003
+### Revised: Jul  4, 2004
 ###
 
 my $PM_VERSION = "IM::Stdio.pm version 20031028(IM146)";

@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Oct 28, 2003
+### Revised: Jul  4, 2004
 ###
 
 my $PM_VERSION = "IM::LocalMbox.pm version 20031028(IM146)";
@@ -314,7 +314,7 @@ sub process_file($$$$) {
     my($format, $msgs, $rp, $length, $inheader, @Message);
     local(*MBOX);
 
-    im_notice("opening MBOX ($mbox)\n");
+    im_notice("opening file ($mbox)\n");
     unless (im_open(\*MBOX, "<$mbox")) {
 	# XXX not found or unreadable...
 	return -1;
@@ -346,13 +346,37 @@ sub process_mbox($$$$$) {
     my($format, $msgs, $length, $inheader, @Message);
     local(*MBOX);
     my($first_line, $FIRST_LINE);
+    my($mbox_filter);
 
-    im_info("Getting new messages from local mailbox into $dst...\n")
-	if ($how eq 'get');
-    im_warn("opening MBOX ($mbox)\n") if (&verbose);
-    unless (im_open(\*MBOX, "<$mbox")) {
-	# XXX not found or unreadable...
-	return -1;
+    if ($how eq 'get') {
+	im_info("Getting new messages from local mailbox into $dst...\n");
+    }
+    $mbox_filter = &mbox_filter();
+    if ($mbox_filter ne '') {
+	if ($mbox_filter =~ /(.+)/) {
+	    if ($main::INSECURE) {
+		im_warn("Sorry, MboxFilter is ignored for SUID root script.\n");
+		$mbox_filter = '';
+	    } else {
+		if ($> != 0) {
+		    $mbox_filter = $1; # to pass through taint check
+		}
+		im_warn("opening MBOX ($mbox_filter $mbox)\n") if (&verbose);
+		unless (im_open(\*MBOX, "$mbox_filter $mbox |")) {
+		    im_err("MboxFilter failed ($!).\n");
+		    return -1;
+		}
+	    }
+	} else {
+	    $mbox_filter = '';
+	}
+    }
+    if ($mbox_filter eq '') {
+	im_warn("opening MBOX ($mbox)\n") if (&verbose);
+	unless (im_open(\*MBOX, "<$mbox")) {
+	    # XXX not found or unreadable...
+	    return -1;
+	}
     }
     chomp($first_line = <MBOX>);
     if ($first_line =~ /^From /) {
@@ -547,7 +571,7 @@ sub local_lockmbox($$) {
     if ($type =~ /file/) {
 #	while (!sysopen(LOCK, "$base.lock", O_RDWR()|O_CREAT()|O_EXCL())) {
 #	    if ($retry >= 10) {
-#		im_warn("can't create $base.lock: $!\n");
+#		im_warn("can't create $base.lock ($!).\n");
 #		return -1;
 #	    }
 #	    im_warn("mailbox is processed by another process, waiting...\n")
@@ -557,7 +581,7 @@ sub local_lockmbox($$) {
 #	}
 
 	unless (im_open(\*LOCKFILE, ">$base.$$")) {
-	    im_warn("can't create lock file $base.$$: $!\n");
+	    im_warn("can't create lock file $base.$$ ($!).\n");
 	    im_warn("use 'flock' instead of 'file' if possible.\n");
 	    return -1;
 	}
@@ -565,7 +589,7 @@ sub local_lockmbox($$) {
 	close(LOCKFILE);
 	while (!link("$base.$$", "$base.lock")) {
 	    if ($retry >= 10) {
-		im_warn("can't create $base.lock: $!\n");
+		im_warn("can't create $base.lock ($!).\n");
 		unlink("$base.$$");
 		return -1;
 	    }
@@ -579,12 +603,12 @@ sub local_lockmbox($$) {
     }
     if ($type =~ /flock/) {
 	unless (im_open(\*LOCK_FH, "+<$base")) {
-	    im_err "can't open $base :$!\n";
+	    im_err "can't open $base ($!).\n";
 	    return -1;
 	}
 	if (! &win95p) {
 	unless (flock (LOCK_FH, LOCK_EX|LOCK_NB)) {
-	    im_warn "can't flock $base: $!\n";
+	    im_warn "can't flock $base ($!).\n";
 	    return -1;
 	}
 	}
@@ -599,7 +623,7 @@ sub local_unlockmbox($) {
     im_debug("removing lock file with uid=$> gid=$)\n") if (&debug('local'));
     if ($locked_by_file) {
 	if (-f "$base.lock" && unlink("$base.lock") <= 0) {
-	    im_warn("can't unlink lock file $base.lock: $!\n");
+	    im_warn("can't unlink lock file $base.lock ($!).\n");
 	    $rcode = -1;
 	}
 	$locked_by_file = 0;

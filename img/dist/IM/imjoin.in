@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: May  5, 1997
-### Revised: Oct 28, 2003
+### Revised: Jul  4, 2004
 ###
 
 BEGIN {
@@ -13,9 +13,15 @@ BEGIN {
     @im_src_siteperl@
 };
 
-my $VERSION = "imjoin version 20031028(IM146)";
-
 $Prog = 'imjoin';
+my $VERSION_DATE = "20040704";
+my $VERSION_NUMBER = "147";
+my $VERSION = "${Prog} version ${VERSION_DATE}(IM${VERSION_NUMBER})";
+my $VERSION_INFORMATION = "${Prog} (IM ${VERSION_NUMBER}) ${VERSION_DATE}
+Copyright (C) 1999 IM developing team
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+";
 
 ##
 ## Require packages
@@ -27,7 +33,7 @@ use IM::Util;
 use integer;
 use strict;
 use vars qw($Prog $EXPLANATION @EnvConfig @OptConfig $opt_noscan
-	    $opt_src $opt_dst $opt_verbose $opt_debug $opt_help);
+	    $opt_src $opt_dst $opt_verbose $opt_debug $opt_help $opt_version);
 
 ##
 ## Environments
@@ -40,12 +46,13 @@ Usage: imjoin [OPTIONS] MSGS
 ";
 
 @OptConfig = (
-	      'src;f;;'     => "Source folder.",
-	      'dst;s;+inbox;' => "Destination folder.",
-	      'verbose;b;;' => 'With verbose messages.',
-	      'debug;d;;'   => "With debug message.",
-	      'help;b;;'    => "Show this message.",
-	      );
+    'src;f;;'     => "Source folder",
+    'dst;s;+inbox;' => "Destination folder",
+    'verbose;b;;' => 'With verbose messages',
+    'debug;d;;'   => "With debug message",
+    'help;b;;'    => "Display this help and exit",
+    'version,V;b;;' => "Output version information and exit",
+    );
 
 ##
 ## Profile and option processing
@@ -55,8 +62,8 @@ init_opt(\@OptConfig);
 read_env(\@EnvConfig);
 read_cfg();
 read_opt(\@ARGV); # help?
+print("${VERSION_INFORMATION}") && exit $EXIT_SUCCESS if $opt_version;
 help($EXPLANATION) && exit $EXIT_SUCCESS if $opt_help;
-
 debug_option($opt_debug) if $opt_debug;
 
 ##
@@ -320,6 +327,10 @@ Print debug messages when running.
 =item I<-h, --help>
 
 Display help message and exit.
+
+=item I<--version>
+
+Output version information and exit.
 
 =back
 

@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: May  9, 1997
-### Revised: Oct 28, 2003
+### Revised: Jul  4, 2004
 ###
 
 BEGIN {
@@ -13,9 +13,15 @@ BEGIN {
     @im_src_siteperl@
 };
 
-my $VERSION = "imsetup version 20031028(IM146)";
-
 $Prog = 'imsetup';
+my $VERSION_DATE = "20040704";
+my $VERSION_NUMBER = "147";
+my $VERSION = "${Prog} version ${VERSION_DATE}(IM${VERSION_NUMBER})";
+my $VERSION_INFORMATION = "${Prog} (IM ${VERSION_NUMBER}) ${VERSION_DATE}
+Copyright (C) 1999 IM developing team
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+";
 
 ##
 ## Require packages
@@ -29,7 +35,8 @@ use IM::Address qw(extract_addr);
 use integer;
 use strict;
 use vars qw($Prog $EXPLANATION @OptConfig
-	    $opt_fromdomain $opt_noharm $opt_usecl $opt_nosync $opt_help);
+	    $opt_fromdomain $opt_noharm $opt_usecl $opt_nosync
+	    $opt_help $opt_version);
 
 ##
 ## Environments
@@ -62,9 +69,10 @@ Usage: $Prog [Options]
 ";
 
 @OptConfig = (
-    'FromDomain;s;;' => 'Default domain name for mail address.',
-    'noharm;b;;' => "Do execute setup, show what will be performed.",
-    'help;b;;'   => "Show this message.",
+    'FromDomain;s;;' => 'Default domain name for mail address',
+    'noharm;b;;' => "Do execute setup, show what will be performed",
+    'help;b;;'    => "Display this help and exit",
+    'version,V;b;;' => "Output version information and exit",
     );
 
 ##
@@ -74,6 +82,7 @@ Usage: $Prog [Options]
 init_opt(\@OptConfig);
 read_cfg();
 read_opt(\@ARGV); # help?
+print("${VERSION_INFORMATION}") && exit $EXIT_SUCCESS if $opt_version;
 help($EXPLANATION) && exit $EXIT_SUCCESS if $opt_help;
 
 ##
@@ -427,8 +436,11 @@ keep=$keep
 #rpath=append			# conversion of UNIX From into Return-Path:
 #PopHistory=pophist-{POPSERVERID}	# to save last state (relative to ~/.im/)
 #NntpHistory=newshist		# to save last state (relative to ~/.im/)
-#MBoxStyle=qmail			# if folder style mbox of qmail is used
-#Imget.Src=local:\${HOME}/Maildir	# in case of qmail
+#MboxFilter=bogofilter -p -M -I	# filter for mbox file
+#MboxFilter=spamoracle mark
+#MBoxFilter=bsfilter --spam-cutoff 0.85 --pipe --insert-flag --mbox 2>/dev/null
+#MBoxStyle=qmail		# in case of qmail (maildir format)
+#Imget.Src=local:\${HOME}/Maildir
 UseCL=$usecl			# Use value of Content-Length header
 NoSync=$nosync			# Do not need fsync(2) on writing file
 #FsyncNumber=0			# if 0, system call number of fsync is guessed
@@ -450,18 +462,18 @@ keep=$keep
 #Keep=7				# preserve read messages on server
 #ProtoKeep=UIDL			# how to know which message is unread
 				# (UIDL, LAST, STATUS, MSGID)
-#IgnorePostPet=yes		# leave messages for PostPet on mbox (POP only)
+#IgnorePostPet=yes		# leave messages for PostPet on POP server
 
 ---
         if ($src =~ /^imap/i) {
             print CONFIG <<"---";
-Imget.Src=imap
+Imget.Src=imap%INBOX
 ImapAccount=/$auth:$user\@$host
 keep=$keep
 ---
         }
         print CONFIG <<"---";
-#Imget.Src=imap
+#Imget.Src=imap%INBOX
 #ImapAccount=/AUTH\@localhost	# account info for IMAP access
 #ImapAccount=/AUTH:user\@host	# account info with user name
 #HttpProxy=proxy-server:8080	# proxy server for HTTP access
@@ -492,6 +504,7 @@ keep=$keep
 #FccDir=\$MailDir		# directory for FCC folders
 #QueueDir=queue			# directory for to store messages to be sent
 #UseXDispatcher=yes		# use X-Dispatcher field
+#MsgIdUser=\${USER}		# user part for creation of Message-Id:
 #MsgIdDomain=\${HOST}		# if you want to use FQDN of dispatching host
 #ObeyMTAdomain=yes		# do not append domainpart to addresses by imput
 #NoMsgIdForNews=yes		# do not insert Message-Id: when posting as news
@@ -563,6 +576,10 @@ Do execute setup, show what will be performed.
 =item I<-h, --help>
 
 Display help message and exit.
+
+=item I<--version>
+
+Output version information and exit.
 
 =back
 

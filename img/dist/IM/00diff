@@ -1,3 +1,11 @@
+		Differences between IM147 and IM146
+
+* New config variable `MboxFilter'.  e.g. `MboxFilter=bogofilter -p -M -I'
+  directs that the bogofilter command be invoked when retrieving mails
+  from mbox file (/var/mail/$USER).
+* New imput option `--msgiduser'.
+* im* commands accept `--version'.
+
 		Differences between IM146 and IM145
 
 * Fix that TCP transaction fails with Perl 5.8.1.
