@@ -5,5 +5,4 @@
 # ml_home_dir	= /var/spool/ml/$ml_name
 
 
-# default umask
-default_umask	= 0022
+default_directory_mode	=	0755
