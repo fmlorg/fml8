@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.45 2002/06/25 12:35:31 fukachan Exp $
+# $FML: newml.pm,v 1.46 2002/06/27 08:24:08 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -191,6 +191,10 @@ sub _install_template_files
     # 2.2 setup ~fml/.qmail-* (qmail style)
     my $qmail = new FML::MTAControl { mta_type => 'qmail' };
     $qmail->setup($curproc, $params);
+
+    # 2.3
+    my $procmail = new FML::MTAControl { mta_type => 'procmail' };
+    $procmail->setup($curproc, $params);
 }
 
 
@@ -216,7 +220,7 @@ sub _update_aliases
     }
     else {
 	eval q{
-	    for my $mta (qw(postfix qmail)) {
+	    for my $mta (qw(postfix qmail procmail)) {
 		my $optargs = { mta_type => $mta };
 
 		use FML::MTAControl;

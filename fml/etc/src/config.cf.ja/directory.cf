@@ -9,6 +9,7 @@ init_config_dir_list	=	$domain_config_base_dir
 				$domain_qmail_config_dir
 				$domain_exim_config_dir
 				$domain_sendmail_config_dir
+				$domain_procmail_config_dir
 
 =head2 fml system directories
 

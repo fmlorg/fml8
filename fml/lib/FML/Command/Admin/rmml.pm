@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: rmml.pm,v 1.5 2002/06/25 12:36:51 fukachan Exp $
+# $FML: rmml.pm,v 1.6 2002/06/27 08:24:08 fukachan Exp $
 #
 
 package FML::Command::Admin::rmml;
@@ -146,7 +146,7 @@ sub _remove_aliases
     eval q{
 	use FML::MTAControl;
 
-	for my $mta (qw(postfix qmail)) {
+	for my $mta (qw(postfix qmail procmail)) {
 	    my $optargs = { mta_type => $mta };
 	    my $obj = new FML::MTAControl;
 	    $obj->remove_alias($curproc, $params, $optargs);
