@@ -3,7 +3,68 @@
 
    2002/12 は、オーバホール・キャンペーン実施中ですぉ。
 
+2002/12/19
+
+   *オーバホール・キャンペーン実施中
+	clean up.
+	+ define label or rename label to more appropriate one for loop.
+	+ use return().
+	+ use qw() if could.
+	use ::::o if could.
+	fix comments.
+
+   FML::Header 
+	s/rerply-to/Reply-To/
+	more defiend() check.
+	
+   FML::Command::Admin::log 
+	fix comments.
+	fix typo.
+	bug fix the usage of _show_log() method.
+	
+   FML::Filter::TextPlain 
+	fix comments. add todo(s).
+	rename $m -> $first_msg to clarify variable function.
+	remove not used declaration.
+
+2002/12/18
+
+   *オーバホール・キャンペーン実施中
+
+   FML::Header 
+	clean up comments.
+	require() -> use()
+	
+   FML::Log 
+	clean up commnets.
+	croak() if loading Mail::Message::Date fails.
+	
+   FML::MTAControl::Procmail 
+	fix comments and documents.
+	use $fh->close() not close($fh).
+	
+   FML::MTAControl::Postfix Qmail.pm 
+	fix comments
+	
+   FML::MTAControl 
+	clean up comments.
+	define is_valid_mta-type() and modified to use it.
+
+   FML::Header::MessageID 
+	define dummy db_close()
+	
+   FML::Process::Addr 
+	clean up comments.
+	$fh->close()
+	
+   FML::Command::DirUtils 
+	clean up comments.
+	modified to define $variable to describe arguments to execute
+	and run system($exec).
+
 2002/12/15
+
+   *オーバホール・キャンペーン実施中
 
    FML::Article 
 	id() returns data on memory or in sequence_file if not found
@@ -30,6 +91,14 @@
    FML::Command::Admin::byeadmin 
 	care for primary_admin_recipient_map
 	XXX we should handle *_maps not primary_*_map.
+
+   FML::Restriction::CGI Command.pm 
+	clean up comments
+	
+   FML::Restriction::Base 
+	clean up comments.
+	define ${file,dir,command}_regexp. modified to use these regexp(s).
+	enhance $command_regexp to include [0-9].
 
 2002/12/13
 
@@ -3724,4 +3793,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.115 2002/12/15 13:39:18 fukachan Exp $
+$FML: CHANGES.txt,v 1.116 2002/12/15 14:38:55 fukachan Exp $
