@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.14 2001/10/21 05:53:58 fukachan Exp $
+# $FML: Lite.pm,v 1.15 2001/10/21 07:37:07 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -15,7 +15,7 @@ use Carp;
 my $debug = $ENV{'debug'} ? 1 : 0;
 my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::HTML::Lite</A>";
 
-my $version = q$FML: Lite.pm,v 1.14 2001/10/21 05:53:58 fukachan Exp $;
+my $version = q$FML: Lite.pm,v 1.15 2001/10/21 07:37:07 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -1692,76 +1692,103 @@ sub _decode_mime_string
 }
 
 
-#
-# debug
-#
+=head1 useful functions as entrance
 
-sub _debug
-{
-    my ($file) = @_;
+=head2 C<htmlify_file($file, $args)>
 
-    use File::Basename;
-    my $f = basename($file);
-    my $html = new Mail::HTML::Lite {
-	charset   => "euc-jp",
-	directory => "/tmp/htdocs",
+try to convert rfc822 message C<$file> to HTML. 
+
+    $args = {
+	directory => "destination directory",
     };
 
-    printf STDERR "_debug( id=%-6s src=%s )\n", $f, $file;
+=head2 C<htmlify_dir($dir, $args)>
+
+try to convert all rfc822 messages to HTML in C<$dir> directory.
+
+    $args = {
+	directory => "destination directory",
+    };
+
+=cut
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub htmlify_file
+{
+    my ($file, $args) = @_;
+    my $dst_dir = $args->{ directory };
+
+    use File::Basename;
+    my $id = basename($file);
+    my $html = new Mail::HTML::Lite {
+	charset   => "euc-jp",
+	directory => $dst_dir, 
+    };
+
+    printf STDERR "htmlify_file( id=%-6s src=%s )\n", $id, $file;
 
     $html->htmlfy_rfc822_message({
-	id  => $f,
+	id  => $id,
 	src => $file,
     });
-    $html->update_relation( $f );
 
-    $html->update_id_monthly_index({ 
-	title => "monthly index",
-	id    => $f,
-    });
-
-    # update index.html
-    $html->update_id_index({ 
-	title => "index",
-	id    => $f,
-    });
-
-    # update thread.html
-    my $start_time = time;
-    $html->update_thread_index({
-	title => "thread",
-	id    => $f,
-    });
+    $html->update_relation( $id );
+    $html->update_id_monthly_index({ id => $id });
+    $html->update_id_index({ id => $id });
+    $html->update_thread_index({ id => $id });
 
     # no more action for old files
-    if ($html->is_ignore($f)) {
-	warn("not process $f (already exists)");
+    if ($html->is_ignore($id)) {
+	warn("not process $id (already exists)");
     }
 }
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub htmlify_dir
+{
+    my ($src_dir, $args) = @_;
+    my $dst_dir = $args->{ directory };
+    my $max     = 0;
+
+    use DirHandle;
+    my $dh = new DirHandle $src_dir;
+    if (defined $dh) {
+      FILE:
+	for my $file ( $dh->read() ) {
+	    next FILE unless $file =~ /^\d+$/;
+	    $max = $max < $file ? $file : $max;
+	}
+    }
+
+    for my $id ( 1 .. $max ) {
+	use File::Spec;
+	my $file = File::Spec->catfile($src_dir, $id);
+	htmlify_file($file, { directory => $dst_dir });
+    }
+}
+
+
+#
+# debug
+#
 if ($0 eq __FILE__) {
+    my $dir = "/tmp/htdocs";
+
     eval q{
 	for my $x (@ARGV) {
 	    if (-f $x) {
-		_debug($x);
+		htmlify_file($x, { directory => $dir });
 	    }
 	    elsif (-d $x) {
-		my $max = 0;
-		use DirHandle;
-		my $dh = new DirHandle $x;
-		if (defined $dh) {
-		    for my $file ( $dh->read() ) {
-			next unless $file =~ /^\d+$/;
-			$max = $max < $file ? $file : $max;
-		    }
-		}
-
-		for my $f ( 1 .. $max ) {
-		    use File::Spec;
-		    my $file = File::Spec->catfile($x, $f);
-		    _debug( $file );
-		}
+		htmlify_dir($x, { directory => $dir });
 	    }
 	}
     };
