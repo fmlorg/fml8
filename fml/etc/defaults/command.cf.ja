@@ -1,3 +1,6 @@
-# value: confirmation / ? 
+=head1	コマンドの定義
 
-command_chaddr_type	=	confirmation
+# value: confirmation / 
+command_chaddr_type		=	confirmation
+
+command_unsubscribe_type	=	confirmation

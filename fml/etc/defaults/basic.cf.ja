@@ -1,10 +1,10 @@
-=head1 configurations
+=head1	基本的なパラメータ
 
 # domain	= fml.org
 # fqdn		= mx0.fml.org
 
 
-=head2 default modes
+=head2	default modes
 
 default_file_mode	=	0600
 

@@ -1,6 +1,4 @@
-###
-### basic logging
-###
+=head1	ログのとり方
 
 # enable logging function
 use_log		=	yes
@@ -13,4 +11,4 @@ log_file	=	$ml_home_dir/log
 log_type	=	file
 
 # log message format
-log_message_format	=	fml4-compatible
+log_format_type	=	fml4_compatible

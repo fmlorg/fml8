@@ -1,4 +1,4 @@
-=head1 hooks
+=head1 フック
 
 ### default_config.cf file ends here.
 ### fml 4.0's 現在の LOCAL_CONFIG で別れ目になる行

@@ -1,7 +1,10 @@
-=head2 MTA
+=head1		MTA の設定
 
+# ひとつの SMTP トランザクションで MTA に渡す受信者の数の上限
+# デフォルトは postfix にあわせて 1000
 recipient_limit		=	1000
 
+# デフォールトの MTA は自分自身( localhost ) 
 mta			=	[::1]:25
 				127.0.0.1:25
 

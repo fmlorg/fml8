@@ -1,6 +1,5 @@
-###
-### Section: Tickets / Trouble Tickets System
-###
+=head1	Tickets / Trouble Tickets System
+
 
 use_ticket		=	yes
 
