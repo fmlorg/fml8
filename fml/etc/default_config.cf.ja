@@ -9,6 +9,11 @@
 maintainer	=
 
 
+=head2	言語
+
+default_charset	=	iso-2022-jp
+
+
 =head2	default modes
 
 # Descriptions: ファイルを作成する時のデフォルトモード
@@ -171,6 +176,43 @@ smtp_servers		=	[::1]:25
 #        Value: mail_address (RFC822 の addrspec)
 #     Examples: elena-admin@fml.org
 smtp_sender		=	$maintainer
+
+=head1 メッセージ操作
+
+=head2 言語
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+reply_message_charset	=	$default_charset
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+system_message_charset	=	$default_charset
+
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+message_default_subject	=	fml system message
+
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+reply_message_subject	=	reply from $ml_name ML
+
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+system_message_subject	=	fml system message ($ml_name ML)
 
 =head1	ヘッダの操作
 

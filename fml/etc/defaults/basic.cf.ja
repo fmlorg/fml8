@@ -9,6 +9,11 @@
 maintainer	=
 
 
+=head2	言語
+
+default_charset	=	iso-2022-jp
+
+
 =head2	default modes
 
 # Descriptions: ファイルを作成する時のデフォルトモード

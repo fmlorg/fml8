@@ -2,6 +2,7 @@ basic.cf
 directory.cf
 acl.cf
 delivery.cf
+messages.cf
 header.cf
 lock.cf
 log.cf
