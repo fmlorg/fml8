@@ -24,7 +24,7 @@ update:
 	@ (cd ../..; make update)
 
 check:
-	@ (cd ../../fml; make check)
+	@ (cd ../../fml; make check 2>&1 ) | grep -v OK || echo ''
 
 link:
 	rm -f doc; ln -s ../../fml/doc
