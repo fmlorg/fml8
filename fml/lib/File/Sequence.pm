@@ -12,7 +12,7 @@ package File::Sequence;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
-use ErrorMessages::Status qw(error_set error error_reset);
+use ErrorMessages::Status qw(error_set error error_clear);
 
 =head1 NAME
 

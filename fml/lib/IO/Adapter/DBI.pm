@@ -11,7 +11,7 @@ package IO::Adapter::DBI;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use ErrorMessages::Status qw(error_set error error_reset);
+use ErrorMessages::Status qw(error_set error error_clear);
 
 =head1 NAME
 

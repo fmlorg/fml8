@@ -433,7 +433,7 @@ sub deliver
 		$self->_deliver($args);
 
 		# remove error messages for the next _deliver() session.
-		$self->error_reset;
+		$self->error_clear;
 
 		# we read the whole $map now. 
 		if ($self->_get_map_status($map) eq 'done') {

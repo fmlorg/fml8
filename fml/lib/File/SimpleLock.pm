@@ -11,7 +11,7 @@ package File::SimpleLock;
 use vars qw(%LockedFileHandle %FileIsLocked @ISA $Error);
 use strict;
 use Carp;
-use ErrorMessages::Status qw(error_set error error_reset);
+use ErrorMessages::Status qw(error_set error error_clear);
 
 =head1 NAME
 

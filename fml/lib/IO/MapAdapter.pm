@@ -12,7 +12,7 @@ package IO::MapAdapter;
 use vars qw(@ISA @ORIG_ISA $FirstTime);
 use strict;
 use Carp;
-use ErrorMessages::Status qw(error_set error error_reset);
+use ErrorMessages::Status qw(error_set error error_clear);
 
 BEGIN {}
 END   {}

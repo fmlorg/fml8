@@ -13,7 +13,7 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK 
 	    $LogFunctionPointer $SmtpLogFunctionPointer);
 use Carp;
-use ErrorMessages::Status qw(error_set error error_reset);
+use ErrorMessages::Status qw(error_set error error_clear);
 
 require Exporter;
 @ISA = qw(Exporter);
@@ -28,7 +28,7 @@ require Exporter;
 
 	     error_set 
 	     error 
-	     error_reset 
+	     error_clear 
 
 	     _set_status_code 
 	     _get_status_code
@@ -149,7 +149,7 @@ save C<$mesg>.
 
 return the latest error message which saved by C<error_set()>.
 
-=head2 C<error_reset()>
+=head2 C<error_clear()>
 
 reset the error buffer which C<error_set()> and C<error()> use.
 

@@ -16,7 +16,7 @@ use Carp;
 
 require Exporter;
 @ISA       = qw(Exporter);
-@EXPORT_OK = qw(error_set error error_reset);
+@EXPORT_OK = qw(error_set error error_clear);
 
 =head1 NAME
 
@@ -27,7 +27,7 @@ ErrorMessages::Status - error handling component
 Use this module in your C<Something> class module like this:
 
    package Something;
-   use ErrorMessages::Status qw(error_set error error_reset);
+   use ErrorMessages::Status qw(error_set error error_clear);
 
    sub xxx
    {
@@ -73,7 +73,7 @@ sub error
 }
 
 
-sub error_reset
+sub error_clear
 {
     my ($self, $args) = @_;
     my $msg = $self->{'_error_reason'};

@@ -51,7 +51,7 @@ sub error       { return $ErrorString;}
 #    Arguments: none
 # Side Effects: undef $ErrorString buffer
 # Return Value: none
-sub error_reset { undef $ErrorString;}
+sub error_clear { undef $ErrorString;}
 
 
 =head2 C<mkdiehier($dir, $mode)>
@@ -69,7 +69,7 @@ sub mkdirhier
 {
     my ($dir, $mode) = @_;
 
-    error_reset();
+    error_clear();
 
     # XXX $mode (e.g. 0755) should be a numeric not a string
     eval qq{ 
@@ -96,7 +96,7 @@ sub touch
     my ($file, $mode) = @_;
     my ($ok) = 0;
 
-    error_reset();
+    error_clear();
 
     if ( -f $file) {
 	return 1;
