@@ -1,5 +1,5 @@
 #
-# $FML$
+# $FML: main.cf.in,v 1.1 2001/11/12 14:33:03 fukachan Exp $
 #
 
 # fml version
@@ -61,6 +61,11 @@ default_domain		=	fml.org
 # whic holds
 # Example: /etc/fml/defaults/5.0/default_config.cf
 default_config_cf	=	$default_config_dir/default_config.cf
+
+
+# path_$program collection
+# Example: /etc/fml/defaults/5.0/default_config.cf
+default_paths_cf	=	$default_config_dir/paths.cf
 
 
 # domain specific configurations
