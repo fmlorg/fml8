@@ -1,5 +1,5 @@
 <!--
-	$FML: create_program.sgml,v 1.2 2001/11/25 06:23:30 fukachan Exp $
+	$FML: create_program.sgml,v 1.3 2002/04/01 23:41:01 fukachan Exp $
 -->
 
 <chapter id="program.create">
@@ -21,12 +21,12 @@
 </para>
 
 <para>
-用意しなければいけない関数は
+用意しなければいけない関数(メソッド)は
 FML::Process::Flow::ProcessStart()
 を見ると分かります。
 FML::Process::Flow::ProcessStart()
 がプロセスを駆動しているからです。
-2001/11 現在、プロセスは以下のメソッドからなっています。
+2002/07 現在、これらのメソッドが必須です。
 <screen>
 new()
 prepare()
@@ -34,6 +34,7 @@ verify_request()
 run()
 finish()
 </screen>
+ダミーでもよいので、このメソッドを用意しておいて下さい。
 </para>
 
 <para>
@@ -72,9 +73,6 @@ FML::Process::Switch
 total 11
 -rw-r--r--  1 fml       wheel  4044 Nov 20 00:19 Standalone.pm
 lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 command -> loader
-drwxr-xr-x  4 root      wheel   512 Mar 29  2001 current-20010329
-drwxr-xr-x  4 root      wheel   512 Apr  7  2001 current-20010407
-drwxr-xr-x  4 root      wheel   512 Apr 18  2001 current-20010418
 drwxr-xr-x  3 root      wheel   512 Nov 23 22:10 current-20011123
 lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 distribute -> loader
 lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 fml.pl -> loader
@@ -134,20 +132,33 @@ FML::CGI::○○○ の注意点は、
 用意するメソッドは
 <screen>
 html_start()
-run_cgi()
 html_end()
 </screen>
+および
+<screen>
+run_cgi_main()
+run_cgi_title()
+run_cgi_navigator()
+run_cgi_menu()
+run_cgi_command_help()
+run_cgi_options()
+</screen>
 になるという点です。
-これは
-FML::Process::CGI 以下で駆動される時に、
-run() メソッドが、
+これらの組で一つの画面が構成されています。
+</para>
+
+<para>
+CGI プロセスは FML::Process::CGI で駆動され、run() メソッドは
 <screen>
 $curproc->html_start($args);
-$curproc->run_cgi($args);
+画面を作るために run_cgi_xxx() メソッド郡を呼び出す。
 $curproc->html_end($args);
 </screen>
-を呼び出しているからです。
-FML::Process::CGI::Kernel 自身は、
+のように FML::CGI:: 以下のメソッド群を呼び出しているからです。
+</para>
+
+<para>
+ちなみに FML::Process::CGI::Kernel 自身は、
 2001/11 現在、プロセスは以下のメソッド
 	<footnote>
 	<para>
@@ -164,6 +175,8 @@ verify_request()
 run()
 finish()
 </screen>
+特に、これらを編集する必要はないでしょう。
+ちなみに FML::CGI:: は run() から呼ばれています。
 </para>
 
 </sect1>

@@ -1,0 +1,68 @@
+<!--
+   $FML: chapter.sgml,v 1.10 2002/04/01 23:41:06 fukachan Exp $
+-->
+
+<chapter id="overview.ml">
+	<title>
+	ＭＬとは？
+	</title>
+
+<sect1>
+	<title>
+	電子メール
+	</title>
+
+<para>
+電子メールとは、郵便のネットワーク版です。
+</para>
+
+<para>
+見栄えはメールソフトによって変わりますが、メールサーバがやりとりしてい
+るのは次のような形式のテキストのファイルに過ぎません。
+<screen>
+From: rudo@nuinui.net
+To: kenken@nuinui.net
+Subject: あそぼうよ
+
+やは、けんけん。ぼく、るどだよ。
+
+// るど
+</screen>
+</para>
+
+</sect1>
+
+
+
+<sect1>
+	<title>
+	メーリングリスト(ＭＬ)
+	</title>
+
+<para>
+メーリングリスト(以下ＭＬ)とは、巨大な文通の仕組みのようなものです。
+</para>
+
+<para>
+ただ、電子メールはいくらでもコピーできるので、
+仮想のある人(ＭＬのアドレス)にメールを送ると、
+文通友の会のメンバー全員にそのメールのコピーを配ります。
+これがＭＬの仕組みです。
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	ＭＬドライバのモデル
+	</title>
+
+<para>
+ＭＬドライバのモデルは次のようなものです。 
+<graphic entityref="image.ml"></graphic>
+</para>
+
+</sect1>
+
+</chapter>

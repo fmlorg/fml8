@@ -1,5 +1,5 @@
 <!--
-   $FML: cgi.sgml,v 1.4 2002/03/19 04:48:54 fukachan Exp $
+   $FML: cgi.sgml,v 1.5 2002/04/01 23:41:03 fukachan Exp $
 -->
 
 <chapter id="internal.cgi">
@@ -17,7 +17,12 @@
 FML::CGI のクラスは以下の３つのメソッドを実装して下さい。
 <screen>
 html_start()
-run_cgi()
+run_cgi_main()
+run_cgi_title()
+run_cgi_navigator()
+run_cgi_menu()
+run_cgi_command_help()
+run_cgi_options()
 html_end()
 </screen>
 ここで
@@ -32,7 +37,7 @@ run_cgi() メソッドでは BODY の部分を表示してください。
 $curproc の run() メソッドは
 <screen>
 html_start()
-run_cgi()
+run_cgi_XXX() 群を実行(テーブル状に出力を配置する)
 html_end()
 </screen>
 を順番に実行しています。
@@ -43,7 +48,7 @@ prepare()
 verify_request()
 run()
    html_start()
-   run_cgi()
+   run_cgi_○○()
    html_end()
 finish()
 </screen>

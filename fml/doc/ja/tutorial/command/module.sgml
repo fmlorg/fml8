@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: module.sgml,v 1.1 2001/11/24 03:22:53 fukachan Exp $
 -->
 
 
@@ -9,7 +9,7 @@
 	</title>
 
 <para>
-5.0 では、
+&fmldevel; では、
 コマンドメール、makefml そして CGI が使うモジュール
 は共有されています。
 ただし、その権限の差異によって、
@@ -20,71 +20,80 @@
 <para>
 FML::Command:: クラスは以下のような構成になっています。
 <screen>
-FML::Command.pm		FML::Command クラス以下への入口
-FML::Command::ACL	ACL
+FML::Command		FML::Command クラス以下への入口
 FML::Command::Utils	よもやまの定義
 FML::Command::User	ユーザ用コマンド群
 FML::Command::Admin	管理者用コマンド群
 </screen>
 例えば、(メールでの)ユーザ用のコマンドの場合
-FML::Command.pm を経由して
-FML::Command::User::コマンド.pm
+FML::Command を経由して
+FML::Command::User::コマンド
 モジュールを使うことになります。
 </para>
 
 <sect2>
-	<title> (メールでの)一般ユーザ用コマンド </title>
+	<title>
+	(メールでの)一般ユーザ用コマンド
+	</title>
+
 <para>
-FML::Process::Command.pm から
-FML::Command.pm 経由で
-FML::Command::User::コマンド.pm
+FML::Process::Command から
+FML::Command 経由で
+FML::Command::User::コマンド
 を用います。
 </para>
 
 <para>
 最終的に
-FML::Command::Admin::コマンド.pm
+FML::Command::Admin::コマンド
 を使うモジュールもあります。
 例えば登録と削除の実作業は
-FML::Command::Admin::コマンド.pm
+FML::Command::Admin::コマンド
 が行なっています。この場合
-FML::Command::User::コマンド.pm
+FML::Command::User::コマンド
 のコマンドは confirm を行なうための wrapper です。
 </para>
 </sect2>
 
 <sect2>
-	<title> (メールでの) adminコマンド </title>
+	<title>
+	(メールでの) adminコマンド
+	</title>
 
 <para>
-FML::Process::Command.pm から
-FML::Command.pm 経由で
-FML::Command::Admin::コマンド.pm
+FML::Process::Command から
+FML::Command 経由で
+FML::Command::Admin::コマンド
 を用います。
 </para>
 
 </sect2>
 
 <sect2>
-	<title> makefml のコマンド </title>
+	<title>
+	makefml のコマンド
+	</title>
 
 <para>
-FML::Process::Configure.pm から
-FML::Command.pm 経由で
-FML::Command::Admin::コマンド.pm
+FML::Process::Configure から
+FML::Command 経由で
+FML::Command::Admin::コマンド
 を用います。
 </para>
 
 </sect2>
 
 <sect2>
-	<title> CGI （予定） </title>
+	<title>
+	CGI
+	</title>
+
 
 <para>
-FML::Process::CGI.pm から
-FML::Command.pm 経由で
-FML::Command::Admin::コマンド.pm
-を用います（予定）。
+FML::Process::CGI から
+FML::Command 経由で
+FML::Command::Admin::コマンド
+を用います。
 </para>
 
 </sect2>

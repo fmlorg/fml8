@@ -1,16 +1,16 @@
 <!--
-    $FML: chapter.sgml,v 1.5 2002/02/16 10:08:34 fukachan Exp $
+    $FML: chapter.sgml,v 1.6 2002/04/01 23:41:01 fukachan Exp $
 -->
 
 <chapter id="delivery">
-
-   <TITLE> &fmldevel; のメール配送システム </TITLE>
+	<TITLE>
+	&fmldevel; のメール配送システム
+	</TITLE>
 
 <sect1 id="fml5-delivery">
-
-   <title>
-           &fml4; と &fmldevel; の相違点
-   </title>
+	<title>
+	&fml4; と &fmldevel; の相違点
+	</title>
 
 <para>
 &fmldevel; の最大の目的の一つは、メンバーリストの取得と操作の統合と抽

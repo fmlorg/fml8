@@ -1,73 +1,88 @@
 <!--
-	$FML: main.cf.sgml,v 1.2 2001/05/10 03:11:43 fukachan Exp $
+	$FML: main.cf.sgml,v 1.3 2002/04/01 23:41:03 fukachan Exp $
 -->
 <sect1 id="main.cf">
-<title> /etc/fml/main.cf </title>
+	<title>
+	/etc/fml/main.cf
+	</title>
 
 <para>
 /etc/fml/main.cf は各ＭＬの設定ではありません。
-これは、バージョン依存性を解決するための設定ファイルです。
-fml のプログラム群が起動する時に参照します。
+これは、fml のバージョンなどメタレベルの依存性を解決するための設定ファ
+イルで、fml のプログラム群が起動する時に参照します。
 </para>
 
 
 <para>
-main.cf はこのようなファイルです。
-
-フォーマットは
+main.cf のフォーマットは他の .cf と同様
+<footnote>
+<para>
+実際のところファイル拡張子とファイルフォーマットには相関があります。 
+</para>
+</footnote>
+に
 <screen>
 変数名 = 値
 </screen>
 です。
 
 <screen>
+#
+# $FML: main.cf.in,v 1.12 2002/04/01 23:41:09 fukachan Exp $
+#
+
 # fml version
 #   This is important
 # Example: fml 5.0
 #          fml-current YYYYMMDD
 #          fml-devel YYYYMMDD
-fml_version	=	current-20010423
+fml_version	=	current-20020701
+
+fml_owner	=	fml
+
+fml_group	=	fml
 
 
 ###
 ### DIRECTORIES
 ###
 
+# Example: /usr/local
+prefix			= 	/usr/local
+exec_prefix		=	${prefix}
 
 # $config_dir holds the global main configuration and
 # several version-dependent default configurations
 # Example: /etc/fml
-config_dir	= 	/etc/fml
+config_dir		= 	/etc/fml
 
 # Example: /etc/fml/defaults/$fml_version
-default_config_dir	= $config_dir/defaults/$fml_version
+default_config_dir	=	$config_dir/defaults/$fml_version
 
-# Example: /usr/local
-default_prefix  = 	/usr/local
-
-
+# defined for convenience, for example, we need this variable
+# at include, include-ctl, which needs expansion of ../libexec/fml/fml.pl
 # Example: /usr/local/libexec/fml
-libexec_prefix	=	$default_prefix
-
-# Example: /usr/local/lib/fml
-lib_prefix	=	$default_prefix
+executable_prefix	=	${exec_prefix}/libexec/fml
 
 # Example: /usr/local/libexec/fml/$fml_version
-libexec_dir	= 	$libexec_prefix/libexec/fml/$fml_version
+libexec_dir		= 	${exec_prefix}/libexec/fml/$fml_version
 
 # Example: /usr/local/lib/fml/$fml_version
-lib_dir		=	$lib_prefix/lib/fml/$fml_version
+lib_dir			=	${exec_prefix}/lib/fml/$fml_version
+
+# Example: /usr/local/share/fml/$fml_version
+share_dir		=	${prefix}/share/fml/$fml_version
 
 # site local library location
 # which is prepared but not used by fml itself
-local_lib_dir	=	$default_prefix/lib/fml/site_local
+local_lib_dir		=	${exec_prefix}/lib/fml/site_local
 
 
 # ml's home directories
 # $ml_home_dir (e.g. /var/spool/ml/elena ) is taken from loader's @ARGV.
 # This is compatible with fml 4.0.
 # Example: /var/spool/ml
-ml_home_prefix	= /var/spool/ml
+default_ml_home_prefix	=	/var/spool/ml
 
 
 
@@ -77,18 +92,26 @@ ml_home_prefix	= /var/spool/ml
 
 
 # default domain
-default_domain	=	fml.org
+default_domain		=	fml.org
 
 
 # version dependent default_config.cf location
 # whic holds
 # Example: /etc/fml/defaults/5.0/default_config.cf
-default_config	=	$config_dir/defaults/$fml_version/default_config.cf
+default_config_cf	=	$default_config_dir/default_config.cf
 
 
 # domain specific configurations
 # Example: /etc/fml/domains/fml.org/default_config.cf
-domain_default_config = $config_dir/domains/$default_domain/config.cf
+domain_default_config 	=	$config_dir/domains/$default_domain/config.cf
+
+
+# virtual format: domain directory
+# for example,
+#   fml.org	/var/spool/ml/fml.org
+#   nuinui.net	/var/spool/ml/nuinui.net
+virtual_maps		=	$config_dir/virtual
+
 </screen>
 </para>
 </sect1>

@@ -1,5 +1,5 @@
 <!--
-   $FML: makefml.sgml,v 1.1 2001/11/24 03:22:59 fukachan Exp $
+   $FML: makefml.sgml,v 1.2 2002/04/01 23:41:07 fukachan Exp $
 -->
 
 <sect1 id="usage.makefml">
@@ -7,7 +7,7 @@
 <title> makefml を使って、ユーザの登録/削除他(あらゆる:) </title>
 
 <para>
-makefml の基本的な使い方は fml 4.0 の makefml と同様です。
+makefml の基本的な使い方は &fml4; の makefml と同様です。
 というより、できるだけ互換性を保つように構築する予定です。
 </para>
 
@@ -49,6 +49,15 @@ makefml の基本的な使い方は fml 4.0 の makefml と同様です。
 	ＭＬの作成
 	(
 		newml
+	)
+	</para>
+	</listitem>
+
+	<listitem>
+	<para>
+	ＭＬの削除
+	(
+		rmml
 	)
 	</para>
 	</listitem>

@@ -1,10 +1,11 @@
 <!--
-	$FML: style.sgml,v 1.3 2002/04/01 23:41:04 fukachan Exp $
+	$FML: style.sgml,v 1.4 2002/05/27 09:00:28 fukachan Exp $
 -->
 
 <chapter id="programingstyle">
-
-<TITLE>プログラミング・スタイル</TITLE>
+	<TITLE>
+	プログラミング・スタイル
+	</TITLE>
 
 <para>
 ここでは、プログラミング上のいくつかの諸問題についてまとめます。
@@ -86,10 +87,16 @@ use_変数		=	yes/no
 
 <!-- ==================================================== -->
 <sect1>
+	<title>
+	プログラミング・スタイル (原案のメモ(注: 単なる走り書き))
+	</title>
 
-<title>
-プログラミング・スタイル (原案のメモ(注: 単なる走り書き))
-</title>
+<warning>
+<para>
+ログとして、原案のメモ(注: 単なる走り書き)をここに記録しておきます。
+</para>
+</warning>
+
 
 <para>
 <itemizedlist>

@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.35 2002/04/02 23:16:31 fukachan Exp $
+	$FML: chapters.ent,v 1.36 2002/05/13 14:16:36 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -14,6 +14,7 @@
 
 <!-- 画像 -->
 <!entity image.architecture SYSTEM "architecture.gif" ndata gif>
+<!entity image.ml           SYSTEM "ml.gif" ndata gif>
 
 
 <!-- メタレベル -->
@@ -23,9 +24,15 @@
 
 
 <!-- パート I: introduction 〜 インストール、テストまで -->
-<!entity chapter.overview        SYSTEM "overview/chapter.sgml">
+<!entity chapter.overview.fml    SYSTEM "overview/fml.sgml">
+<!entity chapter.overview.ml     SYSTEM "overview/ml.sgml">
 <!entity chapter.download        SYSTEM "overview/download.sgml">
-<!entity chapter.install         SYSTEM "install/chapter.sgml">
+
+
+<!-- パート II: セットアップ -->
+<!entity chapter.install.fml.unix SYSTEM "install/fml_on_unix.sgml">
+<!entity chapter.install.fml.nt   SYSTEM "install/fml_on_nt.sgml">
+<!entity chapter.upgrade          SYSTEM "install/upgrade.sgml">
 
 
 <!-- パート II: 使い方の例とカスタマイズについて -->

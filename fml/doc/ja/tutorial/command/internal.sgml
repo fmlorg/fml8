@@ -1,11 +1,11 @@
 <!--
-   $FML: internal.sgml,v 1.2 2001/11/24 03:22:53 fukachan Exp $
+   $FML: internal.sgml,v 1.3 2002/04/01 23:41:00 fukachan Exp $
 -->
 
 <sect1 id="fml.command.interal.change">
 	<title>
 	議論:
-	『4.0 と 5.0 のコードの書き方はどのくらい違うか？』
+	『4.0 と &fmldevel; のコードの書き方はどのくらい違うか？』
 	</title>
 
 <para>
@@ -15,28 +15,29 @@
 
 <para>
 5.0 では help ファイルを送り返すコードの実体は
-	FML::Command::User::help にあり、
-	FML::Process::Command クラスから
-	(FML::Command の AUTOLOAD を経由して)呼び出されます。
+FML::Command::User::help にあり、
+FML::Process::Command クラスから
+(FML::Command の AUTOLOAD を経由して)呼び出されます。
 </para>
 
 <warning>
 <para>
-	注意: 全てのコマンドは FML::Command::User::コマンド もしくは
-	FML::Command::Admin::コマンド クラスとして実装されています。
-	なお makefml は FML::Command::Admin::コマンド を使います。
+全てのコマンドは FML::Command::User::コマンド もしくは
+FML::Command::Admin::コマンド クラスとして実装されています。
+なお makefml や CGI は FML::Command::Admin::コマンド を使います。
+コマンドメールは User や Admin を適宜使い分けます。
 </para>
 </warning>
 
 <para>
-help の実体は FML::Command::User::help のこの関数です。
+例えば help の実体は FML::Command::User::help の process() 関数です。
 <screen>
 sub process
 {
     my ($self, $curproc, $optargs) = @_;
-    my $config        = $curproc->{ config };
-    my $charset       = $config->{ reply_message_charset };
-    my $help_file     = $config->{ help_file };
+    my $config    = $curproc->{ config };
+    my $charset   = $config->{ reply_message_charset };
+    my $help_file = $config->{ help_file };
 
     # template substitution: kanji code, $varname expansion et. al.
     my $params = {
@@ -82,11 +83,15 @@ $curproc->reply_message() は引数によって振舞いがことなりますが、
 </para>
 
 <para>
-この仕組みは fml 4.0 の Notify() と同様ですが、あらゆるメッセージがキュー
-に入れられ、最後に一気に処理されるという点で大きく異なります。get コマ
-ンドなども同じように扱われます。つまり 4.0 の Notify() 相当部分が(通常
-の記事配送以外の)あらゆる送信機能を担当するということです。
-この点において、送信のキューイングのメカニズムは大きく異なっています。
+この仕組みは &fml4; の Notify() と同様ですが、あらゆるメッセージがキュー
+に入れられ、最後に一気に処理されるという点で大きく異なります。
+</para>
+
+<para>
+なお get コマンドなども同じキューイングの仕組みを使っています。つまり 
+4.0 の Notify() 相当部分が(通常の記事配送以外の)あらゆる送信機能を担当
+するということです。この点において、送信のキューイングのメカニズムは大
+きく異なっています。
 </para>
 
 </sect1>

@@ -1,5 +1,5 @@
 <!--
-	$FML: glossary.sgml,v 1.2 2001/11/19 14:55:15 fukachan Exp $
+	$FML: glossary.sgml,v 1.3 2002/04/01 23:41:00 fukachan Exp $
 -->
 
 <glossary id="glossary">
@@ -12,7 +12,7 @@
 	<glossterm>	fml 4	</glossterm>
 	<glossdef>
 	<para>
-		fml 4.0 シリーズのこと
+	&fml4; シリーズのこと
 	</para>
 	</glossdef>
 
@@ -20,16 +20,16 @@
 
 
    <glossentry>
-	<glossterm>	fml 5 / fml-devel	</glossterm>
+	<glossterm>	fml-devel	</glossterm>
 	<glossdef>
 	<para>
-		遠い将来に
-		fml 5.0 になるであろうとおもわれる fml-current
+	将来 &fmldevel; になるであろうとおもわれる fml-current
 	</para>
 
 	<para>
 	もしかしたら fml 8.x の方が適切かも知れない。
 	だが、まだ決まっていない。
+	でも 8 じゃないかな〜という感じ濃厚
 	</para>
 	</glossdef>
 
@@ -41,7 +41,7 @@
 	<glossterm>	curproc	</glossterm>
 	<glossdef>
 	<para>
-		"current process"の略。
+	"current process"の略。
 	</para>
 
 	<para>
@@ -56,10 +56,10 @@
 	<glossterm>	PCB	</glossterm>
 	<glossdef>
 	<para>
-		Process Control Block の略。
-		そのプロセス固有の情報を含む。
-		現状 fml 内部でのコンテキスト切替などはないので、
-		UNIX カーネルの PCB とは少し趣が異なります。
+	Process Control Block の略。
+	そのプロセス固有の情報を含む。
+	現状 fml 内部でのコンテキスト切替などはないので、
+	UNIX カーネルの PCB とは少し趣が異なります。
 	</para>
 
 	<para>
@@ -74,7 +74,7 @@
 	<glossterm>	config	</glossterm>
 	<glossdef>
 	<para>
-		configuration の略
+	configuration の略
 	</para>
 	</glossdef>
    </glossentry>
@@ -84,7 +84,7 @@
 	<glossterm>	conf	</glossterm>
 	<glossdef>
 	<para>
-		configuration の略
+	configuration の略
 	</para>
 	</glossdef>
    </glossentry>
@@ -94,7 +94,7 @@
 	<glossterm>	arg / args	</glossterm>
 	<glossdef>
 	<para>
-		アーギュメントの略
+	アーギュメント( argument )の略
 	</para>
 	</glossdef>
 
@@ -106,7 +106,7 @@
 	<glossterm>	fh	</glossterm>
 	<glossdef>
 	<para>
-		ファイルハンドル( file handle )
+	ファイルハンドル( file handle )
 	</para>
 	</glossdef>
 
@@ -118,7 +118,7 @@
 	<glossterm>	dh	</glossterm>
 	<glossdef>
 	<para>
-		ディレクトリハンドル( directory handle )
+	ディレクトリハンドル( directory handle )
 	</para>
 	</glossdef>
 
@@ -130,8 +130,8 @@
 	<glossterm>	fp	</glossterm>
 	<glossdef>
 	<para>
-		関数へのポインタ( function pointer )。
-		ただし perl では CODE リファレンスと呼ぶべき
+	関数へのポインタ( function pointer )。
+	ただし perl では CODE リファレンスと呼ぶべき
 	</para>
 	</glossdef>
    </glossentry>
@@ -141,14 +141,16 @@
 	<glossterm>	_なになに	</glossterm>
 	<glossdef>
 	<para>
-		慣習的にパッケージ、クラス、オブジェクト内部で使う
-		変数や関数名に _ ではじまるキーワードを使う。
+	慣習的にパッケージ、クラス、オブジェクト内部で使う
+	変数や関数名に _ ではじまるキーワードを使う。
 	</para>
 
 	<para>
 	つまり private ということ(
-		OO の厳密な意味で private method という意味か？などとは
-		つっこまないようにしたい:-)
+	ここで
+	OO の厳密な意味で private method という意味か？などとは
+	つっこまないようにされたい
+	:-)
 	</para>
 	</glossdef>
    </glossentry>
@@ -158,10 +160,14 @@
 	<glossterm>	rなになに	</glossterm>
 	<glossdef>
 	<para>
-		r はリファレンスの略。
-		これをハンガリアン記法と呼ぶ。
-		特別に強調したい場合に使うことがあるが、
-		fml 内部では、あまり使っていない。
+	r はリファレンスの略。
+	これはハンガリアン記法と呼ばれている。
+	</para>
+
+	<para>
+	型を特別に強調したい場合に使うことがあるが、
+	fml 内部では、ほとんど使っていない。
+	適宜コメントを参照してください。
 	</para>
 	</glossdef>
    </glossentry>
@@ -171,7 +177,7 @@
 	<glossterm> 	STR	</glossterm>
 	<glossdef>
 	<para>
-	 	文字列 ( string ) の略
+	文字列 ( string ) の略
 	</para>
 	</glossdef>
 
@@ -182,7 +188,7 @@
 	<glossterm> 	日本語コードの略称	</glossterm>
 	<glossdef>
 	<para>
-	 	JIS SJIS EUC などおなじみのもの…
+	JIS SJIS EUC などおなじみのもの…
 	</para>
 	</glossdef>
    </glossentry>
@@ -192,8 +198,8 @@
 	<glossterm> 	2	</glossterm>
 	<glossdef>
 	<para>
-		to と発音が一緒のため省略形としてよく使う。
-		類似品として 4 ( for の意味)もある
+	to と発音が一緒のため省略形としてよく使う。
+	類似品として 4 ( for の意味)もある
 	</para>
 	<para>
 		例: STR2EUC (STRing to EUC の略)
@@ -210,8 +216,8 @@ $euc_string = STR2EUC($string);
 	<glossterm> 	4	</glossterm>
 	<glossdef>
 	<para>
-	 	for と発音が同じために用いる。
-		例はまだなし。
+	for と発音が同じために用いる。
+	例はまだなし。
 	</para>
 	</glossdef>
    </glossentry>

@@ -1,17 +1,19 @@
 <!--
-   $FML: extension.sgml,v 1.2 2001/11/24 03:22:53 fukachan Exp $
+   $FML: extension.sgml,v 1.3 2002/04/01 23:41:00 fukachan Exp $
 -->
 
 
 <sect1 id="fml.command.hack.example0">
-   <title> コマンドの拡張の仕方 (予定) </title>
+	<title>
+	コマンドの拡張の仕方 (予定)
+	</title>
 
 
    <sect2>
 	<title> 独自コマンドを作る。 </title>
 
 	<para>
-	fml 5.0 では、
+	&fmldevel; では、
 	例えばユーザ向けのコマンド uja を作りたい場合、
 	FML::Command 以下から適当に cut & paste して
 <screen>

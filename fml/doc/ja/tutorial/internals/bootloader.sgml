@@ -1,5 +1,5 @@
 <!--
-	$FML: bootloader.sgml,v 1.5 2002/03/18 13:34:36 fukachan Exp $
+	$FML: bootloader.sgml,v 1.6 2002/04/01 23:41:03 fukachan Exp $
 -->
 
 <chapter id="bootloader">
@@ -9,7 +9,7 @@
 
 <para>
 
-fml 5.0 にはインストールされている fml のバージョン依存性を考慮するた
+&fmldevel; にはインストールされている fml のバージョン依存性を考慮するた
 めに、実行時には本章で述べるようなブートストラップの過程があります。
 
 <screen>
@@ -32,7 +32,7 @@ loader から次々と呼ばれていく様子は、例えば配送処理の場合、次のよう
 </para>
 
 <para>
-libexec/loader は /etc/fml/main.cf を読みこみます。
+libexec/loader は /usr/local/etc/fml/main.cf を読みこみます。
 fml_version 変数から使うべきライブラリのバージョンを決めます。
 例えば fml_vesrion が current-20010501 となっていたら
 /usr/local/lib/fml/current-20010501/ 以下にあるライブラリを使うといった
@@ -73,11 +73,6 @@ FML::Process::Mead       >-|    |
                                 |-use-a  ... その他 ...
 </screen>
 
-=&gt;
-<ulink url="../../../fml/lib/FML/Process/programs.ja.html">
-FML::Process::それぞれのプログラムのモジュールについて
-</ulink>
-
 </para>
 </sect1>
 
@@ -102,7 +97,7 @@ FML::Process::それぞれのプログラムのモジュールについて
    <itemizedlist>
 	<listitem>
 	<para>
-	   /etc/fml/main.cf を読み込む。
+	   /usr/local/etc/fml/main.cf を読み込む。
 		読み込むと fml のバージョンが分かる。
 		default_config.cf はバージョン依存であるので、
 		ここでまずバージョンを評価しなければいけないことに注意。

@@ -1,5 +1,5 @@
 <!--
-   $FML: newml.sgml,v 1.1 2002/03/18 07:39:58 fukachan Exp $
+   $FML: newml.sgml,v 1.2 2002/04/01 23:41:07 fukachan Exp $
 -->
 
 <!--
@@ -16,7 +16,7 @@
 
 <chapter id="usage.newml">
 	<title>
-	ＭＬを作成する (UNIX 編)
+	UNIX 上でＭＬを作成する
 	</title>
 
 
@@ -165,23 +165,70 @@ aliases の設定の仕方は一緒です。
 
 <sect1>
 	<title>
-	aliaess のカスタマイズ
+	aliaess の更新
 	</title>
 
 <para>
 makefml はシステムの aliases を変更することはありませんが、
 $ml_home_prefix/etc/mail/aliases
-への追加が自動的に行なわれているはずです。
-システムへの追加が必要なら、次のようにして下さい。
+への追加と aliases.db の更新が自動的に行なわれているはずです。
+</para>
+
+
+<sect2>
+	<title>
+	postfix の設定
+	</title>
+
+<para>
+makefml newml を実行するだけでＭＬが自動的に有効になるように、あらかじ
+め postfix の設定を変更しておいて下さい。
+具体的には postfix の /etc/postfix/main.cf を次のようにしておきます。
 <screen>
-elena: :include:/var/spool/ml/elena/include
-elena-ctl: :include:/var/spool/ml/elena/include-ctl
-elena-admin: fml
-owner-elena: fml
-owner-elena-ctl: fml
+alias_maps	=	hash:/etc/mail/aliases
+			hash:/var/spool/ml/etc/mail/aliases
 </screen>
 </para>
 
+</sect2>
+
+
+<sect2>
+	<title>
+	qmail の設定
+	</title>
+
+<para>
+makefml newml は次のような qmail 用の設定ファイルを作ります。
+<screen>
+~/.qmail-fml:org-elena
+~/.qmail-fml:org-elena-ctl
+</screen>
+よって
+<screen>
+/var/qmail/control/virtualdomains
+</screen>
+に、あらかじめ次のような設定を仕込んでおけば、
+makefml newml を実行するだけで 
+qmail でも自動的にＭＬが有効になります。
+<screen>
+fml.org:fml-fml.org
+</screen>
+</para>
+
+<warning>
+<para>
+この設定は、ＭＬ用に一つのドメインをまるまる使うことを前提としています。
+</para>
+</warning>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	例: /var/spool/ml/etc/mail/aliases
+	</title>
 
 <para>
 aliases のエントリは
@@ -208,6 +255,8 @@ elena-admin: fukachan
 $ml_home_prefix の部分は
 $virtual_maps にしたがって自動的に変化します。
 </para>
+
+</sect2>
 
 </sect1>
 

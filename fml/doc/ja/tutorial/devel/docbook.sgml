@@ -1,5 +1,5 @@
 <!--
-	$FML: docbook.sgml,v 1.2 2001/11/19 14:55:15 fukachan Exp $
+	$FML: docbook.sgml,v 1.3 2002/04/01 23:41:01 fukachan Exp $
 -->
 
 
@@ -9,7 +9,7 @@
 	</title>
 
 <para>
-fml-devel (fml 5.0) のドキュメントでは、SGML の DTD は
+fml-devel (&fmldevel;) のドキュメントでは、SGML の DTD は
 
 	<ulink url="http://www.oasis-open.org/docbook/">
 	DOCBOOK
@@ -397,7 +397,7 @@ DTD と DSL の規格文書群は必須です。
 </para>
 
 <para>
-fml 5.0 では、以下のプログラムを使って HTML やテキストファイルを作成し
+&fmldevel; では、以下のプログラムを使って HTML やテキストファイルを作成し
 ています。
 <itemizedlist>
 
@@ -427,7 +427,7 @@ fml 5.0 では、以下のプログラムを使って HTML やテキストファイルを作成し
 <para>
 もちろん sgmltools がなくても SGML から HTML を作ることができます。
 どのツールを使うかは、あなたがどれを便利に思うか？次第です。
-単に &fml5; では、sgmltools を歴史的に使っているだけです。
+単に &fmldevel; では、sgmltools を歴史的に使っているだけです。
 </para>
 
 <para>
@@ -508,7 +508,7 @@ LISP を知らないとちょっと手が出ないでしょう。
 </para>
 
 <para>
-ちなみに fml 5.0 の DSL の記述は
+ちなみに &fmldevel; の DSL の記述は
 
    <ulink url="../../../fml/doc/share/sgml/fml.dsl">
    fml/doc/share/sgml/fml.dsl

@@ -1,5 +1,5 @@
 <!--
-   $FML: discussion.sgml,v 1.1 2001/11/24 12:48:10 fukachan Exp $
+   $FML: discussion.sgml,v 1.2 2002/04/01 23:41:04 fukachan Exp $
 -->
 
 <sect1>
@@ -14,10 +14,10 @@
 
 <!-- ===================================================== -->
 <sect2>
-   <title> fml 4.0 の場合 </title>
+   <title> &fml4; の場合 </title>
 
 <para>
-fml 4.0 では
+&fml4; では
 <screen>
    Mesg(*e, キーワード, デフォルトのメッセージ, 変換に使う引数);
 </screen>
@@ -45,7 +45,7 @@ fml 4.0 では
 
 <!-- ===================================================== -->
 <sect2>
-   <title> fml 5.0 はどうするべきか？ </title>
+   <title> &fmldevel; はどうするべきか？ </title>
 
 <para>
 一つのファイルに一つのキーワードを持つのと、
@@ -85,7 +85,7 @@ locale の定義ファイル(
 
 <sect3>
    <title>
-   fml 5.0: とりあえずの方針
+   &fmldevel;: とりあえずの方針
    </title>
 
 <para>

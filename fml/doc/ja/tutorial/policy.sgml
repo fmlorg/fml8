@@ -1,11 +1,20 @@
 <!--
-   $FML: policy.sgml,v 1.1 2002/02/13 13:51:51 fukachan Exp $
+   $FML: policy.sgml,v 1.2 2002/04/01 23:41:00 fukachan Exp $
 -->
 
 <chapter id="design.policy">
 	<title>
 	デザイン/コーディングスタイルの上でいろいろ
 	</title>
+
+<warning>
+<para>
+スタイルについては、
+<ulink url="http://www.fml.org/software/FNF/">FNF</ulink>
+も参照して下さい。 
+</para>
+</warning>
+
 
 <sect1>
 	<title>
@@ -21,7 +30,15 @@
 <para>
 オブジェクトの中身のキーを直接使わずに、
 常にアクセスメソッドを定義すること。
-例: main_cf へのアクセス
+例: main_cf へのアクセスは 
+<screen>
+$curproc->{ ... }->{ main_cf }
+</screen>
+ではなく
+<screen>
+$curproc->main_cf();
+</screen>
+を使うこと
 </para>
 
 

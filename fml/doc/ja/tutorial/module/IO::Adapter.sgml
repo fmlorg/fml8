@@ -1,5 +1,5 @@
 <!--
-   $FML: IO::Adapter.sgml,v 1.2 2001/11/24 03:22:56 fukachan Exp $
+   $FML: IO::Adapter.sgml,v 1.3 2002/04/01 23:41:05 fukachan Exp $
 -->
 
 <chapter id="module.io.adapter">
@@ -13,7 +13,7 @@
 	</title>
 
 <para>
-fml 5.0 でのメンバーリストの読み書きは
+&fmldevel; でのメンバーリストの読み書きは
 IO::Adapter という抽象クラスを通じて、
 アドレスの登録/削除を行なうようになっています。
 </para>

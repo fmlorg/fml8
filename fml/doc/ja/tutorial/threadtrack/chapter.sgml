@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.sgml,v 1.2 2001/11/23 15:00:48 fukachan Exp $
+   $FML: chapter.sgml,v 1.3 2002/04/01 23:41:06 fukachan Exp $
 -->
 
 
@@ -9,7 +9,7 @@
 	</title>
 
 <para>
-fml 5.0 の問題意識は
+&fmldevel; の問題意識は
 「ＭＬを走らせたら、スレッドのまとめくらい宜しくやって欲しい」
 ということです。
 あえていえば、インチキ knowledge database のようなものです。
@@ -106,11 +106,11 @@ closed  この問題について解決されたと判断された時
 
 
 
-<!-- fml 5.0 モデル -->
+<!-- &fmldevel; モデル -->
 
 <sect1>
 	<title>
-	fml 5.0 (minimal_states モデル版)チケットシステム
+	&fmldevel; (minimal_states モデル版)チケットシステム
 	</title>
 
 

@@ -712,6 +712,15 @@ admin
 </row>
 <row>
 <entry>
+qmail_virtual_map_file</entry>
+<entry>
+ MTA に教えるための virtual map ファイル(テンプレート)</entry>
+<entry>
+$domain_qmail_config_dir/virtualdomains
+   </entry>
+</row>
+<row>
+<entry>
 qmail_virtualdomains_file</entry>
 <entry>
  virtual domain configurations for qmail</entry>
