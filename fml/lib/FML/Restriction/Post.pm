@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.12 2004/04/23 04:10:38 fukachan Exp $
+# $FML: Post.pm,v 1.13 2004/07/23 13:16:43 fukachan Exp $
 #
 
 package FML::Restriction::Post;
@@ -142,6 +142,51 @@ sub reject
 	$curproc->restriction_state_set_deny_reason($rule);
     }
     return("matched", "deny");
+}
+
+
+=head1 EXTENSION
+
+=cut
+
+
+# Descriptions: check references and permit this message 
+#               if it refers this thread.
+#    Arguments: OBJ($self) STR($rule) STR($sender)
+# Side Effects: none
+# Return Value: NUM
+sub check_article_thread
+{
+    my ($self, $rule, $sender) = @_;
+    my $curproc = $self->{ _curproc };
+    my $config  = $curproc->config();
+    my $header  = $curproc->incoming_message_header();
+    my $reflist = $header->extract_message_id_references() || [];
+    my $curtime = time;
+    my $limit   = 3600*24*7;
+    my $match   = 0;
+
+  SEARCH_ID:
+    for my $id (@$reflist) {
+	my $a = { message_id => $id };
+	my $r = $header->check_article_message_id($config, $a) || '0';
+
+	# ok if article within $limit (7 days) is referred.
+	if ($limit > $curtime - $r) {
+	    $match = $curtime - $r;
+	    last SEARCH_ID;
+	}
+    }
+
+    # 
+    if ($match) {
+	$curproc->log("check_article_thread matched. ($match sec old)");
+	return("matched", "permit");
+    }
+    else {
+	$curproc->log("check_article_thread failed.");
+	return(0, undef);
+    }
 }
 
 
