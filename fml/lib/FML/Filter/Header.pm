@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.1 2002/09/30 11:00:54 fukachan Exp $
+# $FML: Header.pm,v 1.2 2002/12/20 03:41:28 fukachan Exp $
 #
 
 package FML::Filter::Header;
@@ -140,6 +140,20 @@ sub check_message_id
 
     if ($mid !~ /\@/) {
 	croak( "invalid Message-Id" );
+    }
+}
+
+# Descriptions: validate the date in the given message $msg.
+#               This routine checks missing date field
+#    Arguments: OBJ($self) OBJ($msg) HASH_REF($args)
+# Side Effects: croak()
+# Return Value: none
+sub check_date
+{
+    my ($self, $msg, $args) = @_;
+
+    if(! $msg->get('date')) {
+	croak( "Missing Date: field" );
     }
 }
 
