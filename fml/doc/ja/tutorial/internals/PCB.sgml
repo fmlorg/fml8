@@ -1,26 +1,43 @@
 <para>
 <screen>
-                   module                  function     category
-                                                    <-- (get value)
-                                                    --> (set value)
+                 module                       function     category
+                                                       <-- (get value)
+                                                       --> (set value)
 --------------------------------------------------------------------------------
-        FML/Process/Error                    finish <-- error
-        FML/Process/Error                       run --> error
-       FML/Process/Kernel  _finalize_stderr_channel <-- stderr
-       FML/Process/Kernel  _finalize_stderr_channel <-- stderr
-       FML/Process/Kernel  _finalize_stderr_channel --> stderr
-       FML/Process/Kernel    _reopen_stderr_channel --> stderr
-       FML/Process/Kernel    _reopen_stderr_channel --> stderr
-      FML/Process/Command                       run <-- check_restrictions
-   FML/Process/Distribute                       run <-- check_restrictions
-     FML/Restriction/Post        permit_member_maps <-- check_restrictions
-     FML/Restriction/Post reject_system_special_accounts <-- check_restrictions
-     FML/Restriction/Post                    reject <-- check_restrictions
-     FML/Restriction/Post        permit_member_maps --> check_restrictions
-     FML/Restriction/Post reject_system_special_accounts --> check_restrictions
-     FML/Restriction/Post                    reject --> check_restrictions
-        FML/Process/Utils               get_charset <-- charset
-        FML/Process/Utils               get_charset <-- charset
-        FML/Process/Utils               set_charset --> charset
+      FML/Process/State command_context_get_admin_password <-- process_command
+      FML/Process/State command_context_get_admin_auth <-- process_command
+      FML/Process/State command_context_get_need_confirm <-- process_command
+      FML/Process/State command_context_get_stop_process <-- process_command
+      FML/Process/State command_context_set_admin_password --> process_command
+      FML/Process/State command_context_set_admin_auth --> process_command
+      FML/Process/State command_context_set_need_confirm --> process_command
+      FML/Process/State command_context_set_stop_process --> process_command
+      FML/Process/Utils get_incoming_message_cache_file_path <-- incoming_message
+      FML/Process/Utils set_incoming_message_cache_file_path --> incoming_message
+       FML/Process/Fake                    _faker_main <-- faker
+       FML/Process/Fake                get_emul_domain <-- faker
+       FML/Process/Fake                set_emul_domain --> faker
+       FML/Process/Fake         _faker_analyze_address --> faker
+       FML/Process/Fake         _faker_analyze_address --> faker
+      FML/Process/Error                         finish <-- error
+      FML/Process/Error                            run --> error
+     FML/Process/Kernel       _finalize_stderr_channel <-- stderr
+     FML/Process/Kernel       _finalize_stderr_channel <-- stderr
+     FML/Process/Kernel       _finalize_stderr_channel --> stderr
+     FML/Process/Kernel         _reopen_stderr_channel --> stderr
+     FML/Process/Kernel         _reopen_stderr_channel --> stderr
+    FML/Process/Command                _command_switch <-- check_restrictions
+ FML/Process/Distribute                            run <-- check_restrictions
+   FML/Restriction/Post             permit_member_maps <-- check_restrictions
+   FML/Restriction/Post reject_system_special_accounts <-- check_restrictions
+   FML/Restriction/Post                         reject <-- check_restrictions
+   FML/Restriction/Post             permit_member_maps --> check_restrictions
+   FML/Restriction/Post reject_system_special_accounts --> check_restrictions
+   FML/Restriction/Post                         reject --> check_restrictions
+      FML/Process/Utils                    get_charset <-- charset
+      FML/Process/Utils                    get_charset <-- charset
+      FML/Process/Utils                    set_charset --> charset
+      FML/Process/Utils              get_language_hint <-- language_hint
+      FML/Process/Utils              set_language_hint --> language_hint
 </screen>
 </para>
