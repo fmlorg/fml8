@@ -1,0 +1,87 @@
+<!--
+   $FML: @recipe_template,v 1.1 2003/01/07 11:39:13 fukachan Exp $
+-->
+
+
+<sect1 id="setup.newml.recipies">
+        <title>
+        レシピ’s
+        </title>
+
+<qandaset>
+
+
+<!-- Q -->
+<qandaentry>
+
+<question>
+<para>
+newml 時に、aliasに使われるＭＬの管理者のメールアドレスを指定したい。
+</para>
+</question>
+
+<answer>
+<para>
+newml 時に、そのＭＬ用のエイリアスが準備されます。そのさい、
+<screen>
+${ml_name}-admin: 管理者のメールアドレス 
+</screen>
+部分には
+$newml_command_ml_admin_default_address 
+変数の値が入ります。
+
+デフォルトでは、どのＭＬでも
+/etc/fml/main.cf で定義されている管理者のアドレス $fml_owner 
+が使われます。
+
+それ以外のものにしたい場合、
+$newml_command_ml_admin_default_address 
+にメールアドレスを設定して下さい。
+<screen>
+$newml_command_ml_admin_default_address = メールアドレス
+</screen>
+
+また、$ml_name など、他の変数に依存した値も可です。
+<screen>
+$newml_command_ml_admin_default_address = $ml_name-owner@$ml_domain
+</screen>
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<!-- Q -->
+<qandaentry>
+
+<question>
+<para>
+使わないMTA用のファイルの生成を止めたい。
+</para>
+</question>
+
+<answer>
+<para>
+newml_command_mta_config_list に MTA のリストが定義されています。
+そこから、不要の MTA を抜いて下さい。
+</para>
+
+<para>
+たとえば、qmail が不要であれば
+<screen>
+newml_command_mta_config_list -= qmail
+</screen>
+
+</para>
+~/.qmail-* の生成が止まります。
+</answer>
+
+</qandaentry>
+
+
+
+
+</qandaset>
+
+</sect1>

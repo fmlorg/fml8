@@ -1,5 +1,5 @@
 <!--
-   $FML: newml.sgml,v 1.4 2003/11/22 06:09:55 fukachan Exp $
+   $FML: newml.sgml,v 1.5 2003/11/24 04:44:58 fukachan Exp $
 -->
 
 
@@ -171,5 +171,8 @@ qmail や procmail にはバーチャル用の設定が特にあるわけではありません。
 <!-- 各ＭＬの設定について -->
 &sect.setup.config.cf;
 
+
+<!-- レシピ -->
+&sect.setup.newml.recipes;
 
 </chapter>
