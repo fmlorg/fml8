@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.28 2003/12/22 12:13:17 fukachan Exp $
+# $FML: Queue.pm,v 1.29 2003/12/22 12:38:45 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -107,10 +107,10 @@ sub new
     my $deferred_dir = $me->deferred_dir_path($id);
 
     # hold information for delivery
-    $me->{ _new_qf }               = $new_dir;
-    $me->{ _active_qf }            = $active_dir;
-    $me->{ _info }->{ sender }     = $sender_dir;
-    $me->{ _info }->{ recipients } = $rcpt_dir;
+    $me->{ _new_qf }               = $me->new_file_path($id);
+    $me->{ _active_qf }            = $me->active_file_path($id);
+    $me->{ _info }->{ sender }     = $me->sender_file_path($id);
+    $me->{ _info }->{ recipients } = $me->recipients_file_path($id);
 
     # create directories in queue if not exists.
     for my $_dir ($dir, $active_dir, $new_dir, $info_dir,
@@ -258,7 +258,7 @@ sub getidinfo
     # XXX-TODO: we should provide e.g. sender_dir_path().
     # sender
     use FileHandle;
-    $fh = $self->sender_dir_path($id);
+    $fh = new FileHandle $self->sender_file_path($id);
     if (defined $fh) {
 	$sender = $fh->getline;
 	$sender =~ s/[\n\s]*$//;
@@ -267,7 +267,7 @@ sub getidinfo
 
     # XXX-TODO: we should provide e.g. recipients_dir_path().
     # recipient array
-    $fh = $self->recipients_dir_path($id);
+    $fh = new FileHandle $self->recipients_file_path($id);
     if (defined $fh) {
 	my $buf;
 	while (defined($buf = $fh->getline)) {
@@ -279,7 +279,7 @@ sub getidinfo
 
     return {
 	id         => $id,
-	path       => $self->active_dir_path($id),
+	path       => $self->active_file_path($id),
 	sender     => $sender,
 	recipients => \@recipients,
     };
@@ -539,17 +539,90 @@ sub DESTROY
 #    Arguments: OBJ($self) STR($id)
 # Side Effects: none
 # Return Value: STR
+sub new_file_path
+{
+    my ($self, $id) = @_;
+    my $dir = $self->{ _directory } || croak("directory undefined");
+
+    return File::Spec->catfile($dir, "new", $id);
+}
+
+
+# Descriptions: return "deferred" directory path.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: STR
+sub deferred_file_path
+{
+    my ($self, $id) = @_;
+    my $dir = $self->{ _directory } || croak("directory undefined");
+
+    return File::Spec->catfile($dir, "deferred", $id);
+}
+
+
+# Descriptions: return "active" directory path.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: STR
+sub active_file_path
+{
+    my ($self, $id) = @_;
+    my $dir = $self->{ _directory } || croak("directory undefined");
+
+		return File::Spec->catfile($dir, "active", $id);
+}
+
+
+# Descriptions: return "info" directory path.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: STR
+sub info_file_path
+{
+    my ($self, $id) = @_;
+    my $dir = $self->{ _directory } || croak("directory undefined");
+
+    return File::Spec->catfile($dir, "info", $id);
+}
+
+
+# Descriptions: return "sender" directory path.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: STR
+sub sender_file_path
+{
+    my ($self, $id) = @_;
+    my $dir = $self->{ _directory } || croak("directory undefined");
+
+    return File::Spec->catfile($dir, "info", "sender", $id);
+}
+
+
+# Descriptions: return "recipients" directory path.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: STR
+sub recipients_file_path
+{
+    my ($self, $id) = @_;
+    my $dir = $self->{ _directory } || croak("directory undefined");
+
+    return File::Spec->catfile($dir, "info", "recipients", $id);
+}
+
+
+# Descriptions: return "new" directory path.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: STR
 sub new_dir_path
 {
     my ($self, $id) = @_;
     my $dir = $self->{ _directory } || croak("directory undefined");
 
-    if ($id) {
-	return File::Spec->catfile($dir, "new", $id);
-    }
-    else {
-	return File::Spec->catfile($dir, "new");
-    }
+    return File::Spec->catfile($dir, "new");
 }
 
 
@@ -574,13 +647,8 @@ sub active_dir_path
 {
     my ($self, $id) = @_;
     my $dir = $self->{ _directory } || croak("directory undefined");
-
-    if ($id) {
-	return File::Spec->catfile($dir, "active", $id);
-    }
-    else {
-	return File::Spec->catfile($dir, "active");
-    }
+    
+    return File::Spec->catfile($dir, "active");
 }
 
 
@@ -606,7 +674,7 @@ sub sender_dir_path
     my ($self, $id) = @_;
     my $dir = $self->{ _directory } || croak("directory undefined");
 
-    return File::Spec->catfile($dir, "info", "sender",     $id);
+    return File::Spec->catfile($dir, "info", "sender");
 }
 
 
@@ -619,7 +687,7 @@ sub recipients_dir_path
     my ($self, $id) = @_;
     my $dir = $self->{ _directory } || croak("directory undefined");
 
-    return File::Spec->catfile($dir, "info", "recipients", $id);
+    return File::Spec->catfile($dir, "info", "recipients");
 }
 
 
