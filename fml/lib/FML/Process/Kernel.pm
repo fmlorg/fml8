@@ -29,6 +29,9 @@ sub new
     my ($curproc) = {}; # alloc memory as the struct current_process.
     my ($cfargs)  = {};
 
+    # fndamental checks
+    croak("Error: \$ml_home_dir not defined") unless $args->{ ml_home_dir };
+
     # import variables
     my (@import_vars) = qw(ml_home_prefix ml_home_dir);
     for my $var (@import_vars) {
@@ -66,7 +69,13 @@ sub new
     $curproc->_signal_init;
 
     # debug
-    if ($0 =~ /loader/) { $curproc->debug; sleep 3;}
+    if ($0 =~ /loader/) { 
+	eval q{ 
+	    require Data::Dumper; Data::Dumper->import();
+	    print Dumper( $curproc );
+	    sleep 3;
+	};
+    }
 
     return $curproc;
 }
