@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.95 2003/12/06 04:48:22 fukachan Exp $
+# $FML: Utils.pm,v 1.96 2003/12/24 14:23:36 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1546,8 +1546,8 @@ sub thread_db_args
     my $cur_lang     = $curproc->language_of_html_file();
 
     # whether we should mask address?
-    my $use_address_mask  = 'yes';
-    my $address_mask_type = 'all';
+    my $use_address_mask  = 'no';
+    my $address_mask_type = '';
     if ($config->yes('use_html_archive_address_mask')) {
 	$use_address_mask = 'yes';
 	$address_mask_type
