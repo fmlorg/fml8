@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.41.2.2 2003/06/02 04:57:18 fukachan Exp $
+# $FML: ToHTML.pm,v 1.41.2.3 2003/06/02 23:59:57 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 1;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.41.2.2 2003/06/02 04:57:18 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.41.2.3 2003/06/02 23:59:57 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -1487,16 +1487,16 @@ sub update_id_index
 
     $self->_db_open();
     my $db = $self->{ _db };
-    my $id_max = $db->{ _info }->{ id_max };
+    my $max_id = $db->{ _info }->{ max_id };
 
     $self->_print_ul($wh, $db, $code);
     if ($order eq 'reverse') {
-	for my $id ( reverse (1 .. $id_max )) {
+	for my $id ( reverse (1 .. $max_id )) {
 	    $self->_print_li_filename($wh, $db, $id, $code);
 	}
     }
     else {
-	for my $id ( 1 .. $id_max ) {
+	for my $id ( 1 .. $max_id ) {
 	    $self->_print_li_filename($wh, $db, $id, $code);
 	}
     }
@@ -1675,7 +1675,7 @@ sub _update_id_monthly_index
 
     $self->_db_open();
     my $db = $self->{ _db };
-    my $id_max = $db->{ _info }->{ id_max };
+    my $max_id = $db->{ _info }->{ max_id };
 
     # oops, this list may be " a b c d e " string, nuke \s* to avoid warning.
     $db->{ _monthly_idlist }->{ $this_month } =~ s/^\s*//;
@@ -1736,13 +1736,13 @@ sub update_thread_index
 
     $self->_db_open();
     my $db = $self->{ _db };
-    my $id_max = $db->{ _info }->{ id_max };
+    my $max_id = $db->{ _info }->{ max_id };
 
     # initialize negagtive cache to ensure uniquness
     delete $self->{ _uniq };
 
     $self->_print_ul($wh, $db, $code);
-    for my $id ( 1 .. $id_max ) {
+    for my $id ( 1 .. $max_id ) {
 	# head of the thread (not referenced yet)
 	unless (defined $self->{ _uniq }->{ $id }) {
 	    $self->_print_thread($wh, $db, $id, $code);
