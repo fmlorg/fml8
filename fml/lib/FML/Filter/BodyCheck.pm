@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: BodyCheck.pm,v 1.15 2002/01/16 13:43:19 fukachan Exp $
+# $FML: BodyCheck.pm,v 1.16 2002/04/08 12:44:24 fukachan Exp $
 #
 
 package FML::Filter::BodyCheck;
@@ -12,6 +12,7 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use ErrorStatus qw(error_set error error_clear);
+
 
 =head1 NAME
 
@@ -70,7 +71,7 @@ overwrite rules by specified C<@$rules> ($rules is HASH ARRAY).
 # Descriptions: access method to overwrite rule
 #    Arguments: OBJ($self) ARRAY_REF($rarray)
 # Side Effects: overwrite info in object
-# Return Value: none
+# Return Value: ARRAY_REF
 sub rules
 {
     my ($self, $rarray) = @_;
@@ -425,7 +426,7 @@ sub is_citation
 #               trap special keyword like tel:011-123-456789 ...
 #    Arguments: OBJ($self) STR($data)
 # Side Effects: none
-# Return Value: 1 or 0
+# Return Value: NUM(1 or 0)
 sub is_signature
 {
     my ($self, $data) = @_;
@@ -467,7 +468,7 @@ We remove it and check the remained buffer whether it is safe or not.
 # Descriptions: clean up buffer before main check begins
 #    Arguments: OBJ($self) STR($xbuf)
 # Side Effects: none
-# Return Value: 1 or 0
+# Return Value: STR
 sub clean_up_buffer
 {
     my ($self, $xbuf) = @_;

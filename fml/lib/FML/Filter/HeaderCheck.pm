@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HeaderCheck.pm,v 1.12 2002/02/01 12:03:56 fukachan Exp $
+# $FML: HeaderCheck.pm,v 1.13 2002/04/08 12:44:25 fukachan Exp $
 #
 
 package FML::Filter::HeaderCheck;
@@ -12,6 +12,7 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use ErrorStatus qw(error_set error error_clear);
+
 
 =head1 NAME
 
@@ -67,7 +68,7 @@ overwrite rules by specified C<@$rules> ($rules is HASH ARRAY).
 # Descriptions: access method to overwrite rule
 #    Arguments: OBJ($self) ARRAY_REF($rarray)
 # Side Effects: overwrite info in object
-# Return Value: none
+# Return Value: ARRAY_REF
 sub rules
 {
     my ($self, $rarray) = @_;
@@ -100,12 +101,13 @@ C<Usage>:
 sub header_check
 {
     my ($self, $msg, $args) = @_;
-    my $h = $msg->whole_message_header();
+    my $hdr   = $msg->whole_message_header();
     my $rules = $self->{ _rules };
 
+    # apply $rule check for the header object $hdr 
     for my $rule (@$rules) {
 	eval q{
-	    $self->$rule($h, $args);
+	    $self->$rule($hdr, $args);
 	};
 
 	if ($@) {
@@ -115,7 +117,13 @@ sub header_check
 }
 
 
-# Descriptions: check whether message-id has @
+=head1 RULES
+
+=cut
+
+
+# Descriptions: validate the message-id in the given message $msg.
+#               This routine checks whether the message-id has @.
 #    Arguments: OBJ($self) OBJ($msg) HASH_REF($args)
 # Side Effects: croak()
 # Return Value: none
@@ -125,7 +133,7 @@ sub is_valid_message_id
     my $mid = $msg->get('message-id');
 
     if ($mid !~ /\@/) {
-	croak "invalid Message-Id";
+	croak( "invalid Message-Id" );
     }
 }
 
