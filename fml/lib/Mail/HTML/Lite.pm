@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.11 2001/10/21 04:01:00 fukachan Exp $
+# $FML: Lite.pm,v 1.12 2001/10/21 04:17:17 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -361,6 +361,7 @@ sub html_begin
 
     print $wh "</HEAD>\n";
     print $wh "<BODY>\n";
+    print $wh "<CENTER>$title</CENTER>\n";
 }
 
 
@@ -550,6 +551,7 @@ sub _format_index_navigator
     my $str = qq{
 <A HREF=\"index.html\">[ID Index]</A>
 <A HREF=\"thread.html\">[Thread Index]</A>
+<A HREF=\"monthly_index.html\">[Monthly ID Index]</A>
 };
 
 return $str;
@@ -692,6 +694,19 @@ sub cache_message_info
     print STDERR "   date\n" if $debug > 3;
     $db->{ _date }->{ $id } = $hdr->get('date');
 
+    use Time::ParseDate;
+    my $unixtime = parsedate( $hdr->get('date') );
+    $db->{ _unixtime }->{ $id } = $unixtime;
+    my ($sec,$min,$hour,$mday,$mon,$year,$wday) = localtime( $unixtime );
+    my $month  = sprintf("%04d/%02d", 1900 + $year, $mon + 1);
+
+    # id => YYYY/MM
+    $db->{ _month }->{ $id } = $month;
+
+    # YYYY/MM => (id1 id2 id3 ..)
+    $db->{ _monthly_idlist }->{ $month } .= " $id";
+
+
     print STDERR "   subject\n" if $debug > 3;
     $db->{ _subject }->{ $id } = 
 	$self->_decode_mime_string( $hdr->get('subject') );
@@ -771,6 +786,7 @@ sub update_relation
 {
     my ($self, $id) = @_;
     my $args = $self->evaluate_relation($id);
+    my $list = $self->{ _affected_idlist } = [];
 
     if ($self->is_ignore($id)) {
 	warn("not update relation around $id") if $debug;
@@ -779,6 +795,7 @@ sub update_relation
 
     # update target itself, of course
     $self->_update_relation($id);
+    push(@$list, $id);
 
     # rewrite links of files for 
     #      prev/next id (article id) and
@@ -786,6 +803,7 @@ sub update_relation
     for my $id (qw(prev_id next_id prev_thread_id next_thread_id)) {
 	if (defined $args->{ $id }) {
 	    $self->_update_relation( $args->{ $id });
+	    push(@$list, $args->{ $id });
 	}
     }
 }
@@ -1046,6 +1064,7 @@ For example, you can set { $key => $value } for C<from> data in this way:
 my @kind_of_databases = qw(from date subject message_id references
 			   msgidref idref next_id prev_id
 			   filename filepath
+			   unixtime month monthly_idlist
 			   who info);
 
 
@@ -1193,6 +1212,125 @@ sub update_id_index
 
     $self->_print_ul($wh, $db, $code);
     for my $id ( 1 .. $id_max ) {
+	$self->_print_li_filename($wh, $db, $id, $code);
+    }
+    $self->_print_end_of_ul($wh, $db, $code);
+    
+    $self->_db_close();
+    $self->_print_index_end( $htmlinfo );
+}
+
+
+=head2 C<update_id_monthly_index($args)>
+
+=cut
+
+
+sub update_id_monthly_index
+{
+    my ($self, $args) = @_;
+    my $affected_list = $self->{ _affected_idlist };
+
+    if ($self->is_ignore($args->{id})) {
+	warn("not update index.html around $args->{id}") if $debug;
+	return undef;
+    }
+
+    # open databaes
+    $self->_db_open();
+    my $db = $self->{ _db };
+
+    my %month_update = ();
+
+  IDLIST:
+    for my $id (@$affected_list) {
+	next IDLIST unless $id =~ /^\d+$/;
+	my $month = $db->{ _month }->{ $id };
+	$month_update{ $month } = 1;
+    }
+
+    # todo list
+    for my $month (sort keys %month_update) {
+	my $this_month = $month;                    # yyyy/mm
+	my $suffix     = $month; $suffix =~ s@/@@g; # yyyymm
+
+	$self->_update_id_monthly_index($args, {
+	    this_month => $this_month,
+	    suffix     => $suffix,
+	});
+    }
+
+    # update monthly_index.html
+    $self->_update_id_montly_index_master($args);
+}
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub _update_id_montly_index_master
+{
+    my ($self, $args) = @_;
+    my $html_base_dir = $self->{ _html_base_directory };
+    my $code          = _charset_to_code($self->{ _charset });
+    my $htmlinfo = {
+	title => defined($args->{ title }) ? $args->{ title } : "ID Index",
+	old   => "$html_base_dir/monthly_index.html",
+	new   => "$html_base_dir/monthly_index.html.new.$$",
+	code  => $code,
+    };
+
+    $self->_print_index_begin( $htmlinfo );
+    my $wh = $htmlinfo->{ wh };
+
+    $self->_db_open();
+    my $db = $self->{ _db };
+    my $mlist = $db->{ _monthly_idlist };
+    my (@list) = keys %$mlist;
+
+    $self->_print_ul($wh, $db, $code);
+    for my $id (@list) { # ( YYYY/MM YYYY/MM ... )
+	my $xx = $id; $xx =~ s@/@@g; 
+	my $fn = "month.$xx.html";
+	_print($wh, "<LI>", $code);
+	_print($wh, "<A HREF=\"$fn\"> $id </A>", $code);
+    }
+    $self->_print_end_of_ul($wh, $db, $code);
+    
+    $self->_db_close();
+    $self->_print_index_end( $htmlinfo );
+}
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub _update_id_monthly_index
+{
+    my ($self, $args, $monthlyinfo) = @_;
+    my $html_base_dir = $self->{ _html_base_directory };
+    my $code          = _charset_to_code($self->{ _charset });
+    my $this_month    = $monthlyinfo->{ this_month }; # yyyy/mm
+    my $suffix        = $monthlyinfo->{ suffix };     # yyyymm
+    my $htmlinfo = {
+	title => "ID Monthly Index $this_month",
+	old   => "$html_base_dir/month.${suffix}.html",
+	new   => "$html_base_dir/month.${suffix}.html.new.$$",
+	code  => $code,
+    };
+
+    $self->_print_index_begin( $htmlinfo );
+    my $wh = $htmlinfo->{ wh };
+
+    $self->_db_open();
+    my $db = $self->{ _db };
+    my $id_max = $db->{ _info }->{ id_max };
+    my (@list) = split(/\s+/, $db->{ _monthly_idlist }->{ $this_month });
+
+    $self->_print_ul($wh, $db, $code);
+    for my $id (sort {$a <=> $b} @list) {
+	next unless $id =~ /^\d+$/;
 	$self->_print_li_filename($wh, $db, $id, $code);
     }
     $self->_print_end_of_ul($wh, $db, $code);
@@ -1517,23 +1655,23 @@ sub _debug
     });
     $html->update_relation( $f );
 
+    $html->update_id_monthly_index({ 
+	title => "monthly index",
+	id    => $f,
+    });
+
     # update index.html
-    my $start_time = time;
-    print STDERR "update index.html ... " if $debug;;
     $html->update_id_index({ 
 	title => "index",
 	id    => $f,
     });
-    print STDERR "end ", (time - $start_time), " sec.\n" if $debug;;
 
     # update thread.html
     my $start_time = time;
-    print STDERR "update thread.html ... " if $debug;;
     $html->update_thread_index({
 	title => "thread",
 	id    => $f,
     });
-    print STDERR "end ", (time - $start_time), " sec.\n" if $debug;
 
     # no more action for old files
     if ($html->is_ignore($f)) {
