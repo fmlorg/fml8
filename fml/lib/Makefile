@@ -13,7 +13,6 @@ _subdir: [A-Z]*
 	(cd Mail; make html)
 	(cd Tie; make html)
 	(cd SQL; make html)
-	(cd ErrorMessages; make html)
 
 _clean:
 	rm -f index.ja.html */index.ja.html

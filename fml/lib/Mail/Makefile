@@ -7,6 +7,8 @@ html:	index.ja.html
 
 index.ja.html: *.pm
 	(cd Delivery; make html)
+	(cd Bounce; make html)
+	(cd Message; make html)
 	../../../doc/bin/dir2url.pl > index.ja.html
 
 _clean:
