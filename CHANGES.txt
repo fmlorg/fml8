@@ -1,6 +1,17 @@
 		CHANGES
 		Last Modified: $Date$
 
+2001/12/09
+
+   TinyScheduler 
+	more proper error messages
+	
+   FML::Process::Configure 
+	fix error handling, define finish() to avoid loading error
+	
+   FML::Process::DocViewer 
+	add path for perl executatbles e.g. ::usr::local::bin
+
 2001/11/27
 
    FML::Log 
@@ -1227,4 +1238,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.36 2001/11/23 02:57:30 fukachan Exp $
+$FML: CHANGES.txt,v 1.37 2001/12/02 02:19:51 fukachan Exp $
