@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000 Ken'ichi Fukamachi
 #
-# $FML: Date.pm,v 1.1 2001/11/03 08:03:30 fukachan Exp $
+# $FML: Date.pm,v 1.2 2001/11/09 15:03:20 fukachan Exp $
 #
 
 package Mail::Message::Date;
@@ -334,16 +334,17 @@ sub date_to_unixtime
 	    return $1;
 	}
 	elsif ($debug_mti) {
-	    my (@caller) = caller;
-	    _log("MTI[$$]::Date2UnixTime: invalid [$input]");
-	    _log("MIT[$$]: callded from @caller");
+	    my ($package,$filename,$line) = caller;
+	    _log("date_to_unixtime: invalid [$input]");
+	    _log("date_to_unixtime: callded from @caller");
 	}
     }
     else {
 	if ($debug_mti) {
-	    my (@caller) = caller;
-	    _log("MTI[$$]::Date2UnixTime: invalid [$input]");
-	    _log("MIT[$$]: callded from @caller");
+	    my ($package,$filename,$line) = caller;
+	    my ($package,$filename,$line) = caller;
+	    _log("date_to_unixtime: invalid [$input]");
+	    _log("date_to_unixtime: callded from @caller");
 	}
 	return 0;
     }
