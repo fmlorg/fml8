@@ -3,6 +3,8 @@
 # $Id$
 #
 
+(cd ../../fml/etc/;sh .gen.sh)
+
 pwd=`pwd`
 
 cd ../.. || exit 1
