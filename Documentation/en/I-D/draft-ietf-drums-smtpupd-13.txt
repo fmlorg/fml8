@@ -1,0 +1,101 @@
+
+A new Request for Comments is now available in online RFC libraries.
+
+
+        RFC 2821
+
+        Title:      Simple Mail Transfer Protocol
+        Author(s):  J. Klensin, Editor
+        Status:     Standards Track
+        Date:       April 2001
+        Mailbox:    klensin@research.att.com
+        Pages:      79
+        Characters: 192504
+        Updates:    1123
+        Obsoletes:  821, 974
+
+        I-D Tag:    draft-ietf-drums-smtpupd-13.txt
+
+        URL:        ftp://ftp.rfc-editor.org/in-notes/rfc2821.txt
+
+
+This document is a self-contained specification of the basic protocol
+for the Internet electronic mail transport.  It consolidates, updates
+and clarifies, but doesn't add new or change existing functionality of
+the following:
+ 
+-  the original SMTP (Simple Mail Transfer Protocol) specification of
+   RFC 821,
+ 
+-  domain name system requirements and implications for mail
+   transport from RFC 1035 and RFC 974,
+ 
+-  the clarifications and applicability statements in RFC 1123,
+   and
+ 
+-  material drawn from the SMTP Extension mechanisms.
+ 
+It obsoletes RFC 821, RFC 974, and updates RFC 1123 (replaces the
+mail transport materials of RFC 1123).  However, RFC 821 specifies
+some features that were not in significant use in the Internet by the
+mid-1990s and (in appendices) some additional transport models.  Those
+sections are omitted here in the interest of clarity and brevity;
+readers needing them should refer to RFC 821.
+
+It also includes some additional material from RFC 1123 that required
+amplification.  This material has been identified in multiple ways,
+mostly by tracking flaming on various lists and newsgroups and
+problems of unusual readings or interpretations that have
+appeared as the SMTP extensions have been deployed.  Where this
+specification moves beyond consolidation and actually differs from
+earlier documents, it supersedes them technically as well as
+textually.
+ 
+Although SMTP was designed as a mail transport and delivery protocol,
+this specification also contains information that is important to its
+use as a 'mail submission' protocol, as recommended for POP and IMAP. 
+
+Additional submission issues are discussed in RFC 2476.
+ 
+Section 2.3 provides definitions of terms specific to this document.
+Except when the historical terminology is necessary for clarity, this
+document uses the current 'client' and 'server' terminology to
+identify the sending and receiving SMTP processes, respectively.
+ 
+A companion document discusses message headers, message bodies
+and formats and structures for them, and their relationship.
+
+This document is a product of the Detailed Revision/Update of Message
+Standards Working Group of the IETF.
+
+This is now a Proposed Standard Protocol.
+
+This document specifies an Internet standards track protocol for
+the Internet community, and requests discussion and suggestions
+for improvements.  Please refer to the current edition of the
+"Internet Official Protocol Standards" (STD 1) for the
+standardization state and status of this protocol.  Distribution
+of this memo is unlimited.
+
+This announcement is sent to the IETF list and the RFC-DIST list.
+Requests to be added to or deleted from the IETF distribution list
+should be sent to IETF-REQUEST@IETF.ORG.  Requests to be
+added to or deleted from the RFC-DIST distribution list should
+be sent to RFC-DIST-REQUEST@RFC-EDITOR.ORG.
+
+Details on obtaining RFCs via FTP or EMAIL may be obtained by sending
+an EMAIL message to rfc-info@RFC-EDITOR.ORG with the message body 
+help: ways_to_get_rfcs.  For example:
+
+        To: rfc-info@RFC-EDITOR.ORG
+        Subject: getting rfcs
+
+        help: ways_to_get_rfcs
+
+Requests for special distribution should be addressed to either the
+author of the RFC in question, or to RFC-Manager@RFC-EDITOR.ORG.  Unless
+specifically noted otherwise on the RFC itself, all RFCs are for
+unlimited distribution.echo 
+Submissions for Requests for Comments should be sent to
+RFC-EDITOR@RFC-EDITOR.ORG.  Please consult RFC 2223, Instructions to RFC
+Authors, for further information.
