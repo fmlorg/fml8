@@ -15,7 +15,7 @@ umask 022
 
 ### configurations ###
 date=`date +%C%y%m%d`
-version=current-${date}
+fml_version=current-${date}
 prefix_dir=/usr/local
 config_dir=/etc/fml
 libexec_dir=$prefix_dir/libexec/fml
@@ -40,11 +40,11 @@ _mkdir () {
 
 for dir in 	$config_dir \
 		$config_dir/defaults \
-		$config_dir/defaults/$version \
+		$config_dir/defaults/$fml_version \
 		$lib_dir	\
-		$lib_dir/$version	\
+		$lib_dir/$fml_version	\
 		$libexec_dir	\
-		$libexec_dir/$version \
+		$libexec_dir/$fml_version \
 		$ml_spool_dir
 do
    test -d $dir || _mkdir $dir
@@ -53,21 +53,21 @@ done
 
 if [ ! -f $config_dir/main.cf ];then
 	echo create $config_dir/main.cf
-	sed 	-e s@__version__@$version@ \
+	sed 	-e s@__fml_version__@$fml_version@ \
 		-e s@__config_dir__@$config_dir@ \
 		-e s@__prefix_dir__@$prefix_dir@ \
 		fml/etc/main.cf > $config_dir/main.cf
 fi
 
-echo update $config_dir/defaults/$version/
-cp fml/etc/default_config.cf.ja $config_dir/defaults/$version/default_config.cf
+echo update $config_dir/defaults/$fml_version/
+cp fml/etc/default_config.cf.ja $config_dir/defaults/$fml_version/default_config.cf
 
-echo update $lib_dir/$version/
-cp -pr fml/lib/*	$lib_dir/$version/
-cp -pr cpan/lib/*	$lib_dir/$version/
+echo update $lib_dir/$fml_version/
+cp -pr fml/lib/*	$lib_dir/$fml_version/
+cp -pr cpan/lib/*	$lib_dir/$fml_version/
 
-echo update $libexec_dir/$version/
-cp -pr fml/libexec/*	$libexec_dir/$version/
+echo update $libexec_dir/$fml_version/
+cp -pr fml/libexec/*	$libexec_dir/$fml_version/
 
 if [ ! -f $libexec_dir/fmlwrapper ];then
 

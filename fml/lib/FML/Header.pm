@@ -74,9 +74,12 @@ sub add_fml_article_id
 sub add_software_info
 {
     my ($header, $config, $args) = @_;
+    my $fml_version = $config->{ fml_version };
 
-    $header->add('X-ML-Server',   "fml 5.0 prototype 0");
-    $header->add('List-Software', "fml 5.0 prototype 0");
+    if ($fml_version) {
+	$header->add('X-ML-Server',   $fml_version);
+	$header->add('List-Software', $fml_version);
+    }
 }
 
 

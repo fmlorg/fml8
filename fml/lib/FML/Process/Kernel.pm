@@ -34,6 +34,9 @@ sub new
 	croak "ml_home_dir is not defined.\n";
     }
 
+    # import $fml_version
+    $cfargs->{ fml_version } = "fml ". $args->{ fml_version };
+
     # bind FML::Config object to $curproc
     use FML::Config;
     $curproc->{ config } = new FML::Config $cfargs;

@@ -96,6 +96,7 @@ sub Bootstrap
 	require "$libexec_dir/fml";
 	ProcessSwitch( 
 		      {
+			  fml_version  => $main_cf->{ fml_version },
 			  cf_list      => \@cf,
 			  myname       => $myname,
 			  ml_home_dir  => $ml_home_dir,
