@@ -184,7 +184,7 @@ sub parse_incoming_mail
 
 
 # debug
-sub Debug
+sub debug
 {
     my ($curproc, $args) = @_;
 
