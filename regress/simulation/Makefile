@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.53 2002/05/11 08:50:30 fukachan Exp $
+# $FML: Makefile,v 1.54 2002/06/01 05:06:22 fukachan Exp $
 #
 
 TMPFILE	=	/tmp/log.fml-devel.test
@@ -7,7 +7,7 @@ TMPFILE	=	/tmp/log.fml-devel.test
 all: link
 
 clean:
-	@ (cd ../..; find fml |grep '~' |perl -nple unlink)
+	@ (cd ../..; find fml regress |grep '~' |perl -nple unlink)
 
 allclean: clean clean_link
 	rm -f __scan__
