@@ -29,7 +29,7 @@ euc_ucs2(src, ...)
         if (items > 1) { pedantic = SvIV(ST(1)); };
         dstlen = srclen * 3 + 10; /* large enough? */
 	ST(0) = sv_2mortal(newSV(dstlen));
-	dstlen = _euc_ucs2(SvPVX(ST(0)), s, pedantic);
+	dstlen = _euc_ucs2((unsigned char *)SvPVX(ST(0)), (unsigned char *)s, pedantic);
         SvCUR_set(ST(0), dstlen);
         SvPOK_only(ST(0));
 	if (SvROK(src)) { sv_setsv(SvRV(src), ST(0)); }
@@ -46,7 +46,7 @@ ucs2_euc(src, ...)
         if (items > 1) { pedantic = SvIV(ST(1)); };
         dstlen = srclen * 3 + 10; /* large enough? */
         ST(0) = sv_2mortal(newSV(dstlen));
-        dstlen = _ucs2_euc(SvPVX(ST(0)), s, srclen, pedantic);
+        dstlen = _ucs2_euc((unsigned char *)SvPVX(ST(0)), (unsigned char *)s, srclen, pedantic);
         SvCUR_set(ST(0), dstlen);
         SvPOK_only(ST(0));
 	if (SvROK(src)) { sv_setsv(SvRV(src), ST(0)); }
@@ -61,7 +61,7 @@ utf8_ucs2(src, ...)
         char *s = SvROK(src) ? SvPV(SvRV(src), srclen) :SvPV(src, srclen);
         dstlen = srclen * 3 + 10; /* large enough? */
         ST(0) = sv_2mortal(newSV(dstlen));
-        dstlen = _utf8_ucs2(SvPVX(ST(0)), s);
+        dstlen = _utf8_ucs2((unsigned char *)SvPVX(ST(0)), (unsigned char *)s);
         SvCUR_set(ST(0), dstlen);
         SvPOK_only(ST(0));
 	if (SvROK(src)) { sv_setsv(SvRV(src), ST(0)); }
@@ -76,7 +76,7 @@ ucs2_utf8(src, ...)
         char *s = SvROK(src) ? SvPV(SvRV(src), srclen) :SvPV(src, srclen);
         dstlen = srclen * 3 + 10; /* large enough? */
         ST(0) = sv_2mortal(newSV(dstlen));
-        dstlen = _ucs2_utf8(SvPVX(ST(0)), s, srclen);
+        dstlen = _ucs2_utf8((unsigned char *)SvPVX(ST(0)), (unsigned char *)s, srclen);
         SvCUR_set(ST(0), dstlen);
         SvPOK_only(ST(0));
 	if (SvROK(src)) { sv_setsv(SvRV(src), ST(0)); }

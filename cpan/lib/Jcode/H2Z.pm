@@ -1,5 +1,5 @@
 #
-# $Id: H2Z.pm,v 0.70 2001/05/15 19:35:59 dankogai Exp $
+# $Id: H2Z.pm,v 0.77 2002/01/14 11:06:55 dankogai Exp $
 #
 
 package Jcode::H2Z;
@@ -7,8 +7,8 @@ package Jcode::H2Z;
 use strict;
 use vars qw($RCSID $VERSION);
 
-$RCSID = q$Id: H2Z.pm,v 0.70 2001/05/15 19:35:59 dankogai Exp $;
-$VERSION = do { my @r = (q$Revision: 0.70 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
+$RCSID = q$Id: H2Z.pm,v 0.77 2002/01/14 11:06:55 dankogai Exp $;
+$VERSION = do { my @r = (q$Revision: 0.77 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
 
 use Carp;
 
@@ -157,7 +157,7 @@ sub z2h {
     my $r_str = shift;
     my $n = (
 	     $$r_str =~ s(
-			  ($RE{EUC_C})
+			  ($RE{EUC_C}|$RE{EUC_0212}|$RE{EUC_KANA})
 			  ){
 		 $_Z2D{$1} || $_Z2H{$1} || $1;
 		 }eogx

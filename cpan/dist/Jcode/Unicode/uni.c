@@ -1,5 +1,5 @@
 /*
- * $Id: uni.c,v 0.70 2001/05/15 19:35:59 dankogai Exp $
+ * $Id: uni.c,v 0.79 2002/01/16 02:18:49 dankogai Exp dankogai $
  * (c) 1999 Dan Kogai <dankogai@dan.co.jp>
  */
 
@@ -59,7 +59,7 @@ Octet *u2e(Quad *qp, int pedantic){
   if (t != NULL){
     return q2o(t->euc);
   }else{
-    return "\xa2\xae"; /* во */
+    return (unsigned char *)"\xa2\xae"; /* во */
   }
 }
 
@@ -72,10 +72,10 @@ size_t _ucs2_euc(Octet *dst, Octet *src, int nchar, int pedantic){
   for (nchar /= 2; nchar > 0; nchar--, src += 2)
     {
       q = o2q(src, 2);
-      strcpy(ebuf, u2e(&q, pedantic));
-      strcpy(dst, ebuf);
-      dst += strlen(ebuf);
-      result += strlen(ebuf);
+      strcpy((char *)ebuf, (char *)u2e(&q, pedantic));
+      strcpy((char *)dst, (char *)ebuf);
+      dst += strlen((char *)ebuf);
+      result += strlen((char *)ebuf);
     }
   return result;
 }
@@ -101,17 +101,17 @@ Octet *e2u(Quad *qp, int pedantic){
   static Octet buf[4];
   if (IS_ASCII(*qp)){
     if (!pedantic || not_iso646_jp(*qp)){
-      sprintf(buf, "%c%c", '\0', *qp);
+      sprintf((char *)buf, "%c%c", '\0', *qp);
       return buf;
     }
   }
   t = (Table_t *)bsearch(qp, E2U, TABLE_SIZE, sizeof(Table_t), e_match);
   if (t != NULL){
-      sprintf(buf, "%c%c", 
+      sprintf((char *)buf, "%c%c", 
 	      ((t->ucs2 & 0xff00) >> 8), (t->ucs2 & 0xff));
       return buf;
   }else{
-    return "\x30\x13"; /* во */
+    return (unsigned char *)"\x30\x13"; /* во */
   }
 }
 
@@ -161,23 +161,23 @@ size_t _ucs2_utf8(Octet *dst, Octet *src, int nchar){
     {
       ucs2 = o2q(src, 2);
       if (ucs2 < 0x80){      /* 1 byte */
-	sprintf(ebuf, "%c", ucs2);
+	sprintf((char *)ebuf, "%c", ucs2);
       }
       else if(ucs2 < 0x800){ /* 2 bytes */
-	sprintf(ebuf, "%c%c", 
+	sprintf((char *)ebuf, "%c%c", 
 		(0xC0 | (ucs2 >> 6)), 
 		(0x80 | (ucs2 & 0x3F))
 		);
       }else{                /*  3 bytes */
-	sprintf(ebuf, "%c%c%c",
+	sprintf((char *)ebuf, "%c%c%c",
 		(0xE0 | (ucs2 >> 12)),
                 (0x80 | ((ucs2 >> 6) & 0x3F)),
 		(0x80 | (ucs2 & 0x3F))
 		);
       }
-      strcpy(dst, ebuf);
-      dst += strlen(ebuf);
-      result += strlen(ebuf);
+      strcpy((char *)dst, (char *)ebuf);
+      dst += strlen((char *)ebuf);
+      result += strlen((char *)ebuf);
     }
   return result;
 }

@@ -1,5 +1,5 @@
 #
-# $Id: Tr.pm,v 0.70 2001/05/15 19:35:59 dankogai Exp $
+# $Id: Tr.pm,v 0.77 2002/01/14 11:06:55 dankogai Exp $
 #
 
 package Jcode::Tr;
@@ -7,8 +7,8 @@ package Jcode::Tr;
 use strict;
 use vars qw($VERSION $RCSID);
 
-$RCSID = q$Id: Tr.pm,v 0.70 2001/05/15 19:35:59 dankogai Exp $;
-$VERSION = do { my @r = (q$Revision: 0.70 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
+$RCSID = q$Id: Tr.pm,v 0.77 2002/01/14 11:06:55 dankogai Exp $;
+$VERSION = do { my @r = (q$Revision: 0.77 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
 
 use Carp;
 
@@ -48,7 +48,7 @@ sub _maketable{
     my @from = $from =~ /$RE{EUC_0212}|$RE{EUC_KANA}|$RE{EUC_C}|[\x00-\xff]/go;
     my @to   = $to   =~ /$RE{EUC_0212}|$RE{EUC_KANA}|$RE{EUC_C}|[\x00-\xff]/go;
 
-    push @to, $to[-1] x $#from - $#to if $#to < $#from && $opt !~ /d/;
+    push @to, ($opt =~ /d/ ? '' : $to[-1]) x ($#from - $#to) if $#to < $#from;
     @_TABLE{@from} = @to;
 
 }

@@ -1,4 +1,4 @@
-HISTORY
+Changes
 INSTALL
 Jcode.pm
 Jcode/Constants.pm
@@ -29,5 +29,6 @@ t/table.euc
 t/tr.t
 t/unibench.pl
 t/x0212.euc
+t/stripped.euc
 t/zenkaku.euc
 win_install.pl

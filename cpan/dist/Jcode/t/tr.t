@@ -30,6 +30,10 @@ my $katakana; $file = "t/zenkaku.euc"; open F, $file or die "$file:$!";
 read F, $katakana, -s $file;
 profile(sprintf("prep:  katakana ok %d\n", ++$n));
 
+my $stripped; $file = "t/stripped.euc"; open F, $file or die "$file:$!";
+read F, $stripped, -s $file;
+profile(sprintf("prep:  stripped ok %d\n", ++$n));
+
 #print jcode($katakana)->tr('A-Za-z¥¡-¥óŽ§-ŽÝ','a-zA-Z¤¡-¤óŽ§-ŽÝ');
 #__END__
 
@@ -56,6 +60,14 @@ for my $icode (keys %code2str){
 			$icode, $ocode, $ok, ++$n ));
     }
 }
+
+# test tr($s,'','d');
+
+my $ok = (jcode($hiragana)->tr('¤¡-¤ó','','d')->euc eq $stripped) ?
+"ok" : "not ok";
+
+profile(sprintf("H2Z: %s -> %s %s %d\n", 
+		'¤¡-¤ó', "\'\' \'d\'", $ok, ++$n ));
 
 print 1, "..", $NTESTS, "\n";
 for my $TEST (@TESTS){
