@@ -8,6 +8,11 @@
 	XXX
 
 
+[TODO]	先頭部分だけを返す時に
+
+	「以下に先頭部分の２０４８バイト分を…」の文章を入れると便利？
+
+
 [TODO]	fml 4 の cf を解釈できる互換ルーチン
 
 	cf シンタックスを読んで、
@@ -221,21 +226,6 @@ FileHandle と IO::File 両方 use しちゃうからか？
 		fml $ml useradd-as-recipient アドレス
 
 
-[TODO]	off/on の問題
-
-	on は primary_recipient_map にだけ作用するが、
-	off は recipient_maps すべてに作用する(マッチする全ての map を
-	変化させる)
-
-	unsubscribe はすべての map をサーチし、該当するもの全てを
-	削除する。	 
-
-	いや、「どの *map からはずしたか」をどこかに保存しておいて、
-	適宜戻すようにしないといけない？
-
-	複数マッチするものがあったらどうするの？
-
-
 [TODO]	reply-to: special hack
 
 	   if (	To: ml1, ml2 ) {
@@ -395,4 +385,4 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 ----------
-$FML: 00_MEMO,v 1.77 2003/05/04 07:16:46 fukachan Exp $
+$FML: 00_MEMO,v 1.78 2003/05/06 11:22:36 fukachan Exp $
