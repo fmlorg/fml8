@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Encode.pm,v 1.17 2004/01/24 09:04:00 fukachan Exp $
+# $FML: Encode.pm,v 1.18 2004/04/27 13:35:31 fukachan Exp $
 #
 
 package Mail::Message::Encode;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-Mail::Message::Encode - encode/decode/charset conversion routines
+Mail::Message::Encode - encode/decode/charset conversion routines.
 
 =head1 SYNOPSIS
 
@@ -35,12 +35,12 @@ It is not recommended but if you use old style, import required function:
 
 =head2 new()
 
-standard constructor.
+constructor.
 
 =cut
 
 
-# Descriptions: standard constructor.
+# Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: load Encode or Jcode.
 # Return Value: OBJ
@@ -243,13 +243,14 @@ sub run_in_code
     my $proc_status = undef;
 
     my $obj         = new Mail::Message::Encode;
-    my $conv_status = $obj->convert_str_ref($s, $out_code, $in_code);
+    my $conv_status = $obj->convert_str_ref(\$s, $out_code, $in_code);
 
     # XXX-TODO: validate $proc name regexp.
     eval q{
 	$proc_status = &$proc($s, $args);
     };
 
+    # XXX-TODO: correct ?
     if ($conv_status && $out_code) {
 	$obj->convert_str_ref($s, $out_code, $in_code);
     }
@@ -513,6 +514,8 @@ sub decode_mime_string
 	# XXX ng detects it as ASCII.
 	# XXX Whereas, w3m looks to be able to read it ?
 	$str_out   =~ s/^\e\$\(B/\e\$B/; # make mule read this string.
+
+	# XXX-TODO: use Mail::Message::Charset ?
 	$in_code   = $self->detect_code($str_out);
 	$out_code |= 'euc-jp'; # euc-jp by default.
     }
@@ -524,7 +527,7 @@ sub decode_mime_string
 }
 
 
-# Descriptions: decode MIME base64 encoded-string
+# Descriptions: decode MIME base64 encoded-string.
 #    Arguments: OBJ($self) STR($str) STR($out_code) STR($in_code)
 # Side Effects: croak() if language is unknown.
 # Return Value: STR
@@ -542,6 +545,7 @@ sub decode_base64_string
 
 	return $str if $@;
 
+	# XXX-TODO: use Mail::Message::Charset ?
 	$in_code   = $self->detect_code($str_out);
 	$out_code |= 'euc-jp'; # euc-jp by default.
     }
@@ -553,7 +557,7 @@ sub decode_base64_string
 }
 
 
-# Descriptions: decode MIME quoted-printable encoded-string
+# Descriptions: decode MIME quoted-printable encoded-string.
 #    Arguments: OBJ($self) STR($str) STR($out_code) STR($in_code)
 # Side Effects: croak() if language is unknown.
 # Return Value: STR
@@ -570,6 +574,7 @@ sub decode_qp_string
 	};
 	return $str if $@;
 
+	# XXX-TODO: use Mail::Message::Charset ?
 	$in_code   = $self->detect_code($str_out);
 	$out_code |= 'euc-jp'; # euc-jp by default.
     }
