@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: varclass.pl,v 1.1 2003/06/15 05:24:03 fukachan Exp $
+# $FML: varclass.pl,v 1.2 2003/06/23 04:40:32 fukachan Exp $
 # based on 'FML: check_varname.pl,v 1.3 2003/05/30 13:59:17 fukachan Exp'
 #
 
@@ -42,11 +42,15 @@ sub init
 
     # top level category
     for (qw(path directory system has
-	    default domain 
-	    cgi commands_for 
+	    default
+	    domain 
+	    cgi 
 	    sql ldap
+	    report_mail
+	    message_template
+	    ml_local
+	    x
 	    smtp mail postfix qmail sendmail procmail)) {
-
 	$top{ $_ } = $_;
     }
 }
@@ -89,10 +93,16 @@ sub find_base
 	if ($varname =~ /^use_(\S+)_program/) {
 	    _regist($1);
 	}
+	elsif ($varname =~ /^use_(\S+)_function/) {
+	    _regist($1);
+	}
 	elsif ($varname =~ /^use_([a-z_]+)/) {
 	    _regist($1);
 	}
-	elsif ($varname =~ /(\S+_restrictions)$/) {
+	elsif (0 && $varname =~ /(\S+_address)$/) {
+	    _regist($1);
+	}
+	elsif (0 && $varname =~ /(\S+_restrictions)$/) {
 	    _regist($1);
 	}
 	elsif ($varname =~ 
@@ -148,6 +158,7 @@ sub classfied
 
     for my $base (sort _longest keys %base) {
 	my @x = ();
+	my @y = ();
 	my $pat1 = sprintf("%s_%s", '\S+', $base);
 	my $pat2 = sprintf("%s_%s", $base, '\S+');
 
@@ -158,7 +169,17 @@ sub classfied
 	    }
 	}
 
-	$b{ $base } = \@x;
+	for my $x (@x) {
+	    my $k = "default_$x";
+	    if (defined $varname{ $k }) {
+		push(@y, $k);
+		print STDERR "push(\@y, $k);\n"; sleep 3;
+		delete $varname{ $k };
+	    }
+	}
+
+	push(@x, @y);
+	$b{ $base }  = \@x;
     }
 
     for my $top (sort keys %top) {
@@ -275,7 +296,7 @@ sub _match
 
     # pattern to permit at the last of name.
     my @pat = qw(file dir type format format_type files dirs
-		 size_limit map maps rules type restrictions
+		 size_limit limit map maps rules type restrictions
 		 functions);
 
     for (@pat) { 
