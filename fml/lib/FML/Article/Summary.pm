@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Summary.pm,v 1.8 2002/12/15 14:04:25 fukachan Exp $
+# $FML: Summary.pm,v 1.9 2003/01/11 16:05:13 fukachan Exp $
 #
 
 package FML::Article::Summary;
@@ -81,6 +81,7 @@ sub _prepare_info
     my $curproc = $self->{ _curproc };
     my $config  = $curproc->config();
     my $tag     = $config->{ article_subject_tag };
+    my $addrlen = $config->{ summary_format_address_length };
     my $article = undef;
 
     if (defined $self->{ _article }) {
@@ -100,19 +101,16 @@ sub _prepare_info
 	my $date     = $header->get( 'date' );
 	my $unixtime = Mail::Message::Date::date_to_unixtime( $date );
 
-	# extract the first 15 bytes of user@domain part
-	# from From: header field.
-	# XXX-TODO "15" bytes is hard-coded.
+	# log the first 15 bytes of user@domain in From: header field.
 	use FML::Header;
 	my $hdrobj = new FML::Header;
-	$address = substr($hdrobj->address_clean_up( $address ), 0, 15);
+	$address = substr($hdrobj->address_clean_up( $address ), 0, $addrlen);
 
-	# fold "\n".
 	# XXX-TODO $subject->clean_up() (object flavour?)
 	use FML::Header::Subject;
-	my $obj     = new FML::Header::Subject;
-	my $subject = $obj->clean_up($header->get('subject'), $tag);
-	$subject =~ s/\s*\n/ /g;
+	my $subjobj = new FML::Header::Subject;
+	my $subject = $subjobj->clean_up($header->get('subject'), $tag);
+	$subject =~ s/\s*\n/ /g; # fold "\n".
 	$subject =~ s/\s+/ /g;
 
 	# XXX-TODO "jis-jp" and "euc-jp" is hard-coded.
