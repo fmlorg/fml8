@@ -1,0 +1,8 @@
+Revision history for Perl extension Crypt::UnixCrypt.
+
+1.0  Thu Dec 11 12:00:42 1997
+        - original version
+
+     Sat Oct 16 17:09:30 1999
+	- distribution files; created by h2xs 1.19
+

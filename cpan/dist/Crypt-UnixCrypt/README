@@ -1,0 +1,21 @@
+
+  Crypt::UnixCrypt - perl-only implementation of the crypt(3) function.
+
+        This program is free software; you can redistribute it and/or
+        modify it under the same terms as Perl itself.
+
+This module is for all those poor souls whose perl port answers to the
+use of crypt() with the message `The crypt() function is unimplemented
+due to excessive paranoia.'.
+
+It was tested under Perl 5.004 and 5.005.
+
+To install this module, please run:
+
+        perl Makefile.PL
+        make
+        make test
+        make install
+
+For more information on the module, please see the POD documentation
+inside UnixCrypt.pm. ("perldoc Crypt::UnixCrypt", once it is installed.)
