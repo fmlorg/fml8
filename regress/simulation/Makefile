@@ -16,6 +16,7 @@ allclean: clean
 	rm -f MailingList
 	rm -f libexec
 	rm -f log
+	rm -f File
 
 scan:
 	@ (cd ../..; make scan)
@@ -34,6 +35,7 @@ link:
 	rm -f Ticket; ln -s ../../fml/lib/FML/Ticket
 	rm -f Process; ln -s ../../fml/lib/FML/Process
 	rm -f IO; ln -s ../../fml/lib/IO
+	rm -f File; ln -s ../../fml/lib/File
 	rm -f Tie; 
 	rm -f Dialect; ln -s ../../fml/lib/Dialect
 	rm -f MailingList; ln -s ../../fml/lib/MailingList
