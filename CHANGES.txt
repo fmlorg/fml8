@@ -1,6 +1,57 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/11/16
+
+   FML::Process::Debug 
+	we use this module as simplified FML::Process::Kernel for debug.
+	define simplified version of some following methods:
+	+mkdir
+	+log
+	+logwarn
+	+logerror
+	+ml_home_prefix
+	
+   FML::Command::Admin::newdomain rmdomain 
+   FML::Process::Utils 
+   FML::HomeDir::Prefix 
+	switched to new ml_home_prefix framework, which is enhanced virtual
+	domain operation. See fml-devel in 2003::10.
+	
+   FML::Command::Admin::newdomain rmdomain 
+   FML::Process::Configure 
+	fixed argument handling to support:
+	o makefml method domain
+	o fml domain method
+
+2003/11/11
+
+   FML::Header::MessageID 
+	change message-id format for match RFC2822
+
+2003/11/08
+
+   Mail::Message::Encode 
+	disable Encode use even on >= 5.008 since we are not ready
+	
+   FML::Command::UserControl 
+	call croak() if address to remove not found
+
+2003/11/07
+
+   Mail::Message::ToHTML 
+	add $versionid
+	add new comment tag at html_begin() for file magic
+	change @header_field remove same information (X-xxx) and add
+	Message-Id
+
+2003/11/05
+
+   FML::Process::Kernel 
+   etc/main.cf.in 
+	define $primary_ml_home_prefix_map in main.cf.
+	FML::Process::Kernel imports it.
+
 2003/11/02
 
    FML::Process::Utils 
@@ -5609,4 +5660,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.169 2003/10/30 14:46:57 fukachan Exp $
+$FML: CHANGES.txt,v 1.170 2003/11/02 14:41:00 fukachan Exp $
