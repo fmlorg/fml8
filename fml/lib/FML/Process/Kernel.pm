@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.59 2001/11/03 10:15:49 fukachan Exp $
+# $FML: Kernel.pm,v 1.60 2001/11/04 03:46:50 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -129,6 +129,18 @@ sub new
     $curproc->{ pcb } = new FML::PCB;
 
     bless $curproc, $self;
+
+    # show help and exit here, (ASAP)
+    # XXX longjmp()
+    {
+	my $option = $curproc->command_line_options();
+	if (defined $option->{ help }) {
+	    if ($curproc->can('help')) {
+		$curproc->help();
+	    }
+	    exit 0;
+	}
+    }
 
     # load config.cf files, which is passed from loader.
     $curproc->load_config_files( $args->{ cf_list } );
