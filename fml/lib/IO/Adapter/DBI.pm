@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DBI.pm,v 1.23 2003/01/11 15:22:25 fukachan Exp $
+# $FML: DBI.pm,v 1.24 2003/02/01 10:55:04 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -272,6 +272,11 @@ return values corresponding with the specified key as array_ref.
 
 =cut
 
+
+# Descriptions: return value corresponding with the specified key as STR.
+#    Arguments: OBJ($self) STR($key)
+# Side Effects: none
+# Return Value: STR
 sub get_value_as_str
 {
     my ($self, $key) = @_;
@@ -280,6 +285,10 @@ sub get_value_as_str
 }
 
 
+# Descriptions: return value corresponding with the specified key as ARRAY_REF.
+#    Arguments: OBJ($self) STR($key)
+# Side Effects: none
+# Return Value: ARRAY_REF
 sub get_value_as_array_ref
 {
     my ($self, $key) = @_;

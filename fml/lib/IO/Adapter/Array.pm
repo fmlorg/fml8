@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Array.pm,v 1.28 2003/02/01 10:55:04 fukachan Exp $
+# $FML: Array.pm,v 1.29 2003/02/11 09:48:17 fukachan Exp $
 #
 
 package IO::Adapter::Array;
@@ -155,6 +155,10 @@ return values corresponding with the specified key as array_ref.
 
 =cut
 
+# Descriptions: return value corresponding with the specified key as STR.
+#    Arguments: OBJ($self) STR($key)
+# Side Effects: none
+# Return Value: STR
 sub get_value_as_str
 {
     my ($self, $key) = @_;
@@ -163,6 +167,10 @@ sub get_value_as_str
 }
 
 
+# Descriptions: return value corresponding with the specified key as ARRAY_REF.
+#    Arguments: OBJ($self) STR($key)
+# Side Effects: none
+# Return Value: ARRAY_REF
 sub get_value_as_array_ref
 {
     my ($self, $key) = @_;
