@@ -47,9 +47,9 @@ $id becomes 0, 1, 2, 0, 1, 2...
 File::Sequence module maintains the sequence number for something, 
 for example, the article number.
 
-For extension, you can generate cyclic number by this module.
-If you so, use the C<modulus> parameter in new() method.
-
+As an extension, you can generate a cyclic number by this module.
+Please specify C<modulus> parameter in new() method if you want to get
+a cyclic number.
 
 =head2 C<new($args)>
 

@@ -21,26 +21,41 @@ require Exporter;
 
 =head1 NAME
 
-FML::Ticket::Model::toymodel - a toymodel of ticket systems
+FML::Ticket::Model::toymodel - a ticket system toymodel
 
 =head1 SYNOPSIS
 
-=head1 DESCRIPTION
+   use FML::Ticket::Model::toymodel;
+   my $ticket = FML::Ticket::Model::toymodel->new($curproc, $args);
+   if (defined $ticket) {
+      $ticket->assign($curproc, $args);
+      $ticket->update_status($curproc, $args);
+      $ticket->update_db($curproc, $args);
+   }
+
+=head1 DESCRIPTIONS
+
+This is the simplest model which implements a ticket system.
+This model can handle simple ticket C<open> and C<close>.
+
+This routine adds the ticket-id at the last of the subject in each
+article. We track the ticket-id in articles to follow the ticket
+status.
 
 =head2 CLASS HIERARCHY
 
         FML::Ticket::System
                 |
                 A 
-       -------------------
+        -----------------
        |        |        |
     toymodel  model2    ....
 
-=head1 METHOD
+=head1 METHODS
 
 =head2 C<new($curproc, $args)>
 
-constructor. 
+the constructor. 
 
 =cut
 
@@ -299,24 +314,22 @@ sub _update_index_db
 }
 
 
-=head1 METHOD on DB IO
-
-methods to manipulate data in DB.
-
 =head2 C<open_db($curproc, $args)>
 
-open DB's which tie() hashes to DB as a file. 
-Our toymodel uses several DB's for
+open DB.
+It uses tie() to bind a hash to a DB file.
+Our toymodel uses several DB files for
 C<%ticket_id>,
 C<%date>,
 C<%status>,
 C<%sender>,
-C<%articles>,
+C<%articles>
+and
 C<%index>.
 
 =head2 C<close_db($curproc, $args)>
 
-untie() hashes opended by C<open_db()>.
+untie() corresponding hashes opended by C<open_db()>.
 
 =cut
 
@@ -429,26 +442,25 @@ sub _set_status
 
 
 
-=head1 OUTPUT ROUTINES
+=haead1 OUTPUT ROUTINES
 
 =head2 C<show_summary($curproc, $args>)
 
 show the ticket summary. 
 See L<_simple_print()> for more detail.
-
-Intenally
+Internally either of 
 C<_simple_print()> 
 or
 C<_summary_print()>
-is used for each purpose.
+is used for purposes.
 
-Each row has a set of 
+Each row that C<show_summary()> returns has a set of 
 C<date>, C<age>, C<status>, C<ticket-id> and 
 C<articles>, which is a list of articles with the ticket-id.
 
 =head2 C<_simple_print()>
 
-show entries by the ticket_id order. 
+show entries by the ticket_id order. For example,
 
        date    age status  ticket id             articles
  ------------------------------------------------------------
@@ -465,7 +477,6 @@ show entries in the C<cost> larger order.
 The cost is evaluated by $status and $age.
 The cost is larger as $age is larger.
 It is also larger if $status is C<open>.
-
 
 =cut
 

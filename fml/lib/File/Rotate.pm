@@ -18,11 +18,11 @@ END   {}
 
 =head1 NAME
 
-FILE::Rotate - IO with rotate operations
+File::Rotate - file rotate operations
 
 =head1 SYNOPSIS
 
-    $obj = new FILE::Rotate {
+    $obj = new File::Rotate {
 	max_size    => 10000,
 	num_backlog => 4,
     };
@@ -30,9 +30,8 @@ FILE::Rotate - IO with rotate operations
 
 =head1 DESCRIPTION
 
-library to wrap Rotate IO operations. 
-It automatically rotates $file in close() operation. 
-C<rotation> rearranges files like this:
+Utility functions for file rotate operations. 
+C<rotation> renames and rearranges files like this:
 
     rm file.4
     mv file.3 file.4

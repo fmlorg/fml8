@@ -31,8 +31,7 @@ File::SimpleLock - simple lock by flock(2)
 
 =head1 DESCRIPTION
 
-File::SimpleLock module contains several interfaces for several files,
-for example, Lockfiles, sysLock() (not yet implemented).
+File::SimpleLock module provides simple lock using flock(2).
 
 =head1 METHODS
 
