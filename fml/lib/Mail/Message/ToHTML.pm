@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.15 2002/04/20 15:51:26 fukachan Exp $
+# $FML: ToHTML.pm,v 1.16 2002/04/20 22:24:53 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -19,7 +19,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.15 2002/04/20 15:51:26 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.16 2002/04/20 22:24:53 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -1796,7 +1796,7 @@ sub _update_id_montly_index_master
 
     _print_raw_str($wh, "<TABLE>", $code);
 
-    for my $year (@$years) {
+    for my $year (sort {$b <=> $a} @$years) {
 	_print_raw_str($wh, "<TR>", $code);
 
 	for my $month (1 .. 12) {
@@ -2468,6 +2468,7 @@ sub htmlify_dir
 {
     my ($src_dir, $args) = @_;
     my $dst_dir  = $args->{ directory };
+    my $min      = 0;
     my $max      = 0;
     my $has_fork = 1; # ok on unix and perl>5.6 on wine32.
 
@@ -2479,7 +2480,12 @@ sub htmlify_dir
       FILE:
 	for my $file ( $dh->read() ) {
 	    next FILE unless $file =~ /^\d+$/;
+
+	    # initialize $min
+	    unless ($min) { $min = $file;}
+
 	    $max = $max < $file ? $file : $max;
+	    $min = $min > $file ? $file : $min;
 	}
     }
 
@@ -2487,7 +2493,8 @@ sub htmlify_dir
     $has_fork = $args->{ has_fork } if defined $args->{ has_fork }; 
     $max      = $args->{ max } if defined $args->{ max };
 
-    for my $id ( 1 .. $max ) {
+    print STDERR "   scan ( $min .. $max ) for $src_dir\n";
+    for my $id ( $min .. $max ) {
 	use File::Spec;
 	my $file = File::Spec->catfile($src_dir, $id);
 
