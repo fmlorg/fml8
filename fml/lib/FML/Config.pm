@@ -1,7 +1,7 @@
 #-*- perl -*-
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.30 2001/05/27 14:27:53 fukachan Exp $
+# $FML: Config.pm,v 1.31 2001/07/14 14:15:05 fukachan Exp $
 #
 
 package FML::Config;
@@ -197,15 +197,18 @@ sub load_file
 sub _read_file
 {
     my ($self, $args) = @_;
-    my $file   = $args->{ 'file' };
-    my $config = $args->{ 'config' }; 
+    my $file    = $args->{ 'file' };
+    my $config  = $args->{ 'config' }  || {}; 
+    my $comment = $args->{ 'comment' } || {};
+    my $order   = $args->{ 'order' }   || [];
+    my $mode    = defined $args->{ 'mode' } ? $args->{ 'mode' } : 'default';
 
     # open the $file by using FileHandle.pm
     use FileHandle;
     my $fh = new FileHandle $file;
 
     if (defined $fh) {
-	my ($key, $value, $curkey);
+	my ($key, $value, $curkey, $comment_buffer);
 
 	# For example
 	#    var = key1         (case 1.)
@@ -216,18 +219,27 @@ sub _read_file
 	while (<$fh>) {
 	    last if /^=cut/; # end of postfix format
 	    next if /^=/;    # ignore special keywords of pod formats
-	    next if /^\#/;   # ignore comments
-	    chop;            # nuke trailing "\n"
+	    
+	    if ($mode eq 'raw') { # save comment buffer
+		if (/^\s*\#/) { $comment_buffer .= $_;}
+	    }
+	    else { # in 'default' mode, nuke trailing "\n"
+		chop;
+	    }
 
 	    # case 1.
 	    if (/^([A-Za-z0-9_]+)\s+=\s*(.*)/) {
-		my ($key, $value) = ($1, $2);
-		$value            =~ s/\s*$//o;
-		$curkey           = $key;
-		$config->{$key}   = $value;
+		my ($key, $value)  = ($1, $2);
+		$value             =~ s/\s*$//o;
+		$curkey            = $key;
+		$config->{ $key }  = $value;
+		$comment->{ $key } = $comment_buffer;
+
+		# save variable order for re-construction e.g. used in write()
+		if ($mode eq 'raw') { push(@$order, $key);}
 	    }
 	    # case 2.
-	    elsif (/^\s+(.*)/) {
+	    elsif (/^\s+(.*)/ && defined($curkey)) {
 		my $value = $1;
 		$value =~ s/\s*$//o;
 		$config->{ $curkey }  .= " ". $value;
@@ -238,6 +250,67 @@ sub _read_file
     else {
 	$self->error_set("Error: cannot open $file");
     }
+}
+
+
+=head2 C<read(file)>
+
+read configuration from the specified file. 
+Internally it holds configuration and comment information in 
+appearing order.
+
+=head2 C<write(file)>
+
+=cut
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub read
+{
+    my ($self, $file) = @_;
+    my $config  = {};
+    my $comment = {};
+    my $order   = [];
+
+    $self->_read_file({ 
+	file    => $file, 
+	config  => $config,
+	comment => $comment,
+	order   => $order,
+	mode    => 'raw',
+    });
+
+    # XXX debug: removed in the future
+    if (1) {
+	my ($k, $v);
+	while (($k, $v) = each %$config) {
+	    print STDERR "\n[$k]\n";
+	    print STDERR " value  $v\n";
+	    if (defined $comment->{ $k }) {
+		my $comment = $comment->{ $k };
+		print STDERR " comment\n{$comment}\n";
+	    }
+	}
+    }
+
+    # save the value in the object
+    $self->{ _config_template }->{ config }  = $config;
+    $self->{ _config_template }->{ comment } = $comment;
+    $self->{ _config_template }->{ order  }  = $order;
+}
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub write
+{
+    my ($self, $file, $config) = @_;
+
 }
 
 
