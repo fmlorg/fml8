@@ -1,6 +1,11 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/07/03
+
+   Mail::Message::ToHTML 
+	change regexp $url$trailor
+
 2003/06/29
 
    FML::Command 
@@ -4979,4 +4984,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.149 2003/06/25 01:44:09 fukachan Exp $
+$FML: CHANGES.txt,v 1.150 2003/07/03 04:27:31 fukachan Exp $
