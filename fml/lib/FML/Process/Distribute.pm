@@ -144,7 +144,7 @@ sub _header_rewrite
 
     my $config = $curproc->{ config };
     my $header = $curproc->{ article }->{ header };
-    my $rules  = $curproc->{ config }->{ header_rewrite_rules };
+    my $rules  = $curproc->{ config }->{ article_header_rewrite_rules };
     my $id     = $args->{ id };
 
     for my $rule (split(/\s+/, $rules)) {

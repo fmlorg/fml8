@@ -12,14 +12,18 @@ header_check_rules	=	validate_message_id
 # もちろん”記事”に対してのものだ（自明？）
 # article_header_rewrite_rules とかの方がよいか？
 # XXX: The action to cut off "Re:" is default. need not specified.
-header_rewrite_rules	=	rewrite_subject_tag
-				rewrite_reply_to
-				add_software_info
-				add_fml_ml_name
-				add_fml_traditional_article_id
-				add_fml_article_id
-				add_x_sequence
-				add_rfc2369
+article_header_rewrite_rules	=	rewrite_subject_tag
+					rewrite_reply_to
+					add_software_info
+					add_fml_ml_name
+					add_fml_traditional_article_id
+					add_fml_article_id
+					add_x_sequence
+					add_rfc2369
+
+
+digest_header_rewrite_rules	=	add_software_info
+					add_rfc2369
 
 
 # Subject: につけるタグの制御
