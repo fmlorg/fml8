@@ -65,7 +65,7 @@ makefml newml ML もしくは makefml new ML
 </entry>
 
 <entry>
-makefml newml ML 
+makefml newml ML
 </entry>
 
 </row>
@@ -95,11 +95,11 @@ newml コマンドが作るエイリアス(見本)ファイルのパス
 </entry>
 
 <entry>
-/var/spool/ml/etc/aliaes
+/var/spool/ml/etc/aliases
 </entry>
 
 <entry>
-/var/spool/ml/etc/mail/aliaes
+/var/spool/ml/etc/mail/aliases
 </entry>
 
 </row>
@@ -216,18 +216,20 @@ listserv majordomo でも同じ。
 
 <entry>
 makefml add ML ADDRESS
-もしくは adduser でもよい。 
+もしくは adduser でもよい。
 終了後、ファイルの変更点が表示される。
 デフォルトの操作対象は actives と members ファイル。
 </entry>
 
 <entry>
-makefml subscribe ML ADDRESS 
+makefml subscribe ML ADDRESS
 なお
 add subscribe adduser useradd
-コマンドは全て同じ意味である。 
+コマンドは全て同じ意味である。
 エラーにならない限り、画面表示はなく、静かに終る。
-デフォルトの操作対象は recipients と members ファイル。	
+デフォルトの操作対象は
+$primary_recipient_maps と $primary_member_maps で、
+具体的には recipients と members ファイル。
 </entry>
 
 </row>
@@ -241,18 +243,20 @@ add subscribe adduser useradd
 
 <entry>
 makefml bye ML ADDRESS
-もしくは byeuser でもよい。 
+もしくは byeuser でもよい。
 終了後、ファイルの変更点が表示される。
 デフォルトの操作対象は actives と members ファイル。
 </entry>
 
 <entry>
-makefml unsubscribe ML ADDRESS 
+makefml unsubscribe ML ADDRESS
 なお
-bye unsubscribe deluser remove resign signoff userdel 
-コマンドは全て同じ意味である。 
+bye unsubscribe deluser remove resign signoff userdel
+コマンドは全て同じ意味である。
 エラーにならない限り、画面表示はなく、静かに終る。
-デフォルトの操作対象は recipients と members ファイル。	
+デフォルトの操作対象は
+$primary_recipient_maps と $primary_member_maps で、
+具体的には recipients と members ファイル。
 </entry>
 
 </row>
@@ -273,7 +277,9 @@ makefml chaddr ML OLD_ADDRESS NEW_ADDRESS
 <entry>
 makefml chaddr ML OLD_ADDRESS NEW_ADDRESS
 エラーにならない限り、画面表示はなく、静かに終る。
-デフォルトの操作対象は recipients と members ファイル。	
+デフォルトの操作対象は
+$primary_recipient_maps と $primary_member_maps で、
+具体的には recipients と members ファイル。
 </entry>
 
 </row>
@@ -293,7 +299,11 @@ makefml addactives ML ADDRESS
 </entry>
 
 <entry>
-未実装
+makefml addactives ML ADDRESS 
+エラーにならない限り、画面表示はなく、静かに終る。
+デフォルトの操作対象は
+$primary_recipient_maps で、
+具体的には recipients ファイル。
 </entry>
 
 </row>
@@ -313,7 +323,11 @@ makefml addmembers ML ADDRESS
 </entry>
 
 <entry>
-未実装
+makefml addmembers ML ADDRESS
+エラーにならない限り、画面表示はなく、静かに終る。
+デフォルトの操作対象は
+$primary_recipient_maps と $primary_member_maps で、
+具体的には recipients と members ファイル。
 </entry>
 
 </row>
@@ -334,6 +348,7 @@ makefml off ML ADDRESS
 
 <entry>
 makefml off ML ADDRESS
+エラーにならない限り、画面表示はなく、静かに終る。
 </entry>
 
 </row>
@@ -352,7 +367,8 @@ makefml on  ML ADDRESS
 </entry>
 
 <entry>
-makefml on  ML ADDRESS
+makefml digestoff ML ADDRESS もしくは makefml digest ML ADDRESS off
+エラーにならない限り、画面表示はなく、静かに終る。
 </entry>
 
 </row>
@@ -366,13 +382,14 @@ makefml on  ML ADDRESS
 
 <entry>
 makefml matome ML ADDRESS
-コマンドは digest でもよい。 
+コマンドは digest でもよい。
 終了後、ファイルの変更点が表示される。
 デフォルトの操作対象は actives ファイル。
 </entry>
 
 <entry>
-未実装
+makefml digeston ML ADDRESS もしくは makefml digest ML ADDRESS on
+エラーにならない限り、画面表示はなく、静かに終る。	
 </entry>
 
 </row>
@@ -432,7 +449,7 @@ makefml passwd ML
 </entry>
 
 <entry>
-未実装
+makefml passwd ML はエラーになる。(未実装?)
 </entry>
 
 </row>
@@ -450,7 +467,9 @@ makefml passwd ML ADDRESS
 </entry>
 
 <entry>
-未実装
+makefml passwd ML ADDRESS
+引数で PASSWORD を入力しない場合は、
+対話モードになり、パスワードの入力を促される。
 </entry>
 
 </row>
@@ -488,7 +507,7 @@ makefml config ML
 </entry>
 
 <entry>
-未実装
+実装しているが、まだ中途半端。
 </entry>
 
 </row>
@@ -857,7 +876,7 @@ makefml gpg ML
 <row>
 
 <entry>
-admin-auth
+admin-auth (PGP, GPG KEY RING の操作)
 </entry>
 
 <entry>
@@ -874,24 +893,7 @@ makefml admin-auth ML
 <row>
 
 <entry>
-admin-auth.pgp ML args
-</entry>
-
-<entry>
-makefml admin-auth.pgp ML args ML
-</entry>
-
-<entry>
-未実装
-</entry>
-
-</row>
-
-<!-- 49 -->
-<row>
-
-<entry>
-admin-encrypt
+admin-encrypt (PGP, GPG KEY RING の操作)
 </entry>
 
 <entry>
@@ -904,28 +906,11 @@ makefml admin-encrypt ML
 
 </row>
 
-<!-- 50 -->
+<!-- 49 -->
 <row>
 
 <entry>
-admin-encrypt.pgp ML args
-</entry>
-
-<entry>
-makefml admin-encrypt.pgp ML args ML
-</entry>
-
-<entry>
-未実装
-</entry>
-
-</row>
-
-<!-- 51 -->
-<row>
-
-<entry>
-dist-auth
+dist-auth (PGP, GPG KEY RING の操作)
 </entry>
 
 <entry>
@@ -938,28 +923,11 @@ makefml dist-auth ML
 
 </row>
 
-<!-- 52 -->
+<!-- 50 -->
 <row>
 
 <entry>
-dist-auth.pgp ML args
-</entry>
-
-<entry>
-makefml dist-auth.pgp ML args ML
-</entry>
-
-<entry>
-未実装
-</entry>
-
-</row>
-
-<!-- 53 -->
-<row>
-
-<entry>
-dist-encrypt
+dist-encrypt (PGP, GPG KEY RING の操作)
 </entry>
 
 <entry>
@@ -972,28 +940,11 @@ makefml dist-encrypt ML
 
 </row>
 
-<!-- 54 -->
+<!-- 51 -->
 <row>
 
 <entry>
-dist-encrypt.pgp ML args
-</entry>
-
-<entry>
-makefml dist-encrypt.pgp ML args ML
-</entry>
-
-<entry>
-未実装
-</entry>
-
-</row>
-
-<!-- 55 -->
-<row>
-
-<entry>
-popfml のセットアップをする
+popfml (POP でMTAとMLをエミュレーションする fml) のセットアップをする
 </entry>
 
 <entry>
@@ -1001,12 +952,12 @@ makefml popfml
 </entry>
 
 <entry>
-未実装
+そもそも popfml 自体が未実装
 </entry>
 
 </row>
 
-<!-- 56 -->
+<!-- 52 -->
 <row>
 
 <entry>
@@ -1018,12 +969,12 @@ makefml pop_passwd
 </entry>
 
 <entry>
-未実装
+そもそも popfml 自体が未実装
 </entry>
 
 </row>
 
-<!-- 57 -->
+<!-- 53 -->
 <row>
 
 <entry>
@@ -1040,7 +991,7 @@ makefml lock ML
 
 </row>
 
-<!-- 58 -->
+<!-- 54 -->
 <row>
 
 <entry>
@@ -1058,7 +1009,7 @@ send-pr でもよい
 
 </row>
 
-<!-- 59 -->
+<!-- 55 -->
 <row>
 
 <entry>
@@ -1075,7 +1026,7 @@ makefml command ML
 
 </row>
 
-<!-- 60 -->
+<!-- 56 -->
 <row>
 
 <entry>
@@ -1092,7 +1043,7 @@ makefml delivery_mode ML
 
 </row>
 
-<!-- 61 -->
+<!-- 57 -->
 <row>
 
 <entry>
@@ -1109,7 +1060,7 @@ makefml setq ML
 
 </row>
 
-<!-- 62 -->
+<!-- 58 -->
 <row>
 
 <entry>
@@ -1127,7 +1078,7 @@ showconf でもよい
 
 </row>
 
-<!-- 63 -->
+<!-- 59 -->
 <row>
 
 <entry>
@@ -1144,7 +1095,7 @@ makefml show コマンド
 
 </row>
 
-<!-- 64 -->
+<!-- 60 -->
 <row>
 
 <entry>
@@ -1161,7 +1112,7 @@ makefml resend ML
 
 </row>
 
-<!-- 65 -->
+<!-- 61 -->
 <row>
 
 <entry>
