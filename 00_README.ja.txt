@@ -1,6 +1,12 @@
-○ インストール
+		インストールについて
 
-ちゃんとしたインストーラはまだありません。
+  * 用語について:
+	% 一般ユーザのプロンプト
+	# ユーザ root のプロンプト
+	fml 4 ( fml 4.0 シリーズのこと )
+
+
+対話型インストーラなどは"まだ"作られていません。
 
 トップ・ディレクトリにある INSTALL.sh の先頭にあるディレクトリ名などを
 適当に修正し、root で実行して下さい。
@@ -12,16 +18,21 @@
 
 /etc/fml
 
-	基本設定ファイル
+	基本設定ファイルを置く場所。
 	( fml 4 の /usr/local/fml/.fml や default_config.ph 相当)
+
+	バージョンやライブラリの場所(ディレクトリ)などを指定する。
+
 
 /usr/local/libexec/fml
 
 	実行ファイル ( fml 4 の /usr/local/fml )
 
+
 /usr/local/lib/fml
 
 	ライブラリ ( fml 4 の /usr/local/fml )
+
 
 /var/spool/ml
 
