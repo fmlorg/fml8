@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Confirm.pm,v 1.4 2001/12/22 16:08:58 fukachan Exp $
+# $FML: Confirm.pm,v 1.5 2002/09/11 23:18:02 fukachan Exp $
 #
 
 package FML::Confirm;
@@ -124,8 +124,8 @@ sub _open_db
     my $dir       = File::Spec->catfile($cache_dir, $class);
 
     unless (-d $dir) {
-	eval q{ use File::Utils qw(mkdirhier);};
-	mkdirhier($dir, 0700);
+	use File::Path;
+	mkpath( [ $dir ], 0, 0700 );
     }
 
     use Tie::JournaledDir;
