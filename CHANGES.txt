@@ -1,6 +1,88 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/09/19
+
+   FML::Process::Switch 
+	implement _filespec_splitdir() which split filename to
+	@filepath but it uses File::Spec only in > perl 5.6.1.
+	
+	more specific match for $0 to resolve module we should use.
+
+   FML::Process::Utils 
+	fixed to avoid uninitialized ...
+	
+   etc/command_line_options 
+	define --log-dup anyway
+	
+   FML::Header 
+   FML::Header::MessageID 
+   FML::Process::Kernel 
+	new Header->add_message_id()
+	change Header::MessageID->gen_id() Args
+	change in Process::Kernel->_add_info_on_header() add add_message_id()
+
+2003/09/16
+
+   update CPAN
+	updated to File-Spec-0.85_03.
+	Jcode updated to 0.83
+
+2003/09/14
+
+   FML::MTAControl::Procmail 
+	typo
+	
+   FML::Process::{Flow,Kernel,Switch}
+	Process::Flow and Process::Switch classes need to know $curproc
+	pointer each other.
+	
+	fix log message duplication mechanism.
+	
+	define global_tmp_dir_path(), be_quiet() in FML::Process::Kernel.
+
+2003/09/13
+
+   etc/modules
+   FML::Process::Switch 
+	extension: compare $0 against entry etc::modules by
+	considering subdir. 
+	
+   FML::Process::Switch 
+	fix $0 handling for *.cgi:
+	program_fullname => $ENV{ 'SCRIPT_FILENAME' } || $0
+	
+   FML::Process::CGI::Kernel 
+	use $curproc->config_cf_filepath().
+	
+   FML::Process::Kernel 
+	implement ui_message().
+	change label of log() from ok to info.
+	
+   FML::MTAControl 
+   FML::Command::Admin::{edit mailq newml rmml} 
+   FML::MTAControl::{Postfix,Procmail,Qmail,Sendmail} 
+	use $curproc->ui_message() instead of "print STDERR ...".
+	
+   FML::Filter::MimeComponent3 
+   Mail::Message 
+	fix variable initialization to avoid undefined reference warning.
+	
+   FML::Process::Configure 
+	remove close_stderr_channel_if_quiet_option_specified().
+	
+   FML::Process::Utils 
+	implement is_cgi_process(), is_under_mta_process().
+
+
+2003/09/11
+
+   FML::Command::Admin::newml 
+	clarify error messages more.
+	
+   FML::MTAControl::Postfix 
+	handle default::virtual domain properly.
+
 2003/09/08
 
    Mail::Message
@@ -5239,4 +5321,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.159 2003/09/06 15:15:36 fukachan Exp $
+$FML: CHANGES.txt,v 1.160 2003/09/08 14:54:37 fukachan Exp $
