@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.118 2003/08/03 14:32:23 fukachan Exp $
+# $FML: Distribute.pm,v 1.119 2003/08/05 14:01:02 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -367,7 +367,10 @@ sub _distribute
     }
 
     # thread system checks the message before header rewritings.
-    $curproc->_thread_check($args) if $config->yes('use_thread_track');
+    if ($config->yes('use_thread_track')) {
+	$curproc->_old_thread_check($args);
+	$curproc->_new_thread_check($args);
+    }
 
     # header operations
     # XXX we need $curproc->{ article }, which is prepared above.
@@ -514,7 +517,7 @@ sub _deliver_article
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: update thread information
 # Return Value: none
-sub _thread_check
+sub _old_thread_check
 {
     my ($curproc, $args) = @_;
     my $config = $curproc->{ config };
@@ -546,19 +549,29 @@ sub _thread_check
 	$thread->analyze($msg);
     };
     Log($@) if $@;
+}
 
-    # new thread engine
-    {
-	use Mail::Message::Thread;
 
-	# XXX we need to specify article_id here since
-	# XXX analyzer routine has no clue for the curren primary key.
-	my $tdb_args = $curproc->thread_db_args($args);
-	$tdb_args->{ id } = $article_id;
+# Descriptions: the top level interface to drive thread tracking system
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: update thread information
+# Return Value: none
+sub _new_thread_check
+{
+    my ($curproc, $args) = @_;
+    my $pcb = $curproc->pcb();
+    my $msg = $curproc->article_message();
 
-	my $thread   = new Mail::Message::Thread $tdb_args;
-	$thread->analyze($msg);
-    }
+    use Mail::Message::Thread;
+
+    # XXX we need to specify article_id here since
+    # XXX analyzer routine has no clue for the curren primary key.
+    my $article_id    = $pcb->get('article', 'id');
+    my $tdb_args      = $curproc->thread_db_args($args);
+    $tdb_args->{ id } = $article_id;
+
+    my $thread   = new Mail::Message::Thread $tdb_args;
+    $thread->analyze($msg);
 }
 
 
