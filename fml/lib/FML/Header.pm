@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.49 2002/09/22 14:56:40 fukachan Exp $
+# $FML: Header.pm,v 1.50 2002/12/18 03:41:41 fukachan Exp $
 #
 
 package FML::Header;
@@ -411,7 +411,7 @@ sub rewrite_reply_to
     my $reply_to = $header->get('reply-to') || '';
 
     unless ($reply_to) {
-	$header->add('reply-to', $config->{ address_for_post });
+	$header->add('Reply-To', $config->{ address_for_post });
     }
 }
 
@@ -509,7 +509,7 @@ sub extract_message_id_references
     my %uniq = ();
     foreach my $addr (@addrs) {
 	my $a = $addr->address;
-	unless ($uniq{ $a }) {
+	unless (defined($uniq{ $a }) && $uniq{ $a }) {
 	    push(@r, $addr->address);
 	    $uniq{ $a } = 1;
 	}
