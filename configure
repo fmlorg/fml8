@@ -1556,7 +1556,7 @@ ac_given_srcdir=$srcdir
 trap 'rm -fr `echo "\
 	config.sh \
 	fml/etc/main.cf \
-	fml/etc/paths.cf \
+	fml/etc/default_config.cf.ja \
 	fml/libexec/loader \
 	fml/bin/fmlconf \
 	fml/bin/fmldoc \
@@ -1667,7 +1667,7 @@ cat >> $CONFIG_STATUS <<EOF
 CONFIG_FILES=\${CONFIG_FILES-"\
 	config.sh \
 	fml/etc/main.cf \
-	fml/etc/paths.cf \
+	fml/etc/default_config.cf.ja \
 	fml/libexec/loader \
 	fml/bin/fmlconf \
 	fml/bin/fmldoc \
