@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.39 2002/07/02 04:00:33 fukachan Exp $
+# $FML: Kernel.pm,v 1.40 2002/07/17 12:13:25 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -338,6 +338,22 @@ execute specified command given as FML::Command::*
 sub cgi_execute_command
 {
     my ($curproc, $args, $command_args) = @_;
+    my $commode = $command_args->{ command_mode };
+    my $comname = $command_args->{ comname };
+    my $config  = $curproc->config();
+
+    unless ($config->has_attribute("commands_for_admin_cgi", $comname)) {
+	LogError("cgi deny command: mode=$commode level=cgi");
+
+	my $buf = $curproc->message_nl("cgi.deny",
+				       "Error: deny $comname command");
+	print $buf, "<BR>\n";
+
+	return;
+    }
+    else {
+	Log("run $comname mode=$commode level=cgi");
+    }
 
     use FML::Command;
     my $obj = new FML::Command;
@@ -352,9 +368,12 @@ sub cgi_execute_command
 	else {
 	    print "Error! $comname fails.\n<BR>\n";
 	    if ($@ =~ /^(.*)\s+at\s+/) {
-		my $reason = $@;
+		my $reason    = $@;
+		my ($key, $r) = $curproc->parse_exception($reason);
+		my $buf       = $curproc->message_nl($key);
+
 		print "<BR>\n";
-		print $reason;
+		print ($buf || $reason);
 		print "<BR>\n";
 	    }
 	}
