@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: ThreadTrack.pm,v 1.6 2001/11/11 23:33:59 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.7 2001/11/11 23:42:05 fukachan Exp $
 #
 
 package FML::CGI::ThreadTrack;
@@ -106,7 +106,7 @@ sub run_cgi
 		my ($ml, $id, $value) = @$param;
 		if ($value eq 'closed') {
 		    my $tid = $thread->_create_thread_id_strings($id);
-		    print "closed $tid", br, '\n";
+		    print "closed $tid", br, "\n";
 		    $thread->close($tid);
 		}
 	    }
@@ -152,8 +152,7 @@ sub _show_guide
 {
     my ($curproc, $args) = @_;
     my $config  = $curproc->{ config };
-    my $myname = $config->{ program_name };
-    my $action  = $myname;
+    my $action  = $curproc->myname();
     my $target  = $config->{ thread_cgi_target_window } || 'ThreadCGIWindow';
     my $ml_list = $curproc->get_ml_list($args);
     my $ml_name = $config->{  ml_name };
