@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Summary.pm,v 1.15 2003/10/18 05:07:41 fukachan Exp $
+# $FML: Summary.pm,v 1.16 2003/12/30 08:22:36 fukachan Exp $
 #
 
 package FML::Article::Summary;
@@ -87,36 +87,29 @@ sub _prepare_info
 	$article = $self->{ _article };
     }
     else {
-	# XXX-TODO: why we run "new FML::Article" here?
-	# XXX-TODO: how do we know if this $article is proper (e.g. latest)?
-	# XXX-TODO: we should use e.g. $curproc->last_article() ?
+	# XXX we need article object to use $article->filepath() mthod.
 	use FML::Article;
 	$article = new FML::Article $curproc;
     }
 
     my $file = $article->filepath($id);
     if (-f $file) {
-	use Mail::Message;
 	my $msg      = new Mail::Message->parse( { file => $file } );
 	my $header   = $msg->whole_message_header();
 	my $address  = $header->get( 'from' ) || '';
-	my $date     = $header->get( 'date' ) || '';
+	my $date_str = $header->get( 'date' ) || '';
 
-	# XXX-TODO: not object-flavor,
-	# XXX-TODO: $date = new Mail::Message::Date; 
-	# XXX-TODO: $date->set("Tue Dec 30 17:06:34 JST 2003");
-	# XXX-TODO: $date->to_unixtime();
-	my $obj      = new Mail::Message::Date;
-	my $unixtime = $obj->date_to_unixtime( $date );
+	# data -> unix time.
+	use Mail::Message;
+	my $date     = new Mail::Message::Date $date_str;
+	my $unixtime = $date->as_unixtime();
 
 	# log the first 15 bytes of user@domain in From: header field.
 	if (defined $address) {
-	    # XXX-TODO: implement FML::Address class
-	    # XXX-TODO: $addr = FML::Address $from; $addr->cleanup().
-	    use FML::Header;
-	    my $hdr  = new FML::Header;
-	    my $addr = $hdr->address_clean_up($address);
-	    $address = defined $addr ? substr($addr, 0, $addrlen) : '';
+	    use Mail::Message::Address;
+	    my $addr = new Mail::Message::Address $address;
+	    $addr->clean_up();
+	    $address = $addr->substr(0, $addrlen) || '';
 	}
 
 	# XXX-TODO $subject->clean_up() ? (object flavour?)

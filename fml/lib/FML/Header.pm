@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.68 2004/01/21 03:49:14 fukachan Exp $
+# $FML: Header.pm,v 1.69 2004/01/22 12:34:21 fukachan Exp $
 #
 
 package FML::Header;
@@ -413,6 +413,42 @@ replace original C<Received:> to C<X-Received:>.
 # Side Effects: update $header
 # Return Value: none
 sub rewrite_article_subject_tag
+{
+    my ($header, $config, $rw_args) = @_;
+    my $tag = $config->{ article_subject_tag };
+
+    # XXX-TODO: need $article_subject_tag expaned already e.g. "\Lmlname\E"
+    # XXX-TODO: we should include this exapansion method within this module?
+    use Mail::Message::Subject;
+    my $str = $header->get('subject');
+    my $sbj = new Mail::Message::Subject $str;
+
+    # mime decode
+    $sbj->mime_decode();
+	
+    # de-tag and cut off Re: Re: Re: ... (duplicated reply tag).
+    $sbj->delete_dup_reply_tag() if $sbj->has_reply_tag();
+    $sbj->delete_tag($tag);
+    $sbj->delete_dup_reply_tag() if $sbj->has_reply_tag();
+
+    # add(prepend) the rewrited tag with mime encoding.
+    my $new_tag = sprintf($tag, $rw_args->{ id });
+    my $new_sbj = sprintf("%s %s", $new_tag, $sbj->as_str());
+
+    # update object.
+    $sbj->set($new_sbj);
+
+    # mime encode and replace subject field.
+    $sbj->mime_encode();
+    $header->replace('Subject', $sbj->as_str());
+}
+
+
+# Descriptions: rewrite subject if needed.
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
+# Side Effects: update $header
+# Return Value: none
+sub rewrite_article_subject_tag_orig
 {
     my ($header, $config, $rw_args) = @_;
 
