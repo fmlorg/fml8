@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.4 2001/12/22 09:21:17 fukachan Exp $
+# $FML: Utils.pm,v 1.5 2002/01/13 07:28:54 fukachan Exp $
 #
 
 package Mail::Delivery::Utils;
@@ -124,7 +124,16 @@ C<$buf> is sent to C<STDERR>.
 sub smtplog
 {
     my ($self, $buf) = @_;
-    _smtplog($buf);
+
+    if (defined $buf) { 
+	if (defined $self->{ _smtp_log_handle }) {
+	    my $wh = $self->{ _smtp_log_handle };
+	    print $wh $buf;
+	}
+	else {
+	    _smtplog($buf);
+	}
+    }
 }
 
 

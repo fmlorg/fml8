@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.12 2002/01/16 13:34:03 fukachan Exp $
+# $FML: SMTP.pm,v 1.13 2002/01/27 13:11:57 fukachan Exp $
 #
 
 
@@ -128,6 +128,7 @@ sub new
     $me->{_default_io_timeout} = $args->{default_io_timeout} || 10;
     $me->{_log_function}       = $args->{log_function};
     $me->{_smtp_log_function}  = $args->{smtp_log_function};
+    $me->{_smtp_log_handle}    = $args->{smtp_log_handle};
 
     _initialize_delivery_session($me, $args);
 
@@ -759,6 +760,10 @@ sub _send_body_to_mta
     $msg->set_log_function( $SmtpLogFunctionPointer );
     $msg->set_print_mode('smtp');
     $msg->print($socket);
+    
+    if (defined $self->{ _smtp_log_handle }) {
+	$msg->print( $self->{ _smtp_log_handle });
+    }
 }
 
 
