@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.27 2001/10/28 14:55:54 fukachan Exp $
+# $FML: Lite.pm,v 1.28 2001/10/29 11:44:38 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -15,7 +15,7 @@ use Carp;
 my $debug = $ENV{'debug'} ? 1 : 0;
 my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::HTML::Lite</A>";
 
-my $version = q$FML: Lite.pm,v 1.27 2001/10/28 14:55:54 fukachan Exp $;
+my $version = q$FML: Lite.pm,v 1.28 2001/10/29 11:44:38 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -93,11 +93,12 @@ sub new
     my ($type) = ref($self) || $self;
     my $me     = {};
 
-    $me->{ _charset } = $args->{ charset } || 'us-ascii';
     $me->{ _html_base_directory } = $args->{ directory };
-    $me->{ _is_attachment } = defined($args->{ attachment }) ? 1 : 0;
-    $me->{ _db_type } = $args->{ db_type };
-    $me->{ _args } = $args;
+    $me->{ _charset }        = $args->{ charset } || 'us-ascii';
+    $me->{ _is_attachment }  = defined($args->{ attachment }) ? 1 : 0;
+    $me->{ _db_type }        = $args->{ db_type };
+    $me->{ _args }           = $args;
+    $me->{ _num_attachment } = 0; # for child process
 
     return bless $me, $type;
 }
@@ -167,12 +168,13 @@ sub htmlfy_rfc822_message
     for ($m = $msg; defined($m) ; $m = $m->{ 'next' }) {
 	$type = $m->get_data_type;
 
+	last CHAIN if $type eq 'multipart.close-delimiter'; # last of multipart
+	next CHAIN if $type =~ /^multipart/;
+
 	unless ($type =~ /^\w+\/[-\w\d\.]+$/) { 
 	    warn("invalid type={$type}");
 	    next CHAIN;
 	}
-	last CHAIN if $type eq 'multipart.close-delimiter'; # last of multipart
-	next CHAIN if $type =~ /^multipart/;
 
 	# header (Mail::Message object uses this special type)
 	if ($type eq 'text/rfc822-headers') {
@@ -194,6 +196,7 @@ sub htmlfy_rfc822_message
 		$args->{ attachment } = 1; # clarify not top level content.
 		my $text = new Mail::HTML::Lite $args;
 		$text->htmlfy_rfc822_message({
+		    parent_id => $id,
 		    src => $tmpf,
 		    dst => $outf,
 		});
@@ -343,6 +346,11 @@ sub _init_htmlfy_rfc822_message
 	my $html_base_dir = $self->{ _html_base_directory };
 	$id  = $args->{ id };
 	$dst = $self->message_filepath($id);
+    }
+    elsif (defined $args->{ parent_id }) {
+	$self->{ _num_attachment }++;
+	$id  = $args->{ parent_id } .'.'. $self->{ _num_attachment };
+	$dst = $args->{ dst };
     }
     elsif (defined $args->{ dst }) {
 	$id  = time.".".$$;
@@ -764,10 +772,10 @@ sub cache_message_info
 		$db->{_info}->{id_max} < $id ? $id : $db->{_info}->{id_max};
 	}
 	else {
-	    $db->{_info }->{id_max } = $id;
+	    $db->{_info}->{id_max} = $id;
 	}
 	_PRINT_DEBUG("   parent");
-	_PRINT_DEBUG("   update id_max = $db->{_info }->{id_max }");
+	_PRINT_DEBUG("   update id_max = $db->{_info }->{id_max}");
     }
     else {
 	_PRINT_DEBUG("   child");
@@ -816,7 +824,7 @@ sub cache_message_info
 	my $irt_ra = _address_clean_up( $hdr->get('in-reply-to') );
 	my $in_reply_to = $irt_ra->[0];
 
-	_PRINT_DEBUG("In-Reply-To: $in_reply_to");
+	_PRINT_DEBUG("In-Reply-To: $in_reply_to") if defined $in_reply_to;
 
 	for my $mid (@$irt_ra) {
 	    # { message-id => (id1 id2 id3 ...)
@@ -831,9 +839,12 @@ sub cache_message_info
 
 	# apply the same logic as above for all message-id's in References:
 	my $ref_ra = _address_clean_up( $hdr->get('references') );
-	my %uniq = (); 
+	my %uniq = ();
+      MSGID_SEARCH:
 	for my $mid (@$ref_ra) {
-	    next if $uniq{$mid}; $uniq{$mid} = 1; # ensure uniqueness
+	    next MSGID_SEARCH unless defined $mid;
+	    next MSGID_SEARCH if $uniq{$mid};
+	    $uniq{$mid} = 1; # ensure uniqueness
 
 	    _PRINT_DEBUG("References: $mid");
 	    __add_value_to_array($db, '_msgidref', $mid, $id);
@@ -858,7 +869,7 @@ sub cache_message_info
 	    $idp = 0;
 	}
 
-	if (defined($idp) && $idp) {
+	if (defined($idp) && $idp && $idp =~ /^\d+$/) {
 	    if ($idp != $id) {
 		$db->{ _prev_id }->{ $id } = $idp;
 		_PRINT_DEBUG("\$db->{ _prev_id }->{ $id } = $idp");
@@ -1013,7 +1024,7 @@ sub update_relation
     my %uniq = ( $id => 1 );
 
   UPDATE:
-    for my $id (qw(prev_id next_id prev_thread next_thread)) {
+    for my $id (qw(prev_id next_id prev_thread_id next_thread_id)) {
 	if (defined $args->{ $id }) {
 	    next UPDATE if $uniq{ $args->{$id} }; $uniq{ $args->{$id} } = 1;
 
@@ -1094,11 +1105,11 @@ sub evaluate_relation
     my $db   = $self->{ _db };
     my $file = $db->{ _filepath }->{ $id };
 
-    my $next_file        = $self->message_filepath( $id + 1 );
-    my $prev_id          = $id > 1 ? $id - 1 : undef;
-    my $next_id          = $id + 1 if -f $next_file;
-    my $prev_thread_id   = $db->{ _prev_id }->{ $id } || undef;
-    my $next_thread_id   = $db->{ _next_id }->{ $id } || undef;
+    my $next_file      = $self->message_filepath( $id + 1 );
+    my $prev_id        = $id > 1 ? $id - 1 : undef;
+    my $next_id        = $id + 1 if -f $next_file;
+    my $prev_thread_id = $db->{ _prev_id }->{ $id } || undef;
+    my $next_thread_id = $db->{ _next_id }->{ $id } || undef;
 
     # diagnostic
     if ($prev_thread_id) {
@@ -1111,15 +1122,14 @@ sub evaluate_relation
 	my $xid = _search_default_next_thread_id($db, $id);
 	if ($xid && ($xid != $id)) {
 	    $next_thread_id = $xid;
-	    print STDERR "override next_thread_id = $next_thread_id\n";
 	    _PRINT_DEBUG("override next_thread_id = $next_thread_id");
 	}
     }
 
-    my $link_prev_id     = $self->message_filename($prev_id);
-    my $link_next_id     = $self->message_filename($next_id);
-    my $link_prev_thread = $self->message_filename($prev_thread_id);
-    my $link_next_thread = $self->message_filename($next_thread_id);
+    my $link_prev_id        = $self->message_filename($prev_id);
+    my $link_next_id        = $self->message_filename($next_id);
+    my $link_prev_thread_id = $self->message_filename($prev_thread_id);
+    my $link_next_thread_id = $self->message_filename($next_thread_id);
 
     my $subject = {};
     if (defined $prev_id) {
@@ -1129,27 +1139,24 @@ sub evaluate_relation
 	$subject->{ next_id } = $db->{ _subject }->{ $next_id };
     }
     if (defined $prev_thread_id) {
-	$subject->{ prev_thread } = $db->{ _subject }->{ $prev_thread_id };
+	$subject->{ prev_thread_id } = $db->{ _subject }->{ $prev_thread_id };
     }
     if (defined $next_thread_id) {
-	$subject->{ next_thread } = $db->{ _subject }->{ $next_thread_id };
+	$subject->{ next_thread_id } = $db->{ _subject }->{ $next_thread_id };
     }
 
-    _PRINT_DEBUG("subject($prev_id -> $id -> $next_id)");
-    _PRINT_DEBUG("       ($prev_thread_id -> $id -> $next_thread_id)");
-
     my $args = {
-	id               => $id,
-	file             => $file,
-	prev_id          => $prev_id,
-	next_id          => $next_id,
-	prev_thread      => $prev_thread_id,
-	next_thread      => $next_thread_id,
-	link_prev_id     => $link_prev_id,
-	link_next_id     => $link_next_id,
-	link_prev_thread => $link_prev_thread,
-	link_next_thread => $link_next_thread,
-	subject          => $subject, 
+	id                  => $id,
+	file                => $file,
+	prev_id             => $prev_id,
+	next_id             => $next_id,
+	prev_thread_id      => $prev_thread_id,
+	next_thread_id      => $next_thread_id,
+	link_prev_id        => $link_prev_id,
+	link_next_id        => $link_next_id,
+	link_prev_thread_id => $link_prev_thread_id,
+	link_next_thread_id => $link_next_thread_id,
+	subject             => $subject, 
     };
     _PRINT_DEBUG_DUMP_HASH( $args );
 
@@ -1166,10 +1173,10 @@ sub evaluate_relation
 sub evaluate_safe_preamble
 {
     my ($self, $args) = @_;
-    my $link_prev_id     = $args->{ link_prev_id };
-    my $link_next_id     = $args->{ link_next_id };
-    my $link_prev_thread = $args->{ link_prev_thread };
-    my $link_next_thread = $args->{ link_next_thread };
+    my $link_prev_id        = $args->{ link_prev_id };
+    my $link_next_id        = $args->{ link_next_id };
+    my $link_prev_thread_id = $args->{ link_prev_thread_id };
+    my $link_next_thread_id = $args->{ link_next_thread_id };
 
     my $preamble = $preamble_begin. "\n";
 
@@ -1187,8 +1194,8 @@ sub evaluate_safe_preamble
 	$preamble .= "[No Next ID]\n";
     }
 
-    if (defined $link_prev_thread) {
-	$preamble .= "<A HREF=\"$link_prev_thread\">[Prev by Thread]</A>\n";
+    if (defined $link_prev_thread_id) {
+	$preamble .= "<A HREF=\"$link_prev_thread_id\">[Prev by Thread]</A>\n";
     }
     else {
 	if (defined $link_prev_id) {
@@ -1199,8 +1206,8 @@ sub evaluate_safe_preamble
 	}
     }
     
-    if (defined $link_next_thread) {
-	$preamble .= "<A HREF=\"$link_next_thread\">[Next by Thread]</A>\n";
+    if (defined $link_next_thread_id) {
+	$preamble .= "<A HREF=\"$link_next_thread_id\">[Next by Thread]</A>\n";
     }
     else {
 	if (defined $link_next_id) {
@@ -1225,10 +1232,10 @@ sub evaluate_safe_preamble
 sub evaluate_safe_footer
 {
     my ($self, $args) = @_;
-    my $link_prev_id     = $args->{ link_prev_id };
-    my $link_next_id     = $args->{ link_next_id };
-    my $link_prev_thread = $args->{ link_prev_thread };
-    my $link_next_thread = $args->{ link_next_thread };
+    my $link_prev_id        = $args->{ link_prev_id };
+    my $link_next_id        = $args->{ link_next_id };
+    my $link_prev_thread_id = $args->{ link_prev_thread_id };
+    my $link_next_thread_id = $args->{ link_next_thread_id };
     my $subject     = $args->{ subject };
 
     my $footer = $footer_begin. "\n";;
@@ -1247,17 +1254,17 @@ sub evaluate_safe_footer
 	$footer .= "</A>\n";
     }
 
-    if (defined $link_prev_thread) {
+    if (defined $link_prev_thread_id) {
 	$footer .= "<BR>\n";
-	$footer .= "<A HREF=\"$link_prev_thread\">Prev by Thread: ";
-	$footer .= _sprintf_safe_str($subject->{ prev_thread });
+	$footer .= "<A HREF=\"$link_prev_thread_id\">Prev by Thread: ";
+	$footer .= _sprintf_safe_str($subject->{ prev_thread_id });
 	$footer .= "</A>\n";
     }
 
-    if (defined $link_next_thread) {
+    if (defined $link_next_thread_id) {
 	$footer .= "<BR>\n";
-	$footer .= "<A HREF=\"$link_next_thread\">Next by Thread: ";
-	$footer .= _sprintf_safe_str($subject->{ next_thread });
+	$footer .= "<A HREF=\"$link_next_thread_id\">Next by Thread: ";
+	$footer .= _sprintf_safe_str($subject->{ next_thread_id });
 	$footer .= "</A>\n";
     }
 
@@ -1836,7 +1843,7 @@ sub __print_safe_str
 {
     my ($attr_pre, $wh, $str, $code) = @_;
     my $p = __sprintf_safe_str($attr_pre, $wh, $str, $code);
-    print $wh $p;
+    print $wh $p if defined $p;
     print $wh "\n";
 }
 
@@ -1858,12 +1865,16 @@ sub __sprintf_safe_str
 	&Jcode::convert(\$str, $code);
     }
 
-    use HTML::FromText;
+    if (defined $str) {
+	# $url$trailor => $url $trailor for text2html() incomplete regexp
+	$str =~ s#(http://\S+[\w\d/])#_separete_url($1)#ge;
 
-    # $url$trailor => $url $trailor for text2html() incomplete regexp 
-    $str =~ s#(http://\S+[\w\d/])#_separete_url($1)#ge;
-
-    return text2html($str, urls => 1, pre => $attr_pre);
+	use HTML::FromText;
+	return text2html($str, urls => 1, pre => $attr_pre);
+    }
+    else {
+	return undef;
+    }
 }
 
 
@@ -1911,7 +1922,7 @@ sub _PRINT_DEBUG_DUMP_HASH
 
     if ($debug) {
 	while (($k, $v) = each %$hash) {
-	    print STDERR "   $k => $v\n";
+	    printf STDERR "%-30s => %s\n", $k, $v;
 	}
     }
 }
@@ -2032,7 +2043,8 @@ sub _decode_mime_string
     my $code    = _charset_to_code($charset);
 
     # If looks Japanese and $code is specified as Japanese, decode !
-    if (($str =~ /=\?ISO\-2022\-JP\?[BQ]\?/i) &&
+    if (defined($str) &&
+	($str =~ /=\?ISO\-2022\-JP\?[BQ]\?/i) &&
 	($code eq 'euc' || $code eq 'jis')) {
         use MIME::Base64;
         if ($str =~ /=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/i) { 
