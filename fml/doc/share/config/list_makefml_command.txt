@@ -28,6 +28,7 @@ list
 log
 ls
 mailq
+mergeml
 mget
 newdomain
 newml
