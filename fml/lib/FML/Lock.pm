@@ -12,6 +12,31 @@ use vars qw(%LockedFileHandle %FileIsLocked @ISA $Error);
 use strict;
 use Carp;
 
+=head1 NAME
+
+FML::Lock - simple lock by flock(2)
+
+=head1 SYNOPSIS
+
+    require FML::Lock;
+    my $lockobj = new FML::Lock;
+    $lockobj->lock( { file => $lock_file } ) || croak "fail to lock";
+
+       ... do someting under locking ...
+
+    $lockobj->unlock( { file => $lock_file } ) || croak "fail to unlock";
+
+=head1 DESCRIPTION
+
+FML::Lock.pm contains several interfaces for several files,
+for example, Lockfiles, sysLock() (not yet implemented).
+
+=item Lock( $message )
+
+The argument is the message to Lock.
+
+=cut
+
 require Exporter;
 @ISA = qw(Exporter);
 
@@ -120,41 +145,13 @@ sub _simple_funlock
 }
 
 
-=head1 NAME
-
-FML::Lock.pm - several interfaces to open several files
-
-
-=head1 SYNOPSIS
-
-To import Lock(),
-
-   use FML::Lock qw(Lock);
-   &Lock( $Lock_message );
-
-
-=head1 DESCRIPTION
-
-FML::Lock.pm contains several interfaces for several files,
-for example, Lockfiles, sysLock() (not yet implemented).
-
-=item Lock( $message )
-
-The argument is the message to Lock.
-
-
-
 =head1 SEE ALSO
 
-L<FML::Date>, 
-L<FML::Config>,
-L<FML::BaseSystem>,
 L<FileHandle>
 
 =head1 AUTHOR
 
 Ken'ichi Fukamachi <F<fukachan@fml.org>>
-
 
 =head1 COPYRIGHT
 
@@ -163,13 +160,12 @@ Copyright (C) 2000 Ken'ichi Fukamachi
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself. 
 
-
 =head1 HISTORY
 
 FML::Lock appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
-
 =cut
+
 
 1;
