@@ -85,7 +85,9 @@ sub Bootstrap
     my $myname = basename($0);
 
     # debug;
-    # use Data::Dumper; print Dumper( $main_cf ); exit 1;
+    if ($0 =~ /fmlwrapper/) {
+	use Data::Dumper; print Dumper( $main_cf ); exit 1;
+    }
 
     # 5. o.k. here we go!
     require "$libexec_dir/fml";
