@@ -57,6 +57,11 @@ You can use this method to open $file for both read and write.
     $wh->close;
     $rh->close;
 
+To copy from $src to $dst,
+
+    IO::File::Atomic->copy($src, $dst) || croak("fail to copy");
+
+
 =head1 DESCRIPTION
 
 =cut
@@ -144,6 +149,31 @@ sub close
     else {
        ${ *$fh }{ _error } = "fail to rename($temp, $orig)";
        return 0;
+    }
+}
+
+
+# Descriptions: copy file, which ensures atomic operation
+#    Arguments: $self source_file destination_file
+# Side Effects: $dst's file mode becomes the same as $src
+# Return Value: 1 if succeeded, undef if not
+sub copy
+{
+    my ($self, $src, $dst) = @_;
+    my ($mode) = (stat($src))[2];
+
+    my $rh = new FileHandle $src;
+    my $wh = $self->open($dst);
+
+    if (defined($rh) && defined($wh)) {
+	while (sysread($rh, $_, 4096)) { print $wh $_;}
+	$wh->close;
+	$rh->close;
+
+	chmod $mode, $dst;
+    }
+    else {
+	return undef;
     }
 }
 
