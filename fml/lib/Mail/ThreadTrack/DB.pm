@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.22 2002/02/02 07:55:46 fukachan Exp $
+# $FML: DB.pm,v 1.23 2002/02/04 00:07:17 fukachan Exp $
 #
 
 package Mail::ThreadTrack::DB;
@@ -259,7 +259,7 @@ sub db_hash
 
 =head2 db_last_modified()
 
-return the last modified time of our dateabase as unix time.  
+return the last modified time of our dateabase as unix time.
 This time is the latest modified time among all database files.
 
 =cut

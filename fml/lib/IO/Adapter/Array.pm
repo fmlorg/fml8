@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Array.pm,v 1.21 2001/12/24 07:40:56 fukachan Exp $
+# $FML: Array.pm,v 1.22 2002/01/27 13:11:58 fukachan Exp $
 #
 
 package IO::Adapter::Array;
@@ -123,7 +123,7 @@ undef. ambigous in array case.
 
 # Descriptions: forwarded to get_next_key()
 #               XXX getline() == get_next_key() is valid in this case.
-#               XXX since this map has only key and no value. 
+#               XXX since this map has only key and no value.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: increment the counter in the object
 # Return Value: STR(the next element)

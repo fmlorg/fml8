@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.10 2002/02/03 12:11:55 fukachan Exp $
+# $FML: Utils.pm,v 1.11 2002/02/03 12:30:30 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -187,7 +187,7 @@ sub executable_prefix
 =cut
 
 
-# Descriptions: return the path where template files used in "newml" method exist 
+# Descriptions: return the path where template files used in "newml" method exist
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: STR
@@ -296,7 +296,7 @@ sub __ml_home_prefix_search_in_virtual_maps
 #
 # XXX
 #    __ml_home_prefix_from_main_cf() is not needed.
-#    since FML::Process::Switch calculate this variable and set it to 
+#    since FML::Process::Switch calculate this variable and set it to
 #    $curproc->{ main_cf }.
 #
 
@@ -325,7 +325,7 @@ sub __get_virtual_maps
     my ($main_cf) = @_;
 
     if (defined $main_cf->{ virtual_maps } && $main_cf->{ virtual_maps }) {
-	my (@r) = ();   
+	my (@r) = ();
 	my (@maps) = split(/\s+/, $main_cf->{ virtual_maps });
 	for (@maps) {
 	    if (-f $_) { push(@r, $_);}

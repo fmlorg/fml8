@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.10 2002/02/11 10:59:36 fukachan Exp $
+# $FML: SendFile.pm,v 1.11 2002/02/13 11:13:14 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -144,7 +144,7 @@ sub _is_valid_argument
 
 
 # Descriptions: make an array from $fist to $last number.
-#               This array is composed of article numbers.              
+#               This array is composed of article numbers.
 #    Arguments: NUM($first_number) NUM($last_number)
 # Side Effects: none
 # Return Value: HASH_ARRAY as [ $first .. $last ]

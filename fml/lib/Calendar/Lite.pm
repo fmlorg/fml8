@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Calender::Lite.pm,v 1.16 2002/02/02 07:55:45 fukachan Exp $
+# $FML: Lite.pm,v 1.1.1.1 2002/02/13 12:51:48 fukachan Exp $
 #
 
 package Calender::Lite;
@@ -392,7 +392,7 @@ Calender::Lite appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 Firstly this module name is C<TinyScheduler.pm> and renamed to
-Calender::Lite later. 
+Calender::Lite later.
 
 =cut
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.17 2002/01/27 08:28:11 fukachan Exp $
+# $FML: Sequence.pm,v 1.18 2002/02/01 12:03:58 fukachan Exp $
 #
 
 package File::Sequence;
@@ -198,7 +198,7 @@ To search max_id in hash key,
 
 to search max_id among all keys,
 
-    $self->search_max_id( { 
+    $self->search_max_id( {
 	hash => \%hash_table,
 	full_search => 1,
     });

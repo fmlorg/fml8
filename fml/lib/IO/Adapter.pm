@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.14 2002/01/27 13:11:57 fukachan Exp $
+# $FML: Adapter.pm,v 1.15 2002/02/01 12:03:58 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -72,7 +72,7 @@ is described like this:
 	file content = {
 		key1 => undef,
 		key2 => [ value2 ],
-		key3 => [ value3a, value3b ], 
+		key3 => [ value3a, value3b ],
 	};
 
 IO::Adapter converts data in arbitrary map e.g. file, /etc/group,
@@ -82,7 +82,7 @@ IO::Adapter provides unified access methods to this structure.
 
 
 Instead of unification, IO::Adapter may provide amibugous IO.
-For example, IO into array is not described as above. 
+For example, IO into array is not described as above.
 /etc/group must be described as
 
 	wheel group = {
@@ -277,11 +277,11 @@ sub touch
 getXXX() should be classified into:
 
    getline()        raw data
-                    which may consist of "key" and "value" pair. 
+                    which may consist of "key" and "value" pair.
    get_next_key()   next primary key
    get_next_value() next value for (the next) key
 
-For a file map, following usage is intuitive such that 
+For a file map, following usage is intuitive such that
 getline() returns "key value1 value2 ...",
 get_next_key() returns "key" and
 get_next_value() returns "value1 value2 ...", isn't it ?
@@ -399,7 +399,7 @@ find() returns the result as STRING or ARRAY REFERENCE.
 You get only the first entry as string by default.
 If you specify C<all>, you get the result(s) as ARRAY REFERENCE.
 
-For example, to search mail addresses in recipient list, 
+For example, to search mail addresses in recipient list,
 
     my $a = $self->find($regexp, { want => 'key', all => 1});
     for my $addr (@$a) {

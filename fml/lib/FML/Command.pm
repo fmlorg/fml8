@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.17 2002/01/30 14:51:14 fukachan Exp $
+# $FML: Command.pm,v 1.18 2002/02/13 10:41:16 fukachan Exp $
 #
 
 package FML::Command;
@@ -93,7 +93,7 @@ sub AUTOLOAD
 	}
 
 	# this command needs lock (currently giant lock) ?
-	if ($command->can('need_lock')) { 
+	if ($command->can('need_lock')) {
 	    $need_lock = $command->need_lock($mode);
 	}
 
