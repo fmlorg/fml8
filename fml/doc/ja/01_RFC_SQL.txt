@@ -15,7 +15,11 @@ A2: SQL 構文も書けるようにしておけばよい？
 	lexical scope で取り扱われる変数の表現があれば解決？
 	例: &varname 記法(下記)
 
-	注: IO::Adapter は new IO::Adapter $mapname $config などとする
+	注: IO::Adapter は 
+
+		my $obj = new IO::Adapter $mapname, $config;
+
+	とする
 
 ○ cf の例：
 
@@ -25,24 +29,38 @@ recipient_maps 	= 	mysql:database
 
 [mysql:database]
 
+[mysql:fml]
+
 sql_server	=	localhost
 sql_user	=	fml
-sql_password	=	pa$$word
-sql_database	=	ml
-sql_table	=	fml
+sql_password	=	uja
+sql_database	=	fml
+sql_table	=	ml
 
-get_next_key	=	select address from $sql_table
-			where ml = '&ml_name' and type = '&type'
+sql_get_next_key =	select fml_address from $sql_table
+			where fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
 
-getline		=	select * from $sql_table
-			where ml = '&ml_name' and type = '&type'
+sql_getline	=	select * from $sql_table
+			where fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
 
-add		=	insert into $sql_table
-			values ('$ml_name', '&address', '&type')
+sql_add		=	insert into $sql_table
+			values ('$ml_name', '$ml_domain', '&address', 1, 1)
 
-delete		=	delete from $sql_table
-			where ml = '&ml_name' and addrss = '&address'
+sql_delete	=	delete from $sql_table
+			where	fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
+				fml_address = '&address'
 
-find		=	select * from $sql_table
-			where ml = '&ml_name' and address like '&regexp'
+sql_find	=	select * from $sql_table
+			where	fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
+				fml_address like '&regexp'
 
