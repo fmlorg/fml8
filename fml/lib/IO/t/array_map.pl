@@ -9,26 +9,28 @@
 #
 
 use Carp;
+use strict;
 
-$file = "/etc/passwd";
-$map  = "file:". $file;
-
-open($file, $file) || croak($!); 
-while (1) {
-    $p = sysread($file, $_, 4096);
-    last unless $p;
-    $orgbuf .= $_;
-}
-close($file);
+my $map = ['a', 'b', 'c'];
 
 use IO::MapAdapter;
-$obj = new IO::MapAdapter $map;
+my $obj = new IO::MapAdapter $map;
 $obj->open || croak("cannot open $map");
 if ($obj->error) { croak( $obj->error );}
-while ($x = $obj->getline) { $buf .= $x; }
+
+my $x;
+my @recipients = ();
+while ($x = $obj->get_recipient) { push(@recipients, $x); }
 $obj->close;
 
-if ($orgbuf eq $buf) {
+my $ok = 0;
+my $i  = 0;
+for my $c (@$map) {
+    $c eq $recipients[ $i ] && $ok++;
+    $i++;
+}
+
+if ($ok == $i) {
     print STDERR "$map reading ... ok\n";
 }
 else {

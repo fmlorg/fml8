@@ -9,34 +9,106 @@
 #
 
 package IO::MapAdapter;
+use vars qw(@ISA);
 use strict;
 use Carp;
 
+require Exporter;
+@ISA = qw(Exporter);
 
 BEGIN {}
+END   {}
 
+=head1 NAME
+
+IO::MapAdapter - adapter for several IO interfaces
+
+=head1 SYNOPSIS
+
+This is just an adapter for 
+e.g. file, unix group, NIS, RDMS et. al.
+So, after you create and open the map, 
+operation method is the same as usual file IO.
+For examle
+
+    use IO::MapAdapter;
+    $obj = new IO::MapAdapter $map;
+    $obj->open || croak("cannot open $map");
+    while ($x = $obj->getline) { ... }
+    $obj->close;
+
+=head1 DESCRIPTION
+
+This is "Adapter" (or "Wrapper") design pattern.
+
+=head1 MAP
+
+"map" is what database we read/write. 
+The basic format of the database is a file. 
+In a lot of cases, the file format is one line for one entry.
+For example,
+
+   key1
+   key2 value
+
+So, to get one entry is to read one line or a part of one line.
+
+This wrapper maps IO for some object to usual file IO.
+
+
+   map name        descriptions or examples        
+   ---------------------------------------------------
+   file            file:$file_name
+                   For example, file:/var/spool/ml/elena/recipients
+
+   unix.group      unix.group:$group_name
+                   For example, unix.group:fml
+
+   nis             NIS "Netork Information System" (YP)
+                   *** not yet implemented ***
+
+   mysql           mysql:$schema_name
+                   *** not yet implemented ***
+
+   postgresql      postgresql:$schema_name
+                   *** not yet implemented ***
+
+   ldap            ldap:$schema_name
+                   *** not yet implemented ***
+
+=head1 METHODS
+
+=item C<new()>
+
+the constructor. $args is a map.
+
+=cut
 
 sub new
 {
-    my ($self, $args) = @_;
+    my ($self, $map, $args) = @_;
     my ($type) = ref($self) || $self;
     my ($me)   = {};
 
-    if ( ref($args) eq 'CODE' ) {
-	$me->{_type} = 'array_on_memory';
-	eval { &$args($me);};
+    if ( ref($map) eq 'CODE' ) {
+	$me->{_type} = 'array_on_memory_by_code';
+	eval { &$map($me);};
 	_error_reason($me, $@) if $@;
     }
+    elsif ( ref($map) eq 'ARRAY' ) {
+	$me->{_type}            = 'array_reference';
+	$me->{_array_reference} = $map;
+    }
     else {
-	if ($args =~ /file:(\S+)/ || $args =~ m@^(/\S+)@) {
+	if ($map =~ /file:(\S+)/ || $map =~ m@^(/\S+)@) {
 	    $me->{_file} = $1;
 	    $me->{_type} = 'file';
 	}
-	elsif ($args =~ /unix\.group:(\S+)/) {
+	elsif ($map =~ /unix\.group:(\S+)/) {
 	    $me->{_name} = $1;
 	    $me->{_type} = 'unix.group';
 	}
-	elsif ($args =~ /(ldap|mysql|postgresql):(\S+)/) {
+	elsif ($map =~ /(ldap|mysql|postgresql):(\S+)/) {
 	    $me->{_type}   = $1;
 	    $me->{_schema} = $2;
 
@@ -44,7 +116,7 @@ sub new
 	    $me->{_type}   =~ tr/A-Z/a-z/;
 	}
 	else {
-	    my $s = "IO::MapAdapter::new: args='$args' is unknown.";
+	    my $s = "IO::MapAdapter::new: args='$map' is unknown.";
 	    print STDERR $s, "\n";
 	    _error_reason($me, $s);
 	}
@@ -87,8 +159,9 @@ sub open
 
     if ($self->{'_type'} eq 'file') {
 	my $file = $self->{_file};
-	eval q{ use FileHandle;};
-	my $fh = new FileHandle $file, $flag;
+	my $fh;
+	use FileHandle;
+	$fh = new FileHandle $file, $flag;
 	if (defined $fh) {
 	    $self->{_fh} = $fh;
 	    return $fh;
@@ -106,8 +179,16 @@ sub open
 	$self->{_counter}     = 0;
 	return defined @members ? \@members : undef;
     }
-    elsif ($self->{'_type'} eq 'array_on_memory') {
+    elsif ($self->{'_type'} eq 'array_on_memory_by_code') {
 	my $r_array = $self->{ _recipients_array_on_memory };
+	my @members = @$r_array;
+	$self->{_members}     = $r_array;
+	$self->{_num_members} = $#members;
+	$self->{_counter}     = 0;
+	return defined @members ? \@members : undef;
+    }
+    elsif ($self->{'_type'} eq 'array_reference') {
+	my $r_array = $self->{ _array_reference};
 	my @members = @$r_array;
 	$self->{_members}     = $r_array;
 	$self->{_num_members} = $#members;
@@ -171,7 +252,12 @@ sub _get_address
 	my $ra = $self->{_members};
 	defined $$ra[ $i ] ? $$ra[ $i ] : undef;
     }
-    elsif ($self->{'_type'} eq 'array_on_memory') {
+    elsif ($self->{'_type'} eq 'array_on_memory_by_code') {
+	my $i  = $self->{_counter}++;
+	my $ra = $self->{_members};
+	defined $$ra[ $i ] ? $$ra[ $i ] : undef;
+    }
+    elsif ($self->{'_type'} eq 'array_reference') {
 	my $i  = $self->{_counter}++;
 	my $ra = $self->{_members};
 	defined $$ra[ $i ] ? $$ra[ $i ] : undef;
@@ -212,6 +298,7 @@ sub getline
     }
     else {
 	$self->_error_reason("Error: type=$self->{_type} is unknown type.");
+	return undef;
     }
 }
 
@@ -227,7 +314,10 @@ sub getpos
     elsif ($self->{'_type'} eq 'unix.group') {
 	$self->{_counter};
     }
-    elsif ($self->{'_type'} eq 'array_on_memory') {
+    elsif ($self->{'_type'} eq 'array_on_memory_by_code') {
+	$self->{_counter};
+    }
+    elsif ($self->{'_type'} eq 'array_reference') {
 	$self->{_counter};
     }
     else {
@@ -247,7 +337,10 @@ sub setpos
     elsif ($self->{'_type'} eq 'unix.group') {
 	$self->{_counter} = $pos;
     }
-    elsif ($self->{'_type'} eq 'array_on_memory') {
+    elsif ($self->{'_type'} eq 'array_on_memory_by_code') {
+	$self->{_counter} = $pos;
+    }
+    elsif ($self->{'_type'} eq 'array_reference') {
 	$self->{_counter} = $pos;
     }
     else {
@@ -267,7 +360,10 @@ sub eof
     elsif ($self->{'_type'} eq 'unix.group') {
 	$self->{_counter} > $self->{_num_members} ? 1 : 0;
     }
-    elsif ($self->{'_type'} eq 'array_on_memory') {
+    elsif ($self->{'_type'} eq 'array_on_memory_by_code') {
+	$self->{_counter} > $self->{_num_members} ? 1 : 0;
+    }
+    elsif ($self->{'_type'} eq 'array_reference') {
 	$self->{_counter} > $self->{_num_members} ? 1 : 0;
     }
     else {
@@ -286,7 +382,10 @@ sub close
     elsif ($self->{'_type'} eq 'unix.group') {
 	;
     }
-    elsif ($self->{'_type'} eq 'array_on_memory') {
+    elsif ($self->{'_type'} eq 'array_on_memory_by_code') {
+	;
+    }
+    elsif ($self->{'_type'} eq 'array_reference') {
 	;
     }
     else {
@@ -302,5 +401,22 @@ sub DESTROY
     undef $self;
 }
 
+
+=head1 AUTHOR
+
+Ken'ichi Fukamchi
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001 Ken'ichi Fukamchi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself. 
+
+=head1 HISTORY
+
+IO::MapAdapter.pm appeared in fml5.
+
+=cut
 
 1;
