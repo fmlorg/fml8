@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.27 2004/08/15 14:27:43 fukachan Exp $
+# $FML: QueueManager.pm,v 1.28 2004/09/03 13:04:47 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -238,7 +238,7 @@ sub cleanup
 
 	    # enough old.
 	    if ($mtime < $now - $limit) {
-		$curproc->log("qmgr: remove invalid queue qid=$qid");
+		$curproc->log("qmgr: remove too old queue qid=$qid");
 		$q->remove();
 	    }
 	}
