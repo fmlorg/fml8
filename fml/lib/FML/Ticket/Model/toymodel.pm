@@ -328,6 +328,7 @@ sub list_up
     use FML::Date;
     my $dh  = new FML::Date;
     my $now = time; # save the current UTC for convenience
+    my $fd  = $self->{ _fd } || \*STDOUT;
 
     # XXX $rh = Reference to Hash table, which is tied to db_dir/*db's
     my $rh             = $self->{ _hash_table };
@@ -339,9 +340,9 @@ sub list_up
 
     # format
     $| = 1;
-    printf($format, 'date', 'age', 'status', 'ticket id', 'articles');
-    print "-" x60;
-    print "\n";
+    printf($fd $format, 'date', 'age', 'status', 'ticket id', 'articles');
+    print $fd "-" x60;
+    print $fd "\n";
 
     my (@tid);
 
@@ -364,7 +365,7 @@ sub list_up
 	my $date  = $dh->YYYYxMMxDD( $rh->{ _date }->{ $aid } , '/');
 	my $status = $rh->{ _status }->{ $tid };
 
-	printf($format, $date, $age, $status, $tid, $rh->{ _articles }->{ $tid });
+	printf($fd $format, $date, $age, $status, $tid, $rh->{ _articles }->{ $tid });
     }
 
     # self->{ _hash_table } is untied from DB's.
