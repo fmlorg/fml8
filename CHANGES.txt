@@ -9,6 +9,53 @@
 	fml-devel-20040303 が、このコマンドメールの変更が"入っていない"
 	最後のスナップショットです。
 
+2004/03/04
+
+   コマンドメールのコードを全面的に書き直した。
+
+   new command mail framework
+	FML::Command 
+	FML::Command::Auth 
+	FML::Command::Admin::password 
+	FML::Command::User::admin 
+	FML::Process::Command 
+	FML::Restriction::Command 
+	FML::Process::State 
+
+   FML::Process::Command 
+	fully rewritten. a lot of codes are moved to under
+	FML::Command:::class. 
+	
+   FML::Restriction::Command 
+	method-fy.
+	
+	syntax check is applied to each entry of space separeted command
+	string.
+	
+   FML::Command 
+	implement verify_syntax(), simple_syntax_check() and
+	safe_regexp_match(). 
+	
+	remove auth() method call for FML::Command::$MODE::$COMMAND,
+	which is not used.
+
+   FML::Command::Auth 
+	show detalis of error messages more.
+
+   FML::Command::Admin::password
+	implement verify_syntax() method.
+	
+   FML::Command::User::admin 
+	now, user mode "admin" command becomes entrance for priviledged
+	command world.
+	
+	The main part of $admin_command_restrictions is moved from
+	FML::Process::Command to here.
+	
+	implement verify_syntax(), which is a wrapper for other admin
+	commands. 
+	
+	implemnt need_lock().
 
 2004/02/29
 
@@ -6295,4 +6342,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.182 2004/03/03 12:47:51 fukachan Exp $
+$FML: CHANGES.txt,v 1.183 2004/03/03 14:43:53 fukachan Exp $
