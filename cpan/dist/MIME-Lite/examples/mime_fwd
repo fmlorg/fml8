@@ -1,0 +1,69 @@
+#!/usr/bin/perl -w
+
+
+=head1 NAME
+
+mime_fwd - test the ability to embed messages
+
+
+=head1 SYNOPSIS
+
+Usage:
+
+    mime_fwd 
+
+
+=head1 DESCRIPTION
+
+Create a simple message, then wrap it in a "forward" and
+then a "reply".
+
+
+=head1 AUTHOR
+
+Eryq, eryq@zeegee.com
+
+=cut
+
+use strict;
+use MIME::Lite;
+use Getopt::Std;
+
+#------------------------------
+# main
+#------------------------------
+sub main {
+    my %opts;
+    my $subj = "hello world";
+
+    ### Create a message:
+    my $msg = MIME::Lite->new(From    => 'user0',
+			      To      => 'user1',
+			      Subject => $subj,
+			      Type    => 'TEXT',
+			      Data    => ["This is the original message.\n",
+					  "Let's see if we can embed it!\n"]); 
+    
+    ### Forward it:
+    my $fwd = MIME::Lite->new(From => 'user1',
+			      To   => 'user2',
+			      Subject => ("Fwd: ".$msg->get('subject')),
+			      Type => 'message/rfc822');
+    $fwd->attach($msg);
+
+    ### Reply:
+    my $re = MIME::Lite->new(From => 'user2',
+			     To   => 'user0',
+			     Bcc     => 'archives',
+			     Subject => ("Re: ".$fwd->get('subject')),
+			     Type => 'message/rfc822');
+    $re->attach($fwd);
+
+    ### Output!
+    $re->print;
+}
+exit (&main ? 0 : -1);
+
+__END__
+
+

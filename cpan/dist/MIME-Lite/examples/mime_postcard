@@ -1,0 +1,79 @@
+#!/usr/bin/perl -w
+
+=head1 NAME
+
+mime_postcard - output a multipart/alternative message
+
+
+=head1 SYNOPSIS
+
+Usage:
+
+    mime_postcard /path/to/some/graphic.jpg to@addr.com
+
+You can point it at a .gif file as well.
+The special address "-" just causes the message to go to STDOUT.
+
+
+=head1 DESCRIPTION
+
+This send a mesasge both as HTML and plain text.
+I use "Data"; you would probably use "Path".
+
+
+=head1 AUTHOR
+
+Eryq, eryq@zeegee.com
+
+
+=cut
+
+use MIME::Lite 1.137;
+use strict;
+$SIG{__DIE__} = sub { die "mime_postcard: $_[0]\n" };
+
+### Get graphic:
+my $graphic = shift @ARGV || die "usage error: missing path to graphic\n";
+(-r $graphic) or die "$graphic unreadable\n";
+my $graphic_type;
+if    ($graphic =~ /\.gif$/i)   { $graphic_type = "image/gif" }
+elsif ($graphic =~ /\.jpe?g$/i) { $graphic_type = "image/jpeg" }
+elsif ($graphic =~ /\.png$/i)   { $graphic_type = "image/png" }
+else                            { die "unknown type for: $graphic\n"; }
+my $gid = "my-graphic";
+
+### Get destination:
+my $dest = shift @ARGV || die "missing destination\n";
+
+### The top-level message:
+my $msg = MIME::Lite->new(To      => $dest,
+                          Subject => 'A postcard for you',
+                          Type    => 'multipart/alternative');
+
+
+### Alternative #1 is the plain text:
+my $plain = $msg->attach(Type => 'text/plain',
+			 Data => ["Having a wonderful time... \n",
+				  "wish you were looking at HTML \n",
+				  "instead of this boring text!\n"]);
+
+### Alternative #2 is the HTML-with-content: 
+my $fancy = $msg->attach(Type => 'multipart/related');
+$fancy->attach(Type => 'text/html',
+	       Data => [qq< <H1>Hey there!</H1> \n>,
+			qq< Having a <I>wonderful</I> time... take a look!\n >,
+			qq< <BR><IMG SRC="cid:$gid" ALT="Snapshot"> <HR> >]);
+$fancy->attach(Type => $graphic_type,
+	       Path => $graphic,
+	       Id   => $gid);
+
+
+if ($dest eq '-') {
+    $msg->print;
+}
+else {
+    $msg->send;
+}
+
+
+

@@ -1,0 +1,92 @@
+#!/usr/bin/perl -w
+
+
+=head1 NAME
+
+mime_longlines - generate a test message with long lines
+
+
+=head1 SYNOPSIS
+
+Usage:
+
+    mime_longlines [-s]
+
+Options:
+
+    -s   Stringify message first, and print the *string* to STDOUT.
+
+
+=head1 DESCRIPTION
+
+Assemble and print (to the standard output) a multipart message 
+with 5 attachments, for the purpose of "eyeballing" how well the 
+encoders are working.
+
+Each attachments holds the same data -- some 8-bit text, and a long 
+line consisting of 1000 "a"s followed by a few "b"s) -- but each
+has a different encoding (the "Content-transfer-encoding" field
+will tell you which is which).
+
+All of the encodings (except for the first one, "binary") should 
+break the long line before the b's.
+
+
+=head1 AUTHOR
+
+Eryq, eryq@zeegee.com
+
+=cut
+
+use strict;
+use MIME::Lite;
+use Getopt::Std;
+
+### Set up a long message:
+my $DATA = <<EOF;
+Here's a line with some 8-bit characters... the "7bit" encoding should
+strip them out: 
+
+    \xABFran\xE7ois M\xFCller\xBB.
+
+The line below is REALLY long.  It contains 1000 a's, followed by some b's.
+All of the encodings (except binary) should break the line before the b's:
+
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbb
+
+EOF
+
+#------------------------------
+# main
+#------------------------------
+sub main {
+    my %opts;
+
+    ### Get options:
+    getopts('s', \%opts) or die "usage error\n";
+
+    ### Create a new multipart message:
+    my $msg = new MIME::Lite
+	From    =>'me@myhost.com',
+        To      =>'you@yourhost.com',
+        Cc      =>'some@other.com, some@more.com',
+        Subject =>'The Magnificent Five (encodings, that is)',
+        Type    =>'multipart/mixed';
+
+    ### Add parts:
+    foreach my $enc (qw(binary 8bit 7bit quoted-printable base64)) {
+	$msg->attach(Type => 'TEXT',   
+		     Data => $DATA,
+		     Encoding => $enc);
+    }
+
+    ### Print:
+    if ($opts{'s'}) { print $msg->stringify }
+    else            { $msg->print(\*STDOUT) }
+    1;
+}
+exit (&main ? 0 : -1);
+1;
+
+__END__
+
