@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.81 2003/08/16 05:24:43 fukachan Exp $
+# $FML: Message.pm,v 1.82 2003/08/16 14:57:54 fukachan Exp $
 #
 
 package Mail::Message;
@@ -1765,7 +1765,7 @@ sub delete_message_part_link
 
 # Descriptions: search the next MIME boundary
 #    Arguments: OBJ($self) HASH_STR($data) STR($delimeter)
-#               NUM($loopcnt) NUM(mpb_begin)
+#               NUM($loopcnt) NUM($mpb_begin)
 # Side Effects: none
 # Return Value: (NUM, NUM)
 sub _next_part_pos
