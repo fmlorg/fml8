@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.23 2003/03/05 15:47:21 fukachan Exp $
+# $FML: Filter.pm,v 1.24 2003/03/06 14:13:27 fukachan Exp $
 #
 
 package FML::Filter;
@@ -244,15 +244,18 @@ send back message on rejection, with reason if could.
 sub article_filter_reject_notice
 {
     my ($self, $curproc, $msg_args) = @_;
+    my $cred   = $curproc->{ credential };
     my $config = $curproc->config();
     my $msg    = $curproc->incoming_message();
     my $r      = $msg_args->{ _arg_reason } || 'unknown';
+    my $type   = $config->{article_filter_reject_notice_data_type} || 'string';
 
     # recipients
     my $list  =
 	$config->get_as_array_ref('article_filter_reject_notice_recipients');
     my $rcpts = $curproc->convert_to_mail_address($list);
-    $msg_args->{ recipient } = $rcpts;
+    $msg_args->{ recipient }   = $rcpts;
+    $msg_args->{ _arg_sender } = $cred->sender();
 
     Log("filter notice: [ @$rcpts ]");
 
@@ -263,8 +266,17 @@ sub article_filter_reject_notice
 			       "reason(s) for rejection: $r",
 			       $msg_args);
 
-    $curproc->reply_message_add_header_info($msg_args);
-    $curproc->reply_message($msg, $msg_args);
+    # what we forward ?
+    if ($type eq 'multipart') {
+	$curproc->reply_message($msg, $msg_args);
+    }
+    elsif ($type eq 'string') {
+	my $s = $msg->whole_message_as_str( { indent => '   ' } );
+	$curproc->reply_message(sprintf("\n\n%s", $s));
+    }
+    else {
+	LogError("unknown article_filter_reject_notice_data_type: $type");
+    }
 }
 
 
