@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.10 2002/06/30 05:18:46 fukachan Exp $
+# $FML: Error.pm,v 1.11 2002/07/15 15:27:15 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -73,9 +73,10 @@ sub prepare
     my $eval = $config->get_hook( 'error_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
+    $curproc->resolve_ml_specific_variables( $args );
+    $curproc->load_config_files( $args->{ cf_list } );
+
     if ($config->yes('use_error_analyzer')) {
-	$curproc->resolve_ml_specific_variables( $args );
-	$curproc->load_config_files( $args->{ cf_list } );
 	$curproc->parse_incoming_message($args);
 
 	$config->{ log_format_type } = 'new_style';
@@ -143,6 +144,9 @@ sub run
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
     eval q{
+	my $time = time;
+	my $obj  = $curproc->_error_open_cache();
+
 	use Mail::Bounce;
 	my $bouncer = new Mail::Bounce;
 	$bouncer->analyze( $msg );
@@ -154,15 +158,10 @@ sub run
 	    Log("bounced: address=<$address>");
 	    Log("bounced: status=$status");
 	    Log("bounced: reason=\"$reason\"");
-	}
 
-	my $obj = $curproc->__open_cache();
-	if (defined $obj) {
-	    # show results
-	    for my $address ( $bouncer->address_list ) {
-		my $status = $bouncer->status( $address );
-		my $reason = $bouncer->reason( $address );
-		$obj->set($address, $status);
+	    # save info into cache
+	    if (defined $obj) {
+		$obj->set($address, "$time status=$status");
 	    }
 	}
     };
@@ -238,7 +237,7 @@ sub finish
 #    Arguments: OBJ($cuproc)
 # Side Effects: none
 # Return Value: OBJ
-sub __open_cache
+sub _error_open_cache
 {
     my ($curproc) = @_;
     my $config = $curproc->{ config };
@@ -259,6 +258,51 @@ sub __open_cache
 
     return undef;
 }
+
+
+sub __deluser
+{
+    my ($curproc, $address) = @_;
+    my $config  = $curproc->{ config };
+    my $ml_name = $config->{ ml_name }; 
+
+    # arguments to pass off to each method
+    my $method       = 'unsubscribe';
+    my $command_args = {
+        command_mode => 'admin',
+        comname      => $method,
+        command      => "$method $address",
+        ml_name      => $ml_name,
+        options      => undef,
+        argv         => undef,
+        args         => undef,
+    };
+
+    # here we go
+    require FML::Command;
+    my $obj = new FML::Command;
+
+    if (defined $obj) {
+        # execute command ($comname method) under eval().
+        eval q{
+            $obj->$method($curproc, $command_args);
+        };
+        unless ($@) {
+            ; # not show anything
+        }
+        else {
+            my $r = $@;
+            LogError("command $method fail");
+            LogError($r);
+            if ($r =~ /^(.*)\s+at\s+/) {
+                my $reason = $1;
+                Log($reason); # pick up reason
+                croak($reason);
+            }
+        }
+    }
+}
+
 
 
 =head1 AUTHOR
