@@ -1,0 +1,25 @@
+<!-- ============================================== -->
+<sect1>
+   <title>
+   NT porting:  エミュレーション
+   </title>
+
+<para>
+tail コマンド
+fork() と alarm()
+</para>
+
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+    NT porting: exchange ?
+   </title>
+
+<para>
+http://www.microsoft.com/japan/backoffice/exchange/DeployAdmin/eventscr.htm
+</para>
+
+</sect1>

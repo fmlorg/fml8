@@ -1,0 +1,125 @@
+<!--
+   $FML$
+-->
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+    makefml (bye|chaddr|?) address(regexp)
+   </title>
+
+<para>
+fml-support: 07101,07104
+</para>
+
+<para>
+Incomplete but effective fix is done.  We should rewrite address match
+routine.
+</para>
+
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+   makefml add ML addr options ?
+   </title>
+<para>
+% makefml add ML addr s=skip 
+</para>
+</sect1>
+
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+   makefml $DEFAULT_DIR_MODE in it
+   </title>
+
+<para>
+makefml 内での $DEFAULT_DIR_MODE の取り扱い
+</para>
+
+<para>
+fml-support: 06899
+</para>
+
+<para>
+newml 実行時ってのとき、spool や tmp や var って
+まとめて作ってしまうんでしたっけ? (覚えてない)
+spool  だけはつくられていますねぇ…(lockのため)。
+
+mkdir(ディレクトリ) でよびだすところはほとんどないんですが、
+ここで stat(2)して mode が $DEFAULT_DIR_MODE か否か見て
+もし違ってたら$DEFAULT_DIR_MODEになおすといいかな…と一瞬おもったけど
+意図的にchmodしててもこれに戻されちゃうとかあって問題だろうなぁ
+</para>
+
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+   makefml mkdir()
+   </title>
+
+<para>
+fml-support:6899
+3016:  &amp;Mkdir($dir);
+4817:      $s .= "-d \$$_ || &amp;Mkdir(\$$_); \$$_ =~ s#$DIR/##g;\n";
+</para>
+
+</sect1>
+
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+    makefml controls @*Procedure, %LocalProcedure ?
+   </title>
+
+<para>
+fml-support: 07525
+</para>
+
+</sect1>
+
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+   makefml remove-article 必要か？
+   </title>
+
+<para>
+makefml remove-article ってあるべ？そんなに需要がありますか？
+（ fml-support: 7790 ）
+</para>
+
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+   makefml: あるアドレスが所属しているMLを表示させるには?
+   </title>
+
+<para>
+grep
+</para>
+
+<para>
+でも fmlserv でできるのもなんなので、
+"grep アドレス /var/spool/ml/*/members"する admin コマンドを定義して
+(とてもおそいんじゃないだろうかつぅか:-)
+fmlserv じゃない別の admin ML でやるとかのほうが建設的な感じがするなぁ
+</para>
+
+</sect1>

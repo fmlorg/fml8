@@ -1,0 +1,307 @@
+<!--
+   $FML$
+-->
+
+<chapter id="misc">
+   <title>
+    解決が望まれるもの
+   </title>
+
+&sect.makefml;
+&sect.filter;
+&sect.html;
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+   モデレータモードとexpire
+   </title>
+<para>
+fml-support ML's Count: 05639
+
+って終ったんじゃないの？（嘘？）
+</para>
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+    Subject: unsubscribe で自動削除?
+   </title>
+
+<para>
+もともとの設問の意図が「そういう一行メールが多いので、こういうときは自
+動的にTRAPして削除処理をしよう」っていう変数があるとしあわせ？
+そんな気がするよね〜 :-)
+</para>
+
+<para>
+これがデフォルトはまずいとおもうんだが、オプショナルならOK？
+では、コマンドメールとはっきりしていれば OK ？
+</para>
+
+</sect1>
+
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+   Subject: Welcome を MesgLE() で再実装
+   </title>
+
+<para>
+いまでは MesgLE() をつかって再実装するべきだ。
+しかし $WELCOME_STATEMENT があるのに、今更こうするのはむずかしくないか？
+</para>
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+    chkerror を組み込む
+   </title>
+
+<para>
+Author: i16@forest.ne.jp 。
+package としてくみこむ作業がのこってる
+</para>
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+    msend.pl should not do tr/A-Z/a-z/
+   </title>
+
+<para>
+fml-support: 07262
+</para>
+
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+   chaddr reply の To: Cc:
+   </title>
+
+<para>
+chaddrのレポートメールの To: CC: にuniqかける
+</para>
+
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+   HELP ファイル
+   </title>
+
+<para>
+ヘルプファイルについて、
+mnews ML 版とうまくマージすること
+</para>
+
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+   [認証] $SENDER_AUTH_TYPE
+   </title>
+
+<para>
+$SENDER_AUTH_TYPE = address / pgp
+</para>
+
+<para>
+S/MIME
+</para>
+
+</sect1>
+
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+   ネーミングコンベンション
+   </title>
+
+<para>
+personal, group の名前？  share が適当?
+</para>
+
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+   ファイル操作
+   </title>
+
+<para>
+fml-support: 5564 
+</para>
+
+<para>
+tar.gz の中に spool/file tmp/spool/file が混在する問題
+but ファイル操作の link(2) version がのぞましい。
+</para>
+
+<para>
+NT4 はだめだが NT5 fs には link(2)はある。
+NT4 については対応を見捨てても良いだろう。
+つまり tmp/spool spool/混在可のまま。
+それに tar.gz つかってるかねぇっていうとつかってないよねぇ…
+</para>
+
+</sect1>
+
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+    RFC1153
+   </title>
+
+<para>
+何が正しいのか良く分からない
+</para>
+
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+    かるいまとめおくり？
+   </title>
+
+<para>
+必要かしら？
+</para>
+
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+   PGP
+   </title>
+
+<para>
+<screen>
+PGP 6
+OpenPGP ...
+GNU Privacy Gaurd
+RFC2015 ?
+</screen>
+</para>
+
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+    ヘッダ
+   </title>
+
+<para>
+fml-support: 05843
+<screen>
+MANY MANY "; post only (only members can post)"  ...
+</screen>
+</para>
+
+
+<para>
+Received: handling rule for each distributing article and Saved file
+</para>
+
+<para>
+$REWRITE_TO not number value
+</para>
+
+
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+   アドレス一括書き換えコマンド？
+   </title>
+
+<para>
+アドレス一括書き換えするコマンド？
+</para>
+
+<para>
+<screen>
+admin rewrite s/domain-A/domain-B/ 
+</screen>
+とかか？
+</para>
+
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+    Makefile 再生成
+   </title>
+
+<para>
+fml-support: 07525
+</para>
+
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+   cf/MANIFEST.obsolete
+   </title>
+
+<para>
+必要か？
+</para>
+
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+   コマンド依存の help ? 
+   </title>
+
+<para>
+そら、むずかしいーなー
+(fml-support: 07525)
+</para>
+
+</sect1>
+
+
+
+&sect.cgi;
+&sect.port;
+
+
+</chapter>

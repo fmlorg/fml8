@@ -1,0 +1,147 @@
+<!-- ============================================== -->
+<sect1>
+   <title>
+   remove @elena again where @elena already exists
+   </title>
+
+<para>
+すでに @elena があれば
+<screen>
+	if (-d @elena) { rename(@elena, @elena.日付.$$);}
+	rename( elena, @elena )
+</screen>
+をする？
+rm -fr でちゃれんじ…してもいいけど、失敗するとこわい〜ん;_;
+</para>
+
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+   qmail と CGI でＭＬの作成 
+   </title>
+
+<para>
+てづかず 
+</para>
+
+<para>
+例:  FreeBSD + Apache + qmail  で、Rootの権限が無い場合
+<unlink url="http://www.nmt.ne.jp/~myone/fml.shtml"
+http://www.nmt.ne.jp/~myone/fml.shtml
+</ulink>
+</para>
+
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+   script 一発インストーラ (きめうち)
+   </title>
+
+<para>
+<screen>
+	postfix  + apache + fml-current
+	sendmail + apache + fml-current
+	qmail    + apache + fml-current
+</screen>
+</para>
+
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+   modify file (e.g. help) by CGI ?
+   </title>
+
+<para>
+だめ？
+</para>
+
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+   右から左のメニューへ update があがってない
+   </title>
+
+<para>
+fml-support: 08449
+</para>
+
+
+<para>
+右の画面の newml の結果が出る時に左のメニュバーのフレームに強制的に 
+TARGET 指定をして reload はできないのか？
+</para>
+
+<para>
+規格的にはできなさそうだけど… 
+全体を一括管理されたものとかにしてゴリゴリしないとだめなのか？
+</para>
+
+<para>
+たぶん間違いなくだめ、他の技を考えるように
+うーん、でも Java Script とか実装依存ぽいのは考えたくないねぇ
+それよりは table でなんとかならんかなとかとにかく
+HTML 規格にあるものでなんとか〜
+</para>
+
+
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+   ML を消したら対応する authdb/ml-admin/$ml/ 以下も消す
+   </title>
+
+<para>
+ML を消したら対応する authdb/ml-admin/$ml/ 以下も消す
+</para>
+
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+   apache with SSL の解説の用意をする
+   </title>
+
+<para>
+でもあるから、いいよね？ たとえば
+<screen>
+http://www.apache.org/dist/Announcement.html
+http://www.cert.org/advisories/CA-2000-02.html
+http://www.apache.org/info/css-security/index.html
+</screen>
+</para>
+
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+   ACL model
+   </title>
+
+<para>
+ML名つきで、その下のアクセス権限は各 ML ごとに自由に変更できないといけない
+</para>
+
+<para>
+一般ユーザ用のWWWアクセスモデルの構築も必要
+</para>
+
+</sect1>

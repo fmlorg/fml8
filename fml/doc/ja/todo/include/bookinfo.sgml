@@ -1,11 +1,11 @@
 <!--
-	$FML: bookinfo.sgml,v 1.1 2001/04/24 06:51:59 fukachan Exp $
+	$FML: bookinfo.sgml,v 1.1.1.1 2001/05/19 05:14:57 fukachan Exp $
 -->
 
   <bookinfo>
   <bookbiblio>
     <title>
-	fml-devel (fml 5.0) TODO list
+	fml project TODO list (fml 4.0 and 5.0) 
     </title>
 
     <author>

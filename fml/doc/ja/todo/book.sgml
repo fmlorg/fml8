@@ -2,7 +2,7 @@
 This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
 to generate various output formats.
 
-$FML: book.sgml,v 1.1.1.1 2001/05/19 05:14:57 fukachan Exp $
+$FML: book.sgml,v 1.2 2001/05/19 05:50:39 fukachan Exp $
 -->
 
 <!doctype book public "-//FML//DTD DocBook V3.1-Based Extension//EN" [
@@ -15,7 +15,6 @@ $FML: book.sgml,v 1.1.1.1 2001/05/19 05:14:57 fukachan Exp $
 
   <toc></toc>
 
-<!--
   <part>
 	<title> 4.0 TODO </title>
 	<partintro>
@@ -25,12 +24,13 @@ $FML: book.sgml,v 1.1.1.1 2001/05/19 05:14:57 fukachan Exp $
 	管理の都合上 5.0 branch で保守します。
 	</para>
 	</partintro>
-	&chapter.overview;
+	&chapter.fml4;
+	&chapter.misc;
+	&chapter.fml4to5;
   </part>
--->
 
   <part>
-	<title> 4.0 から 5.0 へマージするべきもの TODO </title>
+	<title> 4.0 から 5.0 へマージするべきもの </title>
 	<partintro>
 	<para>
 	fml 5.0 での TODO リストです。

@@ -1,0 +1,56 @@
+<!--
+   $FML$
+-->
+
+<chapter id="fml4to5">
+
+<title> fml 5.0 では解決したが、4.0 ではどうする？ </title>
+
+<sect1>
+<title> より賢いアップグレード法 </title>
+
+<para>
+fml の入れ換え中に mail が送られてきても大丈夫なようにならないか?
+/etc/fml/main.cf で切替えることにより fml-devel では可能となっている。
+</para>
+
+<para>
+postfix の $smtpd_recipient_restriction とよろしくやる。
+fml-devel ではこの動作がデフォルトなので、done.
+</para>
+
+</sect1>
+
+
+<sect1>
+<title> トラブルチケットシステム </title>
+
+<para>
+原始的なものはすでに完了している。 
+</para>
+
+<para>
+その他の情報については：
+
+<ulink url="http://www.fsck.com/projects/rt/">
+http://www.fsck.com/projects/rt/
+</ulink>
+
+<ulink url="http://sourceforge.net/">
+http://sourceforge.net/
+</ulink>
+
+<ulink url="http://freshmeat.net/">
+http://freshmeat.net/
+</ulink>
+
+<ulink url="http://linas.org/linux/pm.html">
+http://linas.org/linux/pm.html
+</ulink>
+
+</para>
+
+</sect1>
+
+
+</chapter>

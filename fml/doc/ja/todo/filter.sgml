@@ -1,0 +1,41 @@
+<!-- ============================================== -->
+<sect1>
+   <title>
+   Content Hanlder ちょっと変
+   </title>
+
+<para>
+Content Hanlder ちょっと変 (allow+multipartの時だけ?)
+あーでも、そんなことないかも…
+</para>
+
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+   間違いメールのフィルタリング
+   </title>
+
+<para>
+1バイト2バイトいりみだれ文字列ははじけない "chａddr"
+</para>
+
+<para>
+２バイトはじきすぎ問題
+</para>
+
+<para>
+fml-support: 7155
+<screen>
+# mget 6869,6870,6880,6908-6917,6970,6992,6994 unpack
+# end
+</screen>
+</para>
+
+<para>
+# unsubscribe xxx@aa.bb.co.jp
+</para>
+
+</sect1>

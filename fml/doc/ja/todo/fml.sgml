@@ -1,0 +1,76 @@
+<!--
+   $FML$
+-->
+
+<chapter id="fml4.todo">
+
+<title> fml 4.0 current </title>
+
+<para>
+なるべくはやくかんがえるべきもの？
+</para>
+
+<para>
+やり残し、やろうかなとおもってること
+(誰かすでにやってたらパッチ下さい)
+</para>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
+   spool2html
+   </title>
+
+<para>
+fml-suppport: 07638
+</para>
+
+<para>
+ソートは stat(2) の結果をつかうけど、表面的な Date: くらいはファイルの
+中からひろいあげるべき
+</para>
+
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title> RDBMS </title>
+
+<para>
+toy model でテーブルが一つのもの ( members == actives ) 
+</para>
+
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+<title> mget "uu" mode </title>
+
+<para>
+mget の uu って何か空行が足りなくないかい？
+</para>
+</sect1>
+
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>admin add </title>
+
+<para>
+Q: ML管理者からリモートでメンバー登録 admin add した時に返される
+   Welcome メールで、そのメールの Reply-To: のみを $MAIL_LIST に変更したい
+</para>
+
+<para>
+HOOK でいじればできるようなきはするけど、
+それよりデフォールトをそう変更した方がいいんだよね？
+</para>
+
+</sect1>
+
+
+</chapter>

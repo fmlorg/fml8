@@ -1,16 +1,62 @@
 <!--
-	$FML: install.sgml,v 1.1.1.1 2001/04/26 13:31:36 fukachan Exp $
+	$FML: devel.sgml,v 1.1 2001/05/19 05:50:39 fukachan Exp $
 -->
 
-<chapter id="todo">
+<chapter id="fml5.todo">
 
-<title> TODO </title>
+<title> 5.0 </title>
 
+
+<!-- ============================================ -->
 <sect1>
-<title> TODO </title>
+<title> 配送関係 </title>
+
 <para>
-not yet
+smtpfeed を直接叩きたい。
+エラーの場合は、SMTP に処理を切替える。
+</para>
+
+</sect1>
+
+
+<!-- ============================================ -->
+<sect1>
+   <title>
+   MIMEライブラリーの書きなおし
+   </title>
+<para>
+特に base64 encoder 。RFC2047準拠ではヨーロッパ系言語以外では矛盾があ
+る。それを考慮すること
+</para>
+
+<para>
+fml-support:05948 を参照
+</para>
+
+</sect1>
+
+
+<!-- ============================================ -->
+<sect1>
+   <title>
+   エラーアドレスの自動削除のためにより賢いパーサを
+   </title>
+
+<para>
+mead の改造
 </para>
 </sect1>
+
+
+<!-- ============================================ -->
+<sect1>
+   <title> より統合されたパッケージ </title>
+
+<para>
+サーチエンジンとのよりよい連携(?)
+</para>
+
+</sect1>
+
 
 </chapter>
