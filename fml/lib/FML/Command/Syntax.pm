@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.8 2004/01/01 07:29:27 fukachan Exp $
+# $FML: Syntax.pm,v 1.1 2004/04/28 04:10:35 fukachan Exp $
 #
 
 package FML::Command::Syntax;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Syntax - shared command syntax checker
+FML::Command::Syntax - common command syntax checker.
 
 =head1 SYNOPSIS
 
@@ -40,7 +40,7 @@ sub check_syntax_address_handler
     my $comname    = $command_args->{ comname }    || '';
     my $comsubname = $command_args->{ comsubname } || '';
     my $options    = $command_args->{ options }    || [];
-    my @test       = ($comname);
+    my (@test)     = ($comname);
     my $ok         = 0;
 
     # XXX Let original_command be "admin subscribe ADDRESS".
