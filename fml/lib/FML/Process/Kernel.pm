@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.116 2002/07/19 03:11:36 fukachan Exp $
+# $FML: Kernel.pm,v 1.117 2002/07/23 13:16:43 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -857,8 +857,10 @@ sub reply_message
     my $myname = $curproc->myname();
 
     # XXX makefml not support message handling not yet.
-    return if $myname eq 'makefml';
-    return if $myname =~ /\.cgi$/;
+    if ($myname eq 'makefml' || $myname =~ /\.cgi$/) {
+	LogWarn("$myname disables reply_message()");
+	return;
+    }
 
     my $recipient = [ $curproc->{ credential }->sender() ];
 
