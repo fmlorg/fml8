@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.2 2002/08/08 03:02:49 fukachan Exp $
+# $FML: Error.pm,v 1.3 2002/08/09 08:37:24 fukachan Exp $
 #
 
 package FML::Error;
@@ -72,17 +72,30 @@ sub md_analyze
     my ($self, $curproc, $data) = @_;
     my ($addr, $bufarray, $count);
     my @removelist = ();
+    my $debug      = {};
 
     while (($addr, $bufarray) = each %$data) {
 	$count = 0;
 	if (defined $bufarray) {
 	    for my $buf (@$bufarray) {
-		$count++;
+		if ($buf =~ /status=5/i) {
+		    $count++;
+		    $debug->{ $addr } = $count;
+		}
 	    }
 	}
 
 	if ($count > 5) {
 	    push(@removelist, $addr);
+	}
+    }
+
+    # debug info
+    {
+	Log("analyze summary");
+	my ($k, $v);
+	while (($k, $v) = each %$debug) {
+	    Log("summary: $k = $v points");
 	}
     }
 
