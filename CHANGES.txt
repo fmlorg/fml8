@@ -3,12 +3,22 @@
 
 2001/10/21
 
+   makefml htmlify $ml_name outdir=$out_dir
+
+	スプールを HTML 化するコマンド
+	もちろん Mail::HTML::Lite を利用する。
+	＃ fml 4 の spool2html に対応するものといえよう
+
    Mail::HTML::Lite 
 	月ごとの ID インデックスも作る (TABLE)。
 	make monthly index always
 		monthly_index.html
 		month.YYYYMM.html
 
+	prepare top level entrance functions:
+		htmlify_file() for file
+		htmlify_dir()  for directory
+	
 	clean up codes, documents
 	
 	implement _print_index_{begin,end}() and modified to use them
@@ -663,4 +673,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.23 2001/10/21 07:51:19 fukachan Exp $
+$FML: CHANGES.txt,v 1.24 2001/10/21 08:02:08 fukachan Exp $
