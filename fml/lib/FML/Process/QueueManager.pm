@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.31 2004/12/05 16:19:11 fukachan Exp $
+# $FML: QueueManager.pm,v 1.32 2004/12/15 13:51:31 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -125,7 +125,7 @@ sub send
 		    $count_ok++;
 		}
 		else {
-		    $curproc->logwarn("qmgr: qid=$qid try later.");
+		    $curproc->logdebug("qmgr: qid=$qid try later.");
 		    $q->unlock();
 		    $q->sleep_queue();
 		    $is_locked = 0;
