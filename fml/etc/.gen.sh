@@ -13,6 +13,7 @@ test -f $jatmp || rm -f $jatmp
 cat defaults/Configurations | while read file 
 do
 	cat defaults/$file.ja >> $jatmp
+	echo "" >> $jatmp
 done
 
 mv $jatmp default_config.cf.ja
