@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Base.pm,v 1.10 2002/04/23 09:31:37 fukachan Exp $
+# $FML: Base.pm,v 1.11 2002/06/22 14:22:44 fukachan Exp $
 #
 
 package FML::Restriction::Base;
@@ -95,8 +95,9 @@ my %basic_variable =
      'article_id'        => '\d+',
 
      # file, directory et.al.
-     'directory'         => '[-a-zA-Z0-9]+',
-     'file'              => '[-a-zA-Z0-9]+',
+     'directory'         => '[-a-zA-Z0-9_]+',
+     'file'              => '[-a-zA-Z0-9_]+',
+     'map'               => '[-a-zA-Z0-9_]+',
      );
 
 
