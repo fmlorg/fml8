@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.6 2002/06/30 14:30:15 fukachan Exp $
+# $FML: Postfix.pm,v 1.7 2002/07/12 15:03:27 fukachan Exp $
 #
 
 package FML::MTAControl::Postfix;
@@ -186,8 +186,14 @@ sub postfix_get_aliases_as_hash_ref
 	$maps = [ $alias_file ];
     }
 
+  MAP:
     for my $map (@$maps) {
 	print STDERR "scan key = $key, map = $map\n" if $debug;
+
+	if ($map =~ /^\w+:/) {
+	    print STDERR "* ignored $map\n";
+	    next MAP;
+	}
 
 	use FileHandle;
 	my $fh = new FileHandle $map;
@@ -227,12 +233,12 @@ sub postfix_alias_maps
     my $config = $curproc->{ config };
     my $prog   = $config->{ path_postconf };
 
-
     my $maps   = `$prog alias_maps`;
     $maps      =~ s/,/ /g;
-    $maps      =~ s/\s+\w+:/ /g;
+    $maps      =~ s/\s+hash:/ /g;
+    $maps      =~ s/\s+dbm:/ /g;
     $maps      =~ s/^.*=\s*//;
-    chomp $maps;
+    $maps      =~ s/[\s\n]*$//;
 
     my (@maps) = split(/\s+/, $maps);
     return \@maps;
