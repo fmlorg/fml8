@@ -11,7 +11,7 @@ Crypt-RandPasswd		0.02		perl itself
 Crypt-TripleDES			0.24		perl itself
 Crypt-UnixCrypt			1.0		perl itself
 
-File-Spec			0.82		perl itself
+File-Spec			0.85_03		perl itself
 File-MMagic			1.16		bsd + apache ?
 
 HTML-CalendarMonthSimple	1.02		? (freesoftware, unlimited)
@@ -43,4 +43,4 @@ Text-CSV			0.01		perl itself
 
 Unicode-Japanese		0.09		perl itself
 
-$FML: MANIFEST,v 1.8 2002/07/10 14:02:12 fukachan Exp $
+$FML: MANIFEST,v 1.9 2002/12/09 14:09:01 fukachan Exp $
