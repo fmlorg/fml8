@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML$
+# $FML: Queue.pm,v 1.1 2001/05/06 12:56:22 fukachan Exp $
 #
 
 package Mail::Message::Queue;
@@ -18,22 +18,45 @@ Mail::Message::Queue - hashed directory holding queue files
 
 =head1 SYNOPSIS
 
+    use Mail::Message;
+    $msg = new Mail::Message;
+
+    use Mail::Message::Queue;
+    my $queue = new Mail::Message::Queue { directory => "/some/where" };
+
+    # queue in a new message 
+    # "/some/where/new/$queue_id" is created.
+    $queue->in( $msg ) || croak("fail to queue in");
+
+    # ok to deliver this queue !
+    $queue->activate() || croak("fail to activate queue");
+
 =head1 DESCRIPTION
+
+C<Mail::Message::Queue> provides basic manipulation of mail queue.
 
 =head1 DIRECTORY STRUCTURE
 
-create a new queue id and file (C<$qid>).
+C<new()> method assigns a new queue id C<$qid> and filename C<$qf> but
+not do actual works.
 
-   new/$qid
+C<in()> method creates a new queue file C<$qf>. So, C<$qf> follows:
 
-To permit to be deliverd, move the queue file from new/ to active/ by
-C<rename(2)>.
+   $qf = "$queue_dir/new/$qid"
 
-   active/$qid
+When C<$qid> is prepared to be deliverd, you must move the queue file
+from new/ to active/ by C<rename(2)>. You can do it by C<activate()>
+method.
+
+   $queue_dir/new/$qid  --->  $queue_dir/active/$qid
 
 =head1 METHODS
 
 =head2 C<new($args)>
+
+constructor. You must specify $args->{ dirctory } (C<queue directory>).
+C<new()> assigns the queue id, queue files to be used but do no actual
+works.
 
 =cut
 
@@ -52,7 +75,7 @@ sub new
     $me->{ _new_qf }    = "$dir/new/$id";
     $me->{ _active_qf } = "$dir/active/$id";
 
-    for ($dir, "$dir/active", "$dir/new") {
+    for ($dir, "$dir/active", "$dir/new", "$dir/deferred") {
 	-d $_ || _mkdirhier($_);
     }
 
@@ -77,7 +100,7 @@ sub _new_queue_id
 
 =head2 C<id()>
 
-return the quque id assigned to the object.
+return the queue id assigned to the object C<$self>.
 
 =cut
 
@@ -88,13 +111,13 @@ sub id
 }
 
 
-=head2 C<queue_file()>
+=head2 C<filename()>
 
-return the file name of the quque id assigned to the object.
+return the file name of the quque id assigned to the object C<$self>.
 
 =cut
 
-sub queue_file
+sub filename
 {
     my ($self) = @_;
     -f $self->{ _active_qf } ? $self->{ _active_qf } : undef;
@@ -103,7 +126,13 @@ sub queue_file
 
 =head2 C<in($msg)>
 
-C<$msg> is C<Mail::Message> object.
+You specify C<$msg>, which is C<Mail::Message> object.
+C<in()> creates a queue file in C<new/> directory 
+(C<queue_directory/new/>.
+
+If you not C<activate()> it, the queue file is removed by
+C<DESTRUCTOR>. 
+C<REMEMBER YOU MUST ACTIVATE THE QUEUE>.
 
 =head2 C<activate()>
 
