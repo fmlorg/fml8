@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #
-# $FML: Date.pm,v 1.18 2003/01/11 15:16:35 fukachan Exp $
+# $FML: Date.pm,v 1.19 2003/01/26 03:23:10 fukachan Exp $
 #
 
 package Mail::Message::Date;
@@ -290,6 +290,10 @@ sub date_to_unixtime
     my ($shift, $shift_t, $shift_m);
     my (%month);
     my ($zone);
+
+    # cheap sanity, but ok?;)
+    return 0 unless defined $in;
+    return 0 unless $in;
 
     # XXX-TODO: method-ify date_to_unixtime() ?
     # XXX-TODO: more documents

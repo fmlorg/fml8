@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.36 2003/01/11 16:05:16 fukachan Exp $
+# $FML: Subject.pm,v 1.37 2003/01/28 08:58:22 fukachan Exp $
 #
 
 package FML::Header::Subject;
@@ -118,9 +118,11 @@ sub decode
 
     # for example, ml_name = elena
     # if $tag has special regexp such as \U$ml_name\E or \L$ml_name\E
-    if ($tag =~ /\\E/o && $tag =~ /\\U|\\L/o) {
-	eval qq{ \$tag = "$tag";};
-	Log($@) if $@;
+    if (defined $tag) {
+	if ($tag =~ /\\E/o && $tag =~ /\\U|\\L/o) {
+	    eval qq{ \$tag = "$tag";};
+	    Log($@) if $@;
+	}
     }
 
     # XXX-TODO: care for not Japanese !
@@ -198,19 +200,24 @@ sub _regexp_compile
 {
     my ($s) = @_;
 
-    $s = quotemeta( $s );
-    $s =~ s@\\\%@\%@g;
-    $s =~ s@\%s@\\S+@g;
-    $s =~ s@\%d@\\d+@g;
-    $s =~ s@\%0\d+d@\\d+@g;
-    $s =~ s@\%\d+d@\\d+@g;
-    $s =~ s@\%\-\d+d@\\d+@g;
+    if (defined $s) {
+	$s = quotemeta( $s );
+	$s =~ s@\\\%@\%@g;
+	$s =~ s@\%s@\\S+@g;
+	$s =~ s@\%d@\\d+@g;
+	$s =~ s@\%0\d+d@\\d+@g;
+	$s =~ s@\%\d+d@\\d+@g;
+	$s =~ s@\%\-\d+d@\\d+@g;
 
-    # quote for regexp substitute: [ something ] -> \[ something \]
-    # $s =~ s/^(.)/quotemeta($1)/e;
-    # $s =~ s/(.)$/quotemeta($1)/e;
+	# quote for regexp substitute: [ something ] -> \[ something \]
+	# $s =~ s/^(.)/quotemeta($1)/e;
+	# $s =~ s/(.)$/quotemeta($1)/e;
 
-    return $s;
+	return $s;
+    }
+    else {
+	return '';
+    }
 }
 
 
