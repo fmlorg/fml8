@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.106 2004/05/22 02:42:39 fukachan Exp $
+# $FML: Command.pm,v 1.107 2004/05/25 03:39:00 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -170,7 +170,7 @@ sub _check_filter
     };
     $curproc->log($@) if $@;
 
-    my $eval = $config->get_hook( 'command_mail_filter_end_hook' );
+    $eval = $config->get_hook( 'command_mail_filter_end_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
