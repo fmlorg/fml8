@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: HeaderCheck.pm,v 1.2 2001/03/30 12:57:18 fukachan Exp $
+# $FML: HeaderCheck.pm,v 1.3 2001/08/05 13:55:05 fukachan Exp $
 #
 
 package FML::Filter::HeaderCheck;
@@ -42,11 +42,11 @@ sub new
 
 
 
-=head2 C<header_loop_check($curproc, $args)>
+=head2 C<header_check($curproc, $args)>
 
 entrance to the header check routines.
 C<fml process> to need this function kicks off fileter rules 
-through C<header_loop_check()>.
+through C<header_check()>.
 
 Filter rules are applied to the incoming message from STDIN, 
 
@@ -55,14 +55,13 @@ Filter rules are applied to the incoming message from STDIN,
 =cut
 
 
-sub header_loop_check
+sub header_check
 {
     my ($self, $curproc, $args) = @_;
     my $msg  = $curproc->{'incoming_message'};
 
     eval q{
 	$self->is_valid_message_id($curproc, $args, $msg);
-
     };
 
     if ($@) {
