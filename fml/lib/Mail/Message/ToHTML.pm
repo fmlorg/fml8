@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.41.2.12 2003/06/15 01:34:17 fukachan Exp $
+# $FML: ToHTML.pm,v 1.41.2.13 2003/06/15 01:50:33 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -13,11 +13,11 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
 my $is_strict_warn = 0;
-my $debug = 1;
+my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.41.2.12 2003/06/15 01:34:17 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.41.2.13 2003/06/15 01:50:33 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -2174,8 +2174,10 @@ if ($0 eq __FILE__) {
     };
 
     eval q{
+	my ($t, $time_b, $time_e);
 	for my $x (@ARGV) {
-	    print STDERR "processing $x ... \n";
+	    $time_b = time;
+	    print STDERR "debug.main processing $x ...";
 
 	    if (-f $x) {
 		eval q{
@@ -2200,6 +2202,9 @@ if ($0 eq __FILE__) {
 		    db_name     => "elena",
 		});
 	    }
+
+	    $t = time - $time_b;
+	    print STDERR "\t$t sec.\n";
 	}
 	print STDERR "done.\n";
     };

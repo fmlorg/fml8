@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.1.2.10 2003/06/15 01:34:16 fukachan Exp $
+# $FML: DB.pm,v 1.1.2.11 2003/06/15 08:00:57 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -21,10 +21,10 @@ use lib qw(../../../../fml/lib
 	   ../../../../img/lib
 	   );
 
-my $version = q$FML: DB.pm,v 1.1.2.10 2003/06/15 01:34:16 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.1.2.11 2003/06/15 08:00:57 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
-my $debug = 1;
+my $debug = 0;
 
 my $is_keepalive = 1;
 
