@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.76 2002/12/24 10:08:54 fukachan Exp $
+# $FML: Command.pm,v 1.77 2002/12/24 10:19:46 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -453,7 +453,8 @@ sub _get_command_mode
     # XXX-TODO: If so, we should check $command =~ /^$confirm_prefix\s+/ ?
     # XXX-TODO: it is easy for us not to use regexp in this case?
 
-    # Case: "confirm" command.
+    # Case: "confirm" command. For examle, "confirm ..." or "> confirm ...",
+    #        we need to trap all cases including confirm keyword.
     #        It is exceptional so that a stranger can use.
     #        We need to validate commands except for "confirmation"
     #        if $confirm_id is 1, this message must be confirmation reply.
@@ -463,7 +464,11 @@ sub _get_command_mode
 	$command =~ s/^.*$comname/$comname/; # normalize $command
 	my $opts = { comname => $comname, command => $command };
 
-	# $config permits this command for a stranger?
+	# 1. $config permits this command for a stranger?
+	# 2. This condition permits "confirm" command for a member,
+	#    since $commands_for_stranger contains "confirm" command :-)
+	#    It is effective but wrong since we set $level = stranger
+	#    though we should set up $level = user.
 	if ($curproc->_config_permit_command($args, "stranger", $opts)) {
 	    $status->{ mode }  = 'user';
 	    $status->{ level } = 'stranger';
@@ -536,7 +541,8 @@ sub _get_command_mode
 	    return '__LAST__';
 	}
     }
-    # ignore all requests
+    # ignore all requests except for confirm command
+    # when we receive "confirm" command for better security.
     elsif ($is_confirm) {
 	Log("ignore(confirm stage): $command");
 	return '__NEXT__';
@@ -587,7 +593,7 @@ sub _get_command_mode
 #               HASH_REF($args) HASH_REF($status) HAS_REF($command_info)
 # Side Effects: none
 # Return Value: NUM
-sub _allow_command
+sub _config_allow_command
 {
     my ($curproc, $mode, $status, $command_info) = @_;
     my $comname = $command_info->{ comname };
@@ -756,7 +762,7 @@ sub _evaluate_command_lines
 	}
 
 	# 2. check $level if this command is allowed in the current $mode ?
-	unless ($curproc->_allow_command($mode, $status, $cominfo)) {
+	unless ($curproc->_config_allow_command($mode, $status, $cominfo)) {
 	    $curproc->reply_message_nl("command.deny",
 				    "\tyou cannot use this command.");
 	    Log("(debug) ignore $fixed_command");
