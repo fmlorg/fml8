@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: BodyCheck.pm,v 1.1.1.1 2001/03/28 15:13:31 fukachan Exp $
+# $FML: BodyCheck.pm,v 1.2 2001/03/30 09:18:43 fukachan Exp $
 #
 
 package FML::Filter::BodyCheck;
@@ -87,16 +87,124 @@ sub body_check
     $self->clean_up_buffer($m);
 
     ## 6. main fules
-    my $rules = '';
-    for $rules (
+    for my $rule (
 		'reject_not_iso2022jp_japanese_string',
 		'reject_null_mail_body',
 		) {
-	if ($self->can($method)) {
-	    $self->$method($curproc, $args, $m);
+	if ($self->can($rule)) {
+	    $self->$rule($curproc, $args, $m);
 	}
 	else {
-	    LogWarn("no such method $method");
+	    LogWarn("no such rule $rule");
+	}
+    }
+}
+
+
+sub reject_not_iso2022jp_japanese_string
+{
+    use FML::Language::ISO2022JP;
+    not is_iso2022jp_string();
+}
+
+
+sub reject_null_mail_body
+{
+    my $m;
+    $m->is_empty;
+}
+
+
+# Descriptions: virus check against some types of M$ products
+#               Even if Multipart, evaluate all blocks agasint virus checks.
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub reject_virus_message
+{
+    # &use('viruschk');
+    # my ($xr);
+    # $xr = &VirusCheck(*e);
+}
+
+
+# Descriptions: e.g. "unsubscribe", "help", ("subscribe" in some case)
+#               XXX DO NOT INCLUDE ".", "?" (I think so ...)! 
+#               XXX but we need "." for mail address syntax 
+#               XXX e.g. "chaddr a@d1 b@d2".
+#               If we include them, 
+#               we cannot identify a command or an English phrase ;D
+# Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub reject_one_line_message
+{
+    my $buf;
+
+    if ($buf =~ /^[\s\n]*[\s\w\d:,\@\-]+[\n\s]*$/) {
+	croak "one line mail body";
+    }
+}
+
+
+# Descriptions: 
+#              XXX fml 4.0: fml.pl (distribute) should not accpet commands 
+#              XXX: "# command" is internal represention
+#              XXX: but to reject the old compatible syntaxes.
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub reject_old_fml_command_syntax
+{
+    my $buf;
+
+    if ($buf =~ /^[\s\n]*(\#\s*[\w\d\:\-\s]+)[\n\s]*$/) {
+	my $r = $1; 
+	$r =~ s/\n//g;
+	$r = "avoid to distribute commands [$r]";
+	croak $r;
+    }
+}
+
+
+sub reject_invalid_fml_command_syntax
+{
+    my $buf;
+
+    if ($buf =~ /^[\s\n]*\%\s*echo.*/i) {
+	croak "invalid command in the mail body";
+    }
+}
+
+
+# Descriptions: reject Japanese command syntax
+#                JIS: 2 byte A-Z => \043[\101-\132]
+#                JIS: 2 byte a-z => \043[\141-\172]
+#                EUC 2-bytes "A-Z" (243[301-332])+
+#                EUC 2-bytes "a-z" (243[341-372])+
+#                e.g. reject "SUBSCRIBE" : octal code follows:
+#                243 323 243 325 243 302 243 323 243 303 
+#                243 322 243 311 243 302 243 305
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub reject_japanese_command_syntax
+{
+    my $buf;
+
+    if ($buf =~ /\033\044\102(\043[\101-\132\141-\172])/) {
+	# trap /JIS"2byte"[A-Za-z]+/
+
+	# EUC-fy for further investigation
+	my $s = &STR2EUC($buf);
+	$s    = (split(/\n/, $s))[0]; # check the first line only
+
+	my ($n_pat, $sp_pat);
+	$n_pat  = '\243[\301-\332\341-\372]';
+	$sp_pat = '\241\241'; # 2-byte spaces
+
+	if ($s =~ /^\s*(($n_pat){2,})\s+.*$|^\s*(($n_pat){2,})($sp_pat)+.*$|^\s*(($n_pat){2,})$/) {
+	    croak '2 byte command';
 	}
     }
 }
@@ -105,6 +213,13 @@ sub body_check
 sub clean_up_buffer
 {
     ;
+}
+
+
+sub is_empty
+{
+    my $m;
+    $m->is_empty();
 }
 
 
