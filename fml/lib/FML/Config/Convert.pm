@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: @template.pm,v 1.2 2001/10/27 04:27:18 fukachan Exp $
+# $FML: Convert.pm,v 1.1.1.1 2001/12/09 12:48:15 fukachan Exp $
 #
 
 
@@ -52,9 +52,21 @@ sub _replace
     }
 	
     if (defined $config->{ ml_domain }) {
-	$buf =~ s/__ml_domain__/$config->{ml_domain}/g;
+	$buf =~ s/__ml_domain__/$config->{ ml_domain }/g;
+    }
+
+    if (defined $config->{ libexec_dir }) {
+	$buf =~ s/__libexec_dir__/$config->{ libexec_dir }/g;
+    }
+
+    if (defined $config->{ ml_home_prefix }) {
+	$buf =~ s/__ml_home_prefix__/$config->{ ml_home_prefix }/g;
     }
 	
+    if (defined $config->{ executable_prefix }) {
+	$buf =~ s/__executable_prefix__/$config->{ executable_prefix }/g;
+    }
+
     return $buf;
 }
 
