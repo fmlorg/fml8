@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.56 2003/10/06 10:42:19 fukachan Exp $
+# $FML: ToHTML.pm,v 1.57 2003/10/15 01:03:40 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,9 +17,11 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.56 2003/10/06 10:42:19 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.57 2003/10/15 01:03:40 fukachan Exp $;
+my $versionid = 0;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
-    $version = "$URL $1";
+    $versionid = "$1";
+    $version = "$URL $versionid";
 }
 
 =head1 NAME
@@ -494,6 +496,7 @@ sub html_begin
 					$hdr->get('subject') );
     }
 
+    print $wh "<!-- X-FML 8 ToHTML $versionid -->\n";
     print $wh
 	q{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">};
     print $wh "\n";
@@ -718,8 +721,7 @@ sub _gen_attachment_filename
 
 
 # default header to show
-my @header_field = qw(From To Cc Subject Date
-		      X-ML-Name X-Mail-Count X-Sequence);
+my @header_field = qw(From To Cc Subject Date Message-Id X-Sequence);
 
 
 # Descriptions: format header of $msg with escaping HTML metachars
