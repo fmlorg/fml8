@@ -1,5 +1,5 @@
 <!--
-	$FML: include.sgml,v 1.9 2001/04/24 13:16:25 fukachan Exp $
+	$FML: include.sgml,v 1.10 2001/04/24 15:19:14 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -24,7 +24,7 @@
 <!entity programingstyle  SYSTEM "programing_style.sgml">
 <!entity reference SYSTEM "reference.sgml">
 
-
+<!entity glossary     SYSTEM "glossary.sgml">
 <!entity cvstree     SYSTEM "cvstree.sgml">
 <!entity cvstags     SYSTEM "cvstags.sgml">
 

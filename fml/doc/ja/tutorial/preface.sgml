@@ -1,10 +1,82 @@
 <!--
-	$FML: preface.sgml,v 1.2 2001/04/24 07:12:29 fukachan Exp $
+	$FML: preface.sgml,v 1.3 2001/04/24 13:33:34 fukachan Exp $
 -->
 
 <preface>
 
 <title> 前書き </title>
+
+<!-- ======================================================== -->
+<sect1>
+
+<title> はるかなる fml 5.0 への道 </title>
+
+<para>
+fml 5.0  への道(はるかなる道)について現在次のように構想しています。
+基本的な考え方は fml 4.0 の”機能”を再構想/再実装することです。
+</para>
+
+<para>
+まず最初にしたいことは 4.0 の機能についての再検討です。
+例えば、次のような項目です。
+
+<itemizedlist>
+
+   <listitem>
+	<para>
+	   5.0 へ引き継ぐものは何か？
+	</para>
+   </listitem>
+
+   <listitem>
+	<para>
+	   5.0 でもっとうまく、よりカスタマイズしやすいものに実装できないか？
+	</para>
+   </listitem>
+
+   <listitem>
+	<para>
+	   もう要らないものは何か？
+	</para>
+   </listitem>
+
+</itemizedlist>
+
+についての意見を募集したいと思っています。ですが、漠然と議論してもしょ
+うがないので、議論の叩き台としてある程度動くものを作りました。
+
+	<ulink url="ftp://ftp.fml.org/pub/fml-devel/">
+	ftp://ftp.fml.org/pub/fml-devel/
+	</ulink>
+
+にあります。まだまだ 5.0 の α 版ではなく、プロトタイプですらないので、
+リリースなどではありません。これは、あくまでもアイデアを表現するための
+ものですが、配送プログラムとしては十分動きます。fml-devel ＭＬをはじめ
+として、いくつか運用テストに入っているものがあります。
+</para>
+
+<warning>
+<para>
+	実運用には fml-devel を使わずに 4.0 stable を使って下さい。
+	fml-devel は開発用で、 fml-current ですらありません。
+</para>
+</warning>
+
+<para>
+最初に実装するのは
+<emphasis>
+fml 1.2 相当の最低限の機能
+</emphasis>
+だろうと考えています。
+</para>
+
+<para>
+ざっくりとしたイメージは sendmail と postfix のような違いになるだろう
+と個人的には思っています。
+</para>
+
+</sect1>
+
 
 <!-- ======================================================== -->
 <sect1>

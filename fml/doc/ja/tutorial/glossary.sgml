@@ -1,0 +1,190 @@
+<!--
+	$FML$
+-->
+
+<glossary id="glossary">
+   <title> 用語集(関数名および変数名関連) </title>
+
+
+   <glossentry>
+	<glossterm>	fml 4	</glossterm>
+	<glossdef>
+	<para>
+		fml 4.0 シリーズのこと
+	</para>
+	</glossdef>
+
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm>	fml 5 / fml-devel	</glossterm>
+	<glossdef>
+	<para>
+		遠い将来に 
+		fml 5.0 になるであろうとおもわれる fml-current
+	</para>
+	</glossdef>
+
+
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm>	curproc	</glossterm>
+	<glossdef>
+	<para>
+		"current process"の略
+	</para>
+	</glossdef>
+
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm>	PCB	</glossterm>
+	<glossdef>
+	<para>
+		Process Control Block の略。
+		そのプロセス固有の情報を含む。
+		現状 fml 内部でのコンテキスト切替などはないので、
+		UNIX カーネルの PCB とは少し趣が異なります。
+	</para>
+	</glossdef>
+
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm>	config	</glossterm>
+	<glossdef>
+	<para>
+		configuration の略
+	</para>
+	</glossdef>
+
+
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm>	arg / args	</glossterm>
+	<glossdef>
+	<para>
+		アーギュメントの略
+	</para>
+	</glossdef>
+
+
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm>	fh	</glossterm>
+	<glossdef>
+	<para>
+		ファイルハンドル( file handle )
+	</para>
+	</glossdef>
+
+
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm>	dh	</glossterm>
+	<glossdef>
+	<para>
+		ディレクトリハンドル( directory handle )
+	</para>
+	</glossdef>
+
+
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm>	fp	</glossterm>
+	<glossdef>
+	<para>
+		関数へのポインタ( function pointer )。
+		ただし perl では CODE リファレンスと呼ぶべき
+	</para>
+	</glossdef>
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm>	_なになに	</glossterm>
+	<glossdef>
+	<para>
+		慣習的にパッケージ、クラス、オブジェクト内部で使う
+		変数や関数名に _ ではじまるキーワードを使う。
+	</para>
+	</glossdef>
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm>	rなになに	</glossterm>
+	<glossdef>
+	<para>
+		r はリファレンスの略。ハンガリアン記法。
+		特別に強調したい場合に使うことがあるが、
+		あまり使っていない。		
+	</para>
+	</glossdef>
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm> 	STR	</glossterm>
+	<glossdef>
+	<para>
+	 	文字列 ( string ) の略
+	</para>
+	</glossdef>
+
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm> 	日本語コードの略称	</glossterm>
+	<glossdef>
+	<para>
+	 	JIS SJIS EUC などおなじみのもの…
+	</para>
+	</glossdef>
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm> 	2	</glossterm>
+	<glossdef>
+	<para>
+		to と発音が一緒のため省略形としてよく使う。
+		類似品として 4 ( for の意味)もある
+	</para>
+	<para>
+		例: STR2EUC (STRing to EUC の略)
+<screen>
+use String qw(STR2EUC);
+$euc_string = STR2EUC($string);
+</screen>
+	</para>
+	</glossdef>
+   </glossentry>
+
+ 
+   <glossentry>
+	<glossterm> 	4	</glossterm>
+	<glossdef>
+	<para>
+	 	for と発音が同じために用いる。
+		例はまだなし。
+	</para>
+	</glossdef>
+   </glossentry>
+
+
+</glossary>
