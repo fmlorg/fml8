@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Thread.pm,v 1.2 2003/07/19 10:23:33 fukachan Exp $
+# $FML: Thread.pm,v 1.1 2003/07/20 04:58:29 fukachan Exp $
 #
 
 package Mail::Message::Thread;
@@ -64,6 +64,7 @@ sub _init_db
     my $db_type = $args->{ db_type }     || 'AnyDBM_File';
     my $db_base = $args->{ db_base_dir } || croak("specify db_base_dir\n");
     my $db_name = $args->{ db_name }     || croak("specify db_name\n");
+    my $id      = $args->{ id }          || 0;
 
     use File::Spec;
     my $db_dir  = File::Spec->catfile($db_base, $db_name);
@@ -81,7 +82,10 @@ sub _init_db
 
     # Firstly, prepare db object.
     use Mail::Message::DB;
-    return new Mail::Message::DB $_db_args;
+    my $db = new Mail::Message::DB $_db_args;
+    $db->set_key($id) if $id;
+
+    return $db;
 }
 
 
@@ -108,12 +112,12 @@ sub db
 
 
 # Descriptions: top level dispatcher to run thread analyzer.
-#    Arguments: OBJ($self) OBJ($msg)
+#    Arguments: OBJ($self) OBJ($msg) NUM($id)
 # Side Effects: update database
 # Return Value: none
 sub analyze
 {
-    my ($self, $msg) = @_;
+    my ($self, $msg, $id) = @_;
     my $db = $self->db();
 
     $db->analyze($msg);
