@@ -1,0 +1,85 @@
+#! @PERL@ -w
+#-*- perl -*-
+#
+#  Copyright (C) 2003 Ken'ichi Fukamachi
+#   All rights reserved. This program is free software; you can
+#   redistribute it and/or modify it under the same terms as Perl itself.
+#
+# $FML$
+#
+
+use strict;
+use Carp;
+use lib qw(fml/lib cpan/lib img/lib);
+
+# Run this from the top-level fml source directory.
+$ENV{'PATH'} = '/usr/xpg4/bin:/bin:/usr/bin:/usr/sbin:/usr/etc:/sbin:/etc';
+
+my $debug = 0;
+
+if ($0 eq __FILE__) {
+    umask(022);
+
+    unless (@ARGV) {
+	croak("Usage: $0 install.cf\n");
+    }
+    else {
+	_install( $ARGV[0] );
+    }
+}
+else {
+    croak("Usage: $0 install.cf\n");
+}
+
+exit 0;
+
+
+# Descriptions: install fml8
+#    Arguments: STR($cf)
+# Side Effects: install a lot of files: bin, lib, libexec/ and share/.
+# Return Value: none
+sub _install
+{
+    my ($cf) = @_;
+    my $format    = "%20s = %s\n";
+
+    use FML::Install;
+    my $installer = new FML::Install;
+    my $config    = $installer->load_install_cf( $cf );
+
+    printf $format, "version", $installer->get_version() if $debug;
+
+    my $list = $config->get_as_array_ref('mandatory_dirs');
+    for my $dir (@$list) {
+	my $path = $installer->path($dir);
+	printf $format, $dir, $path if $debug;
+	unless (-d $path) {
+	    $installer->mkdir($path);
+	}
+	else {
+	    print STDERR "ok $path\n" if $debug;
+	}
+    }
+
+    # XXX-TODO: check uid, gid
+
+    $installer->install_main_cf();
+    $installer->install_sample_cf_files();
+    $installer->install_default_config_files();
+    $installer->install_mtree_dir();
+    $installer->install_lib_dir();
+    $installer->install_libexec_dir();
+    $installer->install_data_dir();
+
+    # install programs hereafter.
+    $installer->install_bin_programs();
+
+    # update loader.
+    if ( $installer->need_resymlink_loader() ) {
+	$installer->install_loader();
+	$installer->resymlink_loader();
+    }
+
+    # set up ml_spool_dir such as /var/spool/ml if needed.
+    $installer->setup_ml_spool_dir();
+}
