@@ -1,6 +1,114 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/04/21
+
+   FML::Command::Admin::newml 
+	install .htaccess only for the first time
+	
+   Mail::Message::ToHTML 
+	you can specify $ENV{MAX}
+	
+   Mail::Message::ToHTML 
+	for () { fork() && call htmlify_file() }
+	
+   Mail::Message::ToHTML 
+	htmlify_dir() accepts options::$has_fork and $max (for debug)
+	
+   Mail::Message::ToHTML 
+	sort years in monthly.index
+	bug fix the scan range for each subdir
+	
+   FML::Command::HTMLify 
+	sort -n subdirs list
+
+2002/04/20
+
+   FML::Filter::BodyCheck 
+	comment out "local($*) = 0;"
+	
+   FML::Filter::TrafficMonitor 
+	disable almost all codes imported from fml 4.0 once anyway
+	
+   configure
+	add --with-warning
+
+   FML::Command::HTMLify 
+   FML::Process::HTMLify 
+	bug fix subdir checking
+	
+	use FML::Command::HTMLify to share htmlify code between
+	fmlhtmlify and "makefml htmlify".
+	
+   FML::Command::Admin::htmlify 
+	remove $options
+
+   FML::Process::Configure 
+	log raw error message
+	
+2002/04/19
+
+   FML::Process::Spool 
+	check argument and show help if invalid
+	
+   FML::Process::Switch 
+	stop $ml_home_dir search when we can get it.
+	
+   Mail::Message::ToHTML 
+	bug fix::check the source file existence more severely
+	
+2002/04/18
+
+   Mail::Message::ToHTML 
+	check $args->{ file } more severely in _update_relation()
+	
+   FML::Process::Distribute 
+	eval htmlify_file() to avoid unknown error ;)
+	
+   FML::Process::Distribute 
+	eval filtering
+
+2002/04/16
+
+   FML::Process::Switch 
+	fmlspool --srcdir not --dstdir
+	
+   FML::Process::Spool 
+	fix conversion algorithm
+
+2002/04/15
+
+   FML::Process::Switch 
+	fmlspool --srcdir not --dstdir
+	
+   FML::Process::Spool 
+	fix conversion algorithm
+
+   add a new utility "fmlspool"
+	add a new utility::fmlspool to handle spool directory
+	
+   FML::Process::Utils 
+	implement ml_home_dir()
+	
+   FML::Process::Switch 
+	enable fmlspool
+	
+   FML::Article 
+	implement subdirpath().
+	check $curproc->{'incoming_message'}->{ message } in new() data input.
+
+   FML::Process::Kernel 
+	implement set_umask_as_public(), reset_umask() for umask control.
+	
+   FML::Process::Distribute 
+	umask and permission control for html archives
+	
+   Mail::Message::ToHTML 
+	BEGIN { @AnyDBM_File::ISA = qw(DB_File GDBM_File NDBM_File); }
+	
+   FML::Process::HTMLify 
+	consider spool:::may has subdir(s)
+
 2002/04/14
 
    Mail::Message::ToHTML 
@@ -2022,4 +2130,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.66 2002/04/12 15:06:43 fukachan Exp $
+$FML: CHANGES.txt,v 1.67 2002/04/14 14:48:19 fukachan Exp $
