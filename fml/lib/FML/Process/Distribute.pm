@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.75 2002/04/28 13:34:16 fukachan Exp $
+# $FML: Distribute.pm,v 1.76 2002/05/21 15:07:31 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -189,7 +189,7 @@ sub run
 		my $r = "deny request from a system account";
 		$curproc->reply_message_nl("error.system_accounts", $r);
 	    }
-	    elsif ($rule eq 'permit_members_only') {
+	    elsif ($rule eq 'permit_member_maps') {
 		my $r = "deny request from a not member";
 		$curproc->reply_message_nl("error.not_member", $r);
 	    }
