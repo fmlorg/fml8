@@ -1,0 +1,58 @@
+<!--
+   $FML: command.sgml,v 1.1 2001/11/24 03:22:58 fukachan Exp $
+-->
+
+<chapter id="fml.bymyaccount">
+	<title>
+	自分のアカウントでＭＬを行ないたい
+	</title>
+
+<para>
+特定の(自分の)アカウントで、個人あてのメールもＭＬあてのメールも
+処理する必要のある場合があります。
+例えば、ISP のバーチャルドメインサービスの中には
+そういうサービスがあります。
+こういった場合、
+メールのヘッダの To: や Cc: を見て、
+適切に fml を実行する必要があります。
+</para>
+
+
+<para>
+こういった場合、
+fml 5.0 ではユーザが 
+procmail などの振分ツールを使うだろうと期待しています :-)
+</para>
+
+
+<sect1 id="procmail">
+	<title>
+	procmail の例
+	</title>
+
+<para>
+<screen>
+PATH=$HOME/bin:/usr/bin:/usr/ucb:/bin:/usr/local/bin:/usr/pkg/bin
+MAILDIR=$HOME/Mail	# You'd better make sure it exists
+DEFAULT=$HOME/Mail/mbox
+LOGFILE=$MAILDIR/procmail.log
+LOCKFILE=$HOME/.lockmail
+VERBOSE=on
+
+:0
+* To.*elena@fml.org
+| /usr/local/libexec/fml/fml.pl /var/spool/ml/elena
+
+:0
+* To.*elena-ctl@fml.org
+| /usr/local/libexec/fml/fml.pl /var/spool/ml/elena --ctladdr
+
+# last resort, mail for me et. al. 
+:0
+inbox/.
+</screen>
+</para>
+
+</sect1>
+
+</chapter>

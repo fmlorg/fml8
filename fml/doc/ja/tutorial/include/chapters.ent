@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.22 2001/11/24 06:54:46 fukachan Exp $
+	$FML: chapters.ent,v 1.23 2001/11/24 12:48:10 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -36,6 +36,7 @@
 <!entity sect.usage.fmldoc       SYSTEM "usage/fmldoc.sgml">
 <!entity sect.usage.fmlthread    SYSTEM "usage/fmlthread.sgml">
 <!entity sect.usage.fmlhtmlify   SYSTEM "usage/fmlhtmlify.sgml">
+<!entity chapter.usage.procmail  SYSTEM "usage/procmail.sgml">
 
 
 <!-- コマンド -->
