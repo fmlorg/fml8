@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.34 2004/03/04 04:30:12 fukachan Exp $
+# $FML: Auth.pm,v 1.35 2004/04/23 04:10:30 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -256,6 +256,7 @@ sub change_password
     my $obj = new IO::Adapter $map;
     if (defined $obj) {
 	$obj->open();
+	$obj->touch();
 
 	# delete
 	if ($obj->find( $address )) {
@@ -272,6 +273,7 @@ sub change_password
 	}
 
 	# add
+	$obj->error_clear();
 	$obj->add( $address, [ $cp, "UNIX_CRYPT" ] ) && $status++;
 	if ($obj->error()) {
 	    $curproc->logerror("cannot add $address to=$map");
