@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.18 2001/10/22 11:04:11 fukachan Exp $
+# $FML: Lite.pm,v 1.19 2001/10/22 16:09:12 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -15,7 +15,7 @@ use Carp;
 my $debug = $ENV{'debug'} ? 1 : 0;
 my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::HTML::Lite</A>";
 
-my $version = q$FML: Lite.pm,v 1.18 2001/10/22 11:04:11 fukachan Exp $;
+my $version = q$FML: Lite.pm,v 1.19 2001/10/22 16:09:12 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -702,7 +702,7 @@ sub cache_message_info
     $db->{ _filename }->{ $id } = $self->message_filename($id);
     $db->{ _filepath }->{ $id } = $dst;
 
-    print STDERR "   date\n" if $debug > 3;
+    # Date:
     $db->{ _date }->{ $id } = $hdr->get('date');
 
     use Time::ParseDate;
@@ -711,80 +711,191 @@ sub cache_message_info
     my ($sec,$min,$hour,$mday,$mon,$year,$wday) = localtime( $unixtime );
     my $month  = sprintf("%04d/%02d", 1900 + $year, $mon + 1);
 
-    # id => YYYY/MM
+    # { id => YYYY/MM }
     $db->{ _month }->{ $id } = $month;
 
-    # YYYY/MM => (id1 id2 id3 ..)
-    $db->{ _monthly_idlist }->{ $month } .= " $id";
+    # { YYYY/MM => (id1 id2 id3 ..) }
+    __add_value_to_array($db, '_monthly_idlist', $month, $id);
 
-
-    print STDERR "   subject\n" if $debug > 3;
+    # Subject:
     $db->{ _subject }->{ $id } = 
 	$self->_decode_mime_string( $hdr->get('subject') );
 	
-    print STDERR "   from\n" if $debug > 3;
+    # From:
     my $ra = _address_clean_up( $hdr->get('from') );
     $db->{ _from }->{ $id } = $ra->[0];
     $db->{ _who }->{ $id } = $self->_who_of_address( $hdr->get('from') );
 
-    print STDERR "   message-id\n" if $debug > 3;
+    # Message-Id:
     $ra  = _address_clean_up( $hdr->get('message-id') );
     my $mid = $ra->[0];
     if ($mid) {
-	print STDERR "   message-id = <$mid>\n" if $debug > 3;
 	$db->{ _message_id }->{ $id } = $mid;
 	$db->{ _msgidref }->{ $mid }  = $id;
 	$db->{ _idref }->{ $id }      = $id;
     }
 
-    print STDERR "   in-reply-to\n" if $debug > 3;
-    $ra = _address_clean_up( $hdr->get('in-reply-to') );
-    my $in_reply_to = $ra->[0];
-    for my $mid (@$ra) {
-	$db->{ _msgidref }->{ $mid } .= " ".$id;
+    # Thread Information by In-Reply-To: and References
+    {
+	my $irt_ra = _address_clean_up( $hdr->get('in-reply-to') );
+	my $in_reply_to = $irt_ra->[0];
 
-	# message-id => id
-	my $idp = _list_head($db->{ _msgidref }->{ $mid });
-	$db->{ _idref }->{ $idp } .= " ".$id if defined $idp;
-    }
+	_PRINT_DEBUG("In-Reply-To: $in_reply_to");
 
-    print STDERR "   referances\n" if $debug > 3;
-    $ra = _address_clean_up( $hdr->get('references') );
-    for my $mid (@$ra) {
-	$db->{ _msgidref }->{ $mid } .= " ".$id;
+	for my $mid (@$irt_ra) {
+	    # { message-id => (id1 id2 id3 ...)
+	    __add_value_to_array($db, '_msgidref', $mid, $id);
 
-	# message-id => id
-	my $idp = _list_head($db->{ _msgidref }->{ $mid });
-	$db->{ _idref }->{ $idp } .= " ".$id if defined $idp;
-    }
+	    # idp (pointer to id) by { message-id => id }
+	    my $idp = _list_head($db->{ _msgidref }->{ $mid });
 
-    # thread information for convenience
-    #   prev_id = { id => prev_id } (by in-reply-to:)
-    #   next_id = { id => next_id } (? in-reply-to of the future message ?)
+	    # { idp => (id1 id2 id3 ...) }
+	    __add_value_to_array($db, '_idref', $idp, $id) if defined $idp;
+	}
 
-    #  $ids = (id1 id2 id3 ...)
-    my $ids = '';
-    if (defined $in_reply_to) {
-	$ids = $db->{ _msgidref }->{ $in_reply_to };
-    }
-    if (defined $ids) {
-	my $prev_id = _list_head($ids);
+	# apply the same logic as above for all message-id's in References:
+	my $ref_ra = _address_clean_up( $hdr->get('references') );
+	my %uniq = (); 
+	for my $mid (@$ref_ra) {
+	    next if $uniq{$mid}; $uniq{$mid} = 1; # ensure uniqueness
 
-	if (defined $prev_id) {
-	    $db->{ _prev_id }->{ $id } = $prev_id;
+	    _PRINT_DEBUG("References: $mid");
+	    __add_value_to_array($db, '_msgidref', $mid, $id);
+	    my $idp = _list_head($db->{ _msgidref }->{ $mid });
+	    __add_value_to_array($db, '_idref', $idp, $id) if defined $idp;
+	}
+
+	# 0. ok. go to speculate prev/next links
+	# 1. If In-Reply-To: is found, use it as "pointer to previous id"
+	my $idp = 0;
+	if (defined $in_reply_to) {
+	    # XXX idp (id pointer) = id1 by _list_head( (id1 id2 id3 ...)
+	    $idp = _list_head( $db->{ _msgidref }->{ $in_reply_to } ); 
+	}
+	# 2. if not found, try to use References: "in reverse order"
+	elsif (@$ref_ra) {
+	    my (@rra) = reverse(@$ref_ra);
+	    $idp = $rra[0];
+	}
+	# 3. no prev/next link
+	else {
+	    $idp = 0;
+	}
+
+	if (defined($idp) && $idp) {
+	    if ($idp != $id) {
+		$db->{ _prev_id }->{ $id } = $idp;
+		_PRINT_DEBUG("\$db->{ _prev_id }->{ $id } = $idp");
+	    }
+	    else {
+		_PRINT_DEBUG("no \$db->{ _prev_id }");
+	    }
 
 	    # XXX we should not overwrite " id => next_id " hash.
 	    # XXX we preserve the first " id => next_id " value.
-	    unless (defined $db->{ _next_id }->{ $prev_id }) {
-		$db->{ _next_id }->{ $prev_id } = $id;
+	    unless (defined $db->{ _next_id }->{ $idp }) {
+		$db->{ _next_id }->{ $idp } = $id;
+		_PRINT_DEBUG("\$db->{ _next_id }->{ $idp } = $id");
+	    }
+	    else {
+		my $thread_head_id  = _thread_head( $db, $id );
+		_PRINT_DEBUG("no \$db->{ _next_id } override");
 	    }
 	}
-    }
-    else {
-	warn("no prev/next thread link (id=$id)\n") if $debug;
+	else {
+	    _PRINT_DEBUG("no prev/next thread link (id=$id)");
+	    warn("no prev/next thread link (id=$id)\n") if $debug;
+	}
     }
 
     $self->_db_close();
+}
+
+
+sub __str2array
+{
+    my ($str) = @_;
+    $str =~ s/^\s*//; 
+    $str =~ s/\s*$//; 
+    my (@a) = split(/\s+/, $str);
+    return \@a;
+}
+
+
+sub __add_value_to_array
+{
+    my ($db, $dbname, $key, $value) = @_;
+    my $found = 0;
+    my $ra = __str2array($db->{ $dbname }->{ $key });
+
+    for (@$ra) { 
+	$found = 1 if ($value =~ /^\d+$/) && ($_ == $value);
+	$found = 1 if ($value !~ /^\d+$/) && ($_ eq $value);
+    }
+
+    unless ($found) {
+	$db->{ $dbname }->{ $key } .= " $value";
+    }
+}
+
+
+sub _thread_head
+{
+    my ($db, $id) = @_;
+    my $max     = 128;
+    my $head_id = 0;
+
+    # search the thread head
+    while ($max-- > 0) {
+	my $prev_id = $db->{ _prev_id }->{ $id };
+	last unless $prev_id;
+	$head_id = $prev_id;
+    }
+
+    return $head_id;
+}
+
+
+sub _search_default_next_thread_id
+{
+    my ($db, $id) = @_;
+    my (%eatup) = ();
+    my $thread_head_id = _thread_head( $db, $id );
+    my $ra = __str2array( $db->{ _idref }->{ $thread_head_id } );
+
+    # try to eat up all idref hash { id(myself) => (id1 id2 id3 ...) }
+  SEARCH:
+    for my $xid (reverse @$ra) {
+	next SEARCH if $xid == $id;
+	my $ra = __str2array( $db->{ _idref }->{ $xid } );
+	_PRINT_DEBUG("($xid)? reverse @$ra");
+
+	# pushed into @eatup
+	for my $yid (@$ra) { 
+	    $eatup{$yid} = $yid;
+	    my $ra = __str2array( $db->{ _idref }->{ $yid } );
+	    _PRINT_DEBUG("($yid)? reverse @$ra");
+	    for my $zid (@$ra) { $eatup{$zid} = $zid;}
+	}
+
+	# _next ?
+	for my $yid (@$ra) {
+	    my $max = 128;
+	    my $prev_id = $yid;
+	    while (($prev_id = $db->{_prev_id}->{$prev_id}) && ($max-->0)) {
+		$eatup{ $prev_id } = $prev_id;
+	    }
+	}
+    }
+
+    # remove id's of the original thread $ra
+    for (@$ra) { delete $eatup{ $_ };}
+
+    my (@eatup) = keys %eatup;
+    _PRINT_DEBUG("search = @eatup");
+
+    @eatup = sort {$b <=> $a} @eatup;
+    return( @eatup ? $eatup[0] : undef);
 }
 
 
@@ -817,7 +928,7 @@ sub update_relation
     # rewrite links of files for 
     #      prev/next id (article id) and
     #      prev/next by thread
-    for my $id (qw(prev_id next_id prev_thread_id next_thread_id)) {
+    for my $id (qw(prev_id next_id prev_thread next_thread)) {
 	if (defined $args->{ $id }) {
 	    $self->_update_relation( $args->{ $id });
 	    push(@$list, $args->{ $id });
@@ -898,6 +1009,13 @@ sub evaluate_relation
     }
     if ($next_thread_id) {
 	undef $next_thread_id if $next_thread_id == $id;
+    }
+    else {
+	my $xid = _search_default_next_thread_id($db, $id);
+	if ($xid && ($xid != $id)) {
+	    $next_thread_id = $xid;
+	    _PRINT_DEBUG("override next_thread_id = $next_thread_id");
+	}
     }
 
     my $link_prev_id     = $self->message_filename($prev_id);
@@ -1508,9 +1626,8 @@ sub _print_thread
     my $buf = $db->{ _idref }->{ $head_id };
 
     if (defined $buf) {
-	$buf =~ s/^\s*//;
-	$buf =~ s/\s*$//;
-	my (@idlist) = split(/\s+/, $buf);
+	my $ra       = __str2array($buf);
+	my (@idlist) = @$ra;
 
       IDLIST:
 	for my $id (@idlist) {
@@ -1586,6 +1703,12 @@ sub _print
     print $wh $str;
 }
 
+
+sub _PRINT_DEBUG
+{
+    my ($str) = @_;
+    print STDERR "(debug) $str\n" if $ENV{'DEBUG'} == 100 || $debug;
+}
 
 =head2 internal utility functions for HTML TAGS
 
