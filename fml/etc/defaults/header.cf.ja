@@ -1,16 +1,32 @@
 =head1	ヘッダの操作
 
+# Descriptions: ヘッダ書換えの操作をするか？
+#      History:
+#        Value: yes / no
+#     Examples:
 use_header_rewrite		=	yes
 
+# Descriptions: ヘッダを根拠にしたフィルタリングなどをするか？
+#      History:
+#        Value: yes / no
+#     Examples:
 use_header_check		=	yes
 
+
+# Descriptions: ヘッダベースのフィルタリングのルール群
+#      History:
+#        Value:
+#     Examples:
 header_check_rules		=	verify_message_id_uniqueness
 					verify_x_ml_info_uniqueness
 					verify_list_post_uniqueness
 
-# もちろん”記事”に対してのものだ（自明？）
-# article_header_rewrite_rules とかの方がよいか？
-# XXX: The action to cut off "Re:" is default. need not specified.
+
+# Descriptions: 記事のヘッダを書き換えるルール群
+#               Re: を切り落とす操作はデフォルトなので指定の必要なし
+#      History:
+#        Value:
+#     Examples:
 article_header_rewrite_rules	=	delete_unsafe_header_fields
 					rewrite_subject_tag
 					rewrite_reply_to
@@ -22,6 +38,10 @@ article_header_rewrite_rules	=	delete_unsafe_header_fields
 					add_rfc2369
 
 
+# Descriptions: 記事のまとめおくりのヘッダを書き換えるルール群
+#      History:
+#        Value:
+#     Examples:
 digest_header_rewrite_rules	=	add_software_info
 					add_rfc2369
 
@@ -32,14 +52,26 @@ digest_header_rewrite_rules	=	add_software_info
 #     Examples:
 unsafe_header_fields		=	Return-Receipt-To
 
-# Subject: につけるタグの制御
+
+# Descriptions: Subject: につけるタグの制御
+#      History:
+#        Value:
+#     Examples:
 subject_tag_name		=	$ml_name
 
 
-# % の意味は UNIX マニュアルを参照。例えば sprintf 関数など 
+# Descriptions: Subject: のタグ 
+#               % の意味は UNIX マニュアルを参照。例えば sprintf 関数など 
+#      History:
+#        Value:
+#     Examples: [elena:00080]
 subject_tag			=	[$ml_name:%05d]
 
-# X-ML-Name: および X-Sequence にあらわれる ML 名
-#    XXX そこだけ変えたい場合があるかもしれないので、
-#    XXX 一応 $ml_name とは分けておく。
+
+# Descriptions: X-ML-Name: および X-Sequence にあらわれる ML 名
+#               XXX そこだけ変えたい場合があるかもしれないので、
+#               XXX 一応 $ml_name とは分けておく。
+#      History:
+#        Value:
+#     Examples: elena
 x_ml_name			=	$ml_name
