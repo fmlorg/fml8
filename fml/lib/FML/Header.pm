@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML: Header.pm,v 1.33 2001/04/23 04:30:28 fukachan Exp $
+# $FML: Header.pm,v 1.34 2001/04/23 08:32:44 fukachan Exp $
 #
 
 package FML::Header;
@@ -224,10 +224,18 @@ sub add_software_info
 {
     my ($header, $config, $args) = @_;
     my $fml_version = $config->{ fml_version };
+    my $object_type = defined $args->{ type } ? $args->{ type } : undef;
 
     if ($fml_version) {
-	$header->add('X-MLServer',   $fml_version);
-	$header->add('List-Software', $fml_version);
+	if ($object_type eq 'MIME::Lite') {
+	    my $msg = $args->{ message };
+	    $msg->attr('X-MLServer'    => $fml_version);
+	    $msg->attr('List-Software' => $fml_version);
+	}
+	else {
+	    $header->add('X-MLServer',    $fml_version);
+	    $header->add('List-Software', $fml_version);
+	}
     }
 }
 
@@ -235,21 +243,43 @@ sub add_software_info
 sub add_rfc2369
 {
     my ($header, $config, $args) = @_;
+    my $object_type = defined $args->{ type } ? $args->{ type } : undef;
 
     # addresses
     my $post       = $config->{ address_for_post };
     my $command    = $config->{ address_for_command };
     my $maintainer = $config->{ maintainer };
 
-    # See RFC2369 for more details
-    $header->add('List-Post',  "<mailto:${post}>")       if $post;
-    $header->add('List-Owner', "<mailto:${maintainer}>") if $maintainer;
+    # information for list-id
+    my $ml_name = $config->{ ml_name };
+    my $id      = "$ml_name mailing list <$post>"; $id =~ s/\@/./g;
 
-    if ($command) {
-	$header->add('List-Help',      "<mailto:${command}?body=help>");
-	$header->add('List-Subscribe', "<mailto:${command}?body=subscribe>");
-	$header->add('List-UnSubscribe', 
-		     "<mailto:${command}?body=unsubscribe>");
+    # See RFC2369 for more details
+    if ($object_type eq 'MIME::Lite') {
+	my $msg = $args->{ message };
+	$msg->attr('List-ID'    => $id) if $id;
+	$msg->attr('List-Post'  => "<mailto:${post}>") if $post;
+	$msg->attr('List-Owner' => "<mailto:${maintainer}>") if $maintainer;
+	if ($command) {
+	    $msg->attr('List-Help' =>  "<mailto:${command}?body=help>");
+	    $msg->attr('List-Subscribe' =>  
+		       "<mailto:${command}?body=subscribe>");
+	    $msg->attr('List-UnSubscribe' =>  
+		       "<mailto:${command}?body=unsubscribe>");
+	}
+    }
+    else {
+	$header->add('List-ID',    $id) if $id;
+	$header->add('List-Post',  "<mailto:${post}>")       if $post;
+	$header->add('List-Owner', "<mailto:${maintainer}>") if $maintainer;
+
+	if ($command) {
+	    $header->add('List-Help', "<mailto:${command}?body=help>");
+	    $header->add('List-Subscribe', 
+			 "<mailto:${command}?body=subscribe>");
+	    $header->add('List-UnSubscribe', 
+			 "<mailto:${command}?body=unsubscribe>");
+	}
     }
 }
 
