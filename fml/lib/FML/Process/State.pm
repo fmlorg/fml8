@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: State.pm,v 1.10 2004/05/25 04:18:50 fukachan Exp $
+# $FML: State.pm,v 1.11 2004/06/24 10:40:25 fukachan Exp $
 #
 
 package FML::Process::State;
@@ -518,7 +518,7 @@ sub filter_state_get_error
 
 
 # Descriptions: save the spam filter error for later use.
-#    Arguments: OBJ($curproc) STR($category) STR($code)
+#    Arguments: OBJ($curproc) STR($code)
 # Side Effects: update pcb.
 # Return Value: none
 sub filter_state_spam_checker_set_error
@@ -532,7 +532,7 @@ sub filter_state_spam_checker_set_error
 
 
 # Descriptions: get the spam filter error.
-#    Arguments: OBJ($curproc) STR($category)
+#    Arguments: OBJ($curproc)
 # Side Effects: update pcb.
 # Return Value: none
 sub filter_state_spam_checker_get_error
@@ -546,7 +546,7 @@ sub filter_state_spam_checker_get_error
 
 
 # Descriptions: save the virus filter error for later use.
-#    Arguments: OBJ($curproc) STR($category) STR($code)
+#    Arguments: OBJ($curproc) STR($code)
 # Side Effects: update pcb.
 # Return Value: none
 sub filter_state_virus_checker_set_error
@@ -560,7 +560,7 @@ sub filter_state_virus_checker_set_error
 
 
 # Descriptions: get the virus filter error.
-#    Arguments: OBJ($curproc) STR($category)
+#    Arguments: OBJ($curproc)
 # Side Effects: update pcb.
 # Return Value: none
 sub filter_state_virus_checker_get_error
