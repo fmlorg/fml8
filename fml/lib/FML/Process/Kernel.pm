@@ -97,9 +97,10 @@ sub lock
     return 0 unless $lock_file ;
     my $r = $lockobj->lock( { file => $lock_file } );
     if ($r) {
-	$curproc->{ pcb }->{ lock }->{ object } = $lockobj;
-	$curproc->{ pcb }->{ lock }->{ file   } = $lock_file;
-	Log( "locked $lock_file");
+	my $pcb = $curproc->{ pcb };
+	$pcb->set('lock', 'object', $lockobj);
+	$pcb->set('lock', 'file',   $lock_file);
+	Log( "locked $lock_file" );
     }
     else {
 	croak("Error: cannot lock");
@@ -111,8 +112,9 @@ sub unlock
 {
     my ($curproc, $args) = @_;
 
-    my $lockobj   = $curproc->{ pcb }->{ lock }->{ object };
-    my $lock_file = $curproc->{ pcb }->{ lock }->{ file };
+    my $pcb       = $curproc->{ pcb };
+    my $lockobj   = $pcb->get('lock', 'object');
+    my $lock_file = $pcb->get('lock', 'file');
 
     my $r = $lockobj->unlock( { file => $lock_file } );
     if ($r) {

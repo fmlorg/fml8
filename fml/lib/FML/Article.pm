@@ -61,6 +61,7 @@ sub increment_id
     my ($self) = @_;
     my $curproc  = $self->{ curproc };
     my $config   = $curproc->{ config };
+    my $pcb      = $curproc->{ pcb };
     my $seq_file = $config->{ sequence_file };
 
     use FML::SequenceFile;
@@ -69,7 +70,7 @@ sub increment_id
     if ($sfh->error) { Log( $sfh->error ); }
 
     # save $id in pcb (process control block) and return $id
-    $curproc->{ pcb }->{ article }->{ id } = $id;
+    $pcb->set('article', 'id', $id);
     $id;
 }
 
@@ -78,7 +79,8 @@ sub id
 {
     my ($self) = @_;
     my $curproc = $self->{ curproc };    
-    return $curproc->{ pcb }->{ article }->{ id };
+    my $pcb     = $curproc->{ pcb };
+    return $pcb->get('article', 'id');
 }
 
 
