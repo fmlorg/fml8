@@ -1,6 +1,58 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/01/10
+
+   mime component filter に次の機能を仕込みました。
+
+	1) multipart のメッセージの中身がないなら、
+	   そのパートは切り捨てる
+
+	2) もし、すべてのパートが無効なら、reject する
+
+	例: こういうメールの場合を想定したものです。
+		text/plain (空)
+		application/ms-word (virus つき)
+
+	application/ms-word は content filter のルールで削除され、
+	無意味な text/plain は今回の機能で削除され、
+	結局有効なパートがないので reject する(配送しない)。
+
+	とりあえず、この機能はデフォルトで on です。
+
+   Mail::Message 
+	fix next/prev link of object chain
+	implemenet is_multipart() method
+	
+   FML::Filter::MimeComponent3 
+	when $opt_cut_off_empty_part is non zero, we cut off empty part.
+	Also, reject this message if no effective part in multipart.
+	
+	XXX $opt_cut_off_empty_part = 1; by default now.
+
+2003/01/09
+
+   FML::Filter::MimeComponent3 
+	fix wrong logic of handling determined $action vs default_action.
+	corerct messages.
+
+2003/01/08
+
+   FML::Filter::MimeComponent3 
+	sync default rule w/ etc/mime_component_filter
+
+2003/01/07
+
+   variables
+	postfix_verp_delimiters	=	+=
+	qmail_verp_delimiters	=	-=
+	
+   FML::Command::UserControl 
+	shorten log messages
+	
+   FML::Process::Spool 
+	change argument style
+
 2003/01/05
 
    add new utility
@@ -4031,4 +4083,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.124 2003/01/01 02:07:51 fukachan Exp $
+$FML: CHANGES.txt,v 1.125 2003/01/07 11:47:43 fukachan Exp $
