@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.67 2004/07/23 13:16:31 fukachan Exp $
+# $FML: Article.pm,v 1.68 2004/07/23 15:58:59 fukachan Exp $
 #
 
 package FML::Article;
@@ -187,7 +187,7 @@ sub spool_in
 		if ($error) {
 		    $fh->close;
 		    $curproc->logerror("failed to create article");
-		    $self->_try_failover($curproc, $file);
+		    $self->_try_failover($curproc, $id, $file);
 		}
 		else {
 		    $fh->close;
@@ -210,12 +210,12 @@ sub spool_in
 # Descriptions: When we fail to create article file,
 #               we try to save the original message at least.
 #               So, we try to save article content from incoming queue.
-#    Arguments: OBJ($self) OBJ($curproc) STR($article_file)
+#    Arguments: OBJ($self) OBJ($curproc) NUM($id) STR($article_file)
 # Side Effects: link(2) or rename(2).
 # Return Value: none
 sub _try_failover
 {
-    my ($self, $curproc, $article_file) = @_;
+    my ($self, $curproc, $id, $article_file) = @_;
     my $queue      = $curproc->mail_queue_get_incoming_queue();
     my $queue_id   = $queue->id();
     my $queue_file = $queue->incoming_file_path($queue_id);
@@ -225,11 +225,13 @@ sub _try_failover
 
     # 1. try link(2).
     if (link($queue_file, $article_file)) {
-	$curproc->log("article: link queue to article file");
+	$curproc->log("article: linked queue to article file");
+	$curproc->log("article $id (faked)");
     }
     # 2. try rename(2).
     elsif (rename($queue_file, $article_file)) {
-	$curproc->log("article: rename queue to article file");
+	$curproc->log("article: renamed queue to article file");
+	$curproc->log("article $id (faked)");
     }
     else {
 	$curproc->logerror("article: give up failover.");
