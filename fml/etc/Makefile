@@ -1,15 +1,16 @@
 #
-# $FML: Makefile,v 1.12 2002/04/01 23:41:09 fukachan Exp $
+# $FML: Makefile,v 1.13 2003/07/26 14:23:04 fukachan Exp $
 #
 
-OBJ		=	main.cf	default_config.cf.ja
+OBJ		=	default_config.cf.ja \
+			default_config.cf.en
 
 TARGET_DIR	=	../../Documentation/ja/etc
 
 CONV		=	$(PERL) ../../fml/utils/bin/text2html.pl
 
 
-all: default_config.cf.ja.in default_config.cf.en.in
+all: $(OBJ)
 
 default_config.cf.ja.in: src/config.cf.ja/*.cf
 	sh .gen.sh
@@ -19,3 +20,4 @@ default_config.cf.en.in: src/config.cf.en/*.cf
 
 clean:
 	rm -f $(OBJ)
+	rm -f main.cf
