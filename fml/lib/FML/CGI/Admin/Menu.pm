@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.15 2002/06/22 14:37:48 fukachan Exp $
+# $FML: Menu.pm,v 1.16 2002/06/24 11:06:11 fukachan Exp $
 #
 
 package FML::CGI::Admin::Menu;
@@ -237,9 +237,13 @@ sub run_cgi_navigator
 			 -size    => 5);
     print "\n<BR>\n";
 
+    my $command_default = $curproc->safe_param_navi_command() || 
+	$curproc->safe_param_command();
+
     print "  command:\n";
     print scrolling_list(-name   => 'navi_command',
 			 -values => $command_list,
+			 -default => [ $command_default ],
 			 -size   => 5);
     print "\n<BR>\n";
 
