@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.77 2003/09/05 09:01:26 fukachan Exp $
+# $FML: Utils.pm,v 1.78 2003/09/06 03:34:05 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1089,6 +1089,55 @@ sub __get_virtual_maps
     else {
 	return undef;
     }
+}
+
+
+=head2 is_cgi_process()
+
+inform whether this process runs as cgi ?
+
+=head2 is_under_mta_process()
+
+inform whether this process runs under MTA ?
+
+=cut
+
+
+# Descriptions: whether this process runs as cgi ?
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub is_cgi_process
+{
+    my ($curproc) = @_;
+    my $name = $curproc->myname();
+
+    if ($name =~ /\.cgi$/) {
+	return 1;
+    }
+
+    return 0;
+}
+
+
+# Descriptions: whether this process runs as cgi ?
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub is_under_mta_process
+{
+    my ($curproc) = @_;
+    my $name = $curproc->myname();
+
+    if ($name eq 'distribute' ||
+	$name eq 'command'    ||
+	$name eq 'digest'     ||
+	$name eq 'error'      ||
+	$name eq 'fml.pl'     ) {
+	return 1;
+    }
+
+    return 0;
 }
 
 
