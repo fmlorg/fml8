@@ -1,6 +1,6 @@
 #! /bin/sh
 
-# From configure.in Revision: 1.40 
+# From configure.in Revision: 1.41 
 
 # Guess values for system-dependent variables and create Makefiles.
 # Generated automatically using autoconf version 2.13 
@@ -1884,7 +1884,7 @@ else
 fi
 
 
-# spam
+# spam filters
 # Extract the first word of "spamassassin", so it can be a program name with args.
 set dummy spamassassin; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
@@ -1989,6 +1989,80 @@ if test -n "$SPAMC"; then
 else
   echo "$ac_t""no" 1>&6
 fi
+
+# Extract the first word of "bogofilter", so it can be a program name with args.
+set dummy bogofilter; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:1997: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_BOGOFILTER'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$BOGOFILTER" in
+  /*)
+  ac_cv_path_BOGOFILTER="$BOGOFILTER" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_BOGOFILTER="$BOGOFILTER" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_BOGOFILTER="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+BOGOFILTER="$ac_cv_path_BOGOFILTER"
+if test -n "$BOGOFILTER"; then
+  echo "$ac_t""$BOGOFILTER" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+
+# virus checker
+# Extract the first word of "clamscan", so it can be a program name with args.
+set dummy clamscan; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:2034: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_CLAMSCAN'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$CLAMSCAN" in
+  /*)
+  ac_cv_path_CLAMSCAN="$CLAMSCAN" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_CLAMSCAN="$CLAMSCAN" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_CLAMSCAN="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+CLAMSCAN="$ac_cv_path_CLAMSCAN"
+if test -n "$CLAMSCAN"; then
+  echo "$ac_t""$CLAMSCAN" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+
 
 
 use_warning=yes
@@ -2266,6 +2340,8 @@ s%@W3M@%$W3M%g
 s%@SPAMASSASSIN@%$SPAMASSASSIN%g
 s%@SPAMD@%$SPAMD%g
 s%@SPAMC@%$SPAMC%g
+s%@BOGOFILTER@%$BOGOFILTER%g
+s%@CLAMSCAN@%$CLAMSCAN%g
 s%@fmlconfdir@%$fmlconfdir%g
 s%@mlspooldir@%$mlspooldir%g
 s%@fml_owner@%$fml_owner%g
