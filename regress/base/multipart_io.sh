@@ -16,6 +16,7 @@ DIFF () {
 }
  
 DIFF $dir/msg_mp
+DIFF $dir/msg_mp.1
 DIFF $dir/msg_mp.2
 
 exit 0;

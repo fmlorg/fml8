@@ -298,28 +298,37 @@ sub parse_mime_multipart
     # pb = position of the beginning, pe = position of the end
     my ($msg, $next_part, $prev_part, @m);
     my $i   = 0;
+
+    # check the preamble before multipart blocks
     my $pb  = 0;
     my $pe  = $buf_begin;
     $self->_set_pos( $pe + 1 );
 
     do {
-	$m[ $i++ ] = _alloc_new_part($self, {
-	    boundary     => $boundary,
-	    offset_begin => $pb,
-	    offset_end   => $pe,
-	    content      => $content,
-	});
+	# XXX not effective region if $pe <= $pb
+	#     we should check this to avoid the empty preamble case.
+	if ($pe > $pb) {
+	    $m[ $i++ ] = _alloc_new_part($self, {
+		boundary     => $boundary,
+		offset_begin => $pb,
+		offset_end   => $pe,
+		content      => $content,
+	    });
+	}
 
 	($pb, $pe) = $self->_next_part_pos($content, $boundary);
 
+	# the closing of the blocks
 	if ($pe > $buf_end) { $boundary .= "--";}
-
 	my $buf = $boundary."\n";
+
+	# add the multipart delimiter
 	$m[ $i++ ] = _alloc_new_part($self, {
 	    content => \$buf
 	});	
     } while ($pe <= $buf_end);
 
+    # check the trailor after multipart blocks exists or not.
     my $p = index($$content, "\n", $buf_end) + 1;
     if (($content_length - $p) > 0) {
 	$m[ $i++ ] = _alloc_new_part($self, {
@@ -330,6 +339,7 @@ sub parse_mime_multipart
 	});
     }
 
+    # build a chain of multipart blocks and delimeters
     my $j = 0;
     for ($j = 0; $j < $i; $j++) {
 	if (defined $m[ $j + 1 ]) {
@@ -341,8 +351,6 @@ sub parse_mime_multipart
     }
 
     next_chain($self, $m[0]);
-
-    # use Data::Dumper; print Dumper( $self );
 }
 
 
