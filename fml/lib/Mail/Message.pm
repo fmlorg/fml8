@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.55 2002/04/27 05:21:41 fukachan Exp $
+# $FML: Message.pm,v 1.56 2002/04/28 09:42:17 fukachan Exp $
 #
 
 package Mail::Message;
@@ -240,8 +240,9 @@ sub new
     my $me     = {};
     my $data   = '';
 
-    # alloc memory area to hold the whole message.
-    $InComingMessage = \$data;
+    # XXX alloc memory area to hold the whole message.
+    # XXX (NOT NEEDED ? but only parse() needs $InComingMessage ?)
+    # $InComingMessage = \$data;
 
     bless $me, $type;
 
