@@ -1,6 +1,6 @@
 #! /bin/sh
 
-# From configure.in Revision: 1.37 
+# From configure.in Revision: 1.38 
 
 # Guess values for system-dependent variables and create Makefiles.
 # Generated automatically using autoconf version 2.13 
@@ -2286,7 +2286,7 @@ test "$no_create" = yes || ${CONFIG_SHELL-/bin/sh} $CONFIG_STATUS || exit 1
 
 
 if test "X$use_warning" = "Xyes" ; then
-	echo "enabled perl -w"
+	echo "enabled: perl -w"
 else
 	echo "disabled warning (perl -w)"
 	sed '1s/-w//' fml/libexec/loader > fml/libexec/loader.new.$$
