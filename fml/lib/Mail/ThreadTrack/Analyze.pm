@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Analyze.pm,v 1.10 2001/11/04 06:53:22 fukachan Exp $
+# $FML: Analyze.pm,v 1.11 2001/11/07 03:14:22 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Analyze;
@@ -248,7 +248,7 @@ sub update_thread_status
     if ($pragma  =~ /close/     ||
 	$content =~ /^\s*close/ || 
 	$subject =~ /^\s*close/) {
-	$self->set_thread_status("closed");
+	$self->set_thread_status("close");
 	$self->_append_thread_status_info("closed");
 	$self->log("thread is closed");
     }

@@ -175,7 +175,7 @@ sub run_cgi
     if ($action eq 'close') {
 	$self->set_status({
 	    thread_id => $thread_id,
-	    status    => 'closed',
+	    status    => 'close',
 	});
     }
 
