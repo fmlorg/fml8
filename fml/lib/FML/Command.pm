@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Command.pm,v 1.11 2001/10/14 00:56:54 fukachan Exp $
+# $FML: Command.pm,v 1.12 2001/10/17 10:24:25 fukachan Exp $
 #
 
 package FML::Command;
@@ -59,9 +59,13 @@ sub DESTROY { ;}
 sub AUTOLOAD
 {
     my ($self, $curproc, $command_args) = @_;
-    my $mode = $command_args->{ 'command_mode' } =~ /admin/i ? 'Admin' : 'User';
+    my $mode = 'User';
 
     return if $AUTOLOAD =~ /DESTROY/;
+
+    if (defined $command_args->{ 'command_mode' }) {
+	$mode = $command_args->{'command_mode'} =~ /admin/i ? 'Admin' : 'User';
+    }
 
     my $comname = $AUTOLOAD;
     $comname =~ s/.*:://;
