@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML$
+# $FML: Utils.pm,v 1.1.1.1 2001/04/03 09:53:29 fukachan Exp $
 #
 
 package Mail::Delivery::Utils;
@@ -16,8 +15,7 @@ use Carp;
 use ErrorMessages::Status qw(error_set error error_clear);
 
 require Exporter;
-@ISA = qw(Exporter);
-
+@ISA    = qw(Exporter);
 @EXPORT = qw(
 	     Log
 	     _smtplog
