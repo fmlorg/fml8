@@ -1,0 +1,15 @@
+From: virus-smtp-alert@zy.a.nuinui.net
+Date: Tue Dec 18 09:51:34 2001
+To: <fml-help-admin@ffs.fml.org>
+Subject: Returned Mail: Error During Delivery
+Message-Id: <20011218005246.E5F3821465@gatekeeper.noc.a.nuinui.net>
+
+------ Here is your List of Failed Recipients ------
+<rudo@nuinui.net>
+
+
+Transaction failed. [SMTP Error Code 554]
+
+-------- Here Is Your Returned Mail --------
+
+original message
