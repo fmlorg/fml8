@@ -1,43 +1,40 @@
 <para>
 <screen>
-                 module                       function     category
-                                                       <-- (get value)
-                                                       --> (set value)
+module     function                                     category
+                                                    <-- (get value)
+                                                    --> (set value)
 --------------------------------------------------------------------------------
-      FML/Process/State command_context_get_admin_password <-- process_command
-      FML/Process/State command_context_get_admin_auth <-- process_command
-      FML/Process/State command_context_get_need_confirm <-- process_command
-      FML/Process/State command_context_get_stop_process <-- process_command
-      FML/Process/State command_context_set_admin_password --> process_command
-      FML/Process/State command_context_set_admin_auth --> process_command
-      FML/Process/State command_context_set_need_confirm --> process_command
-      FML/Process/State command_context_set_stop_process --> process_command
-      FML/Process/Utils get_incoming_message_cache_file_path <-- incoming_message
-      FML/Process/Utils set_incoming_message_cache_file_path --> incoming_message
-       FML/Process/Fake                    _faker_main <-- faker
-       FML/Process/Fake                get_emul_domain <-- faker
-       FML/Process/Fake                set_emul_domain --> faker
-       FML/Process/Fake         _faker_analyze_address --> faker
-       FML/Process/Fake         _faker_analyze_address --> faker
-      FML/Process/Error                         finish <-- error
-      FML/Process/Error                            run --> error
-     FML/Process/Kernel       _finalize_stderr_channel <-- stderr
-     FML/Process/Kernel       _finalize_stderr_channel <-- stderr
-     FML/Process/Kernel       _finalize_stderr_channel --> stderr
-     FML/Process/Kernel         _reopen_stderr_channel --> stderr
-     FML/Process/Kernel         _reopen_stderr_channel --> stderr
-    FML/Process/Command                _command_switch <-- check_restrictions
- FML/Process/Distribute                            run <-- check_restrictions
-   FML/Restriction/Post             permit_member_maps <-- check_restrictions
-   FML/Restriction/Post reject_system_special_accounts <-- check_restrictions
-   FML/Restriction/Post                         reject <-- check_restrictions
-   FML/Restriction/Post             permit_member_maps --> check_restrictions
-   FML/Restriction/Post reject_system_special_accounts --> check_restrictions
-   FML/Restriction/Post                         reject --> check_restrictions
-      FML/Process/Utils                    get_charset <-- charset
-      FML/Process/Utils                    get_charset <-- charset
-      FML/Process/Utils                    set_charset --> charset
-      FML/Process/Utils              get_language_hint <-- language_hint
-      FML/Process/Utils              set_language_hint --> language_hint
+State      command_context_get_admin_auth           <-- process_command
+State      command_context_get_need_confirm         <-- process_command
+State      command_context_get_stop_process         <-- process_command
+State      command_context_get_admin_password       <-- process_command
+State      command_context_set_admin_auth           --> process_command
+State      command_context_set_need_confirm         --> process_command
+State      command_context_set_stop_process         --> process_command
+State      command_context_set_admin_password       --> process_command
+Utils      get_incoming_message_cache_file_path     <-- incoming_message
+Utils      set_incoming_message_cache_file_path     --> incoming_message
+Fake       _faker_main                              <-- faker
+Fake       get_emul_domain                          <-- faker
+Fake       set_emul_domain                          --> faker
+Fake       _faker_analyze_address                   --> faker
+Fake       _faker_analyze_address                   --> faker
+Error      finish                                   <-- error
+Error      run                                      --> error
+Kernel     _finalize_stderr_channel                 <-- stderr
+Kernel     _finalize_stderr_channel                 <-- stderr
+Kernel     _reopen_stderr_channel                   --> stderr
+Kernel     _reopen_stderr_channel                   --> stderr
+Kernel     _finalize_stderr_channel                 --> stderr
+State      restriction_state_get_deny_reason        <-- check_restrictions
+State      restriction_state_set_deny_reason        --> check_restrictions
+Utils      get_charset                              <-- charset
+Utils      get_charset                              <-- charset
+Utils      set_charset                              --> charset
+Utils      get_language_hint                        <-- language_hint
+Utils      set_language_hint                        --> language_hint
+State      error_message_get_count                  <-- reply_message_count
+State      error_message_set_count                  <-- reply_message_count
+State      error_message_set_count                  --> reply_message_count
 </screen>
 </para>
