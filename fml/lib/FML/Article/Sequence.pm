@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.12 2004/04/22 12:20:07 fukachan Exp $
+# $FML: Sequence.pm,v 1.13 2004/05/25 03:45:20 fukachan Exp $
 #
 
 package FML::Article::Sequence;
@@ -18,7 +18,7 @@ my $lock_channel = 'article_sequence';
 
 =head1 NAME
 
-FML::Article::Sequence - article sequence manipulation
+FML::Article::Sequence - article sequence manipulation.
 
 =head1 SYNOPSIS
 
@@ -34,9 +34,9 @@ save it to C<$sequence_file>.
 =cut
 
 
-# Descriptions: determine article id (sequence number)
+# Descriptions: determine article id (sequence number).
 #    Arguments: OBJ($self)
-# Side Effects: save and update the current article sequence number
+# Side Effects: save and update the current article sequence number.
 # Return Value: NUM(sequence identifier) or 0(failed)
 sub increment_id
 {
@@ -61,6 +61,7 @@ sub increment_id
     $curproc->unlock($lock_channel);
 
     unless ($error) {
+	# XXX-TODO: use $curproc->set_article_id().
 	# save $id in pcb (process control block) and return $id
 	$pcb->set('article', 'id', $id);
 
@@ -78,7 +79,7 @@ return the current article sequence number.
 
 =cut
 
-# Descriptions: return the article id (sequence number)
+# Descriptions: return the article id (sequence number).
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: NUM(sequence number)
@@ -89,6 +90,7 @@ sub id
     my $config  = $curproc->config();
     my $pcb     = $curproc->pcb();
 
+    # XXX-TODO: use $curproc->get_article_id().
     my $n = $pcb->get('article', 'id');
 
     # within Process::Distribute
@@ -122,7 +124,7 @@ sub get_number_from_map
 	$n =~ s/^\s*//;
 	$n =~ s/\s*$//;
 
-	if ($n =~ /^\d+$/) {
+	if ($n =~ /^\d+$/o) {
 	    return $n;
 	}
 	else {
@@ -135,6 +137,11 @@ sub get_number_from_map
 
     return 0;
 }
+
+
+#
+# XXX-TODO: speculate_max_id([$spool_dir]) NOT USED ?
+#
 
 
 =head2 speculate_max_id([$spool_dir])
