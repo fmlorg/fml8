@@ -1,7 +1,7 @@
 #-*- perl -*-
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.37 2001/08/05 22:36:42 fukachan Exp $
+# $FML: Config.pm,v 1.38 2001/08/23 14:29:22 fukachan Exp $
 #
 
 package FML::Config;
@@ -633,6 +633,24 @@ sub CLEAR
 
     undef %_fml_config_result;
     undef %_fml_config;
+}
+
+
+sub FIRSTKEY
+{
+    my ($self) = @_;
+    my @keys = keys %_fml_config_result;
+    $self->{ '_keys' } = \@keys;
+
+    my $keys = $self->{ _keys };
+    shift @$keys;
+}
+
+sub NEXTKEY
+{
+    my ($self) = @_;
+    my $keys = $self->{ '_keys' };
+    shift @$keys;
 }
 
 
