@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.27 2004/05/16 05:08:21 fukachan Exp $
+# $FML: SMTP.pm,v 1.28 2004/05/16 08:16:09 fukachan Exp $
 #
 
 
@@ -24,6 +24,7 @@ END   {}
 # STATUS CODE
 my $MAP_DONE     = 'DONE';
 my $MAP_NOT_DONE = 'NOT DONE';
+my $MAP_ERR_OPEN = 'CANNOT OPEN';
 
 
 =head1 NAME
@@ -448,6 +449,7 @@ sub deliver
 	    }
 	};
 	if ($@) {
+	    $self->set_map_status($map, $MAP_ERR_OPEN);
 	    Log("Error: cannot open and ignore $map");
 	    next MAP;
 	}
@@ -510,6 +512,21 @@ sub deliver
 	    }
 	}
     }
+
+    # check map status.
+  MAP:
+    for my $map (@maps) {
+	my $status = $self->get_map_status($map);
+	next MAP if $status eq $MAP_ERR_OPEN;
+
+	unless ($self->get_map_status($map) eq $MAP_DONE) {
+	    my $n = $self->get_map_position($map) || '?';
+	    Log("map=$map pos=$n status=\"$status\"");
+
+	    # XXX-TODO: fallback to queue
+	    # dump todo into queue for later retry (may be by other process).
+	}
+    }    
 
     # clean up recipient_map information after "all delivery".
     # CAUTION: this mapinfo tracks the delivery status.
