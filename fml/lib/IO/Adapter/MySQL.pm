@@ -117,6 +117,8 @@ sub close
 
     $res->finish     if defined $res;
     $dbh->disconnect if defined $dbh;
+    delete $self->{ _res };
+    delete $self->{ _dbh };
 }
 
 
@@ -253,6 +255,28 @@ sub error
 {
     my ($self) = @_;
     return $self->{ _error };
+}
+
+
+=head2 C<add()>
+
+=cut
+
+sub add
+{
+    my ($self, $args) = @_;
+    my $query = $self->_schema_configure('add');
+    $query = sprintf($query, $args);
+    $self->execute({ query => $query });
+}
+
+
+sub delete
+{
+    my ($self, $args) = @_;
+    my $query = $self->_schema_configure('delete');
+    $query = sprintf($query, $args);
+    $self->execute({ query => $query });
 }
 
 

@@ -8,7 +8,11 @@ use Carp;
 use IO::MapAdapter;
 
 my $map = 'mysql:toymodel';
-my $q   = "select address from ml where ml='elena' and file='members'";
+
+my $q_getline = "select address from ml where ml='elena' and file='members'";
+my $q_add     = "insert into ml values ('elena', 'members', '\%s', 0, 0)";
+my $q_delete  = "delete from ml where ml='elena' and address='\%s'";
+
 my $map_params = {
     $map => {
 	config => {
@@ -19,9 +23,10 @@ my $map_params = {
 	    table         => 'ml',
 	},
 	query  => {
-	    getline        => $q,
-	    get_next_value => $q,
-	    add            => "insert into ml values ()",
+	    getline        => $q_getline,
+	    get_next_value => $q_getline,
+	    add            => $q_add,
+	    delete         => $q_delete,
 	},
     },
 };
@@ -29,19 +34,39 @@ my $map_params = {
 
 my $obj = new IO::MapAdapter ($map, $map_params);
 
-if (defined $obj) {
-    if (defined $obj->open()) {
-	while ($_ = $obj->getline()) {
-	    print $_, "\n";
-	}
-	$obj->close;
-    }
-    else {
-	croak("cannot open()");
-    }
-}
-else {
-    croak("cannot make object");
-}
+_dump($obj); print "\n";
+
+$obj->open();
+$obj->add( 'rudo' );
+$obj->close();
+
+_dump($obj); print "\n";
+
+$obj->open();
+$obj->delete( 'rudo' );
+$obj->close();
+
+_dump($obj); print "\n";
 
 exit 0;
+
+
+sub _dump
+{
+    my ($obj) = @_;
+
+    if (defined $obj) {
+	if (defined $obj->open()) {
+	    while ($_ = $obj->getline()) {
+		print $_, "\n";
+	    }
+	    $obj->close;
+	}
+	else {
+	    croak("cannot open()");
+	}
+    }
+    else {
+	croak("cannot make object");
+    }
+}
