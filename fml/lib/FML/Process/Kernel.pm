@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.158 2003/02/03 12:33:29 fukachan Exp $
+# $FML: Kernel.pm,v 1.159 2003/02/09 12:31:44 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -999,9 +999,11 @@ sub _check_restrictions
 		# A: No, deny distribution
 		LogError("$sender is not an ML member");
 		LogError( $cred->error() );
-		$curproc->reply_message_nl('error.not_member',
-					   "you are not a ML member." );
-		$curproc->reply_message( "   your address: $sender" );
+
+		# reply this info in each FML::Process::* module.
+		# $curproc->reply_message_nl('error.not_member',
+		#			   "you are not a ML member." );
+		# $curproc->reply_message( "   your address: $sender" );
 
 		$pcb->set("check_restrictions", "deny_reason", $rule);
 		return 0;
@@ -1198,6 +1200,8 @@ sub reply_message
 {
     my ($curproc, $msg, $args) = @_;
     my $myname = $curproc->myname();
+
+    $curproc->caller_info($msg, caller) if $debug;
 
     # XXX-TODO: hard-coded. move condition statements to configuration file.
     # XXX makefml not support message handling not yet.
@@ -1429,6 +1433,8 @@ sub reply_message_nl
     my $config = $curproc->{ config };
     my $buf    = $curproc->message_nl($class, $default_msg, $args);
 
+    $curproc->caller_info($class, caller) if $debug;
+
     if (defined $buf) {
 	if ($buf =~ /\$/) {
 	    $config->expand_variable_in_buffer(\$buf, $args);
@@ -1444,6 +1450,22 @@ sub reply_message_nl
     else {
 	$curproc->reply_message($default_msg, $args);
     }
+}
+
+
+# Descriptions: add header info.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: none
+sub reply_message_add_header_info
+{
+    my ($curproc, $msg_args) = @_;
+    my $tag     = '   ';
+    my $hdr     = $curproc->incoming_message_header();
+    my $hdr_str = sprintf("\n%s\n", $hdr->as_string());
+    $hdr_str    =~ s/\n/\n$tag/g;
+
+    $curproc->reply_message($hdr_str);
 }
 
 
@@ -1484,6 +1506,17 @@ sub message_nl
     }
 
     return $buf;
+}
+
+
+# Descriptions: log message with info returned by caller().
+#    Arguments: OBJ($curproc) STR($msg) STR($pkg) STR($fn) NUM($line)
+# Side Effects: none
+# Return Value: none
+sub caller_info
+{
+    my ($curproc, $msg, $pkg, $fn, $line) = @_;
+    Log("msg='$msg' $fn $line");
 }
 
 
