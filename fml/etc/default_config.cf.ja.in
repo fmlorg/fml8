@@ -1456,6 +1456,10 @@ cgi_navigation_bar_color	=	#FFFFFF
 
 =head1	MTA に依存する設定のヒント
 
+newml_command_mta_config_list	=	postfix sendmail qmail procmail
+
+rmml_command_mta_config_list	=	$newml_command_mta_config_list
+
 
 =head2 directory
 
@@ -1491,8 +1495,8 @@ domain_exim_config_dir		= 	$domain_config_base_dir/exim
 # Descriptions: sendmail 用に教えるための設定ファイルを置くディレクトリ
 #      History: fml 4.0 ではきめうち
 #        Value: directory
-#     Examples: /var/spool/ml/etc/mail
-domain_sendmail_config_dir	= 	$domain_mail_config_dir
+#     Examples: /var/spool/ml/etc/sendmail
+domain_sendmail_config_dir	= 	$domain_config_base_dir/sendmail
 
 
 # Descriptions: MTA 用に教えるための設定ファイルを置くディレクトリ
@@ -1561,9 +1565,11 @@ qmail_virtual_map_file	=	$domain_qmail_config_dir/virtualdomains
 
 =head2	sendmail
 
-#
-# 特になし
-#
+# Descriptions: MTA に教えるための virtual map ファイル
+#      History: none
+#        Value: file path
+#     Examples: /var/spool/ml/etc/mail/virtual
+sendmail_virtual_map_file =	$domain_sendmail_config_dir/virtusertable
 
 
 =head2 procmail
@@ -1583,6 +1589,8 @@ path_perl                 = @PERL@
 
 path_cksum                = @CKSUM@
 
+path_sum                  = @SUM@
+
 path_md5                  = @MD5@
 
 path_tar                  = @TAR@
@@ -1590,6 +1598,8 @@ path_tar                  = @TAR@
 path_gzip                 = @GZIP@
 
 path_zcat                 = @ZCAT@
+
+path_gzcat                = @GZCAT@
 
 path_gunzip               = @GUNZIP@
 
@@ -1608,9 +1618,11 @@ path_uuencode             = @UUENCODE@
 path_compress             = @COMPRESS@
 
 
-=head2 MTA related
+=head2 MTA related program paths
 
 path_sendmail             = @SENDMAIL@
+
+path_makemap              = @MAKEMAP@
 
 path_newaliases           = @NEWALIASES@
 
