@@ -1,6 +1,37 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/06/24
+
+   Mail::Message[udb]::ToHTML 
+	pass $old_db_base_dir to DB module
+
+   Mail::Message[udb]::DB 
+	save all values of fields.
+	
+	for filtering system, save other header fields::return_path posted
+	x_posted sender x_sender received x_received.
+	
+	demand copying from old db to udb if needed(demaned) when _
+	db_get() called.
+
+	bug fix negative cache handling et.al.
+
+2003/06/23
+
+   variables
+	remove $system_message_charset and $system_message_subject,
+	which are not used.
+
+   Mail::Message::ToHTML 
+	bugfix at debug
+
+2003/06/21
+
+   Mail::Message 
+	bug fixed::message_text() should be able to handle differenct
+	type $data. 
+
 2003/06/15
 
    variables	
@@ -4934,4 +4965,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.147 2003/06/08 15:52:23 fukachan Exp $
+$FML: CHANGES.txt,v 1.148 2003/06/15 05:26:16 fukachan Exp $
