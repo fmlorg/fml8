@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: list.pm,v 1.3 2002/04/01 23:41:11 fukachan Exp $
+# $FML: list.pm,v 1.4 2002/04/07 05:01:33 fukachan Exp $
 #
 
 package FML::Command::Admin::list;
@@ -56,28 +56,55 @@ sub need_lock { 0;}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config         = $curproc->{ config };
-    my $member_maps    = $config->get_as_array_ref( 'member_maps' );
-    my $recipient_maps = $config->get_as_array_ref( 'recipient_maps' );
-    my $options        = $command_args->{ options };
-    my $maplist        = $member_maps;
+    my $options = [ 'member' ];
+
+    # import makefml options  
+    if (defined $command_args->{ options } &&
+	ref($command_args->{ options }) eq 'ARRAY') {
+	my $xopt = $command_args->{ options };
+	if (@$xopt) { $options = $xopt;}
+    }
+
+    $command_args->{ is_cgi } = 0;
+    $self->_show_list($curproc, $command_args, $options);
+}
+
+
+# Descriptions: show the address list
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#               HASH_ARRAY($options)
+# Side Effects: none
+# Return Value: none
+sub _show_list
+{
+    my ($self, $curproc, $command_args, $options) = @_;
+    my $config  = $curproc->{ config };
+    my $maplist = undef;
 
     for (@$options) {
 	if (/^recipient|active/i) {
-	    $maplist = $recipient_maps;
+	    $maplist = $config->get_as_array_ref( 'recipient_maps' );
 	}
 	elsif (/^member/i) {
-	    $maplist = $member_maps;
+	    $maplist = $config->get_as_array_ref( 'member_maps' );
+	}
+	elsif (/^adminmember|^admin_member/i) {
+	    $maplist = $config->get_as_array_ref( 'admin_member_maps' );
 	}
 	else {
 	    LogWarn("list: unknown type $_");
 	}
     }
 
+    # cheap sanity
+    unless (defined $maplist) { croak("list: map undeflined");}
+    unless ($maplist)         { croak("list: map undeflined");}	
+
     # FML::Command::UserControl specific parameters
     my $uc_args = {
 	maplist => $maplist,
 	wh      => \*STDOUT,
+	is_cgi  => $command_args->{ is_cgi },
     };
     my $r = '';
 
@@ -87,6 +114,33 @@ sub process
 	$obj->userlist($curproc, $command_args, $uc_args);
     };
     if ($r = $@) {
+	croak($r);
+    }
+}
+
+
+# Descriptions: show cgi menu for subscribe
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: update $member_map $recipient_map
+# Return Value: none
+sub cgi_menu
+{
+    my ($self, $curproc, $args, $command_args) = @_;
+    my $options = [ 'member' ];
+    my $r = '';
+
+    # navigation bar
+    print "<p> \"@$options\" address list\n";
+    print "<hr>\n";
+
+    # declare CGI mode
+    $command_args->{ is_cgi } = 1;
+
+    eval q{
+	$self->_show_list($curproc, $command_args, $options);
+    };
+    if ($r = $@) {
+	print $r;
 	croak($r);
     }
 }
