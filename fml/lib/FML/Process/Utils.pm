@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.87 2003/10/16 01:56:22 fukachan Exp $
+# $FML: Utils.pm,v 1.88 2003/10/16 03:50:07 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1425,7 +1425,7 @@ sub get_charset
 	    }
 	}
 	else {
-	    $curproc->log("debug: no accpet-language:");
+	    $curproc->log("debug: no Accpet-Language:");
 	}
     }
 
