@@ -1,0 +1,490 @@
+<!--
+   $FML$
+   $jaFML: fml_on_unix.sgml,v 1.5 2003/04/15 14:51:39 fukachan Exp $
+-->
+
+<chapter id="install.fml.unix">
+	<title>
+	&fml8; installation on UNIX
+	</title>
+
+
+<sect1 id="install.fml.unix.prepare">
+	<title>
+	preparation of installation
+	</title>
+
+
+<para>
+Create the user "fml" and the group "fml" before running 
+configure.
+<screen>
+% su root
+# groupadd fml
+# useradd -g fml -m fml
+</screen>
+</para>
+
+</sect1>
+
+
+<!-- ====================================================== -->
+<sect1 id="install.fml.unix.configure">
+	<title>
+	run configure
+	</title>
+
+
+<para>
+Run configure (GNU autoconf) and make.
+<screen>
+% su root
+# groupadd fml
+# useradd -g fml -m fml
+# ./configure
+# make install
+</screen>
+configure replaces variables in scripts and .cf files.
+</para>
+
+<para>
+After runnig configure, run "make install".  The installer (perl
+scripts) reads etc/fml/install.cf configure created and install &fml8;.
+</para>
+
+<para>
+You can specify the user name and fundametal directory names by
+configure arguments. Customizable variables follow: configure --help
+shows them.
+<screen>
+variables       default value               example
+--------------------------------------------------------
+prefix          /usr/local                  /usr/local
+exec_prefix     /usr/local
+bindir          ${exec_prefix}/bin          /usr/local/bin
+sbindir         ${exec_prefix}/sbin         /usr/local/sbin
+libexecdir      ${exec_prefix}/libexec      /usr/local/libexec/fml
+datadir         ${prefix}/share             /usr/local/share/fml
+sysconfdir      ${prefix}/etc               /usr/local/etc/fml
+sharedstatedir  ${prefix}/com
+localstatedir   ${prefix}/var
+libdir          ${exec_prefix}/lib          /usr/local/lib/fml
+includedir      ${prefix}/include
+oldincludedir   /usr/include
+infodir         ${prefix}/info
+mandir          ${prefix}/man
+</screen>
+You can overwrite the following variables by configure arguments.
+<screen>
+fmlconfdir      $sysconfidr/fml             /usr/local/etc/fml        
+mlspooldir      /var/spool/ml               /var/spool/ml
+fml_owner       fml                         fml
+fml_group       fml                         fml
+default_domain  (spaculated by configure)   (spaculated by configure)	
+</screen>
+These options are shown by runnig
+<screen>
+configure --help 
+</screen>
+.
+<screen>
+  --without-warning       run perl as perl without -w
+  --with-fmlconfdir=DIR   use DIR instead of SYSCONFDIR/fml
+  --with-mlspooldir=DIR   use DIR instead of /var/spool/ml
+  --with-fml-owner=USER   use USER instead of fml
+  --with-fml-group=GROUP  use GROUP instead of fml
+  --with-default-domain=DOMAIN  use DOMAIN as the ML domain
+</screen>
+
+</para>
+
+
+<sect2>
+	<title>
+	Example: running configure
+	</title>
+
+<para>
+Example: On NetBSD, you should install 3rd party programs into /usr/pkg.
+<screen>
+% ./configure --prefix=/usr/pkg
+</screen>
+</para>
+
+
+<para>
+Example: On FreeBSD, use /usr/local.
+<screen>
+% ./configure
+</screen>
+</para>
+
+<para>
+If you use /etc/fml as configuration directory on e.g. Debian,
+<screen>
+# ./configure --with-fmlconfdir=/etc/fml
+loading cache ./config.cache
+checking for perl... (cached) perl
+checking for perl... (cached) /usr/local/bin/perl
+checking whether optional useful commands are available or not
+checking for cksum... (cached) /usr/bin/cksum
+checking for md5... (cached) /usr/bin/md5
+checking for ls... (cached) /bin/ls
+checking for tar... (cached) /usr/bin/tar
+checking for gzip... (cached) /usr/bin/gzip
+checking for zcat... (cached) /usr/bin/zcat
+checking for gunzip... (cached) /usr/bin/gunzip
+checking for lha... (cached) /usr/pkg/bin/lha
+checking for ish... no
+checking for bzip2... (cached) /usr/bin/bzip2
+checking for bunzip2... (cached) /usr/bin/bunzip2
+checking for uuencode... (cached) /usr/bin/uuencode
+checking for compress... (cached) /usr/bin/compress
+checking for sendmail... (cached) /usr/sbin/sendmail
+checking for newaliases... (cached) /usr/bin/newaliases
+checking for postfix... (cached) /usr/sbin/postfix
+checking for postalias... (cached) /usr/sbin/postalias
+checking for postconf... (cached) /usr/sbin/postconf
+checking for postmap... (cached) /usr/sbin/postmap
+checking for nkf... (cached) /usr/pkg/bin/nkf
+checking for kakasi... no
+checking for namazu... no
+checking for pgp... (cached) /usr/pkg/bin/pgp
+checking for pgp5... no
+checking for pgpe... no
+checking for pgpk... no
+checking for pgps... no
+checking for pgpv... no
+checking for gpg... no
+checking for less... (cached) /usr/bin/less
+checking for more... (cached) /usr/bin/more
+checking for w3m... (cached) /usr/pkg/bin/w3m
+updating cache ./config.cache
+creating ./config.status
+creating config.sh
+creating fml/etc/main.cf
+creating fml/etc/default_config.cf.ja
+creating fml/etc/site_default_config.cf
+creating fml/libexec/loader
+creating fml/bin/fmlalias
+creating fml/bin/fmlconf
+creating fml/bin/fmldoc
+creating fml/bin/fmlhtmlify
+creating fml/bin/fmlsch
+creating fml/bin/fmlthread
+creating fml/bin/fmlspool
+creating fml/bin/makefml
+enabled perl -w
+
+fml has been configure with the following options:
+
+                 prefix: /usr/local
+            exec_prefix: ${prefix}
+                 bindir: ${exec_prefix}/bin
+                sbindir: ${exec_prefix}/sbin
+                lib_dir: ${exec_prefix}/lib
+            libexec_dir: ${exec_prefix}/libexec
+                 mandir: ${prefix}/man
+                datadir: ${prefix}/share
+
+      fml process owner: fml
+      fml process group: fml
+             fmlconfdir: /etc/fml
+             mlspooldir: /var/spool/ml
+         default domain: home.fml.org
+
+Now you must run "make install".
+</screen>
+</para>
+
+</sect2>
+
+</sect1>
+
+
+<!-- ====================================================== -->
+<!--
+   XXX-TODO directory roles ? here?
+-->
+<sect1>
+	<title>
+	Appendix: directory roles
+	</title>
+
+<para>
+&fml8; installs under /usr/local by default.
+</para>
+
+<para>
+  <table>
+    	<title>
+	directory structure
+	</title>
+
+    <tgroup cols=2>
+
+      <thead>
+        <row>
+          <entry> directory 		</entry>
+          <entry> description		</entry>
+        </row>
+      </thead>
+
+      <tbody>
+        <row>
+          <entry> /usr/local/etc/fml	</entry>
+          <entry>
+	configuration files.
+	It corresponds with 
+	&fml4;'s /usr/local/fml/.fml and default_config.ph.
+	Files here specify version and library paths etlb.al.
+          </entry>
+        </row>
+
+        <row>
+          <entry> /usr/local/libexec/fml 		</entry>
+          <entry>
+	executables ( &fml4;'s /usr/local/fml )
+	  </entry>
+        </row>
+
+        <row>
+          <entry>
+		/usr/local/lib/fml
+	  </entry>
+          <entry>
+	perl module location ( &fml4;'s /usr/local/fml )
+	  </entry>
+        </row>
+
+        <row>
+          <entry>
+		/usr/local/share/fml
+	  </entry>
+          <entry>
+	message templates 
+	( &fml4;'s /usr/local/fml/messages/)
+	language depends.
+	  </entry>
+        </row>
+
+        <row>
+          <entry>
+		/var/spool/ml
+	  </entry>
+          <entry>
+		The top directory for mailing lists of the default domain.
+		same as &fml4;.
+
+		caution:: the owner of /var/spool/ml 
+		can be specified by configure arguments.
+
+		Prepare different directory for each domain.
+		For example, var/spool/ml for fml.org (default domain),
+		whereas /var/spool/nuinui.net for nuinui.net domain
+		(virtual domain).
+	  </entry>
+        </row>
+      </tbody>
+
+    </tgroup>
+  </table>
+</para>
+</sect1>
+
+
+<!-- ====================================================== -->
+<sect1 id="install.fml.unix.makeinstall">
+	<title>
+	fml installation: make install
+	</title>
+
+<para>
+change user to "root" and run "make install"  after configure runs.
+<screen>
+% su root
+# make install
+</screen>
+</para>
+
+<warning>
+<para>
+You need not to run configure by the user root.
+But, you need to run "make install" by root.
+So, it is good to run both by root.
+<screen>
+% su root
+# ./configure
+# make install
+</screen>
+</para>
+</warning>
+
+</sect1>
+
+
+<sect1 id="install.fml.unix.edit.main.cf">
+	<title>
+	Edit main.cf
+	</title>
+
+<para>
+Please edit /usr/local/etc/fml/main.cf if needed,
+though already configure rewrites main.cf to fit your environment.
+</para>
+
+<para>
+main.cf is the most fundamental configuration to control &fml8; basic
+features: fml version control, library path, virtual domain et.al.
+</para>
+
+<para>
+Instead, the detail of each ML configuration depends on config.cf of
+each ML such as /var/spool/ml/elena/config.cf for elena ML.
+"config.cf" can control customization of header, filter rules, member
+file locations et.al.
+</para>
+
+<!-- main.cf example -->
+&sect.main.cf;
+
+</sect1>
+
+
+<sect1 id="install.fml.unix.edit.site.default.config.cf">
+	<title>
+	Edit site_default_config.cf (optional)
+	</title>
+
+<para>
+/usr/local/etc/fml/site_default_config.cf is the configuration file
+common over all mailing list on this host(site).
+<footnote>
+<para>
+This file corresponds to &fml4;'s site_init.ph.
+</para>
+</footnote>
+</para>
+
+<para>
+Each ML configuration file (/var/spool/ml/elena/config.cf for elena
+ML) overwrites site_default_config.cf.
+</para>
+
+<para>
+By default, some example configurations are added to this file.
+<screen>
+#
+#               site default_config.cf EXAMPLE
+#
+# fml-devel loads .cf files in this order for elena ML.
+#      1. ${prefix}/etc/fml/defaults/$VERSION/default_config.cf
+#      2. ${prefix}/etc/fml/site_default_config.cf
+#      3. ${prefix}/etc/fml/domains/$DOMAIN/default_config.cf
+#      4. /tmp/dir/elena/config.cf
+#
+# This file overrides the default "default_config.cf" configurations
+# in the following way.
+#
+
+# We want to disable the subject tag in articles by default.
+article_header_rewrite_rules	-=	rewrite_article_subject_tag
+
+# mime based comonent filter
+use_mime_component_filter	=	yes
+
+
+# [site specific options]
+#   Example:
+#	key  = value
+#	key += value
+#	key -= value
+
+
+=cut
+
+#
+# you can write hooks here after.
+#   Example:
+#	$distribute_run_start_hook = q{ ... };
+</screen>
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	Filter
+	</title>
+
+<para>
+All filter are enabled by default.
+</para>
+
+<para>
+"mime component filter" is important.
+By default mime component filter is enabled,
+text/plain article can be passeed through &fml8;.
+</para>
+
+<para>
+To disable mime component filter, set
+<screen>
+use_mime_component_filter	=	no
+</screen>
+at site_default_config.cf.
+</para>
+
+<para>
+To customize mime component filter, set
+<screen>
+use_mime_component_filter	=	yes
+</screen>
+at site_default_config.cf, and edit rules in 
+/usr/local/etc/fml/mime_component_filter .
+</para>
+
+</sect1>
+
+
+<sect1 id="install.virtual">
+	<title>
+	virtual domain
+	</title>
+
+<para>
+You do not need edit /usr/local/etc/fml/main.cf but you need to edit
+/usr/local/etc/fml/virtual.
+</para>
+
+<para>
+Suppose that fml.org is the default domain.  In this case,
+/var/spool/ml/$ml is used for $ml ML of fml.org. /var/spool/ml is used
+only for the domain fml.org.  If you want to set up elena@nuinui.net,
+you need to specify other directory.
+</para>
+
+<para>
+Specify the relation between domain and directory, 
+edit /usr/local/etc/fml/virtual and set the following:
+<screen>
+nuinui.net	/var/spool/nuinui.net
+</screen>
+</para>
+
+<warning>
+<para>
+site_default_config.cf is applied to all domains.
+</para>
+</warning>
+
+</sect1>
+
+
+<!-- MTA configurations -->
+&sect.install.postfix;
+&sect.install.qmail;
+
+
+</chapter>
