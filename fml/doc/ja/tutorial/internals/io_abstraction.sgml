@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: io_abstraction.sgml,v 1.1 2003/05/26 08:56:52 fukachan Exp $
 -->
 
 
@@ -248,6 +248,28 @@ XXX すなおに、key() もしくは get_key() でも良い気がする？
 
 <sect2>
 	<title>
+	ARRAY_REF でほしい？
+	</title>
+
+<para>
+find() の返り値を ARRAY_REF にできるので、find() をつかうよろし。
+</para>
+
+<para>
+とどめに find('*', { all => 1 }) などとすると全部の値が
+ARRAY_REF で返りますのぉ。
+<screen>
+KEY1 => ARRAY_REF1
+KEY2 => ARRAY_REF2
+   ...
+</screen>
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
 	プライマリキーを全部取り出したい場合は？
 	</title>
 
@@ -259,7 +281,7 @@ XXX すなおに、key() もしくは get_key() でも良い気がする？
 </para>
 
 <para>
-もし、あるとしたら get_primary_keys() みたいなメソッド？で、
+もし、あるとしたら get_primary_keys() みたいな名前のメソッド？で、
 ARRAY_REF で返すのでしょうかね？
 </para>
 
@@ -281,6 +303,13 @@ ARRAY_REF で返すのでしょうかね？
 </screen>
 って、getattr() とかいうメソッドかなぁ。だが、HASH_REF 中の
 属性のキーがオブジェクトに強く依存するなぁ…う〜む。
+</para>
+
+<para>
+ただ、キャッシュを抽象化したアダプタ層はこの形になりうるでしょう。
+<screen>
+FML::Error -> FML::Error::Cache -> Tie::JournaledDir
+</screen>
 </para>
 
 </sect2>
