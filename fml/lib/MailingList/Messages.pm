@@ -107,6 +107,8 @@ Each default value follows:
    header            undef
    content           ''
 
+C<header> is not used now.
+
 =head1 INTERNAL REPRESENTATION
 
 =head2 plain/text
