@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.10 2001/04/08 14:29:47 fukachan Exp $
+# $FML: Message.pm,v 1.11 2001/04/08 16:15:45 fukachan Exp $
 #
 
 package Mail::Message;
@@ -1299,6 +1299,12 @@ sub get_data_type
 
 return the number of paragraphs in the message ($self).
 
+=head2 C<nth_paragraph($n)>
+
+return the string of C<$n>-th paragraph. 
+For example, C<nth_paragraph(1)> returns the 1st paragraph.
+The syntax is usual not C language flabour.
+
 =cut
 
 
@@ -1312,6 +1318,29 @@ sub num_paragraph
 
     # exit ASAP if the message is empty. 
     return 0 if $self->is_empty();
+
+    my $pmap = $self->_evaluate_pmap();
+
+    # number of paratrah == the max element
+    $#$pmap;
+}
+
+
+sub nth_paragraph
+{
+    my ($self, $i) = @_;
+    my $data = $self->{ data };
+    my $pmap = $self->_evaluate_pmap();
+
+    $i--; # shift $i: 1 => 0, 2 =>1, et. al.
+    my ($pb, $pe) = ($pmap->[ $i ], $pmap->[ $i + 1 ]);
+    return substr($$data, $pb, $pe - $pb);
+}
+
+
+sub _evaluate_pmap
+{
+    my ($self) = @_;
 
     my $pb      = $self->{ offset_begin };
     my $pe      = $self->{ offset_end };
@@ -1356,7 +1385,7 @@ sub num_paragraph
 	print STDERR "( @pmap )\n"; 
     }
 
-    $#pmap;
+    return \@pmap;
 }
 
 
