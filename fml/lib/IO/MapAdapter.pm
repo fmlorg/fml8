@@ -95,6 +95,7 @@ sub open
 	}
 	else {
 	    $self->_log("Error: cannot open $file $flag");
+	    return undef;
 	}
     }
     elsif ($self->{'_type'} eq 'unix.group') {
@@ -221,7 +222,7 @@ sub getpos
 
     if ($self->{'_type'} eq 'file') {
 	my $fh = $self->{_fh};
-	tell($fh);
+	defined $fh ? tell($fh) : undef;
     }
     elsif ($self->{'_type'} eq 'unix.group') {
 	$self->{_counter};
@@ -261,7 +262,7 @@ sub eof
 
     if ($self->{'_type'} eq 'file') {
 	my $fh = $self->{_fh};
-	$fh->eof;
+	$fh->eof if defined $fh;
     }
     elsif ($self->{'_type'} eq 'unix.group') {
 	$self->{_counter} > $self->{_num_members} ? 1 : 0;
@@ -280,7 +281,7 @@ sub close
     my ($self) = @_;
 
     if ($self->{'_type'} eq 'file') {
-	$self->{_fh}->close;
+	$self->{_fh}->close if defined $self->{_fh};
     }
     elsif ($self->{'_type'} eq 'unix.group') {
 	;
