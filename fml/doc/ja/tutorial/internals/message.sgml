@@ -1,5 +1,5 @@
 <!--
-	$FML: config.cf.sgml,v 1.1 2001/05/05 03:53:40 fukachan Exp $	
+	$FML: message.sgml,v 1.1 2001/05/06 23:11:49 fukachan Exp $	
 -->
 
 <chapter id="message">
@@ -11,9 +11,9 @@
    <title> Mail::Message クラス </title>
 
 <para>
-メールはヘッダに始まりボディ（メール本文）が続きます。
-ボディは複数の部分（パート）から成ることもあります。
-ボディは複数の部分（パート）から成ることもあります。
+メールはヘッダに始まりボディ(メール本文)が続きます。
+multipart のように、
+ボディは複数の部分(パート)から成ることもあります。
 </para>
 
 <para>
@@ -24,14 +24,15 @@
 </para>
 
 <para>
-こういった目的のために Mail::Message クラスはあり、
+それらのモジュールのために Mail::Message クラスがあり、
 メールの構造を表現するために用いられています。
-このクラスは 
-Mail::Bounce や Mail::Delivery を始めいたるところで使われています。
+このクラスは
+Mail::Bounce や Mail::Delivery を始め、
+いたるところで使われています。
 </para>
 
 <para>
-例えば、このような使い方になります。
+例えば、このような使い方をします。
 <screen>
     my $fh  = new FileHandle $file;
     my $msg = Mail::Message->parse( { fd => $fh } );
@@ -54,7 +55,8 @@ Mail::Bounce や Mail::Delivery を始めいたるところで使われています。
    <title> Mail::Message::Parse クラス </title>
 
 <para>
-ダミーです。実体は Mail::Message クラスの中にあります。
+Mail::Message::Compose と同様の階層を作るためのダミーです。
+実体は Mail::Message クラスの中にあります。
 </para>
 
 </sect1>

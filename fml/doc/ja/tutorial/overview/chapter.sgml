@@ -1,5 +1,5 @@
 <!--
-	$FML$
+	$FML: chapter.sgml,v 1.1 2001/04/25 14:30:20 fukachan Exp $
 -->
 
 <chapter id="overview"> 
@@ -14,7 +14,7 @@ fml-devel
 は動くとはいえ、まだまだ開発者向けのプログラムであることに注意して
 下さい。実運用には 
 	<ulink url="http://www.fml.org/fml/">
-	fml 4.0
+	&fml4;
 	</ulink>
 系を御利用下さい。
 </para>
@@ -22,13 +22,19 @@ fml-devel
 
 
 <para>
-以下で、特に触れていない概念(例: ＭＬとは？)については fml 4.0 と同様
-です。4.0 の資料を適宜参照して下さい。
+以下で、特に触れていない概念(例: ＭＬとは？)については &fml4; と同様
+です。4.0 の資料(
+	<ulink url="http://www.fml.org/fml/">
+	http://www.fml.org/fml/
+	</ulink>
+	や
+	&fmlbible;
+)を適宜参照して下さい。
 </para>
 
 <para>
-いつものように elena ＭＬを例にとりましょう。
-elena ＭＬを作成するまでのおおまかな流れは次のようになります。
+さて、いつものように elena ＭＬの作成過程を例にとりましょう。
+おおまかな流れは次のようになります。
 </para>
 
 
@@ -36,7 +42,7 @@ elena ＭＬを作成するまでのおおまかな流れは次のようになります。
    <listitem>
 	<para>
 		<link linkend="download">
-		ソースをダウンロードをする。
+		ソースをダウンロードする。
 		</link>
 	</para>
    </listitem>
@@ -46,21 +52,21 @@ elena ＭＬを作成するまでのおおまかな流れは次のようになります。
 		<link linkend="install">
 		ユーザ root でインストールをする。
 		</link>
+	</para>
 
+	<para>
 		インストーラは /usr/local/bin に 
-			fmldoc fmlconf fmlticket makefml 
+		<link linkend="available">
+		fmldoc fmlconf fmlticket makefml 
+		</link>
 		をインストールします。
+	</para>
 
-		これらは、
+	<para>
 		実は、
+		これらは
 		/usr/local/libexec/fml の下の実体を呼び出す単なる
 		wrapper です。
-
-	なお、インストールされるコマンドの一覧は
-		<link linkend="available">
-		ここ
-		</link>
-	にあります。
 	</para>
    </listitem>
 
@@ -76,6 +82,20 @@ elena ＭＬを作成するまでのおおまかな流れは次のようになります。
 
    <listitem>
 	<para>
+		/etc/mail/aliases の設定などをする
+	</para>
+   </listitem>
+
+
+   <listitem>
+	<para>
+		テストをする。
+	</para>
+   </listitem>
+
+
+   <listitem>
+	<para>
 		<link linkend="guide.config.cf">
 		カスタマイズをする。 
 		</link>
@@ -84,18 +104,24 @@ elena ＭＬを作成するまでのおおまかな流れは次のようになります。
 
 </orderedlist>
 
+<warning>
+<para>
+	&fml4; と異なり root でインストールすることに注意して下さい。
+</para>
+</warning>
+
 </sect1>
 
 
-
-
+<!-- ============================================================= -->
 <sect1 id="guide.newml">
 
    <title> ＭＬを作る </title>
 
 <para>
-fml 4.0 と同様です。 
-が、config.cf という設定ファイルをインストールしてくれるだけです。
+&fml4; と同様です。 
+ですが、
+現状では config.cf という設定ファイルをインストールしてくれるだけです。
 
 インストール後は、次のようになるはずです。
 <screen>
@@ -110,7 +136,7 @@ config.cf
 <para>
 とりあえず config.cf の先頭の ml_domain と ml_name を
 自分のＭＬに変更して下さい。
-まだ自動変換できません（そのうちします）。
+まだ自動変換できません（そのうちできるようにします）。
 </para>
 
 
@@ -137,7 +163,7 @@ address_for_command = $ml_name-ctl@$ml_domain
 
 
 <para>
-include include-ctl aliases も fml 4.0 と同様です。
+include include-ctl aliases も &fml4; と同様です。
 が、まだ、makefml newml で自動生成できるようになっていません _o_
 </para>
 
@@ -175,28 +201,30 @@ owner-elena-ctl: fml
 
 <para>
 elena ＭＬの設定のカスタマイズは /var/spool/ml/elena/config.cf を編集
-して下さい。フォーマットは fml 4.0 の cf に近いですが、postfix の設定
-ファイルと同様です。
+して下さい。フォーマットは &fml4; の cf に近いです。
+むしろ postfix の設定ファイルと同様という方が良いでしょう。
 </para>
 
 <para>
-必要な項目を追加して下さい。それ以外はデフォルト値が使われます。
+適宜必要な項目を追加して下さい。
+指定しない場合はデフォルト値が使われます。
 デフォルト値はインストールしたバージョンに依存し、
-
 <screen>
 /etc/fml/defaults/バージョン番号/default_config.cf
 </screen>
-
 というファイルで定義されています。
+</para>
 
+<para>
 これは perl のライブラリが /usr/local/lib/perl/5.00503/ のように
 バージョン番号付のディレクトリに置かれるのと同様です。
 </para>
 
 <para>
-インストールした fml のバージョンごとに全部別のディレクトリに
-置かれることに注意して下さい。
+インストール先も fml のバージョンごとに
+別のディレクトリになることに注意して下さい。
 この仕組みのおかげでアップグレードしても元に戻すのが簡単です。
+これは &fml5; の特徴です。
 </para>
 
 </sect1>
