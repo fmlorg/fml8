@@ -4,10 +4,10 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.33 2003/08/23 07:24:42 fukachan Exp $
+# $FML: UserControl.pm,v 1.34 2003/11/08 06:51:49 fukachan Exp $
 #
 
-package FML::Command::UserControl;
+package FML::User::Control;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
@@ -31,7 +31,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::Command::UserControl - utility functions to control user list.
+FML::User::Control - utility functions to control user list.
 
 =head1 SYNOPSIS
 
@@ -415,7 +415,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::UserControl first appeared in fml8 mailing list driver package.
+FML::User::Control first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
