@@ -1,13 +1,14 @@
 #
-# $FML: Makefile,v 1.2 2001/04/22 16:42:57 fukachan Exp $
+# $FML: Makefile,v 1.3 2001/04/23 03:49:48 fukachan Exp $
 #
 
+TMP_DIR    = 
 TARGET_DIR = ../../../../Documentation/ja/tutorial
 
 all: export
 
 html:
-	sgmltools -v -b html -j "-v" fml-devel.sgml 2>&1 |\
+	env TMPDIR=$(TMP_DIR) sgmltools -v -b html -j "-v" fml-devel.sgml 2>&1 |\
 	uniq
 
 clean:
