@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2003 Ken'ichi Fukamachi
 #
-# $FML: Language.pm,v 1.1 2003/10/15 09:09:14 fukachan Exp $
+# $FML: Language.pm,v 1.2 2004/02/26 12:59:52 fukachan Exp $
 #
 
 package Mail::Message::Language;
@@ -48,7 +48,6 @@ sub accept_language_list
 	}
     }
 
-    push(@$list, '*'); # any language by default.
     return $list;
 }
 
