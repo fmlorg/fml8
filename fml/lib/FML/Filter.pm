@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.4 2001/12/23 13:46:13 fukachan Exp $
+# $FML: Filter.pm,v 1.5 2001/12/23 13:48:07 fukachan Exp $
 #
 
 package FML::Filter;
@@ -96,13 +96,34 @@ sub check
 	    my $obj = new FML::Filter::BodyCheck;
 
 	    # overwrite filter rules based on FML::Config
-	    if (defined $config->{ header_filter_rles }) {
+	    if (defined $config->{ body_filter_rles }) {
 		my (@rules) = split(/\s+/, $config->{ body_filter_rles });
 		$obj->rules( \@rules );
 	    }
 
 	    # go check
 	    $obj->body_check($message);
+	    if ($obj->error()) {
+		my $x = $obj->error();
+		$x =~ s/\s*at .*$//;
+		$x =~ s/[\n\s]*$//m;
+		$self->error_set($x);
+		return $x;
+	    }
+	}
+
+	if ($config->yes( 'use_content_filter' )) {
+	    use FML::Filter::ContentCheck;
+	    my $obj = new FML::Filter::ContentCheck;
+
+	    # overwrite filter rules based on FML::Config
+	    if (defined $config->{ content_filter_rles }) {
+		my (@rules) = split(/\s+/, $config->{ content_filter_rles });
+		$obj->rules( \@rules );
+	    }
+
+	    # go check
+	    $obj->content_check($message);
 	    if ($obj->error()) {
 		my $x = $obj->error();
 		$x =~ s/\s*at .*$//;
@@ -123,7 +144,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
