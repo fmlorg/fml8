@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DirUtils.pm,v 1.15 2003/08/29 15:33:57 fukachan Exp $
+# $FML: DirUtils.pm,v 1.16 2004/01/21 03:45:08 fukachan Exp $
 #
 
 package FML::Command::DirUtils;
@@ -61,6 +61,11 @@ sub dir
     my $path_ls = $config->{ path_ls };
     my $argv    = $du_args->{ argv };
     my $opt_ls  = '';
+    my $rm_args = {};
+
+    # inherit reply_message information.
+    my $recipient = $command_args->{ recipient } || ''; 
+    if ($recipient) { $rm_args->{ recipient } = $recipient;}
 
     # option: permit "ls [-A-Za-z]" syntax
     if (defined($du_args->{ opt_ls })) {
@@ -99,7 +104,7 @@ sub dir
 	my $fh = new FileHandle "$eval|";
 	if (defined $fh) {
 	    my $buf = undef;
-	    while ($buf = <$fh>) { $curproc->reply_message($buf);}
+	    while ($buf = <$fh>) { $curproc->reply_message($buf, $rm_args);}
 	    $fh->close();
 	}
 	else {
