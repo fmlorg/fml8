@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.68 2002/07/25 11:34:01 fukachan Exp $
+# $FML: Config.pm,v 1.69 2002/08/03 13:13:18 fukachan Exp $
 #
 
 package FML::Config;
@@ -627,6 +627,10 @@ sub expand_variables
 }
 
 
+# Descriptions: copy hash (HASH_REF)
+#    Arguments: HASH_REF($dst) HASH_REF($src)
+# Side Effects: none
+# Return Value: none
 sub __hash_copy
 {
     my ($dst, $src) = @_;

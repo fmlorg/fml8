@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledDir.pm,v 1.11 2002/08/03 10:30:44 fukachan Exp $
+# $FML: JournaledDir.pm,v 1.12 2002/08/03 13:13:28 fukachan Exp $
 #
 
 package Tie::JournaledDir;
@@ -277,6 +277,10 @@ sub NEXTKEY
 }
 
 
+# Descriptions: check whether $key exists
+#    Arguments: OBJ($self) STR($key)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
 sub EXISTS
 {
     my ($self, $key) = @_;
@@ -286,6 +290,10 @@ sub EXISTS
 }
 
 
+# Descriptions: delete $key
+#    Arguments: OBJ($self) STR($key)
+# Side Effects: update db
+# Return Value: none
 sub DELETE
 {
     my ($self, $key) = @_;
@@ -293,6 +301,10 @@ sub DELETE
 }
 
 
+# Descriptions: dummy now
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: none
 sub CLEAR
 {
     ;
