@@ -1,0 +1,31 @@
+Date: Fri, 21 Jan 2000 13:30:43 +0900
+Message-Id: <200001210430.NAA02185@evangelist.domain.net>
+To: ＭＬではなく元メールのFrom:のアドレス
+MIME-Version: 1.0
+Content-Type: multipart/report; report-type=delivery-status;
+	boundary="om-mani-padme-hum-926-783-948429043"
+X-UIDL: 07ba100b14891e7033aceec99777073c
+
+--om-mani-padme-hum-926-783-948429043
+Content-Type: text/plain
+
+Some addresses were rejected by the MDA fetchmail forwards to.
+
+
+--om-mani-padme-hum-926-783-948429043
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; localhost
+
+Final-Recipient: rfc822; account
+Last-Attempt-Date: Fri, 21 Jan 2000 13:30:43 +0900 (JST)
+Action: failed
+Status: m.0.0
+Diagnostic-Code: account: 550 <account@localhost>... User unknown
+
+--om-mani-padme-hum-926-783-948429043
+Content-Type: text/rfc822-headers
+
+元メールのヘッダのみ
+
+--om-mani-padme-hum-926-783-948429043--
