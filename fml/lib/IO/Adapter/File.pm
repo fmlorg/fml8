@@ -258,7 +258,7 @@ sub add
 	while (<$fh>) {
 	    print $wh $_;
 	}
-	close($fh);
+	$fh->close;
     }
     else {
 	$self->_error_reason("Error: cannot open file=$self->{ _file }");
@@ -291,7 +291,7 @@ sub delete
 	    next FILE_IO if /$regexp/;
 	    print $wh $_;
 	}
-	close($fh);
+	$fh->close;
 	$wh->close;
     }
     else {
@@ -326,7 +326,7 @@ sub replace
 		print $wh $_;
 	    }
 	}
-	close($fh);
+	$fh->close;
 	$wh->close;
     }
     else {
