@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.144 2004/05/18 00:36:44 fukachan Exp $
+# $FML: Distribute.pm,v 1.145 2004/05/18 08:43:11 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -314,7 +314,9 @@ sub finish
 
     # XXX [queue-based-distrbute] HACK
     # deferred delivery starts !
-    $curproc->_deliver_article();
+    unless ($curproc->is_refused()) {
+	$curproc->_deliver_article();
+    }
 
     $curproc->inform_reply_messages();
     unless ($curproc->smtp_server_state_get_error()) {
