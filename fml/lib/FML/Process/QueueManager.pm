@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.25 2004/08/14 16:32:14 fukachan Exp $
+# $FML: QueueManager.pm,v 1.26 2004/08/15 11:59:04 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -95,7 +95,7 @@ sub send
     else {
 	$queue->set_policy("fair-queue");
 	$ra = $queue->list();
-	if (@$ra) {
+	unless (@$ra) {
 	    $curproc->log("qmgr: empty active queue. re-schedule");
 	    $queue->reschedule();
 	}
