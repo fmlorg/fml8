@@ -86,10 +86,20 @@ sub generate_manual
 
 sub Prepend
 {
+    my $found = 0;
+
     print "<CENTER><EM>$ModulePrefix class modules</EM></CENTER>\n";
     print "<HR>\n";
 
-    my $found = 0;
+    my $appendix = "prepend_index.ja.html";
+    if (-f $appendix) {
+	use FileHandle;
+	my $fh = new FileHandle $appendix;
+	while (<$fh>) { print $_;}
+	close($fh);
+	$found++;
+    }
+
     foreach (<*.txt>) {
 	my $japanese = 0;
 
@@ -126,6 +136,7 @@ sub Show
 	next if $pathname =~ /^\@/;
 	next if $pathname =~ /\~$/;
 	next if $pathname =~ /txt$/;
+	next if $pathname =~ /html$/;
 	next if $pathname =~ /pod$/;
 	next if $pathname eq 'CVS';
 	next if $pathname eq 't'; # test directory
