@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: mget.pm,v 1.3 2001/10/14 00:32:29 fukachan Exp $
+# $FML: mget.pm,v 1.4 2001/12/22 09:21:05 fukachan Exp $
 #
 
 package FML::Command::User::mget;
@@ -18,6 +18,11 @@ use FML::Command::Utils;
 use FML::Command::User::get;
 @ISA = qw(FML::Command::User::get);
 
+
+# Descriptions: send articles, files, et.al...
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: forward request to get module
+# Return Value: none
 sub process
 {
     my ($self, $curproc, $command_args) = @_;

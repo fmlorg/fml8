@@ -1,11 +1,10 @@
-
 #-*- perl -*-
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: mget.pm,v 1.2 2001/10/14 00:44:39 fukachan Exp $
+# $FML: mget.pm,v 1.3 2001/12/22 09:21:03 fukachan Exp $
 #
 
 package FML::Command::Admin::mget;
@@ -18,6 +17,11 @@ use FML::Command::Utils;
 use FML::Command::Admin::get;
 @ISA = qw(FML::Command::Admin::get);
 
+
+# Descriptions: get articles, files, et. al.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: forwarded to get module
+# Return Value: none
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
@@ -31,11 +35,11 @@ FML::Command::Admin::mget - what is this
 
 =head1 SYNOPSIS
 
-forwarded C<FML::Command::Admin::get>.
+See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-forwarded C<FML::Command::Admin::get>.
+forwarded to C<FML::Command::Admin::get>.
 
 =head1 AUTHOR
 

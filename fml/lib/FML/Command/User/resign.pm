@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: resign.pm,v 1.3 2001/10/14 00:32:30 fukachan Exp $
+# $FML: resign.pm,v 1.4 2001/12/22 09:21:05 fukachan Exp $
 #
 
 package FML::Command::User::resign;
@@ -16,6 +16,11 @@ use FML::Command::Utils;
 use FML::Command::User::unsubscribe;
 @ISA = qw(FML::Command::User::unsubscribe use FML::Command::Utils);
 
+
+# Descriptions: unsubscribe user
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: forward request to unsubscribe module
+# Return Value: none
 sub process
 {
     my ($self, $curproc, $command_args) = @_;

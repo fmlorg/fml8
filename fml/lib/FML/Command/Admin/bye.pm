@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: bye.pm,v 1.3 2001/10/14 00:44:39 fukachan Exp $
+# $FML: bye.pm,v 1.4 2001/12/22 09:21:03 fukachan Exp $
 #
 
 package FML::Command::Admin::bye;
@@ -16,6 +16,11 @@ use FML::Command::Utils;
 use FML::Command::Admin::unsubscribe;
 @ISA = qw(FML::Command::Admin::unsubscribe FML::Command::Utils);
 
+
+# Descriptions: unsubscribe user
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: forward request to unsubscribe module
+# Return Value: none
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
@@ -32,6 +37,8 @@ FML::Command::Admin::bye - remove the specified member
 See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
+
+save as C<unsubscribe>.
 
 =head1 AUTHOR
 
