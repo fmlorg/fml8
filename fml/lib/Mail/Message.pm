@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.23 2001/05/06 08:19:11 fukachan Exp $
+# $FML: Message.pm,v 1.24 2001/05/18 03:50:16 fukachan Exp $
 #
 
 package Mail::Message;
@@ -32,10 +32,15 @@ Mail::Message -- manipulate mail messages (parse, analyze and compose)
 To parse the stdin and print it,
 
     use Mail::Message;
-    my $m = Mail::Message->parse({  fh => \*STDIN });
+    my $m = Mail::Message->parse({ fh => \*STDIN });
     $m1->print;
 
-To make a message of the body part,
+to parse file C<$filename>, 
+
+    use Mail::Message;
+    my $m = Mail::Message->parse({ file => $filename });
+
+to make a message of the body part,
 
     my $msg = new Mail::Message {
 	boundary  => $mime_boundary,
@@ -64,36 +69,43 @@ Please specify C<Mail::Header> or C<FML::Header> object as C<data>.
 
 =head2 OVERVIEW
 
-C<A mail message> has the data and the MIME header if needed.
+C<A mail message> has the data to send and some delivery information
+in the header.
+C<Mail::Message> objects construct a chain of header and data.
 C<Mail::Message> object holds them and other control information such
 as the reference to the next C<Mail::Message> object, et. al.
 
 C<Mail::Message> provides useful functions to analyze a mail message.
-It can handle MIME multipart. It provides the functions to check and
-get information on message (part) size et. al.
+such as to analyze MIME information, 
+to check and get information on message (part) size et. al.
+It can handle MIME multipart. 
 
 C<Mail::Message> also can compose a multipart message in primitive
 way.
 It is useful for you to use C<Mail::Message::Compose> class to handle
-MIME multipart in more clever way.  It is preapred as an adapter for
-C<MIME::Lite> class.
+MIME multipart in more clever way.  
+It is an adapter for C<MIME::Lite> class.
 
 =head2 INTERNAL REPRESENTATION
 
-One mail consists of a message or a chain of message objects.
-Elements of a chain are bi-directional among them.
-Our idea to handle the chain is similar to IPv6.
+One mail consists of a message or messages.
+They are all plain text or a set of plain text, images, html and so on.
+C<Mail::Message> is a chain which represents
+a set of several kinds of messages.
+
+
+Elements of one object chain are bi-directional among them.
 For example, a MIME/multipart message is a chain of message objects
 such as
 
-  undef -> mesg1 -> mesg2 -> mesg3 -> undef
+    undef -> mesg1 -> mesg2 -> mesg3 -> undef
+          <-       <-       <-       <-
 
-To describe such a chain, a message object consists of the following
-structure.
+To describe such a chain, a message object consists of 
+bi-directional object chains.
+
 Described below, C<MIME delimiter> is also treated as a virtual
 message for convenience.
-It is useful for other modules to consider what is a MIME delimiter
-et. al.
 
    $message = {
                 version        => 1.0
@@ -145,7 +157,7 @@ The default value for each key follows:
 
 =head2 plain/text
 
-If the message is just an plain/text, which is usual,
+If the message is just a plain/text, which is usual,
 internal representation follows:
 
    i  base_data_type               data_type
@@ -191,29 +203,29 @@ MIME delimiters and others in the same Mail::Message framework.
 
 =head2 C<new($args)>
 
-constructor which makes C<a> message object.
+constructor which makes C<one> message object.
 
-In almost cases, new() is used to a message object of a message body
-part.
+In almost cases, new() is used to make a message object,
+which is a part of one mail message.
 
-You can use this to make a header object by specifying
+We use this framework to make a header object by specifying
 
        data_type => text/rfc822-headers,
        data      => Mail::Header or FML::Header object,
 
 in $args (HASH REFERENCE). Pay attention the type of C<data>.
 
-  WARNING:
+C<WARNING:>
 
-    If you build a message by scratch, you must compose a header
-    object.  When C<parse()> method is called, you need to consider
-    the header object.
+It is useful to treate the message header and body in separate
+way when we compose the message by sequential attachments.
 
-    It is useful to treate the message header and body in separate
-    way when we compose the message by sequential attachments.
+If you build a message by scratch, you must compose a header
+object.  
+When you C<parse()> to a mail, 
+you will get the whole set of a chain and a body message.
 
 =cut
-
 
 # Descriptions: usual constructor
 #               call $self->_build_message($args) if $args is given.
@@ -349,11 +361,12 @@ sub __build_message
 
 =head2 C<dup_header()>
 
-duplicate a message chain. Precisely speaking, it duplicates the
-header object but not duplicate body parts of a message object chain.
-So, the next object of the duplicated header, C<dup_header0> in the
-following figure, is the first body part C<part1> of the origianl
-chain.
+duplicate a message chain. 
+Precisely speaking, it duplicates only the header object 
+but not duplicate body part.
+So, the next object of the duplicated header, 
+C<dup_header0> in the following figure, 
+is the first body part C<part1> of the origianl chain.
 
     header0 ----> part1 -> part2 -> ...
                    A
@@ -392,7 +405,7 @@ sub dup_header
 }
 
 
-=head1 METHODS to parse
+=head1 METHODS TO PARSE
 
 =head2 C<parse($args)>
 
@@ -561,7 +574,8 @@ sub _build_body_object
 
 =head2 C<rfc822_message_header()>
 
-return Mail::Header object for the message header.
+return Mail::Header object corresponding to the header part for the
+object C<$self>.
 
 =head2 C<rfc822_message_body()>
 
@@ -570,7 +584,7 @@ alias of C<rfc822_message_body_head()>.
 =head2 C<rfc822_message_body_head()>
 
 return the first or the head Mail::Message object in a chain for the
-message body.
+body part of the message C<$self>.
 
 =cut
 
@@ -601,13 +615,14 @@ sub rfc822_message_body
 
 =head2 C<find($args)>
 
-return the first C<Mail::Message> object with specified attrribute.
+return the first C<Mail::Message> object with the specified attrribute.
 You can specify C<data_type> in C<$args> HASH REFERENCE.
 For example, 
 
     $m = $msg->find( { data_type => 'text/plain' } );
 
 C<$m> is the first "text/plain" object in a chain of C<$msg> object.
+This method is used for the exact match.
 
     $m = $msg->find( { data_type_regexp => 'text' } );
 
@@ -704,11 +719,13 @@ sub _header_data_type
 
 no argument. 
 It return the head object of a chain of C<Mail::Message> objects.
+Usually it is the header part.
 
 =head2 C<last_message()>
 
 no argument. 
 It return the last object of a chain of C<Mail::Message> objects.
+Usually it is the last message in the body part.
 
 =cut
 
@@ -785,10 +802,12 @@ If $fd is not specified, STDOUT is used.
 =head2 C<set_print_mode(mode)>
 
 set print mode to C<mode>.
+The available <mode> is C<raw> or C<smtp>.
 
 =head2 C<reset_print_mode()>
 
 reset print() mode.
+It sets the mode to be C<raw>.
 
 =cut
 
@@ -989,6 +1008,10 @@ sub _print_messsage_on_disk
 =head1 METHODS to manipulate a multipart message
 
 =head2 C<build_mime_multipart_chain($args)>
+
+build a mime message by scratch.
+This may be obsolete since 
+we use C<MIME::Lite> to build a mime message now.
 
 =cut
 
@@ -1296,6 +1319,8 @@ sub _get_mime_header
 
 =head2 C<build_mime_header($args)>
 
+make a fundamental mime header fields and return it.
+
 =cut
 
 # Descriptions: 
@@ -1462,6 +1487,8 @@ sub is_empty
 
 =head2 C<body_size()>
 
+=head2 C<envelope_sender()>
+
 =cut
 
 sub header_size
@@ -1487,7 +1514,8 @@ sub envelope_sender
 
 =head2 C<get_data_type()>
 
-return the data type of the message object. 
+return the data type of the given message object ($self) not the whole
+mail message.
 
 =cut
 
@@ -1599,14 +1627,13 @@ sub _evaluate_pmap
 }
 
 
-=head2 C<header_in_body_part($size)>
+=head2 C<header()>
 
-get header in the content.
+alias of C<header_in_body_part()>.
 
-=head2 C<data_in_body_part($size)>
+=head2 C<data()>
 
-get body part in the content, 
-which is the whole mail or a part of multipart.
+alias of C<body_in_body_part()>.
 
 =cut
 
@@ -1623,6 +1650,20 @@ sub data
     my ($self) = @_;
     $self->data_in_body_part(@_[1 .. $#_]);
 }
+
+
+=head2 C<header_in_body_part($size)>
+
+return header in the message content.
+It is not mail header but header for each message such as
+mime header information of one part in a multipart.
+
+=head2 C<data_in_body_part($size)>
+
+get body part in the message content, 
+which is the whole mail (plain text) or a part of multipart.
+
+=cut
 
 
 # Descriptions: 

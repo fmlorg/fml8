@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Kernel.pm,v 1.45 2001/05/18 10:39:28 fukachan Exp $
+# $FML: Kernel.pm,v 1.46 2001/05/19 03:31:33 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -14,13 +14,15 @@ use Carp;
 
 =head1 NAME
 
-FML::Process::Kernel - provide core functions
+FML::Process::Kernel - provide fml core functions
 
 =head1 SYNOPSIS
 
     use FML::Process::Kernel;
     $curproc = new FML::Process::Kernel;
     $curproc->prepare($args);
+
+       ... snip ...
 
 =head1 DESCRIPTION
 
@@ -33,20 +35,21 @@ in the process flow.
 
 =head2 C<new($args)>
 
-1. import variables from libexec/loader
-   e.g. C<$ml_home_dir>
+1. import variables such as C<$ml_home_dir> via C<libexec/loader>
+   
+2. determine C<$fml_version> for further library loading
 
-2. define C<$fml_version>
+3. initialize current process struct C<$curproc> such as
 
-3. initialize
     $curproc->{ main_cf }
     $curproc->{ config }
     $curproc->{ pcb }
 
-This C<main_cf> provides the pointer to /etc/fml/main.cf parameters.
+For example, this C<main_cf> provides the pointer to /etc/fml/main.cf
+parameters.
 
 4. load and evaluate configuration files 
-   e.g. /var/spool/ml/elena/config.cf
+   e.g. C</var/spool/ml/elena/config.cf> for C<elena> mailing list.
 
 5. initialize signal handlders
 
@@ -152,7 +155,8 @@ sub _signal_init
 
 =head2 C<prepare($args)>
 
-It does preliminary works before the main part.
+preparation before the main part starts.
+
 It parses the message injected from STDIN to set up
 a set of the header and the body object.
 
@@ -248,20 +252,10 @@ sub unlock
 }
 
 
-# Descriptions: 
-#    Arguments: $self $args
-# Side Effects: 
-# Return Value: none
-sub validate_incoming_message
-{
-    my ($curproc, $args) = @_;
-}
-
-
 =head2 C<verify_sender_credential($args)>
 
-verify the mail sender and put the adddress at 
-$curproc->{ credential } object.
+verify the mail sender is valid or not.
+If valid, it sets the adddress within $curproc->{ credential } object.
 
 =cut
 
@@ -300,6 +294,8 @@ sub verify_sender_credential
 =head2 C<simple_loop_check($args)>
 
 loop checks following rules of $config->{ header_check_rules }.
+The autual check is done by header->C<$rule()> for a C<rule>.
+See C<FML::Header> object for more details.
 
 =cut
 
@@ -334,8 +330,9 @@ sub simple_loop_check
 
 =head2 C<load_config_files($files)>
 
-load configuration variables from C<@$files> and expand them in the
-last.
+read several configuration C<@$files>.
+The variable evaluation (expansion) is done on demand when
+$config->get() of FETCH() method is called.
 
 =cut
 
@@ -361,13 +358,17 @@ sub load_config_files
 
 =head2 C<parse_incoming_message($args)>
 
+C<preapre()> method calls this to
 parse the message to a set of header and body. 
 $curproc->{'incoming_message'} holds the parsed message
 which consists of a set of
+
    $curproc->{'incoming_message'}->{ header }
+
 and
-   $curproc->{'incoming_message'}->{ body }
-.
+
+   $curproc->{'incoming_message'}->{ body }.
+
 The C<header> is C<FML::Header> object.
 The C<body> is C<Mail::Message> object.
 
@@ -400,12 +401,12 @@ sub parse_incoming_message
 =head2 C<premit_post($args)>
 
 permit posting. 
-The restriction rules are based on C<post_restrictions>.
+The restriction rules follows the order of C<post_restrictions>.
 
 =head2 C<premit_command($args)>
 
 permit fml command use.
-The restriction rules are based on C<command_restrictions>.
+The restriction rules follows the order of C<command_restrictions>.
 
 =cut
 
@@ -523,6 +524,8 @@ following category.
    ----------------------------------
    reply_message     message sent back to the mail sender
    system_message    message sent to this list maintainer
+
+Prepare the message and queue it in by C<Mail::Delivery::Queue>.
 
 =cut
 

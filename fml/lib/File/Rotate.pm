@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Rotate.pm,v 1.5 2001/04/03 09:31:27 fukachan Exp $
+# $FML: Rotate.pm,v 1.6 2001/05/28 16:17:14 fukachan Exp $
 #
 
 package File::Rotate;
@@ -30,7 +30,9 @@ File::Rotate - file rotatation utilities
 =head1 DESCRIPTION
 
 Utility functions for file rotate operations. 
-It turns over the given C<file>.
+It turns over the given C<file> by some condition.
+Typical condition is given as the number of files or how old they are.
+
 C<rotation> renames and rearranges files like this:
 
     rm file.4
@@ -39,6 +41,10 @@ C<rotation> renames and rearranges files like this:
     mv file.1 file.2
     mv file.0 file.1
     mv file   file.0
+
+In old age, shell script does this but
+in modern unix, 
+some programs such as /usr/bin/newsyslog (MIT athena project) do.
 
 =head1 METHODS
 
@@ -76,7 +82,15 @@ sub new
 }
 
 
-# Descriptions: determine the time to rotate comes
+=head2 C<is_time_to_rotate()>
+
+C<stat()> the file correspoinding to the object and 
+determine whether the time to do comes or not.
+
+=cut
+
+
+# Descriptions: determine the time to rotate
 #    Arguments: $self
 # Side Effects: none
 # Return Value: 1 (time comes!) or 0
@@ -93,6 +107,18 @@ sub is_time_to_rotate
 }
 
 
+=head2 C<rotate()>
+
+rename files to rotate it.
+
+    rm file.4
+    mv file.3 file.4
+    mv file.2 file.3
+    mv file.1 file.2
+    mv file.0 file.1
+    mv file   file.0
+
+=cut
 
 # Descriptions: rotate filenames
 #    Arguments: $self
@@ -129,6 +155,12 @@ sub _get_param
     (${*$self}{_file}, ${*$self}{_max_size}, ${*$self}{_num_backlog});
 }
 
+
+=head2 C<error()>
+
+return the error message if exists.
+
+=cut
 
 # Descriptions: return error message
 #    Arguments: $self
