@@ -100,9 +100,16 @@ sub add_rfc2369
     my $command    = $config->{ address_for_command };
     my $maintainer = $config->{ maintainer };
 
-    # RFC2369
+    # See RFC2369 for more details
     $header->add('List-Post',  "<mailto:${post}>")       if $post;
     $header->add('List-Owner', "<mailto:${maintainer}>") if $maintainer;
+
+    if ($command) {
+	$header->add('List-Help',      "<mailto:${command}?body=help>");
+	$header->add('List-Subscribe', "<mailto:${command}?body=subscribe>");
+	$header->add('List-UnSubscribe', 
+		     "<mailto:${command}?body=unsubscribe>");
+    }
 }
 
 
