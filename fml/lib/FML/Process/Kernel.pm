@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.70 2002/01/16 13:43:20 fukachan Exp $
+# $FML: Kernel.pm,v 1.71 2002/01/20 13:47:07 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -12,6 +12,7 @@ package FML::Process::Kernel;
 use strict;
 use Carp;
 use vars qw(@ISA);
+use File::Spec;
 
 =head1 NAME
 
@@ -846,7 +847,7 @@ sub prepare_file_to_return
     my ($curproc, $args) = @_;
     my $config      = $curproc->{ config };
     my $tmp_dir     = $config->{ tmp_dir };
-    my $tmpf        = "$tmp_dir/$$";
+    my $tmpf        = File::Spec->catfile($tmp_dir, $$);
     my $src_file    = $args->{ src };
     my $charset_out = $args->{ charset };
 
