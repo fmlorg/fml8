@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: BodyCheck.pm,v 1.16 2002/04/08 12:44:24 fukachan Exp $
+# $FML: BodyCheck.pm,v 1.17 2002/04/10 03:20:52 fukachan Exp $
 #
 
 package FML::Filter::BodyCheck;
@@ -107,7 +107,7 @@ sub body_check
 
     ## 0. preparation
     # local scope after here
-    local($*) = 0;
+    # local($*) = 0;
 
     ## 1. XXX run-hooks
     ## 2. XXX %REJECT_HDR_FIELD_REGEXP
