@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.20 2002/11/17 14:07:34 fukachan Exp $
+# $FML: Queue.pm,v 1.21 2002/11/19 14:13:22 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -91,7 +91,7 @@ sub new
     $me->{ _directory } = $dir;
     $me->{ _id }        = $id;
     $me->{ _status }    = "new";
-    $me->{ _new_qf }    = File::Spec->catfile($dir, "new", $id);
+    $me->{ _new_qf }    = File::Spec->catfile($dir, "new",    $id);
     $me->{ _active_qf } = File::Spec->catfile($dir, "active", $id);
 
     # queue directory mode
@@ -99,12 +99,13 @@ sub new
 	$dir_mode = $args->{ directory_mode };
     }
 
-    # infomation for delivery
+    # must information for delivery
     $me->{ _info }->{ sender }     =
-      File::Spec->catfile($dir, "info", "sender", $id);
+      File::Spec->catfile($dir, "info", "sender",     $id);
     $me->{ _info }->{ recipients } =
       File::Spec->catfile($dir, "info", "recipients", $id);
 
+    # create directories in queue if not exists.
     for ($dir,
 	 File::Spec->catfile($dir, "active"),
 	 File::Spec->catfile($dir, "new"),
@@ -148,7 +149,7 @@ sub _new_queue_id
 
 =head2 C<id()>
 
-return the queue id assigned to the object C<$self>.
+return the queue id assigned to this object C<$self>.
 
 =cut
 
@@ -166,7 +167,7 @@ sub id
 
 =head2 C<filename()>
 
-return the file name of the queue id assigned to the object C<$self>.
+return the file name of the queue id assigned to this object C<$self>.
 
 =cut
 
@@ -204,6 +205,8 @@ where C<$qid> is like this: 990157187.20792.1
 sub list
 {
     my ($self) = @_;
+
+    # XXX-TODO: we need method e.g. active_dirpath();
     my $dir = File::Spec->catfile( $self->{ _directory }, "active");
 
     use DirHandle;
@@ -248,9 +251,10 @@ sub getidinfo
     my $dir = $self->{ _directory };
     my ($fh, $sender, @recipients);
 
-    # validate queue id is given
+    # validate if the queue id is given
     $id ||= $self->id();
 
+    # XXX-TODO: we should provide e.g. sender_dir_path().
     # sender
     use FileHandle;
     $fh = new FileHandle File::Spec->catfile($dir, "info", "sender", $id);
@@ -260,6 +264,7 @@ sub getidinfo
 	$fh->close;
     }
 
+    # XXX-TODO: we should provide e.g. recipients_dir_path().
     # recipient array
     $fh = new FileHandle File::Spec->catfile($dir, "info", "recipients", $id);
     if (defined $fh) {
@@ -358,6 +363,7 @@ sub in
 	$fh->close;
     }
 
+    # check the existence and the size > 0.
     return( (-e $qf && -s $qf) ? 1 : 0 );
 }
 
@@ -395,6 +401,7 @@ sub set
     elsif ($key eq 'recipients') {
 	my $fh = new FileHandle ">> $qf_recipients";
 	if (defined $fh) {
+	    # XXX-TODO: validate $value == ARRAY_REF.
 	    for (@$value) { print $fh $_, "\n";}
 	    $fh->close;
 	}
@@ -402,6 +409,7 @@ sub set
     elsif ($key eq 'recipient_maps') {
 	my $fh = new FileHandle ">> $qf_recipients";
 	if (defined $fh) {
+	    # XXX-TODO: validate $value == ARRAY_REF.
 	    use IO::Adapter;
 	    for my $map (@$value) {
 		my $obj = new IO::Adapter $map;

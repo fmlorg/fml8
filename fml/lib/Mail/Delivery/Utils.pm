@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.8 2002/09/11 23:18:24 fukachan Exp $
+# $FML: Utils.pm,v 1.9 2002/09/22 14:57:02 fukachan Exp $
 #
 
 package Mail::Delivery::Utils;
@@ -45,7 +45,7 @@ require Exporter;
 
 =head1 NAME
 
-Mail::Delivery::utils - utiliti programs for mail delivery
+Mail::Delivery::utils - utility programs for mail delivery class
 
 =head1 SYNOPSIS
 
@@ -78,6 +78,9 @@ If it is not specified,
 the logging message is forwarded to STDERR channel.
 
 =cut
+
+
+# XXX-TODO: we should provide both Log() and $delivery->log() methods ?
 
 
 # Descriptions: log by specified function pointer or into STDERR
@@ -201,6 +204,9 @@ get the latest status code.
 sub _get_status_code
 {
     my ($self) = @_;
+
+    # XXX-TODO: return what code if undefined ?
+    # XXX-TODO: consider Principle of Least Surprise!
     $self->{'_status_code'};
 }
 
@@ -256,6 +262,9 @@ sub _set_target_map
 sub _get_target_map
 {
     my ($self) = @_;
+
+    # XXX-TODO: return what code if undefined ?
+    # XXX-TODO: consider Principle of Least Surprise!
     $self->{ _mapinfo }->{ _curmap };
 }
 
@@ -313,6 +322,9 @@ sub _set_map_position
 sub _get_map_status
 {
     my ($self, $map) = @_;
+
+    # XXX-TODO: return what code if undefined ?
+    # XXX-TODO: consider Principle of Least Surprise!
     $self->{ _mapinfo }->{ $map }->{status};
 }
 
@@ -324,6 +336,9 @@ sub _get_map_status
 sub _get_map_position
 {
     my ($self, $map) = @_;
+
+    # XXX-TODO: return what code if undefined ?
+    # XXX-TODO: consider Principle of Least Surprise!
     $self->{ _mapinfo }->{ $map }->{position};
 }
 
@@ -348,7 +363,7 @@ clear information around the latest map operation.
 sub _rollback_map_position
 {
     my ($self) = @_;
-    my $map      = $self->_get_target_map;
+    my $map    = $self->_get_target_map;
 
     # count the number of rollback to avoid infinite loop
     if ( $self->{ _map_rollback_info }->{ $map }->{ count } > 2 ) {

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: INET6.pm,v 1.9 2002/09/11 23:18:25 fukachan Exp $
+# $FML: INET6.pm,v 1.10 2002/09/22 14:57:03 fukachan Exp $
 #
 
 package Mail::Delivery::Net::INET6;
@@ -55,7 +55,7 @@ sub is_ipv6_ready
 	_we_can_use_Socket6($self, $args);
     };
 
-    $self->{_ipv6_ready} eq 'yes' ? 1 : 0;
+    return ($self->{_ipv6_ready} eq 'yes' ? 1 : 0);
 }
 
 
@@ -122,6 +122,7 @@ sub connect6
 	# clean up
 	delete $self->{_socket} if defined $self->{_socket};
 
+	# XXX-TODO: "LOOP" is an appropriate label ?
       LOOP:
 	while (scalar(@res) >= 5) {
 	    ($family, $type, $proto, $saddr, $canonname, @res) = @res;
