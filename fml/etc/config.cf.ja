@@ -9,10 +9,10 @@
 #
 
 # ドメイン名 (参照: 以下のアドレスを見よ $ml_domain がこの値に展開される)
-ml_domain           = fml.org
+ml_domain           = __ml_domain__
 
 # ML の名前
-ml_name		    = elena		
+ml_name		    = __ml_name__
 
 # 管理者のアドレス
 maintainer	    = $ml_name-admin@$ml_domain
