@@ -4,7 +4,7 @@
 # Copyright (C) 2000 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Distribute.pm,v 1.42 2001/04/08 06:13:15 fukachan Exp $
+# $FML: Distribute.pm,v 1.43 2001/04/15 05:58:05 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -119,13 +119,8 @@ sub run
 
     $curproc->lock();
     {
-	# user credential
-	my $cred = $curproc->{ credential };
-
-	# Q: the mail sender is a ML member?
-	if ($cred->is_member) {
-	    # A: If so, we try to distribute this article.
-	    _distribute( $curproc ); 
+	if ($curproc->permit_post($args)) {
+	    $curproc->_distribute($args);
 	}
     }
     $curproc->unlock();
