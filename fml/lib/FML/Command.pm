@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.40 2003/08/23 04:35:26 fukachan Exp $
+# $FML: Command.pm,v 1.41 2003/08/23 07:24:40 fukachan Exp $
 #
 
 # XXX
@@ -69,6 +69,55 @@ sub new
 sub DESTROY { ;}
 
 
+=head2 set_mode($curproc, $command_args)
+
+set the current mode, either of "admin" or "user".
+
+=head2 get_mode($curproc, $command_args)
+
+return the current mode, either of "admin" or "user".
+
+=cut
+
+
+# Descriptions: set the current mode, either of "admin" or "user".
+#               set 'user' mode if invalid mode specified.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args) STR($mode)
+# Side Effects: none
+# Return Value: STR
+sub set_mode
+{
+    my ($self, $curproc, $command_args, $mode) = @_;
+
+    # always 'usre' if invalid mode specified.
+    if ($mode =~ /admin/i) {
+	$command_args->{'command_mode'} = 'Admin';
+    }
+    else {
+	$command_args->{'command_mode'} = 'User';
+    }
+}
+
+
+# Descriptions: return the current mode, either of "admin" or "user".
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: none
+# Return Value: STR
+sub get_mode
+{
+    my ($self, $curproc, $command_args) = @_;
+
+    if ($command_args->{'command_mode'} =~ /admin/i) {
+	return 'Admin';
+    }
+    else {
+	return 'User';
+    }
+}
+
+
+=head1 METHODS
+
 =head2 rewrite_prompt($curproc, $command_args, $rbuf)
 
 rewrite the specified buffer $rbuf (STR_REF).
@@ -92,8 +141,7 @@ sub rewrite_prompt
     my ($self, $curproc, $command_args, $rbuf) = @_;
     my $command = undef;
     my $comname = $command_args->{ comname };
-    my $mode    =
-	$command_args->{'command_mode'} =~ /admin/i ? 'Admin' : 'User';
+    my $mode    = $self->get_mode($curproc, $command_args);
     my $pkg     = "FML::Command::${mode}::${comname}";
 
     eval qq{ use $pkg; \$command = new $pkg;};
@@ -134,8 +182,7 @@ sub notice_cc_recipient
     my ($self, $curproc, $command_args) = @_;
     my $command = undef;
     my $comname = $command_args->{ comname };
-    my $mode    =
-	$command_args->{'command_mode'} =~ /admin/i ? 'Admin' : 'User';
+    my $mode    = $self->get_mode($curproc, $command_args);
     my $pkg     = "FML::Command::${mode}::${comname}";
 
     eval qq{ use $pkg; \$command = new $pkg;};
@@ -172,8 +219,7 @@ sub AUTOLOAD
     # XXX IMPORTANT: user mode if the given mode is invalid.
     my $mode = 'User';
     if (defined $command_args->{ command_mode }) {
-	$mode =
-	    $command_args->{ command_mode } =~ /admin/i ? 'Admin' : 'User';
+	$mode = $self->get_mode($curproc, $command_args);
     }
 
     my $comname = $AUTOLOAD;
