@@ -161,7 +161,43 @@
 	なくて admin コマンドの時は考えなくてもいいからだな、それは …
 
 
-[TODO]	fml $ml thread $subcommand: モジュールの clean up
+[TODO]	FML::Process::Scheduler ってかなり？
+
+	うーん、なかみがない。予約だけされてるモジュールやね
+	mkdir するだけ？ :-)
+
+
+[TODO]	Mail::Message::Encode へマージしたいもの
+
+	Mail/Message/Decode.pm
+	Mail/Message/Encode.pm
+		はどうする？
+
+	FML::Language を削除
+	FML::Language::ISO2022JP を削除
+		実態は以下の2つのクラス
+
+	FML::Language::Japanese::String
+		STR2EUC()
+		STR2JIS()
+		STR2SJIS()
+
+
+	FML::Language::Japanese::Utils
+		is_iso2022jp_string()
+		_look_not_iso2022jp_string()
+		compare_euc_string()
+
+	[TODO]
+
+	Mail/ThreadTrack/Print/Utils.pm に STR2EUC がある
+
+
+[TODO]	スレッド関連のモジュール全部見直せよ
+
+	Mail::ThreadTrack のクリーニング
+
+	fml $ml thread $subcommand: モジュールの clean up
 
 	スレッド関連のモジュール全部見直せよ
 
@@ -172,9 +208,6 @@
 		FML::Article::Thread		(不要じゃないの？)
 
 	どこに、なんのメソッドがあるべきなのか？	
-
-
-[TODO]	Mail::ThreadTrack のクリーニング
 
 	output とモードの明瞭化を
 	どこでどう CSS とたたかうの？
@@ -282,4 +315,4 @@
 
 
 ----------
-$FML: 00_MEMO,v 1.71 2003/03/17 13:29:01 fukachan Exp $
+$FML: 00_MEMO,v 1.72 2003/04/12 13:54:17 fukachan Exp $
