@@ -1,7 +1,28 @@
 		CHANGES
 		Last Modified: $Date$
 
+2001/12/16
+
+   FML::Messages 
+   IO::Adapter::LDAP 
+   Mail::Message::Date 
+   Mail::Message::Language::Japanese::Subject 
+	nuke "require Exporter, which is not needed
+	
+   INSTALL.sh 
+	warn you should update loader if needed
+
+   loader.in
+	use $fmlconfdir not $sysconfdir
+	use IO::File not FileHandle
+
 2001/12/11
+
+   FML::Command::Admin::newml 
+	ensure installed file mode to be 0644
+	
+   TinyScheduler 
+	speculate $user by $$ unless defined $user
 
    ./configure の拡張
 		メッセージをいろいろつけたす	
@@ -1252,4 +1273,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.39 2001/12/09 13:16:09 fukachan Exp $
+$FML: CHANGES.txt,v 1.40 2001/12/11 16:14:07 fukachan Exp $
