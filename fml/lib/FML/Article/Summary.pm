@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.6 2002/09/28 05:36:03 fukachan Exp $
+# $FML: Summary.pm,v 1.1.1.1 2002/11/26 07:42:19 fukachan Exp $
 #
 
 package FML::Article::Summary;
@@ -29,8 +29,8 @@ FML::Article::Summary - generate article summary
 =cut
 
 
-# Descriptions: 
-#    Arguments: OBJ($self) HASH_REF($args)
+# Descriptions: usual constructor.
+#    Arguments: OBJ($self) OBJ($curproc)
 # Side Effects: 
 # Return Value: none
 sub new
@@ -38,19 +38,23 @@ sub new
     my ($self, $curproc) = @_;
     my ($type) = ref($self) || $self;
     my $me     = {};
+
     $me->{ _curproc } = $curproc;
+
     return bless $me, $type;
 }
 
 
+# Descriptions: append summary to $summary_file
+#    Arguments: OBJ($self) NUM($id)
+# Side Effects: append summary to $summary_file
+# Return Value: none
 sub print
 {
     my ($self, $id) = @_;
     my $curproc = $self->{ _curproc };
     my $config  = $curproc->config();
     my $file    = $config->{ 'summary_file' };
-
-    print STDERR "open summary_file=$file id=$id\n";
 
     use FileHandle;
     my $wh = new FileHandle ">> $file";
@@ -63,30 +67,40 @@ sub print
 }
 
 
+# Descriptions: prepare infomation on article $id for later use
+#               such as $id, $address, $subject et.al.
+#    Arguments: OBJ($self) NUM($id)
+# Side Effects: none
+# Return Value: HASH_REF
 sub _prepare_info
 {
     my ($self, $id) = @_;
     my $curproc = $self->{ _curproc };
+    my $config  = $curproc->config();
+    my $tag     = $config->{ article_subject_tag };
 
     use FML::Article;
-    use Mail::Message;
     my $article = new FML::Article $curproc;
     my $file    = $article->filepath($id);
+
+    use Mail::Message;
     my $msg     = new Mail::Message->parse( { file => $file } );
     my $header  = $msg->whole_message_header();
     my $address = $header->get( 'from' );
 
-    # extract the first 15 bytes of user@domain part.
+    # extract the first 15 bytes of user@domain part from From: header field.
     use FML::Header;
     my $hdrobj = new FML::Header;
-    $address = substr( $hdrobj->address_clean_up( $address ), 0, 15);
+    $address = substr($hdrobj->address_clean_up( $address ), 0, 15);
 
     # fold "\n"
-    my $subject = $header->get( 'subject' );
+    use FML::Header::Subject;
+    my $obj     = new FML::Header::Subject;
+    my $subject = $obj->clean_up($header->get('subject'), $tag);
     $subject =~ s/\s*\n/ /g;   
     $subject =~ s/\s+/ /g;
 
-    my $info    = {
+    my $info = {
 	id       => $id,
 	address  => $address,
 	subject  => $subject,
@@ -96,6 +110,10 @@ sub _prepare_info
 }
 
 
+# Descriptions: one line version of print().
+#    Arguments: OBJ($self) HANDLE($wh) HASH_REF($info)
+# Side Effects: none
+# Return Value: none
 sub print_one_line_summary
 {
     my ($self, $wh, $info) = @_;
@@ -112,6 +130,10 @@ sub print_one_line_summary
 }
 
 
+# Descriptions: write out formatted string into $summary_file.
+#    Arguments: OBJ($self) HANDLE($wh) HASH_REF($info)
+# Side Effects: update $summary_file.
+# Return Value: none
 sub _fml4_compatible_style_one_line_summary
 {
     my ($self, $wh, $info) = @_;
@@ -134,15 +156,6 @@ sub _fml4_compatible_style_one_line_summary
     else {
 	LogError("date object undefined.");
     }
-}
-
-
-if ($0 eq __FILE__) {
-    my $obj = new FML::Article::Summary;
-    $obj->_one_line_summary("\%d \%s\n", [
-				      1000,
-				      "uja"
-				      ]);
 }
 
 
