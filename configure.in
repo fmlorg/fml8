@@ -1,5 +1,5 @@
 dnl
-dnl $FML: configure.in,v 1.39 2003/05/06 04:10:53 fukachan Exp $
+dnl $FML: configure.in,v 1.40 2003/07/26 14:35:17 fukachan Exp $
 dnl
 AC_REVISION($Revision$)
 
@@ -64,11 +64,17 @@ AC_PATH_PROG(LESS,     less)
 AC_PATH_PROG(MORE,     more)
 AC_PATH_PROG(W3M,      w3m)
 
-# spam
+# spam filters
 AC_PATH_PROG(SPAMASSASSIN, spamassassin)
 AC_PATH_PROG(SPAMD,        spamd)
 AC_PATH_PROG(SPAMC,        spamc)
+AC_PATH_PROG(BOGOFILTER,   bogofilter)
+
+# virus checker
+AC_PATH_PROG(CLAMSCAN,     clamscan)
+
 dnl path_check_end
+
 
 use_warning=yes
 AC_ARG_WITH(warning, 
