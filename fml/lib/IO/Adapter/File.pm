@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.30 2002/06/01 05:02:34 fukachan Exp $
+# $FML: File.pm,v 1.31 2002/06/01 05:09:27 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -426,12 +426,12 @@ sub replace
 
     $self->open("w");
 
-    my $fh = $self->{ _fh };
+    my $rh = $self->{ _fh };
     my $wh = $self->{ _wh };
 
-    if (defined $fh) {
+    if (defined $rh) {
       FILE_IO:
-	while (<$fh>) {
+	while (<$rh>) {
 	    if (/$regexp/) {
 		print $wh $value, "\n";
 	    }
@@ -439,8 +439,8 @@ sub replace
 		print $wh $_;
 	    }
 	}
-	$fh->close;
 	$wh->close;
+	$rh->close;
     }
     else {
 	$self->error_set("Error: cannot open file=$self->{ _file }");
