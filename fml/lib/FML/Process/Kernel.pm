@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.218 2004/03/13 06:03:24 fukachan Exp $
+# $FML: Kernel.pm,v 1.219 2004/03/13 10:29:46 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -14,16 +14,16 @@ use Carp;
 use vars qw(@ISA @Tmpfiles $TmpFileCounter %LockInfo);
 use File::Spec;
 
+use File::SimpleLock;
 use FML::Process::Flow;
-use FML::Process::Utils;
 use FML::Parse;
 use FML::Header;
 use FML::Config;
 use FML::Log qw(Log LogWarn LogError);
-use File::SimpleLock;
+use FML::Process::Utils;
+use FML::Process::State;
+@ISA = qw(FML::Process::State FML::Process::Utils);
 
-# for small utilities: fml_version(), myname(), et. al.
-push(@ISA, qw(FML::Process::Utils));
 
 my $debug      = 0;
 my $rm_debug   = 0;
@@ -1080,11 +1080,6 @@ sub _inject_charset_hints
 permit posting.
 The restriction rules follows the order of C<article_post_restrictions>.
 
-=head2 premit_command($args)
-
-permit fml command use.
-The restriction rules follows the order of C<command_mail_restrictions>.
-
 =cut
 
 
@@ -1095,38 +1090,14 @@ The restriction rules follows the order of C<command_mail_restrictions>.
 sub permit_post
 {
     my ($curproc) = @_;
-    $curproc->_check_restrictions('article_post');
-}
-
-
-# Descriptions: permit this command process
-#    Arguments: OBJ($curproc)
-# Side Effects: set the error reason at "check_restriction" in pcb.
-# Return Value: NUM(1 or 0)
-sub permit_command
-{
-    my ($curproc) = @_;
-    $curproc->_check_restrictions('command_mail');
-}
-
-
-# Descriptions: permit this $type process based on the rules defined
-#               in ${type}_restrictions.
-#    Arguments: OBJ($curproc) STR($type)
-# Side Effects: set the error reason at "check_restriction" n pcb.
-# Return Value: NUM(1 or 0)
-sub _check_restrictions
-{
-    my ($curproc, $type) = @_;
-    my $config = $curproc->config();
-    my $cred   = $curproc->{ credential }; # user credential
-    my $pcb    = $curproc->pcb();
-    my $sender = $cred->sender();
-    my $rules  = $config->get_as_array_ref( "${type}_restrictions" );
+    my $config    = $curproc->config();
+    my $cred      = $curproc->{ credential }; # user credential
+    my $pcb       = $curproc->pcb();
+    my $sender    = $cred->sender();
+    my $rules     = $config->get_as_array_ref( "article_post_restrictions" );
 
     use FML::Restriction::Post;
     my $acl = new FML::Restriction::Post $curproc;
-
     my ($match, $result) = (0, 0);
     for my $rule (@$rules) {
 	if ($acl->can($rule)) {
