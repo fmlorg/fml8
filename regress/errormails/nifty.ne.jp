@@ -1,0 +1,37 @@
+From Postmaster@mail.nifty.ne.jp  Sat Oct 14 23:26:50 2000
+Return-Path: <Postmaster@mail.nifty.ne.jp>
+Received: from ums512.nifty.ne.jp (ums512.nifty.ne.jp [10.20.30.4])
+	by ahodori.fml.org (Postfix) with ESMTP id 1C50A8664B
+	for <fml-support-admin@ffs.fml.org>; Sat, 14 Oct 2000 23:26:49 +0900 (JST)
+Received: (from root@localhost)
+	by ums512.nifty.ne.jp (8.9.3+3.2W/3.7W000809) id XAA03435;
+	Sat, 14 Oct 2000 23:27:14 +0900 (JST)
+From: Postmaster@mail.nifty.ne.jp
+Message-Id: <200010141427.XAA03435@ums512.nifty.ne.jp>
+Date: Sat, 14 Oct 2000 23:25:00 +0900
+Subject: Returned mail: RUDO0000 did not receive a mail
+To: fml-support-admin@ffs.fml.org
+
+----- Unsent reason follows -----
+RUDO0000 could not receive a mail that you had sent.
+Because RUDO0000's mailbox in Nifty had been full.
+
+----- Unsent message follows -----
+Received: from ns.nuinui.net (ns.nuinui.net [10.20.30.27])
+	by ums501.nifty.ne.jp (8.9.3+3.2W/3.7W991006) with ESMTP id XAA14368
+	for <RUDO0000@nifty.ne.jp>; Sat, 14 Oct 2000 23:22:41 +0900 (JST)
+Received: from ahodori.fml.org ([10.20.30.30])
+	by ns.nuinui.net (8.9.3/8.9.3) with SMTP id XAA02030
+	for <rudo@nuinui.net>; Sat, 14 Oct 2000 23:21:44 +0900
+From: fukachan@sapporo.iij.ad.jp (Ken'ichi Fukamachi)
+To: elena@nuinui.net
+Reply-To: rudo@nuinui.net
+Subject: [elena:00300] test 01
+	appended_mesg
+Message-Id: <20010102080803.1BCBE15024@iris.fml.org>
+Date: Tue,  2 Jan 2001 17:08:03 +0900 (JST)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
+
+----- Message body suppressed -----
