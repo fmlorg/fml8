@@ -213,6 +213,48 @@ FileHandle と IO::File 両方 use しちゃうからか？
 	   }
 
 
+[TODO]	IO インターフェイスの問題
+
+	(1) fml8 全体の基調となる型は IO::Adapter であろう。このクラスは
+
+		KEY => VALUE
+			もしくは
+		KEY => [ VALUE, VALUE2, VALUE3 ]
+
+	のいづれかの型のデータ構造を抽象化している。
+	ここで、基本となるメソッドは
+
+		open()
+		close()
+		add(KEY, クラス依存のデータ渡し)
+		delete(KEY)
+		find(KEY)
+
+	である。
+
+	Q:  KEY 一覧を取り寄せたい場合は？
+
+	A1: 定石は全部読んでみる == get_next_key() をしまくる;)
+		1) 滅多にそんなコードは必要でない:-)
+			よって、専用メソッドがなくても問題がない
+		2) 問題は一行で書けないことやね;)
+
+	A2: メソッドがあるとよい？？？名前は？やっぱり keys() ?
+		ARRAY_REF で返すのかな？
+		でも、ほとんど使われないんですけど…
+
+	(2)	HASH_REF を返すインターフェイスはどうよ？
+
+		KEY => {
+			ATTR1 => VALUE1,
+			ATTR2 => VALUE2,
+		}
+
+		キャッシュを抽象化したアダプタ層はこの形になりうる。
+	   例:
+		FML::Error -> FML::Error::Cache -> Tie::JournaledDir
+
+
 [TODO]	IO::Adapter
 
 	get_*() には File or !File にだけしかないのがある？
@@ -359,4 +401,4 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 ----------
-$FML: 00_MEMO,v 1.80 2003/05/14 12:17:09 fukachan Exp $
+$FML: 00_MEMO,v 1.81 2003/05/15 03:27:23 fukachan Exp $
