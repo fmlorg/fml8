@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: .module_dependence.pl,v 1.1 2003/03/16 06:24:58 fukachan Exp $
+# $FML: .module_dependence.pl,v 1.2 2003/04/12 13:56:06 fukachan Exp $
 #
 
 use strict;

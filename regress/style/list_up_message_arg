@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+# $FML$
+#
+
+dir=../../fml/share/message/
+
+grep -r _arg_ $dir |\
+perl -nle 's/_arg_\w+/print $&/e'|\
+sort|\
+uniq -c|\
+sort -n
+
+exit 0
