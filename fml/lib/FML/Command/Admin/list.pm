@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: list.pm,v 1.24 2004/04/23 04:10:29 fukachan Exp $
+# $FML: list.pm,v 1.25 2004/05/16 02:26:11 fukachan Exp $
 #
 
 package FML::Command::Admin::list;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::list - show the content of arbitorary map
+FML::Command::Admin::list - show the content of specified map(s).
 
 =head1 SYNOPSIS
 
@@ -48,7 +48,7 @@ sub new
 sub need_lock { 0;}
 
 
-# Descriptions: show the specified map.
+# Descriptions: show the specified map(s).
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: forward request to dir module
 # Return Value: none
@@ -67,7 +67,7 @@ sub process
 }
 
 
-# Descriptions: show content of the specified maps.
+# Descriptions: show content of the specified map(s).
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 #               HASH_ARRAY($options)
 # Side Effects: none
@@ -81,7 +81,7 @@ sub _show_list
     # XXX first match is ok ?
   ARGV:
     for my $option (@$options) {
-	my $list = $self->_gen_map_candidates($option);
+	my $list = $self->_get_map_candidates_as_array_ref($option);
 
       KEY:
 	for my $key (@$list) {
@@ -94,7 +94,7 @@ sub _show_list
 
     # cheap sanity
     unless (defined $maplist) { croak("list: map undefined");}
-    unless ($maplist)         { croak("list: map unspecified");}
+    unless (@$maplist)        { croak("list: map unspecified");}
 
     # $uc_args  = FML::User::Control specific parameters
     my $uc_args = {
@@ -118,7 +118,7 @@ sub _show_list
 #    Arguments: OBJ($self) STR($key)
 # Side Effects: none
 # Return Value: ARRAY_REF
-sub _gen_map_candidates
+sub _get_map_candidates_as_array_ref
 {
     my ($self, $key) = @_;
     my (@list) = (sprintf("%s_maps", $key),
