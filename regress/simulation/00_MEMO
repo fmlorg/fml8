@@ -2,11 +2,6 @@
 		Last Modified: $Date$
 
 
-○	入力
-
-	FML/Restriction/00_CHECK_INPUT.txt
-
-
 ○	newml のときに aliases をどうするの？
 
 	案１
@@ -17,41 +12,27 @@
 	/var/spool/ml/etc/mail/aliases
 
 
-○	$curproc->{ main_cf } のパラメータをむやみに/気軽によびだしてはいけない。
-	きちんとしたアクセスメソッドを用意するべきである。
-
-		FML::Process::Kernel
-		FML::Process::Switch
-		FML::Process::Utils
-
-	以外に main_cf を直接呼び出すべきではない。
-
-
-○	IO::Adapter::find() の定義を考え直せ
-
-	lib/FML/Command/Admin/newml.pm
-
-はこれからだけど、↓このへんで IO::Adapter::find() を使ってるけど、返
-される値の期待は OK （修正したはず）？
-
-
-   IO/Adapter/DBI.pm:271:    my $a = $self->find($regexp, { want => 'key', all => 1});
-
-
-   FML/Command/Admin/newml.pm:74:	    my $path = $obj->find("^$ml_name");
-
-
-
-○	IO::Adapter::get_XXX() の定義を考え直せ
-
-	   IO/Adapter/DBI.pm:182:    $self->get_next_key($args);
-
-
 ○	ドキュメンテーションのチェック 2001 last 
 
 	ErrorStatus.pm
 	IO/Adapter/ErrorStatus.pm
 	Mail/Delivery/ErrorStatus.pm
+
+
+○	ファイルを用意しただけやんシリーズ;) 
+	これから改造するので、ほとんど未修正のままのこす
+
+	FML::Process::Qmail
+	FML/Filter/TrafficMonitor.pm
+	IO::Adapter::LDAP
+
+
+○	FML::Command::Admin::get はこわれてる
+
+	半分直した
+
+	ところで、誰に送信するんじゃ？ :-) って、そうか、makefml じゃ
+	なくて admin コマンドの時は考えなくてもいいからだな、それは …
 
 
 ○ 	未完成だ
@@ -61,15 +42,6 @@
 	FML/Filter/BodyCheck.pm
 	FML/Filter/TrafficMonitor.pm
 	../img/lib/IM/EncDec.pm
-
-
-○ 	@EXPORT @EXPORT_OK をやめたい
-
-
-○ 	サーチするキーに対して quotemeta() を
-
-
-○	Mail::ThreadTrack のドキュメントなどはよく見直すべき（？）
 
 
 ○	まちがってない？
@@ -87,57 +59,10 @@
 	などをトップレベルインターフェイスにするべきじゃないかな	
 
 
-○	FML::Filter::Utils  は FML::Restriction へ移動ですかね？
-
-
-○	FML::Process::Kernel FML::Process::Distribute
+○	FML::Process::Kernel
+	FML::Process::Distribute
 
 	そのうちゆっくりみなおしてみたいですな
-
-
-○	ファイルを用意しただけやんシリーズ;) 
-	これから改造するので、ほとんど未修正のままのこす
-
-	FML::Process::Qmail
-	FML/Filter/TrafficMonitor.pm
-	IO::Adapter::LDAP
-
-
-○	名前を再考するべき？
-
-	FML::Process::Scheduler は紛らわしいのでやめるべきか？
-
-		FML::Process::TinyScheduler ?
-		FML::Process::Demo::Scheduler ?
-
-○	あれ？
-
-	FML/Command/SendFile.pm の ErrorStatus いらないよね？
-
-
-○	FML::MIME は使われてないので削除した
-
-		Mail::Message::Decode
-		Mail::Message::Encode
-
-	の２つに分離された
-
-
-○	コマンドがロックをひつようとするか？などは
-	アクセスメソッドで処理するべきだ
-	-> FML::Command::Attribute を削除するべき
-
-
-○	makefml htmlify elena srdir=DIR dstdir=DIR
-	だけオプションのスタイルが違うのは問題じゃないかい？
-
-
-○	FML::Command::Admin::get はこわれてる
-
-	半分直した
-
-	ところで、誰に送信するんじゃ？ :-) って、そうか、makefml じゃ
-	なくて admin コマンドの時は考えなくてもいいからだな、それは …
 
 
 ○	パフォーマンステスト
@@ -176,6 +101,29 @@
 
 とりあえず、すれっど全部のファイルに修正を試みるべきだ。
 ろーかるな更新は、あまりよい結果にならないようだ。
+
+
+================================================================
+PCB
+
+   129:    my $header = $curproc->{ incoming_message }->{ header };
+   214:    my $header = $curproc->{ incoming_message }->{ header };
+   249:    my $header = $curproc->{ incoming_message }->{ header };
+   389:    my $header = $curproc->{ incoming_message }->{ header };
+   
+   250:    my $body   = $curproc->{ incoming_message }->{ body };
+   
+   182:    my $header = $curproc->{ article }->{ header };
+   1045:   my $header = $curproc->{ article }->{ header };
+   
+   
+   131:    my $pcb     = $curproc->{ pcb };
+   373:    my $pcb     = $curproc->{ pcb };
+   473:    my $pcb     = $curproc->{ pcb };
+   
+   474:    my $db_type   = $curproc->{ ticket_db_type } || 'AnyDBM_File';
+   
+   1091:	$self->set_status($curproc, {
 
 
 ==============================================================================
@@ -352,47 +300,5 @@ Mason
 HTML::Widgets::Menu - Builds an HTML menu
 
 
-================
-PCB
-
-   129:    my $header = $curproc->{ incoming_message }->{ header };
-   214:    my $header = $curproc->{ incoming_message }->{ header };
-   249:    my $header = $curproc->{ incoming_message }->{ header };
-   389:    my $header = $curproc->{ incoming_message }->{ header };
-   
-   250:    my $body   = $curproc->{ incoming_message }->{ body };
-   
-   182:    my $header = $curproc->{ article }->{ header };
-   1045:   my $header = $curproc->{ article }->{ header };
-   
-   
-   131:    my $pcb     = $curproc->{ pcb };
-   373:    my $pcb     = $curproc->{ pcb };
-   473:    my $pcb     = $curproc->{ pcb };
-   
-   474:    my $db_type   = $curproc->{ ticket_db_type } || 'AnyDBM_File';
-   
-   1091:	$self->set_status($curproc, {
-
-
-
-----------------------------------------------------------------------
-TODO
-
-	->data() ではなく ->data_in_body_part() をつかうべし？
-
-	lib/FML/Process/Command.pm:    my $body    = $curproc->{ incoming_message }->{ body }->data_in_body_part;
-
-	lib/FML/Filter/BodyCheck.pm:    my $buf = $first_msg->data;
-	lib/FML/Filter/BodyCheck.pm:    my $buf = $first_msg->data;
-	lib/FML/Filter/BodyCheck.pm:    my $buf = $first_msg->data;
-
-	lib/Mail/Message.pm:    $self->data_in_body_part(@_[1 .. $#_]);
-	lib/Mail/Message.pm:sub data_in_body_part
-	lib/Mail/Message.pm:         $body = $m->data_in_body_part();
-
-	lib/Mail/Bounce/DSN.pm:	my $data = $m->data;
-
-
 ----------
-$FML: 00_MEMO,v 1.2 2002/02/04 14:16:44 fukachan Exp $
+$FML: 00_MEMO,v 1.3 2002/02/11 13:27:52 fukachan Exp $
