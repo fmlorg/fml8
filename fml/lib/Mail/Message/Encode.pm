@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MIME.pm,v 1.15 2001/12/22 09:21:01 fukachan Exp $
+# $FML: Encode.pm,v 1.1 2001/12/23 02:59:48 fukachan Exp $
 #
 
 package Mail::Message::Encode;
@@ -19,14 +19,13 @@ Mail::Message::Encode - handle a MIME encoded string
 
 =head1 SYNOPSIS
 
-    use Mail::Message::Encode qw(decode_mime_string encode_mime_string);
-    $decoded = decode_mime_string( $message );
+    use Mail::Message::Encode qw(encode_mime_string);
+    $encoded = encode_mime_string( $message );
 
 =head1 DESCRIPTION
 
-MIME utilities to encode and decode string.
-It uses C<MIME::Base64> and C<MIME::QuotedPrint> as encoding/decoding
-engines.
+MIME utilities to encode the specified string $message.  It uses C<IM>
+modlues as encoding engines.
 
 =head1 METHODS
 
@@ -35,7 +34,7 @@ engines.
 
 require Exporter;
 @ISA       = qw(Exporter);
-@EXPORT_OK = qw(decode_mime_string encode_mime_string);
+@EXPORT_OK = qw(encode_mime_string);
 
 
 =head2 C<encode_mime_string(string, [$options])>
@@ -50,6 +49,10 @@ by $options->{ charset }.
 =cut
 
 
+# Descriptions: encode string
+#    Arguments: STR($str) HASH_REF)$option)
+# Side Effects: none
+# Return Value: STR
 sub encode_mime_string
 {
     my ($str, $options) = @_;
@@ -79,8 +82,7 @@ sub encode_mime_string
 =head1 SEE ALSO
 
 L<Jcode>,
-L<MIME::Base64>,
-L<MIME::QuotedPrint>.
+L<IM::Iso2022jp>.
 
 =head1 AUTHOR
 
@@ -88,7 +90,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
