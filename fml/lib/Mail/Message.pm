@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.9 2001/04/08 05:56:35 fukachan Exp $
+# $FML: Message.pm,v 1.10 2001/04/08 14:29:47 fukachan Exp $
 #
 
 package Mail::Message;
@@ -457,7 +457,7 @@ sub _build_header_object
 	 };
     croak($@) if $@;
 
-    my $data_type = $self->data_type($header_obj);
+    my $data_type = $self->_header_data_type($header_obj);
     _create($self, {
 	base_data_type => $data_type,
 	data_type      => "rfc822/message.header",
@@ -478,8 +478,8 @@ sub _build_body_object
     my ($self, $args, $result) = @_;
 
     return new Mail::Message {
-	boundary  => $self->mime_boundary($result->{ header }),
-	data_type => $self->data_type($result->{ header }),
+	boundary  => $self->_header_mime_boundary($result->{ header }),
+	data_type => $self->_header_data_type($result->{ header }),
 	data      => \$InComingMessage,
     };
 }
@@ -516,10 +516,35 @@ sub rfc822_message_body
 }
 
 
-=head2 C<mime_boundary(header)>
+=head2 C<find($args)>
 
-return the mime C<boundary> string.
-It is extracted from C<header> object.
+return the first C<Mail::Message> object with specified attrribute.
+You can specify C<data_type> in C<$args> HASH REFERENCE.
+For example, 
+
+    $m = $msg->find( { data_type => 'text/plain' } );
+
+C<$m> is the first "text/plain" object in a chain of C<$msg> object.
+
+=cut
+
+sub find
+{
+    my ($self, $args) = @_;
+
+    if (defined $args->{ data_type }) {
+	my $type = $args->{ data_type };
+	my $mp   = $self;
+	for ( ; $mp; $mp = $mp->{ next }) {
+	    if ($type eq $mp->data_type()) {
+		return $mp;
+	    }
+	}
+    }
+
+    undef;
+}
+
 
 =head2 C<data_type(header)>
 
@@ -529,11 +554,18 @@ It is extracted from C<header> object.
 =cut
 
 
+sub data_type
+{
+    my ($self) = @_;
+    $self->{ data_type } || undef;
+}
+
+
 # Descriptions: return boundary defined in Content-Type
 #    Arguments: $self $args
 # Side Effects: none.
 # Return Value: none
-sub mime_boundary
+sub _header_mime_boundary
 {
     my ($self, $header) = @_;
     my $m = $header->get('content-type');
@@ -551,7 +583,7 @@ sub mime_boundary
 #    Arguments: $self
 # Side Effects: extra spaces in the type to return is removed.
 # Return Value: none
-sub data_type
+sub _header_data_type
 {
     my ($self, $header) = @_;
     my ($type) = split(/;/, $header->get('content-type'));
@@ -1338,6 +1370,20 @@ get body part in the content,
 which is the whole mail or a part of multipart.
 
 =cut
+
+
+sub header
+{
+    my ($self) = @_;
+    $self->header_in_body_part(@_[1 .. $#_]);
+}
+
+
+sub data
+{
+    my ($self) = @_;
+    $self->data_in_body_part(@_[1 .. $#_]);
+}
 
 
 # Descriptions: 
