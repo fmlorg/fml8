@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.63 2001/11/26 08:58:35 fukachan Exp $
+# $FML: Kernel.pm,v 1.64 2001/12/18 12:55:47 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -63,7 +63,6 @@ use FML::Header;
 use FML::Config;
 use FML::Log qw(Log LogWarn LogError);
 use File::SimpleLock;
-use FML::Messages;
 
 # for small utilities: fml_version(), myname(), et. al.
 push(@ISA, qw(FML::Process::Utils));
