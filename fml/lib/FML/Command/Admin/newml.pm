@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.33 2002/05/25 04:25:38 fukachan Exp $
+# $FML: newml.pm,v 1.34 2002/05/25 06:58:23 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -184,14 +184,20 @@ sub _update_aliases
     my $template_dir = $curproc->template_files_dir_for_newml();
     my $config       = $curproc->{ config };
     my $ml_name      = $config->{ ml_name };
+    my $ml_domain    = $config->{ ml_domain };
 
     use File::Spec;
     my $alias = $config->{ mail_aliases_file };
     my $src   = File::Spec->catfile($template_dir, 'aliases');
     my $dst   = $alias . "." . $$;
 
-    print STDERR "updating $alias\n";
-    _install($src, $dst, $params);
+    # update params
+    use FML::MTAControl;
+    my $postfix = new FML::MTAControl;
+    my $xparams = {};
+    for my $k (keys %$params) { $xparams->{ $k } = $params->{ $k };}
+    $postfix->virtual_params($curproc, $xparams);
+    _install($src, $dst, $xparams);
 
     # append
     if ($self->_alias_has_ml_entry($curproc, $alias, $ml_name)) {
@@ -199,11 +205,16 @@ sub _update_aliases
 	print STDERR "         ignore aliases updating.\n";
     }
     else {
-	print STDERR "$ml_name is a new ml. updating aliases ...\n";
+	print STDERR "updating $alias as $ml_name is a new ml\n";
 	eval q{
 	    use File::Utils qw(append);
 	    append($dst, $alias);
 	    unlink $dst;
+
+	    unless ($curproc->is_default_domain($ml_domain)) {
+		# we need to use the original $params here
+		$self->_install_postfix_virtual_map($curproc, $params);
+	    }
 
 	    use FML::MTAControl;
 	    my $postfix = new FML::MTAControl;
@@ -214,6 +225,23 @@ sub _update_aliases
 	};
 	croak($@) if $@;
     }
+}
+
+
+sub _install_postfix_virtual_map
+{
+    my ($self, $curproc, $params) = @_;
+    my $template_dir = $curproc->template_files_dir_for_newml();
+    my $config       = $curproc->{ config };
+    my $ml_name      = $config->{ ml_name };
+    my $ml_domain    = $config->{ ml_domain };
+
+    my $virtual = $config->{ postfix_virtual_map_file };
+    my $src     = File::Spec->catfile($template_dir, 'postfix_virtual');
+    my $dst     = $virtual . "." . $$;
+    print STDERR "updating $virtual\n";
+    _install($src, $dst, $params);
+    append($dst, $virtual);
 }
 
 

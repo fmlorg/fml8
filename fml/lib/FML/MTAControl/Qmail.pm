@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Qmail.pm,v 1.1.1.1 2002/05/24 06:30:04 fukachan Exp $
+# $FML: Qmail.pm,v 1.2 2002/05/25 05:04:51 fukachan Exp $
 #
 
 package FML::MTAControl::Qmail;
@@ -117,6 +117,12 @@ sub qmail_setup
 	print STDERR "  XXX\n";
     }
 
+}
+
+
+sub qmail_virtual_params
+{
+    ;
 }
 
 

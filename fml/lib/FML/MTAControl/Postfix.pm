@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MTAControl.pm,v 1.4 2002/04/27 05:25:01 fukachan Exp $
+# $FML: Postfix.pm,v 1.1.1.1 2002/05/24 06:30:04 fukachan Exp $
 #
 
 package FML::MTAControl::Postfix;
@@ -176,6 +176,21 @@ sub postfix_setup
 
 	print STDERR "creating $dst\n";
 	$self->_install($src, $dst, $params);
+    }
+}
+
+
+sub postfix_virtual_params
+{
+    my ($self, $curproc, $params) = @_;
+    my $config         = $curproc->{ config };
+
+    # rewrite $curproc->{ config };
+    my $ml_name   = $config->{ ml_name  };
+    my $ml_domain = $config->{ ml_domain };
+
+    unless ($curproc->is_default_domain($ml_domain)) {
+	$params->{ ml_name } = "${ml_name}=${ml_domain}";
     }
 }
 

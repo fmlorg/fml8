@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MTAControl.pm,v 1.4 2002/04/27 05:25:01 fukachan Exp $
+# $FML: MTAControl.pm,v 1.5 2002/05/24 06:39:38 fukachan Exp $
 #
 
 package FML::MTAControl;
@@ -161,6 +161,28 @@ sub get_aliases_as_hash_ref
     if ($mta_type eq 'postfix' || $mta_type eq 'qmail') {
 	my $method = "${mta_type}_get_aliases_as_hash_ref";
 	$self->$method($curproc, $optargs);
+    }
+    else {
+	croak("unknown MTA");
+    }
+}
+
+
+# Descriptions: install configuration temaplate alias
+#    Arguments: OBJ($self) 
+#               HASH_REF($curproc) HASH_REF($params) HASH_REF($optargs)
+# Side Effects: update aliases
+# Return Value: none
+sub virtual_params
+{
+    my ($self, $curproc, $params, $optargs) = @_;
+    my $mta_type =
+	defined $optargs->{ mta_type } ? $optargs->{ mta_type } :
+	    $self->{ mta_type };
+
+    if ($mta_type eq 'postfix' || $mta_type eq 'qmail') {
+	my $method = "${mta_type}_virtual_params";
+	$self->$method($curproc, $params, $optargs);
     }
     else {
 	croak("unknown MTA");
