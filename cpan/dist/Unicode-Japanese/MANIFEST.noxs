@@ -1,0 +1,20 @@
+Changes
+Japanese.pm           Unicode::Japanese パッケージ
+Makefile.PL
+MANIFEST
+MANIFEST.noxs
+t/allchar_utf8.pl
+t/base.t
+t/emoji.t
+t/fromutf8.t
+t/hirakata.t
+t/illlet.t
+t/toutf8.t
+t/util.t
+t/z2h.t
+t/getcode.t
+t/outrange.t
+t/random.pl
+t/random_redo.pl
+t/ucs2_utf8.pl
+t/verify_sjis_ucs2.pl
