@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.4 2003/07/20 10:28:03 fukachan Exp $
+# $FML: DB.pm,v 1.5 2003/07/21 04:51:34 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -25,7 +25,7 @@ use lib qw(../../../../fml/lib
 	   ../../../../img/lib
 	   );
 
-my $version = q$FML: DB.pm,v 1.4 2003/07/20 10:28:03 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.5 2003/07/21 04:51:34 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 # special value
@@ -559,6 +559,7 @@ sub tohtml_thread_summary
 
     #
     # XXX-TODO: we should get back this method to Mail::Message::ToHTML ?
+    # XXX-TODO: or Mail::Message::Thread ? but looks difficult ...
     #
 
     unless (defined $next_thread_id || $next_thread_id) {
