@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: rmml.pm,v 1.20 2003/09/27 03:00:16 fukachan Exp $
+# $FML: rmml.pm,v 1.21 2003/10/15 01:03:30 fukachan Exp $
 #
 
 package FML::Command::Admin::rmml;
@@ -95,71 +95,10 @@ sub process
     }
 
     # o.k. here we go!
-    $self->_remove_ml_home_dir($curproc, $command_args, $params);
-    $self->_remove_aliases($curproc, $command_args, $params);
-}
-
-
-# Descriptions: remove $ml_home_dir and update aliases if needed
-#    Arguments: OBJ($self)
-#               OBJ($curproc)
-#               HASH_REF($command_args)
-#               HASH_REF($params)
-# Side Effects: remove ml_home_dir, update aliases entry
-# Return Value: none
-sub _remove_ml_home_dir
-{
-    my ($self, $curproc, $command_args, $params) = @_;
-    my $ml_name        = $params->{ ml_name };
-    my $ml_domain      = $params->{ ml_domain };
-    my $ml_home_prefix = $params->{ ml_home_prefix };
-    my $ml_home_dir    = $params->{ ml_home_dir };
-
-    $curproc->ui_message("removing ml_home_dir for $ml_name");
-
-    # /var/spool/ml/elena -> /var/spool/ml/@elena
-    my $removed_dir =
-	$curproc->removed_ml_home_dir_path($ml_home_prefix, $ml_name);
-    rename($ml_home_dir, $removed_dir);
-
-    if (-d $removed_dir && (! -d $ml_home_dir)) {
-	$curproc->ui_message("removed");
-    }
-    else {
-	my $s = "failed to remove ml_home_dir";
-	$curproc->ui_message("error: $s");
-	$curproc->logerror($s);
-    }
-}
-
-
-# Descriptions: remove aliases entry
-#    Arguments: OBJ($self)
-#               OBJ($curproc)
-#               HASH_REF($command_args)
-#               HASH_REF($params)
-# Side Effects: update aliases entry
-# Return Value: none
-sub _remove_aliases
-{
-    my ($self, $curproc, $command_args, $params) = @_;
-    my $config  = $curproc->config();
-    my $ml_name = $params->{ ml_name };
-    my $list    = $config->get_as_array_ref('newml_command_mta_config_list');
-
-    eval q{
-	use FML::MTAControl;
-
-	for my $mta (@$list) {
-	    my $optargs = { mta_type => $mta };
-	    my $obj = new FML::MTAControl;
-	    $obj->remove_alias($curproc, $params, $optargs);
-	    $obj->update_alias($curproc, $params, $optargs);
-	    $obj->remove_virtual_map($curproc, $params, $optargs);
-	    $obj->update_virtual_map($curproc, $params, $optargs);
-	}
-    };
-    croak($@) if $@;
+    use FML::ML::Control;
+    my $control = new FML::ML::Control;
+    $control->remove_ml_home_dir($curproc, $command_args, $params);
+    $control->remove_aliases($curproc, $command_args, $params);
 }
 
 

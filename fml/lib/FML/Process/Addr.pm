@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Addr.pm,v 1.11 2003/08/29 15:34:06 fukachan Exp $
+# $FML: Addr.pm,v 1.12 2003/12/24 14:29:35 fukachan Exp $
 #
 
 package FML::Process::Addr;
@@ -218,8 +218,8 @@ sub _fmladdr
     my $options = $curproc->command_line_options();
     my $mode    = $options->{ n } ? 'fmlonly' : 'all';
 
-    use FML::MTAControl;
-    my $mta     = new FML::MTAControl;
+    use FML::MTA::Control;
+    my $mta     = new FML::MTA::Control;
     my $aliases = $mta->get_aliases_as_hash_ref($curproc, {}, {
         mta_type => 'postfix',
 	mode     => $mode,

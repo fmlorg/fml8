@@ -4,10 +4,10 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Procmail.pm,v 1.14 2003/09/13 09:17:00 fukachan Exp $
+# $FML: Procmail.pm,v 1.15 2003/09/14 03:53:47 fukachan Exp $
 #
 
-package FML::MTAControl::Procmail;
+package FML::MTA::Control::Procmail;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
@@ -17,7 +17,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::MTAControl::Procmail - handle procmail specific configurations
+FML::MTA::Control::Procmail - handle procmail specific configurations
 
 =head1 SYNOPSIS
 
@@ -305,7 +305,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::MTAControl first appeared in fml8 mailing list driver package.
+FML::MTA::Control first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

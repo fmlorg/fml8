@@ -4,24 +4,24 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MTAControl.pm,v 1.20 2003/02/20 04:32:49 fukachan Exp $
+# $FML: MTAControl.pm,v 1.21 2003/09/13 09:16:59 fukachan Exp $
 #
 
-package FML::MTAControl;
+package FML::MTA::Control;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
-use FML::MTAControl::Postfix;
-use FML::MTAControl::Qmail;
-use FML::MTAControl::Procmail;
-use FML::MTAControl::Sendmail;
-use FML::MTAControl::Utils;
-@ISA = qw(FML::MTAControl::Postfix
-	  FML::MTAControl::Qmail
-	  FML::MTAControl::Procmail
-	  FML::MTAControl::Sendmail
-	  FML::MTAControl::Utils
+use FML::MTA::Control::Postfix;
+use FML::MTA::Control::Qmail;
+use FML::MTA::Control::Procmail;
+use FML::MTA::Control::Sendmail;
+use FML::MTA::Control::Utils;
+@ISA = qw(FML::MTA::Control::Postfix
+	  FML::MTA::Control::Qmail
+	  FML::MTA::Control::Procmail
+	  FML::MTA::Control::Sendmail
+	  FML::MTA::Control::Utils
 	  );
 
 my $debug = 0;
@@ -29,7 +29,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::MTAControl - utilities to handle MTA specific configurations
+FML::MTA::Control - utilities to handle MTA specific configurations
 
 =head1 SYNOPSIS
 
@@ -358,7 +358,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::MTAControl first appeared in fml8 mailing list driver package.
+FML::MTA::Control first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

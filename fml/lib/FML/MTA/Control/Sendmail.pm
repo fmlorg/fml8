@@ -4,10 +4,10 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sendmail.pm,v 1.6 2003/08/29 15:34:06 fukachan Exp $
+# $FML: Sendmail.pm,v 1.7 2003/09/13 09:17:00 fukachan Exp $
 #
 
-package FML::MTAControl::Sendmail;
+package FML::MTA::Control::Sendmail;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
@@ -17,7 +17,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::MTAControl::Sendmail - handle sendmail specific configurations
+FML::MTA::Control::Sendmail - handle sendmail specific configurations
 
 =head1 SYNOPSIS
 
@@ -278,7 +278,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::MTAControl first appeared in fml8 mailing list driver package.
+FML::MTA::Control first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -4,10 +4,10 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.34 2003/11/08 06:51:49 fukachan Exp $
+# $FML: Prefix.pm,v 1.1 2003/11/16 11:53:19 fukachan Exp $
 #
 
-package FML::HomeDir::Prefix;
+package FML::ML::HomePrefix;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD $debug);
 use Carp;
@@ -23,7 +23,7 @@ $debug = 0;
 
 =head1 NAME
 
-FML::HomeDir::Prefix - create, rename and delete ml_home_prefix dir.
+FML::ML::HomePrefix - create, rename and delete ml_home_prefix dir.
 
 =head1 SYNOPSIS
 
@@ -190,7 +190,7 @@ if ($0 eq __FILE__) {
     $debug = 101;
     $|     = 1;
 
-    my $ml_home_prefix = new FML::HomeDir::Prefix $curproc;
+    my $ml_home_prefix = new FML::ML::HomePrefix $curproc;
 
     print "\n# add { $domain => $prefix }\n";
     $ml_home_prefix->add($domain, $prefix);
@@ -219,7 +219,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::HomeDir::Prefix first appeared in fml8 mailing list driver package.
+FML::ML::HomePrefix first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

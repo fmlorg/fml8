@@ -4,10 +4,10 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Qmail.pm,v 1.18 2003/09/13 09:17:00 fukachan Exp $
+# $FML: Qmail.pm,v 1.19 2003/10/15 01:03:33 fukachan Exp $
 #
 
-package FML::MTAControl::Qmail;
+package FML::MTA::Control::Qmail;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
@@ -17,7 +17,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::MTAControl::Qmail - handle qmail specific configurations
+FML::MTA::Control::Qmail - handle qmail specific configurations
 
 =head1 SYNOPSIS
 
@@ -256,7 +256,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::MTAControl first appeared in fml8 mailing list driver package.
+FML::MTA::Control first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

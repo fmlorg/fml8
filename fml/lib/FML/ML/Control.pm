@@ -1,0 +1,538 @@
+#-*- perl -*-
+#
+#  Copyright (C) 2003 Ken'ichi Fukamachi
+#   All rights reserved. This program is free software; you can
+#   redistribute it and/or modify it under the same terms as Perl itself.
+#
+# $FML: Prefix.pm,v 1.1 2003/11/16 11:53:19 fukachan Exp $
+#
+
+package FML::ML::Control;
+use strict;
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD $debug);
+use Carp;
+
+
+=head1 NAME
+
+FML::ML::Control - create, rename and delete ml_home_dir.
+
+=head1 SYNOPSIS
+
+=head1 DESCRIPTION
+
+=head1 METHODS
+
+=cut
+
+
+# Descriptions: standard constructor
+#    Arguments: OBJ($self) OBJ($curproc)
+# Side Effects: none
+# Return Value: OBJ
+sub new
+{
+    my ($self, $curproc) = @_;
+    my ($type) = ref($self) || $self;
+    my $me     = {}; 
+    return bless $me, $type;
+}
+
+
+=head1 CREATE
+
+=cut
+
+
+# Descriptions: generate _ml_name_xxx in $params
+#    Arguments: OBJ($self)
+#               OBJ($curproc) HASH_REF($command_args) HASH_REF($params)
+# Side Effects: update $params
+# Return Value: none
+sub adjust_params_for_virtual_domain
+{
+    my ($self, $curproc, $command_args, $params) = @_;
+    my ($ml_name_admin, $ml_name_ctl, $ml_name_error,
+	$ml_name_post,$ml_name_request);
+    my $ml_name   = $params->{ _ml_name };
+    my $ml_domain = $params->{ ml_domain };
+
+    if ($curproc->is_default_domain($ml_domain)) {
+	$ml_name_admin   = sprintf("%s-%s",$ml_name,"admin",$ml_domain);
+	$ml_name_ctl     = sprintf("%s-%s",$ml_name,"ctl",$ml_domain);
+	$ml_name_error   = sprintf("%s-%s",$ml_name,"error",$ml_domain);
+	$ml_name_request = sprintf("%s-%s",$ml_name,"request",$ml_domain);
+
+	# post is exceptional.
+	$ml_name_post    = sprintf("%s",$ml_name, $ml_domain);
+    }
+    else {
+	# virtual domain case
+	$ml_name_admin   = sprintf("%s-%s=%s",$ml_name,"admin",$ml_domain);
+	$ml_name_ctl     = sprintf("%s-%s=%s",$ml_name,"ctl",$ml_domain);
+	$ml_name_error   = sprintf("%s-%s=%s",$ml_name,"error",$ml_domain);
+	$ml_name_request = sprintf("%s-%s=%s",$ml_name,"request",$ml_domain);
+
+	# post is exceptional.
+	$ml_name_post    = sprintf("%s=%s",$ml_name, $ml_domain);
+    }
+
+    $params->{ _ml_name_admin }   = $ml_name_admin;
+    $params->{ _ml_name_ctl }     = $ml_name_ctl;
+    $params->{ _ml_name_error }   = $ml_name_error;
+    $params->{ _ml_name_post }    = $ml_name_post;
+    $params->{ _ml_name_request } = $ml_name_request;
+}
+
+
+# Descriptions: create $ml_home_dir if needed
+#    Arguments: OBJ($self)
+#               OBJ($curproc)
+#               HASH_REF($command_args)
+#               HASH_REF($params)
+# Side Effects: create $ml_home_dir dirctory if needed
+# Return Value: none
+sub init_ml_home_dir
+{
+    my ($self, $curproc, $command_args, $params) = @_;
+    my $config      = $curproc->config();
+    my $ml_home_dir = $config->{ ml_home_dir };
+
+    unless (-d $ml_home_dir) {
+	$curproc->mkdir($ml_home_dir, "mode=public");
+    }
+
+    # $ml_home_dir/etc/mail
+    my $dirlist = $config->get_as_array_ref('newml_command_init_public_dirs');
+    for my $_dir (@$dirlist) {
+	unless (-d $_dir) {
+	    $curproc->ui_message("creating $_dir");
+	    $curproc->mkdir( $_dir, "mode=public");
+	}
+    }
+
+    $dirlist = $config->get_as_array_ref('newml_command_init_private_dirs');
+    for my $_dir (@$dirlist) {
+	unless (-d $_dir) {
+	    $curproc->ui_message("creating $_dir");
+	    $curproc->mkdir( $_dir, "mode=private");
+	}
+    }
+}
+
+
+# Descriptions: install config.cf, include, include-ctl et. al.
+#    Arguments: OBJ($self)
+#               OBJ($curproc)
+#               HASH_REF($command_args)
+#               HASH_REF($params)
+# Side Effects: install config.cf, include, include-ctl et. al.
+# Return Value: none
+sub install_template_files
+{
+    my ($self, $curproc, $command_args, $params) = @_;
+    my $config       = $curproc->config();
+    my $template_dir = $curproc->template_files_dir_for_newml();
+    my $ml_home_dir  = $params->{ ml_home_dir };
+    my $templ_files  =
+	$config->get_as_array_ref('newml_command_template_files');
+
+    # 1. set up fml specific files e.g. config.cf
+    use File::Spec;
+    for my $file (@$templ_files) {
+	my $src = File::Spec->catfile($template_dir, $file);
+	my $dst = File::Spec->catfile($ml_home_dir, $file);
+
+	$curproc->ui_message("creating $dst");
+	$self->_install($src, $dst, $params);
+    }
+
+    # 2. set up MTA specific files e.g. include, .qmail-*
+    use FML::MTA::Control;
+
+    # 2.1 setup include include-ctl ... (postfix/sendmail style)
+    # 2.2 setup ~fml/.qmail-* (qmail style)
+    my $list = $config->get_as_array_ref('newml_command_mta_config_list');
+    for my $mta (@$list) {
+	my $obj = new FML::MTA::Control { mta_type => $mta };
+	$obj->setup($curproc, $params);
+    }
+}
+
+
+# Descriptions: update aliases entry
+#    Arguments: OBJ($self)
+#               OBJ($curproc)
+#               HASH_REF($command_args)
+#               HASH_REF($params)
+# Side Effects: update aliases entry
+# Return Value: none
+sub update_aliases
+{
+    my ($self, $curproc, $command_args, $params) = @_;
+    my $config    = $curproc->config();
+    my $ml_name   = $config->{ ml_name };
+    my $ml_domain = $config->{ ml_domain };
+    my $alias     = $config->{ mail_aliases_file };
+    my $mask      = umask( 022 );
+
+    # append
+    if ($self->is_mta_alias_maps_has_ml_entry($curproc, $params, $ml_name)) {
+	$curproc->ui_message("warning: $ml_name already defined!");
+	$curproc->ui_message("         ignore aliases updating");
+	$curproc->logwarn("$ml_name ml already defined");
+    }
+    else {
+	my $list = $config->get_as_array_ref('newml_command_mta_config_list');
+	eval q{
+	    for my $mta (@$list) {
+		my $optargs = { mta_type => $mta, key => $ml_name };
+
+		use FML::MTA::Control;
+		my $obj = new FML::MTA::Control;
+		my $found = $obj->find_key_in_alias_maps($curproc, $params, {
+		    mta_type   => $mta,
+		    key        => $ml_name,
+		});
+
+		# we need to use the original $params here
+		# update templates for qmail/control/virtualdomains
+		unless ($curproc->is_default_domain($ml_domain)) {
+		    $obj->install_virtual_map($curproc, $params, $optargs);
+		    $obj->update_virtual_map($curproc, $params, $optargs);
+		}
+
+		if ($found) {
+		    $curproc->ui_message("skipping alias update for $mta");
+		}
+		else {
+		    $obj->install_alias($curproc, $params, $optargs);
+		    $obj->update_alias($curproc, $params, $optargs);
+		}
+	    }
+	};
+	croak($@) if $@;
+    }
+
+    umask( $mask );
+}
+
+
+# Descriptions: $alias file has an $ml_name entry or not
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) STR($ml_name)
+# Side Effects: none
+# Return Value: NUM( 1 or 0 )
+sub is_mta_alias_maps_has_ml_entry
+{
+    my ($self, $curproc, $params, $ml_name) = @_;
+    my $config = $curproc->config();
+    my $list   = $config->get_as_array_ref('newml_command_mta_config_list');
+    my $found  = 0;
+
+    eval q{
+	use FML::MTA::Control;
+
+	my $obj = new FML::MTA::Control;
+	if ($obj->is_user_entry_exist_in_passwd($ml_name)) {
+	    my $s = "ml_name=$ml_name is found in passwd";
+	    $curproc->ui_message("error: $s");
+	    $curproc->logerror($s);
+	    $found = 1;
+	}
+
+	unless ($found) {
+	  MTA:
+	    for my $mta (@$list) {
+		my $obj = new FML::MTA::Control;
+		$found = $obj->find_key_in_alias_maps($curproc, $params, {
+		    mta_type   => $mta,
+		    key        => $ml_name,
+		});
+
+		if ($found) {
+		    my $s = "ml_name=$ml_name is found in $mta aliases";
+		    $curproc->ui_message("error: $s");
+		    $curproc->logerror($s);
+		    last MTA;
+		}
+	    }
+	}
+    };
+    croak($@) if $@;
+
+    return $found;
+}
+
+
+# Descriptions: set up ~fml/public_html/ for this mailing list
+#    Arguments: OBJ($self)
+#               OBJ($curproc)
+#               HASH_REF($command_args)
+#               HASH_REF($params)
+# Side Effects: create directories for html articles
+# Return Value: none
+sub setup_mail_archive_dir
+{
+    my ($self, $curproc, $command_args, $params) = @_;
+    my $config = $curproc->config();
+    my $dir    = $config->{ html_archive_dir };
+
+    unless (-d $dir) {
+	$curproc->ui_message("creating $dir");
+	$curproc->mkdir($dir, "mode=public");
+    }
+}
+
+
+# Descriptions: set up CGI interface for this mailing list but
+#               disable it by default.
+#    Arguments: OBJ($self)
+#               OBJ($curproc)
+#               HASH_REF($command_args)
+#               HASH_REF($params)
+# Side Effects: create directories and install cgi scripts
+# Return Value: none
+sub setup_cgi_interface
+{
+    my ($self, $curproc, $command_args, $params) = @_;
+    my $template_dir = $curproc->template_files_dir_for_newml();
+    my $config       = $curproc->config();
+
+    #
+    # 1. create directory path if needed
+    #
+    my (%is_dir_exists)  = ();
+    my $cgi_base_dir     = $config->{ cgi_base_dir };
+    my $admin_cgi_dir    = $config->{ admin_cgi_base_dir };
+    my $ml_admin_cgi_dir = $config->{ ml_admin_cgi_base_dir };
+    for my $dir ($cgi_base_dir, $admin_cgi_dir, $ml_admin_cgi_dir) {
+	unless (-d $dir) {
+	    $curproc->ui_message("creating $dir");
+	    $is_dir_exists{ $dir } = 0;
+	    $curproc->mkdir($dir, "mode=public");
+	}
+	else {
+	    $is_dir_exists{ $dir } = 1;
+	}
+    }
+
+    #
+    # 2. disable CGI access by creating a dummy .htaccess
+    #    install .htaccess only for the first time.
+    #
+    unless ( $is_dir_exists{ $cgi_base_dir } ) {
+	use File::Spec;
+	my $src   = File::Spec->catfile($template_dir, 'dot_htaccess');
+	my $dst   = File::Spec->catfile($cgi_base_dir, '.htaccess');
+
+	$curproc->ui_message("creating $dst");
+	$curproc->ui_message("         (a dummy to disable cgi by default)");
+	$self->_install($src, $dst, $params);
+    }
+
+    #
+    # 3.  install *.cgi
+    #
+
+    use File::Spec;
+    my $libexec_dir = $config->{ fml_libexec_dir };
+    my $src         = File::Spec->catfile($libexec_dir, 'loader');
+    my $ml_name     = $config->{ ml_name };
+    my $ml_domain   = $config->{ ml_domain };
+
+    # 3.1 install admin/{menu,config,thread}.cgi
+    {
+	# hints
+	$params->{ __hints_for_fml_process__ } = qq{
+	    \$hints = {
+		cgi_mode  => 'admin',
+		ml_name   => '$ml_name',
+		ml_domain => '$ml_domain',
+	    };
+	};
+
+	use File::Spec;
+	for my $dst (
+		   File::Spec->catfile($admin_cgi_dir, 'menu.cgi'),
+		   File::Spec->catfile($admin_cgi_dir, 'config.cgi'),
+		   File::Spec->catfile($admin_cgi_dir, 'thread.cgi')
+		     ) {
+	    $curproc->ui_message("creating $dst");
+	    $self->_install($src, $dst, $params);
+	    chmod 0755, $dst;
+	}
+    }
+
+    #
+    # 3.2. install ml-admin/
+    {
+	# hints
+	$params->{ __hints_for_fml_process__ } = qq{
+	    \$hints = {
+		cgi_mode  => 'ml-admin',
+		ml_name   => '$ml_name',
+		ml_domain => '$ml_domain',
+	    };
+	};
+
+	use File::Spec;
+	for my $dst (
+		   File::Spec->catfile($ml_admin_cgi_dir, 'menu.cgi'),
+		   File::Spec->catfile($ml_admin_cgi_dir, 'config.cgi'),
+		   File::Spec->catfile($ml_admin_cgi_dir, 'thread.cgi')
+		     ) {
+	    $curproc->ui_message("creating $dst");
+	    $self->_install($src, $dst, $params);
+	    chmod 0755, $dst;
+	}
+    }
+}
+
+
+# Descriptions: install $dst with variable expansion of $src
+#    Arguments: OBJ($self) STR($src) STR($dst) HASH_REF($config)
+# Side Effects: create $dst
+# Return Value: none
+sub _install
+{
+    my ($self, $src, $dst, $config) = @_;
+
+    eval q{
+	use FML::Config::Convert;
+	&FML::Config::Convert::convert_file($src, $dst, $config);
+    };
+    croak($@) if $@;
+}
+
+
+# Descriptions: set up information for this mailing list.
+#    Arguments: OBJ($self)
+#               OBJ($curproc)
+#               HASH_REF($command_args)
+#               HASH_REF($params)
+# Side Effects: create directories
+# Return Value: none
+sub setup_listinfo
+{
+    my ($self, $curproc, $command_args, $params) = @_;
+    my $config       = $curproc->config();
+    my $template_dir = $config->{ listinfo_template_dir };
+    my $listinfo_dir = $config->{ listinfo_dir };
+
+    unless (-d $listinfo_dir) {
+	$curproc->mkdir($listinfo_dir, "mode=public");
+    }
+
+    use DirHandle;
+    my $dh = new DirHandle $template_dir;
+    if (defined $dh) {
+	my $file = '';
+
+      FILE:
+	while (defined($file = $dh->read)) {
+	    next FILE if $file =~ /^\./;
+	    next FILE if $file =~ /^CVS/;
+
+	    use File::Spec;
+	    my $src   = File::Spec->catfile($template_dir, $file);
+	    my $dst   = File::Spec->catfile($listinfo_dir, $file);
+
+	    $curproc->ui_message("creating $dst");
+	    $self->_install($src, $dst, $params);
+	}
+    }
+}
+
+
+=head1 REMOVE
+
+=cut
+
+
+# Descriptions: remove $ml_home_dir and update aliases if needed
+#    Arguments: OBJ($self)
+#               OBJ($curproc)
+#               HASH_REF($command_args)
+#               HASH_REF($params)
+# Side Effects: remove ml_home_dir, update aliases entry
+# Return Value: none
+sub remove_ml_home_dir
+{
+    my ($self, $curproc, $command_args, $params) = @_;
+    my $ml_name        = $params->{ ml_name };
+    my $ml_domain      = $params->{ ml_domain };
+    my $ml_home_prefix = $params->{ ml_home_prefix };
+    my $ml_home_dir    = $params->{ ml_home_dir };
+
+    $curproc->ui_message("removing ml_home_dir for $ml_name");
+
+    # /var/spool/ml/elena -> /var/spool/ml/@elena
+    my $removed_dir =
+	$curproc->removed_ml_home_dir_path($ml_home_prefix, $ml_name);
+    rename($ml_home_dir, $removed_dir);
+
+    if (-d $removed_dir && (! -d $ml_home_dir)) {
+	$curproc->ui_message("removed");
+    }
+    else {
+	my $s = "failed to remove ml_home_dir";
+	$curproc->ui_message("error: $s");
+	$curproc->logerror($s);
+    }
+}
+
+
+# Descriptions: remove aliases entry
+#    Arguments: OBJ($self)
+#               OBJ($curproc)
+#               HASH_REF($command_args)
+#               HASH_REF($params)
+# Side Effects: update aliases entry
+# Return Value: none
+sub remove_aliases
+{
+    my ($self, $curproc, $command_args, $params) = @_;
+    my $config  = $curproc->config();
+    my $ml_name = $params->{ ml_name };
+    my $list    = $config->get_as_array_ref('newml_command_mta_config_list');
+
+    eval q{
+	use FML::MTA::Control;
+
+	for my $mta (@$list) {
+	    my $optargs = { mta_type => $mta };
+	    my $obj = new FML::MTA::Control;
+	    $obj->remove_alias($curproc, $params, $optargs);
+	    $obj->update_alias($curproc, $params, $optargs);
+	    $obj->remove_virtual_map($curproc, $params, $optargs);
+	    $obj->update_virtual_map($curproc, $params, $optargs);
+	}
+    };
+    croak($@) if $@;
+}
+
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
+
+=head1 AUTHOR
+
+Ken'ichi Fukamachi
+
+=head1 COPYRIGHT
+
+Copyright (C) 2003 Ken'ichi Fukamachi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself.
+
+=head1 HISTORY
+
+FML::ML::Control first appeared in fml8 mailing list driver package.
+See C<http://www.fml.org/> for more details.
+
+=cut
+
+
+1;

@@ -4,10 +4,10 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.1 2003/01/29 08:48:49 fukachan Exp $
+# $FML: Utils.pm,v 1.2 2003/02/09 12:31:43 fukachan Exp $
 #
 
-package FML::MTAControl::Utils;
+package FML::MTA::Control::Utils;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
@@ -17,7 +17,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::MTAControl::Utils - utility functions
+FML::MTA::Control::Utils - utility functions
 
 =head1 SYNOPSIS
 
@@ -80,7 +80,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::MTAControl::Utils first appeared in fml8 mailing list driver package.
+FML::MTA::Control::Utils first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
