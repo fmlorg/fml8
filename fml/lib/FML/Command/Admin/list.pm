@@ -4,13 +4,29 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: list.pm,v 1.2 2002/04/01 14:20:20 fukachan Exp $
+# $FML: list.pm,v 1.3 2002/04/01 23:41:11 fukachan Exp $
 #
 
 package FML::Command::Admin::list;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+use FML::Log qw(Log LogWarn LogError);
+
+
+=head1 NAME
+
+FML::Command::Admin::list - show user list(s)
+
+=head1 SYNOPSIS
+
+See C<FML::Command> for more detailist.
+
+=head1 DESCRIPTION
+
+show user list(s).
+
+=cut
 
 
 # Descriptions: standard constructor
@@ -33,28 +49,28 @@ sub new
 sub need_lock { 0;}
 
 
-# Descriptions: dir
+# Descriptions: show the user list
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: forward request to dir module
 # Return Value: none
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config        = $curproc->{ config };
-    my $member_map    = $config->{ primary_member_map };
-    my $recipient_map = $config->{ primary_recipient_map };
-    my $options       = $command_args->{ options };
-    my $maplist       = [ $member_map ];
+    my $config         = $curproc->{ config };
+    my $member_maps    = $config->get_as_array_ref( 'member_maps' );
+    my $recipient_maps = $config->get_as_array_ref( 'recipient_maps' );
+    my $options        = $command_args->{ options };
+    my $maplist        = $member_maps;
 
     for (@$options) {
 	if (/^recipient|active/i) {
-	    $maplist = [ $recipient_map ];
+	    $maplist = $recipient_maps;
 	}
 	elsif (/^member/i) {
-	    $maplist = [ $member_map ];
+	    $maplist = $member_maps;
 	}
 	else {
-	    $maplist = [ $member_map ];
+	    LogWarn("list: unknown type $_");
 	}
     }
 
@@ -75,17 +91,6 @@ sub process
     }
 }
 
-=head1 NAME
-
-FML::Command::Admin::list - list a new member
-
-=head1 SYNOPSIS
-
-See C<FML::Command> for more detailist.
-
-=head1 DESCRIPTION
-
-same as C<dir>.
 
 =head1 AUTHOR
 
