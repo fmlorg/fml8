@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.11 2001/04/08 16:15:45 fukachan Exp $
+# $FML: Message.pm,v 1.12 2001/04/09 14:07:01 fukachan Exp $
 #
 
 package Mail::Message;
@@ -314,7 +314,7 @@ sub dup_header
     my ($self) = @_;
 
     # if the head object is rfc822 header, dup the header. 
-    if ($self->{ data_type } eq 'rfc822/message.header') {
+    if ($self->{ data_type } eq 'text/rfc822-headers') {
 	my $dupmsg  = new Mail::Message; # make a new object
 	my $dupmsg2 = new Mail::Message; # make a new object
 	my $body    = $self->{ next };
@@ -460,7 +460,7 @@ sub _build_header_object
     my $data_type = $self->_header_data_type($header_obj);
     _create($self, {
 	base_data_type => $data_type,
-	data_type      => "rfc822/message.header",
+	data_type      => "text/rfc822-headers",
 	data           => $header_obj,
     });
 
@@ -499,7 +499,7 @@ return a Mail::Message object or a chain of objects for the message body.
 sub rfc822_message_header
 {
     my ($self) = @_;
-    ($self->{ data_type } eq 'rfc822/message.header') ? $self->{ data } : undef;
+    ($self->{ data_type } eq 'text/rfc822-headers') ? $self->{ data } : undef;
 }
 
 
@@ -507,7 +507,7 @@ sub rfc822_message_body
 {
     my ($self) = @_;
 
-    if ($self->{ data_type } eq 'rfc822/message.header') {
+    if ($self->{ data_type } eq 'text/rfc822-headers') {
 	$self->{ next } || undef;
     }
     else {
@@ -772,13 +772,13 @@ sub _print_messsage_on_memory
     $logfp    = ref($logfp) eq 'CODE' ? $logfp : undef;
 
     # 1. print content header if exists
-    my $header = ($type eq 'rfc822/message.header') ? $data->as_string : $self->{header};
+    my $header = ($type eq 'text/rfc822-headers') ? $data->as_string : $self->{header};
     if (defined $header) {
 	$header =~ s/\n/\r\n/g unless (defined $raw_print_mode);
 	print $fd $header;
 	print $fd ($raw_print_mode ? "\n" : "\r\n");
     }
-    return if ($type eq 'rfc822/message.header');
+    return if ($type eq 'text/rfc822-headers');
     
 
     # 2. print content body: write each line in buffer
