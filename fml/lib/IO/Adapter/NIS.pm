@@ -33,7 +33,7 @@ sub configure
 
 =head1 NAME
 
-IO::Adapter::NIS.pm - NIS map operations
+IO::Adapter::NIS - NIS map operations
 
 =head1 SYNOPSIS
 

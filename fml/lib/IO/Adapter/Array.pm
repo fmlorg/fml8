@@ -16,7 +16,7 @@ use Carp;
 
 =head1 NAME
 
-IO::Adapter::Array.pm - emulation of IO for the ARRAY
+IO::Adapter::Array - emulation of IO for the ARRAY
 
 =head1 SYNOPSIS
 
