@@ -9,6 +9,11 @@
 
 	~fml/public_html/mlarchive/ＭＬ名/ 
 
+   FML::Process::Kernel 
+	define $fml_owner_home_dir by process $uid
+	
+   FML::Process::Distribute 
+	htlmify article
 
 2001/12/16
 
@@ -1282,4 +1287,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.41 2001/12/16 14:42:56 fukachan Exp $
+$FML: CHANGES.txt,v 1.42 2001/12/18 12:59:58 fukachan Exp $
