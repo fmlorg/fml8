@@ -1,0 +1,40 @@
+○	IO::Adapter
+
+   [用語]
+	KEY = STR
+	*   = ステータス
+
+   [要点]
+
+   1)
+	getline() して split() しているコードは
+	get_next_value() で ARRAY_REF として受けとるように変更
+
+   2)
+	address -> # address したい場合は
+	replace(key, \@argv) を使って行なう。
+
+
+------------------------------------------------------------
+
+   [このメソッドは使っている]
+	getline			()		STR
+	get_next_key		()		STR
+	add			(KEY, STR)	*
+				(KEY, [])	*	
+	delete			(KEY)		*	
+
+   [このメソッドは改良の余地なし]
+	touch			(引数なし)	NUM
+
+   [ん〜？]
+	(only Mail::Delivery::SMTP)
+	getpos			()		NUM
+	setpos			(NUM)		---	
+	eof			()		*
+
+   [要再実装(今はとりあえず使っていない)]
+	get_next_value		()		STR	←
+	get_next_values		()		[]	←
+	replace			(KEY, STR)	*	←	
+				(KEY, [])	*	←
