@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: DSN.pm,v 1.7 2001/07/30 14:42:34 fukachan Exp $
+# $FML: DSN.pm,v 1.8 2001/07/30 23:09:04 fukachan Exp $
 #
 
 
@@ -122,6 +122,10 @@ sub _parse_dsn_format
     if ($addr =~ /.*;\s*(\S+\@\S+\w+)/) { $addr = $1;}
     $addr = $self->address_clean_up($self, $addr);
 
+    # gives $addr itself as a hint of fixing broken address
+    # domain part of $addr may match someting e.g. nifty.ne.jp, webtv.ne.jp. 
+    $addr = $self->address_clean_up($addr, $addr);
+    
     # set up return buffer
     if ($addr =~ /\@/) {
 	$result->{ $addr }->{ 'Final-Recipient' } = $addr;
