@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.20 2002/03/20 08:00:29 fukachan Exp $
+# $FML: Kernel.pm,v 1.21 2002/03/30 11:08:37 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -13,17 +13,17 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use File::Spec;
 
-use FML::Process::Kernel;
-use FML::Log qw(Log LogWarn LogError);
-@ISA = qw(FML::Process::Kernel);
-
 # load standard CGI routines
 use CGI qw/:standard/;
+
+use FML::Log qw(Log LogWarn LogError);
+use FML::Process::Kernel;
+@ISA = qw(FML::Process::Kernel);
 
 
 =head1 NAME
 
-FML::Process::CGI::Kernel - CGI basic functions
+FML::Process::CGI::Kernel - CGI core functions
 
 =head1 SYNOPSIS
 
@@ -48,7 +48,7 @@ ordinary constructor which is used widely in FML::Process classes.
 =cut
 
 
-# Descriptions: constructor.
+# Descriptions: ordinary constructor.
 #               now we re-evaluate $ml_home_dir and @cf again.
 #               but we need the mechanism to re-evaluate $args passed from
 #               libexec/loader.
@@ -169,6 +169,10 @@ sub run
 }
 
 
+# Descriptions: show error string
+#    Arguments: STR($r)
+# Side Effects: none
+# Return Value: none
 sub _error_string
 {
     my ($r) = @_;
@@ -189,6 +193,10 @@ sub _error_string
 }
 
 
+# Descriptions: show menu table
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub _drive_cgi_by_table
 {
     my ($curproc, $args) = @_;
@@ -366,6 +374,10 @@ show title.
 =cut
 
 
+# Descriptions: show title
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub run_cgi_title
 {
     my ($curproc, $args) = @_;
@@ -447,7 +459,8 @@ execute cgi_menu() given as FML::Command::*
 
 
 # Descriptions: execute FML::Command
-#    Arguments: OBJ($curproc) HASH_REF($args) HASH_REF($command_args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
+#               STR($comname) HASH_REF($command_args)
 # Side Effects: load module
 # Return Value: none
 sub run_cgi_menu

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: User.pm,v 1.1 2002/03/19 08:11:54 fukachan Exp $
+# $FML: User.pm,v 1.2 2002/03/30 11:08:34 fukachan Exp $
 #
 
 package FML::CGI::Admin::User;
@@ -29,7 +29,10 @@ sub new
 
 
 # Descriptions: show menu for subscribe/unsubscribe commands
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($self)
+#               OBJ($curproc)
+#               HASH_REF($args)
+#               HASH_REF($command_args)
 # Side Effects: none
 # Return Value: none
 sub cgi_menu

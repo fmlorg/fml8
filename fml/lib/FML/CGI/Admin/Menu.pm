@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.6 2002/03/20 07:31:54 fukachan Exp $
+# $FML: Menu.pm,v 1.7 2002/03/30 11:08:33 fukachan Exp $
 #
 
 package FML::CGI::Admin::Menu;
@@ -20,7 +20,7 @@ use FML::Process::CGI;
 
 =head1 NAME
 
-FML::CGI::Admin::Menu - provides functions for makefml CGI interface
+FML::CGI::Admin::Menu - provides CGI for ML administrators
 
 =head1 SYNOPSIS
 
@@ -98,7 +98,7 @@ sub html_end
 }
 
 
-# Descriptions: main routine for makefml.cgi.
+# Descriptions: main routine for CGI.
 #               kick off suitable FML::Command finally
 #               via cgi_execulte_command().
 #    Arguments: OBJ($curproc) HASH_REF($args)
@@ -142,7 +142,7 @@ sub run_cgi_main
 }
 
 
-# Descriptions: show menu
+# Descriptions: show menu (table based menu)
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none

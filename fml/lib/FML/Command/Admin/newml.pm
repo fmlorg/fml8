@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.21 2002/03/31 12:10:42 fukachan Exp $
+# $FML: newml.pm,v 1.22 2002/04/01 03:41:59 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -131,6 +131,13 @@ sub process
 }
 
 
+# Descriptions: install config.cf, include, include-ctl et. al.
+#    Arguments: OBJ($self) 
+#               OBJ($curproc)
+#               HASH_REF($command_args)
+#               HASH_REF($params)
+# Side Effects: install config.cf, include, include-ctl et. al.
+# Return Value: none
 sub _install_template_files
 {
     my ($self, $curproc, $command_args, $params) = @_;
@@ -150,6 +157,13 @@ sub _install_template_files
 }
 
 
+# Descriptions: update aliases entry
+#    Arguments: OBJ($self) 
+#               OBJ($curproc)
+#               HASH_REF($command_args)
+#               HASH_REF($params)
+# Side Effects: update aliases entry
+# Return Value: none
 sub _update_aliases
 {
     my ($self, $curproc, $command_args, $params) = @_;
@@ -169,6 +183,13 @@ sub _update_aliases
 }
 
 
+# Descriptions: set up ~fml/public_html/ for this mailing list
+#    Arguments: OBJ($self) 
+#               OBJ($curproc)
+#               HASH_REF($command_args)
+#               HASH_REF($params)
+# Side Effects: create directories for html articles
+# Return Value: none
 sub _setup_mail_archive_dir
 {
     my ($self, $curproc, $command_args, $params) = @_;
@@ -185,6 +206,14 @@ sub _setup_mail_archive_dir
 }
 
 
+# Descriptions: set up CGI interface for this mailing list but
+#               disable it by default.
+#    Arguments: OBJ($self) 
+#               OBJ($curproc)
+#               HASH_REF($command_args)
+#               HASH_REF($params)
+# Side Effects: create directories and install cgi scripts
+# Return Value: none
 sub _setup_cgi_interface
 {
     my ($self, $curproc, $command_args, $params) = @_;
@@ -324,6 +353,13 @@ sub _install
 }
 
 
+# Descriptions: set up information for this mailing list.
+#    Arguments: OBJ($self) 
+#               OBJ($curproc)
+#               HASH_REF($command_args)
+#               HASH_REF($params)
+# Side Effects: create directories
+# Return Value: none
 sub _setup_listinfo
 {
     my ($self, $curproc, $command_args, $params) = @_;

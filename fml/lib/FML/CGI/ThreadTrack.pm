@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ThreadTrack.pm,v 1.15 2002/03/18 13:52:19 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.16 2002/03/20 03:17:47 fukachan Exp $
 #
 
 package FML::CGI::ThreadTrack;
@@ -13,6 +13,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
 use CGI qw/:standard/; # load standard CGI routines
+
 use FML::Process::CGI;
 @ISA = qw(FML::Process::CGI);
 
@@ -217,7 +218,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
