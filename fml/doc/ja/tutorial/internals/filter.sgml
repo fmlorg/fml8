@@ -1,11 +1,27 @@
 <!--
-   $FML: filter.sgml,v 1.5 2003/06/20 22:03:13 fukachan Exp $
+   $FML: filter.sgml,v 1.6 2004/04/07 11:07:08 fukachan Exp $
 -->
 
 <chapter id="internals.filter">
 	<title>
 	フィルタ
 	</title>
+
+<caution>
+
+<para>
+ここでいうフィルタとは、特にこだわらない限り、投稿された記事に対するフィ
+ルタです。このフィルタは FML::Filter クラスに実装されています。
+</para>
+
+<para>
+また、記事ではなくコマンドメール特有の特別なフィルタなども考えられます。
+この場合 FML::Filter にあるとはかぎりません。
+たとえばコマンドメールのコマンドの長さ制限などは
+FML::Command::Filter クラスが担当しています。
+</para>
+
+</caution>
 
 
 <sect1  id="internals.filter.overview">
