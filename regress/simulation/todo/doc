@@ -1,136 +1,129 @@
 hier.ja.html
-index.html
-index.ja.html
 
 
-fml/doc/architecture.gif
-fml/doc/architecture.html
-fml/doc/components.ja.html
-fml/doc/dirhier.ja.html
-fml/doc/index.ja.html
-fml/doc/interfaces.ja.html
-
-fml/doc/modules.ja.html
-fml/doc/objects.ja.html
-fml/doc/refactoring.ja.html
-fml/doc/releng.ja.html
-fml/doc/terms.ja.html
+doc/architecture.gif
+doc/architecture.html
+doc/components.ja.html
+doc/dirhier.ja.html
+doc/index.ja.html
+doc/interfaces.ja.html
+doc/objects.ja.html
 
 
-fml/etc/defaults/basic.cf.ja
-fml/etc/defaults/command.cf.ja
-fml/etc/defaults/dbms.cf.ja
-fml/etc/defaults/delivery.cf.ja
-fml/etc/defaults/directory.cf.ja
-fml/etc/defaults/header.cf.ja
-fml/etc/defaults/lock.cf.ja
-fml/etc/defaults/log.cf.ja
-fml/etc/defaults/paths.cf.ja
-fml/etc/defaults/spool.cf.ja
-fml/etc/defaults/system_dependence.cf.ja
-fml/etc/defaults/tickets.cf.ja
-fml/etc/defaults/cgi.cf.ja
+etc/defaults/basic.cf.ja
+etc/defaults/command.cf.ja
+etc/defaults/dbms.cf.ja
+etc/defaults/delivery.cf.ja
+etc/defaults/directory.cf.ja
+etc/defaults/header.cf.ja
+etc/defaults/lock.cf.ja
+etc/defaults/log.cf.ja
+etc/defaults/paths.cf.ja
+etc/defaults/spool.cf.ja
+etc/defaults/system_dependence.cf.ja
+etc/defaults/tickets.cf.ja
+etc/defaults/cgi.cf.ja
 
 
-fml/etc/config.cf
+etc/config.cf
 
 
-fml/lib/Dialect/Japanese/String.pm
-fml/lib/Dialect/Japanese/Subject.pm
-fml/lib/Dialect/Japanese/Utils.pm
-fml/lib/Dialect/ISO2022JP.pm
+lib/Dialect/Japanese/String.pm
+lib/Dialect/Japanese/Subject.pm
+lib/Dialect/Japanese/Utils.pm
+lib/Dialect/ISO2022JP.pm
 
 
-fml/lib/FML/Article.pm
-fml/lib/FML/Checksum.pm
-fml/lib/FML/Config.pm
-fml/lib/FML/Credential.pm
-fml/lib/FML/Date.pm
-fml/lib/FML/Debug.pm
-fml/lib/FML/Errors.pm
-fml/lib/FML/Header.pm
-fml/lib/FML/Log.pm
-fml/lib/FML/MIME.pm
+lib/Article.pm
+lib/Checksum.pm
+lib/Config.pm
+lib/Credential.pm
+lib/Date.pm
+lib/Debug.pm
+lib/Errors.pm
+lib/Header.pm
+lib/Log.pm
+lib/MIME.pm
 
 
-fml/lib/FML/Messages.pm
-fml/lib/FML/PCB.pm
-fml/lib/FML/Parse.pm
-fml/lib/FML/CGI/TicketSystem.pm
+lib/Messages.pm
+lib/PCB.pm
+lib/Parse.pm
+lib/CGI/TicketSystem.pm
 
 
-fml/lib/FML/Command/mget.pm
-fml/lib/FML/Command/bye.pm
-fml/lib/FML/Command/get.pm
-fml/lib/FML/Command/remove.pm
-fml/lib/FML/Command/resign.pm
-fml/lib/FML/Command/subscribe.pm
-fml/lib/FML/Command/unsubscribe.pm
+lib/Command/mget.pm
+lib/Command/bye.pm
+lib/Command/get.pm
+lib/Command/remove.pm
+lib/Command/resign.pm
+lib/Command/subscribe.pm
+lib/Command/unsubscribe.pm
 
 
-fml/lib/FML/Header/Subject.pm
-fml/lib/FML/Process/Command.pm
-fml/lib/FML/Process/Configure.pm
-fml/lib/FML/Process/Distribute.pm
-fml/lib/FML/Process/Flow.pm
-fml/lib/FML/Process/Kernel.pm
+lib/Header/Subject.pm
+lib/Process/Command.pm
+lib/Process/Configure.pm
+lib/Process/Distribute.pm
+lib/Process/Flow.pm
+lib/Process/Kernel.pm
 
 
-fml/lib/FML/Process/QMail.pm
-fml/lib/FML/Process/Switch.pm
-fml/lib/FML/Process/TicketSystem.pm
-fml/lib/FML/Process/CGI.pm
+lib/Process/QMail.pm
+lib/Process/Switch.pm
+lib/Process/TicketSystem.pm
+lib/Process/CGI.pm
 
 
-fml/lib/FML/Ticket/Model/toymodel.ja.txt
-fml/lib/FML/Ticket/Model/toymodel.pm
-fml/lib/FML/Ticket/00_DESIGN.txt
+lib/Ticket/Model/toymodel.ja.txt
+lib/Ticket/Model/toymodel.pm
+lib/Ticket/00_DESIGN.txt
 
 
-fml/lib/FML/Ticket/System.pm
-fml/lib/File/Errors.pm
+lib/Ticket/System.pm
+lib/File/Errors.pm
 
 
-fml/lib/File/RingBuffer.pm
-fml/lib/File/Rotate.pm
-fml/lib/File/Sequence.pm
-fml/lib/File/SimpleLock.pm
-fml/lib/File/Utils.pm
+lib/File/RingBuffer.pm
+lib/File/Rotate.pm
+lib/File/Sequence.pm
+lib/File/SimpleLock.pm
+lib/File/Utils.pm
 
 
-fml/lib/IO/Adapter/Array.pm
-fml/lib/IO/Adapter/File.pm
-fml/lib/IO/Adapter/LDAP.pm
+lib/IO/Adapter/Array.pm
+lib/IO/Adapter/File.pm
+lib/IO/Adapter/LDAP.pm
 
 
-fml/lib/IO/Adapter/NIS.pm
-fml/lib/IO/Adapter/RDBMS.pm
-fml/lib/IO/Adapter/UnixGroup.pm
+lib/IO/Adapter/NIS.pm
+lib/IO/Adapter/RDBMS.pm
+lib/IO/Adapter/UnixGroup.pm
 
 
-fml/lib/IO/MapAdapter.pm
+lib/IO/MapAdapter.pm
 
 
-fml/lib/IO/File/Atomic.pm
+lib/IO/File/Atomic.pm
 
 
-fml/lib/MailingList/Net/INET4.pm
-fml/lib/MailingList/Net/INET6.pm
+lib/MailingList/Net/INET4.pm
+lib/MailingList/Net/INET6.pm
 
 
-fml/lib/MailingList/Delivery.ja.pod
-fml/lib/MailingList/Delivery.pm
-fml/lib/MailingList/ESMTP.pm
+lib/MailingList/Delivery.ja.pod
+lib/MailingList/Delivery.pm
+lib/MailingList/ESMTP.pm
 
 
-fml/lib/MailingList/Messages.pm
-fml/lib/MailingList/SMTP.pm
-fml/lib/MailingList/Utils.pm
-fml/lib/ErrorMessages/00_PARSE.ja.txt
-fml/lib/ErrorMessages/00_README.ja.txt
-fml/lib/Tie/JournaledFile.pm
+lib/MailingList/Messages.pm
+lib/MailingList/SMTP.pm
+lib/MailingList/Utils.pm
+lib/ErrorMessages/00_PARSE.ja.txt
+lib/ErrorMessages/00_README.ja.txt
+lib/Tie/JournaledFile.pm
 
 
-fml/libexec/Standalone.pm
-fml/libexec/boot.ja.html
-fml/libexec/loader
+libexec/Standalone.pm
+libexec/boot.ja.html
+libexec/loader

@@ -45,7 +45,7 @@ fml5 [ fml リファクトリング プロジェクト (Refactroing Project) ]
 	<PRE>
 	fml.pl ---> /etc/fml/main.cf
 	       ---> libexec/loader
-	       ---> libexec/$VERSION/process_switch
+	       ---> lib/$VERSION/プロセス切替えモジュール
 	       ---> lib/$VERSION/モジュール
 	</PRE>
 
@@ -57,7 +57,7 @@ fml5 [ fml リファクトリング プロジェクト (Refactroing Project) ]
 	自主開発はできるだけ避ける。
 	<BR>
 	可能な限りあらゆる CPAN モジュールなどを使う。
-	また、利用する場合にも乖離層を設ける。
+	そして利用する場合には乖離層を設けること。
 	<PRE>
 	FML::モジュール →  乖離層 → CPAN/モジュール
 	</PRE>
@@ -79,7 +79,11 @@ fml5 [ fml リファクトリング プロジェクト (Refactroing Project) ]
   <TR>
 	<TD>
 	<TD>
-	<EM> 変数名ルールの統一 </EM>
+	<EM> 
+		<A HREF="../etc/defaults/naming_conventin.ja.html">
+		変数の命名規則
+		</A>
+	</EM>
 	<UL>
 		<LI>	USE_機能
 		<LI>	機能_TYPE
@@ -130,8 +134,9 @@ fml5 [ fml リファクトリング プロジェクト (Refactroing Project) ]
 	しかしながら configure という名前のスクリプトを（フェイクでも）
 	用意することはよいことかもしれない。
 	そのスクリプトは例えば
-	IPv6 ready か否かを決めるために使われるだろう。
-
+	IPv6 ready か否かを決めるために使われるだろう(
+	現在の実装では使ってはいない、IPv6 は常に挑戦してみる
+	)。
 
 </TABLE>
 
