@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.16 2002/03/20 03:20:45 fukachan Exp $
+# $FML: Utils.pm,v 1.17 2002/03/30 11:08:36 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -16,7 +16,7 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Process::Utils - small utilities for FML::Process::
+FML::Process::Utils - convenient utilities for FML::Process:: classes
 
 =head1 SYNOPSIS
 
@@ -40,19 +40,19 @@ return fml group.
 
 =head2 myname()
 
-return current process name.
+return the current process name.
 
 =head2 command_line_raw_argv()
 
-@ARGV before getopts() analyze.
+return @ARGV before getopts() analyze.
 
 =head2 command_line_argv()
 
-@ARGV after getopts() analyze.
+return @ARGV after getopts() analyze.
 
 =head2 command_line_argv_find(pat)
 
-search pattern in @ARGV and return it if found.
+return the matched pattern in @ARGV and return it if found.
 
 =head2 command_line_options()
 
@@ -100,7 +100,7 @@ sub fml_group
 }
 
 
-# Descriptions: return current process name
+# Descriptions: return the current process name
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: STR
@@ -113,11 +113,11 @@ sub myname
 }
 
 
-# Descriptions: return raw @ARGV of current process,
+# Descriptions: return raw @ARGV of the current process,
 #               where @ARGV is before getopts() applied
 #    Arguments: OBJ($curproc)
 # Side Effects: none
-# Return Value: HASH_ARRAY
+# Return Value: ARRAY_REF
 sub command_line_raw_argv
 {
     my ($curproc) = @_;
@@ -127,11 +127,11 @@ sub command_line_raw_argv
 }
 
 
-# Descriptions: return @ARGV of current process,
+# Descriptions: return @ARGV of the current process,
 #               where @ARGV is after getopts() applied
 #    Arguments: OBJ($curproc)
 # Side Effects: none
-# Return Value: HASH_ARRAY
+# Return Value: ARRAY_REF
 sub command_line_argv
 {
     my ($curproc) = @_;
@@ -141,11 +141,11 @@ sub command_line_argv
 }
 
 
-# Descriptions: search string matched with specified pattern and
+# Descriptions: return a string matched with the specified pattern and
 #               return it.
 #    Arguments: OBJ($curproc) STR($pat)
 # Side Effects: none
-# Return Value: STR or UNDEF
+# Return Value: STR
 sub command_line_argv_find
 {
     my ($curproc, $pat) = @_;
@@ -163,10 +163,10 @@ sub command_line_argv_find
 }
 
 
-# Descriptions: options, which is the result by getopts() analyze
+# Descriptions: return options, which is the result by getopts() analyze
 #    Arguments: OBJ($curproc)
 # Side Effects: none
-# Return Value: HASH_ARRAY
+# Return Value: ARRAY_REF
 sub command_line_options
 {
     my ($curproc) = @_;
@@ -237,10 +237,13 @@ sub executable_prefix
 
 =head2 template_files_dir_for_newml()
 
+return the path where template files used in "newml" method exist.
+
 =cut
 
 
-# Descriptions: return the path where template files used in "newml" method exist
+# Descriptions: return the path where template files used
+#               in "newml" method exist
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: STR
@@ -258,6 +261,13 @@ sub template_files_dir_for_newml
 return $ml_home_prefix in main.cf.
 
 =cut
+
+######################################################################
+# XXX
+#    __ml_home_prefix_from_main_cf() is not needed.
+#    since FML::Process::Switch calculate this variable and set it to
+#    $curproc->{ main_cf }.
+######################################################################
 
 
 # Descriptions: front end wrapper to retrieve $ml_home_prefix (/var/spool/ml).
@@ -310,10 +320,11 @@ sub __ml_home_prefix_from_main_cf
 }
 
 
-
 # Descriptions: search virtual domain in $virtual_maps.
 #               return $ml_home_prefix for the virtual domain if found.
-#    Arguments: HASH_REF($main_cf) STR($virtual_domain) ARRAY_REF($virtual_maps)
+#    Arguments: HASH_REF($main_cf)
+#               STR($virtual_domain)
+#               ARRAY_REF($virtual_maps)
 # Side Effects: none
 # Return Value: STR
 sub __ml_home_prefix_search_in_virtual_maps
@@ -348,21 +359,18 @@ sub __ml_home_prefix_search_in_virtual_maps
 }
 
 
-#
-# XXX
-#    __ml_home_prefix_from_main_cf() is not needed.
-#    since FML::Process::Switch calculate this variable and set it to
-#    $curproc->{ main_cf }.
-#
-
-
 =head2 get_aliases_filepath($domain)
 
-return file path of the aliases for this domain $domain.
+return the file path of the alias file for this domain $domain.
 
 =cut
 
 
+# Descriptions: return the file path of the alias file
+#               for this domain $domain.
+#    Arguments: OBJ($curproc) STR($domain)
+# Side Effects: none
+# Return Value: STR
 sub mail_aliases
 {
     my ($curproc, $domain) = @_;
@@ -380,7 +388,7 @@ return virtual maps.
 # Descriptions: options, which is the result by getopts() analyze
 #    Arguments: OBJ($curproc)
 # Side Effects: none
-# Return Value: HASH_ARRAY
+# Return Value: ARRAY_REF
 sub get_virtual_maps
 {
     my ($curproc) = @_;
@@ -389,6 +397,10 @@ sub get_virtual_maps
 }
 
 
+# Descriptions: return virtual maps as array reference.
+#    Arguments: HASH_REF($main_cf)
+# Side Effects: none
+# Return Value: ARRAY_REF
 sub __get_virtual_maps
 {
     my ($main_cf) = @_;
@@ -452,6 +464,10 @@ whether the current process runs in admin mode or user mode ? et.al.
 =cut
 
 
+# Descriptions: return hints on this process.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: HASH_REF
 sub hints
 {
     my ($curproc) = @_;
