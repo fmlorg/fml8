@@ -1,0 +1,276 @@
+<!--
+   $FML$
+-->
+
+<chapter id="merge">
+	<title>
+	TODO: fml 4.0 から 5.0 への検討事項
+	</title>
+
+<sect1 id="merge.suspend">
+	<title>
+	HTML 関係はどうする？
+	</title>
+
+<para>
+そもそも fml 5.0 で実装するのか？不明
+<screen>
+     AUTO_HTML_GEN:
+     
+     HTML_THREAD:			1
+     
+     HTML_INDEX_REVERSE_ORDER:	1
+     
+     HTML_DIR:			htdocs
+     
+     HTML_EXPIRE_LIMIT:
+     
+     HTML_INDEX_TITLE:
+     
+     HTML_DATA_CACHE:
+     HTML_DATA_THREAD:
+     
+     HTML_OUTPUT_FILTER:
+     
+     HTML_STYLESHEET_BASENAME:	
+     
+     HTML_THREAD_REF_TYPE:		prefer-in-reply-to
+     
+     HTML_THREAD_SORT_TYPE:
+     
+     HTML_INDEX_UNIT:		day
+     
+     HTML_INDENT_STYLE:		UL
+     
+     HTML_MULTIPART_IMAGE_REF_TYPE:
+     
+     HTML_DEFAULT_UMASK:
+     HTML_WRITE_UMASK:
+</screen>
+</para>
+
+</sect1>
+
+
+
+
+<sect1 id="merge.removed">
+	<title>
+	削除してよいか？
+	</title>
+
+<sect2>
+	<title> コマンド関係 </title>
+
+
+<para>
+コマンド
+
+	status
+	stat
+	member
+	active
+	members
+	actives
+
+はなくてよい?
+</para>
+
+
+<para>
+<screen>
+	COMMAND_SYNTAX_EXTENSION
+	USE_WARNING
+	COMMAND_ONLY_SERVER
+</screen>
+は削除して良い？
+</para>
+
+
+</sect2>
+<sect2>
+	<title> りれーもの </title>
+
+
+<para>
+<screen>
+	DEFAULT_RELAY_SERVER
+	RELAY_HACK
+	CF_DEF
+</screen>
+は削除して良い？
+</para>
+
+
+</sect2>
+<sect2>
+	<title> ヘッダの操作 </title>
+
+
+<para>
+<screen>
+	STRIP_BRACKETS:  0
+	BRACKET_SEPARATOR:
+	SUBJECT_FREE_FORM:
+	SUBJECT_FREE_FORM_REGEXP:
+	SUBJECT_FORM_LONG_ID:
+
+
+	REWRITE_TO:
+	DATE_TYPE:	original-date
+	USE_ORIGINAL_MESSAGE_ID:	1
+	PASS_ALL_FIELDS_IN_HEADER: 1
+</screen>
+</para>
+
+</sect2>
+<sect2>
+	<title> WHOIS </title>
+
+
+<para>
+全部
+<screen>
+	USE_WHOIS:
+	DEFAULT_WHOIS_SERVER:
+	WHOIS_DB:		$VARDB_DIR/whoisdb
+	WHOIS_HELP_FILE:
+	WHOIS_JCODE_P:		1
+</screen>
+</para>
+</sect2>
+
+<sect2>
+	<title> MIME 関連 </title>
+
+
+<para> 
+USE_MIME
+はデフォルトなので、変数は不必要。
+</para> 
+
+
+<para> 
+MIME_DECODED_ARTICLE
+は削除
+</para> 
+
+</sect2>
+
+<sect2>
+	<title> ロック </title>
+
+
+<para>
+ロックは flock(2) のみ。
+</para>
+
+
+<para>
+MAX_TIMEOUT
+は link(2) ベースのロックで使う変数なので削除。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title> その他 </title>
+
+
+<para>
+	5.0 では ReloadMySelf() って必要ないような気がするが…
+</para>
+
+<para>
+	RCS バックアップ？
+		CVS のみサポートか？
+</para>
+
+<para>
+	LOG_CONNECTION:	0
+</para>
+
+<para>
+	Subject:
+	From_address:	 not.found
+	User:		 not.found
+	Date:		 not.found
+</para>
+
+<para>
+BASE64_DECODE:
+BASE64_ENCODE:
+</para>
+
+<para>
+PREAMBLE_MAILBODY:
+TRAILER_MAILBODY:
+</para>
+
+<para>
+GOOD_BYE_PHRASE:
+FACE_MARK:
+</para>
+
+<para>
+USE_CROSSPOST:
+</para>
+
+<para>
+MIME_VERSION:
+MIME_CONTENT_TYPE:
+MIME_MULTIPART_BOUNDARY:
+MIME_MULTIPART_CLOSE_DELIMITER:
+MIME_MULTIPART_DELIMITER:
+MIME_MULTIPART_PREAMBLE:
+MIME_MULTIPART_TRAILER:
+</para>
+
+<para>
+MGET_SUBJECT_TEMPLATE:	result for mget _DOC_MODE_ _PART_ _ML_FN_
+MSEND_SUBJECT_TEMPLATE:	Digest _ARTICLE_RANGE_ _PART_ _ML_FN_
+</para>
+
+<para>
+MEMBER_LIST: 	 $DIR/members
+ACTIVE_LIST: 	 $DIR/actives
+</para>
+
+<para>
+COMPAT_SOLARIS2:	
+</para>
+
+<para>
+NOT_USE_TIOCNOTTY:	
+</para>
+
+<para>
+MAIL_LIST_ACCEPT_COMMAND:
+</para>
+
+<para>
+PGP_PATH:		$DIR/etc/pgp
+</para>
+
+<para>
+NOT_USE_UNIX_FROM_LOOP_CHECK:  0
+</para>
+</sect2>
+
+</sect1>
+
+<sect1 id="merge.functions">
+	<title>
+	関数関係
+	</title>
+
+
+<para>
+libdebug.pl::StdinLog
+</para>
+
+</sect1>
+
+
+</chapter>

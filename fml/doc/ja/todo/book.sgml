@@ -1,0 +1,58 @@
+<!--
+This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
+to generate various output formats.
+
+$FML: book.sgml,v 1.10 2001/05/17 04:00:43 fukachan Exp $
+-->
+
+<!doctype book public "-//FML//DTD DocBook V3.1-Based Extension//EN" [
+	<!entity % include SYSTEM "include/chapters.ent"> %include;
+]>
+
+<book>
+
+  &bookinfo;
+
+  <toc></toc>
+
+<!--
+  <part>
+	<title> 4.0 TODO </title>
+	<partintro>
+	<para>
+	fml 4.0 での TODO リストです。
+	従来は 4.0 の fml/doc/ri/TODO.wix にあったものです。
+	管理の都合上 5.0 branch で保守します。
+	</para>
+	</partintro>
+	&chapter.overview;
+  </part>
+-->
+
+  <part>
+	<title> 4.0 から 5.0 へマージするべきもの TODO </title>
+	<partintro>
+	<para>
+	fml 5.0 での TODO リストです。
+	</para>
+	</partintro>
+
+	<!-- 以下、各章が並ぶ -->
+	&chapter.merge;
+  </part>
+
+  <part>
+	<title> 5.0 TODO </title>
+	<partintro>
+	<para>
+	fml 5.0 での TODO リストです。
+	</para>
+	</partintro>
+
+	<!-- 以下、各章が並ぶ
+	&chapter.todo;
+ -->
+  </part>
+
+</book>
+
