@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: summary.pm,v 1.19 2004/04/23 04:10:32 fukachan Exp $
+# $FML: summary.pm,v 1.20 2004/04/23 04:15:58 fukachan Exp $
 #
 
 package FML::Command::User::summary;
@@ -18,7 +18,7 @@ use FML::Command::SendFile;
 
 =head1 NAME
 
-FML::Command::User::summary - send back ML's summary file
+FML::Command::User::summary - send back ML's summary file.
 
 =head1 SYNOPSIS
 
@@ -35,7 +35,7 @@ send back summary file.
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -48,14 +48,14 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
 
 
-# Descriptions: lock channel
+# Descriptions: lock channel.
 #    Arguments: none
 # Side Effects: none
 # Return Value: STR
@@ -75,6 +75,7 @@ sub process
     if (-f $article_summary_file) {
 	$command_args->{ _filepath_to_send } = $article_summary_file;
 	$self->send_file($curproc, $command_args);
+	delete $command_args->{ _filepath_to_send };
     }
     else {
 	$curproc->reply_message_nl('error.no_such_file',
