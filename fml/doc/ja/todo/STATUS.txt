@@ -304,8 +304,10 @@ V部　その他のトピック
 
 27章　エラーメールを自動解析する
 
-	[TODO] Mail::Bounce モジュールは作ったが、組み込んだ
-		まだ自動削除ができてない;)
+	Mail::Bounce モジュールは作って自動削除も可能になった
+
+	[TODO] アルゴリズムを選択可能にする
+	[TODO] カスタマイズを可能にする
 
 28章　メールサーバの変更/引越し
 
@@ -355,4 +357,4 @@ VIII部　付録
 	queue manager for LMTP ? 
 
 ---
-$FML: STATUS.txt,v 1.10 2002/07/13 14:30:14 fukachan Exp $
+$FML: STATUS.txt,v 1.11 2002/07/29 10:11:49 fukachan Exp $
