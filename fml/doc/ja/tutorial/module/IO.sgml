@@ -1,5 +1,5 @@
 <!--
-   $FML: IO::Adapter.sgml,v 1.7 2002/09/28 14:14:06 fukachan Exp $
+   $FML: IO.sgml,v 1.1 2003/02/18 02:29:14 fukachan Exp $
 -->
 
 <chapter id="module.io.adapter">
@@ -220,7 +220,8 @@ NIS/YP から group にあたるものを引っ張ってくるところだけが異なります。
 	</title>
 
 <para>
-&fmldevel; の設定では .cf の中にSQL の設定を書いておきたいと思います。
+保守性をあげるためには、一箇所に設定をまとめておきたい。
+&fmldevel; の設定では .cf の中にSQL の設定を書いておきたい。
 つまり一つの cf ファイルにいろいろ書けるようにしておきたい。
 </para>
 
@@ -228,7 +229,7 @@ NIS/YP から group にあたるものを引っ張ってくるところだけが異なります。
 そこで、[mysql:members] (から終りまで、もしくは次の =head 文まで)の
 ブロックで、マップのタイプと識別子を表現しています。
 <screen>
-config.cf の例
+config.cf の記述例
 
 member_maps     =       mysql:members
 
@@ -268,6 +269,127 @@ FML::Config は .cf から上のようなハッシュを構成します。
 よって IO::Adapter の new() の際には、
 FML::Config のオブジェクトを引数で渡せば OK です。
 </para>
+
+
+<sect2>
+	<title>
+	議論:
+		SQL 構文を config.cf に書くには？
+		(参照: fml-devel 204)
+	</title>
+
+<para>
+関数が呼ばれた時に始めて決まる変数もあるので
+cf で全部定義することはできない。
+そこで、lexical scope で取り扱われる変数の表現があれば解決だろうか？
+現在では &amp;varname 記法(下記)を使っている。
+</para>
+
+<para>
+例: 
+以下は、受信者リストとメンバーリストが食い違う例なので、
+アドレスの登録をする際に、fml_recepient という値が異なる。
+その場合、member と recipient は少し異なる SQL 命令になるので
+別々に定義する。
+off/on 命令を無視するとか、
+fml は sql からデータを読むだけで、
+書き込むことはしないなら、
+話は簡単になる。
+<screen>
+member_maps 	= 	mysql:members
+
+recipient_maps 	= 	mysql:recipients
+
+
+[mysql:members]
+
+sql_server	=	localhost
+sql_user	=	fml
+sql_password	=	uja
+sql_database	=	fml
+sql_table	=	ml
+
+sql_get_next_key =	select fml_address from $sql_table
+			where fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+
+sql_getline	=	select * from $sql_table
+			where fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+
+sql_add		=	insert into $sql_table
+			values ('$ml_name', '$ml_domain', '&address', 1, 1)
+
+sql_delete	=	delete from $sql_table
+			where	fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
+				fml_address = '&address'
+
+sql_find	=	select * from $sql_table
+			where	fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
+				fml_address like '&regexp'
+
+
+
+[mysql:recipients]
+
+sql_server	=	localhost
+sql_user	=	fml
+sql_password	=	uja
+sql_database	=	fml
+sql_table	=	ml
+
+sql_get_next_key =	select fml_address from $sql_table
+			where fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
+				fml_recipient = '1'
+
+sql_getline	=	select * from $sql_table
+			where fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
+				fml_recipient = '1'
+
+sql_add		=	update ml
+			set recipient = 1
+			where fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
+				fml_address = '&address'
+
+sql_delete	=	update ml
+			set recipient = 0
+			where fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
+				fml_address = '&address'
+
+
+sql_find	=	select * from $sql_table
+			where	fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
+				fml_recipient = '1'
+					and
+				fml_address like '&regexp'
+</screen>
+</para>
+
+</sect2>
+
 
 </sect1>
 
