@@ -1,6 +1,20 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/08/18
+
+   --quiet オプション創設 (fml と makefml コマンドだけ)
+
+   FML::Process::Configure Kernel 
+	support --quiet options for makefml and fml.
+	It closes STDERR before the main routine begins.
+	
+	define close_stderr_channel_if_quiet_option_specified().
+	
+   etc/command_line_options 
+	--quite option for fml and makefml.
+	clean up.
+
 2003/08/16
 
    FML::Process::Kernel 
@@ -5122,4 +5136,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.156 2003/08/03 16:37:14 fukachan Exp $
+$FML: CHANGES.txt,v 1.157 2003/08/16 15:40:10 fukachan Exp $
