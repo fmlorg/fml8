@@ -80,6 +80,9 @@ article {
    article_* {
           $article_sequence_file
     ?     $article_subject_tag
+          $article_summary_file
+    ?     $article_summary_file_format_address_length
+    ?     $article_summary_file_format_style
    }
 }
 
@@ -646,7 +649,6 @@ _file$ {
           $help_file
           $objective_file
           $sequence_file
-          $summary_file
 }
 
 _dir$ {
@@ -671,8 +673,6 @@ _dir$ {
     ?     $commands_for_stranger
     ?     $commands_for_user
     ?     $list_addresses
-    ?     $summary_format_address_length
-    ?     $summary_format_style
     ?     $unsafe_header_fields
 </screen>
 </para>

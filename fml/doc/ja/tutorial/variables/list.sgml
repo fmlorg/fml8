@@ -157,6 +157,15 @@ article_subject_tag</entry>
 </row>
 <row>
 <entry>
+article_summary_file_format_address_length</entry>
+<entry>
+ アドレスは先頭の何バイトかだけを記録する。詳しくはログ見ろ</entry>
+<entry>
+15
+   </entry>
+</row>
+<row>
+<entry>
 article_text_plain_filter_rules</entry>
 <entry>
  テキスト部分へのフィルタリングのルール。</entry>
@@ -1371,15 +1380,6 @@ subscribe_command_auth_type</entry>
  subscribe コマンドで confirmation 認証(コールバック認証)</entry>
 <entry>
 confirmation
-   </entry>
-</row>
-<row>
-<entry>
-summary_format_address_length</entry>
-<entry>
- アドレスは先頭の何バイトかだけを記録する。詳しくはログ見ろ</entry>
-<entry>
-15
    </entry>
 </row>
 <row>

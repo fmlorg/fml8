@@ -157,6 +157,33 @@ article_subject_tag</entry>
 </row>
 <row>
 <entry>
+article_summary_file</entry>
+<entry>
+ article summary file.</entry>
+<entry>
+$ml_home_dir/summary
+   </entry>
+</row>
+<row>
+<entry>
+article_summary_file_format_address_length</entry>
+<entry>
+ save the first N bytes of the address in summary.</entry>
+<entry>
+15
+   </entry>
+</row>
+<row>
+<entry>
+article_summary_file_format_style</entry>
+<entry>
+ format style.</entry>
+<entry>
+fml4_compatible
+   </entry>
+</row>
+<row>
+<entry>
 article_text_plain_filter_rules</entry>
 <entry>
  filter rules of text/plain filter.</entry>
@@ -1371,33 +1398,6 @@ subscribe_command_auth_type</entry>
  use comnfirmation in subscribe command ?</entry>
 <entry>
 confirmation
-   </entry>
-</row>
-<row>
-<entry>
-summary_file</entry>
-<entry>
- article summary file.</entry>
-<entry>
-$ml_home_dir/summary
-   </entry>
-</row>
-<row>
-<entry>
-summary_format_address_length</entry>
-<entry>
- save the first N bytes of the address in summary.</entry>
-<entry>
-15
-   </entry>
-</row>
-<row>
-<entry>
-summary_format_style</entry>
-<entry>
- format style.</entry>
-<entry>
-fml4_compatible
    </entry>
 </row>
 <row>
