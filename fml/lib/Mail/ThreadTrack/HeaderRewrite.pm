@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: HeaderRewrite.pm,v 1.1.1.1 2001/11/02 09:07:39 fukachan Exp $
+# $FML: HeaderRewrite.pm,v 1.2 2001/11/03 00:18:01 fukachan Exp $
 #
 
 package Mail::ThreadTrack::HeaderRewrite;
@@ -37,15 +37,15 @@ sub rewrite_header
     my $header = $msg->rfc822_message_header;
 
     if (defined $self->{ _status_info }) {
-	$header->add('X-Ticket-Status', $self->{ _status_info });
+	$header->add('X-Thread-Status', $self->{ _status_info });
     }
 
     if (defined $self->{ _thread_id }) {
-	$header->add('X-Ticket-ID', $self->{ _thread_id });
+	$header->add('X-Thread-ID', $self->{ _thread_id });
     }
 
     if (defined $self->{ _status_history }) {
-	$header->add('X-Ticket-History', $self->{ _status_history });
+	$header->add('X-Thread-History', $self->{ _status_history });
     }
 }
 

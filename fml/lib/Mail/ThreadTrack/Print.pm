@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Print.pm,v 1.2 2001/11/03 00:10:06 fukachan Exp $
+# $FML: Print.pm,v 1.3 2001/11/03 00:18:02 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print;
@@ -26,7 +26,7 @@ Mail::ThreadTrack::Print - print out thread relation
 
 =head2 C<show_summary(>)
 
-top level entrance for routines to show the ticket summary. 
+top level entrance for routines to show the thread summary. 
 
 See L<simple_print()> for more detail.
 Either of 
@@ -36,14 +36,14 @@ C<_summary_print()>
 is used for purposes.
 
 Each row that C<show_summary()> returns has a set of 
-C<date>, C<age>, C<status>, C<ticket-id> and 
-C<articles>, which is a list of articles with the ticket-id.
+C<date>, C<age>, C<status>, C<thread-id> and 
+C<articles>, which is a list of articles with the thread-id.
 
 =head2 C<simple_print()>
 
 show entries by the thread_id order. For example,
 
-       date    age status  ticket id             articles
+       date    age status  thread id             articles
  ------------------------------------------------------------
  2001/02/07    3.6  going  elena_#00000450       807 808 809 
  2001/02/07    3.1   open  elena_#00000451       810 
@@ -68,24 +68,24 @@ sub show_summary
     my ($tid, $status, $thread_id);
     my $mode = $self->get_mode || 'text';
 
-    # rh: ticket id list, which is ARRAY REFERENCE tied to db_dir/*db's
+    # rh: thread id list, which is ARRAY REFERENCE tied to db_dir/*db's
     $thread_id = $self->list_up_thread_id();
 
     # self->{ _hash_table } is tied to DB's.
     $self->db_open();
 
     if (@$thread_id) {
-	# sort the ticket output order it out by cost
-	# and print the ticket summary in that order.
+	# sort the thread output order it out by cost
+	# and print the thread summary in that order.
 	$self->sort($thread_id);
 
 	if ($mode eq 'html') {
 	    print "<TABLE BORDER=4>\n" if $mode eq 'html';
-	    $self->_print_ticket_summary($thread_id);
+	    $self->_print_thread_summary($thread_id);
 	    print "</TABLE>\n" if $mode eq 'html';
 	}
 	else {
-	    $self->_print_ticket_summary($thread_id);
+	    $self->_print_thread_summary($thread_id);
 
 	    # show short summary for each article
 	    $self->_print_article_summary($thread_id);
@@ -98,7 +98,7 @@ sub show_summary
 
 
 
-sub _print_ticket_summary
+sub _print_thread_summary
 {
     my ($self, $thread_id) = @_;
     my $mode   = $self->get_mode || 'text';
@@ -132,7 +132,7 @@ sub _print_ticket_summary
 	$status = $rh->{ _status }->{ $tid };
 
 	if ($mode eq 'html') {
-	    $self->_show_ticket_by_html_table( {
+	    $self->_show_thread_by_html_table( {
 		format   => $format,
 		date     => $date, 
 		age      => $age, 

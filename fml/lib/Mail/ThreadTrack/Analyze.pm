@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Analyze.pm,v 1.2 2001/11/03 00:13:10 fukachan Exp $
+# $FML: Analyze.pm,v 1.3 2001/11/03 00:18:01 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Analyze;
@@ -18,11 +18,7 @@ Mail::ThreadTrack::Analyze - analyze mail thread relation
 
 =head1 SYNOPSIS
 
-    my $ticket = $pkg->new($args);
-    if (defined $ticket) {
-	$ticket->analyze($msg);
-	$ticket->rewrite_header($msg);
-    }
+See C<Mail::ThreadTrack> perl module.
 
 =head1 DESCRIPTION
 
@@ -35,9 +31,9 @@ Mail::ThreadTrack::Analyze - analyze mail thread relation
 
 C<$mesg> is Mail::Message object.
 
-1) assign a new ticket or extract the existing ticket-id from the subject.
+1) assign a new thread or extract the existing thread-id from the subject.
 
-2) update ticket status if needed.
+2) update thread status if needed.
 
 =cut
 
@@ -46,7 +42,7 @@ sub analyze
 {
     my ($self, $msg) = @_;
     $self->_assign($msg);
-    $self->update_ticket_status($msg);
+    $self->update_thread_status($msg);
     $self->update_db($msg);
 }
 
@@ -65,8 +61,8 @@ sub _is_reply
 }
 
 
-# Descriptions: assign a new ticket or 
-#               extract the existing ticket-id from the subject
+# Descriptions: assign a new thread or 
+#               extract the existing thread-id from the subject
 #    Arguments: $self $curproc $args
 # Side Effects: a new thread_id may be assigned
 #               article header is rewritten
@@ -95,34 +91,34 @@ sub _assign
 	}
     }
 
-    # 2. check "X-Ticket-Pragma:" field, 
+    # 2. check "X-Thread-Pragma:" field, 
     #    we ignore this mail if the pragma is specified as "ignore".
-    if (defined $header->get('x-ticket-pragma')) {
-	my $pragma = $header->get('x-ticket-pragma') || '';
+    if (defined $header->get('x-thread-pragma')) {
+	my $pragma = $header->get('x-thread-pragma') || '';
 	if ($pragma =~ /ignore/i) {
 	    $self->{ _pragma } = 'ignore';
-	    $self->_append_ticket_status_info("ignored");
+	    $self->_append_thread_status_info("ignored");
 	    return undef;
 	}
     }
     
-    # if the header carries "Subject: Re: ..." with ticket-id, 
+    # if the header carries "Subject: Re: ..." with thread-id, 
     # we do not rewrite the subject but save the extracted $thread_id.
     if ($is_reply && $thread_id) {
 	$self->log("reply message with thread_id=$thread_id");
 	$self->{ _thread_id } = $thread_id;
 	$self->{ _status    } = 'analyzed';
-	$self->_append_ticket_status_info('analyzed');
+	$self->_append_thread_status_info('analyzed');
     }
     elsif ($thread_id) {
 	$self->log("usual message with thread_id=$thread_id");
 	$self->{ _thread_id } = $thread_id;
-	$self->_append_ticket_status_info("found");
+	$self->_append_thread_status_info("found");
     }
     else {
 	$self->log("message with no thread_id");
 
-	# assign a new ticket number for a new message
+	# assign a new thread number for a new message
 	my $id = $self->increment_id();
 
 	# O.K. rewrite Subject: of the article to distribute
@@ -130,7 +126,7 @@ sub _assign
 	    my $header = $msg->rfc822_message_header();
 	    $self->_get_thread_id($header, $config, $id);
 	    $self->_rewrite_header($header, $config, $id);
-	    $self->_append_ticket_status_info("newly assigned");
+	    $self->_append_thread_status_info("newly assigned");
 	}
 	else {
 	    $self->log("add fail for $id");
@@ -184,19 +180,19 @@ sub _speculate_thread_id
 }
 
 
-sub _append_ticket_status_info
+sub _append_thread_status_info
 {
     my ($self, $s) = @_;
     $self->{ _status_info } .= $self->{ _status_info } ? " -> ".$s : $s;
 }
 
 
-=head2 update_ticket_status($msg)
+=head2 update_thread_status($msg)
 
 =cut
 
 
-sub update_ticket_status
+sub update_thread_status
 {
     my ($self, $msg) = @_;
 
@@ -205,7 +201,7 @@ sub update_ticket_status
     # entries to check
     my $header  = $msg->rfc822_message_header();
     my $subject = $header->get('subject');
-    my $pragma  = $header->get('x-ticket-pragma') || '';
+    my $pragma  = $header->get('x-thread-pragma') || '';
 
     my $content = '';
     my $message = $msg->get_first_plaintext_message();
@@ -220,11 +216,11 @@ sub update_ticket_status
 	$subject =~ /^\s*close/ || 
 	$pragma  =~ /close/      ) {
 	$self->{ _status } = "closed";
-	$self->_append_ticket_status_info("closed");
-	$self->log("ticket is closed");
+	$self->_append_thread_status_info("closed");
+	$self->log("thread is closed");
     }
     else {
-	$self->log("ticket status not changed");
+	$self->log("thread status not changed");
     }
 }
 
@@ -287,12 +283,12 @@ sub _extract_message_id_references
 sub _extract_thread_id_in_subject
 {
     my ($self, $header, $config) = @_;
-    my $tag     = $config->{ ticket_subject_tag };
+    my $tag     = $config->{ thread_subject_tag };
     my $subject = $header->get('subject');
     my $regexp  = _regexp_compile($tag);
 
     # Subject: ... [thread_id]
-    if (($config->{ ticket_subject_tag_location } eq 'appended') &&
+    if (($config->{ thread_subject_tag_location } eq 'appended') &&
 	($subject =~ /($regexp)\s*$/)) {
 	my $id = $1;
 	$id =~ s/^(\[|\(|\{)//;
@@ -302,7 +298,7 @@ sub _extract_thread_id_in_subject
     # XXX incomplete, we check subject after cutting off "Re:" et. al.
     # Subject: [thread_id] ...
     # Subject: Re: [thread_id] ...
-    elsif (($config->{ ticket_subject_tag_location } eq 'appended') &&
+    elsif (($config->{ thread_subject_tag_location } eq 'appended') &&
 	   ($subject =~ /^\s*($regexp)/)) {
 	my $id = $1;
 	$id =~ s/^(\[|\(|\{)//;
@@ -310,7 +306,7 @@ sub _extract_thread_id_in_subject
 	return $id;
     }
     else {
-	$self->log("no ticket id /$regexp/ in subject");
+	$self->log("no thread id /$regexp/ in subject");
 	return 0;
     }
 }
@@ -319,12 +315,12 @@ sub _extract_thread_id_in_subject
 sub _get_thread_id
 {
     my ($self, $header, $config, $id) = @_;
-    my $subject_tag = $config->{ ticket_subject_tag };
+    my $subject_tag = $config->{ thread_subject_tag };
     my $id_syntax   = $config->{ thread_id_syntax };
 
     # thread_id in subject
     my $thread_id = sprintf($subject_tag, $id);
-    $self->{ _ticket_subject_tag } = $thread_id;
+    $self->{ _thread_subject_tag } = $thread_id;
 
     $thread_id = sprintf($id_syntax, $id);
     $self->{ _thread_id } = $thread_id;
@@ -337,10 +333,10 @@ sub _rewrite_header
 {
     my ($self, $header, $config, $id) = @_;
 
-    # append the ticket tag to the subject
+    # append the thread tag to the subject
     my $subject = $header->get('subject') || '';
     $header->replace('Subject', 
-		     $subject." " . $self->{ _ticket_subject_tag });
+		     $subject." " . $self->{ _thread_subject_tag });
 }
 
 
@@ -441,7 +437,7 @@ sub _update_db
     $when = Mail::Message::Date->new($when)->mail_header_style();
     
     $buf .= "\t\n";
-    $buf .= "\tthis ticket/thread is opended at article $aid[0]\n";
+    $buf .= "\tthis thread is opended at article $aid[0]\n";
     $buf .= "\tby $sender\n";
     $buf .= "\ton $when\n";
     $buf .= "\tarticle references: @aid\n";

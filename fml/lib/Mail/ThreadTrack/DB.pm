@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: DB.pm,v 1.1.1.1 2001/11/02 09:07:39 fukachan Exp $
+# $FML: DB.pm,v 1.2 2001/11/03 00:18:01 fukachan Exp $
 #
 
 package Mail::ThreadTrack::DB;
@@ -58,7 +58,7 @@ my @kind_of_databases = qw(thread_id
 sub db_open
 {
     my ($self) = @_;
-    my $db_type = $self->{ config }->{ ticket_db_type } || 'AnyDBM_File';
+    my $db_type = $self->{ config }->{ thread_db_type } || 'AnyDBM_File';
     my $db_dir  = $self->{ _db_dir };
 
     my $index_file      = $self->{ _index_db };

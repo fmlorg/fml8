@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: ThreadTrack.pm,v 1.2 2001/11/03 00:11:22 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.3 2001/11/03 00:18:00 fukachan Exp $
 #
 
 package Mail::ThreadTrack;
@@ -31,6 +31,25 @@ Mail::ThreadTrack - analyze mail threading
 
 =head1 SYNOPSIS
 
+    ... lock mailing list ...
+
+    my $args = {
+	fd          => \*STDOUT,
+	db_base_dir => "/var/spool/ml/\@db\@/thread",
+	ml_name     => 'elena',
+	spool_dir   => "/var/spool/ml/elena/spool",
+	article_id  => 100,
+    };
+
+    use Mail::ThreadTrack;
+    my $thread = new Mail::ThreadTrack $args;
+    $thread->analyze($msg);
+    $thread->show_summary();
+
+    ... unlock mailing list ...
+
+where C<$msg> is Mail::Message object for article 100.
+
 =head1 DESCRIPTION
 
 =head1 METHODS
@@ -38,12 +57,11 @@ Mail::ThreadTrack - analyze mail threading
 =head2 C<new($args)>
 
     $args = {
-	db_base_dir => "/var/spool/ml/\@db\@/ticket",
 	fd          => \*STDOUT,
-	article_id  => $id,
-	config      => {
-	    ml_name => 'elena',
-	},
+	db_base_dir => "/var/spool/ml/\@db\@/thread",
+	ml_name     => 'elena',
+	spool_dir   => "/var/spool/ml/elena/spool",
+	article_id  => 100,
     };
 
 C<db_base_dir> and C<ml_name> in C<config> are mandatory.
@@ -77,9 +95,9 @@ sub new
 	$config->{ thread_id_syntax } = "$ml_name/\%d";
     }
 
-    unless (defined $args->{ ticket_subject_tag }) {
+    unless (defined $args->{ thread_subject_tag }) {
 	my $id_syntax = $config->{ thread_id_syntax };
-	$config->{ ticket_subject_tag } = "[$id_syntax]";
+	$config->{ thread_subject_tag } = "[$id_syntax]";
     }
 
     # database directory used to store thread information et. al.
@@ -90,7 +108,7 @@ sub new
     $me->{ _fd }          = $args->{ fd } || \*STDOUT;
 
     # initialize directory
-    _init_ticket_db_dir($me);
+    _init_dir($me);
 
     return bless $me, $type;
 }
@@ -125,7 +143,7 @@ sub _mkdirhier
 #    Arguments: $self $curproc $args
 # Side Effects: create a "_db_dir" directory if needed
 # Return Value: 1 (success) or undef (fail)
-sub _init_ticket_db_dir
+sub _init_dir
 {
     my ($self, $args) = @_;
 
@@ -147,13 +165,13 @@ sub _init_ticket_db_dir
 
 =head2 C<increment_id(file)>
 
-increment ticket number which is taken up from C<file> 
+increment thread number which is taken up from C<file> 
 and save its new number to C<file>.
 
 =cut
 
 
-# Descriptions: increment ticket number $id holded in $seq_file
+# Descriptions: increment thread number $id holded in $seq_file
 #    Arguments: $self $seq_file
 # Side Effects: increment id holded in $seq_file 
 # Return Value: number
@@ -257,7 +275,7 @@ sub _calculate_age
 	(@aid) = split(/\s+/, $rh->{ _articles }->{ $tid });
 	$last  = $aid[ $#aid ] || 0;
 
-	# how long this ticket is not concerned ?
+	# how long this thread is not concerned ?
 	$age = sprintf("%2.1f%s", ($now - $rh->{ _date }->{ $last })/$day);
 	$age{ $tid } = $age;
 

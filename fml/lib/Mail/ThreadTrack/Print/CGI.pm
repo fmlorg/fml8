@@ -8,7 +8,7 @@ sub STR2EUC
 }
 
 
-sub show_articles_for_ticket
+sub show_articles_for_thread
 {
     my ($self, $thread_id) = @_;
     my $mode      = $self->get_mode || 'text';
@@ -56,8 +56,8 @@ sub cgi_top_menu
 {
     my ($self) = @_;
     my $config = $self->{ _config };
-    my $action = 'fmlticket.cgi';
-    my $target = $config->{ ticket_cgi_target_window } || 'TicketCGIWindow';
+    my $action = 'fmlthread.cgi';
+    my $target = $config->{ thread_cgi_target_window } || 'ThreadCGIWindow';
 
     use DirHandle;
     my $dh = new DirHandle $config->{ ml_home_prefix };
@@ -88,15 +88,15 @@ sub cgi_top_menu
 
 
 # This shows summary on C<$thread_id> in HTML language.
-# It is used in C<FML::CGI::TicketSystem>.
-sub _show_ticket_by_html_table
+# It is used in C<FML::CGI::ThreadSystem>.
+sub _show_thread_by_html_table
 {
     my ($self, $optargs) = @_;
     my $config    = $self->{ _config };
     my $ml_name   = $config->{ ml_name };
     my $spool_dir = $config->{ spool_dir };
-    my $action    = 'fmlticket.cgi';
-    my $target    = $config->{ ticket_cgi_target_window } || 'TicketCGIWindow';
+    my $action    = 'fmlthread.cgi';
+    my $target    = $config->{ thread_cgi_target_window } || 'ThreadCGIWindow';
 
     # printf($fd $format, 
     #        $date, $age, $status, $tid, $rh->{ _articles }->{ $tid });
@@ -145,8 +145,8 @@ sub run_cgi
 {
     my ($self) = @_;
     my $config = $self->{ _config };
-    my $title  = $config->{ ticket_cgi_title }   || 'ticket system interface';
-    my $color  = $config->{ ticket_cgi_bgcolor } || '#E6E6FA';
+    my $title  = $config->{ thread_cgi_title }   || 'thread system interface';
+    my $color  = $config->{ thread_cgi_bgcolor } || '#E6E6FA';
 
     # XXX $ml_name may change by HTTP request
     $config->{ ml_name } = param('ml_name') if param('ml_name');
@@ -173,7 +173,7 @@ sub run_cgi
 
     if ($action eq 'show') {
 	Log("run.cgi.show_articles for $thread_id");
-	$self->show_articles_for_ticket($thread_id);
+	$self->show_articles_for_thread($thread_id);
     }
     else {
 	# menu at the top of scrren
