@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML: replace.pl,v 1.2 2001/04/03 09:45:47 fukachan Exp $
+# $FML: replace.pl,v 1.3 2001/05/04 14:32:34 fukachan Exp $
 #
 
 use strict;
