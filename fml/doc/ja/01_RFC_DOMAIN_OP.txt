@@ -1,7 +1,7 @@
 
 		RFC: ドメイン(default + virtual)の操作の統合
 
-
+[ビジョン]
 	利点:
 		設定を、ＭＬを用意するのに必要な操作のほぼ全部をコマンド
 		操作にすることで自動チェックが効く。
@@ -15,6 +15,22 @@
 
 	欠点:	ツールを作る時(最初)だけは気合いが要るねぇ;-)
 
+
+[使い方]
+	一連の作業がこのように変更される（と予想している）。
+	ＭＬの作成は、「ドメインの宣言」＋「ＭＬの作成」の二段階にする。
+	＃もちろん「ドメインの宣言」は最初の一回だけです。
+
+	% makefml newdomain fml.org
+	% makefml newml elena もしくは makefml newml elena@fml.org
+	
+	ＭＬの削除は今までどおり
+	% makefml rmml elena
+
+	一つのドメインの削除 == そのドメインの全ＭＬを削除
+	% makefml rmdomain fml.org
+
+[作業]
 
 I. あらたに「makefml newdomain」コマンドを創設する。
 
@@ -125,4 +141,4 @@ IV. では、ドメイン名を変更したい場合は？
 
 
 ------------------------------------------------
-$FML: 01_RFC_DOMAIN_OP.txt,v 1.1 2003/10/26 04:34:52 fukachan Exp $
+$FML: 01_RFC_DOMAIN_OP.txt,v 1.2 2003/10/26 04:38:08 fukachan Exp $
