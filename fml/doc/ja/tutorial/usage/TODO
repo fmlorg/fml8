@@ -1,5 +1,5 @@
 <!--
-   $FML: TODO,v 1.1 2001/11/24 03:22:58 fukachan Exp $
+   $FML: TODO,v 1.2 2002/02/16 10:08:36 fukachan Exp $
 -->
 
 <chapter id="available">
@@ -47,7 +47,7 @@ subject を書き換える。
 スプールに記事として溜める。
 IPv6 をしゃべる。
 チケット番号をふる。
-et. al. 
+et. al.
 </para>
 
 </sect2>
@@ -74,7 +74,7 @@ distribute と同じ。
 command は fml.pl --ctladdr と同じです。
 </para>
 
-<para>  
+<para>
 プログラム自体は動きますが、
 機能するコマンドはまだないです。
 </para>
@@ -108,20 +108,20 @@ makefml の CGI インターフェイス。
 	<title>	/usr/local/libexec/fml/fmlticket.cgi </title>
 
 
-<para>  
+<para>
 fmlticket の CGI 版。
 チケットを close する。
 あるチケットに該当する記事群を表示する。
 </para>
 </sect2>
-		
+
 
 <!-- ================================================== -->
 <sect2>
 
 	<title>	/usr/local/libexec/fml/mead </title>
 
-<para>  
+<para>
 ま〜だだよ
 </para>
 
@@ -133,7 +133,7 @@ fmlticket の CGI 版。
 
 	<title>	/usr/local/libexec/fml/fmlserv </title>
 
-<para>  
+<para>
 ま〜だだよ
 </para>
 
@@ -141,7 +141,7 @@ fmlticket の CGI 版。
 
 
 </sect1>
-<!-- 
+<!--
 	###########################
  -->
 <sect1 id="usr.local.bin">
@@ -155,12 +155,12 @@ fmlticket の CGI 版。
 	<title>	/usr/local/bin/makefml </title>
 
 
-<para>  
+<para>
 登録と削除関係、および最低限のＭＬの作成だけは動きます
 (add subscribe bye unsubscribe resign remove そして newml)。
-</para>  
+</para>
 
-<para>  
+<para>
 使い方は fml 4.0 と一緒です。
 <screen>
 % makefml add elena アドレス
@@ -179,7 +179,7 @@ fmlticket の CGI 版。
 
 <para>  変数一覧を表示します</para>
 </sect2>
-   
+
 
 <!-- ================================================== -->
 <sect2>
@@ -197,7 +197,7 @@ perldoc への wrapper です。
 <sect2>
 	<title>	/usr/local/bin/fmlticket	</title>
 
-<para>  
+<para>
 現在のチケットシステムのサマリを表示する。
 チケットの close をする。
 </para>

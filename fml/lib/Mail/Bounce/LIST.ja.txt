@@ -8,7 +8,7 @@
 	Novell GroupWise
 
   * 特定の ISP など
-	
+
 	ido.ne.jp 	qmail らしい	●au(旧IDO)
 	Caiwireless
 	Compuserve
@@ -18,9 +18,9 @@
 
   * 25/tcp を喋りそうなソフトウエア
 
-	CC:Mail			
+	CC:Mail
 	InterMail		＊ 壊れてる DSN ;)
-	InterScan		
+	InterScan
 	MAILsweeper
 	MailShield
 	Microsoft Exchange
@@ -30,10 +30,10 @@
 	Norton-AntiVirus
 	SLmail
 	SMI-8.6
-	fetchmail		
+	fetchmail
 	netscape
-	Exim			
-	Lotus SMTP MTA SMTP v4.6 (notes gateway ?) 
+	Exim
+	Lotus SMTP MTA SMTP v4.6 (notes gateway ?)
 	openmail ?
 	Smail
 
@@ -42,7 +42,7 @@
 
 	freeml.com		独自 && 日本語はつらい;)
 	GOO			独自 && 日本語はつらい;)
-	ODN			RFC1894 もどきだけど肝心のアドレスがない 
+	ODN			RFC1894 もどきだけど肝心のアドレスがない
 	Biglobe.ne.jp		DSN じゃない sendmail ???
 	nifty.com		独自	# 推奨 nifty.com > nifty.ne.jp
 	(nifty.ne.jp		独自)
@@ -55,7 +55,7 @@
 
 --------------------------------------------------------------------
 
-○ TODO 英語で返ってこないものをどう扱うか (考え中) 
+○ TODO 英語で返ってこないものをどう扱うか (考え中)
 
 	Netscape Messaging Server 4.15
 		ドメインを見て言語別にメッセージが変わる(らしい)
@@ -71,4 +71,4 @@
 		今は sendmail みたいだ
 
 
-$FML$
+$FML: LIST.ja.txt,v 1.1 2002/02/01 14:39:24 fukachan Exp $

@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: file_map.pl,v 1.4 2001/05/04 14:32:34 fukachan Exp $
+# $FML: file_map.pl,v 1.5 2001/08/19 16:12:25 fukachan Exp $
 #
 
 use Carp;
@@ -12,7 +12,7 @@ use Carp;
 $file = "/etc/passwd";
 $map  = "file:". $file;
 
-open($file, $file) || croak($!); 
+open($file, $file) || croak($!);
 while (1) {
     $p = sysread($file, $_, 4096);
     last unless $p;

@@ -1,5 +1,5 @@
 <!--
-   $FML: command.sgml,v 1.1 2001/11/24 03:22:58 fukachan Exp $
+   $FML: procmail.sgml,v 1.1 2001/11/25 03:52:13 fukachan Exp $
 -->
 
 <chapter id="fml.bymyaccount">
@@ -20,7 +20,7 @@
 
 <para>
 こういった場合、
-fml 5.0 ではユーザが 
+fml 5.0 ではユーザが
 procmail などの振分ツールを使うだろうと期待しています :-)
 </para>
 
@@ -47,7 +47,7 @@ VERBOSE=on
 * To.*elena-ctl@fml.org
 | /usr/local/libexec/fml/fml.pl /var/spool/ml/elena --ctladdr
 
-# last resort, mail for me et. al. 
+# last resort, mail for me et. al.
 :0
 inbox/.
 </screen>

@@ -3,9 +3,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: distdir2url.pl,v 1.1 2001/04/30 11:43:34 fukachan Exp $
+# $FML: distdir2url.pl,v 1.2 2001/07/15 12:17:19 fukachan Exp $
 #
 
 use strict;
@@ -54,7 +54,7 @@ sub Show
 }
 
 
-sub HEADER 
+sub HEADER
 {
 
 print <<"_EOF";

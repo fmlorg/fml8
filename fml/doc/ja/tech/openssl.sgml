@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: openssl.sgml,v 1.1 2001/04/28 08:16:10 fukachan Exp $
 -->
 
 <chapter id="openssl">
@@ -60,12 +60,12 @@ csr.pem         private.pem
 </sect2>
 
 <sect2>
-  <title> sign signature by CA 
+  <title> sign signature by CA
           (here myself == private.pem, but it is meaningless).
   </title>
 
 <screen>
-% openssl x509 -in csr.pem -out crt.pem -req -signkey private.pem 
+% openssl x509 -in csr.pem -out crt.pem -req -signkey private.pem
 Signature ok
 subject=/C=JP/ST=Hokkaido/L=Sapporo/O=fml project/CN=beth.fml.org/Email=fukachan@fml.org
 Getting Private key

@@ -16,7 +16,7 @@
 	ファイル = {
 		key1 => undef,
 		key2 => [ value2 ],
-		key3 => [ value3a, value3b ], 
+		key3 => [ value3a, value3b ],
 	};
 
 という perl のデータ構造に相当するだろう。
@@ -54,4 +54,4 @@
 だが、汎用性を考えればハッシュにあわせるべきだろう。
 
 ----------
-$FML$
+$FML: IMPLEMENTATION.jp,v 1.1 2002/01/27 13:11:58 fukachan Exp $

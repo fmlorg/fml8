@@ -1,5 +1,5 @@
 <!--
-	$FML: glossary.sgml,v 1.1 2001/04/25 02:55:56 fukachan Exp $
+	$FML: glossary.sgml,v 1.2 2001/11/19 14:55:15 fukachan Exp $
 -->
 
 <glossary id="glossary">
@@ -23,7 +23,7 @@
 	<glossterm>	fml 5 / fml-devel	</glossterm>
 	<glossdef>
 	<para>
-		遠い将来に 
+		遠い将来に
 		fml 5.0 になるであろうとおもわれる fml-current
 	</para>
 
@@ -205,7 +205,7 @@ $euc_string = STR2EUC($string);
 	</glossdef>
    </glossentry>
 
- 
+
    <glossentry>
 	<glossterm> 	4	</glossterm>
 	<glossdef>

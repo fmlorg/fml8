@@ -77,8 +77,8 @@ unsafe_header_fields		=	Return-Receipt-To
 subject_tag_name		=	$ml_name
 
 
-# Descriptions: Subject: のタグ 
-#               % の意味は UNIX マニュアルを参照。例えば sprintf 関数など 
+# Descriptions: Subject: のタグ
+#               % の意味は UNIX マニュアルを参照。例えば sprintf 関数など
 #      History:
 #        Value:
 #     Examples: [elena:00080]

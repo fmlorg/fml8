@@ -22,7 +22,7 @@
 	という構造は残したいとおもうが、
 	それ以外の互換性を保証するかはかなり不明
 
-	Q: ?     ~ユーザ名/fml/ML名 
+	Q: ?     ~ユーザ名/fml/ML名
 	   suEXEC みたいなものかい?
 
 		ユーザが死にそうにいるサーバ上では uniqueness をチェッ
@@ -45,12 +45,12 @@
 	/usr/local/libexec/fml/distribute		(配送プログラム)
 	/usr/local/libexec/fml/command		(コマンド処理プログラム)
 	/usr/local/libexec/fml/mead			(エラー解析)
-	/usr/local/libexec/fml/confirmd		
+	/usr/local/libexec/fml/confirmd
 
 		注: --ctladdr はつかわない。できるだけ DO NOT PARSE
 		    でないと機械的な処理がしにくいため
 		   # 例えば CGI では include-ctl ファイルの編集の際
-		   s/distribute/command/g 
+		   s/distribute/command/g
 		   するだけの方が楽などといった具合(?)
 
    /usr/local/libexec/fml/emul/
@@ -63,7 +63,7 @@
 	 	例: emul/listserv
 
 
-   /usr/local/lib/fml/	
+   /usr/local/lib/fml/
 		ドキュメントや perl module などをおく ?
 
 		/usr/local/lib/fml/doc/text/
@@ -87,7 +87,7 @@
 		/usr/local/lib/fml/examples/databases/
 
 		/usr/local/lib/fml/contrib/
-		
+
 
 ○ 基本設定の例
 
@@ -155,9 +155,9 @@
 	admin_members_maps	=	$myhomedir/members-admin
 
 	# definition of recipients: fml uses recipient lists in this order
-	# [a-z]+: のうち file: だけは省略しても良い 
+	# [a-z]+: のうち file: だけは省略しても良い
 	# これで配列の表現ができる
-	recipients_maps = 	$myhomedir/recipients 
+	recipients_maps = 	$myhomedir/recipients
 				file:$myhomedir/actives
 				mysql:$sysconfdir/mysql.cf
 
@@ -166,7 +166,7 @@
 	#    たとえばファイルに追加であって、mysql へではない
 	# XXX この名前づけルールは良くないと思う > postfix
 	# XXX もっとよい名前を
-	recipient_database = $myhomedir/recipients 
+	recipient_database = $myhomedir/recipients
 
 
 	# かならず use_* と *_type がこんび(か?)
@@ -188,7 +188,7 @@
 					members_only
 					ignore
 
-	# 
+	#
 	distribute_restrictions	= 	reject_system_accounts
 					members_only
 					reject
@@ -205,7 +205,7 @@
 
 	# LDAP
 	LDAP::HOST		=
-	LDAP::PORT		=	
+	LDAP::PORT		=
 
 
 
@@ -226,7 +226,7 @@
 	=cut
 
 	# 現在の LOCAL_CONFIG で別れ目になる行
-	# HOOK 
+	# HOOK
 
 
 ○ 多国語化
@@ -251,8 +251,8 @@
  	あどれす
  	POST_RESTRICTION
  	COMMAND_RESTRICTION
- 	REGISTRATION_TYPE	auto_confirmation (とかか?)	
- 
+ 	REGISTRATION_TYPE	auto_confirmation (とかか?)
+
  以外はデフォルトのままにしたいなぁ。
  ぼく、差分だけが一画面くらいあるだけなのが希望ですぅ。
 
@@ -263,7 +263,7 @@
  	$rcf->load( /usr/local/fml/lib/$VERSION/etc/default_config.cf );
  	$rcf->load( /etc/fml/$DOMAIN/default_config.cf );
  	$rcf->load( /var/spool/ml/elena/config.cf );
- 
+
   とかいうローディングをしないといけないような気がする
 
   ＊ メニューで明示的に変更すると、それだけは新たに付け加わる > config.cf

@@ -2,7 +2,7 @@
 This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
 to generate various output formats.
 
-$FML: book.sgml,v 1.31 2002/03/18 07:39:57 fukachan Exp $
+$FML: book.sgml,v 1.32 2002/03/18 13:34:35 fukachan Exp $
 -->
 
 <!doctype book public "-//FML//DTD DocBook V3.1-Based Extension//EN" [
@@ -13,7 +13,7 @@ $FML: book.sgml,v 1.31 2002/03/18 07:39:57 fukachan Exp $
 
   &bookinfo;
 
-  &preface; 
+  &preface;
 
   <toc></toc>
 
@@ -27,7 +27,7 @@ $FML: book.sgml,v 1.31 2002/03/18 07:39:57 fukachan Exp $
 	<para>
 	なお、メーリングリストの仕組みなどの、
 	より基本的な内容については
-	&fmlbible; 
+	&fmlbible;
 	や
 	&www.fml.org;
 	などを参照して下さい。
@@ -103,7 +103,7 @@ $FML: book.sgml,v 1.31 2002/03/18 07:39:57 fukachan Exp $
 	<!-- セキュリティ -->
 	&chapter.restriction;
 
-	<!-- フック --> 
+	<!-- フック -->
 	&chapter.hook;
 
 	<!-- その他 -->
@@ -126,7 +126,7 @@ $FML: book.sgml,v 1.31 2002/03/18 07:39:57 fukachan Exp $
   </part>
 
 
-  <!-- 
+  <!--
 	*************** ここから後は付録 **************
   -->
   <part>

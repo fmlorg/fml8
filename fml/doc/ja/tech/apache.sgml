@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: apache.sgml,v 1.1 2001/04/28 08:16:09 fukachan Exp $
 -->
 
 <chapter id="apache">
@@ -13,13 +13,13 @@
 まず、これらのソースを手に入れる。
 
 	apache_1.3.9.tar.gz
-	mod_ssl-2.4.8-1.3.9.tar.gz 
+	mod_ssl-2.4.8-1.3.9.tar.gz
 	openssl-0.9.4.tar.gz
 
 そして、解凍する。
 <screen>
 % tar zxvf apache_1.3.9.tar.gz
-% tar zxvf mod_ssl-2.4.8-1.3.9.tar.gz 
+% tar zxvf mod_ssl-2.4.8-1.3.9.tar.gz
 % tar zxvf openssl-0.9.4.tar.gz
 </screen>
 </para>
@@ -28,7 +28,7 @@
 まず、openssl を作る。
 
 <screen>
-% cd openssl-0.9.4 
+% cd openssl-0.9.4
 % ./config
 % make
 % su
@@ -42,7 +42,7 @@ openssl を使えるようにするパッチを当てて、apache を compile する。
 % cd mod_ssl-2.4.8-1.3.9
 % sh configure --with-apache=../apache_1.3.9
 % cd ../apache_1.3.9
-% env BASE_SSL=/usr/local/ssl ./configure --enable-module=ssl 
+% env BASE_SSL=/usr/local/ssl ./configure --enable-module=ssl
 % make
 </screen>
 </para>
@@ -154,7 +154,7 @@ ENV: SSL_SERVER_CN =&gt; beth.fml.org
 ENV: SSL_SERVER_M_VERSION =&gt; 3
 ENV: SSL_SECRETKEYSIZE =&gt; 40
 ENV: SERVER_PORT =&gt; 443
-ENV: SSL_CLIENT_CERT =&gt; 
+ENV: SSL_CLIENT_CERT =&gt;
 ENV: SSL_CLIENT_KEY_ALGORITHM =&gt; Not supported by mod_ssl
 ENV: SSL_SERVER_IDN =&gt; /C=jp/ST=hokkaido/L=sapporo/O=FML.ORG Sapporo/OU=Technical Division/CN=beth.fml.org/Email=fukachan@fml.org
 ENV: SERVER_SIGNATURE =&gt; &le;ADDRESS&gt;Apache/1.3.9 Server at beth.fml.org Port 443&le;/ADDRESS&gt;
@@ -202,7 +202,7 @@ ENV: SSL_SERVER_I_DN_SP =&gt; hokkaido
 ENV: SSL_SERVER_I_DN_OU =&gt; Technical Division
 ENV: SSL_PROTOCOL_VERSION =&gt; SSLv3
 ENV: SSL_SERVER_A_SIG =&gt; md5WithRSAEncryption
-ENV: QUERY_STRING =&gt; 
+ENV: QUERY_STRING =&gt;
 ENV: SSL_SERVER_S_DN_SP =&gt; Hokkaido
 ENV: SSL_SERVER_S_DN_C =&gt; jp
 ENV: SSL_CIPHER_EXPORT =&gt; true
@@ -271,7 +271,7 @@ Config: submit-p =&gt; Remove
 Config: ML =&gt; sayori
 Config: PROC =&gt; destructml
 Config: LANGUAGE =&gt; Japanese
-Config: ML_DEF =&gt; 
+Config: ML_DEF =&gt;
 メーリングリスト: sayori
 を削除します。
 

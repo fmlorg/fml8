@@ -3,9 +3,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: gen_table.pl,v 1.1 2001/04/30 10:47:47 fukachan Exp $
 #
 
 use strict;
@@ -31,10 +31,10 @@ for my $f (@ARGV) {
   IN:
     while (<$fh>) {
 	$p++ if /^\s*$/;
-	
+
 	print $_ if $p == 2;
 	last IN if $p > 2;
-    } 
+    }
 
     print "\n";
 }

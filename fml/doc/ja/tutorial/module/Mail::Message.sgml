@@ -1,5 +1,5 @@
 <!--
-   $FML: Mail::Message.sgml,v 1.4 2001/10/13 08:47:57 fukachan Exp $
+   $FML: Mail::Message.sgml,v 1.5 2002/01/16 14:12:37 fukachan Exp $
 -->
 
 <chapter id="module.mail.message">
@@ -43,14 +43,14 @@ Mail::Message のクラスは
 <para>
 header は Mail::Message のタイプが text/rfc822-headers で、
 data が Mail::Header オブジェクトになります。
-一方 part1 は 
+一方 part1 は
 text/plain
 で、
 data 部分が文字列へのリファレンスです。
 </para>
 
 <para>
-参照: 
+参照:
 <ulink url="../../en/modules/Mail/Message.txt">
 Mail::Message モジュールのマニュアル
 </ulink>
@@ -206,7 +206,7 @@ __last_message() は鎖の最後の部分なのでメッセージ本文の最後になります。
 find_first_plaintext_message($args)
 は
 鎖の中で最初の plain/text タイプの Mail::Message オブジェクトを返します。
-フィルタリングでは最初の 
+フィルタリングでは最初の
 plain/text タイプのメッセージ部分に着目することが多いので
 この関数を使うと便利です。
 </para>
@@ -238,7 +238,7 @@ print() メソッドは文字どおり print です。
 </para>
 
 <para>
-print() には CRLF なのか LF なのかを指定する mode という概念があります。 
+print() には CRLF なのか LF なのかを指定する mode という概念があります。
 このために
 set_print_mode(mode) および
 reset_print_mode()
@@ -324,7 +324,7 @@ num_paragraph()
 nth_paragraph(数字)
 は
 数字番目のパラグラフの内容を文字列として返します。
-例えば、一番目のパラグラフは 0 ではなく 1 と指定して下さい。  
+例えば、一番目のパラグラフは 0 ではなく 1 と指定して下さい。
 </para>
 
 

@@ -28,7 +28,7 @@ chaddr		登録してあるメールアドレスを変更する
 confirm		subscribe, unsubscribe, chaddr で用いる
 		汎用 confirmation アダプタ
 
-		もし、confirm が正しいなら操作の実体である 
+		もし、confirm が正しいなら操作の実体である
 		FML::Command::Admin::コマンドを呼び出す。
 		つまり登録関係のユーザコマンドは admin コマンドへの
 		アダプターというわけです。
@@ -58,4 +58,4 @@ off
 on
 
 
-$FML: MANIFEST.euc-jp,v 1.5 2002/02/23 13:29:20 fukachan Exp $
+$FML: MANIFEST.euc-jp,v 1.6 2002/03/17 06:05:05 fukachan Exp $

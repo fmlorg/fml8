@@ -13,7 +13,7 @@
  [アドレス関連の操作]
 
 actives
-		add			done	
+		add			done
 add2actives
 add2members
 addactives
@@ -94,4 +94,4 @@ help
 
 
 ----------
-$FML: TODO,v 1.6 2002/03/30 11:58:45 fukachan Exp $
+$FML: TODO,v 1.7 2002/03/31 09:49:37 fukachan Exp $

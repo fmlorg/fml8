@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: list.pm,v 1.1 2002/04/01 12:41:41 fukachan Exp $
+# $FML: list.pm,v 1.2 2002/04/01 14:20:20 fukachan Exp $
 #
 
 package FML::Command::Admin::list;
@@ -49,10 +49,10 @@ sub process
     for (@$options) {
 	if (/^recipient|active/i) {
 	    $maplist = [ $recipient_map ];
-	} 
+	}
 	elsif (/^member/i) {
 	    $maplist = [ $member_map ];
-	} 
+	}
 	else {
 	    $maplist = [ $member_map ];
 	}

@@ -1,5 +1,5 @@
 <!--
-	$FML$
+	$FML: qmail.sgml,v 1.1.1.1 2001/04/28 06:32:36 fukachan Exp $
 -->
 
 <chapter id="qmail">
@@ -65,19 +65,19 @@ home-dir/.qmaildashext
 Example 1: ext == -ctl
    +elena:fukachan:0:0:/a:-:XXX:
 
-	      => 
+	      =>
 
    =elena-ctl:fukachan:0:0:/a:-:XXX-ctl:
 
 	by /a/.qmail-XXX-ctl
 
 
-Example 2: really ? 
+Example 2: really ?
 
 assume "ext == ctl", so we expect the following behaviour:
 
    +elena-:fukachan:0:0:/a:-:XXX:
-	      => 
+	      =>
    =elena-ctl:fukachan:0:0:/a:-:XXXctl:
 
    controlled by /a/.qmail-XXXctl

@@ -168,7 +168,7 @@ admin_command_restrictions	=	check_password
 primary_member_map	=	file:$ml_home_dir/members
 
 
-# Descriptions: メンバーかどうか認証する際に検索するすべてのメンバーリスト 
+# Descriptions: メンバーかどうか認証する際に検索するすべてのメンバーリスト
 #      History: fml 4.0 の $MEMBER_LIST @MEMBER_LIST 相当
 #         Type:
 #     Examples:
@@ -181,7 +181,7 @@ member_maps		=	$primary_member_map
 # Descriptions: 登録などの際に対象とする受信者のリスト
 #               XXX map のタイプによっては書き込みできないこともある
 #               XXX (例: unix.group )
-#      History: fml 4.0 の $ACTIVE_LIST 
+#      History: fml 4.0 の $ACTIVE_LIST
 #        Value: filename
 #     Examples: /var/spool/ml/elena/actives
 primary_recipient_map	=	 file:$ml_home_dir/actives
@@ -207,7 +207,7 @@ recipient_maps		=	$primary_recipient_map
 primary_admin_member_map	=	file:$ml_home_dir/members-admin
 
 
-# Descriptions: メンバーかどうか認証する際に検索するすべてのメンバーリスト 
+# Descriptions: メンバーかどうか認証する際に検索するすべてのメンバーリスト
 #      History: fml 4.0 の $ADMIN_MEMBER_LIST @ADMIN_MEMBER_LIST 相当
 #         Type:
 #     Examples:
@@ -248,10 +248,10 @@ system_accounts		=	root
 #      History: 4.0 で直接対応するものはない。
 #               $MCI_SMTP_HOSTS は似ているがちょっと違う
 #        Value: number
-#     Examples: 
+#     Examples:
 recipient_limit		=	1000
 
-# Descriptions: デフォールトの MTA は自分自身( localhost ) 
+# Descriptions: デフォールトの MTA は自分自身( localhost )
 #               IPv6 の loopback がデフォルトなのがおしゃれ :-)
 #      History: fml 4.0 の $HOST
 #        Value: host:port
@@ -415,8 +415,8 @@ unsafe_header_fields		=	Return-Receipt-To
 subject_tag_name		=	$ml_name
 
 
-# Descriptions: Subject: のタグ 
-#               % の意味は UNIX マニュアルを参照。例えば sprintf 関数など 
+# Descriptions: Subject: のタグ
+#               % の意味は UNIX マニュアルを参照。例えば sprintf 関数など
 #      History:
 #        Value:
 #     Examples: [elena:00080]
@@ -473,7 +473,7 @@ body_cksum_cache_dir		=	$db_dir/body_cksum
 
 # Descriptions: ロックをするか？
 #      History:
-#        Value: yes /no 
+#        Value: yes /no
 use_lock	= yes
 
 # Descriptions: ロックファイルを置くディレクトリ
@@ -622,7 +622,7 @@ command_unsubscribe_type	=	confirmation
 #      History: fml 4.0 ではデフォルトのコマンド定義一覧に対し
 #               @PERMIT_PROCEDURE @DENY_PROCEDURE などで
 #               変更を加える
-#        Value: 
+#        Value:
 #     Examples:
 available_commands_for_user	=	help
 					get
@@ -689,7 +689,7 @@ available_commands_for_admin_cgi	=	subscribe
 #     Examples:
 confirm_command_prefix		=	confirm
 
-	
+
 # Descriptions: 管理用のコマンドを表す特別なコマンド
 #        Value: STR
 #     Examples:
@@ -788,7 +788,7 @@ thread_cgi_bgcolor	=	#E6E6FA
 
 ###
 ### TODO
-###   うー？  
+###   うー？
 ###   DATABASE_CACHE_FILE_SUFFIX はどするん？
 ###
 
@@ -852,19 +852,19 @@ ldap_servers		=
 #      History:
 #        Value:
 #     Examples:
-ldap_server_password	=	
+ldap_server_password	=
 
 # Descriptions: LDAP の search base
 #      History:
 #        Value:
 #     Examples:
-ldap_search_base	=	
+ldap_search_base	=
 
 # Descriptions: LDAP の search bind
 #      History:
 #        Value:
 #     Examples:
-ldap_server_bind	=	
+ldap_server_bind	=
 
 # Descriptions: LDAP のフィルタ
 #      History:
@@ -899,13 +899,13 @@ admin_cgi_base_dir	=	$cgi_base_dir/admin
 ml_admin_cgi_base_dir	=	$cgi_base_dir/ml-admin/$ml_name
 
 
-# Descriptions: デフォルトの CHARSET 
+# Descriptions: デフォルトの CHARSET
 #      History:
 #        Value:
 #     Examples:
 cgi_default_charset	=	euc-jp
 
-# Descriptions: CGI の表示の CHARSET 
+# Descriptions: CGI の表示の CHARSET
 #      History:
 #        Value:
 #     Examples:

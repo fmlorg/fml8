@@ -1,5 +1,5 @@
 <!--
-   $FML: cgi.sgml,v 1.3 2002/03/18 13:34:36 fukachan Exp $
+   $FML: cgi.sgml,v 1.4 2002/03/19 04:48:54 fukachan Exp $
 -->
 
 <chapter id="internal.cgi">
@@ -41,7 +41,7 @@ html_end()
 new()
 prepare()
 verify_request()
-run() 
+run()
    html_start()
    run_cgi()
    html_end()
@@ -55,14 +55,14 @@ finish()
 
 <sect1 id="internal.cgi.frames">
 	<title>
-	画面の作りとメソッド 
+	画面の作りとメソッド
 	</title>
 
 <para>
 典型的な画面は次のように分割されると考えて良いでしょう。
 <screen>
           ヘッダ
-バー１    メニュー     バー２ 
+バー１    メニュー     バー２
           フッタ
 </screen>
 なお、バー１と２の部分は navigation などと呼ばれます。
@@ -72,10 +72,10 @@ finish()
 <para>
 ヘッダ部分( HTTP ヘッダではなく、HTML の DOCTYPE から BODY あたり)
 やフッタの部分は
-html_start() および html_end() で HTML コードを生成するでしょう。 
+html_start() および html_end() で HTML コードを生成するでしょう。
 BODY の中身は
 <screen>
-バー１    メニュー     バー２ 
+バー１    メニュー     バー２
 </screen>
 の部分で、run_cgi() によって生成します。
 </para>
@@ -108,19 +108,19 @@ sw   south  se
 
 <para>
 CGI の表示部分は
-FML::Command:: 
+FML::Command::
 以下のクラスに移動させます。
 しかしながら、
-FML::Command:: 
+FML::Command::
 の中に実体があるとは限らず
 object composition の形式で
 FML::CGI:: クラスが提供するメニュー生成クラスを
 使うことになるでしょう。
 たとえば subscribe の場合
 <screen>
-FML::CGI::Admin::Main → 
-FML::Command::Admin::subscribe → 
-FML::CGI::Admin::Menu → 
+FML::CGI::Admin::Main →
+FML::Command::Admin::subscribe →
+FML::CGI::Admin::Menu →
 メニューの表示
 </screen>
 などとなるでしょう。

@@ -33,16 +33,16 @@ sub Parse
 	### unknown MTA
 	# e.g. uset not known
 	if (/$TrapWord/i && $P_CurAddr) {
-	    &AnalyzeErrorWord($_, $P_CurAddr); 
-	    $found++;	
+	    &AnalyzeErrorWord($_, $P_CurAddr);
+	    $found++;
 	}
 
 	# EXIM pattern
-	if (/failed/i && $MTA eq 'exim') { 
+	if (/failed/i && $MTA eq 'exim') {
 	    $trap_want_addr = $_;
 	    next;
 	}
-	if ($trap_want_addr && /\@/ && $MTA eq 'exim') { 
+	if ($trap_want_addr && /\@/ && $MTA eq 'exim') {
 	    local($a);
 	    /^\s*(\S+\@\S+)/ && ($a = $1);
 	    $a =~ s/[\<\>:]//g;
@@ -50,8 +50,8 @@ sub Parse
 	    undef $trap_want_addr;
 	}
 
-	if (/($ErrorCodePat)/ && $MTA eq 'exim') { 
-	    &AnalyzeErrorWord($_, $CurAddr); 
+	if (/($ErrorCodePat)/ && $MTA eq 'exim') {
+	    &AnalyzeErrorWord($_, $CurAddr);
 	    $found++;
 	}
 
@@ -63,7 +63,7 @@ sub Parse
 	    &CacheOn($a, " ") if $a; # space is a dummy
 	}
 	# end of fatal block
-	if ($fatal && /^$/) {    
+	if ($fatal && /^$/) {
 	    undef $fatal;
 	}
     }
@@ -79,7 +79,7 @@ sub Parse
 	if ($addr =~ /=/) {
 	    $addr =~ s/\@\S+$//;
 	    $addr =~ s/=/\@/;
-	    $addr =~ s/^\S+\-admin\-//; # fml specific 
+	    $addr =~ s/^\S+\-admin\-//; # fml specific
 
 	    $ra =~ s/admin\-\S+\@/admin@/;
 

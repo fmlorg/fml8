@@ -1,5 +1,5 @@
 <!--
-   $FML: post.sgml,v 1.1.1.1 2001/11/23 15:47:37 fukachan Exp $
+   $FML: post.sgml,v 1.2 2001/11/24 03:22:59 fukachan Exp $
 -->
 
 <chapter id="usage.post">
@@ -10,7 +10,7 @@
 <para>
 elena ＭＬなら、投稿する時はメールを elena@fml.org に送信してください。
 メールは MTA が受け、最終的に MTA は
-/usr/local/libexec/fml/fml.pl 
+/usr/local/libexec/fml/fml.pl
 (もしくは /usr/local/libexec/fml/distribute )
 というコマンドを実行します。
 fml.pl はメールを標準入力から受けとり、

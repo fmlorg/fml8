@@ -6,8 +6,8 @@ _ARG1_
 
 という一文を
 
-_ARG2_ 
+_ARG2_
 
-というアドレスまで送り返して下さい。 
+というアドレスまで送り返して下さい。
 
 # @argv = ($MAIL_LIST, $CONFIRMATION_KEYWORD)

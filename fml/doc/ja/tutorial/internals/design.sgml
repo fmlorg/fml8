@@ -1,5 +1,5 @@
-<!-- 
-	$FML: design.sgml,v 1.4 2001/10/13 08:47:56 fukachan Exp $
+<!--
+	$FML: design.sgml,v 1.5 2002/02/16 10:08:35 fukachan Exp $
 -->
 
 <chapter id="design">
@@ -7,7 +7,7 @@
 	&fmldevel; (仮名) のデザインコンセプト
 	</title>
 
-  
+
 <!-- ========================================================
 		section 1
      ========================================================
@@ -19,7 +19,7 @@
 
 <para>
 <ulink url="http://www.fml.org/devel/">
-fml-devel 
+fml-devel
 </ulink>
 とも呼ばれている fml 5.0 プロジェクトは、
 fml 4.0 の再構想(refactoring)とその実装(例)の構築
@@ -137,46 +137,46 @@ fml 5.0 のアルファ版のアルファ版のアルファ版
 	<para>
 	統一化されたメンバーリストなどへのアクセスをできるだけ抽象化する。
 	</para>
-		
+
 		<itemizedlist>
-		
+
 		   <listitem>
 			<para>
 				ファイル (実装済み)
 			</para>
 		   </listitem>
-		
+
 		   <listitem>
 			<para>
 				/etc/group (実装済み)
 			</para>
 		   </listitem>
-		
+
 		   <listitem>
 			<para>
 				NIS (実装済み)
 			</para>
 		   </listitem>
-		
+
 		   <listitem>
 			<para>
 				SQL (プロトタイプは実装済み)
 			</para>
 		   </listitem>
-		
+
 		   <listitem>
 			<para>
 				LDAP
 			</para>
 		   </listitem>
-		
+
 	</itemizedlist>
 
 	<para>
 	実際には効率の問題もあり、
 	あらゆる抽象化は重たくなってしまう。
 	しかし少々重くなっても実装しよう。
-	</para>		
+	</para>
    </listitem>
 
    <listitem>
@@ -228,7 +228,7 @@ fml をリファクトリングするアイデア
 	<row>
 	<entry>	done. 		</entry>
 	<entry>
-		メインプログラムの wrapper (乖離層)。 
+		メインプログラムの wrapper (乖離層)。
 	</entry>
 	<entry>
 		バージョン管理やデバッグを簡単にするための乖離層
@@ -269,7 +269,7 @@ fml をリファクトリングするアイデア
 	<entry> 変数の命名規則の規格化
 	</entry>
 	<entry>
-		”USE_ほえ”および”ほえ_TYPE”形式か？	
+		”USE_ほえ”および”ほえ_TYPE”形式か？
 		また、NOT_USE などは禁止する( default_config に書くこと)。
 
 		attribute にあたるものが
@@ -379,7 +379,7 @@ fml をリファクトリングするアイデア
 	<row>
 	<entry> 最初の 4〜5日</entry>
 	<entry> 計画を練り直す。
-		リリースエンジニアリングプロセス中の 
+		リリースエンジニアリングプロセス中の
 		20 ％程度はこの計画に費やすこと
 	</entry>
 	</row>

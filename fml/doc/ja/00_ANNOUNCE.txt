@@ -35,11 +35,11 @@ fml 5.0  への道(はるかなる道)について現在次のように構想しています。
 現状動いている機能は
 
 	fml 1.2 相当の最低限の機能
-	  + postfix スタイルの設定ファイル 
-	  + IPv6 
+	  + postfix スタイルの設定ファイル
+	  + IPv6
 	  + チケットシステム(最小限の機能、CGI 含む)
 	  + 抽象化 IO 層
-		メンバーファイルをファイル、/etc/group, NIS, MySQL 
+		メンバーファイルをファイル、/etc/group, NIS, MySQL
 		から取り出す。
 		＃ 3 行くらい変更すれば PostgreSQL も動くはず
 
@@ -49,7 +49,7 @@ fml 5.0  への道(はるかなる道)について現在次のように構想しています。
 
 ○ fml 4.0 と 5.0 の関係
 
-http://www.fml.org/devel/fmlsrc/fml/doc/purpose.ja.html 
+http://www.fml.org/devel/fmlsrc/fml/doc/purpose.ja.html
 
 4.0 と 5.0 はアイデアは継承していても、起源は別です。
 図解すれば次のようなものといえます。
@@ -64,18 +64,18 @@ http://www.fml.org/devel/fmlsrc/fml/doc/purpose.ja.html
 のを逆輸入する形になるでしょう。
 
 
-○ fml5で既に動く機能                             
+○ fml5で既に動く機能
 
 http://www.fml.org/devel/fmlsrc/fml/doc/built_already.ja.html
 
 
-これらのものは /usr/local/libexec/fml以下にインストールされます。実際には 
+これらのものは /usr/local/libexec/fml以下にインストールされます。実際には
 /usr/local/libexec/fml/loaderへのリンクです。起動される時の名前で振舞いを変
-えています。 
+えています。
 
 注意: fml5ではすべてのプログラムは /usr/local/libexec/fml/loaderを経由して
 起動されます。バージョン依存性を処理するために、つねにこの loaderを通して
-起動していくことになっています。 
+起動していくことになっています。
 +------------------+--------------------------------------------------------+
 |fml.pl            |配送処理をする。subjectを書き換える。スプールに記事とし |
 |distribute        |て溜める。IPv6をしゃべる。チケット番号をふる。et. al.   |

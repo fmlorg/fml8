@@ -1,15 +1,15 @@
 #!/usr/local/bin/perl
 #
-# $FML$
+# $FML: data2sgml.pl,v 1.1 2001/04/28 14:37:05 fukachan Exp $
 #
 
 use strict;
 use Carp;
 use vars qw(%list @ENTRY);
 
-@ENTRY = ('system', 
+@ENTRY = ('system',
 	  'release',
-	  'perl.version', 
+	  'perl.version',
 	  'perl.path',
 	  'comments'
 	  );

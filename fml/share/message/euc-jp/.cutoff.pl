@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML$
+# $FML: .cutoff.pl,v 1.1.1.1 2001/10/11 08:43:12 fukachan Exp $
 #
 
 use strict;
@@ -24,7 +24,7 @@ for my $file (@ARGV) {
 	}
 	else {
 	    s/^\t//;
-	    if (defined $fh) {	
+	    if (defined $fh) {
 		$fh->print($_);
 	    }
 	}
@@ -40,7 +40,7 @@ sub _open
     system "mkdir -p $x";
 
     $fh = new FileHandle "> $x/$y";
-    if (defined $fh) { 
+    if (defined $fh) {
 	print STDERR "$x/$y opened\n";
     }
     else {

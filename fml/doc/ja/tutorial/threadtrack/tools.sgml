@@ -1,5 +1,5 @@
 <!--
-   $FML: tools.sgml,v 1.1.1.1 2001/11/17 13:09:40 fukachan Exp $
+   $FML: tools.sgml,v 1.2 2001/11/23 15:00:48 fukachan Exp $
 -->
 
 <appendix id="threadtrack.pmtools.summary">
@@ -16,7 +16,7 @@ bug tracking システムとチケットシステムは微妙に目的が違うと思うが、
 <ulink url="http://www.daveeaton.com/scm/PMTools.html">
 http://www.daveeaton.com/scm/PMTools.html
 </ulink>
-に FAQ 
+に FAQ
 	<footnote>
 	<para>
 	<ulink url="http://www.iac.honeywell.com/Pub/Tech/CM/PMTools.html">
@@ -28,11 +28,11 @@ http://www.daveeaton.com/scm/PMTools.html
 がある。特に売りもの一覧についてはここをまず見られたい。
 Free のものもいくつかある。
 最も有名なものは GNATS かもしれないが、
-あとは 
+あとは
 jitterbug
 がよくみるだろうか？
 他に
-Bugzilla 
+Bugzilla
 とか
 debuggs (Debian Bug Tracking System)
 とか OpenTrack PTS WREK Wreq (?) などというのもある。
@@ -168,7 +168,7 @@ no definition for this card.
 
 &gt;How-To-Repeat:
 
-attach it. 
+attach it.
 
 &gt;Fix:
 
@@ -194,7 +194,7 @@ diff -u -u -b -r1.62.4.5 if_ne_pcmcia.c
 @@ -200,6 +200,11 @@
        PCMCIA_CIS_SVEC_PN650TX,
        0, -1, { 0x00, 0xe0, 0x98 }, NE2000DVF_DL10019 },
- 
+
 +    { PCMCIA_STR_NEC_9801N_J12,
 +      PCMCIA_VENDOR_NEC, PCMCIA_PRODUCT_NEC_9801N_J12,
 +      PCMCIA_CIS_NEC_9801N_J12,
@@ -225,7 +225,7 @@ diff -u -u -b -r1.93.2.7 pcmciadevs
 +
 +/* NEC */
 +product NEC 9801N_J12		0x0002 NEC	PC-9801N-J12	LAN
- 
+
  /* Adaptec Products */
  product ADAPTEC APA1460		0x0001 Adaptec APA-1460 SlimSCSI
 </screen>

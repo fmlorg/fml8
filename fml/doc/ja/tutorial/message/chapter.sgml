@@ -1,5 +1,5 @@
 <!--
-	$FML: chapter.sgml,v 1.1 2001/11/24 03:22:55 fukachan Exp $	
+	$FML: chapter.sgml,v 1.2 2001/11/24 12:48:10 fukachan Exp $
 -->
 
 <chapter id="mail.manipulation">
@@ -35,7 +35,7 @@ multipart のように、
 </para>
 
 <para>
-それらのモジュールのために 
+それらのモジュールのために
 <link linkend="module.mail.message">
 Mail::Message クラス
 </link>
@@ -76,7 +76,7 @@ Mail::Bounce や Mail::Delivery を始め、
 </para>
 
 <para>
-パーサの実体は 
+パーサの実体は
 	<link linkend="module.mail.message">
 	Mail::Message
 	</link>
@@ -92,7 +92,7 @@ Mail::Bounce や Mail::Delivery を始め、
 
 <para>
 これはメールを構築する際に用いるクラスですが、単なるアダプタです。
-メールを作成する実体は 
+メールを作成する実体は
 CPAN の MIME::Lite クラスです。
 作成のリクエストは
 MIME::Lite クラスへ

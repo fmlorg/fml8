@@ -2,7 +2,7 @@
 
 ###
 ### TODO
-###   うー？  
+###   うー？
 ###   DATABASE_CACHE_FILE_SUFFIX はどするん？
 ###
 
@@ -66,19 +66,19 @@ ldap_servers		=
 #      History:
 #        Value:
 #     Examples:
-ldap_server_password	=	
+ldap_server_password	=
 
 # Descriptions: LDAP の search base
 #      History:
 #        Value:
 #     Examples:
-ldap_search_base	=	
+ldap_search_base	=
 
 # Descriptions: LDAP の search bind
 #      History:
 #        Value:
 #     Examples:
-ldap_server_bind	=	
+ldap_server_bind	=
 
 # Descriptions: LDAP のフィルタ
 #      History:

@@ -1,5 +1,5 @@
 <!--
-	$FML: chapter.sgml,v 1.9 2002/02/03 10:33:50 fukachan Exp $
+	$FML: chapter.sgml,v 1.10 2002/03/18 07:39:27 fukachan Exp $
 -->
 
 <chapter id="install">
@@ -8,7 +8,7 @@
 	</title>
 
 
-<!-- ====================================================== --> 
+<!-- ====================================================== -->
 <sect1 id="install.configure">
 	<title>
 	概要
@@ -41,10 +41,10 @@ sbindir         ${exec_prefix}/sbin         /usr/local/sbin
 libexecdir      ${exec_prefix}/libexec      /usr/local/libexec/fml
 datadir         ${prefix}/share             /usr/local/share/fml
 sysconfdir      ${prefix}/etc               /usr/local/etc/fml
-sharedstatedir  ${prefix}/com         
+sharedstatedir  ${prefix}/com
 localstatedir   ${prefix}/var
 libdir          ${exec_prefix}/lib          /usr/local/lib/fml
-includedir      ${prefix}/include       
+includedir      ${prefix}/include
 oldincludedir   /usr/include
 infodir         ${prefix}/info
 mandir          ${prefix}/man
@@ -112,7 +112,7 @@ creating fml/bin/makefml
 </sect1>
 
 
-<!-- ====================================================== --> 
+<!-- ====================================================== -->
 <sect1>
 	<title>
 	各ディレクトリの役割
@@ -148,7 +148,7 @@ creating fml/bin/makefml
 		バージョンやライブラリの場所(ディレクトリ)などを指定する。
           </entry>
         </row>
-  
+
         <row>
           <entry> /usr/local/libexec/fml 		</entry>
           <entry>
@@ -198,11 +198,11 @@ creating fml/bin/makefml
     ======================================================
 	main.cf の例
     ======================================================
---> 
+-->
 &sect.main.cf;
 
 
-<!-- ====================================================== --> 
+<!-- ====================================================== -->
 <sect1 id="upgrade">
 	<title>
 	アップグレード

@@ -3,9 +3,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: dir2url.pl,v 1.1 2001/04/30 11:43:33 fukachan Exp $
+# $FML: dir2url.pl,v 1.2 2001/08/19 16:11:27 fukachan Exp $
 #
 
 use strict;
@@ -53,7 +53,7 @@ sub update_cvs_ignore
 	my $fh = new FileHandle "> .cvsignore";
 	print $fh '@@doc', "\n";
 	close($fh);
-    } 
+    }
 }
 
 
@@ -104,7 +104,7 @@ sub Prepend
 
 	/ja.txt/ && $japanese++;
 
-	my $name = $_; 
+	my $name = $_;
 	$name =~ s/^00_//;
 	$name =~ s/.txt$//;
 	$name =~ s/.ja$//;
@@ -143,7 +143,7 @@ sub Show
 	next if $pathname eq 'Makefile';
 
 	my $module = $pathname;
-	if ($module =~ /\.pm$/ || $module eq 'loader') { 
+	if ($module =~ /\.pm$/ || $module eq 'loader') {
 	   generate_manual($pathname);
 	}
 
@@ -154,7 +154,7 @@ sub Show
 	if (-d $pathname) {
 	    print ($TableMode ? "<TR>\n" : "<LI>\n");
 	    print "<TD>\n" if $TableMode;
-	    
+
 	    if (-f "$pathname/index.ja.html") {
 		print " <A HREF=$pathname/index.ja.html>";
 
@@ -206,7 +206,7 @@ sub Show
 }
 
 
-sub HEADER 
+sub HEADER
 {
 
 print <<"_EOF";

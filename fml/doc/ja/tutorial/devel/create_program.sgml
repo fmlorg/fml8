@@ -1,5 +1,5 @@
 <!--
-	$FML: create_program.sgml,v 1.1 2001/11/25 06:06:57 fukachan Exp $
+	$FML: create_program.sgml,v 1.2 2001/11/25 06:23:30 fukachan Exp $
 -->
 
 <chapter id="program.create">
@@ -16,7 +16,7 @@
 <para>
 まず FML::Process:: にモジュールを用意します。
 最小構成の見本としては FML::Process::Scheduler 、
-最大構成としては FML::Process::Distribute 
+最大構成としては FML::Process::Distribute
 を参考にすると良いでしょう。
 </para>
 
@@ -38,7 +38,7 @@ finish()
 
 <para>
 <screen>
-        FML::Process::Kernel 
+        FML::Process::Kernel
                 |       uses-a FML::Process::{Flow,Utils} FML::Parse ...
                 |
                 A
@@ -98,7 +98,7 @@ lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 mead -> loader
 
 <sect1>
 	<title>
-	プログラムを作る( CGI 用)	
+	プログラムを作る( CGI 用)
 	</title>
 
 <para>
@@ -107,7 +107,7 @@ FML::CGI::○○○
 というモジュールです。
 CGI 系列では次のような、オブジェクトの関係にあります。
 <screen>
-        FML::Process::Kernel 
+        FML::Process::Kernel
                 |
                 A
         FML::Process::CGI::Kernel   uses-a CGI
@@ -124,7 +124,7 @@ CGI 系列では次のような、オブジェクトの関係にあります。
 CGI のプログラムの書き方も同様です。
 コマンドラインのプログラムと同様に、
 FML::CGI のモジュールを見本にして、
-FML::CGI::○○○ 
+FML::CGI::○○○
 を適宜用意して下さい。
 </para>
 
@@ -152,7 +152,7 @@ FML::Process::CGI::Kernel 自身は、
 	<footnote>
 	<para>
 	このため、多くの場合
-	FML::Process::Kernel 
+	FML::Process::Kernel
 	のメソッドは呼ばれてはいません。
 	</para>
 	</footnote>

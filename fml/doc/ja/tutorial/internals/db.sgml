@@ -1,5 +1,5 @@
 <!--
-   $FML: db.sgml,v 1.3 2001/08/19 14:55:38 fukachan Exp $
+   $FML: db.sgml,v 1.4 2001/10/21 02:18:09 fukachan Exp $
 -->
 
 <chapter id="db">
@@ -36,7 +36,7 @@ DBMS
 
 <warning>
 <para>
-現在では 
+現在では
 	Tie::JournaledFile クラス
 を利用した
 	Tie::JournaledDir クラス

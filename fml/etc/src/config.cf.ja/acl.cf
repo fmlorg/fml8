@@ -46,7 +46,7 @@ admin_command_restrictions	=	check_password
 primary_member_map	=	file:$ml_home_dir/members
 
 
-# Descriptions: メンバーかどうか認証する際に検索するすべてのメンバーリスト 
+# Descriptions: メンバーかどうか認証する際に検索するすべてのメンバーリスト
 #      History: fml 4.0 の $MEMBER_LIST @MEMBER_LIST 相当
 #         Type:
 #     Examples:
@@ -59,7 +59,7 @@ member_maps		=	$primary_member_map
 # Descriptions: 登録などの際に対象とする受信者のリスト
 #               XXX map のタイプによっては書き込みできないこともある
 #               XXX (例: unix.group )
-#      History: fml 4.0 の $ACTIVE_LIST 
+#      History: fml 4.0 の $ACTIVE_LIST
 #        Value: filename
 #     Examples: /var/spool/ml/elena/actives
 primary_recipient_map	=	 file:$ml_home_dir/actives
@@ -85,7 +85,7 @@ recipient_maps		=	$primary_recipient_map
 primary_admin_member_map	=	file:$ml_home_dir/members-admin
 
 
-# Descriptions: メンバーかどうか認証する際に検索するすべてのメンバーリスト 
+# Descriptions: メンバーかどうか認証する際に検索するすべてのメンバーリスト
 #      History: fml 4.0 の $ADMIN_MEMBER_LIST @ADMIN_MEMBER_LIST 相当
 #         Type:
 #     Examples:

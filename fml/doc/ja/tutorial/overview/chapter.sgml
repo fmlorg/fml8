@@ -1,8 +1,8 @@
 <!--
-   $FML: chapter.sgml,v 1.8 2002/02/26 14:15:28 fukachan Exp $
+   $FML: chapter.sgml,v 1.9 2002/03/18 07:39:58 fukachan Exp $
 -->
 
-<chapter id="overview"> 
+<chapter id="overview">
 	<title>
 	&fmldevel; の概要
 	</title>
@@ -12,7 +12,7 @@
 <para>
 &fmldevel; は &fml4; 相当のものを完全に一から書き直すプロジェクトです。
 使い方の見かけは &fml4; に"似せて"います。
-主な注意点は 
+主な注意点は
 root での作業、 configure の使用、
 そして /etc/fml/ 以下のファイル、
 特に /etc/fml/main.cf というグローバルな設定ファイルです。
@@ -22,7 +22,7 @@ root での作業、 configure の使用、
 
 <sect1>
 	<title>
-	インストール作業の概略 
+	インストール作業の概略
 	</title>
 
 <para>
@@ -71,18 +71,18 @@ root での作業、 configure の使用、
 	</para>
 
 	<para>
-	(デフォルトでは)インストーラは /usr/local/bin 
+	(デフォルトでは)インストーラは /usr/local/bin
 		<footnote>
 		<para>
 		デフォルトでは /usr/local ディレクトリ以下に
 		適宜サブディレクトリが作られます。
 		<link linkend="install.configure">
-		configure のオプション 
+		configure のオプション
 		</link>
 		で変更が可能です。
 		</para>
 		</footnote>
-	に 
+	に
 	fmldoc fmlconf fmlthread makefml fmlhtmlify fmlsch
 	などをインストールします。
 	実は、
@@ -96,7 +96,7 @@ root での作業、 configure の使用、
    <listitem>
 	<para>
 	<link linkend="guide.newml">
-	ユーザ fml で elena ＭＬを作る。 
+	ユーザ fml で elena ＭＬを作る。
 	</link>
 <screen>
 % su fml
@@ -124,7 +124,7 @@ root での作業、 configure の使用、
    <listitem>
 	<para>
 	<link linkend="guide.config.cf">
-	ＭＬ のカスタマイズをする。 
+	ＭＬ のカスタマイズをする。
 	</link>
 	</para>
    </listitem>

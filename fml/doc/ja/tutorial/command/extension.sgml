@@ -1,5 +1,5 @@
 <!--
-   $FML: extension.sgml,v 1.1 2001/10/13 08:47:54 fukachan Exp $
+   $FML: extension.sgml,v 1.2 2001/11/24 03:22:53 fukachan Exp $
 -->
 
 
@@ -14,9 +14,9 @@
 	fml 5.0 では、
 	例えばユーザ向けのコマンド uja を作りたい場合、
 	FML::Command 以下から適当に cut & paste して
-<screen>	
+<screen>
 /usr/local/lib/fml/site_local/FML/Command/User/uja.pm
-</screen>	
+</screen>
 	というファイルを置けば OK にしようとしています。
 	</para>
 

@@ -8,7 +8,7 @@
 
 	DSN (RFC1894, e.g. Postfix-release, Sendmail, et. al.)
 		postfix release
-		sendmail 
+		sendmail
 		Norton AntiVirus Gateway ?
 
 	old style sendmail error message before DSN
@@ -17,7 +17,7 @@
 	Postfix 19991231
 	Qmail
 	Exim
-	fetchmail (DSN だけどちゃんとしたアドレスでないかも ...)  
+	fetchmail (DSN だけどちゃんとしたアドレスでないかも ...)
 	Smtpfeed -F オプション (要テスト)
 	SMTP32 ??? (要テスト)
 	InterScan
@@ -46,4 +46,4 @@
 		compuserve.net (要テスト)
 
 
-$FML: STATUS.ja.txt,v 1.12 2001/09/22 03:33:53 fukachan Exp $
+$FML: STATUS.ja.txt,v 1.13 2002/02/01 14:39:24 fukachan Exp $

@@ -1,5 +1,5 @@
 <!--
-	$FML: bookinfo.sgml,v 1.1.1.1 2001/05/19 05:14:57 fukachan Exp $
+	$FML: bookinfo.sgml,v 1.1.1.1 2001/05/19 05:59:27 fukachan Exp $
 -->
 
   <bookinfo>
@@ -18,7 +18,7 @@
 		<email>
 		<ulink url="mailto:fukachan@fml.org">
 		fukachan@fml.org
-		</ulink> 
+		</ulink>
 		</email>
 	    </address>
 	</affiliation>
@@ -34,7 +34,7 @@
     <legalnotice>
       <para>
 	All rights reserved. This program is free software; you can
-	redistribute it and/or modify it under the same terms as Perl itself. 
+	redistribute it and/or modify it under the same terms as Perl itself.
       </para>
     </legalnotice>
 

@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: delete.pl,v 1.3 2001/05/04 14:32:34 fukachan Exp $
+# $FML: delete.pl,v 1.4 2001/08/19 16:12:25 fukachan Exp $
 #
 
 use strict;
@@ -34,7 +34,7 @@ if ($obj->error) { croak( $obj->error );}
 my $orgbuf   = GetContent($org_file);
 my $buf      = GetContent($tmpf) . GetContent($file);
 
-if ($buf eq $orgbuf) { 
+if ($buf eq $orgbuf) {
     print " ... ok\n";
 }
 else {

@@ -1,5 +1,5 @@
 <!--
-   $FML: preface.sgml,v 1.11 2001/11/23 15:00:46 fukachan Exp $
+   $FML: preface.sgml,v 1.12 2001/11/24 03:22:52 fukachan Exp $
 -->
 
 
@@ -17,7 +17,7 @@
 </para>
 
 <para>
-そういう意味で、実運用には、まだ 
+そういう意味で、実運用には、まだ
 <ulink url="http://www.fml.org/software/fml/menu.html">
 4.0 stable
 </ulink>
@@ -41,7 +41,7 @@ HTML 化機能＋スレッド追跡システムは便利で、
 <sect1 id="way.to.fmlng">
 
 	<title>
-	次世代 fml への道 
+	次世代 fml への道
 	</title>
 
 <para>
@@ -125,7 +125,7 @@ ftp://ftp.fml.org/pub/fml-devel/
 最初の試金石バージョンがリリースされる際には、
 <screen>
 fml 1.2 相当の最低限の機能
-+ makefml (CUI + CGI) が加わったもの 
++ makefml (CUI + CGI) が加わったもの
 + 自動スレッド追跡システム
 + 自動 HTML 化機構
 </screen>
@@ -138,7 +138,7 @@ fml 1.2 相当の最低限の機能
 <!-- ======================================================== -->
 <sect1 id="fml.and.fmlng">
 	<title>
-	fml 4.0 と 5.0 の関係 
+	fml 4.0 と 5.0 の関係
 	</title>
 
 <para>
@@ -188,7 +188,7 @@ fml 5.0 用に作られたモジュールを fml 4.0 へ輸入する予定です。
 <!-- ======================================================== -->
 <sect1>
 	<title>
-	&fml5; で既に動く機能 
+	&fml5; で既に動く機能
 	</title>
 
 <para>
@@ -198,7 +198,7 @@ fml 5.0 用に作られたモジュールを fml 4.0 へ輸入する予定です。
 
     <listitem>
 	<para>
-	postfix スタイルの設定ファイル 
+	postfix スタイルの設定ファイル
 	</para>
     </listitem>
 
@@ -207,7 +207,7 @@ fml 5.0 用に作られたモジュールを fml 4.0 へ輸入する予定です。
 	<para>
 	配送、
 	ヘッダの書き換え、
-	フィルタ( 4.0 の Envelope Filter に相当するもの ) 
+	フィルタ( 4.0 の Envelope Filter に相当するもの )
 	</para>
     </listitem>
 
@@ -270,7 +270,7 @@ fml 5.0 用に作られたモジュールを fml 4.0 へ輸入する予定です。
 	<link linkend="module.io.adapter">
 	抽象化 IO 層
 	</link>
-	メンバーファイルをファイル、/etc/group, NIS, MySQL 
+	メンバーファイルをファイル、/etc/group, NIS, MySQL
 	から取り出すことができます。
 	</para>
     </listitem>
@@ -284,7 +284,7 @@ fml 5.0 用に作られたモジュールを fml 4.0 へ輸入する予定です。
 <sect1 id="mailinglist">
 
 	<title>
-	メーリングリスト 
+	メーリングリスト
 	</title>
 
 <para>
@@ -294,7 +294,7 @@ fml 5 の議論のためのメーリングリストを用意してあります。
 <para>
 登録の仕方はいつもと一緒です。
 
-fml-devel MLへの自動登録は fml-devel-ctl@ffs.fml.org へ 
+fml-devel MLへの自動登録は fml-devel-ctl@ffs.fml.org へ
 subscribe の後に自分の名前をローマ字で続けたフレーズをメールの"本文"
 (注意: メールの本文)に書いて送って下さい。例えば次のようになります。
 
@@ -318,7 +318,7 @@ fml-devel ＭＬのログは
 </para>
 
 <para>
-ＭＬに参加しないが、要望等を送りたいという場合、ＭＬではなく 
+ＭＬに参加しないが、要望等を送りたいという場合、ＭＬではなく
 
 	<ulink url="mailto:fml-request@fml.org">
 	fml-request@fml.org
@@ -336,7 +336,7 @@ fml-devel ＭＬのログは
 <sect1>
 
 	<title>
-	ご意見募集中 
+	ご意見募集中
 	</title>
 
 <para>

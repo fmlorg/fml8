@@ -1,5 +1,5 @@
 <!--
-   $FML: merge.sgml,v 1.1.1.1 2001/05/19 05:14:57 fukachan Exp $
+   $FML: merge.sgml,v 1.2 2001/11/25 00:44:19 fukachan Exp $
 -->
 
 <chapter id="merge">
@@ -97,16 +97,16 @@
 	<title> MIME 関連 </title>
 
 
-<para> 
+<para>
 USE_MIME
 はデフォルトなので、変数は不必要。
-</para> 
+</para>
 
 
-<para> 
+<para>
 MIME_DECODED_ARTICLE
 は削除
-</para> 
+</para>
 
 </sect2>
 
@@ -191,11 +191,11 @@ ACTIVE_LIST: 	 $DIR/actives
 </para>
 
 <para>
-COMPAT_SOLARIS2:	
+COMPAT_SOLARIS2:
 </para>
 
 <para>
-NOT_USE_TIOCNOTTY:	
+NOT_USE_TIOCNOTTY:
 </para>
 
 <para>

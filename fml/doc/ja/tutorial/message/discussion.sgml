@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: discussion.sgml,v 1.1 2001/11/24 12:48:10 fukachan Exp $
 -->
 
 <sect1>
@@ -18,14 +18,14 @@
 
 <para>
 fml 4.0 では
-<screen> 
+<screen>
    Mesg(*e, キーワード, デフォルトのメッセージ, 変換に使う引数);
-</screen> 
+</screen>
 の形で呼び出します。
 </para>
 
 <para>
-/usr/local/fml/messages/Japanese/ 
+/usr/local/fml/messages/Japanese/
 以下にあるファイル群に対して、
 キーワード検索を行ないます。
 各ファイルにはカテゴリごとに分類されたキーワードとメッセージが
@@ -36,7 +36,7 @@ fml 4.0 では
 <para>
 例えば、キーワードが not_found の場合、
 /usr/local/fml/messages/Japanese/kern
-の not_found という欄が該当します。 
+の not_found という欄が該当します。
 </para>
 
 </sect2>
@@ -85,7 +85,7 @@ locale の定義ファイル(
 
 <sect3>
    <title>
-   fml 5.0: とりあえずの方針     
+   fml 5.0: とりあえずの方針
    </title>
 
 <para>
@@ -95,7 +95,7 @@ makefml を筆頭に、各種コマンド群のエラーメッセージの日本語化
 locale を考えておくのも悪くはないのかとも思います。
 この場合は locale ぽくするために
 <screen>
-/usr/local/lib/fml/バージョン/messages/ja_JP.EUC/kern 
+/usr/local/lib/fml/バージョン/messages/ja_JP.EUC/kern
 
 1: %s は見つかりません
 2: %s は %d のエラーです
@@ -127,7 +127,7 @@ FML::Message::ja::not_found
    <listitem>
 	<para>
         ファイルがバラバラになる
-        (逆に長所としてカスタマイズしやすくなる) 
+        (逆に長所としてカスタマイズしやすくなる)
 	</para>
    </listitem>
 

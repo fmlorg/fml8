@@ -6,7 +6,7 @@
 		addr			実装するべきなのか不明
 					新スタイル？ 例: set addrlevel 10
 		admin			emulated in FML::Process::Command
-approve					
+approve
 		bye			done
 		chaddr			done
 		chaddr-confirm		removed
@@ -48,7 +48,7 @@ skip
 		status			removed ?
 		subscribe		done
 		summary			done
-traffic			
+traffic
 undigest
 unmatome
 		unsubscribe		done

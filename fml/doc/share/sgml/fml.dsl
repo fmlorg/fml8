@@ -1,4 +1,4 @@
-<!-- $FML: fml.dsl,v 1.2 2001/06/05 13:25:57 fukachan Exp $ -->
+<!-- $FML: fml.dsl,v 1.3 2001/10/23 07:45:28 fukachan Exp $ -->
 
 <!DOCTYPE style-sheet PUBLIC "-//James Clark//DTD DSSSL Style Sheet//EN" [
    <!ENTITY docbook.dsl PUBLIC "-//Norman Walsh//DOCUMENT DocBook HTML Stylesheet//EN" CDATA DSSSL>
@@ -9,7 +9,7 @@
 <!ENTITY % output.print.pdf     "IGNORE">
 
 <![ %output.html; [
-<!ENTITY docbook.dsl PUBLIC "-//Norman Walsh//DOCUMENT DocBook HTML Stylesheet//EN" 
+<!ENTITY docbook.dsl PUBLIC "-//Norman Walsh//DOCUMENT DocBook HTML Stylesheet//EN"
 CDATA DSSSL>
 ]]>
 <![ %output.print; [
@@ -24,7 +24,7 @@ CDATA DSSSL>
   <style-specification use="docbook">
     <style-specification-body>
 
-      <![ %output.html; [ 
+      <![ %output.html; [
 
         (define %root-filename%
           ;; Name for the root HTML document
@@ -54,8 +54,8 @@ CDATA DSSSL>
               (make element gi: "small"
                 (literal "fml-devel (fml 5.0), fml next generation prototype, homepage is ")
 	        (make element gi: "a"
-                      attributes: 
-                      (list (list "href" "http://www.fml.org/software/fml-devel/") 
+                      attributes:
+                      (list (list "href" "http://www.fml.org/software/fml-devel/")
                             (list "target" "_top"))
                   (literal "www.fml.org/software/fml-devel/"))
                 (literal "."))
@@ -65,7 +65,7 @@ CDATA DSSSL>
               (make element gi: "small"
                 (literal "fml 4.0 homepage is ")
 	        (make element gi: "a"
-                      attributes: 
+                      attributes:
                      (list (list "href" "http://www.fml.org/fml/menu.html")
                             (list "target" "_top"))
                   (literal "www.fml.org/fml/menu.html"))
@@ -73,7 +73,7 @@ CDATA DSSSL>
 
                 (make empty-element gi: "br")
 
-              (make element gi: "small"  
+              (make element gi: "small"
                 (literal "For questions about FML, e-mail <")
                 (make element gi: "a"
                       attributes: (list (list "href" "mailto:fml-bugs@fml.org"))

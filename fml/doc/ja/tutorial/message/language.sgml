@@ -1,5 +1,5 @@
 <!--
-   $FML: language.sgml,v 1.1.1.1 2001/10/13 08:33:23 fukachan Exp $
+   $FML: language.sgml,v 1.2 2001/11/24 12:48:10 fukachan Exp $
 -->
 
 
@@ -18,13 +18,13 @@ reply_message_nl()
 	</footnote>
 を使い、
 <screen>
-$curproc->reply_message_nl('error.already_member', 
+$curproc->reply_message_nl('error.already_member',
 			   'already member',
 			   { _arg_address => $address });
 </screen>
 のような呼び出し方をします。
 この関数は
-/usr/local/share/fml/message/euc-jp/error/already_member 
+/usr/local/share/fml/message/euc-jp/error/already_member
 というテンプレートを用いてメッセージを構築します。
 </para>
 

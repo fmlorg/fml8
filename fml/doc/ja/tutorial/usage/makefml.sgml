@@ -1,5 +1,5 @@
 <!--
-   $FML: makefml.sgml,v 1.4 2001/10/13 08:47:58 fukachan Exp $
+   $FML: makefml.sgml,v 1.1 2001/11/24 03:22:59 fukachan Exp $
 -->
 
 <sect1 id="usage.makefml">
@@ -48,7 +48,7 @@ makefml の基本的な使い方は fml 4.0 の makefml と同様です。
 	<para>
 	ＭＬの作成
 	(
-		newml 
+		newml
 	)
 	</para>
 	</listitem>

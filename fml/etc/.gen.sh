@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML: .gen.sh,v 1.4 2001/11/27 09:30:40 fukachan Exp $
+# $FML: .gen.sh,v 1.5 2001/12/09 10:21:43 fukachan Exp $
 #
 
 tmp=default_config.cf.xx.$$
@@ -11,7 +11,7 @@ for lang in ja
 do
 	test -f $tmp || rm -f $tmp
 
-	cat src/list.cf | while read file 
+	cat src/list.cf | while read file
 	do
 		cat src/config.cf.$lang/$file >> $tmp
 		echo "" >> $tmp
@@ -19,7 +19,7 @@ do
 
 	mv $tmp default_config.cf.$lang.in
 
-	if [ -f default_config.cf.$lang.in ];then 
+	if [ -f default_config.cf.$lang.in ];then
 		echo default_config.cf.$lang.in created
 	fi
 done

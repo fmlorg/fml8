@@ -1,8 +1,8 @@
 <!--
-	$FML: bootloader.sgml,v 1.4 2002/03/18 06:57:36 fukachan Exp $
+	$FML: bootloader.sgml,v 1.5 2002/03/18 13:34:36 fukachan Exp $
 -->
 
-<chapter id="bootloader">    	
+<chapter id="bootloader">
 	<title>
 	バージョン依存性を解決するための fml ブートローダ
 	</title>
@@ -15,9 +15,9 @@ fml 5.0 にはインストールされている fml のバージョン依存性を考慮するた
 <screen>
 boot していくイメージ
 
-libexec/loader -> 
-     FML::Process::Switch -> 
-         FML::Process::Flow -> 
+libexec/loader ->
+     FML::Process::Switch ->
+         FML::Process::Flow ->
               FML::Process::それぞれのプログラムのモジュール
 </screen>
 </para>
@@ -66,7 +66,7 @@ FML::Process::Distribute を実行していくという流れになります。
 <screen>
 FML::Process::Distribute >-|
 FML::Process::Command    >-|-- FML::Process::Kernel
-FML::Process::Mead       >-|    |   
+FML::Process::Mead       >-|    |
                                 |-use-a FML::Parse
                                 |-use-a FML::Config
                                 |-use-a FML::Log

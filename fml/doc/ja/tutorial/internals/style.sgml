@@ -1,5 +1,5 @@
 <!--
-	$FML: style.sgml,v 1.1 2001/05/01 15:16:27 fukachan Exp $
+	$FML: style.sgml,v 1.2 2001/10/13 08:47:57 fukachan Exp $
 -->
 
 <chapter id="programingstyle">
@@ -53,11 +53,11 @@ use_変数		=	yes/no
 
 	</sect2>
 
-	<sect2> 
+	<sect2>
 	<title> パターン２ (例 acl.cf ) </title>
 
 <screen>
-変数_restrictions	=	reject_属性 
+変数_restrictions	=	reject_属性
 				permit_なんとか
 
 属性 			=	パターン1
@@ -90,7 +90,7 @@ use_変数		=	yes/no
 <itemizedlist>
 	<listitem>
 	<para>
-	
+
 	Perl ではポリモーフィズムと実行時バインディングができることに
 	は重視すること。多重継承などに頭を使うより
 	ポリモーフィズムと実行時バインディングによる
@@ -102,7 +102,7 @@ use_変数		=	yes/no
 
 	<listitem>
 	<para>
-	
+
 	Perl 5 のパッケージを使った、オブジェクトぽい書き方は
 	変数自身が自分のパッケージを知っているので、
 	単にパッケージ修飾(例: :: )を使わなくてもよいくらいに
@@ -114,7 +114,7 @@ use_変数		=	yes/no
 
 	<listitem>
 	<para>
-	
+
 	そのために、
 	再利用性と抽象度を高くしたインターフェイスは
 	オブジェクトぽい書きかたが良さそう。
@@ -125,7 +125,7 @@ use_変数		=	yes/no
 
 	<listitem>
 	<para>
-	
+
 	perl 5 だと必然的にオブジェクトぽくなってしまうが、
 	オブジェクト、オブジェクト、オブジェクトし過ぎないように
 	バランス感覚に注意しよう。
@@ -136,11 +136,11 @@ use_変数		=	yes/no
 
 	<listitem>
 	<para>
-	
+
  	他人のモジュールを使う場合はともかく、
 	自分達で書くモジュールでの
 	”深い”継承はできるだけ避けたい。
-	何でも深くすればよいというものではないでしょう。 
+	何でも深くすればよいというものではないでしょう。
 
 	</para>
 	</listitem>

@@ -1,5 +1,5 @@
 <!--
-	$FML: docbook.sgml,v 1.1 2001/05/09 09:37:35 fukachan Exp $
+	$FML: docbook.sgml,v 1.2 2001/11/19 14:55:15 fukachan Exp $
 -->
 
 
@@ -29,7 +29,7 @@ fml-devel (fml 5.0) のドキュメントでは、SGML の DTD は
         HTML は SGML 形式の応用の(最も有名な)一例です。
         そのため本質的なシンタックスは HTML と同じということになります。
         </para>
-	</footnote>	
+	</footnote>
 ですが、正しい HTML の書き方と同様です。
 本 Appendix で、２、３の典型的な SGML テンプレートをメモしておくので、
 それらを適当に切り剥ぎしていけばなんとかなるはずです。
@@ -42,33 +42,33 @@ fml-devel (fml 5.0) のドキュメントでは、SGML の DTD は
    SGML の概念
    </title>
 
-<para> 
+<para>
 SGML は本や短い文書(記事)を作成するに使います。
 本や記事の論理構造を記述するための規格です。
 HTML のもっと厳密なものだと思って下さい
   <footnote>
-  <para> 
-  正確には HTML が SGML の一部です。 
+  <para>
+  正確には HTML が SGML の一部です。
   HTML の方がはるかに有名になってしまったので、
   「HTML のもっと厳密なもの…」といった説明が良くされます :)
-  </para> 
+  </para>
   </footnote>
-</para> 
+</para>
 
-<para> 
+<para>
 例えば、”本”という概念を考えてみます。
 まず”本”には章、節といった構成単位があります。
 節の中にはパラグラフがありますし、文には脚注がついたり、
 図などが挟み込まれたりします。
 </para>
 
-<para> 
+<para>
 これらの概念には、ある関係があります。
 例えば”章”は”節”を含みますが、”節”は”章”を含みません。
 そして、文は必ずあるパラグラフの中にあるものです。
 </para>
 
-<para> 
+<para>
 そういった概念をどう表現するべきか？を規定したものが DTD (Data Type
 Definition)といえます。
 DTD は自由に定義すれば良いのですが、かなり大変です。
@@ -76,11 +76,11 @@ DTD は自由に定義すれば良いのですが、かなり大変です。
 使うのが便利です。
 我々は DTD として docbook というものを使う
    <footnote>
-   <para> 
+   <para>
    我々が DOCBOOK を選んだ理由は簡単で、
    多くの場所で使われているからです。
    ということは、docbook のタグを書ける人は世の中に多いという意味です。
-   </para> 
+   </para>
    </footnote>
 ことにしています。
 </para>
@@ -94,39 +94,39 @@ DOCBOOK は OASIS-0PEN.ORG が保守している DTD 集です。
 Free の UNIX などをはじめ、多くのプロジェクトで使われています。
 </para>
 
-<para> 
+<para>
 つまり
 SGML を使うことで得られる最大の意義は「ある基準となるもの」に
 規格化ないしは強制されるということです。
 これは SGML の構文による規制という意味ではありません。
 ある概念に従うことに強制されようということです。
-</para> 
+</para>
 
-<para> 
+<para>
 ここで”概念”といっているのであって、”見栄え”については
 ふれていないことに注意して下さい。
 例えば HTML では概念と見栄えは(むしろ意識的に)はっきり分離していません。
-</para> 
+</para>
 
-<para> 
+<para>
 見栄えは DTD とは別の何かで定義されます。
 通常スタイルシートというものです。
 HTML 4.0 などでご存知の CSS と同じ概念です。
 </para>
 
-<para> 
+<para>
 スタイルシートの記述をするプログラミング言語が必要です。
 docbook では schema (lisp の一種) ベースの
 DSSSL (Document Style Semantics and Specification Language)
 を使います。
-</para> 
+</para>
 
-<para> 
+<para>
 また SGML では論理構造しか記述しないので見栄えはコンバータ次第で
 どうとでもなります。
 HTML、テキスト、ROFF、PS、PDF、RTF を始め、
 いろいろなものへ変換するやり方が用意されています。
-</para> 
+</para>
 
 
 </sect1>
@@ -153,7 +153,7 @@ book スタイルの典型的な SGML のテンプレートは次のようになります。
 &lt;book&gt;
 
   &amp;bookinfo;
-  &amp;preface; 
+  &amp;preface;
 
   &lt;toc&gt;&lt;/toc&gt;
 
@@ -195,8 +195,8 @@ perl の require() と同様の働きをしています。
 
 これらの定義により
 &amp;bookinfo;
-命令で 
-bookinfo.sgml 
+命令で
+bookinfo.sgml
 が include されるようになります。
 
 このようにして、文書本体と
@@ -301,7 +301,7 @@ include するべき定義ファイルを
           &lt;entry&gt; キー 1 		&lt;/entry&gt;
           &lt;entry&gt; 値 1		&lt;/entry&gt;
         &lt;/row&gt;
-  
+
         &lt;row&gt;
           &lt;entry&gt; キー 2  	&lt;/entry&gt;
           &lt;entry&gt; 値 2		&lt;/entry&gt;
@@ -334,7 +334,7 @@ include するべき定義ファイルを
           &lt;entry&gt; けんけん	&lt;/entry&gt;
           &lt;entry&gt; きたきつね	 &lt;/entry&gt;
         &lt;/row&gt;
-  
+
         &lt;row&gt;
           &lt;entry&gt; るど 		&lt;/entry&gt;
           &lt;entry&gt; テディベア	 &lt;/entry&gt;
@@ -364,7 +364,7 @@ include するべき定義ファイルを
           <entry> けんけん	</entry>
           <entry> きたきつね	 </entry>
         </row>
-  
+
         <row>
           <entry> るど 		</entry>
           <entry> テディベア	 </entry>
@@ -386,7 +386,7 @@ include するべき定義ファイルを
 <para>
 SGML を HTML などに翻訳するために、いくつかのツールが必要です。
 DTD と DSL の規格文書群は必須です。
-処理系として openjade と opensp 
+処理系として openjade と opensp
 	<footnote>
 	<para>
 	opensp は openjade パッケージに含まれています。
@@ -427,7 +427,7 @@ fml 5.0 では、以下のプログラムを使って HTML やテキストファイルを作成し
 <para>
 もちろん sgmltools がなくても SGML から HTML を作ることができます。
 どのツールを使うかは、あなたがどれを便利に思うか？次第です。
-単に &fml5; では、sgmltools を歴史的に使っているだけです。 
+単に &fml5; では、sgmltools を歴史的に使っているだけです。
 </para>
 
 <para>
@@ -440,7 +440,7 @@ fml/doc/share/sgml/ にある fml.dtd fml.dsl を定義として使っています。
 
 <warning>
 <para>
-NetBSD 1.5-stable 系列(およびそれ以前のバージョン)上で 
+NetBSD 1.5-stable 系列(およびそれ以前のバージョン)上で
 openjade を compile するには unproven-pthreads が必要ですが、
 以前作った時の変な include ファイルが残っていて
 openjade をうまく compile できないことがありました。
@@ -477,7 +477,7 @@ book.sgml
 などとします。
 -j
 は openjade に与えるオプションを指定しています。
--c 
+-c
 でカタログを指定しない場合、
 sgmltools は /etc/sgml/catalog ファイルを使います。
 </para>
@@ -523,7 +523,7 @@ LISP を知らないとちょっと手が出ないでしょう。
 
 <sect1>
 	<title>
-	その他の情報源 
+	その他の情報源
 	</title>
 
 <para>
@@ -546,7 +546,7 @@ SGML の書き方については
 
 <para>
 SGML のタグの一覧は
-	
+
 	<ulink url="http://www.oasis-open.org/docbook/documentation/reference/html/docbook.html">
 	DOCBOOK definitive guide (O'reilly)
 	</ulink>

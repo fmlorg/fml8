@@ -3,9 +3,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: html2sgml.pl,v 1.1 2001/04/30 11:43:34 fukachan Exp $
+# $FML: html2sgml.pl,v 1.2 2001/05/01 13:45:53 fukachan Exp $
 #
 
 use strict;
@@ -43,7 +43,7 @@ sub convert
 
     while (<$fh>) {
 	# <P>
-	if (m@<P>@i) { 
+	if (m@<P>@i) {
 	    print $wh  "<para>\n";
 	    $para = 1;
 	    next;

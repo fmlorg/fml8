@@ -1,5 +1,5 @@
 <!--
-	$FML: main.cf.sgml,v 1.1.1.1 2001/05/01 14:52:05 fukachan Exp $	
+	$FML: main.cf.sgml,v 1.2 2001/05/10 03:11:43 fukachan Exp $
 -->
 <sect1 id="main.cf">
 <title> /etc/fml/main.cf </title>
@@ -34,7 +34,7 @@ fml_version	=	current-20010423
 ###
 
 
-# $config_dir holds the global main configuration and 
+# $config_dir holds the global main configuration and
 # several version-dependent default configurations
 # Example: /etc/fml
 config_dir	= 	/etc/fml

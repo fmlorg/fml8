@@ -3,9 +3,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: text2html.pl,v 1.1 2001/04/30 11:43:34 fukachan Exp $
+# $FML: text2html.pl,v 1.2 2001/08/19 16:11:28 fukachan Exp $
 #
 
 use strict;
@@ -21,7 +21,7 @@ print "</PRE>\n";
 1;
 
 
-sub HEADER 
+sub HEADER
 {
 
 print <<"_EOF";

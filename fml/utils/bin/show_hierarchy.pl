@@ -1,6 +1,6 @@
 #!/usr/local/bin/perl
 #
-# $FML$
+# $FML: show_hierarchy.pl,v 1.2 2001/08/19 16:11:28 fukachan Exp $
 #
 
 use lib qw(./lib/3RDPARTY ./lib/fml5 ./lib/CPAN ./lib);
@@ -40,7 +40,7 @@ sub load
 	}
     }
 
-    unless (-f $f) { 
+    unless (-f $f) {
 	P( "not found: $f" ) if $debug;;
 	$Count--;
 	return;
@@ -87,7 +87,7 @@ sub load
 
 	    chop;
 
-	    if (/^sub (\S+)/) { 
+	    if (/^sub (\S+)/) {
 		$current_function = $1;
 	    }
 

@@ -1,5 +1,5 @@
 <!--
-    $FML: reply.sgml,v 1.4 2001/10/13 08:47:55 fukachan Exp $
+    $FML: reply.sgml,v 1.1 2001/11/24 03:22:55 fukachan Exp $
 -->
 
 <chapter id="message.reply">
@@ -43,7 +43,7 @@ Mail::Delivery
    <title> queue ディレクトリ  </title>
 
 <para>
-queue ディレクトリは複数のディレクトリからなります。 
+queue ディレクトリは複数のディレクトリからなります。
 <screen>
 new/
 active/

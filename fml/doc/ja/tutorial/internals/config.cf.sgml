@@ -1,5 +1,5 @@
 <!--
-	$FML: config.cf.sgml,v 1.4 2001/08/23 14:48:51 fukachan Exp $	
+	$FML: config.cf.sgml,v 1.5 2001/11/24 06:54:46 fukachan Exp $
 -->
 
 <chapter>
@@ -51,7 +51,7 @@ cf というファイルと config.ph という
    <title> config.cf のフォーマット </title>
 
 <para>
-config.cf のフォーマットは 
+config.cf のフォーマットは
 	<link linkend="main.cf">
 	/etc/fml/main.cf
 	</link>

@@ -1,5 +1,5 @@
 <!--
-   $FML: nativelanguage.sgml,v 1.4 2001/10/13 08:47:57 fukachan Exp $
+   $FML: nativelanguage.sgml,v 1.1 2001/11/24 03:22:56 fukachan Exp $
 -->
 
 <chapter>
@@ -29,9 +29,9 @@ fml 内部では言語に依存した変換処理が必要です。
 
 <para>
 クラス名は
-なにか::Language:: 
+なにか::Language::
 もしくは
-Language:: 
+Language::
 などとなります。
 これらの階層以下に言語依存モジュール群は配置されます。
 </para>

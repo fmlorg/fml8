@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: file_map_getpos.pl,v 1.5 2001/05/04 14:32:34 fukachan Exp $
+# $FML: file_map_getpos.pl,v 1.6 2001/08/19 16:12:25 fukachan Exp $
 #
 
 use strict;
@@ -49,7 +49,7 @@ while ($x = $obj->getline) {
 	    print STDERR "     * try to roll back ... \n" if $debug;;
 	    $obj->setpos( $pebot );
 	    $done = 1;
-	} 
+	}
     }
 }
 $obj->close;

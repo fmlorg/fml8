@@ -3,5 +3,5 @@
 ことを『リモート管理』といっています。
 管理用のヘルプは次のコマンドを<_ARG0_>へ送ると送り返されます。
    admin help
-   approve パスワード help 
+   approve パスワード help
 

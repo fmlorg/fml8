@@ -1,5 +1,5 @@
 <!--
-   $FML: post.sgml,v 1.2 2001/11/24 03:22:59 fukachan Exp $
+   $FML: newml.sgml,v 1.1 2002/03/18 07:39:58 fukachan Exp $
 -->
 
 <!--
@@ -42,7 +42,7 @@ makefml を使ってＭＬを作成します。
 
    <listitem>
         <para>
-	/var/spool/ml/elena へ 
+	/var/spool/ml/elena へ
 	<screen>
 	config.cf
 	include
@@ -61,7 +61,7 @@ makefml を使ってＭＬを作成します。
    <listitem>
         <para>
 	<screen>
-	~fml/public_html/$domain/$ml/ 
+	~fml/public_html/$domain/$ml/
 	</screen>
 	例えば elena@fml.org なら
 	<screen>
@@ -101,9 +101,9 @@ makefml を使ってＭＬを作成します。
 makefml は
 config.cf (設定ファイル) と
 fml を起動するために MTA が呼び出すファイルである
-include 
+include
 および
-include-ctl をインストールしてくれます。 
+include-ctl をインストールしてくれます。
 <screen>
 % su fml
 % makefml newml elena
@@ -129,7 +129,7 @@ config.cf の例
 ml_domain           = fml.org
 
 # ML の名前
-ml_name		    = elena		
+ml_name		    = elena
 
 # 管理者のアドレス
 maintainer	    = $ml_name-admin@$ml_domain
@@ -205,7 +205,7 @@ elena-admin: fukachan
 ### END-elena@fml.org-ML-aliases ###
 </screen>
 バーチャルドメインの場合、
-$ml_home_prefix の部分は  
+$ml_home_prefix の部分は
 $virtual_maps にしたがって自動的に変化します。
 </para>
 

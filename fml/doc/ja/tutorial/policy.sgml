@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: policy.sgml,v 1.1 2002/02/13 13:51:51 fukachan Exp $
 -->
 
 <chapter id="design.policy">
@@ -11,7 +11,7 @@
 	<title>
 	２、３の注意点
 	</title>
-	
+
 
 <para>
 サーチするキーに対して quotemeta() を

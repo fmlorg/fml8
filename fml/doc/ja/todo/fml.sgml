@@ -1,5 +1,5 @@
 <!--
-   $FML: fml.sgml,v 1.6 2001/07/29 01:54:57 fukachan Exp $
+   $FML: fml.sgml,v 1.7 2001/11/25 00:53:45 fukachan Exp $
 -->
 
 <chapter id="fml4.todo">
@@ -36,7 +36,7 @@ connect(2) してみなくてもよいだろうに？
    <title> RDBMS </title>
 
 <para>
-toy model でテーブルが一つのもの ( members == actives ) 
+toy model でテーブルが一つのもの ( members == actives )
 </para>
 
 </sect1>

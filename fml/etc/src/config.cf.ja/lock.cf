@@ -2,7 +2,7 @@
 
 # Descriptions: ロックをするか？
 #      History:
-#        Value: yes /no 
+#        Value: yes /no
 use_lock	= yes
 
 # Descriptions: ロックファイルを置くディレクトリ

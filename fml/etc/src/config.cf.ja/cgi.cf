@@ -25,13 +25,13 @@ admin_cgi_base_dir	=	$cgi_base_dir/admin
 ml_admin_cgi_base_dir	=	$cgi_base_dir/ml-admin/$ml_name
 
 
-# Descriptions: デフォルトの CHARSET 
+# Descriptions: デフォルトの CHARSET
 #      History:
 #        Value:
 #     Examples:
 cgi_default_charset	=	euc-jp
 
-# Descriptions: CGI の表示の CHARSET 
+# Descriptions: CGI の表示の CHARSET
 #      History:
 #        Value:
 #     Examples:

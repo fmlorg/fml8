@@ -25,9 +25,9 @@
 	る。
 
 
-＊ makefml 
+＊ makefml
 
 	コマンドラインで実行するので、入力チェックなしがデフォルト
 
 ----------
-$FML: 00_MEMO,v 1.2 2002/02/04 14:16:44 fukachan Exp $
+$FML: 00_CHECK_INPUT.txt,v 1.1 2002/02/11 13:27:02 fukachan Exp $

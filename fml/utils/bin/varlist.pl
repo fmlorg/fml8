@@ -3,9 +3,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: dir2url.pl,v 1.2 2001/08/19 16:11:27 fukachan Exp $
+# $FML: varlist.pl,v 1.1 2001/11/24 06:55:23 fukachan Exp $
 #
 
 use strict;
@@ -95,9 +95,9 @@ sub _customize_tag
 	$table_begin       = "<para>\n<table>\n";
 	$table_end         = "</tgroup>\n</table>\n</para>\n";
 
-	$table_title       = 
+	$table_title       =
 	    "<title> table description </title>\n<tgroup cols=3>";
-    
+
 	$table_entry_begin = "<entry>\n";
 	$table_entry_end   = "</entry>\n";
 
@@ -114,7 +114,7 @@ sub _customize_tag
 
 
 sub print_varlist
-{ 
+{
     _customize_tag();
 
     print $table_begin;

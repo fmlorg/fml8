@@ -1,5 +1,5 @@
 <!--
-   $FML: done.sgml,v 1.4 2001/07/15 09:17:59 fukachan Exp $
+   $FML: done.sgml,v 1.5 2001/11/25 00:51:08 fukachan Exp $
 -->
 
 <chapter id="fml4to5">
@@ -79,7 +79,7 @@ fml 5.0 では解決済みだが、4.0 ではどうする？
 <title> トラブルチケットシステム </title>
 
 <para>
-原始的なものはすでに完了している。 
+原始的なものはすでに完了している。
 </para>
 
 <para>
@@ -125,34 +125,34 @@ fml 5.0 では解決済みだが、4.0 ではどうする？
 <para>
 <screen>
      AUTO_HTML_GEN:
-     
+
      HTML_THREAD:			1
-     
+
      HTML_INDEX_REVERSE_ORDER:	1
-     
+
      HTML_DIR:			htdocs
-     
+
      HTML_EXPIRE_LIMIT:
-     
+
      HTML_INDEX_TITLE:
-     
+
      HTML_DATA_CACHE:
      HTML_DATA_THREAD:
-     
+
      HTML_OUTPUT_FILTER:
-     
-     HTML_STYLESHEET_BASENAME:	
-     
+
+     HTML_STYLESHEET_BASENAME:
+
      HTML_THREAD_REF_TYPE:		prefer-in-reply-to
-     
+
      HTML_THREAD_SORT_TYPE:
-     
+
      HTML_INDEX_UNIT:		day
-     
+
      HTML_INDENT_STYLE:		UL
-     
+
      HTML_MULTIPART_IMAGE_REF_TYPE:
-     
+
      HTML_DEFAULT_UMASK:
      HTML_WRITE_UMASK:
 </screen>

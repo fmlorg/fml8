@@ -1,6 +1,6 @@
 		OS 出荷時設定における perl バージョンについて
 
-					fml project 
+					fml project
 					http://www.fml.org/
 
 [title]        OS 出荷時設定における perl バージョンについて
@@ -136,7 +136,7 @@
 [perl.version] 4.036
 [perl.path]    /usr/bin/perl
 
-[system]       BSD/OS 
+[system]       BSD/OS
 [release]      4.0.1
 [perl.version] 5.004_02
 [perl.path]    /usr/bin/perl5
@@ -224,12 +224,12 @@
 [system]       Slackware
 [release]      7.1
 [perl.version] 5.6.0
-[comments]     
+[comments]
 
 [system]       Slackware-current
 [release]      7.1
 [perl.version] 5.6.0
-[comments]     
+[comments]
 
 
 [system]       RedHat Linux
@@ -305,8 +305,8 @@
 [system]       IRIX
 [release]      6.5.11
 [perl.version] 5.005_04
-[perl.path]    
-[comments]     
+[perl.path]
+[comments]
 
 [system]       IRIX
 [release]      6.5.7m
@@ -320,11 +320,11 @@
 # IBM AIX
 #
 
-[system]       AIX 
+[system]       AIX
 [release]      4.3.2
 [perl.version] none
 
-[system]       AIX 
+[system]       AIX
 [release]      4.3.3
 [perl.version] 5.005_03
 
@@ -422,4 +422,4 @@ SEE ALSO:
    http://www.cyber-magic.org/~taka/perl-versions.html
    http://www.uinet.or.jp/~taka/perl-versions.html
 
-$FML: OS_and_Perl.data,v 1.7 2001/12/28 08:29:01 fukachan Exp $
+$FML: OS_and_Perl.data,v 1.8 2002/02/02 16:14:33 fukachan Exp $

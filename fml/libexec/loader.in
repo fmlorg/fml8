@@ -2,9 +2,9 @@
 #-*- perl -*-
 #
 # Copyright (C) 2000-2002 Ken'ichi Fukamachi
-#          All rights reserved. 
+#          All rights reserved.
 #
-# $FML: loader.in,v 1.8 2001/12/16 13:32:50 fukachan Exp $
+# $FML: loader.in,v 1.9 2002/03/20 03:14:53 fukachan Exp $
 #
 
 eval 'exec @PERL@ -S $0 ${1+"$@"}'
@@ -29,7 +29,7 @@ delete @ENV{'IFS', 'CDPATH', 'ENV', 'BASH_ENV'};
 
     eval q{ Bootstrap($main_cf);};
 
-    # not use Carp.pm to be quiet if needed 
+    # not use Carp.pm to be quiet if needed
     if ($@) { print STDERR "Error: ", $@, "\n"; exit 1;}
 }
 
@@ -47,8 +47,8 @@ loader C<[-c main.cf]> [program specific options]
 =head1 DESCRIPTION
 
 Perl modules C<fml> uses are dependent on fml version.
-C<loader> resolves fml version dependence by 
-@sysconfdir@/main.cf, 
+C<loader> resolves fml version dependence by
+@sysconfdir@/main.cf,
 set up proper @INC and load C<FML::Process::Switch>.
 
 See C<FML::Process::Switch> for boot strap phase 2 of fml process.
@@ -68,14 +68,14 @@ top level loader.
 
 
 # Descriptions: top lebel bootstrap program
-#               which load a dispather program (process_switch) 
+#               which load a dispather program (process_switch)
 #               for process switch. The flow of execution follows:
-#               libexec/loader -> 
-#                  libexec/process_switch -> 
+#               libexec/loader ->
+#                  libexec/process_switch ->
 #                      FML::Process::Something
 #    Arguments: none
 #               XXX this program sees $0
-#                   (program name, == argv[0] of C language) 
+#                   (program name, == argv[0] of C language)
 # Side Effects: switch to the real process
 # Return Value: none
 sub Bootstrap
@@ -93,7 +93,7 @@ sub Bootstrap
 
     # 1.1 parse command line options (preliminary).
     #     we check @ARGV again after by getopt().
-    my $main_cf_file = $main_cf_default; # main.cf by default 
+    my $main_cf_file = $main_cf_default; # main.cf by default
     for (my $i = 0; $i <= $#ARGV; $i++) {
 	# -c main.cf
 	if ($ARGV[ $i ] =~ /^\-c$/) {
@@ -115,7 +115,7 @@ sub Bootstrap
     # 2.1.2 inherit some parameters to change behaviour
     $main_cf->{ _hints } = $hints;
 
-    # 2.2 load version dependent Bootstrap2(), 
+    # 2.2 load version dependent Bootstrap2(),
     #     which is imported from FML::Process::Switch
     eval {
 	require FML::Process::Switch;
@@ -154,7 +154,7 @@ where $param is optional.
 #               It is available to use the following style.
 #                    key = value1 value2
 #                          value3
-#               XXX This file is non-Object Oriented style but 
+#               XXX This file is non-Object Oriented style but
 #               XXX this is minimum module used in standalone program.
 #    Arguments: $file $params
 #               $params is 'key1=value1 key2=value2' syntax.
@@ -195,7 +195,7 @@ sub loader_read_main_cf
 
 # Descriptions: expand $var to the value of $var.
 #    Arguments: $ref_to_config
-# Side Effects: rewrite the given $config 
+# Side Effects: rewrite the given $config
 # Return Value: none
 sub loader_expand_variables
 {
@@ -220,9 +220,9 @@ sub loader_expand_variables
 	next KEY unless defined($config->{ $x });
 	next KEY if $config->{ $x } !~ /\$/o;
 
-	# we need a loop to expand nested variables, for example, 
+	# we need a loop to expand nested variables, for example,
 	# a = $x/y and b = $a/c/0
-	# 
+	#
 	$max = 0;
       EXPANSION_LOOP:
 	while ($max++ < 16) {
@@ -243,7 +243,7 @@ sub loader_expand_variables
 
 	if ($max >= 16) {
 	    __CROAK("variable expansion of $x causes infinite loop");
-	} 
+	}
     }
 }
 
@@ -275,7 +275,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2000-2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 

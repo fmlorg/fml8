@@ -1,11 +1,11 @@
 <!--
-   $FML: internal.sgml,v 1.1.1.1 2001/10/12 11:00:20 fukachan Exp $
+   $FML: internal.sgml,v 1.2 2001/11/24 03:22:53 fukachan Exp $
 -->
 
 <sect1 id="fml.command.interal.change">
 	<title>
 	議論:
-	『4.0 と 5.0 のコードの書き方はどのくらい違うか？』 
+	『4.0 と 5.0 のコードの書き方はどのくらい違うか？』
 	</title>
 
 <para>
@@ -14,7 +14,7 @@
 </para>
 
 <para>
-5.0 では help ファイルを送り返すコードの実体は 
+5.0 では help ファイルを送り返すコードの実体は
 	FML::Command::User::help にあり、
 	FML::Process::Command クラスから
 	(FML::Command の AUTOLOAD を経由して)呼び出されます。
@@ -43,7 +43,7 @@ sub process
         src         => $help_file,
         charset_out => $charset,
     };
-    my $help_template = $curproc->prepare_file_to_return( $params ); 
+    my $help_template = $curproc->prepare_file_to_return( $params );
 
     if (-f $help_template) {
         $curproc->reply_message( {
@@ -69,7 +69,7 @@ prepare_file_to_return() はメッセージテンプレートの中にある変数の展開
 や文字コード変換を適宜行ないます。
  </para>
 
-<para> 
+<para>
 $curproc->reply_message() は引数によって振舞いがことなりますが、
 いずれにせよ、メッセージをキューに入れるメソッドです。
 </para>

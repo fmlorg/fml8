@@ -32,7 +32,7 @@ command_unsubscribe_type	=	confirmation
 #      History: fml 4.0 ではデフォルトのコマンド定義一覧に対し
 #               @PERMIT_PROCEDURE @DENY_PROCEDURE などで
 #               変更を加える
-#        Value: 
+#        Value:
 #     Examples:
 available_commands_for_user	=	help
 					get
@@ -99,7 +99,7 @@ available_commands_for_admin_cgi	=	subscribe
 #     Examples:
 confirm_command_prefix		=	confirm
 
-	
+
 # Descriptions: 管理用のコマンドを表す特別なコマンド
 #        Value: STR
 #     Examples:

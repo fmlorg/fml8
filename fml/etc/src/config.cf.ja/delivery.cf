@@ -5,10 +5,10 @@
 #      History: 4.0 で直接対応するものはない。
 #               $MCI_SMTP_HOSTS は似ているがちょっと違う
 #        Value: number
-#     Examples: 
+#     Examples:
 recipient_limit		=	1000
 
-# Descriptions: デフォールトの MTA は自分自身( localhost ) 
+# Descriptions: デフォールトの MTA は自分自身( localhost )
 #               IPv6 の loopback がデフォルトなのがおしゃれ :-)
 #      History: fml 4.0 の $HOST
 #        Value: host:port

@@ -1,11 +1,11 @@
 <!--
-	$FML: inet6.sgml,v 1.2 2001/08/22 22:34:44 fukachan Exp $
+	$FML: inet6.sgml,v 1.3 2001/11/19 14:55:15 fukachan Exp $
 -->
 
 <appendix id="inet6">
 
 	<title>
-	NetBSD 1.5 での IPv6 の設定 
+	NetBSD 1.5 での IPv6 の設定
 	</title>
 
 <para>
@@ -17,7 +17,7 @@ NetBSD の IPv6 の解説
 
 <sect1>
 	<title>
-	IIJ IPv6 トンネル型サービスの場合 
+	IIJ IPv6 トンネル型サービスの場合
 	</title>
 
 <para>
@@ -43,7 +43,7 @@ NetBSD の IPv6 の解説
 トンネルを張った後、route6d を動かします。
 これにより IIJ からの ::/0 を受けとります。
 そして、
-こちらからは 2001:240:22::/48 を advertise することになります。 
+こちらからは 2001:240:22::/48 を advertise することになります。
 </para>
 
 <warning>
@@ -57,7 +57,7 @@ route6d を何も考えずに起動すると /64 を advertise してしまうので
 
 <sect1>
 	<title>
-	トンネルの設定 
+	トンネルの設定
 	</title>
 
 <para>
@@ -80,7 +80,7 @@ tunnel 10.1.1.1 10.2.2.2
 </para>
 
 <para>
-トンネルが上がったかどうかは 
+トンネルが上がったかどうかは
 <screen>
 % ping6 -n ff02::1%gif0
 </screen>
@@ -97,7 +97,7 @@ tunnel 10.1.1.1 10.2.2.2
 
 <sect1>
 	<title>
-	ルーティング 
+	ルーティング
 	</title>
 
 <para>
@@ -123,7 +123,7 @@ route6d=YES		route6d_flags="-A 2001:240:22::/48,gif0"
 
 <sect1>
 	<title>
-	ホストなどへのアドレスの割り当て 
+	ホストなどへのアドレスの割り当て
 	</title>
 
 <para>
@@ -180,7 +180,7 @@ www.kame.net
 
 
 <para>
-Interview with Jun-ichiro "Itojun" Hagino about the KAME Project 
+Interview with Jun-ichiro "Itojun" Hagino about the KAME Project
 <ulink url="http://www.feyrer.de/NetBSD/interview-itojun.html">
 http://www.feyrer.de/NetBSD/interview-itojun.html
 </ulink>
