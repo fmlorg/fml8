@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.2 2003/07/19 10:23:33 fukachan Exp $
+# $FML: DB.pm,v 1.3 2003/07/20 04:57:16 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -25,7 +25,7 @@ use lib qw(../../../../fml/lib
 	   ../../../../img/lib
 	   );
 
-my $version = q$FML: DB.pm,v 1.2 2003/07/19 10:23:33 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.3 2003/07/20 04:57:16 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 # special value
@@ -1142,6 +1142,7 @@ sub _old_db_copyin
     my $file       = File::Spec->catfile($old_db_dir, ".htdb_${_table}");
     my $file_db    = File::Spec->catfile($old_db_dir, ".htdb_${_table}.db");
     my $file_pag   = File::Spec->catfile($old_db_dir, ".htdb_${_table}.pag");
+    my $cur_key    = $self->get_key() || 0;
 
     if (-f $file_db || -f $file_pag) {
 	eval qq{ use $db_type; use Fcntl;};
@@ -1162,8 +1163,15 @@ sub _old_db_copyin
 	    my $start = $key - 25 > 0 ? $key - 25 : 1;
 	    my $end   = $key + 25;
 	    _PRINT_DEBUG("copy ($start .. $end) into $table from $file");
+
+	  COPYIN:
 	    for my $i ($start .. $end) {
-		$self->_db_set($db, $table, $i, $old_db{ $i } || $NULL_VALUE);
+		last COPYIN if $cur_key == $i || $cur_key < $i; 
+
+		# we should not overwrite myself in coping.
+		if ($cur_key && $cur_key != $i) {
+		    $self->_db_set($db, $table, $i, $old_db{$i}||$NULL_VALUE);
+		}
 	    }
 	}
 	# we may need to copy all contents
