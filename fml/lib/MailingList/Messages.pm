@@ -10,7 +10,7 @@
 
 package MailingList::Messages;
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
 require Exporter;
@@ -178,6 +178,21 @@ sub set_log_function
 {
     my ($self, $fp) = @_;
     $self->{ _log_function } = $fp; # log function pointer
+}
+
+
+sub AUTOLOAD
+{
+    my ($self, $args) = @_;
+    my $function = $AUTOLOAD;
+    $function =~ s/.*:://;
+
+    if ($function =~ /^get_(\w+)_reference$/) {
+	return $self->{ $1 };
+    }
+    else {
+	return undef;
+    }
 }
 
 
