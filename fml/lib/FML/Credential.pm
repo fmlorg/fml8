@@ -15,7 +15,7 @@ use vars qw(%Credential @ISA @EXPORT @EXPORT_OK);
 use Carp;
 
 require Exporter;
-@ISA       = qw(Exporter);
+@ISA = qw(Exporter);
 
 
 sub new

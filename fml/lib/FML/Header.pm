@@ -16,35 +16,15 @@ FML::Header - header manipulators
 
 =head1 SYNOPSIS
 
-    $header = use FML::Header $r_header;
-    $header->rewrite;
-
-(... not yet mature  ...)
+    $header = use FML::Header \@header;
+    $header->add('X-ML-Info', "mailing list name");
     
-
 =head1 DESCRIPTION
 
+FML::Header is an adapter for Mail::Address class.
+That is, Mail::Address is the base class. 
+
 =head1 METHOD
-
-=item rewrite
-
-=item check
-
-
-=head1 AUTHOR
-
-Ken'ichi Fukamachi
-
-=head1 COPYRIGHT
-
-Copyright (C) 2001 Ken'ichi Fukamachi
-
-All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
-
-=head1 HISTORY
-
-FML::Header.pm appeared in fml5.
 
 =cut
 
@@ -64,27 +44,14 @@ sub new
     $self->SUPER::new($args);
 }
 
+
 sub DESTROY {}
+
 
 sub AUTOLOAD
 {
     my ($self, $args) = @_;
     Log("Error: $AUTOLOAD is not defined");
-}
-
-
-sub rewrite
-{
-    my ($self) = @_;
-}
-
-
-sub check
-{
-    my ($self) = @_;
-
-    print "From: ",       $self->get('from');
-    print "Message-Id: ", $self->get('message-id');
 }
 
 
@@ -135,5 +102,26 @@ sub add_x_sequence
     $header->add('X-Sequence',  "$args->{ name } $args->{ id }");
 }
 
+
+=head1 SEE ALSO
+
+L<Mail::Address>
+
+=head1 AUTHOR
+
+Ken'ichi Fukamachi
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001 Ken'ichi Fukamachi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself. 
+
+=head1 HISTORY
+
+FML::Header.pm appeared in fml5.
+
+=cut
 
 1;
