@@ -1,6 +1,12 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/09/23
+
+   FML::Filter::BodyCheck 
+	should not import STR2EUC from Mail::Message::Encode
+	bug fixed to use Mail::Message::Encode->convert()
+
 2002/09/14
 
    FML::Filter::BodyCheck 
@@ -3321,4 +3327,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.101 2002/09/11 22:17:25 fukachan Exp $
+$FML: CHANGES.txt,v 1.102 2002/09/15 02:22:47 fukachan Exp $
