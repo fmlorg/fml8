@@ -13,6 +13,31 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
+=head1 NAME
+
+FML::Checksum - utilities for check sum
+
+=head1 SYNOPSIS
+
+   use FML::Checksum;
+   $cksum  = new FML::Checksum;
+   $md5sum = $cksum->md5( \$string );
+
+=head1 METHODS
+
+=head2 C<new()>
+
+the constructor. 
+It checks we can use MD5 perl module or should use some programs e.g. 
+C<md5>, C<cksum>, et.al.
+
+=head2 C<md5(\$string)>
+
+return the md5 checksum of C<$string>.
+
+=cut
+
+
 require Exporter;
 @ISA = qw(Exporter);
 
@@ -115,23 +140,6 @@ sub _md5_by_program
     undef;
 }
 
-
-
-=head1 NAME
-
-FML::Checksum - what is this
-
-=head1 SYNOPSIS
-
-=head1 DESCRIPTION
-
-=head1 CLASSES
-
-=head1 METHODS
-
-=item C<new()>
-
-... what is this ...
 
 =head1 AUTHOR
 
