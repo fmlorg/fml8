@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ML.pm,v 1.7 2004/01/02 14:50:29 fukachan Exp $
+# $FML: ML.pm,v 1.8 2004/01/18 13:56:05 fukachan Exp $
 #
 
 package FML::CGI::ML;
@@ -14,7 +14,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use CGI qw/:standard/; # load standard CGI routines
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -27,7 +27,7 @@ sub new
 }
 
 
-# Descriptions: show menu for subscribe/unsubscribe commands
+# Descriptions: show menu for subscribe/unsubscribe commands.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: none
 # Return Value: none
@@ -42,11 +42,11 @@ sub cgi_menu
     my $comname      = $command_args->{ comname };
     my $command_list = [ 'newml', 'rmml' ];
 
-    # XXX-TODO: who verified comname ?
+    # XXX-TODO: who verified comname ? ($command_args verified?)
 
     unless ($curproc->cgi_var_cgi_mode() eq "admin") {
 	# XXX-TODO: nl ?
-	croak("Admin::ML::cgi_menu: prohibited in this mode");
+	croak("FML::CGI::ML prohibited in this mode");
     }
 
     print start_form(-action=>$action, -target=>$target);
