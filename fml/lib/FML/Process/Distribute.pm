@@ -164,10 +164,11 @@ sub _deliver_article
     my $header  = $curproc->{ article }->{ header };# FML::Header
 
     # distribute article
-    use MailingList::SMTP;
+    use MailingList::Delivery;
+
     my $fp  = sub { Log(@_);}; # pointer to the log function
     my $sfp = sub { my ($s) = @_; print $s; print "\n" if $s !~ /\n$/o;};
-    my $service = new MailingList::SMTP {
+    my $service = new MailingList::Delivery {
 	log_function       => $fp,
 	smtp_log_function  => $sfp,
 	socket_timeout     => 2,     # XXX 2 for debug but 10 by default
