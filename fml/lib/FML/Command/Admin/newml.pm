@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.71 2003/09/27 03:00:15 fukachan Exp $
+# $FML: newml.pm,v 1.72 2003/10/15 01:03:29 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -72,8 +72,10 @@ sub process
     my $ml_domain      = $config->{ ml_domain };
     my $ml_home_prefix = $curproc->ml_home_prefix($ml_domain);
     my $ml_home_dir    = $curproc->ml_home_dir($ml_name, $ml_domain);
+    my $owner          = $config->{ newml_command_ml_admin_default_address }||
+			 $curproc->fml_owner();
     my $params         = {
-	fml_owner         => $curproc->fml_owner(),
+	fml_owner         => $owner,
 	executable_prefix => $curproc->executable_prefix(),
 	ml_name           => $ml_name,
 	ml_domain         => $ml_domain,
