@@ -521,9 +521,22 @@ system_special_accounts		=	root
 #      History: none
 #        Value: a list of strings
 #     Examples: (elena-ctl@fml.org elena-ctl@fml.org ...)
-list_addresses	=	$address_for_post
-			$address_for_command
-			$maintainer
+list_addresses	=	$maintainer
+			$article_post_address
+			$command_mail_address
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+article_post_address	=	$address_for_post
+
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+command_mail_address	=	$address_for_command
 
 =head1	ユーザ情報
 
