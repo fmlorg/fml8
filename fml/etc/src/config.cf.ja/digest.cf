@@ -5,7 +5,7 @@
 #      History:
 #        Value:
 #     Examples:
-use_digest_program		=	yes
+use_digest_program	=	yes
 
 
 # Descriptions: まとめ送りした最後の記事番号を保存するファイル
