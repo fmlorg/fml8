@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.66 2001/12/22 09:21:09 fukachan Exp $
+# $FML: Kernel.pm,v 1.67 2001/12/23 11:37:07 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -592,7 +592,9 @@ sub reply_message_nl
     }
 
     if (defined $buf) {
-	use FML::Language::ISO2022JP qw(STR2JIS);
+	eval q{
+	    use FML::Language::ISO2022JP qw(STR2JIS);
+	};
 	if ($buf =~ /\$/) {
 	    $config->expand_variable_in_buffer(\$buf, $args);
 	}
@@ -680,7 +682,6 @@ sub queue_in
     # cheap sanity check
     unless (defined($sender) && defined($recipient)) {
 	my $reason = '';
-	use Carp;
 	$reason = "no sender specified\n"    unless defined $sender;
 	$reason = "no recipient specified\n" unless defined $recipient;
 	croak("panic: queue_in()\n\treason: $reason\n");
@@ -690,7 +691,10 @@ sub queue_in
     #
     # start building a message
     #
-    use Mail::Message::Compose;
+    eval q{
+	use Mail::Message::Compose;
+    };
+    croak($@) if $@;
 
     my $pcb          = $curproc->{ pcb };
     my $string       = $pcb->get($category, 'text') || undef;
@@ -698,11 +702,13 @@ sub queue_in
     my $msg;
 
     if ($is_multipart) {
-	$msg = new Mail::Message::Compose
-	    From    => $sender,
-	    To      => $recipient,
-	    Subject => $subject,
-	    Type    => "multipart/mixed";
+	eval q{
+	    $msg = new Mail::Message::Compose
+		From    => $sender,
+		To      => $recipient,
+		Subject => $subject,
+		Type    => "multipart/mixed";
+	};
 
 	_add_info_on_header($config, $msg);
 
@@ -722,16 +728,20 @@ sub queue_in
     }
     # text/plain format message (by default).
     else {
-	$msg = new Mail::Message::Compose
-	    From    => $sender,
-	    To      => $recipient,
-	    Subject => $subject,
-	    Data    => $string;
+	eval q{
+	    $msg = new Mail::Message::Compose
+		From    => $sender,
+		To      => $recipient,
+		Subject => $subject,
+		Data    => $string;
+	};
 	$msg->attr('content-type.charset' => $charset);
 	_add_info_on_header($config, $msg);
     }
 
-    use Mail::Delivery::Queue;
+    eval q{
+	use Mail::Delivery::Queue;
+    };
     my $queue_dir = $config->{ mqueue_dir };
     my $queue     = new Mail::Delivery::Queue { directory => $queue_dir };
     my $qid       = $queue->id();
@@ -788,9 +798,12 @@ sub queue_flush
     my $config    = $curproc->{ config };
     my $queue_dir = $config->{ mqueue_dir };
 
-    use FML::Process::QueueManager;
-    my $obj = new FML::Process::QueueManager { directory => $queue_dir };
-    $obj->send($curproc);
+    eval q{
+	use FML::Process::QueueManager;
+	my $obj = new FML::Process::QueueManager { directory => $queue_dir };
+	$obj->send($curproc);
+    };
+    croak($@) if $@;
 }
 
 
@@ -837,8 +850,8 @@ sub prepare_file_to_return
     my $rh = new FileHandle $src_file;
     my $wh = new FileHandle "> $tmpf";
 
-    use FML::Language::ISO2022JP qw(STR2JIS);
     if (defined($rh) && defined($wh)) {
+	eval q{ use FML::Language::ISO2022JP qw(STR2JIS);};
 	while (<$rh>) {
 	    if (/\$/) { $config->expand_variable_in_buffer(\$_, $args);}
 	    $wh->print(STR2JIS($_));
