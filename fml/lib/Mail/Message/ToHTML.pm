@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.41.2.13 2003/06/15 01:50:33 fukachan Exp $
+# $FML: ToHTML.pm,v 1.41.2.14 2003/06/15 08:07:16 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.41.2.13 2003/06/15 01:50:33 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.41.2.14 2003/06/15 08:07:16 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -111,9 +111,12 @@ sub new
     my $db_base = $me->{ _db_base_dir } || croak("specify db_base_dir\n");
     my $db_name = $me->{ _db_name }     || croak("specify db_name\n");
     my $_args   = {
-	db_module   => $db_type,
-	db_base_dir => $db_base,
-	db_name     => $db_name, # mailing list identifier
+	db_module       => $db_type,
+	db_base_dir     => $db_base,
+	db_name         => $db_name, # mailing list identifier
+
+	# db non UDB
+	old_db_base_dir => $args->{ directory },
     };
 
     # Firstly, prepare db object.
