@@ -1,8 +1,5 @@
 etc/defaults/basic.cf.ja
-etc/defaults/command.cf.ja
-etc/defaults/dbms.cf.ja
 etc/defaults/delivery.cf.ja
-etc/defaults/directory.cf.ja
 etc/defaults/header.cf.ja
 etc/defaults/system_dependence.cf.ja
 etc/defaults/tickets.cf.ja
