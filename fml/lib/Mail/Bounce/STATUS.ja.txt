@@ -1,3 +1,7 @@
+
+		Current Status of fml-devel (fml 5.0) Bounce Filter
+
+
 ○ 実装済み
 
    MTA specific
@@ -38,6 +42,8 @@
 		caiwireless.net (要テスト)
 		compuserve.net (要テスト)
 
+
+--------------------------------------------------------------------
 
 ○ TODO 英語で返ってこないものをどう扱うか (考え中) 
 
@@ -110,4 +116,4 @@
 		今は sendmail みたいだ
 
 
-$FML: STATUS.ja.txt,v 1.6 2001/04/13 04:52:11 fukachan Exp $
+$FML: STATUS.ja.txt,v 1.7 2001/04/13 04:55:48 fukachan Exp $
