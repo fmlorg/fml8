@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.208 2004/02/26 05:07:57 fukachan Exp $
+# $FML: Kernel.pm,v 1.209 2004/02/26 08:05:37 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1034,12 +1034,11 @@ sub _inject_charset_hints
 
     # 1. prefer Accept-Language: alyways, ignore Content-Type: in this case. 
     if ($list) { 
-	$curproc->log("hints: save accept_language=[@$list]");
 	$curproc->set_accept_language_list($list);
     }
 
-    # 2. analyze Content-Type: if valid Accept-Languge: unspecified.
-    if ($liststr eq '*' && $charset) {
+    # 2. save charset of Content-Type: as a hint.
+    if ($charset) {
 	# validate charset usage.
 	#   iso-2022-jp -> japanese -> iso-2022-jp
 	#   sjis        -> japanese -> iso-2022-jp
@@ -1047,11 +1046,10 @@ sub _inject_charset_hints
 	use Mail::Message::Charset;
 	my $char = new Mail::Message::Charset;
 	my $lang = $char->message_charset_to_language($charset);
-	$charset = $char->language_to_message_charset($lang);
 
-	$curproc->log("hints: use \"$charset\" as message charset");
-	$curproc->set_charset('message',       $charset);
-	$curproc->set_charset('reply_message', $charset);
+	$curproc->log("hints: \"$charset\" => lang=\"$lang\" as a hint.");
+	$curproc->set_language_hint('reply_message', $lang);
+	$curproc->set_language_hint('template_file', $lang);
     }
 }
 
@@ -1730,15 +1728,21 @@ sub reply_message_nl
     $curproc->caller_info($class, caller) if $debug;
 
     if (defined $buf) {
-	if ($buf =~ /\$/) {
+	my $charset = $curproc->get_charset('reply_message');
+	$curproc->log("hints: reply charset=\"$charset\"");
+
+	if ($buf =~ /\$/o) {
 	    $config->expand_variable_in_buffer(\$buf, $rm_args);
 	}
 
 	# XXX-TODO: jis-jp is hard-coded.
 	eval q{
-	    use Mail::Message::Encode;
-	    my $obj = new Mail::Message::Encode;
-	    $curproc->reply_message( $obj->convert( $buf, 'jis-jp' ), $rm_args);
+	    use Mail::Message::String;
+	    my $str = new Mail::Message::String $buf;
+	    $str->charcode_convert('jis');
+	    $buf = $str->as_str();
+
+	    $curproc->reply_message($buf, $rm_args); 
 	};
 	$curproc->logerror($@) if $@;
     }
@@ -1819,6 +1823,84 @@ sub caller_info
 {
     my ($curproc, $msg, $pkg, $fn, $line) = @_;
     $curproc->log("msg='$msg' $fn $line");
+}
+
+
+=head2 get_preferred_languages()
+
+return preferred languages e.g. [ ja ], [ ja en ]... in this system.
+
+=cut
+
+
+# Descriptions: return preferred languages e.g. [ ja ], [ ja en ]...
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub get_preferred_languages
+{
+    my ($curproc)  = @_;
+    my $config     = $curproc->config();
+    my $pref_order = $config->get_as_array_ref('language_preference_order');
+
+    # hints
+    #   $pref_order     = [ ja en ]
+    #   $acpt_lang_list = [ ja en ]
+    #   $mime_lang      = ja        ('en' if no mime charset).
+    my $acpt_lang_list = $curproc->get_accept_language_list() || [];
+    my $mime_lang      = $curproc->get_language_hint()        || 'en';
+
+    # return = [ ja ] or [ ja en ] ...
+    my $p = $curproc->__find_preferred_languages($pref_order, 
+						 $acpt_lang_list, 
+						 $mime_lang);
+    $curproc->log("hints: preferred languge = [ @$p ]");
+    return $p;
+}
+
+
+# Descriptions: return preferred languages e.g. [ ja ], [ ja en ]...
+#    Arguments: OBJ($curproc)
+#               ARRAY_REF($pref_order)
+#               ARRAY_REF($acpt_lang_list)
+#               ARRAY_REF($mime_lang)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub __find_preferred_languages
+{
+    my ($curproc, $pref_order, $acpt_lang_list, $mime_lang) = @_;
+    my $orig_mime_lang = $mime_lang;
+    my $selected       = [];
+
+    # 0. fix
+    $mime_lang ||= 'en';
+
+    # 1. prefer Accept-Languge: always. 
+    if (@$acpt_lang_list) {
+	if ($acpt_lang_list->[ 0 ]) {
+	    my $x = $acpt_lang_list->[ 0 ];
+	    $selected = [ $x ];
+	}
+    }
+    # 2. when no Accept-Language:
+    elsif ($mime_lang) {
+	# for (ja, en, ...) { ... }
+      LANG:
+	for my $lang (@$pref_order) {
+	    push(@$selected, $lang);
+	    last LANG if $lang eq $mime_lang;
+	}	
+    }
+
+    if ($debug) {
+	print STDERR "      pref_order  = [ @$pref_order ]\n";
+	print STDERR "accpet languages  = [ @$acpt_lang_list ]\n";
+	print STDERR "  mime language   = \" $orig_mime_lang \"\n";
+	print STDERR "preferred languge = [ @$selected ]\n";
+	print STDERR "\n";
+    }
+
+    return $selected;
 }
 
 
