@@ -1,5 +1,5 @@
 <!--
-	$FML: commands.sgml,v 1.4 2001/04/30 10:21:43 fukachan Exp $
+	$FML: commands.sgml,v 1.5 2001/08/26 05:55:51 fukachan Exp $
 -->
 
 <chapter id="fml.command.op">
@@ -21,6 +21,32 @@ CGI でのコマンド処理
 
 
 <sect1>
+	<title>
+	FML::Command クラス以下の構成
+	</title>
+
+<para>
+FML::Command:: クラスの再構成
+<sceen>
+FML::Command.pm		FML::Command クラス以下への入口
+FML::Command::ACL	ACL
+FML::Command::Utils	よもやまの定義
+FML::Command::User	ユーザ用コマンド群
+FML::Command::Admin	ユーザ用コマンド群
+</sceen>
+</para>
+
+<para>
+例えば、ユーザ用のコマンドの場合
+FML::Command.pm を経由して
+FML::Command::User::コマンド.pm
+モジュールを使うことになります。
+</para>
+
+</sect1>
+
+
+<sect1>
    <title> コマンドの拡張の仕方の例 </title>
 
 
@@ -29,9 +55,10 @@ CGI でのコマンド処理
 
 	<para>
 	fml 5.0 では、
-	例えばコマンド uja を作りたいなら、FML::Command をぱくって
+	例えばユーザ向けのコマンド uja を作りたい場合、
+	FML::Command 以下から適当に cut & paste して
 <screen>	
-/usr/local/lib/fml/site_local/FML/Command/uja.pm
+/usr/local/lib/fml/site_local/FML/Command/User/uja.pm
 </screen>	
 	というファイルを置けば OK にしようとしています。
 	</para>
