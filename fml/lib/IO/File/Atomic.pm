@@ -31,7 +31,10 @@ IO::Atomic - atomic IO operation
     print $wh "new/updated things ...";
     $wh->close unless $wh->error;
 
-So, in usual cases, you use this module in the following way.
+In C<close()> runs, the C<$file> is replaced with the new content.
+Updating is defered until C<close()>.
+
+In usual cases, you use this module in the following way.
 
     use FileHandle;
     use IO::Atomic;

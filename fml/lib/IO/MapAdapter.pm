@@ -22,12 +22,6 @@ IO::MapAdapter - adapter for several IO interfaces
 
 =head1 SYNOPSIS
 
-This is just an adapter for 
-e.g. file, unix group, NIS, RDMS et. al.
-So, after you create and open the map, 
-operation method is the same as usual file IO.
-For examle
-
     use IO::MapAdapter;
     $obj = new IO::MapAdapter $map;
     $obj->open || croak("cannot open $map");
@@ -36,22 +30,31 @@ For examle
 
 =head1 DESCRIPTION
 
-This is "Adapter" (or "Wrapper") design pattern.
+This is "Adapter" (or "Wrapper") C<design pattern>.
+This is a wrapper of IO for
+e.g. file, 
+unix group, 
+NIS (Network Information System), 
+RDBMS (Relational DataBase Management System)
+et. al.
+Once you create and open a C<map>, 
+you can use the same methods as usual file IO.
 
-=head1 MAP
+=head2 MAP
 
-"map" is what database we read/write. 
-The basic format of the database is a file. 
-In a lot of cases, the file format is one line for one entry.
-For example,
+C<map> specifies the type of the database we read/write.  
+
+For example, C<file> map imples we hold our data in a file.
+The format is one line for one entry in a lot of cases.
 
    key1
    key2 value
 
-So, to get one entry is to read one line or a part of one line.
+To get one entry is to read one line or a part of one line.
 
-This wrapper maps IO for some object to usual file IO.
+This wrapper provides IO like a usual file for the specified C<$map>. 
 
+=head2 MAP TYPES
 
    map name        descriptions or examples        
    ---------------------------------------------------
@@ -141,8 +144,10 @@ sub new
 
 =item C<open([$flag])>
 
-start IO operation for the map. $flag is passed to SUPER CLASS open()
-for "file:" map but ignored in other maps now.
+open IO operation for the map. 
+C<$flag> is passed to SUPER CLASS open()
+when "file:" map is specified. 
+C<open()> is a dummy function in other maps now.
 
 =cut
 
@@ -179,14 +184,16 @@ sub open
 
 =item C<getline()>
 
-For file map, it is the same as usual getline() for file.
-For other maps, same as C<get_next_value()> method.
+In C<file> map case, it is the same as usual getline() for a file.
+In other maps, it is the same as C<get_next_value()> method below.
 
 =item C<get_next_value()>
 
-get the next value. For example, the first column in the next line for
-C<file> map. For C<array_reference>, C<unix.group>, C<nis.grouop> maps,
-return the next element of the array.
+get the next value from the specified database (map). 
+For example, this function returns the first column in the next line
+for C<file> map. 
+It return the next element of the array,
+in C<array_reference>, C<unix.group>, C<nis.grouop> maps.
 
 =item C<get_member()>
 

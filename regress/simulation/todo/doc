@@ -28,102 +28,89 @@ etc/defaults/cgi.cf.ja
 etc/config.cf
 
 
-lib/Dialect/Japanese/String.pm
-lib/Dialect/Japanese/Subject.pm
-lib/Dialect/Japanese/Utils.pm
-lib/Dialect/ISO2022JP.pm
+Dialect/Japanese/String.pm
+Dialect/Japanese/Subject.pm
+Dialect/Japanese/Utils.pm
+Dialect/ISO2022JP.pm
 
 
-lib/Article.pm
-lib/Checksum.pm
-lib/Config.pm
-lib/Credential.pm
-lib/Date.pm
-lib/Debug.pm
-lib/Errors.pm
-lib/Header.pm
-lib/Log.pm
-lib/MIME.pm
+Article.pm
+Checksum.pm
+Config.pm
+Credential.pm
+Date.pm
+Debug.pm
+Errors.pm
+Header.pm
+Log.pm
+MIME.pm
 
 
-lib/Messages.pm
-lib/PCB.pm
-lib/Parse.pm
-lib/CGI/TicketSystem.pm
+Messages.pm
+PCB.pm
+Parse.pm
+CGI/TicketSystem.pm
 
 
-lib/Command/mget.pm
-lib/Command/bye.pm
-lib/Command/get.pm
-lib/Command/remove.pm
-lib/Command/resign.pm
-lib/Command/subscribe.pm
-lib/Command/unsubscribe.pm
+Command/mget.pm
+Command/bye.pm
+Command/get.pm
+Command/remove.pm
+Command/resign.pm
+Command/subscribe.pm
+Command/unsubscribe.pm
 
 
-lib/Header/Subject.pm
-lib/Process/Command.pm
-lib/Process/Configure.pm
-lib/Process/Distribute.pm
-lib/Process/Flow.pm
-lib/Process/Kernel.pm
+Header/Subject.pm
+Process/Command.pm
+Process/Configure.pm
+Process/Distribute.pm
+Process/Flow.pm
+Process/Kernel.pm
 
 
-lib/Process/QMail.pm
-lib/Process/Switch.pm
-lib/Process/TicketSystem.pm
-lib/Process/CGI.pm
+Process/QMail.pm
+Process/Switch.pm
+Process/TicketSystem.pm
+Process/CGI.pm
 
 
-lib/Ticket/Model/toymodel.ja.txt
-lib/Ticket/Model/toymodel.pm
-lib/Ticket/00_DESIGN.txt
+Ticket/Model/toymodel.ja.txt
+Ticket/Model/toymodel.pm
+Ticket/00_DESIGN.txt
 
 
-lib/Ticket/System.pm
-lib/File/Errors.pm
+Ticket/System.pm
+File/Errors.pm
 
 
-lib/File/RingBuffer.pm
-lib/File/Rotate.pm
-lib/File/Sequence.pm
-lib/File/SimpleLock.pm
-lib/File/Utils.pm
+File/RingBuffer.pm
+File/Rotate.pm
+File/Sequence.pm
+File/SimpleLock.pm
+File/Utils.pm
 
 
-lib/IO/Adapter/Array.pm
-lib/IO/Adapter/File.pm
-lib/IO/Adapter/LDAP.pm
+IO/Adapter/Array.pm
+IO/Adapter/NIS.pm
+IO/Adapter/UnixGroup.pm
 
 
-lib/IO/Adapter/NIS.pm
-lib/IO/Adapter/RDBMS.pm
-lib/IO/Adapter/UnixGroup.pm
+MailingList/Net/INET4.pm
+MailingList/Net/INET6.pm
+MailingList/Delivery.ja.pod
+MailingList/Delivery.pm
+MailingList/Messages.pm
+MailingList/SMTP.pm
+MailingList/Utils.pm
 
 
-lib/IO/MapAdapter.pm
+ErrorMessages/00_PARSE.ja.txt
+ErrorMessages/00_README.ja.txt
 
 
-lib/IO/File/Atomic.pm
-
-
-lib/MailingList/Net/INET4.pm
-lib/MailingList/Net/INET6.pm
-
-
-lib/MailingList/Delivery.ja.pod
-lib/MailingList/Delivery.pm
-lib/MailingList/ESMTP.pm
-
-
-lib/MailingList/Messages.pm
-lib/MailingList/SMTP.pm
-lib/MailingList/Utils.pm
-lib/ErrorMessages/00_PARSE.ja.txt
-lib/ErrorMessages/00_README.ja.txt
-lib/Tie/JournaledFile.pm
+Tie/JournaledFile.pm
 
 
 libexec/Standalone.pm
-libexec/boot.ja.html
 libexec/loader

@@ -16,7 +16,7 @@ use Carp;
 
 =head1 NAME
 
-IO::Adapter::File - functions to do IO for a file
+IO::Adapter::File - IO functions for a file
 
 =head1 SYNOPSIS
 
@@ -30,14 +30,16 @@ IO::Adapter::File - functions to do IO for a file
 
 =head1 DESCRIPTION
 
-This module provides real IO functions for a file used in IO::MapAdapter.
-The map is the fully pathed file name or a file name 'file:/' prefix.
+This module provides real IO functions for a file used in
+IO::MapAdapter. 
+The map is the fully path-ed file name or a file name with 'file:/'
+prefix. 
 
 =head1 METHODS
 
 =head2 C<new()>
 
-standard constructor
+standard constructor.
 
 =cut
 
@@ -53,7 +55,7 @@ sub new
 
 =head2 C<open($args)>
 
-$args HASH REFERENCE has two parameters. 
+$args HASH REFERENCE must have two parameters. 
 C<file> is the target file to open.
 C<flag> is the mode of open().
 
