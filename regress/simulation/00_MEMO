@@ -8,6 +8,31 @@
 	XXX
 
 
+○	かけやー
+
+	tutorial/internals/DB.txt 
+
+
+○	we ensure safe_param_*() and try_cgi_*() returns save value.
+
+	いいとおもう（２００３／０２／１５）
+
+
+○	$action って、どうシンタックスチェックするべ？
+
+	my $action  = $curproc->safe_cgi_action_name();
+
+	Mail/ThreadTrack/Print/HTML.pm
+
+
+○	euc-jp がはーどこーど
+
+	FML/Header/Subject.pm
+	FML/Article/Summary.pm
+	Mail/Message/Encode.pm
+	Mail/Message/ToHTML.pm
+
+
 ○	../scheduler/HOW_TO_MAKE.ja.txt
 
 	もう install.sh じゃないんで、ていせい
@@ -351,4 +376,4 @@ sub compare_euc_string
 
 
 ----------
-$FML: 00_MEMO,v 1.62 2003/02/01 13:59:07 fukachan Exp $
+$FML: 00_MEMO,v 1.63 2003/02/11 14:23:53 fukachan Exp $
