@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.109 2003/03/06 13:37:34 fukachan Exp $
+# $FML: Distribute.pm,v 1.110 2003/03/16 10:49:51 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -321,7 +321,13 @@ sub finish
 sub _distribute
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config       = $curproc->config();
+
+    # XXX_LOCK_CHANNEL: article_spool_modify
+    # exclusive lock for both sequence updating and spool writing
+    my $lock_channel = "article_spool_modify";
+
+    $curproc->lock($lock_channel);
 
     # XXX $article != $curproc->{ article } (which is just a key)
     # XXX $curproc->{ article } is prepared as a side effect for the future.
@@ -350,6 +356,8 @@ sub _distribute
     use FML::Article::Summary;
     my $summary = new FML::Article::Summary $curproc;
     $summary->append($article, $id);
+
+    $curproc->unlock($lock_channel);
 
     # delivery starts !
     $curproc->_deliver_article($args);
