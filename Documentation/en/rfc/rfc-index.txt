@@ -5,7 +5,7 @@
                              RFC INDEX
                            -------------
 
-(CREATED ON: 11/13/2001.)
+(CREATED ON: 12/05/2001.)
 
 This file contains citations for all RFCs in numeric order.
 
@@ -101,8 +101,8 @@ See the RFC Editor Web page http://www.rfc-editor.org
      Deloche. Aug-01-1969. (Not online) (Obsoleted by RFC0033) (Status:
      UNKNOWN)
 
-0012 IMP-Host interface flow diagrams. M. Wingfield. Aug-26-1969. (Not
-     online) (Status: UNKNOWN)
+0012 IMP-Host interface flow diagrams. M. Wingfield. Aug-26-1969.
+     (Format: TXT=177.PS=.PDF= bytes) (Status: UNKNOWN)
 
 0013 Zero Text Length EOF Message. V. Cerf. Aug-20-1969. (Format:
      TXT=1070 bytes) (Status: UNKNOWN)
@@ -351,7 +351,7 @@ See the RFC Editor Web page http://www.rfc-editor.org
      RFC0189) (Status: UNKNOWN)
 
 0089 Some historic moments in networking. R.M. Metcalfe. Jan-19-1971.
-     (Not online) (Status: UNKNOWN)
+     (Format: TXT=16832 bytes) (Status: UNKNOWN)
 
 0090 CCN as a Network Service Center. R.T. Braden. Jan-25-1971.
      (Format: TXT=11929 bytes) (Status: UNKNOWN)
@@ -546,8 +546,8 @@ See the RFC Editor Web page http://www.rfc-editor.org
      (Format: TXT=13744 bytes) (Status: UNKNOWN)
 
 0145 Initial Connection Protocol Control Commands. J. Postel.
-     May-04-1971. (Format: TXT=2432 bytes) (Obsoletes RFC0127) (Obsoleted
-     by RFC0165) (Updated by RFC0143) (Status: UNKNOWN)
+     May-04-1971. (Format: TXT=2490.PS=.PDF= bytes) (Obsoletes RFC0127)
+     (Obsoleted by RFC0165) (Updated by RFC0143) (Status: UNKNOWN)
 
 0146 Views on issues relevant to data sharing on computer networks.
      P.M. Karp, D.B. McKay, D.C.M. Wood. May-12-1971. (Format: TXT=9828
@@ -1148,7 +1148,7 @@ See the RFC Editor Web page http://www.rfc-editor.org
      (Format: TXT=3787 bytes) (Status: UNKNOWN)
 
 0338 EBCDIC/ASCII Mapping for Network RJE. R.T. Braden. May-17-1972.
-     (Not online) (Status: UNKNOWN)
+     (Format: TXT=11494.PS=.PDF= bytes) (Status: UNKNOWN)
 
 0339 MLTNET: A "Multi Telnet" Subsystem for Tenex. R. Thomas.
      May-05-1972. (Format: TXT=7941 bytes) (Status: UNKNOWN)
@@ -1532,7 +1532,7 @@ See the RFC Editor Web page http://www.rfc-editor.org
      TXT=3684 bytes) (Status: UNKNOWN)
 
 0466 Telnet logger/server for host LL-67. J.M. Winett. Feb-27-1973.
-     (Not online) (Status: UNKNOWN)
+     (Format: TXT=17595 bytes) (Status: UNKNOWN)
 
 0467 Proposed change to Host-Host Protocol: Resynchronization of
      connection status. J.D. Burchfiel, R.S. Tomlinson. Feb-20-1973.
@@ -1699,7 +1699,8 @@ See the RFC Editor Web page http://www.rfc-editor.org
      TXT=75385 bytes) (Status: UNKNOWN)
 
 0525 MIT-MATHLAB meets UCSB-OLS -an example of resource sharing. W.
-     Parrish, J.R. Pickens. Jun-01-1973. (Not online) (Status: UNKNOWN)
+     Parrish, J.R. Pickens. Jun-01-1973. (Format: TXT=18501.PS=.PDF=
+     bytes) (Status: UNKNOWN)
 
 0526 Technical meeting: Digital image processing software systems.
      W.K. Pratt. Jun-25-1973. (Format: TXT=4062 bytes) (Status: UNKNOWN)
@@ -1753,19 +1754,19 @@ See the RFC Editor Web page http://www.rfc-editor.org
      Jul-13-1973. (Format: TXT=1541 bytes) (Status: UNKNOWN)
 
 0545 Of what quality be the UCSB resources evaluators?. J.R. Pickens.
-     Jul-23-1973. (Not online) (Status: UNKNOWN)
+     Jul-23-1973. (Format: TXT=3754 bytes) (Status: UNKNOWN)
 
-0546 Tenex load averages for July 1973. R. Thomas. Aug-10-1973. (Not
-     online) (Status: UNKNOWN)
+0546 Tenex load averages for July 1973. R. Thomas. Aug-10-1973.
+     (Format: TXT=6632.PS=.PDF= bytes) (Status: UNKNOWN)
 
 0547 Change to the Very Distant Host specification. D.C. Walden.
-     Aug-13-1973. (Not online) (Status: UNKNOWN)
+     Aug-13-1973. (Format: TXT=6236 bytes) (Status: UNKNOWN)
 
 0548 Hosts using the IMP Going Down message. D.C. Walden. Aug-16-1973.
      (Format: TXT=1435 bytes) (Status: UNKNOWN)
 
 0549 Minutes of Network Graphics Group meeting, 15-17 July 1973. J.C.
-     Michener. Jul-17-1973. (Not online) (Status: UNKNOWN)
+     Michener. Jul-17-1973. (Format: TXT=23367 bytes) (Status: UNKNOWN)
 
 0550 NIC NCP experiment. L.P. Deutsch. Aug-24-1973. (Format: TXT=3688
      bytes) (Status: UNKNOWN)
@@ -1818,7 +1819,8 @@ See the RFC Editor Web page http://www.rfc-editor.org
      Oct-15-1973. (Format: TXT=17717 bytes) (Status: HISTORIC)
 
 0570 Experimental input mapping between NVT ASCII and UCSB On Line
-     System. J.R. Pickens. Oct-30-1973. (Not online) (Status: UNKNOWN)
+     System. J.R. Pickens. Oct-30-1973. (Format: TXT=177.PS=.PDF= bytes)
+     (Status: UNKNOWN)
 
 0571 Tenex FTP problem. R.T. Braden. Nov-15-1973. (Not online)
      (Status: UNKNOWN)
@@ -5514,10 +5516,10 @@ See the RFC Editor Web page http://www.rfc-editor.org
      (Status: HISTORIC)
 
 1611 DNS Server MIB Extensions. R. Austein, J. Saperia. May 1994.
-     (Format: TXT=58700 bytes) (Status: PROPOSED STANDARD)
+     (Format: TXT=58700 bytes) (Status: HISTORIC)
 
 1612 DNS Resolver MIB Extensions. R. Austein, J. Saperia. May 1994.
-     (Format: TXT=61382 bytes) (Status: PROPOSED STANDARD)
+     (Format: TXT=61382 bytes) (Status: HISTORIC)
 
 1613 cisco Systems X.25 over TCP (XOT). J. Forster, G. Satz, G. Glick,
      R. Day. May 1994. (Format: TXT=29267 bytes) (Status: INFORMATIONAL)
@@ -5902,7 +5904,8 @@ See the RFC Editor Web page http://www.rfc-editor.org
      (Obsoleted by RFC2167) (Status: INFORMATIONAL)
 
 1715 The H Ratio for Address Assignment Efficiency. C. Huitema.
-     November 1994. (Format: TXT=7392 bytes) (Status: INFORMATIONAL)
+     November 1994. (Format: TXT=7392 bytes) (Updated by RFC3194) (Status:
+     INFORMATIONAL)
 
 1716 Towards Requirements for IP Routers. P. Almquist, F. Kastenholz.
      November 1994. (Format: TXT=432330 bytes) (Obsoleted by RFC1812)
@@ -6527,8 +6530,8 @@ See the RFC Editor Web page http://www.rfc-editor.org
      STANDARD)
 
 1886 DNS Extensions to support IP version 6. S. Thomson, C. Huitema.
-     December 1995. (Format: TXT=6424 bytes) (Updated by RFC3152) (Status:
-     PROPOSED STANDARD)
+     December 1995. (Format: TXT=6424 bytes) (Updated by RFC2874, RFC3152)
+     (Status: PROPOSED STANDARD)
 
 1887 An Architecture for IPv6 Unicast Address Allocation. Y. Rekhter,
      T. Li, Editors. December 1995. (Format: TXT=66066 bytes) (Status:
@@ -9377,8 +9380,8 @@ See the RFC Editor Web page http://www.rfc-editor.org
      PS=1610846, PDF=315195 bytes) (Status: INFORMATIONAL)
 
 2639 Internet Printing Protocol/1.0: Implementer's Guide. T. Hastings,
-     C. Manros. July 1999. (Format: TXT=145086 bytes) (Status:
-     INFORMATIONAL)
+     C. Manros. July 1999. (Format: TXT=145086 bytes) (Obsoleted by
+     RFC3196) (Status: INFORMATIONAL)
 
 2640 Internationalization of the File Transfer Protocol. B. Curtin.
      July 1999. (Format: TXT=57204 bytes) (Updates RFC0959) (Status:
@@ -10262,7 +10265,8 @@ See the RFC Editor Web page http://www.rfc-editor.org
 
 2874 DNS Extensions to Support IPv6 Address Aggregation and
      Renumbering. M. Crawford, C. Huitema. July 2000. (Format: TXT=44204
-     bytes) (Updated by RFC3152) (Status: PROPOSED STANDARD)
+     bytes) (Updates RFC1886) (Updated by RFC3152) (Status: PROPOSED
+     STANDARD)
 
 2875 Diffie-Hellman Proof-of-Possession Algorithms. H. Prafullchandra,
      J. Schaad. July 2000. (Format: TXT=45231 bytes) (Status: PROPOSED
@@ -11423,6 +11427,10 @@ See the RFC Editor Web page http://www.rfc-editor.org
 3185 Reuse of CMS Content Encryption Keys. S. Farrell, S. Turner.
      October 2001. (Format: TXT=20404 bytes) (Status: PROPOSED STANDARD)
 
+3186 MAPOS/PPP Tunneling mode. S. Shimizu, T. Kawano, K. Murakami, E.
+     Beier. December 2001. (Format: TXT=27109 bytes) (Status:
+     INFORMATIONAL)
+
 3187 Using International Standard Book Numbers as Uniform Resource
      Names. J. Hakala, H. Walravens. October 2001. (Format: TXT=22620
      bytes) (Status: INFORMATIONAL)
@@ -11443,5 +11451,25 @@ See the RFC Editor Web page http://www.rfc-editor.org
      S. Booth. November 2001. (Format: TXT=63804 bytes) (Status: PROPOSED
      STANDARD)
 
+3194 The H-Density Ratio for Address Assignment Efficiency An Update
+     on the H ratio. A. Durand, C. Huitema. November 2001. (Format:
+     TXT=14539 bytes) (Updates RFC1715) (Status: INFORMATIONAL)
+
 3195 Reliable Delivery for syslog. D. New, M. Rose. November 2001.
      (Format: TXT=60960 bytes) (Status: PROPOSED STANDARD)
+
+3196 Internet Printing Protocol/1.1: Implementor's Guide. T. Hastings,
+     C. Manros, P. Zehler, C. Kugler, H. Holst. November 2001. (Format:
+     TXT=200720 bytes) (Obsoletes RFC2639) (Status: INFORMATIONAL)
+
+3197 Applicability Statement for DNS MIB Extensions. R. Austein.
+     November 2001. (Format: TXT=8610 bytes) (Status: INFORMATIONAL)
+
+3198 Terminology for Policy-Based Management. A. Westerinen, J.
+     Schnizlein, J. Strassner, M. Scherling, B. Quinn, S. Herzog, A.
+     Huynh, M. Carlson, J. Perry, S. Waldbusser. November 2001. (Format:
+     TXT=47806 bytes) (Status: INFORMATIONAL)
+
+3203 DHCP reconfigure extension. Y. T'Joens, C. Hublet, P. De
+     Schrijver. December 2001. (Format: TXT=11857 bytes) (Status: PROPOSED
+     STANDARD)
