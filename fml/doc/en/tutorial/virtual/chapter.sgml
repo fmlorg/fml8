@@ -1,0 +1,87 @@
+<!--
+   $FML$
+   $jaFML: chapter.sgml,v 1.2 2003/04/15 14:51:47 fukachan Exp $
+-->
+
+<chapter id="virtualdomain">
+	<title>
+	virtual domain handling
+	</title>
+
+<para>
+It is difficult to handle virtual domains and the default domain in
+same ways.
+</para>
+
+<para>
+We user "user@domain" form for the ML name if it is an ML of a virtual
+domain. For example, for a virtual domain, use makefml like this
+<screen>
+% makefml newml mlname@virtualdomain
+</screen>
+but both syntaxes are ok for the default domain.
+<screen>
+% makefml newml mlname@defaultdomain
+% makefml newml mlname
+</screen>
+fml treats these properly as could as possible but fml needs some
+hints such as the ml home directory information.
+You need to prepare /usr/local/etc/fml/virtual file for a hint on
+domain to directory mappings.
+This file name is $virtual_maps in main.cf.
+</para>
+
+
+<sect1 id="virtualdomain.fml8.overview">
+	<title>
+	Overview: virtual domain handling in &fmldevel;
+	</title>
+
+<para>
+It is easy. Prepare
+<link linkend="install.virtual">
+/etc/fml/virtual
+</link>
+file. 
+After that, use "user@domain" form in makefml for virtual domains.
+<screen>
+makefml newml	ML@virtualdomain
+makefml add	ML@virtualdomain	address
+makefml bye	ML@virtualdomain	address
+</screen>
+Instead, for the default domain, either of user and user@domain is
+accpetable.
+</para>
+
+<para>
+When you use CGI, you need not to use user@domain syntax 
+since the url of config.cgi includes the domain name.
+<screen>
+http://lists/~fml/cgi-bin/fml/$domain/admin/config.cgi
+</screen>
+</para>
+
+<warning>
+<para>
+The domain name is hard-coded within config.cgi.  makefml inject the
+domain name in creating config.cgi when "makefml newml" runs.
+config.cgi does not resolve its domain by URL.
+</para>
+</warning>
+
+</sect1>
+
+
+<sect1 id="virtualdomain.movement">
+	<title>
+	Case study: movement ?
+	</title>
+
+<para>
+NOT YET WRITTEN.
+</para>
+
+</sect1>
+
+
+</chapter>
