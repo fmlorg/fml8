@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.10 2002/12/18 04:23:41 fukachan Exp $
+# $FML: Analyze.pm,v 1.11 2002/12/23 21:28:32 fukachan Exp $
 #
 
 package FML::Error::Analyze;
@@ -77,6 +77,7 @@ sub simple_count
     my $summary    = {};
     my $config     = $curproc->config();
     my $limit      = $config->{ error_analyzer_simple_count_limit } || 5;
+    my $daylimit   = $config->{ error_analyzer_day_limit } || 14;
 
     while (($addr, $bufarray) = each %$data) {
 	$count = 0;
@@ -85,6 +86,8 @@ sub simple_count
 	if (defined $bufarray) {
 	    for my $buf (@$bufarray) {
 		if ($buf =~ /status=5/i) {
+		    ($time, $status, $reason) = split(/\s+/, $buf);
+		    next if((time - $time) > (86400*$daylimit));
 		    $count++;
 		    $summary->{ $addr } = $count;
 		}
@@ -139,12 +142,14 @@ sub error_continuity
     my $summary    = {};
     my $config     = $curproc->config();
     my $limit      = $config->{ error_analyzer_simple_count_limit } || 14;
+    my $daylimit   = $config->{ error_analyzer_day_limit } || 14;
 
     while (($addr, $bufarray) = each %$data) {
 	$count = 0;
 	if (defined $bufarray) {
 	    for my $buf (@$bufarray) {
 		($time, $status, $reason) = split(/\s+/, $buf);
+		next if((time - $time) > (86400*$daylimit));
 
 		if ($buf =~ /status=5/i) {
 		    unless (defined $summary->{ $addr }) {
