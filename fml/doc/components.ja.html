@@ -12,20 +12,20 @@
 <!-- ================== body =========================================== -->
 <PRE>
 
-       fml/{distribute,command, ... }
-            |||
+       libexec/fmlwrapper
+             |
+       libexec/fml
+             |
   -------- 乖離層 --------
-            |||
-       FML::BaseSystem
-       |            |  
-   FML::Config      |
-    |     |      logging() 
-    |     |       |     |
-  file   DBMS   file  syslog(3)
-</PRE>
+             |
+  FML::* 
+         Mail::*
+         Jcode:*
+         MIME::*
 
-FML::BaseSystem は設定の保守とログとりをサポートする最低限の基本システ
-ムのクラスといえる。
+         Netlib::SMTP
+                 IO::*
+</PRE>
 
 <!-- =================================================================== -->
 </BODY>

@@ -43,7 +43,10 @@ fml5 [ fml リファクトリング プロジェクト (Refactroing Project) ]
 	<EM> メインプログラムの wrapper (乖離層) </EM>
 	バージョン管理やデバッグを簡単にするための乖離層
 	<PRE>
-	fml.pl --- /etc/fml/wrapper.cf  ---&gt fml/$VERSION/libexec/distribute	
+	fml.pl ---> /etc/fml/main.cf
+	       ---> libexec/fml.pl
+	       ---> libexec/$VERSION/fml
+	       ---> lib/$VERSION/モジュール
 	</PRE>
 
   <TR>
@@ -97,13 +100,13 @@ fml5 [ fml リファクトリング プロジェクト (Refactroing Project) ]
 	<EM> 関数名ルールの統一 </EM>
 	<BR>
 	main:: スペースに出てくるものは従来通り X11 風準拠に。
-	<BR>
 	メソッドは他のモジュールにあるようなそれっぽい小文字の名前をつける。
-	<BR>
 	lisp 的要素を廃止する。
-	<BR>
 	参考文献 Perl Cookbook として、
-	そこにあるようなシンタックス風を推奨する？例:
+	そこにあるようなシンタックス風を推奨する？
+	<BR>
+	例:
+	メソッドなら is_member() で、大域関数なら
 	<PRE> 
 	MemberP() -> IsMember()
 	</PRE> 
