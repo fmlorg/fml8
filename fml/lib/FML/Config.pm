@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.62 2002/06/30 14:30:13 fukachan Exp $
+# $FML: Config.pm,v 1.63 2002/07/02 03:50:51 fukachan Exp $
 #
 
 package FML::Config;
@@ -130,7 +130,6 @@ sub new
     if (defined $args) {
 	my ($k, $v);
 	while (($k, $v) = each %$args) {
-	    print "set($me, $k, $v)\n" if $0 =~ /loader/; # debug
 	    set($me, $k, $v);
 	}
     }
