@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.7 2002/09/22 14:56:56 fukachan Exp $
+# $FML: Command.pm,v 1.8 2002/12/15 15:17:18 fukachan Exp $
 #
 
 package FML::Restriction::Command;
@@ -55,7 +55,8 @@ sub is_secure_command_string
    #      mail address = [-_\w]+@[\w\-\.]+
    #   command options = last:30
    #
-   # XXX-TODO: sync w/ mailaddress regexp in FML::Restriction::Base.
+   # XXX sync w/ mailaddress regexp in FML::Restriction::Base ?
+   # XXX hmm, it is difficult.
    #
    if ($s =~/^[-\d\w]+\s*$/o) {
        return 1;
@@ -65,32 +66,6 @@ sub is_secure_command_string
    }
 
    return 0;
-}
-
-
-=head2 C<is_valid_mail_address($string)>
-
-check if C<$strings> contains no Japanese string.
-return 1 if $string looks valid email address.
-
-=cut
-
-
-# Descriptions: $s is valid email address ?
-#    Arguments: STR($s)
-# Side Effects: none
-# Return Value: 1 or 0
-sub is_valid_mail_address
-{
-    my ($s) = @_;
-
-    #
-    # XXX-TODO: sync w/ mailaddress regexp in FML::Restriction::Base.
-    #
-
-    # 1. NOT Japanese strings
-    ($s !~ /\s|\033\$[\@B]|\033\([BJ]/ &&
-     $s =~ /^[\0-\177]+\@[\0-\177]+$/) ? 1 : 0;
 }
 
 
@@ -104,7 +79,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002 Ken'ichi Fukamachi
+Copyright (C) 2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
