@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Message.pm,v 1.2 2001/11/09 13:30:38 fukachan Exp $
+# $FML: Message.pm,v 1.3 2001/11/10 09:04:28 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::Message;
@@ -102,8 +102,14 @@ sub _valid_buf
 sub _delete_subject_tag_like_string
 {
     my ($str) = @_;
-    use Mail::Message::Utils;
-    return Mail::Message::Utils::remove_subject_tag_like_string($str);
+
+    if (defined $str) {	
+	use Mail::Message::Utils;
+	return Mail::Message::Utils::remove_subject_tag_like_string($str);
+    }
+    else {
+	return undef;
+    }
 }
 
 
@@ -113,15 +119,20 @@ sub header_summary
     my $date    = $args->{ header }->get('date');
     my $from    = $args->{ header }->get('from');
     my $subject = $args->{ header }->get('subject');
-    my $padding = $args->{ padding };
+    my $padding = $args->{ padding } || '   ';
 
-    $subject = decode_mime_string($subject, { charset => 'euc-japan' });
-    $subject =~ s/\n/ /g;
-    $subject = _delete_subject_tag_like_string($subject);
-    $subject =~ s/[\s\n]*$//g;    
-    $from    = $self->_who_of_address( $from );
-    $from    =~ s/\n/ /g;
-    $from    =~ s/[\s\n]*$//g;
+    if (defined $subject) {
+	$subject = decode_mime_string($subject, { charset => 'euc-japan' });
+	$subject =~ s/\n/ /g;
+	$subject = _delete_subject_tag_like_string($subject);
+	$subject =~ s/[\s\n]*$//g;    
+    }
+
+    if (defined $from) {
+	$from    = $self->_who_of_address( $from );
+	$from    =~ s/\n/ /g;
+	$from    =~ s/[\s\n]*$//g;
+    }
 
     # return buffer
     my $r = $padding. $date;
