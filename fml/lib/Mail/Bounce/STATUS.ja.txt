@@ -1,12 +1,20 @@
 ○ 実装済み
 
+   MTA specific
+
 	DSN (RFC1894, e.g. Postfix-release, Sendmail, et. al.)
 	Postfix 19991231
 	Qmail
 	Exim
 
+   ISP specific
+
+	biglobe.ne.jp
+
+
    要テスト
 	Smtpfeed -F オプション
+
 
 --------------------------------------------------------------------
 
@@ -71,4 +79,4 @@
 		今は sendmail みたいだ
 
 
-$FML$
+$FML: STATUS.ja.txt,v 1.2 2001/04/10 15:27:49 fukachan Exp $
