@@ -1,6 +1,72 @@
 		CHANGES
 		Last Modified: $Date$
 
+2001/11/08
+
+   FML::Command 
+	defined() check for $command_args
+	
+   FML::Process::Switch 
+	modify error message
+
+2001/11/07
+
+   FML::Process::Switch ThreadTrack.pm 
+   Mail::ThreadTrack 
+   Mail::ThreadTrack::Print 
+	
+	enable fmlthread options:
+	--article_id_max=\d+  to override ::var::spool::ml::$ml::seq
+	--reverse             to reverse time order in showing "review"
+	
+   Mail::ThreadTrack::DB 
+	
+	remove not used variables
+	
+   FML::Process::Switch ThreadTrack.pm 
+   Mail::ThreadTrack::Analyze 
+	
+	fmlthread -f filterlist ...
+	
+   Mail::ThreadTrack::DB 
+	
+	show ... when processing
+	
+   Mail::ThreadTrack::Print 
+	
+	check -f article_file
+	
+   FML::Process::Utils 
+	
+	command_line_argv_find()
+	
+   FML::Process::ThreadTrack 
+	
+	fmlthread review ML RANGE srcdir=::some::where
+	XXX srcdir=\S+ overwrites config->{ spool_dir } variable
+	
+   Mail::ThreadTrack 
+	
+	define add_filter() method
+	
+   FML::Process::Switch ThreadTrack.pm 
+	
+	we should use long line options since we support it :)
+	o define --spool_dir for fmlthread. for example:
+	% fmlthread db_clear fml-help
+	% fmlthread --spool_dir=::some::where -f ::tmp::filter db_rebuild fml-help
+	% fmlthread --spool_dir=::some::where review fml-help last:100
+	
+
+
+2001/11/06
+
+   スレッド review と再生成をリモートでできるようにするとちょっと便利
+
+	fmlthread db_clear fml-help
+	fmlthread --spool_dir=/some/where -f /tmp/filter db_rebuild fml-help
+	fmlthread --spool_dir=/some/where review fml-help last:100
+
 2001/11/05
 
    fmlthread review
@@ -837,4 +903,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.30 2001/11/04 13:55:01 fukachan Exp $
+$FML: CHANGES.txt,v 1.31 2001/11/05 14:37:47 fukachan Exp $
