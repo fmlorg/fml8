@@ -51,6 +51,13 @@ status.
        |                 |
     minimal_states     model2    ....
 
+If you use fmlticket.cgi, the hierarchy follows:
+
+        FML::Process::Kernel
+                |
+                A 
+        FML::Process::CGI has-a FML::CGI::TicketSystem::minimal_states
+
 =head1 METHODS
 
 =head2 C<new($curproc, $args)>
