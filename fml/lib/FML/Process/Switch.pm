@@ -130,6 +130,7 @@ sub main::Bootstrap2
 	fml_version    => $main_cf->{ fml_version },
 	
 	myname         => $myname,
+	program_name   => $myname,
 	ml_home_prefix => $main_cf->{ ml_home_prefix },
 	ml_home_dir    => $main_cf->{ ml_home_dir },
 	
@@ -319,6 +320,9 @@ sub _module_specific_options
     elsif ($myname eq 'makefml') {
 	return qw(debug! params=s -c=s);	
     }
+    elsif ($myname eq 'makefml.cgi') {
+	return qw(debug!);
+    }
     else {
 	croak "options for $myname are not defined.\n";
     }
@@ -380,6 +384,9 @@ sub _module_we_use
     }
     elsif ($name eq 'qmail-ext') {
 	$pkg = 'FML::Process::QMail';
+    }
+    elsif ($name eq 'makefml.cgi') {
+	$pkg = 'FML::CGI::Configure';
     }
     else {
 	return '';
