@@ -42,7 +42,7 @@ sub increment_id
 }
 
 
-sub _pcb_save_id
+sub _pcb_set_id
 {
     my ($self, $curproc, $id) = @_;
     my $pcb = $curproc->{ pcb }; # FML::PCB object

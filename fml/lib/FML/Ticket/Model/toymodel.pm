@@ -56,7 +56,7 @@ sub assign
 
 	# O.K. rewrite Subject: of the article to distribute
 	unless ($self->error) {
-	    $self->_pcb_save_id($curproc, $id);
+	    $self->_pcb_set_id($curproc, $id); # save $id info in PCB
 	    $self->_rewrite_subject($header, $config, $id);
 	}
 	else {
