@@ -250,10 +250,24 @@ sub deliver
 	push(@maps, $map);
     }
 
+
   MAP:
     for my $map ( @maps ) {
 	# uniq $map
 	next if $used_map{ $map }; $used_map{ $map } = 1;
+
+	# try to open $map
+	eval q{
+	    use IO::MapAdapter;
+	    my $obj = new IO::MapAdapter $map;
+	    if (defined $obj) { 
+		$obj->open || croak("cannot open $map");
+	    }
+	};
+	if ($@) {
+	    Log("Error: cannot open and ignore $map");
+	    next MAP;
+	}
 	
 	$self->_set_target_map($map);
 	$self->_set_map_status($map, 'not done');
@@ -467,7 +481,10 @@ sub _send_recipient_list_by_recipient_map
 	my $num_recipients = 0;
 	my $recipient_limit = $self->{_recipient_limit};
 
-	$obj->open;
+	$obj->open || do {
+	    $self->_error_why( $obj->error );
+	    return undef;
+	};
 
 	# roll back the previous file offset
 	if ($self->_get_map_position($map) > 0) {
