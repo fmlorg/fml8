@@ -9,9 +9,6 @@ use IO::MapAdapter;
 
 my $map = 'mysql:toymodel';
 
-my $q_getline = "select address from ml where ml='elena' and file='members'";
-my $q_add     = "insert into ml values ('elena', 'members', '\%s', 0, 0)";
-my $q_delete  = "delete from ml where ml='elena' and address='\%s'";
 
 my $map_params = {
     $map => {
@@ -22,11 +19,9 @@ my $map_params = {
 	    database      => 'fml',
 	    table         => 'ml',
 	},
-	query  => {
-	    getline        => $q_getline,
-	    get_next_value => $q_getline,
-	    add            => $q_add,
-	    delete         => $q_delete,
+	params  => {
+	    ml_name       => 'elena',
+	    file          => 'members',
 	},
     },
 };

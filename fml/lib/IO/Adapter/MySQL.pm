@@ -13,13 +13,14 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
+use IO::Adapter::DBI;
+@ISA = qw(IO::Adapter::DBI);
+
 =head1 NAME
 
 IO::Adapter::MySQL - interface to talk with a MySQL server
 
 =head1 SYNOPSIS
-
-
 
 =head1 DESCRIPTION
 
@@ -32,7 +33,7 @@ Each model name is specified at $args->{ schema } in new($args).
 
 =head1 METHODS
 
-=head2 C<new($args)>
+=head2 C<configure($me, $args)>
 
 =cut
 
@@ -41,168 +42,35 @@ sub configure
     my ($self, $me, $args) = @_;
     my $map    = $me->{ _map };
     my $config = $args->{ $map }->{ config };
-    my $query  = $args->{ $map }->{ query };
+    my $params = $args->{ $map }->{ params };
 
     # import basic DBMS parameters
+    $me->{ _config }        = $config;
+    $me->{ _params }        = $params;
     $me->{ _sql_server }    = $config->{ sql_server }    || 'localhost';
     $me->{ _database }      = $config->{ database }      || 'fml';
     $me->{ _table }         = $config->{ table }         || 'ml';
     $me->{ _user }          = $config->{ user }          || 'fml';
     $me->{ _user_password } = $config->{ user_password } || '';
-    $me->{_dsn}             = _get_dsn($me, {
+    $me->{_dsn}             = $self->SUPER::make_dsn( {
 	driver     =>  'mysql',
 	database   =>  $me->{ _database },
 	host       =>  $me->{ _sql_server },
     });
     
-    # we want to pass basic parameters from caller.
-    $me->{ _schema }        = $config->{ schema } || 'toymodel';
-    $me->{ _query }         = $query || '';
-}
-
-
-sub _get_dsn
-{
-    my ($self, $args) = @_;
-    my $driver   = $args->{ driver };
-    my $database = $args->{ database };
-    my $host     = $args->{ host };
-
-    return "DBI:$driver:$database:$host";
-}
-
-
-=head2 C<open($args)>
-
-=head2 C<close($args)>
-
-=cut
-
-
-# Descriptions: 
-#    Arguments: $self $args
-# Side Effects: 
-# Return Value: none
-sub open
-{
-    my ($self, $args) = @_;
-
-    use DBI;
-    use DBD::mysql;
-
-    my $dsn      = $self->{ _dsn };
-    my $user     = $self->{ _user }        || 'fml';
-    my $password = $self->{_user_password} || '';
-
-    # try to connect
-    my $dbh = DBI->connect($dsn, $user, $password);
-    unless (defined $dbh) { 
-	$self->error_reason( $DBI::errstr );
-	return undef;
-    }
-
-    $self->{ _dbh } = $dbh;
-}
-
-
-# Descriptions: 
-#    Arguments: $self $args
-# Side Effects: 
-# Return Value: none
-sub close
-{ 
-    my ($self, $args) = @_;
-    my $res = $self->{ _res };
-    my $dbh = $self->{ _dbh };
-
-    $res->finish     if defined $res;
-    $dbh->disconnect if defined $dbh;
-    delete $self->{ _res };
-    delete $self->{ _dbh };
-}
-
-
-=head2 C<load_schema($args)>
-
-=cut
-
-sub load_schema
-{
-    my ($self, $args) = @_;
-
-    # load model dependent module specified by $args->{ schema };
-    if (defined $self->{ schema }) {
-	my $schema = $self->{ schema };
-	my $pkg    = "SQL::Schema::${schema}";
-	my $obj    = '';
-	eval qq{ require $pkg; $pkg->import(); \$obj = $pkg->new(); };
-	unless ($@) {
-	    $self->{ _schema } = $obj;
-	} 
-	else {
-	    print $@;
-	    error_reason($self, $@);
-	    return undef;
-	}
-    }
-}
-
-
-=head2 C<execute($args)>
-
-execute sql query.
-
-    $args->{ 
-	query => sql_query_statment,
-    };
-
-=cut
-
-
-sub execute
-{
-    my ($self, $args) = @_;
-    my $dbh   = $self->{ _dbh };
-    my $query = $args->{  query };
-
-    if (defined $dbh) {
-	my $res = $dbh->prepare($query);
-
-	if (defined $res) {
-	    $res->execute;
-	    $self->{ _res } = $res;
-	    return $res;
-	}
-	else {
-	    $self->error_reason( $DBI::errstr );
-	    return undef;
-	}
+    # load model specific library
+    my $schema = $config->{ schema } || 'toymodel';
+    my $pkg    = "SQL::Schema::". $schema;
+    eval qq{ require $pkg; $pkg->import();};
+    print $@;
+    unless ($@) {
+	@ISA = ($pkg, @ISA);
+	$me->{ _schema } = $pkg;
     }
     else {
-	$self->error_reason( $DBI::errstr );
+	error_reason($self, $@);
 	return undef;
     }
-}
-
-
-
-=head2 C<error_reason($mesg)>
-
-=head2 C<error()>
-
-=cut
-
-sub error_reason
-{
-    my ($self, $mesg) = @_;
-    $self->{ _error } = $mesg;
-}
-
-
-sub error
-{
-    my ($self) = @_;
-    return $self->{ _error };
 }
 
 
@@ -217,20 +85,6 @@ same as C<getline()> now.
 =cut
 
 
-sub _schema_configure
-{
-    my ($self, $query_type) = @_;
-    my $query  = $self->{ _query }->{ $query_type };
-
-    if (ref($query) eq 'CODE') {
-	$query = &$query();
-    }
-    else {
-	$query;
-    }
-}
-
-
 sub getline
 {
     my ($self, $args) = @_;
@@ -242,9 +96,17 @@ sub get_next_value
 {
     my ($self, $args) = @_;
 
+    # for the first time
     unless ($self->{ _res }) {
-	my $query = $self->_schema_configure('get_next_value');
-	$self->execute({ query => $query });
+	if ( $self->{ _schema }->can('get_next_value') ) {
+	    $self->{ _schema }->get_next_value($args);
+	}
+	else {
+	    my $query = $self->build_sql_query({ 
+		query   => 'get_next_value',
+	    });
+	    $self->execute({ query => $query });
+	}
     }
 
     if ($self->{ _res }) {
@@ -258,7 +120,9 @@ sub get_next_value
 }
 
 
-=head2 C<add()>
+=head2 C<add($addr)>
+
+=head2 C<delete($addr)>
 
 =cut
 
@@ -266,18 +130,34 @@ sub get_next_value
 sub add
 {
     my ($self, $addr) = @_;
-    my $query = $self->_schema_configure('add');
-    $query = sprintf($query, $addr);
-    $self->execute({ query => $query });
+
+    if ( $self->{ _schema }->can('add') ) {
+	$self->{ _schema }->add($addr);
+    }
+    else {
+	my $query = $self->build_sql_query({ 
+	    query   => 'add',
+	    address => $addr,
+	});
+	$self->execute({ query => $query });
+    }
 }
 
 
 sub delete
 {
     my ($self, $addr) = @_;
-    my $query = $self->_schema_configure('delete');
-    $query = sprintf($query, $addr);
-    $self->execute({ query => $query });
+
+    if ( $self->{ _schema }->can('delete') ) {
+	$self->{ _schema }->delete($addr);
+    }
+    else {
+	my $query = $self->build_sql_query({ 
+	    query   => 'delete',
+	    address => $addr,
+	});
+	$self->execute({ query => $query });
+    }
 }
 
 

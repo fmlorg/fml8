@@ -31,8 +31,26 @@ model.
 
 =cut
 
-sub new
+
+sub build_sql_query
 {
+    my ($self, $args) = @_;
+    my $query   = $args->{ query };
+    my $ml_name = $self->{ _params }->{ ml_name };
+    my $file    = $self->{ _params }->{ file };
+    my $address = $args->{ address };
+    my $table   = $self->{ _table };
+
+    if ($query eq 'add') {
+	"insert into $table values ('$ml_name', '$file', '$address', 0, 0)";
+    }
+    elsif ($query eq 'delete') {
+	"delete from $table where ml='$ml_name' and address='$address'";
+    }
+    else {
+	"select address from $table where ml='$ml_name' and file='$file'";
+    }
 }
+
 
 1;
