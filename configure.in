@@ -1,5 +1,5 @@
 dnl
-dnl $FML: configure.in,v 1.17 2002/04/20 11:18:21 fukachan Exp $
+dnl $FML: configure.in,v 1.18 2002/04/21 13:10:33 fukachan Exp $
 dnl
 AC_REVISION($Revision$)
 
@@ -37,7 +37,10 @@ AC_PATH_PROG(BUNZIP2,  bunzip2)
 AC_PATH_PROG(UUENCODE, uuencode)
 AC_PATH_PROG(COMPRESS, compress)
 
-AC_PATH_PROG(SENDMAIL, sendmail)
+AC_PATH_PROG(SENDMAIL,   sendmail)
+AC_PATH_PROG(NEWALIASES, newaliases)
+AC_PATH_PROG(POSTFIX,    postfix)
+AC_PATH_PROG(POSTALIAS,  postalias)
 
 AC_PATH_PROG(NKF,      nkf)
 AC_PATH_PROG(KAKASI,   kakasi)
