@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.16 2002/04/08 12:44:24 fukachan Exp $
+# $FML: SendFile.pm,v 1.17 2002/07/02 12:05:49 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -118,51 +118,12 @@ sub _is_valid_argument
     my $file     = $config->{ sequence_file };
     my $sequence = new File::Sequence { sequence_file => $file };
 
-    if ($fn =~ /^\d+$/) {
-	return [ $fn ];
-    }
-    elsif ($fn =~ /^[\d,]+$/) {
-	my (@fn) = split(/,/, $fn);
-	return \@fn;
-    }
-    elsif ($fn =~ /^(\d+)\-(\d+)$/) {
-	my ($first, $last) = ($1, $2);
-	return _expand_range($first, $last);
-    }
-    elsif ($fn eq 'first') {
-	return [ 1 ];
-    }
-    elsif ($fn eq 'last' || $fn eq 'cur') {
-	my $last_id = $sequence->get_id();
-	return [ $last_id ];
-    }
-    elsif ($fn =~ /^first:(\d+)$/) {
-	my $range = $1;
-        return _expand_range(1, 1 + $range);
-    }
-    elsif ($fn =~ /^last:(\d+)$/) {
-	my $range   = $1;
-	my $last_id = $sequence->get_id();
-        return _expand_range($last_id - $range, $last_id);
-    }
-    else {
-	return undef;
-    }
-}
+    use Mail::Message::MH;
+    my $mh      = new Mail::Message::MH;
+    my $last_id = $sequence->get_id();
 
-
-# Descriptions: make an array from $fist to $last number.
-#               This array is composed of article numbers.
-#    Arguments: NUM($first_number) NUM($last_number)
-# Side Effects: none
-# Return Value: ARRAY_REF as [ $first .. $last ]
-sub _expand_range
-{
-    my ($first, $last) = @_;
-    my (@fn) = ();
-
-    for ($first .. $last) { push(@fn, $_);}
-    return \@fn;
+    # XXX we assume min_id = 1, but not correct always.
+    return $mh->expand($fn, 1, $last_id);
 }
 
 
