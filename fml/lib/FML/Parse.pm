@@ -5,12 +5,11 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML: Parse.pm,v 1.13 2001/04/06 16:25:41 fukachan Exp $
+# $FML: Parse.pm,v 1.14 2001/04/08 06:43:49 fukachan Exp $
 #
 
 package FML::Parse;
 
-use vars qw($InComingMessage);
 use strict;
 use Carp;
 use FML::Header;
