@@ -178,7 +178,7 @@ sub _update_db
     $rh->{ _articles }->{ $ticket_id }  .= $article_id . " ";
 
     # sender
-    my $header = $curproc->{ incoming_mail }->{ header };
+    my $header = $curproc->{ incoming_message }->{ header };
     $rh->{ _sender }->{ $article_id } = $header->get('from');
 
     # default value of status

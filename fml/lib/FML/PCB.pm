@@ -139,9 +139,9 @@ which are mainly hashes.
 		# emulator mode though fml mode in fact
 		emulator => $emulator,
 
-		# struct incoming_mail holds the mail input from STDIN.
-		incoming_mail => $r_msg,
-		article       => $r_msg,
+		# struct incoming_message holds the mail input from STDIN.
+		incoming_message => $r_msg,
+		article          => $r_msg,
 		};
 
 We use r_variable_name syntax where "r_" implies "reference to" here.

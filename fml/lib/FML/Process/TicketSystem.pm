@@ -84,45 +84,11 @@ sub AUTOLOAD
 
 =head1 NAME
 
-distribute -- fml5 article distributer program.
+TicketSystem -- primitive fml5 ticket system
 
 =head1 SYNOPSIS
 
-   distribute [-d] config.cf
-
 =head1 DESCRIPTION
-
-libexec/fml.pl, the wrapper, executes this program. For example, The
-incoming mail to elena@fml.org kicks off libexec/distribute via
-libexec/fml.pl, whereas mail to elena-ctl@fml.org kicks off
-libexec/command finally.
-
-   incoming_mail =>
-      elena@fml.org       => fml.pl => libexec/distribute
-      elena-ctl@fml.org   => fml.pl => libexec/command
-      elena-admin@fml.org => forwarded to administrator(s)
-                                  OR
-                          => libexec/mead
-
-C<-d>
-    debug on.
-
-=head1 FLOW AROUND COMPONENTS
-
-   |  <=> FML::BaseSystem
-   |      load configuration files
-   |      start logging service
-   |
-   |  STDIN                     => FML::Parse
-   |  $CurProc->{'incoming_mail'} <=
-   |  $CurProc->{'credential'}
-   | 
-   |  (lock)
-   |  prepare article
-   |  $CurProc->{'article'} is spooled in.
-   |  $CurProc->{'article'}    <=> Service::SMTP
-   |  (unlock)
-   V
 
 =cut
 

@@ -65,7 +65,7 @@ sub new
 sub prepare
 {
     my ($curproc, $args) = @_;
-    $curproc->parse_incoming_mail();
+    $curproc->parse_incoming_message();
 }
 
 
@@ -143,7 +143,7 @@ sub ValidateInComingMail
 sub verify_sender_credential
 {
     my ($curproc, $args) = @_;
-    my $r_msg = $curproc->{'incoming_mail'};
+    my $r_msg = $curproc->{'incoming_message'};
     my $from  = $r_msg->{'header'}->get('from');
 
     use Mail::Address;
@@ -189,7 +189,7 @@ sub load_config_files
 }
 
 
-sub parse_incoming_mail
+sub parse_incoming_message
 {
     my ($curproc, $args) = @_;
 
@@ -200,7 +200,7 @@ sub parse_incoming_mail
     # $r_msg is the reference to the memory area.
     my $r_msg = {};
     ($r_msg->{'header'}, $r_msg->{'body'}) = new FML::Parse $curproc, \*STDIN;
-    $curproc->{'incoming_mail'} = $r_msg;
+    $curproc->{'incoming_message'} = $r_msg;
 }
 
 

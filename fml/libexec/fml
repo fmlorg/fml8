@@ -107,7 +107,7 @@ incoming mail to elena@fml.org kicks off libexec/distribute via
 libexec/fml.pl, whereas mail to elena-ctl@fml.org kicks off
 libexec/command finally.
 
-   incoming_mail =>
+   incoming_message =>
       elena@fml.org       => fml.pl => libexec/distribute
       elena-ctl@fml.org   => fml.pl => libexec/command
       elena-admin@fml.org => forwarded to administrator(s)
@@ -123,8 +123,8 @@ C<-d>
    |      load configuration files
    |      start logging service
    |
-   |  STDIN                     => FML::Parse
-   |  $CurProc->{'incoming_mail'} <=
+   |  STDIN                           => FML::Parse
+   |  $CurProc->{'incoming_message'} <=
    |  $CurProc->{'credential'}
    | 
    |  (lock)

@@ -44,7 +44,7 @@ sub _setup_article_template
     my ($curproc) = @_;
 
     # setup article to distribute
-    my $msg = $curproc->{'incoming_mail'};
+    my $msg = $curproc->{'incoming_message'};
 
     # create an article template by duplicating the incoming message
     $curproc->{ article }->{ header } = $msg->{'header'}->dup();
