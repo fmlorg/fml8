@@ -101,6 +101,7 @@ commands_for_admin_cgi	=		subscribe
 					unsubscribe
 					addadmin
 					byeadmin
+					list
 					log
 					newml
 					rmml
