@@ -4,11 +4,11 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Adapter.pm,v 1.7 2001/08/26 05:52:08 fukachan Exp $
+# $FML: Adapter.pm,v 1.8 2001/09/17 11:28:31 fukachan Exp $
 #
 
 package IO::Adapter;
-use vars qw(@ISA @ORIG_ISA $FirstTime);
+use vars qw(@ISA @ORIG_ISA $FirstTime $AUTOLOAD);
 use strict;
 use Carp;
 use IO::Adapter::ErrorStatus qw(error_set error error_clear);
@@ -398,6 +398,10 @@ sub find
 }
 
 
+=head2 C<DESTROY> 
+
+=cut
+
 # Descriptions: destructor
 #               request is forwarded to close() method.
 #    Arguments: $self $args
@@ -408,6 +412,33 @@ sub DESTROY
     my ($self) = @_;
     $self->close;
     undef $self;
+}
+
+
+
+=head2 C<AUTOLOAD(@varargs)>
+
+=cut
+
+sub AUTOLOAD
+{
+    my ($self, @varargs) = @_;
+
+    return if $AUTOLOAD =~ /DESTROY/;
+
+    my $comname = $AUTOLOAD;
+    $comname =~ s/.*:://;
+
+    # try md_something() for something()
+    my $fp = "md_${comname}";
+
+    if ($self->can($fp)) {
+	$self->$fp(@varargs);
+    }
+    else {
+	croak("${comname}() nor md_${comname}() is not found");
+	croak($@);
+    }
 }
 
 
