@@ -1,0 +1,70 @@
+=head1 メッセージ操作
+
+=head2 言語
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+reply_message_charset	=	$default_charset
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+system_message_charset	=	$default_charset
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+template_file_charset	=	euc-jp
+
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+message_default_subject	=	fml system message
+
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+reply_message_subject	=	reply from $ml_name ML
+
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+system_message_subject	=	fml system message ($ml_name ML)
+
+
+=head2 テンプレートファイル群
+
+
+# Descriptions: ヘルプファイル
+#      History:
+#        Value:
+#     Examples:
+help_file		=	$message_template_dir/help
+
+# Descriptions: ヘルプファイル
+#      History:
+#        Value:
+#     Examples:
+guide_file		=	$message_template_dir/guide
+
+# Descriptions: ヘルプファイル
+#      History:
+#        Value:
+#     Examples:
+summary_file		=	$message_template_dir/summary
+
+# Descriptions: ヘルプファイル
+#      History:
+#        Value:
+#     Examples:
+objective_file		=	$message_template_dir/objective

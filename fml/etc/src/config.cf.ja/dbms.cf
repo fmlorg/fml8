@@ -1,0 +1,87 @@
+=head1	データベース管理システムとの連携
+
+###
+### TODO
+###   うー？  
+###   DATABASE_CACHE_FILE_SUFFIX はどするん？
+###
+
+
+# Descriptions: データベース管理システムを使うか？
+#               このパラメータは必要ないと思うな…（？）
+#      History: 4.0 の $USE_DATABASE
+#        Value: yes / no
+use_database	=	no
+
+# Descriptions: データベース管理システムとの通信方法
+#      History:
+#        Value: mysql / postgresql / ldap
+#     Examples:
+database_method	=	mysql
+
+# Descriptions: データベース管理システムとの通信方法が
+#		記述されているモジュール
+#      History:
+#        Value: SQL::Schema::toymodel
+#     Examples:
+database_model	=	SQL::Schema::toymodel
+
+
+=head2	SQL の場合
+
+# Descriptions: SQL サーバ群の定義
+#      History:
+#        Value:
+#     Examples:
+sql_servers		=
+
+# Descriptions: SQL サーバにログインするためのユーザ名
+#      History:
+#        Value:
+#     Examples:
+sql_user		=	fml
+
+# Descriptions: SQL サーバにログインするためのパスワード
+#      History:
+#        Value:
+#     Examples:
+sql_user_password	=
+
+# Descriptions: データベースの名前
+#      History:
+#        Value:
+#     Examples:
+sql_database_name	=	fml
+
+
+=head2	LDAP の場合
+
+# Descriptions: LDAP サーバ
+#      History:
+#        Value:
+#     Examples:
+ldap_servers		=
+
+# Descriptions: LDAP サーバにログインするためのパスワード
+#      History:
+#        Value:
+#     Examples:
+ldap_server_password	=	
+
+# Descriptions: LDAP の search base
+#      History:
+#        Value:
+#     Examples:
+ldap_search_base	=	
+
+# Descriptions: LDAP の search bind
+#      History:
+#        Value:
+#     Examples:
+ldap_server_bind	=	
+
+# Descriptions: LDAP のフィルタ
+#      History:
+#        Value:
+#     Examples:
+ldap_query_filter	=	(objectclass=*)

@@ -1,0 +1,30 @@
+=head1	システム依存 (主に BSD との非互換性を記述している)
+
+#
+# 注意: デフォールトは NetBSD
+#
+
+# Descriptions: getpwuid(2) があるか？
+#      History:
+#        Value: yes / no
+#     Examples:
+has_getpwuid	=	yes
+
+# Descriptions: getpwgid(2) があるか？
+#      History:
+#        Value: yes / no
+#     Examples:
+has_getpwgid	=	yes
+
+# Descriptions: alarm(2) があるか？
+#      History:
+#        Value: yes / no
+#     Examples:
+has_alarm	=	yes
+
+# Descriptions: select(2) があるか？
+#      History:
+#        Value: yes / no
+#     Examples:
+has_select	=	yes
+
