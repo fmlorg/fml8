@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.10 2002/07/02 12:01:38 fukachan Exp $
+# $FML: Auth.pm,v 1.11 2002/07/18 23:17:10 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -153,7 +153,7 @@ sub check_admin_member_password
     # { $user => $encryptd_passwrod }.
     for my $map (@$maplist) {
 	use IO::Adapter;
-	my $obj   = new IO::Adapter $map;
+	my $obj   = new IO::Adapter $map, $config;
 	my $pwent = $obj->find( $user , { want => 'key,value', all => 1 });
 
 	# if this $map has this $user entry,

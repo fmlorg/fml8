@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.2 2002/04/07 04:59:45 fukachan Exp $
+# $FML: chaddr.pm,v 1.3 2002/05/29 11:26:38 fukachan Exp $
 #
 
 package FML::Command::Admin::chaddr;
@@ -102,7 +102,7 @@ sub process
 	    unless ($cred->has_address_in_map($map, $new_address)) {
 		# remove the old address.
 		{
-		    my $obj = new IO::Adapter $map;
+		    my $obj = new IO::Adapter $map, $config;
 		    $obj->touch();
 
 		    $obj->open();
@@ -119,7 +119,7 @@ sub process
 		# restart map to add the new address.
 		# XXX we need to restart or rewrind map.
 		{
-		    my $obj = new IO::Adapter $map;
+		    my $obj = new IO::Adapter $map, $config;
 		    $obj->open();
 		    $obj->add( $new_address );
 		    unless ($obj->error()) {

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.12 2002/07/14 15:15:28 fukachan Exp $
+# $FML: UserControl.pm,v 1.13 2002/07/17 12:13:23 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -51,6 +51,7 @@ sub new
 sub useradd
 {
     my ($self, $curproc, $command_args, $uc_args) = @_;
+    my $config   = $curproc->config();
     my $address  = $uc_args->{ address };
     my $maplist  = $uc_args->{ maplist };
     my $msg_args = $command_args->{ msg_args };
@@ -61,7 +62,7 @@ sub useradd
 	unless ($cred->has_address_in_map($map, $address)) {
 	    $msg_args->{ _arg_map } = $curproc->which_map_nl($map);
 
-	    my $obj    = new IO::Adapter $map;
+	    my $obj    = new IO::Adapter $map, $config;
 	    $obj->touch(); # create a new map entry (e.g. file) if needed.
 	    $obj->add( $address );
 	    unless ($obj->error()) {
@@ -93,6 +94,7 @@ sub useradd
 sub userdel
 {
     my ($self, $curproc, $command_args, $uc_args) = @_;
+    my $config   = $curproc->config();
     my $address  = $uc_args->{ address };
     my $maplist  = $uc_args->{ maplist };
     my $msg_args = $command_args->{ msg_args };
@@ -103,7 +105,7 @@ sub userdel
 	if ($cred->has_address_in_map($map, $address)) {
 	    $msg_args->{ _arg_map } = $curproc->which_map_nl($map);
 	    
-	    my $obj    = new IO::Adapter $map;
+	    my $obj    = new IO::Adapter $map, $config;
 	    $obj->delete( $address );
 	    unless ($obj->error()) {
 		Log("removed $address from map=$map");
@@ -133,12 +135,13 @@ sub userdel
 sub userlist
 {
     my ($self, $curproc, $command_args, $uc_args) = @_;
+    my $config  = $curproc->config();
     my $maplist = $uc_args->{ maplist };
     my $wh      = $uc_args->{ wh };
     my $style   = $curproc->get_print_style();
 
     for my $map (@$maplist) {
-	my $obj = new IO::Adapter $map;
+	my $obj = new IO::Adapter $map, $config;
 
 	if (defined $obj) {
 	    my $x = '';

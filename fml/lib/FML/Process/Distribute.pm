@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.83 2002/07/14 15:15:29 fukachan Exp $
+# $FML: Distribute.pm,v 1.84 2002/07/15 15:27:14 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -434,6 +434,8 @@ sub _deliver_article
 			  'recipient_limit' => $config->{smtp_recipient_limit},
 
 			  'message'         => $message,
+
+			  map_params        => $config, 
 		      });
     if ($service->error) { Log($service->error); return;}
 }

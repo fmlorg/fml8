@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.14 2002/05/27 11:20:02 fukachan Exp $
+# $FML: SMTP.pm,v 1.15 2002/06/01 05:09:28 fukachan Exp $
 #
 
 
@@ -402,7 +402,7 @@ See L<Mail::Message> for more details.
 # Return Value: none
 sub deliver
 {
-    my ($self, $args) = @_;
+    my ($self, $args, $io_params) = @_;
 
     # recipient limit
     $self->{_recipient_limit} = $args->{recipient_limit} || 1000;
@@ -433,7 +433,7 @@ sub deliver
 	# try to open $map
 	eval q{
 	    use IO::Adapter;
-	    my $obj = new IO::Adapter ($map, $args->{ map_params });
+	    my $obj = new IO::Adapter $map, $args->{ map_params };
 	    if (defined $obj) {
 		$obj->open || croak("cannot open $map");
 	    }
@@ -653,7 +653,7 @@ sub _send_recipient_list_by_recipient_map
     # $map syntax is "type:parameter", e.g.,
     # file:$filename mysql:$schema_name
     use IO::Adapter;
-    my $obj = new IO::Adapter $map;
+    my $obj = new IO::Adapter  $map, $args->{ map_params };
 
     unless (defined $obj) {
 	Log("Error: cannot get object for $map by IO::Adapter");

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.34 2002/07/15 15:27:15 fukachan Exp $
+# $FML: Utils.pm,v 1.35 2002/07/17 12:13:25 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -565,6 +565,8 @@ sub __ml_home_prefix_from_main_cf
 #               This limit comes from the architecture
 #               since this function may be used
 #               before $curproc and $config is allocated.
+#
+#               SUPPORT ONLY FILE TYPE MAPS NOT SQL NOR LDAP.
 # Side Effects: none
 # Return Value: STR
 sub __ml_home_prefix_search_in_virtual_maps
@@ -577,6 +579,7 @@ sub __ml_home_prefix_search_in_virtual_maps
 	unless ($@) {
 	  MAP:
 	    for my $map (@$virtual_maps) {
+		# XXX only support file:// map
 		my $obj = new IO::Adapter $map;
 		if (defined $obj) {
 		    $obj->open();
@@ -760,7 +763,7 @@ sub get_address_list
 	my $r = [];
 
 	for my $map (@$list) {
-	    my $io  = new IO::Adapter $map;
+	    my $io  = new IO::Adapter $map, $config;
 	    my $key = '';
 	    if (defined $io) {
 		$io->open();
