@@ -3,12 +3,12 @@
 # 配列表現には本質的に
 
 # 現在の PERMIT_POST_FROM と REJECT_ADDR をがったいしたもの
-POST_RESTRICTIONS	=	reject_system_accounts
+post_restrictions	=	reject_system_accounts
 				permit_members_only
 				reject
 
 # 現在の PERMIT_COMMAND_FROM と REJECT_ADDR をがったいしたもの
-COMMAND_RESTRICTIONS	=	reject_system_accounts
+command_restrictions	=	reject_system_accounts
 				permit_members_only
 				reject
 
