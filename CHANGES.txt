@@ -1,7 +1,52 @@
 		CHANGES
 		Last Modified: $Date$
 
-2003/03/16k5
+2003/03/18
+
+  【重要】 giant lock をなくす。粒度の細かいロックへ移行した。
+
+   FML::Command::Admin::edit get mailq 
+   FML::Command::User::deny guide help objective 
+	not need lock
+	
+   FML::Process::Kernel 
+	more logs around locks.
+	add deadlock warning.
+	reuse lock object if could.
+
+2003/03/17
+
+   特定のデータ構造を操作する関数をできるだけ集約するべく改造する
+	→ロックの粒度を細かくするため
+
+   FML::Process::Kernel 
+   Mail::Delivery::Queue 
+	fix that setrunnable() of Mail::Deliver::Queue returns the
+	correct value and FML::Process::Kernel logs the value.
+	
+   FML::Process::Distribute 
+	use new lock channel article_spool_modify to exclusive lock for both
+	sequence updating and spool writing.  In addition, locks at channel
+	article_sequence and article_spool are also done in each critical
+	section.
+	
+   FML::Command::Admin::chaddr 
+	move the main code to FML::Command::UserControl.
+	modified to use FML::Command::UserControl.
+	
+   FML::Command::Admin::changepassword 
+	move the main code to FML::Command::Auth.
+	
+   FML::Command::Auth 
+	implement change_password().
+	
+   FML::Process::Utils 
+	get_address_list() uses get_user_list() in FML::Command::UserControl.
+	
+   FML::Command::UserControl 
+	implement user_chaddr() and get_user_list().
+
+2003/03/16
 
    removed "fmlthread".
 	instead of these, use the following commands: 
@@ -4558,4 +4603,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.135 2003/03/11 16:14:23 fukachan Exp $
+$FML: CHANGES.txt,v 1.136 2003/03/16 13:04:40 fukachan Exp $
