@@ -1,5 +1,5 @@
 <!--
-   $FML: style.sgml,v 1.7 2003/10/17 08:38:24 fukachan Exp $
+   $FML: style.sgml,v 1.8 2003/11/01 02:37:16 fukachan Exp $
 -->
 
 <chapter id="programingstyle">
@@ -64,6 +64,10 @@ mail は「いわゆるメール」つまり messager/rfc822 形式のものです。
 fml システムへ入力されるものも mail だし、出ていくものも mail です。
 それらは mail から派生したサブクラスと考えられるため、
 「PREFIX_mail_属性」形式に統一する方が良いでしょう。
+が、ものすごく厳密にやると逆にわけ分からないので程ほどに。
+</para>
+
+<para>
 <screen>
 mail_何とか
 mail_default_何とか
@@ -73,7 +77,12 @@ incoming_mail_何とか
 
 use_outgoing_mail_何とか
 outgoing_mail_何とか
+
+use_report_mail_何とか
+report_mail_何とか
 </screen>
+この例でも、厳密には outgoing_report_mail とかするべきなんでしょうけど、
+そこまではやらないのが程ほどってところですね。
 </para>
 
 <para>
