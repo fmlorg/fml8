@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.56 2003/09/27 06:58:16 fukachan Exp $
+# $FML: Kernel.pm,v 1.57 2003/09/27 13:56:42 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -498,6 +498,10 @@ sub run_cgi_command_help
 }
 
 
+# Descriptions: prepare arguemnts for message handling.
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: HASH_REF
 sub _gen_msg_args
 {
     my ($curproc, $args) = @_;
@@ -590,6 +594,7 @@ sub run_cgi_options
     my ($curproc, $args) = @_;
     my $domain = $curproc->cgi_var_ml_domain();
     my $action = $curproc->safe_cgi_action_name();
+    my $lang   = $curproc->cgi_var_language();
 
     # natural language-ed name
     my $name_options = $curproc->message_nl('term.options',  'options');
@@ -603,10 +608,11 @@ sub run_cgi_options
 
     # XXX-TODO: $langlist is hard-coded.
     print $name_lang, ":\n";
-    my $langlist = [ 'Japanese', 'English' ];
-    print scrolling_list(-name   => 'language',
-			 -values => $langlist,
-			 -size   => 1);
+    my $langlist = [ 'japanese', 'english' ];
+    print scrolling_list(-name    => 'language',
+			 -values  => $langlist,
+			 -default => [ $lang ],
+			 -size    => 1);
 
     print submit(-name => $name_change);
     print reset(-name  => $name_reset);

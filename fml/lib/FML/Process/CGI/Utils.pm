@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.2 2003/09/27 03:44:04 fukachan Exp $
+# $FML: Utils.pm,v 1.3 2003/09/27 06:57:00 fukachan Exp $
 #
 
 package FML::Process::CGI::Utils;
@@ -71,6 +71,10 @@ sub cgi_var_ml_home_prefix
 }
 
 
+# Descriptions: return list of ml_name as ARRAY_REF.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: ARRAY_REF
 sub cgi_var_ml_name_list
 {
     my ($curproc) = @_;
@@ -87,6 +91,10 @@ sub cgi_var_ml_name_list
 }
 
 
+# Descriptions: return address map
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
 sub cgi_var_address_map
 {
     my ($curproc)   = @_;
@@ -97,6 +105,10 @@ sub cgi_var_address_map
 }
 
 
+# Descriptions: return list of address map
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: ARRAY_REF
 sub cgi_var_address_map_list
 {
     my ($curproc) = @_;
@@ -105,6 +117,10 @@ sub cgi_var_address_map_list
 }
 
 
+# Descriptions: return my program name.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
 sub cgi_var_myname
 {
     my ($curproc) = @_;
@@ -113,10 +129,14 @@ sub cgi_var_myname
 }
 
 
+# Descriptions: return command list
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: ARRAY_REF
 sub cgi_var_available_command_list
 {
     my ($curproc) = @_;
-    my $config = $curproc->config();
+    my $config    = $curproc->config();
     my $cgi_mode  = $curproc->cgi_var_cgi_mode();
 
     if ($cgi_mode eq 'admin') {
@@ -160,6 +180,20 @@ sub cgi_var_cgi_mode
     my $hints     = $curproc->hints();
 
     return $hints->{ cgi_mode };
+}
+
+
+sub cgi_var_language
+{
+    my ($curproc) = @_;
+    my $lang = $curproc->safe_param_language() || '';
+
+    if ($lang =~ /^(Japanese|English)$/io)  {
+	return lc($lang);
+    }
+    else {
+	return 'japanese';
+    }
 }
 
 
