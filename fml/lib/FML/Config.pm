@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.91 2004/02/15 04:38:25 fukachan Exp $
+# $FML: Config.pm,v 1.92 2004/03/12 08:36:45 fukachan Exp $
 #
 
 package FML::Config;
@@ -765,14 +765,10 @@ sub __expand_special_macros
     if ($config->{ $x } =~ /\$\{([a-z0-9_]+):-([a-z0-9_]+)\}/) {
 	my ($var, $default) = ($1, $2);
 
-	print STDERR "\${$var:-$default} => " if $debug;
-
 	$config->{$x} =~
 	    s/\$\{([a-z0-9_]+):-([a-z0-9_]+)\}/(defined $config->{$1} ?
 						$config->{$1} : 
 						$default)/ge;
-
-	print STDERR $config->{$x}, "\n" if $debug;
     }
 }
 
