@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: INSTALL.sh,v 1.30 2001/11/12 15:03:34 fukachan Exp $
+# $FML: INSTALL.sh,v 1.31 2001/11/12 15:19:53 fukachan Exp $
 #
 
 # Run this from the top-level fml source directory.
@@ -55,7 +55,6 @@ if [ ! -f $config_dir/main.cf ];then
 	echo create $config_dir/main.cf
 	sed 	-e s@__fml_version__@$fml_version@ \
 		-e s@__config_dir__@$config_dir@ \
-		-e s@__default_prefix__@$default_prefix@ \
 		fml/etc/main.cf > $config_dir/main.cf
 fi
 
