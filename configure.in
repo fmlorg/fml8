@@ -1,5 +1,5 @@
 dnl
-dnl $FML: configure.in,v 1.22 2002/05/28 14:46:18 fukachan Exp $
+dnl $FML: configure.in,v 1.23 2002/06/30 05:01:22 fukachan Exp $
 dnl
 AC_REVISION($Revision$)
 
@@ -135,7 +135,7 @@ fi
 
 
 echo ""
-echo "fml has been configure with the following options:"
+echo "fml has been configured with the following options:"
 echo ""
 echo "                 prefix: $prefix"
 echo "            exec_prefix: $exec_prefix"
