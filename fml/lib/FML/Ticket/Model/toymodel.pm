@@ -166,8 +166,15 @@ sub update_db
 
     return if $self->{ _pragma } eq 'ignore';
 
-    # save $ticke_id et.al. in db_dir/
+    $self->open_db($curproc, $args);
+
+    # save $ticke_id et.al. in db_dir/$ml_name
     $self->_update_db($curproc, $args);
+
+    # save cross reference pointers among $ml_name
+    $self->_update_index_db($curproc, $args);
+
+    $self->close_db($curproc, $args);
 }
 
 
@@ -227,124 +234,76 @@ sub _rewrite_subject
 sub _update_db
 {
     my ($self, $curproc, $args) = @_;
-    my $config    = $curproc->{ config };
-    my $pcb       = $curproc->{ pcb };
+    my $config     = $curproc->{ config };
+    my $pcb        = $curproc->{ pcb };
+    my $article_id = $pcb->get('article', 'id');
+    my $ticket_id  = $self->{ _ticket_id };
 
-    $self->_open_db($curproc, $args);
+    # 0. logging
+    Log("article_id=$article_id ticket_id=$ticket_id");
 
     # prepare hash table tied to db_dir/*db's
     my $rh = $self->{ _hash_table };
 
-    # prepare article_id and ticket_id
-    my $article_id = $pcb->get('article', 'id');
-    my $ticket_id  = $self->{ _ticket_id };
-    Log("article_id=$article_id ticket_id=$ticket_id");
-
+    # 1. 
     $rh->{ _ticket_id }->{ $article_id }  = $ticket_id;
     $rh->{ _date      }->{ $article_id }  = time;
     $rh->{ _articles  }->{ $ticket_id  } .= $article_id . " ";
 
-    # record the sender information
+    # 2. record the sender information
     my $header = $curproc->{ incoming_message }->{ header };
     $rh->{ _sender }->{ $article_id } = $header->get('from');
 
-    # in the first ticket assignment, set the default status value.
-    unless (defined $rh->{ _status }->{ $ticket_id }) {
-	$self->_set_status($ticket_id, 'open');
-    }
-
-    # update status
+    # 3. update status information
     if (defined $self->{ _status }) {
 	$self->_set_status($ticket_id, $self->{ _status });
     }
+    else {
+	# set the default status value for the first time.
+	unless (defined $rh->{ _status }->{ $ticket_id }) {
+	    $self->_set_status($ticket_id, 'open');
+	}
+    }
+}
 
-    # register myself to index_db for further reference among mailing
-    # lists
-    my $ml_name = $config->{ ml_name };
+
+
+# register myself to index_db for further reference among mailing lists
+sub _update_index_db
+{
+    my ($self, $curproc, $args) = @_;
+    my $config    = $curproc->{ config };
+    my $ticket_id = $self->{ _ticket_id };
+    my $rh        = $self->{ _hash_table };
+    my $ml_name   = $config->{ ml_name };
+
     my $ref = $rh->{ _index }->{ $ticket_id } || '';
     if ($ref !~ /^$ml_name|\s$ml_name\s|$ml_name$/) {
 	$rh->{ _index }->{ $ticket_id } .= $ml_name." ";
     }
-
-    $self->_close_db($curproc, $args);
 }
 
-
-sub _set_status
-{
-    my ($self, $ticket_id, $value) = @_;
-    $self->{ _hash_table }->{ _status }->{ $ticket_id } = $value;
-}
-
-
-=head2 C<set_status($args)>
-
-set $status for $ticket_id. 
-C<$args>, HASH reference, must have two keys.
-
-    $args = {
-	ticket_id => $ticket_id,
-	status    => $status,
-    }
 
 =head2 C<list_up($curproc, $args>)
 
-show the ticket summary. By default the output is as follow:
-
-   2001/02/06   open  support_#00000002      3 
-   2001/02/06   open  support_#00000003      4 6 8
-   2001/02/06   open  support_#00000004      5 7
-
-where the column is a set of 
-C<date>, C<status>, C<ticket-id> and C<articles>.
+show the ticket summary. 
+See L<_simple_print()> for more detail.
 
 =cut
-
-
-# Descriptions: 
-#    Arguments: $self $args
-# Side Effects: 
-# Return Value: none
-sub set_status
-{
-    my ($self, $curproc, $args) = @_;
-    my $ticket_id = $args->{ ticket_id };
-    my $status    = $args->{ status };
-
-    $self->_open_db($curproc, $args);
-    $self->_set_status($ticket_id, $status);
-    $self->_close_db($curproc, $args);
-}
 
 
 sub list_up
 {
     my ($self, $curproc, $args) = @_;
+    my ($tid, $status, @ticket_id);
 
     # self->{ _hash_table } is tied to DB's.
-    $self->_open_db($curproc, $args);
-
-    # XXX $dh: date object handle
-    use FML::Date;
-    my $dh  = new FML::Date;
-    my $now = time; # save the current UTC for convenience
-    my $fd  = $self->{ _fd } || \*STDOUT;
+    $self->open_db($curproc, $args);
 
     # XXX $rh = Reference to Hash table, which is tied to db_dir/*db's
     my $rh             = $self->{ _hash_table };
     my $rh_status      = $rh->{ _status };
-    my ($tid, $status) = ();
     my $mode           = $args->{ mode } || 'default';
-    my $day            = 24*3600;
-    my $format         = "%10s  %5s %6s  %-20s  %s\n";
-
-    # format
-    $| = 1;
-    printf($fd $format, 'date', 'age', 'status', 'ticket id', 'articles');
-    print $fd "-" x60;
-    print $fd "\n";
-
-    my (@tid);
 
   TICEKT_LIST:
     while (($tid, $status) = each %$rh_status) {
@@ -352,28 +311,40 @@ sub list_up
 	    next TICEKT_LIST if $status =~ /close/o;
 	}
 
-	push(@tid, $tid);
+	push(@ticket_id, $tid);
     }
 
-    for $tid (sort @tid) {
-	# we get the date by the form 1999/09/13 
-	# for the oldest article assigned to this ticket ($tid)
-	my (@aid) = split(/\s+/, $rh->{ _articles }->{ $tid });
-	my $aid   = $aid[0];
-	my $laid  = $aid[ $#aid ];
-	my $age   = sprintf("%2.1f%s", ($now - $rh->{ _date }->{ $laid })/$day);
-	my $date  = $dh->YYYYxMMxDD( $rh->{ _date }->{ $aid } , '/');
-	my $status = $rh->{ _status }->{ $tid };
-
-	printf($fd $format, $date, $age, $status, $tid, $rh->{ _articles }->{ $tid });
-    }
+    $self->_simple_print($curproc, $args, \@ticket_id);
 
     # self->{ _hash_table } is untied from DB's.
-    $self->_close_db($curproc, $args);
+    $self->close_db($curproc, $args);
 }
 
 
-sub _open_db
+
+=head1 METHOD on DB IO
+
+methods to manipulate data in DB.
+
+=head2 C<open_db($curproc, $args)>
+
+open DB's which tie() hashes to DB as a file. 
+Our toymodel uses several DB's for
+C<%ticket_id>,
+C<%date>,
+C<%status>,
+C<%sender>,
+C<%articles>,
+C<%index>.
+
+=head2 C<close_db($curproc, $args)>
+
+untie() hashes opended by C<open_db()>.
+
+=cut
+
+
+sub open_db
 {
     my ($self, $curproc, $args) = @_;
     my $config    = $curproc->{ config };
@@ -422,9 +393,10 @@ sub _open_db
 }
 
 
-sub _close_db
+sub close_db
 {
     my ($self, $curproc, $args) = @_;
+
     my $ticket_id = $self->{ _hash_table }->{ _ticket_id };
     my $date      = $self->{ _hash_table }->{ _date };
     my $status    = $self->{ _hash_table }->{ _status };
@@ -438,6 +410,115 @@ sub _close_db
     untie %$sender;
     untie %$articles;
     untie %$index;
+}
+
+
+=head2 C<set_status($args)>
+
+set $status for $ticket_id. It rewrites DB (file).
+C<$args>, HASH reference, must have two keys.
+
+    $args = {
+	ticket_id => $ticket_id,
+	status    => $status,
+    }
+
+C<set_status()> calls open_db() an close_db() automatically within it.
+
+=cut
+
+
+# Descriptions: 
+#    Arguments: $self $curproc $args
+# Side Effects: 
+# Return Value: none
+sub set_status
+{
+    my ($self, $curproc, $args) = @_;
+    my $ticket_id = $args->{ ticket_id };
+    my $status    = $args->{ status };
+
+    $self->open_db($curproc, $args);
+    $self->_set_status($ticket_id, $status);
+    $self->close_db($curproc, $args);
+}
+
+
+sub _set_status
+{
+    my ($self, $ticket_id, $value) = @_;
+    $self->{ _hash_table }->{ _status }->{ $ticket_id } = $value;
+}
+
+
+
+=head1 OUTPUT ROUTINES
+
+show summary output. Intenally
+C<_simple_print()> 
+or
+C<_summary_print()>
+is used for each purpose.
+
+Each row has a set of 
+C<date>, C<age>, C<status>, C<ticket-id> and 
+C<articles>, which is a list of articles with the ticket-id.
+
+=head2 C<_simple_print()>
+
+         date    age status  ticket id             articles
+   ------------------------------------------------------------
+   2001/02/07    3.1   open  elena_#00000451       810 
+   2001/02/07    3.0   open  elena_#00000452       812 
+   2001/02/07    2.9   open  elena_#00000453       813 
+   2001/02/10    0.1   open  elena_#00000456       821 
+   2001/02/07    3.5  going  elena_#00000450       807 808 809 
+   2001/02/07    2.9  going  elena_#00000454       814 815 
+
+=head2 C<_summary_print()> 
+
+=cut
+
+
+sub _simple_print
+{
+    my ($self, $curproc, $args, $ticket_id) = @_;
+
+    # XXX $dh: date object handle
+    use FML::Date;
+    my $dh  = new FML::Date;
+    my $now = time; # save the current UTC for convenience
+    my $fd  = $self->{ _fd } || \*STDOUT;
+
+    # 
+    my $rh        = $self->{ _hash_table };
+    $|            = 1;
+    my $day       = 24*3600;
+    my $format    = "%10s  %5s %6s  %-20s  %s\n";
+
+    printf($fd $format, 'date', 'age', 'status', 'ticket id', 'articles');
+    print $fd "-" x60;
+    print $fd "\n";
+
+    for my $tid (sort @$ticket_id) {
+	# we get the date by the form 1999/09/13 
+	# for the oldest article assigned to this ticket ($tid)
+	my (@aid) = split(/\s+/, $rh->{ _articles }->{ $tid });
+	my $aid   = $aid[0];
+	my $laid  = $aid[ $#aid ];
+	my $age   = sprintf("%2.1f%s", ($now - $rh->{ _date }->{ $laid })/$day);
+	my $date  = $dh->YYYYxMMxDD( $rh->{ _date }->{ $aid } , '/');
+	my $status = $rh->{ _status }->{ $tid };
+
+	printf($fd $format, 
+	       $date, $age, $status, $tid, $rh->{ _articles }->{ $tid });
+    }
+}
+
+
+sub _summary_print
+{
+    ;
 }
 
 
