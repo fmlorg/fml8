@@ -1,7 +1,7 @@
-default_umask
-has_alarm
-has_getuid
-has_getgid
+	$default_umask
+	$has_alarm
+	$has_getuid
+	$has_getgid
 
 
 loop_check
@@ -11,3 +11,18 @@ loop_check
 time_zone config?
 
 newsyslog()
+
+mode-expire
+mode-archive
+mode-html-generator
+
+alarm() 
+
+
+default signal handling
+    $SIG{'ALRM'} = 'Tick';
+    $SIG{'INT'}  = $SIG{'QUIT'} = $SIG{'TERM'} = 'SignalLog';
+    
+MIME Content Handler(include backword compatible)
+
+log suffix extension
