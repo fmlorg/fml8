@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Calender.pm,v 1.10 2002/12/18 04:43:51 fukachan Exp $
+# $FML: Calender.pm,v 1.11 2003/01/11 16:05:17 fukachan Exp $
 #
 
 package FML::Process::Calender;
@@ -62,11 +62,19 @@ sub new
 }
 
 
-# Descriptions: dummy
+# Descriptions: load default configurations to use $path_* info.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
-sub prepare { 1;}
+sub prepare
+{ 
+    my ($curproc, $args) = @_;
+
+    # load default configurations.
+    use FML::Config;
+    $curproc->{ config } = new FML::Config;
+    $curproc->load_config_files( $args->{ cf_list } );
+}
 
 
 # Descriptions: dummy
@@ -91,6 +99,7 @@ sub finish         { 1; }
 sub run
 {
     my ($curproc, $args) = @_;
+    my $config = $curproc->config();
     my $argv   = $args->{ argv };
     my $option = $args->{ options };
     my $mode   = 'text';
@@ -141,11 +150,12 @@ sub run
 
     # XXX-TODO: use $path_w3m not w3m
     if ($mode eq 'text') {
-	system "w3m -dump $tmpf";
+	my $w3m = $config->{ path_w3m } || 'w3m';
+	system "$w3m -dump $tmpf";
     }
     # XXX-TODO: use $path_cat not cat
     else {
-	system "cat $tmpf";
+	$curproc->cat( [ $tmpf ] );
     }
 
     unlink $tmpf if -f $tmpf;
