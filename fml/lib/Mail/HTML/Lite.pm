@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.21 2001/10/27 04:50:40 fukachan Exp $
+# $FML: Lite.pm,v 1.22 2001/10/27 14:51:42 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -15,7 +15,7 @@ use Carp;
 my $debug = $ENV{'debug'} ? 1 : 0;
 my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::HTML::Lite</A>";
 
-my $version = q$FML: Lite.pm,v 1.21 2001/10/27 04:50:40 fukachan Exp $;
+my $version = q$FML: Lite.pm,v 1.22 2001/10/27 14:51:42 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -965,16 +965,16 @@ sub _update_relation
     if (defined $rh && defined $wh) {
 	while (<$rh>) {
 	    if (/^$pat_preamble_begin/ .. /^$pat_preamble_end/) {
-		_print($wh, $preamble, $code) if /^$pat_preamble_end/;
+		_print_raw_str($wh, $preamble, $code) if /^$pat_preamble_end/;
 		next;
 	    }
 	    if (/^$pat_footer_begin/ .. /^$pat_footer_end/) {
-		_print($wh, $footer, $code) if /^$pat_footer_end/;
+		_print_raw_str($wh, $footer, $code) if /^$pat_footer_end/;
 		next;
 	    }
 
 	    # just copy (rewrite only $preamble and $footer not message)
-	    _print($wh, $_, $code);
+	    _print_raw_str($wh, $_, $code);
 	}
 	$rh->close;
 	$wh->close;
@@ -1306,7 +1306,7 @@ sub _print_index_begin
 
     $self->html_begin($wh, { title => $title });
 
-    _print($wh, _format_index_navigator(), $code);
+    _print_raw_str($wh, _format_index_navigator(), $code);
     $self->mhl_separator($wh);
 }
 
@@ -1325,10 +1325,10 @@ sub _print_index_end
     my $code  = $args->{ code };
 
     $self->mhl_separator($wh);
-    _print($wh, _format_index_navigator(), $code);
+    _print_raw_str($wh, _format_index_navigator(), $code);
 
     # append version information
-    _print($wh, "<BR>Genereated by $version\n", $code);
+    _print_raw_str($wh, "<BR>Genereated by $version\n", $code);
 
     $self->html_end($wh);
 
@@ -1445,13 +1445,13 @@ sub _update_id_montly_index_master
     my (@list)  = sort __sort_yyyymm keys %$mlist;
     my ($years) = _yyyy_range(\@list);
 
-    _print($wh, "<TABLE>", $code);
+    _print_raw_str($wh, "<TABLE>", $code);
 
     for my $year (@$years) {
-	_print($wh, "<TR>", $code);
+	_print_raw_str($wh, "<TR>", $code);
 
 	for my $month (1 .. 12) {
-	    _print($wh, "<TR>", $code) if $month == 7;
+	    _print_raw_str($wh, "<TR>", $code) if $month == 7;
 
 	    my $id = sprintf("%04d/%02d", $year, $month); # YYYY/MM
 	    my $xx = sprintf("%04d%02d", $year, $month); # YYYYMM
@@ -1460,14 +1460,14 @@ sub _update_id_montly_index_master
 	    use File::Spec;
 	    my $file = File::Spec->catfile($html_base_dir, $fn);
 	    if (-f $file) {
-		_print($wh, "<TD><A HREF=\"$fn\"> $id </A>", $code);
+		_print_raw_str($wh, "<TD><A HREF=\"$fn\"> $id </A>", $code);
 	    }
 	    else {
-		_print($wh, "<TD>", $code);
+		_print_raw_str($wh, "<TD>", $code);
 	    }
 	}
     }
-    _print($wh, "</TABLE>", $code);
+    _print_raw_str($wh, "</TABLE>", $code);
     
     $self->_db_close();
     $self->_print_index_end( $htmlinfo );
@@ -1616,7 +1616,7 @@ sub _print_thread
     my $uniq = $self->{ _uniq };
 
     # debug information (it is useful not to remove this ?)
-    _print($wh, "<!-- thread head=$head_id -->\n", $code);
+    _print_raw_str($wh, "<!-- thread head=$head_id -->\n", $code);
 
     # get id list: @idlist = ( $head_id id2 id3 ... )
     my $buf = $db->{ _idref }->{ $head_id };
@@ -1627,7 +1627,7 @@ sub _print_thread
 
       IDLIST:
 	for my $id (@idlist) {
-	    _print($wh, "<!-- thread (@idlist) -->\n", $code);
+	    _print_raw_str($wh, "<!-- thread (@idlist) -->\n", $code);
 
 	    next IDLIST if $uniq->{ $id };
 	    $uniq->{ $id } = 1;
@@ -1686,7 +1686,7 @@ sub _charset_to_code
 #    Arguments: $self $args
 # Side Effects: 
 # Return Value: none
-sub _print
+sub _print_raw_str
 {
     my ($wh, $str, $code) = @_;
     $code = defined($code) ? $code : 'euc'; # euc-jp by default
@@ -1752,7 +1752,7 @@ sub _print_ul
     $self->{ _stack }++;
 
     my $padding = "   " x $self->{ _stack };
-    _print($wh, "${padding}<UL>\n", $code);
+    _print_raw_str($wh, "${padding}<UL>\n", $code);
 }
 
 
@@ -1763,7 +1763,7 @@ sub _print_end_of_ul
     return unless $self->{ _stack } > 0;
 
     my $padding = "   " x $self->{ _stack };
-    _print($wh, "${padding}</UL>\n", $code);
+    _print_raw_str($wh, "${padding}</UL>\n", $code);
 
     $self->{ _stack }--;
 }
@@ -1776,14 +1776,14 @@ sub _print_li_filename
     my $subject  = $db->{ _subject }->{ $id };
     my $who      = $db->{ _who }->{ $id };
 
-    _print($wh, "<!-- LI id=$id -->\n", $code);
+    _print_raw_str($wh, "<!-- LI id=$id -->\n", $code);
 
-    _print($wh, "<LI>\n", $code);
-    _print($wh, "<A HREF=\"$filename\">\n", $code);
+    _print_raw_str($wh, "<LI>\n", $code);
+    _print_raw_str($wh, "<A HREF=\"$filename\">\n", $code);
     _print_safe_str($wh, $subject, $code);
-    _print($wh, "\n", $code);
+    _print_raw_str($wh, "\n", $code);
     _print_safe_str($wh, "$who\n", $code);
-    _print($wh, "</A>\n", $code);
+    _print_raw_str($wh, "</A>\n", $code);
 }
 
 
