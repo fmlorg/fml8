@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: INSTALL.sh,v 1.36 2001/11/27 08:43:09 fukachan Exp $
+# $FML: INSTALL.sh,v 1.37 2001/11/27 09:55:38 fukachan Exp $
 #
 
 # Run this from the top-level fml source directory.
@@ -128,7 +128,7 @@ id -un $owner 2>/dev/null || (
 	echo warning: user $owner is not defined
 )
 
-if [ need_fix_ml_spool_dir = 1 ]; then
+if [ $need_fix_ml_spool_dir = 1 ]; then
    if [ -d $ml_spool_dir -a -w $ml_spool_dir ]; then
 	echo set up the owner of $ml_spool_dir to be $owner
 	chown -R $owner $ml_spool_dir
