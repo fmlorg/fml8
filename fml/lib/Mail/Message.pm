@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.96 2004/07/23 15:59:14 fukachan Exp $
+# $FML: Message.pm,v 1.97 2004/07/26 06:39:16 fukachan Exp $
 #
 
 package Mail::Message;
@@ -2689,6 +2689,33 @@ sub find_first_plaintext_message
     }
 
     return undef;
+}
+
+
+=head2 message_chain_as_array_ref()
+
+return the chain of message objects as ARRAY_REF of OBJ's like this:
+
+   [ Mail::Message, Mail::Message, ... ]
+
+=cut
+
+
+# Descriptions: return the chain of message objects as ARRAY_REF of OBJ's.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: ARRAY_REF(OBJ)
+sub message_chain_as_array_ref
+{
+    my ($self, $args) = @_;
+    my $head_msg = $self->whole_message_body_head();
+    my (@chain)  = ();
+
+    for (my $m = $head_msg; $m ; $m = $m->{ next }) {
+	push(@chain, $m);
+    }
+
+    return \@chain;
 }
 
 
