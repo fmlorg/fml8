@@ -7,12 +7,16 @@
 
 subscribe	ＭＬへの入会
 (add)
+(useradd)
+(adduser)
 
 unsubscribe	ＭＬからの脱退
 (bye)
 (remove)
 (resign)
 (signoff)
+(deluser)
+(userdel)
 
 chaddr		登録してあるメールアドレスを変更する
 
@@ -44,4 +48,4 @@ help		admin のヘルプファイルを取り寄せる
 off		メンバーの誰かを off にする
 on		メンバーの誰かを on  にする
 
-$FML: MANIFEST.euc-jp,v 1.5 2002/03/23 15:23:21 fukachan Exp $
+$FML: MANIFEST.euc-jp,v 1.6 2002/04/23 09:30:42 fukachan Exp $

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: User.pm,v 1.9 2002/06/25 04:02:11 fukachan Exp $
+# $FML: User.pm,v 1.10 2002/07/02 03:55:21 fukachan Exp $
 #
 
 package FML::CGI::Admin::User;
@@ -49,10 +49,19 @@ sub cgi_menu
     my $address_list = [];
 
     # which address list to show at the scrolling list
-    if ($comname eq 'subscribe' || $comname eq 'unsubscribe') {
+    if ($comname eq 'subscribe'   || 
+	$comname eq 'adduser'     ||
+	$comname eq 'useradd'     ||
+	$comname eq 'unsubscribe' ||
+	$comname eq 'userdel'     ||
+	$comname eq 'deluser'     ) {
 	$address_list = $curproc->get_address_list( 'member_maps' );
     }
-    elsif ($comname eq 'addadmin' || $comname eq 'byeadmin') {
+    elsif ($comname eq 'addadmin' ||
+	   $comname eq 'adminadd' ||
+	   $comname eq 'admindel' ||
+	   $comname eq 'deladmin' ||
+	   $comname eq 'byeadmin'  ) {
 	$address_list = $curproc->get_address_list( 'admin_member_maps' );
     }
 

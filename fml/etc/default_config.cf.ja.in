@@ -826,10 +826,10 @@ commands_for_privileged_user	=	subscribe
 					list
 
 
-commands_for_admin_cgi	=		subscribe
-					unsubscribe
+commands_for_admin_cgi	=		adduser
+					deluser
 					addadmin
-					byeadmin
+					deladmin
 					list
 					log
 					newml

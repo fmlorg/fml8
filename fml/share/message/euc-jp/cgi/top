@@ -4,12 +4,12 @@ submit ボタンを押して下さい。
 
 <table>
 <tr>
-	<td>	subscribe
+	<td>	adduser
 	<td>	アドレスの追加
 </tr>
 
 <tr>
-	<td>	unsubscribe
+	<td>	deluser
 	<td>	アドレスの削除
 </tr>
 
@@ -19,7 +19,7 @@ submit ボタンを押して下さい。
 </tr>
 
 <tr>
-	<td>	byeadmin
+	<td>	deladmin
 	<td>	リモート管理者アドレスの削除
 </tr>
 
