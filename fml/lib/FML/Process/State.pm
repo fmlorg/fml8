@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: State.pm,v 1.5 2004/03/14 10:29:51 fukachan Exp $
+# $FML: State.pm,v 1.6 2004/04/17 11:37:56 fukachan Exp $
 #
 
 package FML::Process::State;
@@ -190,7 +190,7 @@ sub command_context_init
     my ($curproc, $orig_command) = @_;
 
     # Example: if orig_command = "# help", comname = "help"
-    my $cleanstr = _command_string_clean_up($orig_command);
+    my $cleanstr = $curproc->_command_string_clean_up($orig_command);
     my $context  = $curproc->_build_command_context_template($cleanstr);
 
     # save original string, set the command mode be "user" by default.
@@ -204,7 +204,29 @@ sub command_context_init
     my $ml_name = $curproc->ml_name();
     $curproc->command_context_set_ml_name($ml_name);
 
-    return $context;
+    # check if command is valid.
+    my $found = 0;
+    my $name  = $context->{ comname } || '';
+    if ($name) {
+	my $config = $curproc->config();
+
+      LIST:
+	for my $list (qw(anonymous_command_mail_allowed_commands
+			 user_command_mail_allowed_commands)) {
+	    if ($config->has_attribute($list, $name)) {
+		$found = 1;
+		last LIST;
+	    }
+	}
+    }
+
+    # if valid, return the current context (HASH_REF).
+    if ($found) {
+	return $context;
+    }
+    else {
+	return {};
+    }
 }
 
 
@@ -242,13 +264,16 @@ sub _build_command_context_template
 
 
 # Descriptions: remove the superflous string before the actual command.
-#    Arguments: STR($buf)
+#    Arguments: OBJ($curproc) STR($buf)
 # Side Effects: none
 # Return Value: STR
 sub _command_string_clean_up
 {
-    my ($buf) = @_;
-    $buf =~ s/^\W+//o;
+    my ($curproc, $buf) = @_;
+    my $config         = $curproc->config();
+    my $confirm_prefix = $config->{ confirm_command_prefix };
+
+    $buf =~ s/^\W+$confirm_prefix/$confirm_prefix/;
     return $buf;
 }
 
@@ -279,7 +304,8 @@ sub command_context_get_ml_name
 }
 
 
-# Descriptions: declare no more further command processing needed.
+# Descriptions: declare no more further command processing needed 
+#               due to critical error.
 #    Arguments: OBJ($curproc)
 # Side Effects: update pcb.
 # Return Value: NUM
@@ -302,6 +328,32 @@ sub command_context_get_stop_process
     my $pcb = $curproc->pcb();
 
     return( $pcb->get("process_command", "stop_now") || 0 );
+}
+
+
+# Descriptions: declare no more further command processing needed.
+#    Arguments: OBJ($curproc)
+# Side Effects: update pcb.
+# Return Value: NUM
+sub command_context_set_normal_stop
+{
+    my ($curproc) = @_;
+    my $pcb = $curproc->pcb();
+
+    $pcb->set("process_command", "normal_stop", 1);
+}
+
+
+# Descriptions: we stop here or not ?
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: NUM
+sub command_context_get_normal_stop
+{
+    my ($curproc) = @_;
+    my $pcb = $curproc->pcb();
+
+    return( $pcb->get("process_command", "normal_stop") || 0 );
 }
 
 
