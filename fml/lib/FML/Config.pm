@@ -1,7 +1,7 @@
 #-*- perl -*-
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.43 2001/10/12 00:14:19 fukachan Exp $
+# $FML: Config.pm,v 1.44 2001/10/13 03:00:12 fukachan Exp $
 #
 
 package FML::Config;
@@ -412,7 +412,6 @@ sub write
     else {
 	use Carp;
 	carp("cannot open > $file");
-	Log("cannot open > $file");
     }
 }
 
@@ -504,8 +503,15 @@ expand $varname to $config->{ varname } in C<$rbuf>.
 sub expand_variable_in_buffer
 {
     my ($config, $rbuf, $args) = @_;
+    my $loop_max = 16;
+    my $loop     = 0;
 
+  EXPAND:
     while ($$rbuf =~ /\$([\w\d\_]+)/) {
+	# in some case, we cannot expand ;)
+	# for example, $FML which is not defined in config.cf.
+	last EXPAND if $loop++ > $loop_max;
+
 	my $varname = $1;
 	if (defined $config->{ $varname }) {
 	    my $x = $config->{ $varname };
