@@ -1,0 +1,5 @@
+=head1	CGI 関連の設定
+
+cgi_default_charset	=	euc-jp
+
+cgi_charset		=	$cgi_default_charset

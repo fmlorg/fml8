@@ -272,6 +272,12 @@ ldap_server_bind	=
 
 ldap_query_filter	=	
 
+=head1	CGI 関連の設定
+
+cgi_default_charset	=	euc-jp
+
+cgi_charset		=	$cgi_default_charset
+
 =head1	プログラムのパス名
 
 # 
