@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.176 2003/08/29 15:34:08 fukachan Exp $
+# $FML: Kernel.pm,v 1.177 2003/08/30 00:13:42 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -683,7 +683,7 @@ sub resolve_ml_specific_variables
 	  ARGS:
 	    for my $arg (@ARGV) {
 		last ARGS if $ml_addr;
-		next ARGS if $arg =~ /^-/o; # options
+		next ARGS if $arg =~ /^\-/o; # options
 
 		if ($safe->regexp_match('ml_name', $arg)) {
 		    $ml_addr = $arg. '@' . $default_domain;
@@ -692,7 +692,8 @@ sub resolve_ml_specific_variables
 	}
     }
 
-    # 1.2 ml@domain may be specified in command line args.
+    # 1.2 set up ml_* in config space.
+    # 1.2(a) ml@domain found. It may be specified in command line args.
     if ($ml_addr) {
 	($ml_name, $ml_domain) = split(/\@/, $ml_addr);
 	$config->set( 'ml_name',   $ml_name );
@@ -705,56 +706,73 @@ sub resolve_ml_specific_variables
 
 	$config_cf_path = $curproc->config_cf_filepath($ml_name, $ml_domain);
     }
+    # 1.2(b) argv must have dirname (ml_home_dir).
     # Example: "| /usr/local/libexec/fml/fml.pl /var/spool/ml/elena"
     #    XXX the following code is true if config.cf has $ml_name definition.
     else {
 	my $r = $curproc->_find_ml_home_dir_in_argv($args->{ main_cf });
 
-	# determine default $ml_home_dir and $hom_home_prefix by main.cf
+	# [1.2.b.1]
+	# determine default $ml_home_dir and $hom_home_prefix by main.cf.
 	if (defined $r->{ ml_home_dir }) {
 	    use File::Basename;
-	    my $dir    = $r->{ ml_home_dir };
-	    my $prefix = dirname( $dir );
+	    my $home_dir = $r->{ ml_home_dir };
+	    my $prefix   = dirname( $home_dir );
 	    $config->set( 'ml_home_prefix', $prefix);
-	    $config->set( 'ml_home_dir',    $dir);
+	    $config->set( 'ml_home_dir',    $home_dir);
 
 	    use File::Spec;
-	    $config_cf_path = File::Spec->catfile($dir, "config.cf");
+	    $config_cf_path = File::Spec->catfile($home_dir, "config.cf");
 	}
 
+	# [1.2.b.2]
+	# lastly, we need to determine $ml_name and $ml_domain.
 	# parse the argument such as "fml.pl /var/spool/ml/elena ..."
 	unless ($ml_name) {
 	    $curproc->log("(debug) parse @ARGV");
 
 	  ARGS:
 	    for my $arg (@ARGV) {
-		last ARGS if $ml_addr;
-		next ARGS if $arg =~ /^-/o; # options
+		last ARGS if $ml_name;
+		next ARGS if $arg =~ /^\-/o; # options
 
 		# the first directory name e.g. /var/spool/ml/elena
 		if (-d $arg) {
 		    my $default_domain = $curproc->default_domain();
 
-		    use File::Basename;
-		    $ml_name     = basename( $arg );
-		    $ml_home_dir = dirname( $arg );
+		    use File::Spec;
+		    my $_cf_path = File::Spec->catfile($arg, "config.cf");
 
-		    $config->set( 'ml_name',     $ml_name );
-		    $config->set( 'ml_domain',   $default_domain );
-		    $config->set( 'ml_home_dir', $arg );
+		    if (-f $config_cf_path) {
+			$config_cf_path = $_cf_path;
 
-		    $curproc->log("(debug) ml_name=$ml_name ml_home_dir=$ml_home_dir");
+			use File::Basename;
+			$ml_name     = basename( $arg );
+			$ml_home_dir = dirname( $arg );
+
+			$config->set( 'ml_name',     $ml_name );
+			$config->set( 'ml_domain',   $default_domain );
+			$config->set( 'ml_home_dir', $arg );
+
+			my $s = "ml_name=$ml_name ml_home_dir=$ml_home_dir";
+			$curproc->log("(debug) $s");
+		    }
 		}
 	    }
 	}
     }
 
-    # debug
-    $curproc->__debug_ml_xxx('resolv:');
+    if ($config_cf_path) {
+	# debug
+	$curproc->__debug_ml_xxx('resolv:');
 
-    # add this ml's config.cf to the .cf list.
-    my $list = $args->{ cf_list };
-    push(@$list, $config_cf_path);
+	# add this ml's config.cf to the .cf list.
+	my $list = $args->{ cf_list };
+	push(@$list, $config_cf_path);
+    }
+    else {
+	$curproc->logerror("cannot determine which ml_name");
+    }
 }
 
 
@@ -797,16 +815,17 @@ sub __debug_ml_xxx
 sub _find_ml_home_dir_in_argv
 {
     my ($curproc, $main_cf) = @_;
-    my $ml_home_prefix = $main_cf->{ default_ml_home_prefix };
+    my $ml_home_prefix = $curproc->ml_home_prefix();
     my $ml_home_dir    = '';
     my $found_cf       = 0;
     my @cf             = ();
 
-    # "elena" is translated to "/var/spool/ml/elena"
+    # Example: "elena" is translated to "/var/spool/ml/elena"
   ARGV:
     for my $argv (@ARGV) {
 	# 1. for the first time
-	#   a) speculate "/var/spool/ml/$_" looks a $ml_home_dir ?
+	#  a) speculate "/var/spool/ml/$_" looks a $ml_home_dir
+	#     (== default $ml_home_dir)?
 	unless ($found_cf) {
 	    my $x  = File::Spec->catfile($ml_home_prefix, $argv);
 	    my $cf = File::Spec->catfile($x, "config.cf");
