@@ -15,11 +15,9 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::unsubscribe - what is this
+FML::Command::unsubscribe - remove the specified member
 
 =head1 SYNOPSIS
-
-not yet implemented
 
 =head1 DESCRIPTION
 
@@ -28,11 +26,6 @@ not yet implemented
 =head2 C<new()>
 
 =cut
-
-
-require Exporter;
-@ISA = qw(Exporter);
-
 
 sub new
 {
@@ -43,20 +36,42 @@ sub new
 }
 
 
+sub unsubscribe
+{
+    my ($self, $curproc, $args) = @_;
+    my $config        = $curproc->{ config };
+    my $member_map    = $config->{ primary_member_map };
+    my $recipient_map = $config->{ primary_recipient_map };
+    my $options       = $args->{ options };
+    my $address       = $options->[ 0 ];
+
+    # fundamental check
+    croak("\$member_map is not specified")    unless $member_map;
+    croak("\$recipient_map is not specified") unless $recipient_map;
+
+    use IO::MapAdapter;
+    my $obj = new IO::MapAdapter $member_map;
+    $obj->delete( $address );
+
+    $obj = new IO::MapAdapter $recipient_map;
+    $obj->delete( $address );
+}
+
+
 =head1 AUTHOR
 
-__YOUR_NAME__
+Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 __YOUR_NAME__
+Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself. 
 
 =head1 HISTORY
 
-FML::Command::unsubscribe appeared in fml5 mailing list driver package.
+FML::MemberControl appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

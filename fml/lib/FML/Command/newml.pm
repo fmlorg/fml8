@@ -19,6 +19,10 @@ FML::Command::newml - make a new mailing list
 
 =head1 SYNOPSIS
 
+    use FML::Command::newml;
+    $obj = new FML::Command::newml;
+    $obj->newml($curproc, $args);
+
 =head1 DESCRIPTION
 
 =head1 METHODS
@@ -26,6 +30,7 @@ FML::Command::newml - make a new mailing list
 =head2 C<new()>
 
 =cut
+
 
 sub new
 {
@@ -43,10 +48,11 @@ sub new
 
 sub newml
 {
-    my ($self, $curproc, $ml_name) = @_;
+    my ($self, $curproc, $args) = @_;
     my $config        = $curproc->{ config };
     my $member_map    = $config->{ primary_member_map };
     my $recipient_map = $config->{ primary_recipient_map };
+    my $ml_name       = $args->{ ml_name };
 
     # fundamental check
     croak("\$ml_name is not specified")    unless $ml_name;

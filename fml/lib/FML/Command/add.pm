@@ -13,6 +13,8 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
+@ISA = qw(FML::Command::subscribe);
+
 =head1 NAME
 
 FML::Command::add - add a new member
@@ -20,49 +22,6 @@ FML::Command::add - add a new member
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
-
-=head1 METHODS
-
-=head2 C<new()>
-
-=cut
-
-sub new
-{
-    my ($self) = @_;
-    my ($type) = ref($self) || $self;
-    my $me     = {};
-
-    print STDERR " FML::Comand::add::new() \n";
-
-    return bless $me, $type;
-}
-
-
-=head2 C<add( $address )>
-
-=cut
-
-
-sub add
-{
-    my ($self, $curproc, $address) = @_;
-    my $config        = $curproc->{ config };
-    my $member_map    = $config->{ primary_member_map };
-    my $recipient_map = $config->{ primary_recipient_map };
-
-    # fundamental check
-    croak("\$member_map is not specified")    unless $member_map;
-    croak("\$recipient_map is not specified") unless $recipient_map;
-
-    use IO::MapAdapter;
-    my $obj = new IO::MapAdapter $member_map;
-    $obj->add( $address );
-
-    $obj = new IO::MapAdapter $recipient_map;
-    $obj->add( $address );
-}
-
 
 =head1 AUTHOR
 

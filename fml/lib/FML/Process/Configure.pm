@@ -113,16 +113,21 @@ sub _makefml
 	# local scope
 	local(@ISA) = ($pkg, @ISA);
 
+	# arguments to pass off to each method
+	my $args = {
+	    command => $command,
+	    ml_name => $ml_name,
+	    options => \@options,
+	    argv    => $argv,
+	};
+
 	eval qq{ require $pkg; $pkg->import();};
-	if ($@) { 
-	    Log( $@ );
-	    return ;
-	}
+	if ($@) { Log($@); croak("command=$command is not supported.");}
 
 	# here we go
 	$curproc->lock();
-	my $obj = $pkg->new;
-	$obj->$method($curproc, @options);
+	my $obj  = $pkg->new;
+	$obj->$method($curproc, $args);
 	$curproc->unlock();
     }
     else {
@@ -139,11 +144,11 @@ sub _which_makefml_method
 {
     my ($self, $command) = @_;
     my $method = {
-	'add'        => 'add',
-	'subscribe'  => 'add',
+	'add'          => 'subscribe',
+	'subscribe'    => 'subscribe',
 
-	'bye'          => 'delete',
-	'unsubscribe'  => 'delete',
+	'bye'          => 'unsubscribe',
+	'unsubscribe'  => 'unsubscribe',
 
 	'newml'        => 'newml',
     };
