@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.2 2003/11/23 14:18:23 fukachan Exp $
+# $FML: Control.pm,v 1.3 2003/11/25 14:13:15 fukachan Exp $
 #
 
 package FML::User::Control;
@@ -356,7 +356,7 @@ sub _try_chaddr_in_map
 #               OBJ($curproc) HASH_REF($command_args) HASH_REF($uc_args)
 # Side Effects: none
 # Return Value: none
-sub userlist
+sub print_userlist
 {
     my ($self, $curproc, $command_args, $uc_args) = @_;
     my $config  = $curproc->config();
