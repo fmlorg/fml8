@@ -1,10 +1,10 @@
 <!--
-   $FML: done.sgml,v 1.2 2001/06/29 12:26:49 fukachan Exp $
+   $FML: done.sgml,v 1.3 2001/07/08 13:46:26 fukachan Exp $
 -->
 
 <chapter id="fml4to5">
 
-<title> fml 5.0 では解決したが、4.0 ではどうする？ </title>
+<title> 解決したもの </title>
 
 <!-- ============================================ -->
 <sect1>
@@ -65,6 +65,12 @@ postfix の $smtpd_recipient_restriction とよろしくやる。
 fml-devel ではこの動作がデフォルトなので、done.
 </para>
 
+<warning>
+<para>
+fml 5.0 では解決済みだが、4.0 ではどうする？
+</para>
+</warning>
+
 </sect1>
 
 
@@ -97,7 +103,13 @@ http://linas.org/linux/pm.html
 
 </para>
 
-</sect1>
 
+<warning>
+<para>
+fml 5.0 では解決済みだが、4.0 ではどうする？
+</para>
+</warning>
+
+</sect1>
 
 </chapter>
