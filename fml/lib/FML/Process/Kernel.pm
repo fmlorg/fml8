@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.162 2003/03/06 04:17:19 fukachan Exp $
+# $FML: Kernel.pm,v 1.163 2003/03/06 09:34:15 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -2093,6 +2093,27 @@ sub reset_umask
 
     # back to the original umask;
     umask($saved_umask);
+}
+
+
+# Descriptions: finalize curproc.
+#    Arguments: OBJ($curproc) 
+# Side Effects: non
+# Return Value: none
+sub finalize
+{
+    my ($curproc) = @_;
+    my $debug     = $curproc->debug_level();
+
+    if ($debug > 100) {
+	Log("debug: dump curproc structure");
+	eval q{
+	    use FML::Process::Debug;
+	    my $obj = new FML::Process::Debug;
+	    $obj->dump_curproc($curproc);
+	};
+	LogError($@) if $@;
+    }
 }
 
 
