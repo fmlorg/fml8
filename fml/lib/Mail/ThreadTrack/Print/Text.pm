@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Text.pm,v 1.4 2001/11/19 08:47:01 fukachan Exp $
+# $FML: Text.pm,v 1.5 2001/12/22 09:21:21 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::Text;
@@ -13,13 +13,32 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use Mail::ThreadTrack::Print::Utils qw(decode_mime_string STR2EUC);
 
+=head1 NAME
+
+Mail::ThreadTrack::Print::Text - what is this
+
+=head1 SYNOPSIS
+
+See C<Mail::ThreadTrack::Print> for usage of this subclass.
+
+=head1 DESCRIPTION
+
+See C<Mail::ThreadTrack::Print> for usage of this subclass.
+
+=head1 METHODS
+
+=head2 show_articles_in_thread(thread_id)
+
+=cut
+
+
 my $is_show_cost_indicate = 0;
 
 my $format = "%-20s %10s %5s %8s %s\n";
 
 
-# Descriptions: show articles as HTML in this thread
-#    Arguments: $self $str
+# Descriptions: show articles as text in this thread
+#    Arguments: OBJ($self) STR($thread_id)
 # Side Effects: none
 # Return Value: none
 sub show_articles_in_thread
@@ -49,7 +68,7 @@ sub show_articles_in_thread
 
 
 # Descriptions: show guide line
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub __start_thread_summary
@@ -64,7 +83,7 @@ sub __start_thread_summary
 
 
 # Descriptions: print formated brief summary
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub __print_thread_summary
@@ -83,9 +102,9 @@ sub __print_thread_summary
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: print closing string, empty now
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
 # Return Value: none
 sub __end_thread_summary
 {
@@ -95,9 +114,9 @@ sub __end_thread_summary
 
 
 # Descriptions: create a string of "a b c .." style up to $num bytes
-#    Arguments: $num $str
+#    Arguments: NUM($num) STR($str)
 # Side Effects: none
-# Return Value: string
+# Return Value: STR
 sub _format_list
 {
     my ($max, $str) = @_;
@@ -117,7 +136,7 @@ sub _format_list
 
 
 # Descriptions: print message summary
-#    Arguments: $self $args
+#    Arguments: OBJ($self) STR($thread_id)
 # Side Effects: none
 # Return Value: none
 sub __print_message_summary
@@ -157,10 +176,11 @@ sub __print_message_summary
 }
 
 
-# Descriptions: ( broken now ;-)
-#    Arguments: $string
+# Descriptions: for example, cost -> '!!!'
+#               broken now ;-)
+#    Arguments: STR($cost)
 # Side Effects: none
-# Return Value: string
+# Return Value: STR
 sub _cost_to_indicator
 {
     my ($cost) = @_;
@@ -174,6 +194,27 @@ sub _cost_to_indicator
 
     $how_bad;
 }
+
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
+
+=head1 AUTHOR
+
+Ken'ichi Fukamachi
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself.
+
+=head1 HISTORY
+
+Mail::ThreadTrack::Print::Text appeared in fml5 mailing list driver package.
+See C<http://www.fml.org/> for more details.
 
 
 1;

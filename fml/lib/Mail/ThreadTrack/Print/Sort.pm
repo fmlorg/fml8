@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sort.pm,v 1.4 2001/11/10 08:50:41 fukachan Exp $
+# $FML: Sort.pm,v 1.5 2001/12/22 09:21:21 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::Sort;
@@ -13,15 +13,29 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
 
+=head1 NAME
+
+Mail::ThreadTrack::Print::Sort - sort function for printing
+
+=head1 SYNOPSIS
+
+See C<Mail::ThreadTrack::Print> for usage of this subclass.
+
+=head1 DESCRIPTION
+
+See C<Mail::ThreadTrack::Print> for usage of this subclass.
+
+=head1 METHODS
+
 =head2 sort_thread_id($thread_id_list)
 
 =cut
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: sort ARRAY REFERENCE $thread_id_list
+#    Arguments: OBJ($self) REF_ARRAY($thread_id_list)
+# Side Effects: none
+# Return Value: REF_ARRAY
 sub sort_thread_id
 {
     my ($self, $thread_id_list) = @_;
@@ -45,10 +59,10 @@ my $status_cost = {
 };
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: evaluate how old and status for each thread
+#    Arguments: OBJ($self) REF_ARRAY($thread_id_list)
+# Side Effects: none
+# Return Value: ARRAY( REF_HASH, REF_HASH )
 sub _calculate_age
 {
     my ($self, $thread_id_list) = @_;
@@ -77,6 +91,30 @@ sub _calculate_age
 
     return (\%age, \%cost);
 }
+
+
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
+
+=head1 AUTHOR
+
+Ken'ichi Fukamachi
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself.
+
+=head1 HISTORY
+
+Mail::ThreadTrack::Print::Sort appeared in fml5 mailing list driver package.
+See C<http://www.fml.org/> for more details.
+
+=cut
 
 
 1;

@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.4 2001/11/19 03:01:26 fukachan Exp $
+# $FML: Message.pm,v 1.5 2001/12/22 09:21:21 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::Message;
@@ -13,6 +13,32 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use Mail::ThreadTrack::Print::Utils qw(decode_mime_string STR2EUC);
 
+
+=head1 NAME
+
+Mail::ThreadTrack::Print::Message - summarize et.al.
+
+=head1 SYNOPSIS
+
+See C<Mail::ThreadTrack::Print> for usage of this subclass.
+
+=head1 DESCRIPTION
+
+See C<Mail::ThreadTrack::Print> for usage of this subclass.
+
+=head1 METHODS
+
+=head2 message_summary($file)
+
+make message summary for specified $file (article).
+
+=cut
+
+
+# Descriptions: make message summary for specified $file (article)
+#    Arguments: OBJ($self) STR($file)
+# Side Effects: none
+# Return Value: STR
 sub message_summary
 {
     my ($self, $file) = @_;
@@ -77,6 +103,10 @@ sub message_summary
 }
 
 
+# Descriptions: str looks effective, not quotation et.al. ?
+#    Arguments: STR($str)
+# Side Effects: none
+# Return Value: 1 or 0
 sub _valid_buf
 {
     my ($str) = @_;
@@ -99,6 +129,10 @@ sub _valid_buf
 }
 
 
+# Descriptions: remove subject tag like string in $str e.g. [elena 100]
+#    Arguments: STR($str)
+# Side Effects: none
+# Return Value: STR
 sub _delete_subject_tag_like_string
 {
     my ($str) = @_;
@@ -113,6 +147,10 @@ sub _delete_subject_tag_like_string
 }
 
 
+# Descriptions: make summary of header $args->{ header }
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: STR
 sub header_summary
 {
     my ($self, $args) = @_;
@@ -141,6 +179,11 @@ sub header_summary
 }
 
 
+# Descriptions: get gecos field in $address.
+#               return $address itself if the extraction failed.
+#    Arguments: OBJ($self) STR($address)
+# Side Effects: none
+# Return Value: STR
 sub _who_of_address
 {
     my ($self, $address) = @_;
@@ -170,6 +213,29 @@ sub _who_of_address
 	return $address;
     }
 }
+
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
+
+=head1 AUTHOR
+
+Ken'ichi Fukamachi
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself.
+
+=head1 HISTORY
+
+Mail::ThreadTrack::Print::Message appeared in fml5 mailing list driver package.
+See C<http://www.fml.org/> for more details.
+
+=cut
 
 
 1;

@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HTML.pm,v 1.7 2001/11/17 04:03:38 fukachan Exp $
+# $FML: HTML.pm,v 1.8 2001/12/22 09:21:21 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::HTML;
@@ -12,13 +12,35 @@ package Mail::ThreadTrack::Print::HTML;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use CGI qw/:standard/;
 
+
+=head1 NAME
+
+Mail::ThreadTrack::Print::HTML - print thread summary as HTML
+
+=head1 SYNOPSIS
+
+See C<Mail::ThreadTrack::Print> for usage of this subclass.
+
+=head1 DESCRIPTION
+
+See C<Mail::ThreadTrack::Print> for usage of this subclass.
+
+=head1 METHODS
+
+=head2 show_articles_in_thread(thread_id)
+
+show articles as HTML in this thread.
+
+=cut
+
+
+use CGI qw/:standard/;
 use Mail::ThreadTrack::Print::Utils qw(decode_mime_string STR2EUC);
 
 
 # Descriptions: show articles as HTML in this thread
-#    Arguments: $self $str
+#    Arguments: OBJ($self) STR($thread_id)
 # Side Effects: none
 # Return Value: none
 sub show_articles_in_thread
@@ -62,7 +84,7 @@ sub show_articles_in_thread
 
 
 # Descriptions: show guide
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub __start_thread_summary
@@ -110,7 +132,7 @@ sub __start_thread_summary
 
 # Descriptions: finalize thread list
 #               close TABLE tag
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub __end_thread_summary
@@ -128,7 +150,7 @@ sub __end_thread_summary
 
 # Descriptions: This shows summary on C<$thread_id> in HTML language.
 #               It is used in C<FML::CGI::ThreadSystem>.
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub __print_thread_summary
@@ -207,7 +229,7 @@ sub __print_thread_summary
 }
 
 
-# Descriptions: dummy
+# Descriptions: dummy, defined for symmetry
 #    Arguments: none
 # Side Effects: none
 # Return Value: none
@@ -215,6 +237,29 @@ sub __print_message_summary
 {
     ;
 }
+
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
+
+=head1 AUTHOR
+
+Ken'ichi Fukamachi
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself.
+
+=head1 HISTORY
+
+Mail::ThreadTrack::Print::HTML appeared in fml5 mailing list driver package.
+See C<http://www.fml.org/> for more details.
+
+=cut
 
 
 1;
