@@ -1,0 +1,8 @@
+PUBLIC "-//FML//DTD DocBook V3.1-Based Extension//EN" 
+       "fml.dtd"
+
+PUBLIC "-//FML//DOCUMENT DocBook Stylesheet//EN"
+        "fml.dsl"
+
+PUBLIC "-//FML//DOCUMENT DocBook Language Neutral Stylesheet//EN"
+        "fml.dsl"
