@@ -98,23 +98,11 @@ sub _distribute
     my $header = $curproc->{'article'}->{'header'};
     my $config = $curproc->{'config'};
 
-    my $ra_rcpt = [ 
-		   'fukachan-1@elena.sapporo.iij.ad.jp',
-		   'fukachan-2@elena.sapporo.iij.ad.jp',
-		   'fukachan-3@elena.sapporo.iij.ad.jp',
-		   'fukachan-4@elena.sapporo.iij.ad.jp',
-		   'fukachan-5@elena.sapporo.iij.ad.jp',
-		   ];
-
-    undef $ra_rcpt;
-    $ra_rcpt = [  'fukachan@nuinui.net' ];
-
     $service->deliver(
 		      {
 			  'mta'             => $config->{'mta'},
 
 			  'smtp_sender'     => 'rudo',
-			  'recipient_array' => $ra_rcpt,
 			  'recipient_maps'  => $config->{recipient_maps},
 			  'recipient_limit' => $config->{recipient_limit},
 
