@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.209 2004/02/26 08:05:37 fukachan Exp $
+# $FML: Kernel.pm,v 1.210 2004/02/26 13:22:25 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1384,6 +1384,8 @@ sub ui_message
 }
 
 
+=head1 REPLY MESSAGES
+
 =head2 reply_message($msg)
 
 C<reply_message($msg)> holds message C<$msg> sent back to the mail
@@ -1391,11 +1393,11 @@ sender.
 
 To send a plain text,
 
-    reply_message( "message" );
+    $curproc->reply_message( "message" );
 
 but to attach an image file, please use in the following way:
 
-    reply_message( {
+    $curproc->reply_message( {
 	type        => "image/gif",
 	path        => "aaa00123.gif",
 	filename    => "logo.gif",
@@ -1404,7 +1406,7 @@ but to attach an image file, please use in the following way:
 
 If you attach a plain text with the charset = iso-2022-jp,
 
-    reply_message( {
+    $curproc->reply_message( {
 	type        => "text/plain; charset=iso-2022-jp",
 	path        => "/etc/fml/main.cf",
 	filename    => "main.cf",
@@ -1413,12 +1415,15 @@ If you attach a plain text with the charset = iso-2022-jp,
 
 =head3 CAUTION
 
-makefml not support message handling not yet.
+makefml/fml not support message handling not yet.
+If given, makefml/fml ignores message output.
 
 =cut
 
 
-# Descriptions: set reply message
+# Descriptions: reply message interface.
+#               It injects messages into message queue on memory in fact.
+#               inform_reply_messages() recollects them and send it later. 
 #    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($rm_args)
 # Side Effects: none
 # Return Value: none
@@ -1429,23 +1434,20 @@ sub reply_message
 
     $curproc->caller_info($msg, caller) if $debug;
 
-    # XXX-TODO: hard-coded. move condition statements to configuration file.
-    # XXX makefml not support message handling not yet.
-    if ($myname eq 'makefml' ||
-	$myname eq 'fml'     ||
-	$myname =~ /\.cgi$/) {
+    # process running under MTA can handle reply messages by mail.
+    unless ($curproc->is_under_mta_process()) {
 	$curproc->logwarn("(debug) $myname disables reply_message()");
 	return;
     }
 
     # get recipients list
-    my ($recipient, $recipient_maps) = $curproc->_analyze_recipients($rm_args);
-    my $hdr                          = $curproc->_analyze_header($rm_args);
+    my ($recipient,$recipient_maps) = $curproc->_analyze_recipients($rm_args);
+    my $hdr                         = $curproc->_analyze_header($rm_args);
 
     # check text messages and fix if needed.
     unless (ref($msg)) {
 	# \n in the last always.
-	$msg .= "\n" unless $msg =~ /\n$/;
+	$msg .= "\n" unless $msg =~ /\n$/o;
     }
 
     $curproc->_append_message_into_queue2($msg, $rm_args,
