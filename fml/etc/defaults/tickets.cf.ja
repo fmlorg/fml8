@@ -14,4 +14,4 @@ ticket_subject_tag	=	[$ticket_id_syntax]
 
 ticket_sequence_file	=	$ml_home_dir/ticket.seq
 
-ticket_db_dir		=	$shared_db_dir/ticket/$mlname
+ticket_db_dir		=	$shared_db_dir/ticket/$ml_name
