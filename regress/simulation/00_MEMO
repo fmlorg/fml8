@@ -7,6 +7,17 @@
         XXX 遠大なビジョンやとりあえず後まわしでよいものは STATUS.txt へ
 
 
+[TODO] fml.pl が、すなおに fml4 の config.ph をよんで（こんばーとして）
+	そのままうごけば’いいのでは？？
+
+		/usr/sbin/sendmail と postfix みたいなもんだね
+
+
+[TODO] CGI スキンを動的に切替えられる？
+
+		config.cgi -> menu.cgi
+
+
 [TODO] config tool
 
 	GUI -> config
@@ -297,5 +308,4 @@
 
 
 ----------
-$FML: 00_MEMO,v 1.115 2004/07/31 09:33:58 fukachan Exp $
-
+$FML: 00_MEMO,v 1.116 2004/10/24 17:24:37 fukachan Exp $
