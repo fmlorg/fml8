@@ -32,6 +32,11 @@ address_for_command = $ml_name-ctl@$ml_domain
 
 $distribute_run_start_hook = q{
 
-	print STDERR "hook: hey!\n"; sleep 2;
+	print STDERR "hook: hey!\n";
 
+	my $header = $curproc->{ incoming_message }->{ header };
+
+	print STDERR $header->get('content-type');
+
+	sleep 2;
 };
