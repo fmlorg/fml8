@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: case_studies.sgml,v 1.1 2003/02/16 13:07:15 fukachan Exp $
 -->
 
 
@@ -43,7 +43,7 @@ Subject: (SUPPORT 10000)
 ただし、自ドメインからのリクエストに対してのみ、
 コマンドメールの使用を許す。
 これは、HOOK で実現する。
-<section>
+<screen>
 $command_verify_request_end_hook = q{
         my $cred = $curproc->{ credential };
         my $from = $cred->sender();
@@ -53,7 +53,7 @@ $command_verify_request_end_hook = q{
                 LogError("deny command request from $from");
         }
 };
-</section>  
+</screen>  
 </para>
 
 
