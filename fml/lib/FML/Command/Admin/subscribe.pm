@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: subscribe.pm,v 1.3 2001/09/13 11:53:30 fukachan Exp $
+# $FML: subscribe.pm,v 1.4 2001/10/11 23:59:54 fukachan Exp $
 #
 
 package FML::Command::Admin::subscribe;
@@ -59,10 +59,10 @@ sub process
 	    $obj->touch();
 	    $obj->add( $address );
 	    unless ($obj->error()) {
-		Log("added $address to map=$map");
+		Log("add $address to map=$map");
 	    }
 	    else {
-		LogError("fail to add $address to map=$map");
+		croak("fail to add $address to map=$map");
 	    }
 	}
 	else {
