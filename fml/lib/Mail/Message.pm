@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.69 2002/12/30 15:06:46 fukachan Exp $
+# $FML: Message.pm,v 1.70 2003/01/09 00:43:57 fukachan Exp $
 #
 
 package Mail::Message;
@@ -1731,6 +1731,26 @@ sub is_empty
 
     # false
     return 0;
+}
+
+
+=head2 is_multipart()
+
+return this message has empty content or not.
+
+=cut
+
+
+# Descriptions: return 1 if this message object is a multipart.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM( 1 or 0 )
+sub is_multipart
+{
+    my ($self) = @_;
+    my $type = $self->whole_message_header_data_type();
+
+    return( ($type =~ /multipart/i) ? 1 : 0 );
 }
 
 
