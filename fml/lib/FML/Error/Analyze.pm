@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.11 2002/12/23 21:28:32 fukachan Exp $
+# $FML: Analyze.pm,v 1.12 2003/01/04 12:55:53 tmu Exp $
 #
 
 package FML::Error::Analyze;
@@ -85,9 +85,9 @@ sub simple_count
 	# count up the number of error messsages if the status is 5XX.
 	if (defined $bufarray) {
 	    for my $buf (@$bufarray) {
+		($time, $status, $reason) = split(/\s+/, $buf);
+		next if((time - $time) > (86400*$daylimit));
 		if ($buf =~ /status=5/i) {
-		    ($time, $status, $reason) = split(/\s+/, $buf);
-		    next if((time - $time) > (86400*$daylimit));
 		    $count++;
 		    $summary->{ $addr } = $count;
 		}
@@ -103,6 +103,57 @@ sub simple_count
     # debug info
     if ($debug) {
 	Log("error: simple_count analyzer summary");
+	my ($k, $v);
+	while (($k, $v) = each %$summary) {
+	    Log("summary: $k = $v points");
+	}
+    }
+
+    return \@removelist;
+}
+
+# Descriptions: count up the number of errors.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($data)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub simple_count2
+{
+    my ($self, $curproc, $data) = @_;
+    my ($addr, $bufarray, $count);
+    my @removelist = ();
+    my $summary    = {};
+    my $config     = $curproc->config();
+    my $limit      = $config->{ error_analyzer_simple_count_limit } || 5;
+    my $daylimit   = $config->{ error_analyzer_day_limit } || 14;
+
+    while (($addr, $bufarray) = each %$data) {
+	$count = 0;
+
+	# count up the number of error messsages if the status is 5XX.
+	if (defined $bufarray) {
+	    for my $buf (@$bufarray) {
+		($time, $status, $reason) = split(/\s+/, $buf);
+		next if((time - $time) > (86400*$daylimit));
+		if ($buf =~ /status=5/i) {
+		    $count++;
+		    $summary->{ $addr } = $count;
+		}
+		if ($buf =~ /status=4/i) {
+		    $count += 0.25;
+		    $summary->{ $addr } = $count;
+		}
+	    }
+	}
+
+	# add address to the removal list if the count is over $limit.
+	if ($count > $limit) {
+	    push(@removelist, $addr);
+	}
+    }
+
+    # debug info
+    if ($debug) {
+	Log("error: simple_count2 analyzer summary");
 	my ($k, $v);
 	while (($k, $v) = each %$summary) {
 	    Log("summary: $k = $v points");
@@ -195,6 +246,84 @@ sub error_continuity
     return \@removelist;
 }
 
+sub error_continuity2
+{
+    my ($self, $curproc, $data) = @_;
+    my ($addr, $bufarray, $count, $i);
+    my ($time, $status, $reason);
+    my @removelist = ();
+    my $summary    = {};
+    my $config     = $curproc->config();
+    my $limit      = $config->{ error_analyzer_simple_count_limit } || 14;
+    my $daylimit   = $config->{ error_analyzer_day_limit } || 14;
+
+    while (($addr, $bufarray) = each %$data) {
+	$count = 0;
+	if (defined $bufarray) {
+	    for my $buf (@$bufarray) {
+		($time, $status, $reason) = split(/\s+/, $buf);
+		next if((time - $time) > (86400*$daylimit));
+
+		if ($buf =~ /status=5/i) {
+		    unless (defined $summary->{ $addr }) {
+			$summary->{ $addr } = [ 0 ];
+		    }
+
+		    # center of distribution function
+		    $i = int( (time - $time ) / (24*3600) );
+		    $summary->{ $addr }->[ $i ] += 2;
+
+		    # +delta
+		    $i = int( (time - $time + 12*3600) / (24*3600) );
+		    $summary->{ $addr }->[ $i ] += 1;
+
+		    # -delta
+		    $i = int( (time - $time - 12*3600) / (24*3600) );
+		    $summary->{ $addr }->[ $i ] += 1 if $i >= 0;
+		}
+		if ($buf =~ /status=4/i) {
+		    unless (defined $summary->{ $addr }) {
+			$summary->{ $addr } = [ 0 ];
+		    }
+
+		    # center of distribution function
+		    $i = int( (time - $time ) / (24*3600) );
+		    $summary->{ $addr }->[ $i ] += 0.25;
+
+		    # +delta
+		    $i = int( (time - $time + 12*3600) / (24*3600) );
+		    $summary->{ $addr }->[ $i ] += 0.25;
+
+		    # -delta
+		    $i = int( (time - $time - 12*3600) / (24*3600) );
+		    $summary->{ $addr }->[ $i ] += 0.25 if $i >= 0;
+		}
+	    }
+	}
+    }
+
+    # debug info
+    {
+	my $addr = '';
+	my $sum  = 0;
+	my $ra   = ();
+	while (($addr, $ra) = each %$summary) {
+	    $sum = 0;
+	    for my $v (@$ra) {
+		# count if the top of the mountain is over 2.
+		if (defined $v) {
+		    $sum += 1 if $v >= 2;
+		}
+	    }
+
+	    my $array = __debug_printable_array($ra);
+	    Log("summary: $addr sum=$sum ($array)");
+	    push(@removelist, $addr) if $sum >= $limit;
+	}
+    }
+
+    return \@removelist;
+}
 
 # Descriptions: return array list with 0 padding (debug)
 #    Arguments: ARRAY_REF($ra)
