@@ -40,8 +40,11 @@ in the process flow.
 2. define C<$fml_version>
 
 3. initialize
+    $curproc->{ main_cf }
     $curproc->{ config }
     $curproc->{ pcb }
+
+This C<main_cf> provides the pointer to /etc/fml/main.cf parameters.
 
 4. load and evaluate configuration files 
    e.g. /var/spool/ml/elena/config.cf
@@ -91,6 +94,9 @@ sub new
     if (defined $args->{ fml_version }) {
 	$cfargs->{ fml_version } = "fml-devel ". $args->{ fml_version };
     }
+
+    # for more convenience, save the parent configuration
+    $curproc->{ main_cf } = $args->{ main_cf };
 
     # bind FML::Config object to $curproc
     use FML::Config;
