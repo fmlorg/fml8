@@ -23,9 +23,9 @@ sub configure
     my ($type) = ref($self) || $self;
 
     # emulate an array on memory
-    my (@x)       = getgrnam( $me->{_name} );
-    my (@members) = split ' ', $x[3];
-    $me->{_array_reference} = \@members;
+    my (@x)        = getgrnam( $me->{_name} );
+    my (@elements) = split ' ', $x[3];
+    $me->{_array_reference} = \@elements;
 }
 
 

@@ -75,7 +75,7 @@ $flag is "r" only now.
 #                              flag => $flag
 #                  _array_reference => ARRAY_REFERENCE
 #               }
-# Side Effects: malloc @members array
+# Side Effects: malloc @elements array
 # Return Value: ARRAY REFERENCE
 sub open
 {
@@ -84,11 +84,11 @@ sub open
     my $r_array = $self->{ _array_reference};
 
     # malloc()
-    my @members = @$r_array;
-    $self->{_members}     = $r_array;
-    $self->{_num_members} = $#members;
-    $self->{_counter}     = 0;
-    return defined @members ? \@members : undef;
+    my @elements = @$r_array;
+    $self->{_elements}     = $r_array;
+    $self->{_num_elements} = $#elements;
+    $self->{_counter}      = 0;
+    return defined @elements ? \@elements : undef;
 }
 
 
@@ -116,7 +116,7 @@ sub get_next_value
 {
     my ($self, $args) = @_;
     my $i  = $self->{_counter}++;
-    my $ra = $self->{_members};
+    my $ra = $self->{_elements};
     defined $$ra[ $i ] ? $$ra[ $i ] : undef;
 }
 
@@ -153,7 +153,7 @@ sub setpos
 sub eof
 {
     my ($self) = @_;
-    $self->{_counter} > $self->{_num_members} ? 1 : 0;
+    $self->{_counter} > $self->{_num_elements} ? 1 : 0;
 }
 
 

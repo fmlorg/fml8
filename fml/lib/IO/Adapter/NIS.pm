@@ -23,10 +23,10 @@ sub configure
     my ($type) = ref($self) || $self;
 
     # emulate an array on memory
-    my $key       = $me->{_name};
-    my (@x)       = split(/:/, `ypmatch $key group.byname`);
-    my (@members) = split ',', $x[3];
-    $me->{_array_reference} = \@members;
+    my $key        = $me->{_name};
+    my (@x)        = split(/:/, `ypmatch $key group.byname`);
+    my (@elements) = split ',', $x[3];
+    $me->{_array_reference} = \@elements;
 }
 
 
