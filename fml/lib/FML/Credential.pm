@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.20 2002/01/27 09:21:51 fukachan Exp $
+# $FML: Credential.pm,v 1.21 2002/01/27 09:25:22 fukachan Exp $
 #
 
 package FML::Credential;
@@ -145,10 +145,44 @@ sub is_member
 {
     my ($self, $curproc, $args) = @_;
     my $status = 0;
-
     my $member_maps = $curproc->{ config }->{ member_maps };
     my $address = $args->{ address } || $curproc->{'credential'}->{'sender'};
+
+    $self->_is_member($curproc, $args, {
+	address     => $address,
+	member_maps => $member_maps,
+    });
+}
+
+
+# Descriptions: sender of the current process is an ML administrator ?
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: 1 or 0
+sub is_privileged_member
+{
+    my ($self, $curproc, $args) = @_;
+    my $member_maps = $curproc->{ config }->{ admin_member_maps };
+    my $address = $args->{ address } || $curproc->{'credential'}->{'sender'};
+
+    $self->_is_member($curproc, $args, {
+	address     => $address,
+	member_maps => $member_maps,
+    });
+}
+
+
+# Descriptions: sender of the current process is an ML member or not.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args) HASH_REF($optargs)
+# Side Effects: none
+# Return Value: 1 or 0
+sub _is_member
+{
+    my ($self, $curproc, $args, $optargs) = @_;
+    my $address     = $optargs->{ address };
+    my $member_maps = $optargs->{ member_maps };
     my ($user, $domain) = ();
+    my $status = 0;
 
     if (defined $address) {
 	($user, $domain) = split(/\@/, $address);
