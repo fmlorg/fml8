@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ConfViewer.pm,v 1.12 2002/06/27 08:25:49 fukachan Exp $
+# $FML: ConfViewer.pm,v 1.13 2002/06/30 01:23:55 fukachan Exp $
 #
 
 package FML::Process::ConfViewer;
@@ -18,13 +18,15 @@ use FML::Process::Kernel;
 
 =head1 NAME
 
-FML::Process::ConfViewer -- show variables
+FML::Process::ConfViewer -- show configuration variables
 
 =head1 SYNOPSIS
 
     use FML::Process::ConfViewer;
     $curproc = new FML::Process::ConfViewer;
+       ...
     $curproc->run();
+       ...
 
 =head1 DESCRIPTION
 
@@ -39,7 +41,7 @@ It make a C<FML::Process::Kernel> object and return it.
 
 =head2 C<prepare($args)>
 
-dummy.
+adjust ml_* and load configuration files.
 
 =cut
 
@@ -57,7 +59,7 @@ sub new
 }
 
 
-# Descriptions: dummy
+# Descriptions: adjust ml_* and load configuration files.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -133,9 +135,9 @@ See <FML::Process::Switch()> on C<$args> for more details.
 sub run
 {
     my ($curproc, $args) = @_;
-    my $config  = $curproc->{ config };
-    my $myname  = $curproc->myname();
-    my $argv    = $curproc->command_line_argv();
+    my $config = $curproc->{ config };
+    my $myname = $curproc->myname();
+    my $argv   = $curproc->command_line_argv();
 
     my $eval = $config->get_hook( 'fmlconf_run_start_hook' );
     if ($eval) {

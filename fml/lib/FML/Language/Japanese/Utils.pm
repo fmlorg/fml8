@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.8 2002/04/08 12:44:25 fukachan Exp $
+# $FML: Utils.pm,v 1.9 2002/05/11 09:45:48 fukachan Exp $
 #
 
 package FML::Language::Japanese::Utils;
@@ -110,6 +110,9 @@ return 1 if found or 0 if not.
 sub compare_euc_string
 {
     my ($self, $a, $pat) = @_;
+
+    # XXX validate $a and $pat ???
+    #     e.g. defined($a) ?
 
     # (Refeence: jcode 2.12)
     # $re_euc_c    = '[\241-\376][\241-\376]';

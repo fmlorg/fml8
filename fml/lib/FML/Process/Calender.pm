@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Calender.pm,v 1.4 2002/04/07 05:04:38 fukachan Exp $
+# $FML: Calender.pm,v 1.5 2002/06/01 02:22:06 fukachan Exp $
 #
 
 package FML::Process::Calender;
@@ -28,8 +28,8 @@ FML::Process::Calender -- demonstration of FML module usage
 =head1 DESCRIPTION
 
 FML::Process::Calender is a demonstration module to show fml module
-usage.  This module provides calender presentation for a simple
-scheduler, Calender::Lite class.
+usage.  This module provides calender presentation as a simple
+scheduler based on Calender::Lite class.
 
 =head1 METHODS
 
@@ -62,13 +62,15 @@ sub new
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
-sub prepare        { 1; }
+sub prepare { 1;}        
+
 
 # Descriptions: dummy
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub verify_request { 1; }
+
 
 # Descriptions: dummy
 #    Arguments: OBJ($self) HASH_REF($args)
@@ -120,7 +122,7 @@ sub run
 	    $schedule->print_specific_month($wh, $month);
 	}
     }
-    # if "month" to show is specified as arguments,
+    # if "month" option is specified as an argument,
     # show the corresponding calender.
     elsif (defined(@$argv) && @$argv) {
 	# ($month, $yeer) = @$argv;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HeaderCheck.pm,v 1.15 2002/04/10 09:57:23 fukachan Exp $
+# $FML: HeaderCheck.pm,v 1.16 2002/06/01 14:53:38 fukachan Exp $
 #
 
 package FML::Filter::HeaderCheck;
@@ -60,7 +60,7 @@ sub new
 
 =head2 C<rules( $rules )>
 
-overwrite rules by specified C<@$rules> ($rules is HASH ARRAY).
+overwrite rules by specified C<@$rules> ($rules is ARRAY_REF).
 
 =cut
 

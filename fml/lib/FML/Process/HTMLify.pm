@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: HTMLify.pm,v 1.19 2002/04/27 05:25:03 fukachan Exp $
+# $FML: HTMLify.pm,v 1.20 2002/06/27 08:25:50 fukachan Exp $
 #
 
 package FML::Process::HTMLify;
@@ -41,7 +41,7 @@ create a C<FML::Process::Kernel> object and return it.
 
 =head2 C<prepare()>
 
-dummy :)
+adjust ml_* and load configuration files.
 
 =cut
 
@@ -59,7 +59,7 @@ sub new
 }
 
 
-# Descriptions: dummy to avoid to take data from STDIN
+# Descriptions: adjust ml_* and load configuration files
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none

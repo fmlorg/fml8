@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: User.pm,v 1.8 2002/06/24 11:06:11 fukachan Exp $
+# $FML: User.pm,v 1.9 2002/06/25 04:02:11 fukachan Exp $
 #
 
 package FML::CGI::Admin::User;
@@ -28,7 +28,8 @@ sub new
 }
 
 
-# Descriptions: show menu for subscribe/unsubscribe commands
+# Descriptions: show menu for user control commands such as
+#               subscribe, unsubscribe, addadmin, byeadmin, ...
 #    Arguments: OBJ($self)
 #               OBJ($curproc)
 #               HASH_REF($args)
@@ -47,7 +48,7 @@ sub cgi_menu
     my $comname      = $command_args->{ comname };
     my $address_list = [];
 
-    # prepare address list to show them at the scrolling list
+    # which address list to show at the scrolling list
     if ($comname eq 'subscribe' || $comname eq 'unsubscribe') {
 	$address_list = $curproc->get_address_list( 'member_maps' );
     }

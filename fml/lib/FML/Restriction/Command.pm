@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.1 2002/02/11 12:29:27 fukachan Exp $
+# $FML: Command.pm,v 1.2 2002/04/06 14:48:03 fukachan Exp $
 #
 
 package FML::Restriction::Command;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Restriction::Command - filter rules for command input
+FML::Restriction::Command - safe regexp allowed as a command
 
 =head1 SYNOPSIS
 

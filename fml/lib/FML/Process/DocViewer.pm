@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DocViewer.pm,v 1.16 2002/04/07 05:05:06 fukachan Exp $
+# $FML: DocViewer.pm,v 1.17 2002/06/27 08:25:50 fukachan Exp $
 #
 
 package FML::Process::DocViewer;
@@ -26,14 +26,16 @@ FML::Process::DocViewer -- perldoc wrapper to show a fml module
 
     use FML::Process::DocViewer;
     $curproc = new FML::Process::DocViewer;
+      ...
     $curproc->run();
+      ...
 
 =head1 DESCRIPTION
 
 FML::Process::DocViewer is the main routine of C<fmldoc> program.
 It wraps C<perldoc>.
 
-See C<FML::Process::Flow> for program flow.
+See C<FML::Process::Flow> for the program flow.
 
 =head1 METHODS
 
@@ -44,7 +46,7 @@ It inherits C<FML::Process::Kernel>.
 
 =head2 C<prepare($args)>
 
-dummy.
+load default configuration files.
 
 =cut
 
@@ -62,7 +64,7 @@ sub new
 }
 
 
-# Descriptions: dummy
+# Descriptions: load default configurations
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -90,7 +92,7 @@ sub prepare
 sub verify_request
 {
     my ($curproc, $args) = @_;
-    my $argv = $curproc->command_line_argv();
+    my $argv   = $curproc->command_line_argv();
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'fmldoc_verify_request_start_hook' );
@@ -122,9 +124,9 @@ C<fmlconf($args)>.
 sub run
 {
     my ($curproc, $args) = @_;
-    my $config  = $curproc->{ config };
-    my $myname  = $curproc->myname();
-    my $argv    = $curproc->command_line_argv();
+    my $config = $curproc->{ config };
+    my $myname = $curproc->myname();
+    my $argv   = $curproc->command_line_argv();
 
     $curproc->_fmldoc($args);
 }
@@ -137,9 +139,9 @@ sub run
 sub _fmldoc
 {
     my ($curproc, $args) = @_;
-    my $config  = $curproc->{ config };
-    my $myname  = $curproc->myname();
-    my $argv    = $curproc->command_line_argv();
+    my $config = $curproc->{ config };
+    my $myname = $curproc->myname();
+    my $argv   = $curproc->command_line_argv();
 
     my $eval = $config->get_hook( 'fmldoc_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }

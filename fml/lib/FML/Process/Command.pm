@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.61 2002/06/01 05:09:25 fukachan Exp $
+# $FML: Command.pm,v 1.62 2002/06/27 08:25:49 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -62,11 +62,13 @@ sub new
 
 =head2 C<prepare($args)>
 
-forward the request to SUPER CLASS.
+adjust ml_* and load configuration files.
+parse the incoming message.
 
 =cut
 
-# Descriptions: dummy
+# Descriptions: adjust ml_* and load configuration files.
+#               parse the incomiung message.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -194,7 +196,7 @@ _EOF_
 =cut
 
 
-# Descriptions: finalize command process.
+# Descriptions: finalize the command process.
 #               reply messages, command results et. al.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: queue manipulation

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.8 2002/06/25 04:11:30 fukachan Exp $
+# $FML: UserControl.pm,v 1.9 2002/06/30 14:30:14 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -45,7 +45,7 @@ sub new
 
 # Descriptions: add user
 #    Arguments: OBJ($self)
-#               HASH_REF($curproc) HASH_REF($command_args) HASH_REF($uc_args)
+#               OBJ($curproc) HASH_REF($command_args) HASH_REF($uc_args)
 # Side Effects: update maps
 # Return Value: none
 sub useradd
@@ -77,7 +77,7 @@ sub useradd
 
 # Descriptions: remove user
 #    Arguments: OBJ($self)
-#               HASH_REF($curproc) HASH_REF($command_args) HASH_REF($uc_args)
+#               OBJ($curproc) HASH_REF($command_args) HASH_REF($uc_args)
 # Side Effects: update maps
 # Return Value: none
 sub userdel
@@ -107,7 +107,7 @@ sub userdel
 
 # Descriptions: show list
 #    Arguments: OBJ($self)
-#               HASH_REF($curproc) HASH_REF($command_args) HASH_REF($uc_args)
+#               OBJ($curproc) HASH_REF($command_args) HASH_REF($uc_args)
 # Side Effects: none
 # Return Value: none
 sub userlist

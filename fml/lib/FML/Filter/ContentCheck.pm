@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ContentCheck.pm,v 1.7 2002/05/11 09:34:16 fukachan Exp $
+# $FML: ContentCheck.pm,v 1.8 2002/05/11 13:55:23 tmu Exp $
 #
 
 package FML::Filter::ContentCheck;
@@ -62,7 +62,7 @@ sub new
 
 =head2 C<rules( $rules )>
 
-overwrite rules by specified C<@$rules> ($rules is HASH ARRAY).
+overwrite rules by specified C<@$rules> ($rules is ARRAY_REF).
 
 =cut
 
@@ -80,7 +80,7 @@ sub rules
 
 =head2 C<permit_rules( $rules )>
 
-overwrite rules by specified C<@$rules> ($rules is HASH ARRAY).
+overwrite rules by specified C<@$rules> ($rules is ARRAY_REF).
 
 =cut
 
@@ -97,7 +97,7 @@ sub permit_rules
 
 =head2 C<reject_rules( $rules )>
 
-overwrite rules by specified C<@$rules> ($rules is HASH ARRAY).
+overwrite rules by specified C<@$rules> ($rules is ARRAY_REF).
 
 =cut
 
