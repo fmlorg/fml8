@@ -1,5 +1,5 @@
 dnl
-dnl $FML: configure.in,v 1.4 2001/11/17 14:22:17 fukachan Exp $
+dnl $FML: configure.in,v 1.5 2001/11/17 14:51:31 fukachan Exp $
 dnl
 AC_REVISION($Revision$)
 
@@ -10,6 +10,7 @@ AC_INIT(fml/libexec/loader.in)
 CFLAGS=${CFLAGS-"-O"}
 LDFLAGS=${LDFLAGS-""}
 
+dnl path_check
 dnl Checks for programs.
 
 dnl perl is mandatory
@@ -17,7 +18,39 @@ AC_CHECK_PROGS(have_perl, perl)
 if test ! -n "$have_perl" ; then
    AC_MSG_ERROR("Perl needs to be installed to use fml")
 fi
-AC_PATH_PROG(PERL, perl)
+AC_PATH_PROG(PERL,   perl)
+
+AC_MSG_RESULT([checking whether optional useful commands are available])
+
+AC_PATH_PROG(CKSUM,    cksum)
+AC_PATH_PROG(MD5,      md5)
+
+AC_PATH_PROG(TAR,      tar)
+AC_PATH_PROG(GZIP,     gzip)
+AC_PATH_PROG(ZCAT,     zcat)
+AC_PATH_PROG(GUNZIP,   gunzip)
+AC_PATH_PROG(LHA,      lha)
+AC_PATH_PROG(ISH,      ish)
+AC_PATH_PROG(BZIP2,    bzip2)
+AC_PATH_PROG(BUNZIP2,  bunzip2)
+AC_PATH_PROG(UUENCODE, uuencode)
+AC_PATH_PROG(COMPRESS, compress)
+
+AC_PATH_PROG(SENDMAIL, sendmail)
+
+AC_PATH_PROG(NKF,      nkf)
+AC_PATH_PROG(KAKASI,   kakasi)
+AC_PATH_PROG(NAMAZU,   namazu)
+
+AC_PATH_PROG(PGP,      pgp)
+AC_PATH_PROG(PGP5,     pgp5)
+AC_PATH_PROG(PGPe,     pgpe)
+AC_PATH_PROG(PGPK,     pgpk)
+AC_PATH_PROG(PGPS,     pgps)
+AC_PATH_PROG(PGPV,     pgpv)
+AC_PATH_PROG(GPG,      gpg)
+dnl path_check_end
+
 
 mlspooldir=/var/spool/ml
 AC_ARG_WITH(mlspooldir, 
@@ -37,8 +70,9 @@ AC_SUBST(SHELL)
 
 AC_OUTPUT(\
 	config.sh \
-	fml/libexec/loader \
 	fml/etc/main.cf \
+	fml/etc/paths.cf \
+	fml/libexec/loader \
 	fml/bin/fmlconf \
 	fml/bin/fmldoc \
 	fml/bin/fmlhtmlify \
