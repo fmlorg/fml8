@@ -93,10 +93,10 @@ sub _distribute
     };
     if ($service->error) { Log($service->error); return;}
 
-    my $fileobj;
-    my $body   = $curproc->{'article'}->{'body'};
-    my $header = $curproc->{'article'}->{'header'};
-    my $config = $curproc->{'config'};
+    $article    = $curproc->{ article };
+    my $body    = $article->{ body };    # FML::Body -> Netlib::Messages
+    my $header  = $article->{ header };  # FML::Header object
+    my $config  = $curproc->{ config };  # FML::Config object
 
     $service->deliver(
 		      {

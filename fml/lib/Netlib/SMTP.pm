@@ -581,37 +581,15 @@ sub _send_header_to_mta
 
 
 # Descriptions: send the body part of the message to socket
-#               replace "\n" in the end of line with "\r\n" on memory.
-#               We should do it to use as less memory as possible.
-#               So we use substr() to process each line.
-#    Arguments: $self $socket $ref_to_body
+#    Arguments: $self $socket "Netlib::Messages object"
 # Side Effects: none
 # Return Value: none
 sub _send_body_to_mta
 {
-    my ($self, $socket, $r_body) = @_;
-    my ($pp, $p, $maxlen, $len, $buf, $pbuf);
+    my ($self, $socket, $msg) = @_;
 
-    $pp     = 0;
-    $maxlen = length($$r_body);
-
-    # write each line in buffer
-  SMTP_IO:
-    while (1) {
-	$p   = index($$r_body, "\n", $pp);
-	$len = $p  - $pp + 1;
-	$buf = substr($$r_body, $pp, ($p < 0 ? $maxlen-$pp : $len));
-	if ($buf !~ /\r\n$/) { $buf =~ s/\n$/\r\n/;}
-
-	# ^. -> ..
-	$buf =~ s/^\./../;
-
-	$self->_smtplog($buf);
-	print $socket $buf;
-
-	last SMTP_IO if $p < 0;
-	$pp = $p + 1;
-    }
+    # XXX $msg is Netlib::Messages object.
+    $msg->print($socket);
 }
 
 
@@ -623,12 +601,6 @@ sub _send_body_to_mta
 sub _send_data_to_mta
 {
     my ($self, $args) = @_;
-
-
-    # XXX debug;
-    # Log("(debug) not send DATA now"); return ;
-    # 
-
 
     # prepare smtp information
     my $body       = $args->{ body };
