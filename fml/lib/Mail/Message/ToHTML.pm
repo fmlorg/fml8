@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.13 2002/04/19 05:22:01 fukachan Exp $
+# $FML: ToHTML.pm,v 1.14 2002/04/19 16:21:54 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -19,7 +19,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.13 2002/04/19 05:22:01 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.14 2002/04/19 16:21:54 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -2467,8 +2467,9 @@ sub htmlify_file
 sub htmlify_dir
 {
     my ($src_dir, $args) = @_;
-    my $dst_dir = $args->{ directory };
-    my $max     = 0;
+    my $dst_dir  = $args->{ directory };
+    my $max      = 0;
+    my $has_fork = 1; # ok on unix and perl>5.6 on wine32.
 
     print STDERR "src = $src_dir\ndst = $dst_dir\n" if $debug;
 
@@ -2485,7 +2486,26 @@ sub htmlify_dir
     for my $id ( 1 .. $max ) {
 	use File::Spec;
 	my $file = File::Spec->catfile($src_dir, $id);
-	htmlify_file($file, { directory => $dst_dir });
+
+	unless ( $has_fork ) {
+	    htmlify_file($file, { directory => $dst_dir });
+	}
+	else {
+	    my $pid = fork();
+	    if ($pid < 0) {
+		croak("cannot fork");
+	    }
+	    elsif ($pid == 0) {
+		htmlify_file($file, { directory => $dst_dir });
+		exit 0;
+	    }
+
+	    # parent
+	    my $dying;
+	    while (($dying = wait()) != -1 && ($dying != $pid) ){
+		;
+	    }
+	}
     }
 }
 
