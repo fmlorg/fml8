@@ -12,6 +12,17 @@
 	fml-devel-20040313 では、変数命名のルールが大きく変わりました。
 	気をつけてください。
 
+2005/06/13
+
+   Mail::Message::ToHTML 
+	set $main::opt_mimedecodequoted at
+	_print_li_filename(),_format_safe_header()
+	
+   Mail::Message::DB 
+	null check $key at _db_set()
+	
+   Mail::Message::ToHTML 
+	select index files using @indexs
 
 2004/06/09
 
@@ -7206,4 +7217,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.208 2004/06/07 16:10:11 fukachan Exp $
+$FML: CHANGES.txt,v 1.209 2004/06/10 04:02:54 fukachan Exp $
