@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.50 2002/12/18 03:41:41 fukachan Exp $
+# $FML: Header.pm,v 1.51 2002/12/20 03:37:17 fukachan Exp $
 #
 
 package FML::Header;
@@ -456,7 +456,7 @@ sub delete_unsafe_header_fields
     my ($header, $config, $args) = @_;
     my ($fields) = $config->get_as_array_ref('unsafe_header_fields');
 
-    for (@$fields) { $header->delete($_);}
+    for my $field (@$fields) { $header->delete($field);}
 }
 
 
@@ -626,7 +626,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
