@@ -1,6 +1,35 @@
 		CHANGES
 		Last Modified: $Date$
 
+2001/11/04
+
+   プログラム全域で ticket -> thread
+
+   FML::Process::Switch 
+	eval FML::Process::Flow::ProcessStart($obj, $args);
+	and trap error.
+	If error traped and $obj has help() method, run $obj->help().
+	also upcall the $@ by croak($@)
+	
+   FML::Process::
+	save $args at $curproc->{ __parent_args }
+	$curproc provides convenient functions FML::Process::Utils has.
+	fml_version()
+	myname()
+	command_line_raw_argv()
+	command_line_argv()
+	article_id_max()
+	
+	my $myname  = $curproc->myname();
+	my $argv    = $curproc->command_line_argv();
+	
+   FML::Process::ThreadTrack 
+	enable db_clear, db_mkdb, summary, help
+	
+   Mail::ThreadTrack 
+	implement exist() and close()
+	implemente db_clear(), db_mkdb()
+
 2001/11/03
 
    remove fmlticket, create fmlthread
@@ -792,4 +821,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.28 2001/10/29 15:10:05 fukachan Exp $
+$FML: CHANGES.txt,v 1.29 2001/11/03 15:48:16 fukachan Exp $
