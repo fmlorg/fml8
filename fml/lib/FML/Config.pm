@@ -1,7 +1,7 @@
 #-*- perl -*-
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.46 2001/10/27 04:11:30 fukachan Exp $
+# $FML: Config.pm,v 1.47 2001/12/22 09:21:01 fukachan Exp $
 #
 
 package FML::Config;
@@ -104,6 +104,12 @@ pseudo variable C<_pid> is reserved for process id reference.
 =cut
 
 
+# Descriptions: constructor.
+#               newly blessed object is binded to internal variable
+#               %_fml_config. So changes are shared among all objects. 
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: object is binded to common %_fml_config area
+# Return Value: OBJ
 sub new
 {
     my ($self, $args) = @_;
@@ -133,10 +139,19 @@ sub new
 
 =head2  C<get( key )>
 
+get value for key.
+
 =head2  C<set( key, value )>
+
+set value for key.
 
 =cut
 
+
+# Descriptions: get vaule for $key
+#    Arguments: OBJ($self) STR($key)
+# Side Effects: update internal area
+# Return Value: STR
 sub get
 {
     my ($self, $key) = @_;
@@ -144,6 +159,10 @@ sub get
 }
 
 
+# Descriptions: set vaule for $key
+#    Arguments: OBJ($self) STR($key)
+# Side Effects: update internal area
+# Return Value: STR
 sub set
 {
     my ($self, $key, $value) = @_;
@@ -170,6 +189,10 @@ them to %_fml_config.
 =cut
 
 
+# Descriptions: load file
+#    Arguments: OBJ($self) STR($file)
+# Side Effects: none
+# Return Value: none
 sub overload
 {
     my ($self, $file) = @_;
@@ -177,6 +200,10 @@ sub overload
 }
 
 
+# Descriptions: load file
+#    Arguments: OBJ($self) STR($file)
+# Side Effects: none
+# Return Value: none
 sub load_file
 {
     my ($self, $file) = @_;
@@ -205,10 +232,9 @@ sub load_file
 #               XXX we should not reset $config since we permit
 #               XXX $config can be overwritten.
 #
-#    Arguments: $self $file $config $options
+#    Arguments: OBJ($self) HASH_REF($args)
 #                     $file = configuration file
 #                   $config = area to store {key => value } hash
-#                  $options = REFHASH to describe a hash for options
 # Side Effects: $config changes
 # Return Value: none
 sub _read_file
@@ -291,9 +317,9 @@ sub _read_file
 #                  key becomes "value1 value3".
 #               If "key += value4, key becomes
 #                  "value1 value2 value3 value4".
-#    Arguments: $config $key $mode $value
+#    Arguments: OBJ($config) STR($key) STR($mode) STR($value)
 # Side Effects: update $config by $mode
-# Return Value: new value for $config{ $key }
+# Return Value: STR(new value for $config{ $key })
 sub _evaluate
 {
     my ($config, $key, $mode, $value) = @_;
@@ -328,9 +354,9 @@ appearing order.
 my $config_hold_space = {};
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: read $file and push the content into $config
+#    Arguments: OBJ($self) STR($file)
+# Side Effects: open file
 # Return Value: none
 sub read
 {
@@ -368,9 +394,9 @@ sub read
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: save $config into $file
+#    Arguments: OBJ($self) STR($file)
+# Side Effects: rewrite $file
 # Return Value: none
 sub write
 {
@@ -428,7 +454,11 @@ The expanded result is saved in the same hash.
 =cut
 
 
-# expand variable name e.g. $dir/xxx -> /var/spool/ml/elena/xxx
+# Descriptions: expand variable name 
+#               e.g. $dir/xxx -> /var/spool/ml/elena/xxx
+#    Arguments: OBJ($self)
+# Side Effects: update config
+# Return Value: none
 sub expand_variables
 {
     my ($self) = @_;
@@ -444,6 +474,10 @@ sub expand_variables
 }
 
 
+# Descriptions: variable expansion
+#    Arguments: OBJ($config)
+# Side Effects: variable expansion in $config
+# Return Value: none
 sub _expand_variables
 {
     my ($config) = @_;
@@ -496,8 +530,9 @@ expand $varname to $config->{ varname } in C<$rbuf>.
 
 =cut
 
+
 # Descriptions: expand $varname to $config->{ varname }
-#    Arguments: $config $ref_buffer
+#    Arguments: OBJ($config) STR_REF($rbuf) HASH_REF($args)
 # Side Effects: $ref_buffer is rewritten.
 # Return Value: none
 sub expand_variable_in_buffer
@@ -541,6 +576,11 @@ return 0 if not.
 
 =cut
 
+
+# Descriptions: return 1 if the value of the key is "yes"
+#    Arguments: OBJ($self) STR($key)
+# Side Effects: none
+# Return Value: 1 or 0
 sub yes
 {
     my ($self, $key) = @_;
@@ -553,6 +593,10 @@ sub yes
 }
 
 
+# Descriptions: return 1 if the value of the key is "no"
+#    Arguments: OBJ($self) STR($key)
+# Side Effects: none
+# Return Value: 1 or 0
 sub no
 {
     my ($self, $key) = @_;
@@ -560,8 +604,11 @@ sub no
 }
 
 
-# has_attribute( key, attribute )
-# e.g. has_attribute( "available_command_list" , "help" );
+# Descriptions: check the attribute for $key
+#               e.g. has_attribute( "available_command_list" , "help" );
+#    Arguments: OBJ($self) STR($key) STR($attribute)
+# Side Effects: none
+# Return Value: 1 or 0
 sub has_attribute
 {
     my ($self, $key, $attribute) = @_;
@@ -584,6 +631,11 @@ show all {key => value} for debug.
 
 =cut
 
+
+# Descriptions: dump all variables
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub dump_variables
 {
     my ($self, $args) = @_;
@@ -630,6 +682,11 @@ tie() IO.
 
 =cut
 
+
+# Descriptions: begin op for tie() with %_fml_config
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: OBJ
 sub TIEHASH
 {
     my ($self, $args) = @_;
@@ -639,6 +696,11 @@ sub TIEHASH
 }
 
 
+
+# Descriptions: FETCH op for tie() with %_fml_config
+#    Arguments: OBJ($self) STR($key)
+# Side Effects: none
+# Return Value: STR or UNDEF
 sub FETCH
 {
     my ($self, $key) = @_;
@@ -652,6 +714,10 @@ sub FETCH
 }
 
 
+# Descriptions: STORE op for tie() with %_fml_config
+#    Arguments: OBJ($self) STR($key) STR($value)
+# Side Effects: update %_fml_config
+# Return Value: STR or UNDEF
 sub STORE
 {
     my ($self, $key, $value) = @_;
@@ -664,6 +730,10 @@ sub STORE
 }
 
 
+# Descriptions: DELETE op for tie() with %_fml_config
+#    Arguments: OBJ($self) STR($key)
+# Side Effects: update %_fml_config
+# Return Value: none
 sub DELETE
 {
     my ($self, $key) = @_;
@@ -673,6 +743,10 @@ sub DELETE
 }
 
 
+# Descriptions: CLEAR op for tie() with %_fml_config
+#    Arguments: OBJ($self)
+# Side Effects: update %_fml_config
+# Return Value: none
 sub CLEAR
 {
     my ($self) = @_;
@@ -682,6 +756,10 @@ sub CLEAR
 }
 
 
+# Descriptions: FIRSTKEY op for tie() with %_fml_config
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
 sub FIRSTKEY
 {
     my ($self) = @_;
@@ -692,6 +770,11 @@ sub FIRSTKEY
     shift @$keys;
 }
 
+
+# Descriptions: NEXTKEY op for tie() with %_fml_config
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
 sub NEXTKEY
 {
     my ($self) = @_;
@@ -699,21 +782,6 @@ sub NEXTKEY
     shift @$keys;
 }
 
-
-=head1 Data IN/OUT among modules
-
-=head2 Style
-
-    OO
-
-=head2 Data IN
-
-    $args { key => value }
-    read file $args->{ file }
-
-=head2 Data OUT
-
-    rewrite config.cf
 
 =head1 AUTHOR
 
