@@ -13,22 +13,26 @@
 	FNF-ify.
 	clean up.
 	nuke debug.
-	implement $summary->rebuild() to enable "fmlsummary rebuild
-	$ml_name". 
-	
+	implement rebuild() to enable "fmlsummary rebuild $ml_name". 
+	make jcode of summary file "jis-jp".
+	implement append($id).
+
    FML::Process::Summary 
 	newly added as a main module to run fmlsummary program.
-	implement $summary->rebuild() to enable "fmlsummary rebuild
-	$ml_name". 
+	implement rebuild() to enable "fmlsummary rebuild $ml_name". 
+	fix help and conditions to show help
 	
-   FML::Header::Subject 
-	define clean_up(), decode(), delete_subject_tag() to separete
-	functions.
-	
+   FML::Process::Distribute 
+	update summary file by calling $summary->append($id)
+
    FML::Process::Kernel 
 	enable fmlsummary $command $ml_name ...
 	more defined() check
 
+   FML::Header::Subject 
+	define clean_up(), decode(), delete_subject_tag() to separete
+	functions.
+	
 2002/11/24
 
    variables
@@ -3651,4 +3655,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.111 2002/11/23 15:27:17 fukachan Exp $
+$FML: CHANGES.txt,v 1.112 2002/11/26 11:15:35 fukachan Exp $
