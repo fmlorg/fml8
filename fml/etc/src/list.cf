@@ -8,6 +8,7 @@ body.cf
 lock.cf
 log.cf
 spool.cf
+htmlarchive.cf
 command.cf
 threadtrack.cf
 dbms.cf
