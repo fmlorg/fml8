@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.28 2002/10/11 15:11:15 tmu Exp $
+# $FML: ToHTML.pm,v 1.29 2002/10/20 13:20:13 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.28 2002/10/11 15:11:15 tmu Exp $;
+my $version = q$FML: ToHTML.pm,v 1.29 2002/10/20 13:20:13 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -306,6 +306,9 @@ sub htmlfy_rfc822_message
 sub _disable_html_tag_in_file
 {
     my ($inf, $outf) = @_;
+    my $mask = umask();
+
+    umask(022);
 
     use FileHandle;
     my $rh = new FileHandle $inf;
@@ -317,6 +320,8 @@ sub _disable_html_tag_in_file
 	$wh->close;
 	$rh->close;
     }
+
+    umask($mask);
 }
 
 
@@ -376,7 +381,10 @@ sub _html_file_subdir_name
 	    use File::Spec;
 	    my $xsubdir = File::Spec->catfile($html_base_dir, $subdir);
 	    unless (-d $xsubdir) {
+		my $mask = umask();
+		umask(022);
 		mkdir($xsubdir, $dir_mode);
+		umask($mask);
 	    }
 	}
     }
@@ -572,12 +580,17 @@ sub _set_output_channel
     my $dst = $args->{ dst };
     my $wh;
 
+    my $mask = umask();
+    umask(022);
+
     if (defined $dst) {
 	$wh = new FileHandle "> $dst";
     }
     else {
 	$wh = \*STDOUT;
     }
+
+    umask($mask);
 
     return $wh;
 }
@@ -605,6 +618,8 @@ sub _create_temporary_file_in_raw_mode
 {
     my ($self, $msg) = @_;
     my $tmpf = $self->_create_temporary_filename();
+    my $mask = umask();
+    umask(022);
 
     use FileHandle;
     my $wh = new FileHandle "> $tmpf";
@@ -615,9 +630,11 @@ sub _create_temporary_file_in_raw_mode
 	$wh->print($buf);
 	$wh->close;
 
+	umask($mask);
 	return ($tmpf);
     }
 
+    umask($mask);
     return undef;
 }
 
@@ -779,6 +796,9 @@ sub _text_raw_print
     my $buf  = $msg->message_text();
 
     if (defined( $args->{ file } )) {
+	my $mask = umask();
+	umask(022);
+
 	my $outf = $args->{ file };
 	use FileHandle;
 	my $fh = new FileHandle "> $outf";
@@ -789,6 +809,8 @@ sub _text_raw_print
 	}
 	print $fh $buf, "\n";
 	$fh->close();
+
+	umask($mask);
     }
 }
 
@@ -804,6 +826,9 @@ sub _binary_print
     my $msg  = $args->{ message }; # Mail::Message object
     my $type = $msg->data_type;
     my $enc  = $msg->encoding_mechanism;
+    my $mask = umask();
+
+    umask(022);
 
     if (defined( $args->{ file } )) {
 	my $outf = $args->{ file };
@@ -836,6 +861,8 @@ sub _binary_print
 	    $fh->close();
 	}
     }
+
+    umask($mask);
 }
 
 
@@ -1248,6 +1275,10 @@ sub _update_relation
     my $pat_footer_begin   = quotemeta($footer_begin);
     my $pat_footer_end     = quotemeta($footer_end);
 
+    my $mask = umask();
+
+    umask(022);
+
     _PRINT_DEBUG("_update_relation $id");
 
     use FileHandle;
@@ -1289,6 +1320,8 @@ sub _update_relation
     else {
 	warn("undefined file for $id\n") if $is_strict_warn;
     }
+
+    umask($mask);
 }
 
 
@@ -1381,6 +1414,10 @@ sub evaluate_safe_preamble
     my $prefix     = $use_subdir ? '../' : '';
     my $preamble   = $preamble_begin. "\n";
 
+    my $mask = umask();
+
+    umask(022);
+
     if (defined($link_prev_id)) {
 	$preamble .= "<A HREF=\"${prefix}$link_prev_id\">[Prev by ID]</A>\n";
     }
@@ -1425,6 +1462,8 @@ sub evaluate_safe_preamble
 
     $preamble .= _format_index_navigator( { use_subdir => $use_subdir } );
     $preamble .= $preamble_end. "\n";;
+
+    umask($mask);
 
     return $preamble;
 }
@@ -1644,6 +1683,10 @@ sub _print_index_begin
     my $title = $args->{ title };
     my $code  = _charset_to_code($self->{ _charset });
 
+    my $mask = umask();
+
+    umask(022);
+
     use FileHandle;
     my $wh = new FileHandle "> $new";
     $args->{ wh } = $wh;
@@ -1652,6 +1695,8 @@ sub _print_index_begin
 
     _print_raw_str($wh, _format_index_navigator(), $code);
     $self->mhl_separator($wh);
+
+    umask($mask);
 }
 
 
