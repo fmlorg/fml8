@@ -53,30 +53,58 @@ sub _connect4
 
 =head1 NAME
 
-FML::__HERE_IS_YOUR_MODULE_NAME__.pm - what is this
-
+MailingList::Net::INET4 - establish tcp connection over IPv4
 
 =head1 SYNOPSIS
 
+   use MailingList::Net::INET4;
+
+   $mta = '127.0.0.1:25';
+   $self->_connect4( { _mta => $mta });
+
 =head1 DESCRIPTION
 
-=head2 new
+This module tries to create a socket and establish tcp connection over
+IPv4. This is a typical socket program.
 
-=item Function()
+=head1 METHODS
 
+=item C<_connect4()>
+
+try L<connect(2)>. 
+If it succeeds, returned 
+$self->{ _socket } has true value.
+If not, 
+$self->{ _socket } is undef. 
+
+Avaialble arguments follows:
+
+    _connect4( { _mta => $mta });
+
+$mta is a hostname or [raw_ipv4_addr]:port form, for example, 
+127.0.0.1:25.
+
+=head1 SEE ALSO
+
+L<MailingList::SMTP>,
+L<Socket>,
+L<IO::Socket>,
+L<MailingList::Utils>
 
 =head1 AUTHOR
 
+Ken'ichi Fukamachi
+
 =head1 COPYRIGHT
 
-Copyright (C) 2001 __YOUR_NAME__
+Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself. 
 
 =head1 HISTORY
 
-FML::__MODULE_NAME__.pm appeared in fml5.
+MailingList::Net::INET4.pm appeared in fml5.
 
 =cut
 

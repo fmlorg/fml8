@@ -144,30 +144,64 @@ sub _connect6
 
 =head1 NAME
 
-FML::__HERE_IS_YOUR_MODULE_NAME__.pm - what is this
-
+MailingList::Net::INET6 - establish tcp connection over IPv6 
 
 =head1 SYNOPSIS
 
+    if ($self->is_ipv6_ready($args)) {
+	$self->_connect6($args);
+    }
+
 =head1 DESCRIPTION
 
-=head2 new
+This module tries to create a socket and establish a tcp connection
+over IPv6. It is used within C<MailingList::SMTP> module.
 
-=item Function()
+=head1 METHODS
 
+=item C<is_ipv6_ready()>
+
+It checks whether your environment has Socket6.pm or not?
+If Socket6 module exists, we assume your operating system is IPv6 ready!
+
+=item C<_connect6()>
+
+try L<connect(2)>. 
+If it succeeds, returned 
+$self->{ _socket } has true value.
+If not, 
+$self->{ _socket } is undef. 
+
+Avaialble arguments follows:
+
+    _connect6( { _mta => $mta });
+
+$mta is a hostname or [raw_ipv6_addr]:port form, for example, 
+[::1]:25.
+
+=head1 SEE ALSO
+
+L<MailingList::SMTP>,
+L<Socket6>,
+L<Socket>,
+L<IO::Handle>,
+L<IO::Socket>,
+L<MailingList::Utils>
 
 =head1 AUTHOR
 
+Ken'ichi Fukamachi
+
 =head1 COPYRIGHT
 
-Copyright (C) 2001 __YOUR_NAME__
+Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself. 
 
 =head1 HISTORY
 
-FML::__MODULE_NAME__.pm appeared in fml5.
+MailingList::Net::INET6.pm appeared in fml5.
 
 =cut
 

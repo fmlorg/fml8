@@ -23,6 +23,7 @@ require Exporter;
 
 
 BEGIN {}
+END   {}
 
 
 =head1 NAME
@@ -59,6 +60,19 @@ To start delivery, use deliver() method in this way.
 
 =head1 DESCRIPTION
 
+This module provides SMTP/ESMTP mail delivery service.
+It tries IPv6 connection If possible.
+
+The socket creation and tcp connection is controlled by
+sub-classes, 
+C<MailingList::Net::INET4> and
+C<MailingList::Net::INET6>.
+
+It sends all recipients indicated by $recipient_maps.
+The list of recipients for $recipient_maps is resolved by
+L<IO::MapAdapter>.
+
+
 =head1 METHODS
 
 =item C<new()>
@@ -66,11 +80,11 @@ To start delivery, use deliver() method in this way.
 constructor. If you control parameters, specify it in a hash reference
 as an argument of new().
 
-        hash key           value
-        --------------------------------------------
-        log_function       reference to function for logging
-        smtp_log_function  reference to function for logging
-        default_io_timeout set the timeout associated with the socket
+   hash key             value
+   --------------------------------------------
+   log_function         reference to function for logging
+   smtp_log_function    reference to function for logging
+   default_io_timeout   default timeout associated with the socket IO
 
 log_function() is for general purpose.
 smtp_log_function() is used to log SMTP transactions.
@@ -265,14 +279,14 @@ sub close
 
 start delivery process.
 
-        hash key           value
-        --------------------------------------------
-        mta                127.0.0.1:25 [::1]:25
-        smtp_sender        sender's mail address
-        recipient_maps     $recipient_maps
-        recipient_limit    recipients in one SMTP transactions
-        header             FML::Header object
-        body               MailingList::Messages object
+    hash key           value
+    --------------------------------------------
+    mta                127.0.0.1:25 [::1]:25
+    smtp_sender        sender's mail address
+    recipient_maps     $recipient_maps
+    recipient_limit    recipients in one SMTP transactions
+    header             FML::Header object
+    body               MailingList::Messages object
 
 C<mta> is a list of MTA's.
 The syntax of each MTA is address:port style. 
@@ -281,8 +295,8 @@ For example, [::1]:25 (v6 loopback).
 You can specify IPv4 and IPv6 addresses.
 deliver() automatically tries smtp in both protocols.
 
-C<smtp_sender> is the sender's email address. It is used at MAIL FROM:
-parameter.
+C<smtp_sender> is the sender's email address. 
+It is used at MAIL FROM: command.
 
 C<recipient_maps> is a list of C<maps>.
 See L<IO::MapAdapter> for more details. 
@@ -299,9 +313,9 @@ to read addresses from /etc/group
 C<recipient_limit> is the max number of recipients in one SMTP
 transaction. 1000 by default, which corresponds to the limit by Postfix. 
 
-C<header> is FML::Header object.
+C<header> is an FML::Header object.
 
-C<body> is MailingList::Messages object.
+C<body> is a MailingList::Messages object.
 See L<MailingList::Messages> for more details.
 
 =cut
@@ -750,16 +764,16 @@ sub _reset_smtp_transaction
 
 =head1 SEE ALSO
 
-L<IO::Socket>
-L<MailingList::Utils>
-L<MailingList::INET4>
-L<MailingList::INET6>
+L<IO::Socket>,
+L<MailingList::Utils>,
+L<MailingList::INET4>,
+L<MailingList::INET6>,
+L<IO::MapAdapter>
 
 
 =head1 AUTHOR
 
 Ken'ichi Fukamachi
-
 
 =head1 COPYRIGHT
 

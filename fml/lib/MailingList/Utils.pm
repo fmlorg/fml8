@@ -10,7 +10,8 @@
 
 package MailingList::Utils;
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK $LogFunctionPointer $SmtpLogFunctionPointer);
+use vars qw(@ISA @EXPORT @EXPORT_OK 
+	    $LogFunctionPointer $SmtpLogFunctionPointer);
 use Carp;
 
 require Exporter;
@@ -41,6 +42,39 @@ require Exporter;
 	     _reset_mapinfo
 	     );
 
+
+=head1 NAME
+
+MailingList::utils - utiliti programs for mail delivery
+
+=head1 SYNOPSIS
+
+For example,
+
+   use MailingList::utils;
+   Log( $message_to_log );
+
+=head1 DESCRIPTION
+
+=cut
+
+#################################################################
+#####
+##### General Logging
+#####
+
+=head2
+
+=item C<Log()>
+
+Logging interface. 
+If CODE REFERENCE is not specified at
+MailingList::Delivery::new(), 
+the logging message is forwarded to STDERR channel.
+
+=cut
+
+
 sub Log
 {
     my ($buf) = @_;
@@ -57,6 +91,21 @@ sub Log
     }
 }
 
+
+#################################################################
+#####
+##### SMTP Logging
+#####
+=head2
+
+=item C<smtplog()>
+
+smtp logging interface.
+If CODE REFERENCE is not specified at
+MailingList::Delivery::new(), 
+the logging message is forwarded to STDERR channel.
+
+=cut
 
 sub smtplog
 {
@@ -80,6 +129,21 @@ sub _smtplog
     }
 }
 
+
+
+#################################################################
+#####
+##### error manipulations
+#####
+=head2
+
+=item C<_error_reason()>
+
+=item C<error()>
+
+=item C<error_reset()>
+
+=cut
 
 sub _error_reason
 {
@@ -112,11 +176,18 @@ sub error_reset
 }
 
 
-sub _set_status_code
-{
-    my ($self, $value) = @_;
-    $self->{'_status_code'} = $value;
-}
+#################################################################
+#####
+##### status codes manipulations
+#####
+
+=head2
+
+=item C<_get_status_code()>
+
+=item C<_set_status_code(value)>
+
+=cut
 
 
 sub _get_status_code
@@ -126,12 +197,39 @@ sub _get_status_code
 }
 
 
+sub _set_status_code
+{
+    my ($self, $value) = @_;
+    $self->{'_status_code'} = $value;
+}
 
-############################################################
+
+
+
+#################################################################
 #####
-##### utility functions to operate $recipient_maps
+##### utility to control $recipient_map
 #####
 
+=head2
+
+=item	     C<_set_target_map()>
+
+=item	     C<_get_target_map()>
+
+=item	     C<_set_map_status()>
+
+=item	     C<_set_map_position()>
+
+=item	     C<_get_map_status()>
+
+=item	     C<_get_map_position()>
+
+=item	     C<_rollback_map_position()>
+
+=item	     C<_reset_mapinfo()>
+
+=cut
 
 sub _set_target_map
 {
@@ -211,7 +309,22 @@ sub _reset_mapinfo
 }
 
 
-1;
 
+=head1 AUTHOR
+
+Ken'ichi Fukamachi
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001 Ken'ichi Fukamachi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself. 
+
+=head1 HISTORY
+
+MailingList::utils.pm appeared in fml5.
+
+=cut
 
 1;

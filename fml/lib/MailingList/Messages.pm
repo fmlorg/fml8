@@ -30,7 +30,7 @@ sub new
 ######################################################################
 =head1 NAME
 
-MailingList::Messages -- message manipulators
+MailingList::Messages -- message manipulator
 
 =head1 SYNOPSIS
 
@@ -48,23 +48,61 @@ MailingList::Messages -- message manipulators
 =head1 DESCRIPTION
 
 A message has the content and a header including the next message
-pointer, et. al. Out idea is similar to IPv6.
+pointer, et. al. 
 
-Message Format
+The messages are chained from/to others among them.
+Out idea on the chain is similar to IPv6.
+For example, MIME/multipart is a chain of messages such as
 
-   %message = {
-                version      => 1.0
-                content_type => text/plain
+  mesg1 -> mesg2 -> mesg3 (-> undef)
+
+So the message format is as follows. 
+We describe a message as a hash reference.
+
+   $message = {
                 next         => \%next_message
                 prev         => \%prev_message
+
+                version      => 1.0
+                mime_version => 1.0
+                content_type => text/plain
                 header       => {
                                     field_name => field_value
                                  }
                 content      => \$message_body
                }
 
+   key              value
+   -----------------------------------------------------
+   next             pointer to the next message
+   prev             pointer to the previous message
+   version          MailingList::Message object version
+   mime_version     MIME version
+   content_type     MIME content-type
+   header           reference to a header hash
+   content          reference to the content (that is, memory area)
 
-=item Function()
+Each default value follows:
+
+   key              value
+   -----------------------------------------------------
+   next             undef
+   prev             undef
+   version          1.0
+   mime_version     1.0
+   content_type     text/plain
+   header           undef
+   content          ''
+
+=head1 METHOD
+
+=item C<new($args)>
+
+constructor. if $args is given, create() method is called.
+
+=item C<create($args)>
+
+build a template message following the given $args (a hash reference).
 
 =cut
 
@@ -78,7 +116,7 @@ sub create
 
     $self->{ version }      = $args->{ version }       || 1.0; 
     $self->{ mime_version } = $args->{ mime_version }  || 1.0; 
-    $self->{ content_type } = $args->{ content_type  } || 'message/rfc822';
+    $self->{ content_type } = $args->{ content_type  } || 'text/plain';
     $self->{ header  }      = $args->{ header  } || undef;
     $self->{ content }      = $args->{ content } || '';
 }
@@ -97,6 +135,23 @@ sub prev_chain
     $self->{ prev } = $ref_prev_message;
 }
 
+
+=head2
+
+=item C<next_chain( $reference_to_message )>
+
+The next one of this message is $reference_to_message.
+
+=item C<prev_chain( $reference_to_message )>
+
+The previous one of this message is $reference_to_message.
+
+=item C<print( $fd )>
+
+print out a chain of messages to the file descriptor $fd.
+If $fd is not specified, STDOUT is used.
+
+=cut
 
 sub print
 {
@@ -152,6 +207,18 @@ sub _print
 }
 
 
+=head2
+
+=item C<size()>
+
+return the message size.
+
+=item C<is_empty()>
+
+return this message has empty content or not.
+
+=cut
+
 sub size
 {
     my ($self) = @_;
@@ -197,8 +264,25 @@ sub AUTOLOAD
     }
 }
 
+=head2
+
+=item C<get_xxx_reference()>
+
+get the reference to xxx, which is a key of the message. 
+For example, 
+C<get_content_reference()>
+returns the reference to the
+content of the message.
+
+=cut
 
 ######################################################################
+
+=head1 TODO
+
+The chain structure of messages is implemented, but 
+MIME/multipart is not yet handled well.
+
 =head1 AUTHOR
 
 Ken'ichi Fukamachi
