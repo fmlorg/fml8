@@ -7,23 +7,40 @@
         XXX 遠大なビジョンやとりあえず後まわしでよいものは STATUS.txt へ
 
 
-[TODO] fml.pl が、すなおに fml4 の config.ph をよんで（こんばーとして）
-	そのままうごけば’いいのでは？？
+[TODO]	config tool
 
-		/usr/sbin/sendmail と postfix みたいなもんだね
+	多言語サポート
+	GUI config
 
 
-[TODO] CGI スキンを動的に切替えられる？
+[TODO]	CGI スキンを動的に切替えられる？
 
 		config.cgi -> menu.cgi
 
 
-[TODO] config tool
+[TODO]	mime component filter で添付ファイルを禁止する
 
-	GUI -> config
-	CUI -> config (さきだろう)
+	こんなかんじ？
 
-		めにゅー config はどうする？			
+	use_article_mime_component_filter       =       yes
+	article_mime_component_filter_rules     = 	ファイル
+
+	[ファイル]
+
+		multipart/*	*;name=.*\.exe 	reject
+		multipart/*	attachment	reject
+
+	もしくは、こんなの？
+
+
+	article_mime_component_filter_rules     = 	ファイル
+							reject_attachment
+
+	article_mime_component_filter_unsafe_attachments = exe
+
+
+
+[TODO]	メモリー使用量を、より少なく
 
 
 [TODO]	Mail::Message->print() ???
@@ -38,9 +55,6 @@
 	FML/Process/Kernel.pm:	$msg_in->print($wh);
 
 	Mail/Delivery/Queue.pm:	$msg->print($fh);
-
-
-[TODO]	Calendar/Lite.pm uses FML::Restriction::Base;-)
 
 
 [TODO]	使ってないモジュール?
@@ -110,7 +124,7 @@
 		set Reply-To: ml1, ml2
 	   }
 
-	if ($curproc->is_managed_ml_address($address)) {
+	if ($curproc->is_fml8_managed_address($address)) {
 		...
 	}
 
@@ -167,9 +181,6 @@
 
 	local いがいのばあい、はどうすればいいの？
 	MySQL につっこみたいとか〜
-
-
-[TODO]	FML/Process/00_USAGE
 
 
 [TODO]	FML::Command::Admin::dir
@@ -261,7 +272,7 @@
 	FML::Process::Fake
 
 
-[TODO]	2004/06 年のオーバホールの残り
+[TODO]	2004/06 のオーバホールの残り
 
 
 	FML/Process/Fake.pm
@@ -308,4 +319,4 @@
 
 
 ----------
-$FML: 00_MEMO,v 1.116 2004/10/24 17:24:37 fukachan Exp $
+$FML: 00_MEMO,v 1.117 2004/11/20 02:03:58 fukachan Exp $
