@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.sgml,v 1.5 2002/07/05 04:01:36 fukachan Exp $
+   $FML: chapter.sgml,v 1.6 2002/07/07 01:57:10 fukachan Exp $
 -->
 
 <chapter>
@@ -10,6 +10,8 @@
 
 <!-- モジュールの使い方について、 FML::Command:: 以下の話 -->
 &sect.command.module;
+
+&sect.command.dataflow;
 
 <!-- コマンドの拡張例 -->
 &sect.command.extension;

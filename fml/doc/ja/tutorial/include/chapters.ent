@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.56 2002/11/09 14:16:18 fukachan Exp $
+	$FML: chapters.ent,v 1.57 2002/11/26 11:17:13 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -13,6 +13,7 @@
 
 <!-- 画像 -->
 <!entity image.architecture SYSTEM "architecture.gif" ndata gif>
+<!entity image.command.dataflow SYSTEM "command.dataflow.gif" ndata gif>
 <!entity image.ml           SYSTEM "ml.gif" ndata gif>
 <!entity image.cgi.top      SYSTEM "cgi.top.gif" ndata gif>
 <!entity image.cgi.newml    SYSTEM "cgi.newml.gif" ndata gif>
@@ -87,6 +88,7 @@
 
 <!-- コマンド -->
 <!entity chapter.command          SYSTEM "command/chapter.sgml">
+<!entity sect.command.dataflow    SYSTEM "command/dataflow.sgml">
 <!entity sect.command.internal    SYSTEM "command/internal.sgml">
 <!entity sect.command.extension   SYSTEM "command/extension.sgml">
 <!entity sect.command.module      SYSTEM "command/module.sgml">

@@ -1,0 +1,14 @@
+<!--
+   $FML: module.sgml,v 1.3 2002/07/07 01:57:11 fukachan Exp $
+-->
+
+
+<sect1 id="fml.command.dataflow">
+	<title>
+	コマンドの入力データフロー
+	</title>
+
+
+<graphic entityref="image.command.dataflow"></graphic>
+
+</sect1>
