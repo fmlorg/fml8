@@ -129,6 +129,7 @@ sub verify_sender_credential
 
 	# extract the first address as a sender.
 	$from = $a->format unless $from;
+	$from =~ s/\n$//o;
     }
 
     if ($count == 1) {
