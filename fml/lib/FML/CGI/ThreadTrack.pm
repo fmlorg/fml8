@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ThreadTrack.pm,v 1.13 2001/12/23 09:20:42 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.14 2001/12/23 11:39:45 fukachan Exp $
 #
 
 package FML::CGI::ThreadTrack;
@@ -65,8 +65,6 @@ sub html_start
 		     -lang => $charset,
 		     -BGCOLOR=>$color);
     print "\n";
-
-    $curproc->_show_guide($args);
 }
 
 
@@ -77,9 +75,6 @@ sub html_start
 sub html_end
 {
     my ($curproc, $args) = @_;
-
-    print "<HR>\n";
-    $curproc->_show_guide($args);
 
     # o.k. end of html
     print end_html;
@@ -92,7 +87,7 @@ sub html_end
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
-sub run_cgi
+sub run_cgi_main
 {
     my ($curproc, $args) = @_;
     my $config = $curproc->{ config };
@@ -181,7 +176,7 @@ sub _build_param
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
-sub _show_guide
+sub run_cgi_navigator
 {
     my ($curproc, $args) = @_;
     my $config  = $curproc->{ config };

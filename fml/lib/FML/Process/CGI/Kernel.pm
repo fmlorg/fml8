@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.14 2002/02/01 12:03:57 fukachan Exp $
+# $FML: Kernel.pm,v 1.15 2002/02/02 15:24:19 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -62,22 +62,22 @@ sub new
     my $is_need_ml_name = $args->{ 'need_ml_name' };
 
     # we should get $ml_name from HTTP.
-    if ($is_need_ml_name) {
-	use FML::Process::Utils;
-	my $ml_home_prefix = FML::Process::Utils::__ml_home_prefix_from_main_cf($args);
-	my $ml_name        = safe_param_ml_name($self) || do {
+    use FML::Process::Utils;
+    my $ml_home_prefix = FML::Process::Utils::__ml_home_prefix_from_main_cf($args);
+    my $ml_name        = safe_param_ml_name($self) || do {
+	if ($is_need_ml_name) {
 	    croak("not get ml_name from HTTP") if $args->{ need_ml_name };
-	};
+	}
+    };
 
-	use File::Spec;
-	my $ml_home_dir = File::Spec->catfile($ml_home_prefix, $ml_name);
-	my $config_cf   = File::Spec->catfile($ml_home_dir, 'config.cf');
+    use File::Spec;
+    my $ml_home_dir = File::Spec->catfile($ml_home_prefix, $ml_name);
+    my $config_cf   = File::Spec->catfile($ml_home_dir, 'config.cf');
 
-	# fix $args { cf_list, ml_home_dir };
-	my $cflist = $args->{ cf_list };
-	push(@$cflist, $config_cf);
-	$args->{ ml_home_dir } =  $ml_home_dir;
-    }
+    # fix $args { cf_list, ml_home_dir };
+    my $cflist = $args->{ cf_list };
+    push(@$cflist, $config_cf);
+    $args->{ ml_home_dir } =  $ml_home_dir;
 
     # o.k. load configurations
     my $curproc = new FML::Process::Kernel $args;
@@ -133,11 +133,21 @@ dispatch *.cgi programs.
 FML::CGI::XXX module should implement these routines:
 star_html(), run_cgi() and end_html().
 
-run() executes
+C<run()> executes
 
     $curproc->start_html($args);
     $curproc->run_cgi($args);
     $curproc->end_html($args);
+
+C<run_cgi()> prepares tables by the following granularity.
+
+   nw   north  ne
+   west center east
+   sw   south  se
+
+C<run_cgi_main()> shows at the center and
+C<run_cgi_navigation_bar()> at the west by default.
+You can specify the location by configure() access method. 
 
 =cut
 
@@ -154,8 +164,77 @@ sub run
     my ($curproc, $args) = @_;
 
     $curproc->html_start($args);
-    $curproc->run_cgi($args);
+    $curproc->_drive_cgi_by_table($args);
     $curproc->html_end($args);
+}
+
+
+sub _error_string
+{
+    my ($r) = @_; 
+
+    if ($r =~ /ERROR\.INSECURE/) {
+	print "<B>Error! insecure input.</B>\n";
+    }
+    else {
+	print "<B>Error! unknown reason.</B>\n";
+    }
+
+    eval q{
+	use FML::Log qw(Log LogError);
+	LogError($r);
+	my ($k, $v);
+	while (($k, $v) = each %ENV) { Log("$k => $v");}
+    };
+}
+
+
+sub _drive_cgi_by_table
+{
+    my ($curproc, $args) = @_;
+    my $r = '';
+
+    # 
+    #   nw   north  ne
+    #   west center east
+    #   sw   south  se
+    # 
+    # table starts.
+    print "<table border=0 cellspacing=\"0\" cellpadding=\"5\">\n";
+
+    # the first line
+    print "<tr>\n";
+    print "<td></td>\n";
+    print "<td rowspan=2 valign=\"top\">\n";
+
+    eval q{ $curproc->run_cgi_main($args);};
+    if ($r = $@) { _error_string($r);}
+
+    print "</td>\n";
+    print "<td></td>\n";
+    print "</tr>\n";
+
+    # the second line
+    print "<tr>\n";
+    print "<td valign=\"top\" BGCOLOR=\"#E0E0F0\">\n";
+
+    eval q{ $curproc->run_cgi_navigator($args);};
+    if ($r = $@) { _error_string($r);}
+
+    print "</td>\n";
+    print "<td></td>\n";
+    print "<td></td>\n";
+    print "</tr>\n";
+
+    # the 3rd line
+    print "<tr>\n";
+    print "<td></td>\n";
+    print "<td></td>\n";
+    print "<td></td>\n";
+    print "</tr>\n";
+
+    # table ends.
+    print "</table>\n";
 }
 
 
@@ -169,7 +248,7 @@ get HASH ARRAY of valid mailing lists.
 # Descriptions: list up ML
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
-# Return Value: HASH_ARRAY
+# Return Value: ARRAY_REF
 sub get_ml_list
 {
     my ($curproc, $args) = @_;
@@ -191,6 +270,44 @@ sub get_ml_list
     $dh->close;
 
     return \@dirlist;
+}
+
+
+=head2 get_recipient_list($args)
+
+get HASH ARRAY of valid mailing lists.
+
+=cut
+
+
+# Descriptions: list up recipients list
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub get_recipient_list
+{
+    my ($curproc, $args) = @_;
+    my $config = $curproc->{ config };
+    my $list   = $config->get_as_array_ref( 'recipient_maps' );
+
+    eval q{ use IO::Adapter;};
+    unless ($@) {
+	my $r = [];
+
+	for my $map (@$list) {
+	    my $io  = new IO::Adapter $map;
+	    my $key = '';
+	    $io->open();
+	    while (defined($key = $io->get_next_key())) {
+		push(@$r, $key);
+	    }
+	    $io->close();
+	}
+
+	return $r;
+    }
+
+    return [];
 }
 
 
