@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Qmail.pm,v 1.3 2001/07/30 14:42:34 fukachan Exp $
+# $FML: Qmail.pm,v 1.4 2001/12/22 09:21:16 fukachan Exp $
 #
 
 
@@ -32,6 +32,10 @@ format), as describbed in
 =cut
 
 
+# Descriptions: parse qmail error message
+#    Arguments: OBJ($self) OBJ($msg) HASH_REF($result)
+# Side Effects: update $result
+# Return Value: none
 sub analyze
 {
     my ($self, $msg, $result) = @_;

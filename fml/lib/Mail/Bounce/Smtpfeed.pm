@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Smtpfeed.pm,v 1.2 2001/07/30 14:42:34 fukachan Exp $
+# $FML: Smtpfeed.pm,v 1.3 2001/12/22 09:21:16 fukachan Exp $
 #
 
 
@@ -38,12 +38,10 @@ at the header somewhere in the error message.
 =cut
 
 
-#	# smtpfeed -1 -F hack
-#	if (/^To: \(original recipient in envelope at \S+\) <(\S+)>/) {
-#	    &PickUpHint($1);
-#	}
-
-
+# Descriptions: trap error patterin in To: (smtpfeed -F mode).
+#    Arguments: OBJ($self) OBJ($msg) HASH_REF($result)
+# Side Effects: update $result
+# Return Value: none
 sub analyze
 {
     my ($self, $msg, $result) = @_;
@@ -66,6 +64,7 @@ sub analyze
     $result->{ $addr }->{ 'Status' }          = '5.x.y';
     $result->{ $addr }->{ 'hints' }           = 'smtpfeed';
 }
+
 
 =head1 AUTHOR
 

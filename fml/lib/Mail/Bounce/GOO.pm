@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: GOO.pm,v 1.2 2001/07/30 14:42:34 fukachan Exp $
+# $FML: GOO.pm,v 1.3 2001/12/22 09:21:15 fukachan Exp $
 #
 
 
@@ -40,6 +40,10 @@ See C<Mail::Bounce> for more details.
 =cut
 
 
+# Descriptions: trap error pattern in subject from goo.ne.jp.
+#    Arguments: OBJ($self) OBJ($msg) HASH_REF($result)
+# Side Effects: update $result
+# Return Value: none
 sub analyze
 {
     my ($self, $msg, $result) = @_;
@@ -58,6 +62,7 @@ sub analyze
 	}
     }
 }
+
 
 =head1 AUTHOR
 

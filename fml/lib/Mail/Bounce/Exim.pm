@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Exim.pm,v 1.3 2001/07/30 14:42:34 fukachan Exp $
+# $FML: Exim.pm,v 1.4 2001/12/22 09:21:15 fukachan Exp $
 #
 
 
@@ -37,15 +37,21 @@ See C<Mail::Bounce> for more details.
  Subject: Mail delivery failed: returning message to sender
  Message-Id: <E11fxjP-0005MW-00@eriko.fml.org>
 
+=head1 TODO
+
+need to guess MTA as "exim" ???
+
+	if (/^Message-ID:\s+\<[\w\d]+\-[\w\d]+\-[\w\d]+\@/i) {
+	    $MTA = "exim";
+	}
+
 =cut
 
 
-# need to guess MTA as "exim" ???
-#	if (/^Message-ID:\s+\<[\w\d]+\-[\w\d]+\-[\w\d]+\@/i) {
-#	    $MTA = "exim";
-#	}
-
-
+# Descriptions: trap X-Failed-Recipients: exim returns.
+#    Arguments: OBJ($self) OBJ($msg) HASH_REF($result)
+# Side Effects: update $result
+# Return Value: none
 sub analyze
 {
     my ($self, $msg, $result) = @_;
@@ -60,6 +66,7 @@ sub analyze
 	$result->{ $addr }->{ 'hints' }           = 'exim';
     }
 }
+
 
 =head1 AUTHOR
 
