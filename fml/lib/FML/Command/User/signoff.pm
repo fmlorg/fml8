@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: signoff.pm,v 1.5 2001/12/22 09:53:10 fukachan Exp $
+# $FML: signoff.pm,v 1.6 2002/02/13 10:41:17 fukachan Exp $
 #
 
 package FML::Command::User::signoff;
@@ -12,16 +12,9 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
-use FML::Command::Utils;
+
 use FML::Command::User::unsubscribe;
-@ISA = qw(FML::Command::User::unsubscribe use FML::Command::Utils);
-
-
-# Descriptions: need lock or not
-#    Arguments: none
-# Side Effects: none
-# Return Value: NUM( 1 or 0)
-sub need_lock { 1;}
+@ISA = qw(FML::Command::User::unsubscribe use);
 
 
 # Descriptions: unsubscribe user

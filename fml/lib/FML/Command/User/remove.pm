@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: remove.pm,v 1.4 2001/12/22 09:21:05 fukachan Exp $
+# $FML: remove.pm,v 1.5 2001/12/22 09:53:10 fukachan Exp $
 #
 
 package FML::Command::User::remove;
@@ -12,9 +12,9 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
-use FML::Command::Utils;
+
 use FML::Command::User::unsubscribe;
-@ISA = qw(FML::Command::User::unsubscribe use FML::Command::Utils);
+@ISA = qw(FML::Command::User::unsubscribe);
 
 
 # Descriptions: unsubscribe user
@@ -46,7 +46,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

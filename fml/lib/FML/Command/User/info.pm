@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: info.pm,v 1.2 2001/12/22 09:21:05 fukachan Exp $
+# $FML: info.pm,v 1.3 2001/12/22 09:53:09 fukachan Exp $
 #
 
 package FML::Command::User::info;
@@ -12,9 +12,9 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
-use FML::Command::Utils;
+
 use FML::Command::User::guide;
-@ISA = qw(FML::Command::User::guide FML::Command::Utils);
+@ISA = qw(FML::Command::User::guide);
 
 
 # Descriptions: send back guide
@@ -44,7 +44,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: send.pm,v 1.4 2001/12/22 09:53:10 fukachan Exp $
+# $FML: send.pm,v 1.5 2002/02/13 10:41:17 fukachan Exp $
 #
 
 package FML::Command::User::send;
@@ -13,8 +13,6 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
-use ErrorStatus;
-use FML::Command::Utils;
 use FML::Command::User::get;
 @ISA = qw(FML::Command::User::get);
 
@@ -23,7 +21,7 @@ use FML::Command::User::get;
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
-sub need_lock { 1;}
+sub need_lock { $self->SUPER::need_lock();}
 
 
 # Descriptions: send articles, files, et.al...

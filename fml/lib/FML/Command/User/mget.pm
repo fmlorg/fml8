@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: mget.pm,v 1.6 2002/02/13 10:12:08 fukachan Exp $
+# $FML: mget.pm,v 1.7 2002/02/13 10:41:17 fukachan Exp $
 #
 
 package FML::Command::User::mget;
@@ -12,8 +12,6 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
-use ErrorStatus;
-use FML::Command::Utils;
 use FML::Command::User::get;
 @ISA = qw(FML::Command::User::get);
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.8 2002/01/27 09:27:11 fukachan Exp $
+# $FML: get.pm,v 1.9 2002/02/13 10:41:17 fukachan Exp $
 #
 
 package FML::Command::User::get;
@@ -12,11 +12,11 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
-use ErrorStatus;
-use FML::Command::Utils;
+
+
 use FML::Command::SendFile;
 use FML::Log qw(Log LogWarn LogError);
-@ISA = qw(FML::Command::SendFile FML::Command::Utils ErrorStatus);
+@ISA = qw(FML::Command::SendFile);
 
 =head1 NAME
 
@@ -35,6 +35,19 @@ send back articles.
 =head2 C<process()>
 
 =cut
+
+
+# Descriptions: standard constructor
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: OBJ
+sub new
+{
+    my ($self) = @_;
+    my ($type) = ref($self) || $self;
+    my $me     = {};
+    return bless $me, $type;
+}
 
 
 # Descriptions: need lock or not
