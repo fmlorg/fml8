@@ -66,6 +66,21 @@ sub assign
 }
 
 
+sub update_status
+{
+    my ($self, $curproc, $args) = @_;
+    my $rbody   = $curproc->{ article }->{ body };
+    my $content = $rbody->get_content_reference();
+
+    if ($$content =~ /close/) {
+	$self->{ _ticket_id } .= " closed";
+    }
+    else {
+	Log("(debug) ticket status not changes");
+    }
+}
+
+
 sub update_cache
 {
     my ($self, $curproc, $args) = @_;
@@ -76,6 +91,9 @@ sub update_cache
 
     # cache file
     $self->{ _cache_file } = $cache_file;
+
+    # initialize $db_dir and $cache_file for further work
+    $self->_update_cache_init($curproc, $args) || do { return undef;};
 
     # save $id in $cache_file
     $self->_save_ticket_id_in_cache($curproc, $args);
@@ -129,9 +147,6 @@ sub _save_ticket_id_in_cache
     my ($self, $curproc, $args) = @_;
     my $config    = $curproc->{ config };
     my $pcb       = $curproc->{ pcb };
-
-    # initialize $db_dir and $cache_file for further work
-    $self->_update_cache_init($curproc, $args) || do { return undef;};
 
     use IO::File;
     my $fh = new IO::File $self->{ _cache_file }, "a";

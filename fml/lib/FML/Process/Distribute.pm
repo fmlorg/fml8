@@ -214,6 +214,7 @@ sub _ticket_check
     unless ($@) {
 	my $ticket = $pkg->new;
 	$ticket->assign($curproc, $args);
+	$ticket->update_status($curproc, $args);
 	$ticket->update_cache($curproc, $args);
     }
     else {
