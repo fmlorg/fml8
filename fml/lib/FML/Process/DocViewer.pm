@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DocViewer.pm,v 1.9 2001/12/08 14:53:18 fukachan Exp $
+# $FML: DocViewer.pm,v 1.10 2001/12/22 09:21:09 fukachan Exp $
 #
 
 package FML::Process::DocViewer;
@@ -16,12 +16,12 @@ use FML::Process::Kernel;
 use FML::Log qw(Log LogWarn LogError);
 use FML::Config;
 
-@ISA = qw(FML::Process::Kernel Exporter);
+@ISA = qw(FML::Process::Kernel);
 
 
 =head1 NAME
 
-FML::Process::DocViewer -- fmldoc wrapper
+FML::Process::DocViewer -- perldoc wrapper for fml modules
 
 =head1 SYNOPSIS
 
@@ -32,21 +32,16 @@ FML::Process::DocViewer -- fmldoc wrapper
 =head1 DESCRIPTION
 
 FML::Process::DocViewer is the main routine of C<fmldoc> program.
-It wrapps C<perldoc>.
+It wraps C<perldoc>.
 
 See C<FML::Process::Flow> for program flow.
-
-=head2 MODULES
-
-C<fmlconf> bootstraps itself in this order.
-
-   libexec/loader -> FML::Process::Switch -> FML::Process::DocViewer
 
 =head1 METHODS
 
 =head2 C<new($args)>
 
-usual constructor.
+standard constructor.
+It inherits C<FML::Process::Kernel>.
 
 =head2 C<prepare($args)>
 
@@ -54,8 +49,9 @@ dummy.
 
 =cut
 
+
 # Descriptions: constructor
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: FML::Process::DocViewer object
 sub new
@@ -67,16 +63,17 @@ sub new
 }
 
 
-# Descriptions: dummy yet now
-#    Arguments: $self $args
+# Descriptions: dummy
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub prepare { ; }
 
 
-# Descriptions: check @ARGV
-#    Arguments: $self $args
-# Side Effects: longjmp() to help() if appropriate
+# Descriptions: check @ARGV and show help if needed
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: may exit.
+#               longjmp() to help() if appropriate.
 # Return Value: none
 sub verify_request
 {
@@ -98,8 +95,9 @@ C<fmlconf($args)>.
 
 =cut
 
-# Descriptions: just a switch
-#    Arguments: $self $args
+
+# Descriptions: just a switch, call _fmldoc() 
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub run
@@ -113,7 +111,37 @@ sub run
 }
 
 
+# Descriptions: fmldoc wrapper / top level dispacher
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
+sub _fmldoc
+{
+    my ($curproc, $args) = @_;
+    my $config  = $curproc->{ config };
+    my $myname  = $curproc->myname();
+    my $argv    = $curproc->command_line_argv();
+
+    my (@opts);
+    push(@opts, '-v') if $args->{ options }->{ v };
+    push(@opts, '-t') if $args->{ options }->{ t };
+    push(@opts, '-u') if $args->{ options }->{ u };
+    push(@opts, '-m') if $args->{ options }->{ m };
+    push(@opts, '-l') if $args->{ options }->{ l };
+
+    # add path for perl executatbles e.g. /usr/local/bin
+    eval q{
+	use Config;
+	$ENV{'PATH'} .= ":". $Config{ scriptdir };
+	exec 'perldoc', @opts, @$argv;
+    };
+    croak($@);
+}
+
+
 =head2 help()
+
+show help.
 
 =cut
 
@@ -138,32 +166,6 @@ Usage: $name MODULE
    $name FML::Process::Kernel
 
 _EOF_
-}
-
-
-# Descriptions: fmldoc wrapper / top level dispacher
-#    Arguments: $self $args
-# Side Effects: none
-# Return Value: none
-sub _fmldoc
-{
-    my ($curproc, $args) = @_;
-    my $config  = $curproc->{ config };
-    my $myname  = $curproc->myname();
-    my $argv    = $curproc->command_line_argv();
-
-    my (@opts);
-    push(@opts, '-v') if $args->{ options }->{ v };
-    push(@opts, '-t') if $args->{ options }->{ t };
-    push(@opts, '-u') if $args->{ options }->{ u };
-    push(@opts, '-m') if $args->{ options }->{ m };
-    push(@opts, '-l') if $args->{ options }->{ l };
-
-    # add path for perl executatbles e.g. /usr/local/bin
-    use Config;
-    $ENV{'PATH'} .= ":". $Config{ scriptdir };
-
-    exec 'perldoc', @opts, @$argv;
 }
 
 
