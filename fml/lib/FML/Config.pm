@@ -9,7 +9,7 @@ package FML::Config;
 
 use strict;
 use Carp;
-use vars qw(%_fml_config);
+use vars qw(%_fml_config %_default_fml_config);
 
 
 sub new
@@ -31,10 +31,45 @@ sub new
 
 sub dump_variables
 {
+    my ($mode) = @_;
     my ($k, $v);
-    while (($k, $v) = each %_fml_config) {
-	print "${k}: $v\n";
+    my $len = 0;
+
+    $mode ||= 'all';
+
+    for $k (keys %_fml_config) { $len = $len > length($k) ? $len : length($k);}
+
+    my $format = '%-'. $len. 's = %s'. "\n";
+    for $k (sort keys %_fml_config) {
+	next unless $k =~ /^[a-z0-9]/io;
+	$v = $_fml_config{ $k };
+
+	# print out all keys
+	if ($mode eq 'all') {
+	    printf $format, $k, $v;
+	}
+	# compare the value with the default one
+	# print key if values for the key differs.
+	else {
+	    if (defined $_default_fml_config{ $k }) {
+		if ($v ne $_default_fml_config{ $k }) {
+		    printf $format, $k, $v;
+		}
+	    }
+	    else {
+		printf $format, $k, $v;
+	    }
+	}
     }
+}
+
+
+sub _fml_config_sort
+{
+    my ($x, $y) = ($a, $b);
+    $x =~ s/^use_//ig;
+    $y =~ s/^use_//ig;
+    $x cmp $y;
 }
 
 
@@ -110,6 +145,11 @@ sub load_file
     else {
 	$self->_log("Error: cannot open $file");
     }
+
+    # first time
+    unless (%_default_fml_config) {
+	%_default_fml_config = %_fml_config;
+    }
 }
 
 
@@ -117,6 +157,7 @@ sub load_file
 sub expand_variables
 {
     my ($self) = @_;
+    _expand_variables( \%_default_fml_config );
     _expand_variables( \%_fml_config );
 }
 
