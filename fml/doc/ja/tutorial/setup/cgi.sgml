@@ -1,5 +1,5 @@
 <!--
-   $FML: cgi.sgml,v 1.5 2004/03/31 06:29:00 fukachan Exp $
+   $FML: cgi.sgml,v 1.6 2004/10/02 14:29:46 fukachan Exp $
 -->
 
 
@@ -20,20 +20,23 @@ CGI の内部構造については
 </para>
 
 <para>
-<link linkend="setup.apache.suexec">apache で suexec を使う</link>
+<link linkend="setup.apache.suexec">
+apache で suexec を使う
+</link>
 ことを前提としています。
 </para>
 
 <para>
-2004 年、秋現在、ＭＬごとの CGI およびドメイン全体を管理する CGI は、
-あります。ユーザの追加、削除、メンバーリストやログの閲覧などが可能です
-が、CGI からの設定変更インターフェイス( config.cf の編集機能)が未実装
-です。
+2004 年、秋現在、ＭＬごとの CGI およびドメイン全体を管理する CGI が用
+意されています。このインターフェイスで、ユーザの追加、削除、メンバーリ
+ストやログの閲覧などが可能ですが、CGI からの設定変更インターフェイス(
+config.cf の編集機能)が未実装です。
 </para>
 
 <para>
-なお、CGI を使う場合でも、メールサーバとして postfix や qmail を使って
-いるなら、CGI 用の特別な「メールサーバの設定変更」は不要です。
+なお、CGI から設定変更を行なう場合でも、メールサーバとして postfix や 
+qmail を使っているなら、CGI 用の特別な「メールサーバの設定変更」は不要
+です。
 </para>
 
 </warning>
@@ -41,14 +44,14 @@ CGI の内部構造については
 
 <sect1 id="setupcgi.install">
 	<title>
-	いつでも makefml newml は CGI スクリプトを作っています
+	いつでも makefml newml は CGI スクリプトを作ります
 	</title>
 
 <para>
 makefml newml を実行するとデフォルトで config.cgi などの CGI スクリプ
 トが ~fml/public_html/ 以下に用意されています。この CGI は二種類あり、
-ドメイン全体を管理するものとそれぞれのＭＬを管理する CGI と両方ありま
-す。
+ドメイン全体を管理する CGI と、それぞれのＭＬを管理する CGI と両方あり
+ます。
 <screen>
 そのドメインのＭＬ全部の管理者用
 ~fml/public_html/fml/ドメイン/admin/config.cgi
@@ -74,8 +77,7 @@ http://lists.fml.org/~fml/cgi-bin/fml/ドメイン/ml-admin/ＭＬ名/config.cgi
 例
 http://lists.fml.org/~fml/cgi-bin/fml/fml.org/ml-admin/elena/config.cgi
 </screen>
-の両方が makefml により用意されます
-(後者はそういう予定ということで、実際には作られません _o_)。
+の両方が makefml により用意されます。
 </para>
 
 <para>
@@ -104,6 +106,12 @@ http://lists.fml.org/~fml/cgi-bin/fml/fml.org/.htaccess
 <para>
 デフォルトの .htaccess は次のような無意味:)なものになっていて、
 アクセスできません。
+<footnote>
+<para>
+さらに、デフォルトの apache では ~fml/ へのアクセスは出来ないはずなの
+で、apache の設定も別途必要です。一応、この二段構えになっています。
+</para>
+</footnote>
 <screen>
 AuthName ByPassword
 AuthType Basic
@@ -122,10 +130,10 @@ require valid-user
 
 <warning>
 <para>
-(当たり前だけど)このファイルを消すと、誰でもアクセスできるようになります。
-デバッグする場合はともかく、そういう裏技は使わないようにしましょう;-)
-また、そういうのに限って再設定し忘れたりするものなので、しない方が良い
-です。きちんと .htaccess を設定しましょう。
+(当たり前だけど)このファイルを消すと、誰でもアクセスできるようになりま
+す。デバッグする場合はともかく、そういう裏技は使わないようにしましょう;-)
+また、そういうデバッグなんて時に限って、そのまま再設定し忘れたりするも
+のなので、しない方が良いです。きちんと .htaccess を設定しましょう。
 </para>
 </warning>
 

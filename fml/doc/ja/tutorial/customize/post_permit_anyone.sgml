@@ -1,6 +1,7 @@
 <!--
-   $FML: post_permit_anyone.sgml,v 1.4 2003/11/30 10:01:13 fukachan Exp $
+   $FML: post_permit_anyone.sgml,v 1.5 2004/04/07 11:07:02 fukachan Exp $
 -->
+
 
 <sect1 id="config.post.permitanyone">
 	<title>
@@ -8,11 +9,11 @@
 	</title>
 
 <para>
+article_post_restrictions は記事の投稿を許すメンバーを定義しています。
+これを permit_anyone とすると、だれでも投稿可能になります。
 <screen>
 article_post_restrictions = permit_anyone
 </screen>
-article_post_restrictions は記事の投稿を許すメンバーを定義しています。
-これを permit_anyone とすると、だれでも投稿可能になります。
 </para>
 
 <para>

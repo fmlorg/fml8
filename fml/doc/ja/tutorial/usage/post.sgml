@@ -1,6 +1,7 @@
 <!--
-   $FML: post.sgml,v 1.7 2003/04/15 14:51:46 fukachan Exp $
+   $FML: post.sgml,v 1.8 2004/04/07 11:07:13 fukachan Exp $
 -->
+
 
 <sect1 id="usage.post">
 	<title>
@@ -13,7 +14,7 @@ fml.org の elena ＭＬへの投稿は、
 メールは MTA が受け、最終的に MTA は
 /usr/local/libexec/fml/distribute
 というコマンドを実行します。
-fml.pl はメールを標準入力から受けとり、
+distribute はメールを標準入力から受けとり、
 ＭＬとして必要な処理(記事の保存やヘッダの書き換え)をした後、
 MTA へ配送処理を委ねます。
 </para>
@@ -70,7 +71,9 @@ XXX-TODO 投稿記事の振舞いを制御する変数
 
 
 <sect2>
-   <title> 解説: ブートしていく様子 </title>
+	<title>
+	解説: ブートしていく様子
+	</title>
 
 <para>
 <link linkend="bootloader">
@@ -81,9 +84,12 @@ fml ブートローダ
 
 
 <para>
-/usr/local/libexec/loader は /usr/local/etc/fml/main.cf を読みこみます。
-fml_version 変数から使うべきライブラリのバージョンを決めます。例えば 
-fml_vesrion が current-20010501 となっていたら
+/usr/local/libexec/fml/distribute と/usr/local/libexec/fml/loader は 
+symlink(2) で結ばれ、同一のファイルです。
+/usr/local/libexec/fml/distribute が起動されると、つまり loader が起動
+されると、/usr/local/libexec/fml/loader は /usr/local/etc/fml/main.cf 
+を読みこみます。そして fml_version 変数から使うべきライブラリのバージョ
+ンを決めます。例えば fml_vesrion が current-20010501 となっていたら
 /usr/local/lib/fml/current-20010501/ 以下にあるライブラリを使うといっ
 た具合です。
 </para>

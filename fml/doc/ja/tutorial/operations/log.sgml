@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: log.sgml,v 1.1 2003/11/29 12:51:36 fukachan Exp $
 -->
 
 
@@ -22,6 +22,10 @@
 で、最近のログ(デフォルトでは 30 行分)が表示されます。
 </para>
 
+<para>
+GUI からも log コマンドを実行可能です。
+</para>
+
 </sect1>
 
 
@@ -31,8 +35,8 @@
 	</title>
 
 <para>
-別のコマンドや独自のCGIなどからfml CUIを呼びだし処理をさせたい場合、
-STDERRなどでログを受けとりたいことがあります。
+別のコマンドや独自の CGI などから &fml8; CUI を呼びだし処理をさせたい
+場合に STDERR などでログを受けとりたいことがあります。
 </para>
 
 <para>
@@ -41,12 +45,12 @@ STDERRなどでログを受けとりたいことがあります。
 % makefml --log-computer-output コマンド ＭＬ名
 % fml --log-computer-output     ＭＬ名 コマンド
 </screen>
-とすると、コマンドの結果が標準出力(STDOUT)へ、
-ログがSTDERRへ出力されます。
+とすると、コマンドの結果が標準出力( STDOUT )へ、
+ログが STDERR へ出力されます。
 </para>
 
 <para>
-たとえば
+たとえば次のようになります。
 <screen>
 % fml --log-computer-output elena@fml.org list
 rudo@nuinui.net
@@ -64,20 +68,22 @@ config.cf などで
 <screen>
 use_log_computer_output = yes
 </screen>
-と指定することでも可能です。でも、単にこの変数を yes にすると、
-makefml や fml だけでなく、配送やコマンドメールのプログラムも
-STDERRにログの出力をしてしまいます。
+と指定することでも同じ効果となります。
+</para>
+
+<para>
+しかしながら、この変数を yes にすると、makefml や fml だけでなく、配送
+やコマンドメールのプログラムもSTDERRにログの出力をしてしまいますので注
+意が必要です。
 </para>
 
 <para>
 メッセージのキューイングの内部構造や出力フォーマットは、ある perl
 module のなかに押し込めてあります。このモジュール(デフォルトは 
-FML::Log::Print::Simple)は log_computer_output_engine 変数で指定可能で
-す。出力を切替えたい場合は、自分用のモジュールを作り、それを、この変数
-に指定してください。
-モジュールは
-FML::Log::Print::Simple
-を参考に、hack してみてください:)
+FML::Log::Print::Simple)は config.cf で log_computer_output_engine を
+変数を使えば変更可能です。出力を切替えたい場合は、自分用のモジュールを
+作り、それを、この変数に指定してください。モジュールは
+FML::Log::Print::Simpleを参考に、hack してみてください:)
 </para>
 
 </sect1>

@@ -1,6 +1,7 @@
 <!--
-   $FML$
+   $FML: fml.sgml,v 1.1 2003/01/05 08:03:23 fukachan Exp $
 -->
+
 
 <sect1 id="usage.fml">
 	<title>
@@ -17,11 +18,11 @@ fml (/usr/local/bin/fml)
 <para>
 fml コマンドでは
 <screen>
-% fml ＭＬ名 コマンド [コマンドのオプション]
+% fml ＭＬ名 コマンド [コマンド固有のオプション]
 </screen>
 となります。一方、makefml では
 <screen>
-% makefml コマンド ＭＬ名 [コマンドのオプション]
+% makefml コマンド ＭＬ名 [コマンド固有のオプション]
 </screen>
 です。
 各コマンドの使い方については makefml を参照して下さい。

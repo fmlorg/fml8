@@ -1,6 +1,7 @@
 <!--
-   $FML: fmlconf.sgml,v 1.3 2002/07/07 01:57:12 fukachan Exp $
+   $FML: fmlconf.sgml,v 1.4 2002/07/28 06:26:58 fukachan Exp $
 -->
+
 
 <sect1 id="usage.fmlconf">
 	<title>
@@ -18,7 +19,7 @@ fmlconf (/usr/local/bin/fmlconf)
 <screen>
 % fmlconf elena
 </screen>
-デフォルト値と異なる変数を表示する。
+デフォルト値と異なる変数のみを表示する。
 <screen>
 % fmlconf -n elena
 </screen>

@@ -1,6 +1,7 @@
 <!--
-   $FML: config.cf.sgml,v 1.3 2003/04/15 14:51:44 fukachan Exp $
+   $FML: config.cf.sgml,v 1.4 2004/04/07 11:07:11 fukachan Exp $
 -->
+
 
 <sect1 id="setup.config.cf">
 	<title>
@@ -11,8 +12,9 @@
 makefml は、
 makefml newml を実行した際に、
 そのＭＬの config.cf などの設定ファイル群を一式を作り、
-さらに、MTA がfml を起動する際に使う include 類( postfix 用)および~
-fml/.qmail-* ( qmail 用)など必要な設定ファイル一式を用意します。
+さらに、MTA が fml を起動する際に使う include 類( postfix 用)および
+~fml/.qmail-* ( qmail 用 )
+などの必要な設定ファイル一式を用意します。
 <screen>
 % su fml
 % makefml newml elena
@@ -43,15 +45,15 @@ config.cf の先頭の ml_domain と ml_name もコメントになっていますが、そ
 <screen>
 "| /usr/local/libexec/fml/distribute elena@fml.org"
 </screen>
-そして、/var/spool/ml/elena/include-ctl ファイルは
+そして /var/spool/ml/elena/include-ctl ファイルは
 <screen>
 "| /usr/local/libexec/fml/command elena@fml.org"
 </screen>
-などとなっています。MTAから起動された 
+などとなっています。MTA から起動された 
 /usr/local/libexec/fml/distribute
-コマンドなどが、このコマンド引数の elena@fml.org の部分からml_domain 
-と ml_name を自動的に設定します。そのため config.cf ではコメントのまま
-で問題ありません。
+コマンドなどが、このコマンド引数の elena@fml.org の部分から
+ml_domain と ml_name を自動的に設定します。
+そのため config.cf ではコメントのままで問題ありません。
 </para>
 
 <para>

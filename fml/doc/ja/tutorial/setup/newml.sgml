@@ -1,5 +1,5 @@
 <!--
-   $FML: newml.sgml,v 1.6 2003/12/21 03:19:14 fukachan Exp $
+   $FML: newml.sgml,v 1.7 2004/04/07 11:07:11 fukachan Exp $
 -->
 
 
@@ -134,19 +134,27 @@ makefml newdomain コマンドでパスを指定して下さい。
 makefml を使ってＭＬを作成します。
 使い方は &fml4; と同様ですが、ＭＬ名にきちんとドメインまでつけて下さい。
 <screen>
+初回は、newdomain コマンドによるドメイン定義も必要です。
 % su root
 # makefml newdomain nuinui.net /var/spool/virtual/nuinui.net
 # exit
 % su fml
 % makefml newml elena@nuinui.net
+
+二回目以降の場合は
+
+% su fml
+% makefml newml elena@nuinui.net
+
+だけでよいです。
 </screen>
 </para>
 
 <para>
-newdomainコマンドでは、ドメインと使うml_home_prefixディレクトリのペア
-を指定します。このコマンドは /usr/local/etc/fml/ml_home_prefix ファイ
-ルの編集を代行します。上の例では ml_home_prefix ファイルに次の行を追加
-します。
+newdomainコマンドでは、ドメインと使う ml_home_prefix ディレクトリのペ
+アを指定します。このコマンドは /usr/local/etc/fml/ml_home_prefix ファ
+イルの編集を代行します。上の例では ml_home_prefix ファイルに次の行を追
+加します。
 <screen>
 nuinui.net /var/spool/virtual/nuinui.net
 </screen>

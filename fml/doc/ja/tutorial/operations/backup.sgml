@@ -1,5 +1,5 @@
 <!--
-   $FML: backup.sgml,v 1.1 2004/03/25 04:10:03 fukachan Exp $
+   $FML: backup.sgml,v 1.2 2004/04/07 11:07:10 fukachan Exp $
 -->
 
 
@@ -10,8 +10,8 @@
 
 
 <para>
-fml8 の設定にかんしては、これら(最少で２つ)のディレクトリ以下のファイ
-ルをバックアップしておけば良いです。
+&fml8; の設定にかんしては、これら(最少で２つ)のディレクトリ以下のファ
+イルをバックアップしておけば良いです。
 <screen>
 /usr/local/etc/fml/
 $ml_home_prefix	(たとえば /var/spool/ml/、ドメインごとに異なります)
@@ -22,12 +22,12 @@ $ml_home_prefix	(たとえば /var/spool/ml/、ドメインごとに異なります)
 
 <para>
 また、MTA の設定もバックアップしておくとよいでしょう。
-Postfixなら、/etc/postfixです。
+Postfixなら /etc/postfix です。
 </para>
 
 <para>
-よって、まとめると、その３つ(正確には２＋fml8が管轄しているドメインの
-数)のディレクトリということになります。
+まとめると、その３つ(正確には２＋ &fml8; が管轄しているドメインの数)の
+ディレクトリということになります。
 <screen>
 /etc/postfix/
 /usr/local/etc/fml/
@@ -42,13 +42,13 @@ $ml_home_prefix	(たとえば /var/spool/ml/、ドメインごとに異なります)
 
 <sect1 id="operations.backup.fml8.include">
 	<title>
-	fml8 の設定をバックアップする
+	&fml8;  の設定をバックアップする
 	</title>
 
 <para>
-fml8 の設定にかんしては、この２つのディレクトリ以下のファイルをバック
-アップしておけば良いのですが、ただ、これだと記事やログファイルなどあら
-ゆるものが含まれているので、サイズが大きいです。
+&fml8; の設定に関しては、この２つのディレクトリ以下のファイルをバック
+アップしておけば良いのですが、ただ、この方法だと記事やログファイルなど
+あらゆるものが含まれているので、サイズが大きいです。
 <screen>
 /usr/local/etc/fml/
 $ml_home_prefix	(たとえば /var/spool/ml/、ドメインごとに異なります)
@@ -78,7 +78,7 @@ $ml_home_prefix	(たとえば /var/spool/ml/、ドメインごとに異なります)
 </para>
 
 <para>
-まず、fml8 では、ファイル名に .cf がついているファイルが設定を書くファ
+まず、&fml8;  では、ファイル名に .cf がついているファイルが設定を書くファ
 イルです。正確には
 <screen> 
 key = value
@@ -140,7 +140,7 @@ key = value
 
 <sect1 id="operations.backup.fml8.exclude">
 	<title>
-	fml8 の設定をバックアップする: 特定のディレクトリ以外、全部
+	&fml8; の設定をバックアップする: 特定のディレクトリ以外、全部
 	</title>
 
 <para>

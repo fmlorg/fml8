@@ -1,6 +1,7 @@
 <!--
-   $FML$
+   $FML: guide.sgml,v 1.1 2002/07/28 12:20:20 fukachan Exp $
 -->
+
 
 <sect1 id="usage.user.guide">
 	<title>
@@ -12,6 +13,12 @@ elena@fml.org の場合、
 本文に guide と書いたメールを
 elena-ctl@fml.org  に送って下さい。
 ガイドが返送されます。
+</para>
+
+<para>
+guide という名前のファイルがＭＬのホームディレクトリにあれば、そのファ
+イルを送り返します。ない場合（デフォルト）は、テンプレートの guide ファ
+イルがお繰り返されます。
 </para>
 
 </sect1>

@@ -1,5 +1,5 @@
 <!--
-   $FML: newml.recipes.sgml,v 1.1 2003/12/21 03:19:14 fukachan Exp $
+   $FML: newml.recipes.sgml,v 1.2 2004/04/07 11:07:11 fukachan Exp $
 -->
 
 
@@ -33,7 +33,7 @@ $newml_command_ml_admin_default_address
 デフォルトでは、どのＭＬでも /usr/local/etc/fml/main.cf で定義されてい
 る管理者のアドレス $fml_owner が使われます。
 
-それ以外のものにしたい場合、
+それ以外のものにしたい場合、site_default_config.cf で
 $newml_command_ml_admin_default_address 
 にメールアドレスを設定して下さい。
 <screen>

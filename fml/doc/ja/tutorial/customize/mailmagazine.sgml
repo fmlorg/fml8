@@ -1,5 +1,5 @@
 <!--
-   $FML: mailmagazine.sgml,v 1.4 2004/04/07 11:07:02 fukachan Exp $
+   $FML: mailmagazine.sgml,v 1.5 2004/06/23 15:07:16 fukachan Exp $
 -->
 
 
@@ -7,6 +7,19 @@
 	<title>
 	ケーススタディ: メールマガジン (1)
 	</title>
+
+
+<warning>
+<para>
+ここではメールヘッダによる認証しか取り上げていませんが、
+安全のため、もっともっと厳しい設定をするべきです。
+</para>
+
+<para>
+たとえば、そもそもインターネット側に SMTP インターフェイスがないような
+サーバの設定、およびサーバの設置場所の選定などを行なうべきです。
+</para>
+</warning>
 
 
 <para>
@@ -93,6 +106,8 @@ smtp_servers = 127.0.0.1:2025
 
 % fml -o smtp_servers=127.0.0.1:25 ＭＬ名 flushq
 </screen>
+ちなみに flush と flushq コマンドは同じ意味です。
+flushq が打ちづらいので flush コマンドも作ってみました。
 </para>
 
 </sect1>

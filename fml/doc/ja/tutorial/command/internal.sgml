@@ -1,16 +1,18 @@
 <!--
-   $FML: internal.sgml,v 1.8 2004/04/07 11:07:00 fukachan Exp $
+   $FML: internal.sgml,v 1.9 2004/04/21 08:48:47 fukachan Exp $
 -->
+
 
 <sect1 id="fml.command.internal.change">
 	<title>
 	補足:
-	『&fml4;と &fmldevel; のコードの書き方はどのくらい違うか？』
+	『&fml4;と &fml8; のコードの書き方はどのくらい違うか？』
 	</title>
 
 <para>
-コマンドの典型である『ファイルを送り返す』だけの help コマンドを例にと
-り、相違点を説明しましょう。
+コマンドの典型である『ファイルを送り返す』だけの 
+help コマンドを例にとり、
+相違点を説明しましょう。
 </para>
 
 <para>
@@ -33,7 +35,7 @@ sub myProcHelpFileSendBack
 </para>
 
 <para>
-&fmldevel; では help ファイルを送り返すコードの実体は
+&fml8; では help ファイルを送り返すコードの実体は
 FML::Command::User::help にあり、
 FML::Process::Command クラスから
 (FML::Command の AUTOLOAD を経由して)呼び出されます。
@@ -85,8 +87,8 @@ sub process
 </para>
 
 <para>
-変数は、&fml4; ではグローバル変数群です。一方 &fml8; では $config オブ
-ジェクトを通じてアクセスできる設定変数空間の中にあります。
+変数ですが、&fml4; ではグローバル変数群です。一方 &fml8; では $config 
+オブジェクトを通じてアクセスできる設定変数空間の中にあります。
 </para>
 
 <para>

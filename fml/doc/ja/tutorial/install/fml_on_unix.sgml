@@ -1,6 +1,7 @@
 <!--
-   $FML: fml_on_unix.sgml,v 1.6 2003/11/24 04:44:57 fukachan Exp $
+   $FML: fml_on_unix.sgml,v 1.7 2004/04/07 11:07:05 fukachan Exp $
 -->
+
 
 <chapter id="install.fml.unix">
 	<title>
@@ -36,7 +37,9 @@ configure を実行する(後述)前に、
 
 <para>
 configure (GNU autoconf) および make を実行して下さい。
-なお configure の前に、適宜、ユーザ fml とグループ fml を作ってください。
+configure の前に、適宜、ユーザ fml とグループ fml を作っておく必要があ
+りますので注意して下さい。
+ここまでの作業をまとめて書くと、次のようになります。
 <screen>
 % su root
 # groupadd fml
@@ -48,7 +51,7 @@ configure が適宜、script 群や .cf 群の変数を書き換えます。
 </para>
 
 <para>
-make install を実行すると、configure が生成する etc/fml/install.cf を
+make install を実行すると、configure が生成した etc/fml/install.cf を
 元に、configure が生成した install.pl (perl script) がインストールを行
 ないます。
 </para>
@@ -341,13 +344,14 @@ make install はユーザ root で実行して下さい。
 必要なら /usr/local/etc/fml/main.cf を編集して下さい。
 
 configure が、あなたの環境に合わせて main.cf を書換えしているはずなの
-でconfigure のオプション指定が正しければ、編集の必要は、まずないです。
+で configure のオプション指定が正しければ、編集の必要は、まずないです。
 </para>
 
 <para>
 mani.cf は大枠の最も基本的な設定です。より細かな設定、たとえばサイト共
 通の fml の動作指定などは site_default_config.cf の役割です。各ＭＬ固
-有の設定は、各ＭＬのホームディレクトリにあるconfig.cfファイルです。
+有の設定は、各ＭＬのホームディレクトリにある config.cf ファイルを編集
+して下さい。
 </para>
 
 <!-- main.cf の見本 -->
@@ -378,10 +382,10 @@ mani.cf は大枠の最も基本的な設定です。より細かな設定、たとえばサイト共
 </para>
 
 <para>
-デフォルトでは&fml4;兼、見本として:)
+デフォルトでは &fml4; と合わせるために、および見本として:)
 subject のタグをつけない設定とフィルタ関連の設定だけが入っています。
 <screen>
-# $FML: fml_on_unix.sgml,v 1.6 2003/11/24 04:44:57 fukachan Exp $
+# $FML: fml_on_unix.sgml,v 1.7 2004/04/07 11:07:05 fukachan Exp $
 #
 #               site default_config.cf EXAMPLE
 #

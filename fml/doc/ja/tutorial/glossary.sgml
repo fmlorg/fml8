@@ -1,9 +1,9 @@
 <!--
-	$FML: glossary.sgml,v 1.4 2002/07/02 10:39:29 fukachan Exp $
+	$FML: glossary.sgml,v 1.5 2003/04/15 14:51:34 fukachan Exp $
 -->
 
 <glossary id="glossary">
-   <title>
+	<title>
 	用語集(関数名および変数名関連)
 	</title>
 
@@ -23,13 +23,7 @@
 	<glossterm>	fml-devel	</glossterm>
 	<glossdef>
 	<para>
-	将来 &fmldevel; になるであろうとおもわれる fml-current
-	</para>
-
-	<para>
-	もしかしたら fml 8.x の方が適切かも知れない。
-	だが、まだ決まっていない。
-	でも 8 じゃないかな〜という感じ濃厚
+	&fml8 の開発時の名称。
 	</para>
 	</glossdef>
 
@@ -131,7 +125,9 @@
 	<glossdef>
 	<para>
 	関数へのポインタ( function pointer )。
-	ただし perl では CODE リファレンスと呼ぶべき
+	perl では CODE リファレンスと呼ぶべきだが、
+	cr などと書くより分かりやすいので、
+	プログラム中では $fp を使うることが多い。
 	</para>
 	</glossdef>
    </glossentry>
@@ -160,7 +156,7 @@
 	<glossterm>	rなになに	</glossterm>
 	<glossdef>
 	<para>
-	r はリファレンスの略。
+	r はリファレンス(reference)の略。
 	これはハンガリアン記法と呼ばれている。
 	</para>
 
@@ -229,8 +225,8 @@ $euc_string = STR2EUC($string);
 	<para>
 	メールの本文に fml への命令(コマンド)を書いて送ることで
 	何らかの処理をしてもらう操作の総称。
-	一般ユーザ用のものと、
-	リモート管理用のもの(通称 admin コマンド)の２つのクラスがある。
+	一般ユーザ用のコマンドと、
+	リモート管理用のコマンド(通称 admin コマンド)の２つのクラスがある。
 	</para>
 	</glossdef>
    </glossentry>

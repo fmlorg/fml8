@@ -1,6 +1,7 @@
 <!--
-   $FML: directory.sgml,v 1.3 2003/04/15 14:51:40 fukachan Exp $
+   $FML: directory.sgml,v 1.4 2004/04/07 11:07:08 fukachan Exp $
 -->
+
 
 <chapter id="directory">
 	<title>
@@ -14,8 +15,8 @@
 	</title>
 
 <para>
-たとえば、HTML化された記事は、こんな階層に置かれていますが、どうでしょ
-う？
+たとえば、HTML化された記事は、
+こんな階層に置かれていますが、どうでしょう？
 <screen>
 200201/msg○○.html
 </screen>
@@ -31,9 +32,9 @@
 </para>
 
 <para>
-HTML 化されたディレクトリや sub は 1000 ごとに用意すると、例えば 
-spool/sub/file みたいにすると spool/ 以下で 10^6 ( million )くらいはそ
-れなりのアクセス速度を保ちつつ格納できるはず。
+HTML 化されたファイルをおくサブディレクトリを 1000 ごとに用意すると、
+たとえば spool/sub/file みたいにすると、 spool/ 以下で 10^6 ( million )
+くらいはそれなりのアクセス速度を保ちつつ格納できるはず。
 </para>
 
 <para>

@@ -1,5 +1,5 @@
 <!--
-   $FML: case_studies.sgml,v 1.5 2003/11/29 07:29:12 fukachan Exp $
+   $FML: case_studies.sgml,v 1.6 2004/04/07 11:07:01 fukachan Exp $
 -->
 
 
@@ -17,8 +17,8 @@
 ヘッダ関連では、まず Subject: にタグをつけないことにしました。
 <footnote>
 <para>
-なお、この設定はデフォルトの site_default_config.cf に仕込まれているた
-め、&fmldevel; のデフォルトです。
+なお、この設定はデフォルトの site_default_config.cf に仕込まれています。
+つまり &fml8; のデフォルトです。
 </para>
 </footnote>
 ことにした。
@@ -38,6 +38,7 @@ outgoing_mail_header_x_ml_name          =       office#$ml_name
 
 <para>
 記事は誰でも投稿可能としましょう。
+ここでは root さんからのシステムメールなども許しています。
 <screen>
 article_post_restrictions		=	permit_anyone
 </screen>

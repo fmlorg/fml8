@@ -1,6 +1,7 @@
 <!--
-   $FML: chapter.onhost.sgml,v 1.9 2004/02/26 05:29:59 fukachan Exp $
+   $FML: chapter.onhost.sgml,v 1.10 2004/04/07 11:07:12 fukachan Exp $
 -->
+
 
 <chapter id="usage.onhost">
 	<title>
@@ -48,9 +49,9 @@ makefml を使う操作は confirmation が不要です。makefml を実行できる時点
 
 <para>
 そのためファイルの直接編集などはせずに、通常は「makefml (
-/usr/local/bin/makefml )を使うことで fml の設定を変更して下さい」とい
-うポリシーが推奨されています。もちろんファイルを編集しても構いませんが、
-内部構造などを良く理解してからにしてください。
+/usr/local/bin/makefml )コマンドを使うことで fml の設定を変更して下さ
+い」というポリシーが推奨されています。もちろんファイルを編集しても構い
+ませんが、内部構造などをよく理解してからにしてください。
 </para>
 
 <para>

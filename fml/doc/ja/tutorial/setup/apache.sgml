@@ -1,5 +1,5 @@
 <!--
-   $FML: apache.sgml,v 1.1 2004/10/02 14:29:46 fukachan Exp $
+   $FML: apache.sgml,v 1.2 2004/10/03 10:55:15 fukachan Exp $
 -->
 
 
@@ -31,6 +31,7 @@ fml8 CGI の内部構造については
 suexec 利用可能な apache を作る必要があります。 
 configure を実行する際に、
 <screen>
+(apache 1.x の場合)
 configure --enable-suexec --suexec-caller=www
 </screen>
 などとします。
@@ -40,8 +41,10 @@ configure --enable-suexec --suexec-caller=www
 
 <para>
 インストール後、~ユーザ/cgi-bin/ を許すように httpd.conf を
-設定する必要があります。
+変更する必要があります。
 <screen>
+設定例:
+
 &lt;Directory /home/*/*/public_html&gt;
     AllowOverride FileInfo AuthConfig Limit
     Options MultiViews Indexes SymLinksIfOwnerMatch IncludesNoExec ExecCGI

@@ -1,6 +1,7 @@
 <!--
-   $FML: test.sgml,v 1.4 2003/04/15 14:51:44 fukachan Exp $
+   $FML: test.sgml,v 1.5 2004/04/07 11:07:12 fukachan Exp $
 -->
+
 
 <chapter id="test">
 	<title>
@@ -28,7 +29,7 @@
 <warning>
 <para>
 テストの前に
-newml の際の重複チェックを効かせるために
+newml の際のユーザ重複チェックを効かせるために
 postfix の aliases をきちんと追加して下さい。
 これをしないと root ＭＬとか作れちゃいます:-)
 </para>
@@ -59,7 +60,7 @@ qmail をメールサーバに使っている人は特にやることはないとおもいます。
 
 <para>
 まず、メールサーバに個人宛のメールアドレスを用意しましょう。
-ここでは、ユーザるどくん rudo@fml.org とします。
+ここでは、ユーザ「るど」くん rudo@fml.org を例にとります。
 <footnote>
 <para>
 簡単に用意するには、ユーザ rudo くんを作ればよいでしょう。

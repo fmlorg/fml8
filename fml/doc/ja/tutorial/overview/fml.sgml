@@ -1,6 +1,7 @@
 <!--
-   $FML: fml.sgml,v 1.4 2003/04/15 14:51:43 fukachan Exp $
+   $FML: fml.sgml,v 1.5 2004/04/07 11:07:10 fukachan Exp $
 -->
+
 
 <chapter id="overview.fml">
 	<title>
@@ -75,6 +76,7 @@
 		リモート管理者の登録/削除、
 		ログを見る、
 		メンバーリストを見る。
+	設定ファイルの編集機能が未実装です。
 	</para>
     </listitem>
 
@@ -114,6 +116,7 @@
 	<link linkend="error.internal">
 	エラーメールの自動解析
 	</link>
+	、エラーになるアドレスの自動削除。
 	</para>
     </listitem>
 
@@ -160,6 +163,14 @@
 	fmldoc
 	makefml
 	fml
+	</para>
+    </listitem>
+
+
+    <listitem>
+	<para>
+	2004 夏以降: 配送キュー管理システムにより再送処理。
+	事実上 MTA の役割をしている。
 	</para>
     </listitem>
 
@@ -353,6 +364,13 @@ elena@fml.org ＭＬを作るには
 の場合は、ＭＬのアドレスを全部指定して下さい。
 たとえば elena@nuinui.net を作る場合は、次のように実行します。
 <screen>
+初回
+% su root
+% makefml newdomain nuinui.net /some/where/nuinui.net
+% su fml
+% makefml newml elena@nuinui.net
+
+二回目以降
 % su fml
 % makefml newml elena@nuinui.net
 </screen>
@@ -473,8 +491,10 @@ elena ＭＬの設定のカスタマイズは
 <link linkend="internal.config.cf">
 フォーマットは postfix の設定ファイル
 </link>
-と同様です(&fml4; の config.ph よりは cf にやや近いですが、フォーマッ
-トが違うことに変わりはない)。
+とかなり似ています(&fml4; の config.ph よりは cf にやや近いですが、フォー
+マットが違うことに変わりはない)。
+HOOK (perl script)を各場合は、
+(perl script ファイルのように) =cut より後に書いて下さい。
 </para>
 
 <para>
@@ -486,7 +506,7 @@ elena ＭＬの設定のカスタマイズは
 </screen>
 というファイル中で定義されています。
 これは perl のライブラリが /usr/local/lib/perl/5.00503/ のように
-バージョン番号付のディレクトリに置かれるのと似ています。
+バージョン番号付のディレクトリに置かれるのと少し似ています。
 </para>
 
 <para>

@@ -1,5 +1,5 @@
 <!--
-   $FML: recipe.filter.spamassassin.sgml,v 1.1 2004/05/19 13:18:00 fukachan Exp $
+   $FML: recipe.filter.spamassassin.sgml,v 1.2 2004/05/20 12:34:26 fukachan Exp $
 -->
 
 
@@ -7,7 +7,7 @@
 
 <question>
 <para>
-spamassassin で SPAM メールを無視する。
+spamassassin で SPAM メールを無視する (HOOK を使った例)。
 </para>
 </question>
 
@@ -74,8 +74,7 @@ $distribute_verify_request_end_hook = q{
 </para>
 
 <para>
-ちょっとトリッキーだが、動作はする。
-そのうち、もうちょっと変えるつもりでつ。
+ちょっとトリッキーですが、動きます。
 </para>
 
 </answer>

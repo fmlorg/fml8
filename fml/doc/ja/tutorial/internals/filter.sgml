@@ -1,6 +1,12 @@
 <!--
-   $FML: filter.sgml,v 1.6 2004/04/07 11:07:08 fukachan Exp $
+   $FML: filter.sgml,v 1.7 2004/04/20 03:36:34 fukachan Exp $
 -->
+
+
+<!--
+   XXX-TODO: かきなおせよ、ふぃるた
+-->
+
 
 <chapter id="internals.filter">
 	<title>
@@ -54,10 +60,15 @@ text/plain に対してより厳しいシンタックスチェックを行なうフィルタも
 			非言語依存パート (M$ GUID scanner みたいな)
 		先頭部分の text/plain パートに対する
 		シンタックスチェック
+
+	外部フィルタ (ウィルス/SPAM チェッカを呼び出す)
+		clamav
+		spamassassin
+		bogofilter
 </screen>
-本当はこれ以外に、外部の virus scanner なりに飛ばす迂回路が必要だと思
-うんだけど今はまだ考えていません。とりあえず、それは postfix でやって
-ください。
+本当はこれ以外に、SMTP もしくは LMTP を使って、外部の virus scanner な
+りに飛ばす迂回路(postfix の content_filter 相当)が必要だと思うんだけど
+今はまだ考えていません。とりあえず、それは postfix でやってください。
 </para>
 
 <!-- XXX-TODO トラフィックベースのフィルタ -->
@@ -124,13 +135,8 @@ use_機能A   = yes
 
 <para>
 コマンドメールには「一通当たりのコマンド数」とか「コマンド依存の制限一
-回のコマンドメールでgetできるファイルは100個まで」といった制限が必要で
-しょう。
-</para>
-
-<para>
-TODO: でも、コマンドメールを一行ずつ解析するコード(Mail::Message)のメ
-モリ効率がよくない ;)もっと良い方法を考えるべし。
+回のコマンドメールで get できるファイルは100個まで」といったコマンド固
+有の制限があります。
 </para>
 
 <!-- &table.list.filter.commandmail; -->
@@ -151,11 +157,11 @@ text/plain 	permit
 text/html	reject
 *		permit
 </screen>
-みたいなフォーマットで書きます。
+みたいな空白区切りのフォーマットで書きます。
 </para>
 
 <para>
-MIME が前提なので、!MIME なんてのはない。が、text/plain と 
+MIME が前提なので、!MIME なんてのはないですが、text/plain と 
 multipart/mixed 中の text/plain を区別するために、こういう書き方である
 必要があるとおもうわけです。
 <screen>

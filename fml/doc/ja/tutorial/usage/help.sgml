@@ -1,6 +1,7 @@
 <!--
-   $FML$
+   $FML: help.sgml,v 1.1 2002/07/28 12:20:20 fukachan Exp $
 -->
+
 
 <sect1 id="usage.user.help">
 	<title>
@@ -16,6 +17,12 @@ help
 と書いたメールを
 elena-ctl@fml.org  に送って下さい。
 ヘルプが送り返されます。
+</para>
+
+<para>
+help という名前のファイルがＭＬのホームディレクトリにあれば、そのファ
+イルを送り返します。ない場合（デフォルト）は、テンプレートの help ファ
+イルがお繰り返されます。
 </para>
 
 </sect1>

@@ -1,19 +1,21 @@
 <!--
-   $FML: chapter.sgml,v 1.11 2002/10/29 03:44:17 fukachan Exp $
+   $FML: chapter.sgml,v 1.12 2003/04/15 14:51:37 fukachan Exp $
 -->
+
 
 <chapter id="delivery">
 	<TITLE>
-	&fmldevel; のメール配送システム
+	&fml8; のメール配送システム
 	</TITLE>
 
-<sect1 id="fmldevel-delivery">
+
+<sect1 id="fml8-delivery">
 	<title>
-	&fml4; と &fmldevel; の相違点
+	&fml4; と &fml8; の相違点
 	</title>
 
 <para>
-&fmldevel; の最大の目的の一つは、メンバーリストの取得操作におけるコー
+&fml8; の最大の目的の一つは、メンバーリストの取得操作におけるコー
 ドの統合と抽象化です。配送には抽象化された Mail::Delivery クラスを次の
 ように使います。
 </para>
@@ -87,6 +89,23 @@ Mail::Message
 
 <!-- mail queue -->
 &sect.mailqueue;
+
+
+<sect1 id="delivery.qmgr">
+	<title>
+	キュー管理システム
+	</title>
+
+<!--
+   XXX-TODO: もっと、キュー管理システムについて詳しく書いて！
+-->
+
+<para>
+2004 夏以降、&fml8; の配送システムはキュー管理システムのもとで動いてい
+ます。これにより再送処理が可能となりました。
+</para>
+
+</sect1>
 
 
 <sect1>

@@ -1,6 +1,7 @@
 <!--
-   $FML: upgrade.sgml,v 1.5 2004/03/18 05:42:20 fukachan Exp $
+   $FML: upgrade.sgml,v 1.6 2004/04/07 11:07:06 fukachan Exp $
 -->
+
 
 <chapter id="xxxgrade">
 	<title>
@@ -32,7 +33,9 @@ fml4 から fml8 へのアップグレードは、
 
 <para>
 単に、もう一度
-<link linkend="install.fml.unix">インストール</link>
+<link linkend="install.fml.unix">
+インストール
+</link>
 して下さい。
 </para>
 
@@ -42,6 +45,11 @@ fml4 から fml8 へのアップグレードは、
 ファイルをセーブした瞬間から新しい fml に切り替わります
 (注: エディタで編集中は古い内容)。
 </para>
+
+<para>
+逆に言えば、fml_version 行を編集するまで有効にはなりません。
+</para>
+
 </sect1>
 
 

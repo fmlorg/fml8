@@ -1,6 +1,7 @@
 <!--
-   $FML: create_program.sgml,v 1.7 2003/12/23 06:20:36 fukachan Exp $
+   $FML: create_program.sgml,v 1.8 2004/04/07 11:07:04 fukachan Exp $
 -->
+
 
 <chapter id="program.create">
 	<title>
@@ -123,9 +124,9 @@ lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 mead@ -> loader
 </para>
 
 <para>
-CGI のプログラムは
+CGI のプログラム本体は
 FML::CGI::○○○
-というモジュールです。
+というクラスのモジュールです。
 CGI 系列では次のような、オブジェクトの関係があります。
 <screen>
         FML::Process::Kernel
@@ -180,7 +181,7 @@ verify_request() および run() から呼ばれた先のメソッドとなっています。
 CGI プロセスは FML::Process::CGI で駆動され、run() メソッドは
 <screen>
 $curproc->html_start($args);
-画面を作るために run_cgi_xxx() メソッド郡を呼び出す。
+画面を作るために run_cgi_xxx() メソッド群を呼び出す。
 $curproc->html_end($args);
 </screen>
 の順に FML::CGI:: 以下のメソッド群を呼び出しています。

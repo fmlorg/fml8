@@ -1,6 +1,7 @@
 <!--
-   $FML: main.cf.sgml,v 1.8 2003/04/15 14:51:41 fukachan Exp $
+   $FML: main.cf.sgml,v 1.9 2004/04/07 11:07:08 fukachan Exp $
 -->
+
 
 <sect2 id="main.cf">
 	<title>
@@ -29,7 +30,7 @@ main.cf のフォーマットは他の .cf と同様
 
 <screen>
 #
-# $FML: main.cf.sgml,v 1.8 2003/04/15 14:51:41 fukachan Exp $
+# $FML: main.cf.sgml,v 1.9 2004/04/07 11:07:08 fukachan Exp $
 #
 
 # fml version

@@ -1,6 +1,7 @@
 <!--
-   $FML: get.sgml,v 1.1 2002/07/28 12:20:19 fukachan Exp $
+   $FML: get.sgml,v 1.2 2003/04/15 14:51:46 fukachan Exp $
 -->
+
 
 <sect1 id="usage.user.get">
 	<title>
@@ -15,7 +16,20 @@ get 記事番号
 </screen>
 と書いたメールを
 elena-ctl@fml.org  に送って下さい。
-記事が mime/multipart で送り返されます。
+要求した記事(群)は一つの mime/multipart で送り返されます。
+</para>
+
+<para>
+気時番号の部分では MH 準拠の書き方をして構いません。
+<screen>
+例
+
+get 100
+get 1-100
+get first:3
+get last:3
+get 1-100,first:3,last:3
+</screen>
 </para>
 
 </sect1>

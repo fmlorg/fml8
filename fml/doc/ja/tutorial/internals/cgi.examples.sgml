@@ -1,9 +1,8 @@
 <!--
-   $FML: dbms.sgml,v 1.5 2003/05/31 08:51:09 fukachan Exp $
+   $FML: cgi.examples.sgml,v 1.1 2004/03/31 06:03:00 fukachan Exp $
 
    注意: cgi.sgml の中にはめ込むので <chapter> は不必要だ。
 -->
-
 
 
 <sect1 id="cgi.internal.example.isa">
@@ -106,7 +105,7 @@ run_cgi_menu() は、入力画面の生成をおこないます。
 </para>
 
 <para>
-この２つはデフォルトのものを使っているという気分です。
+この２つは、たいていデフォルトのものを使っています。
 <screen>
 run_cgi_title             FML::Process::CGI::Kernel クラス (タイトル表示)
 run_cgi_options           FML::Process::CGI::Kernel クラス (言語選択画面)

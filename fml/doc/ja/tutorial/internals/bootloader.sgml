@@ -1,6 +1,7 @@
 <!--
-   $FML: bootloader.sgml,v 1.10 2003/04/15 14:51:40 fukachan Exp $
+   $FML: bootloader.sgml,v 1.11 2004/04/07 11:07:06 fukachan Exp $
 -->
+
 
 <chapter id="bootloader">
 	<title>
@@ -8,8 +9,8 @@
 	</title>
 
 <para>
-&fmldevel; にはインストールされている fml のバージョン依存性を考慮するた
-めに、本章で述べるようなブートストラップの過程があります。
+&fml8; にはインストールされている fml のバージョン依存性を考慮するため
+に、本章で述べるようなブートストラップの過程があります。
 <screen>
 fml (libexec/distribute) が boot していく様子
 
@@ -144,8 +145,8 @@ FML::Process::Mead       >-|    |
 		<listitem>
 		<para>
 		Bootstrap2() および ProcessSwitch() を実行し、
-		配送用、コマンドモード用などの各
-		プログラム/プロセスなどへ制御を移します(分岐する)。
+		配送用、コマンドメール用の各プロセスへ
+		制御を移します(分岐する)。
 		この時は $0 から自分の名前を知り、
 		どのプロセスへ分岐すればいいのかを判断しています。
 		</para>

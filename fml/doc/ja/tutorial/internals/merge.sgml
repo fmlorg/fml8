@@ -1,6 +1,7 @@
 <!--
-   $FML$
+   $FML: merge.sgml,v 1.1 2004/03/23 05:16:52 fukachan Exp $
 -->
+
 
 <chapter id="merge.internal.to.fml8">
 	<title>
@@ -24,7 +25,8 @@
 
 <para>
 1) fml-devel をインストールする。この際、postfix の alias_maps に 
-/var/spool/ml/etc/mail/aliases を追加する。
+/var/spool/ml/etc/mail/aliases (まだ、この段階では中身のないファイル)
+を追加する。
 </para>
 
 <para>
@@ -97,7 +99,9 @@ m=... つまりまとめ行が無効になる。
 
 <para>
 同一ドメインで、fml4 と fml8 を半々に使っている場合、
-次のような設定を施しておくのがよいでしょう。
+次のような設定を施しておくとよい？
+いや中途半端なトリックはやめて、
+すなおに、mergeml で変換するか、しないかにしておいた方が無難だと思う。
 </para>
 
 <para>

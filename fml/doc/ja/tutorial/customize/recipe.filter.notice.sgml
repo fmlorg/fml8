@@ -1,5 +1,5 @@
 <!--
-   $FML: recipe.filter.notice.sgml,v 1.2 2003/04/15 14:51:37 fukachan Exp $
+   $FML: recipe.filter.notice.sgml,v 1.3 2004/04/07 11:07:02 fukachan Exp $
 -->
 
 
@@ -20,7 +20,7 @@ use_article_filter_reject_notice	=	yes
 article_filter_reject_notice_recipient	=	maintainer sender
 </screen>
 となっています。
-つまり、エラーメールを返し、返す先はＭＬの管理者です。
+つまり、エラーメールを返し、返す先はＭＬの管理者と送信者の両方です。
 </para>
 
 

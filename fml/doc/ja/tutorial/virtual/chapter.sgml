@@ -1,6 +1,7 @@
 <!--
-   $FML: chapter.sgml,v 1.3 2003/11/24 04:44:58 fukachan Exp $
+   $FML: chapter.sgml,v 1.4 2004/04/07 11:07:14 fukachan Exp $
 -->
+
 
 <chapter id="virtualdomain">
 	<title>
@@ -57,7 +58,7 @@ rmdomain コマンドが創設されました。
 <link linkend="install.virtual">
 ml_home_prefix_maps 
 </link>
-を適宜、編集してくれます。
+(正確には primary_ml_home_prefix_map)を適宜、編集してくれます。
 </para>
 
 <para>
@@ -96,8 +97,12 @@ http://lists/~fml/cgi-bin/fml/$domain/admin/config.cgi
 <para>
 なお、CGI の URL にドメイン名が入っているのは、操作する人にとって分か
 りやすいようにという配慮であって、URL を元にドメイン名を決めているわけ
-ではありません。ＭＬ名やドメイン名は newml 時に作成される .cgi スクリ
-プトにハードコーディングされています。
+ではありません(それは危険です)。
+</para>
+
+<para>
+ＭＬ名やドメイン名は newml 時に作成される .cgi スクリプトにハードコー
+ディングされています。
 </para>
 </warning>
 
@@ -143,8 +148,11 @@ http://lists/~fml/cgi-bin/fml/$domain/admin/config.cgi
 </para>
 
 <para>
-4.0 から 8.0 へは？
-一応、fml.pl は互換性のため fml.pl $DIR でも可で、
+4.0 から 8.0 へは？ mergeml コマンドがある。
+</para>
+
+<para>
+一応、fml.pl は互換性のため fml.pl $DIR も可で、
 libexec/distribute libexec/command など新しいコマンドは
 ＭＬ名を引数にとるということにしてある。
 </para>

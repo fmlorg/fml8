@@ -1,6 +1,7 @@
 <!--
-   $FML: restriction.sgml,v 1.6 2003/04/12 15:26:36 fukachan Exp $
+   $FML: restriction.sgml,v 1.7 2003/04/15 14:51:41 fukachan Exp $
 -->
+
 
 <chapter id="restriction">
 	<title>
@@ -66,7 +67,6 @@ safe_param_*()
 および
 try_cgi_*() 
 は安全な値を返すことになっています。
-FML::Restiction の正規表現でチェックされてた後、返される。
 </para>
 
 <para>
@@ -91,7 +91,7 @@ FML::Restriction::Base を継承している)経由でパターンの検査をしています。
 <para>
 もちろん、各モジュールごとの制限は受けます。
 たとえば、adduser でアドレスを追加しようとしても、
-アドレスに見えないような文字列を入れれば拒否されます。
+正しいアドレスに見えないような文字列を入れれば拒否されます。
 このあたりの制限は各モジュール依存です。
 </para>
 
@@ -175,7 +175,6 @@ for my $key (param()) {
 </para>
 
 </sect1>
-
 
 
 <sect1>

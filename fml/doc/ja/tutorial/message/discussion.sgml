@@ -1,8 +1,9 @@
 <!--
-   $FML: discussion.sgml,v 1.3 2002/07/02 10:39:36 fukachan Exp $
+   $FML: discussion.sgml,v 1.4 2003/04/15 14:51:42 fukachan Exp $
 -->
 
-<sect1>
+
+<sect1 id="send.back.error.messages">
 	<title>
 	議論: エラーメッセージを返す
 	</title>
@@ -10,13 +11,15 @@
 <para>
 適宜、エラーメッセージを送信者に返す必要があります。
 それもエラーメッセージは言語依存です。
-何らかの形で言語変換をしてから送り出す必要があるわけです。
+よって、何らかの形で言語変換をしてから送り出す必要があるわけです。
 </para>
 
 
 <!-- ===================================================== -->
 <sect2>
-   <title> &fml4; の場合 </title>
+	<title>
+	&fml4; の場合
+	</title>
 
 <para>
 &fml4; では
@@ -36,7 +39,7 @@ Mesg() は /usr/local/fml/messages/Japanese/ 以下にあるファイル群に対し
 <para>
 例えば、キーワードが not_found の場合、
 /usr/local/fml/messages/Japanese/kern
-の not_found という欄が該当します。
+ファイルの not_found という欄が該当します。
 </para>
 
 </sect2>
@@ -45,7 +48,9 @@ Mesg() は /usr/local/fml/messages/Japanese/ 以下にあるファイル群に対し
 
 <!-- ===================================================== -->
 <sect2>
-   <title> &fmldevel; はどうするべきか？ </title>
+	<title>
+	&fmldevel; はどうするべきか？
+	</title>
 
 <para>
 一つのファイルに一つのキーワードを持つのと、
@@ -89,7 +94,7 @@ locale の定義ファイル(
    </title>
 
 <para>
-問題の一つは locale に対応するか？という問題です。
+言語問題の一つは locale に対応するか？という問題です。
 makefml を筆頭に、各種コマンド群のエラーメッセージの日本語化
 を考えると、
 locale を考えておくのも悪くはないのかとも思います。
@@ -118,7 +123,7 @@ FML::Message::ja::キーワード
 <screen>
 FML::Message::ja::not_found
 </screen>
-などと2、300個のファイルが作られることになります（まじか？）。
+などと2、300個のファイルが作られることになります。
 </para>
 
 <para>
@@ -142,6 +147,10 @@ FML::Message::ja::not_found
 あたりにあるでしょう。
 </para>
 
+<para>
+まぁ複数のファイルから一つのファイルを合成するのは簡単なので、
+ばらしておいて問題ないとも考えられます。
+</para>
 
 <para>
 また、各メッセージテンプレートはどのようなものであるべきだろうか？
@@ -163,7 +172,6 @@ locale 化を考えるなら、これはこれで面倒な気がするわけですが…
 </para>
 
 </sect3>
-
 
 </sect2>
 

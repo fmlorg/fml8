@@ -1,11 +1,13 @@
 <!--
-   $FML: chapter.header.sgml,v 1.3 2003/04/15 14:51:36 fukachan Exp $
+   $FML: chapter.header.sgml,v 1.4 2004/04/07 11:07:02 fukachan Exp $
 -->
+
 
 <chapter id="customize.header">
 	<title>
 	ヘッダの書き換え
 	</title>
+
 
 <para>
 ヘッダ情報は FML::Header クラスのオブジェクトに収納されています。

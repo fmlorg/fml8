@@ -1,5 +1,5 @@
 <!--
-   $FML: lock.sgml,v 1.2 2003/04/13 04:36:12 fukachan Exp $
+   $FML: lock.sgml,v 1.3 2003/04/15 14:51:41 fukachan Exp $
 -->
 
 
@@ -15,20 +15,27 @@
 	</title>
 
 <para>
-ながらく giant lock だったが、2003/03 に giant lock をなくした。
+ながらく giant lock でしたが、2003/03 に giant lock をなくしました。
 </para>
 
 <para>
-Mail::Delivery 関連はメンバーリストにアクセスするので、いろいろありそう。
-でも、Mail::Delivery::Queue は見るだけ (mailq コマンド)か、並列操作可
+現在では、いろいろなりソースごとに、ロックチャンネルが用意されています。
+</para>
+
+<para>
+たとえば、Mail::Delivery 関連はメンバーリストにアクセスするので、いろ
+いろとロックが必要です。
+</para>
+
+<para>
+Mail::Delivery::SMTP の操作の際にはメンバーリストのロックが必要です。
+現在は、Mail::Delivery::SMTP を呼び出す FML のクラス(実は FML::Send と 
+FML::Process::Delivery の２箇所しかない)の中でロック処理をしています。
+</para>
+
+<para>
+一方、Mail::Delivery::Queue は見るだけ (mailq コマンド)か、並列操作可
 能なものだけなので、ロックは考えなくて良いはずです。
-</para>
-
-<para>
-一方、Mail::Delivery::SMTP の操作の際にはメンバーリストのロックが必要
-です。現在は、Mail::Delivery::SMTP を呼び出す FML のクラス(実は 
-FML::Send と FML::Process::Delivery の２箇所しかない)の中でロック処理
-をしています。
 </para>
 
 <para>
@@ -40,7 +47,13 @@ FML/Command/UserControl.pm
 FML/Command/Auth.pm
 には write lock が必要ですが、
 FML/Credential.pm
-には read lock だけでよさそう。
+は read lock だけでよいです。
+</para>
+
+<para>
+しかしながら、いまのところ reader writer lock は実装されていませんので、
+リソースごとの細かいロック制御で critical region の時間を短くするよう
+になっています。
 </para>
 
 </sect1>

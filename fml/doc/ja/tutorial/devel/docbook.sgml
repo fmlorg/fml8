@@ -1,5 +1,5 @@
 <!--
-   $FML: docbook.sgml,v 1.5 2002/07/06 14:55:16 fukachan Exp $
+   $FML: docbook.sgml,v 1.6 2003/04/15 14:51:38 fukachan Exp $
 -->
 
 
@@ -9,7 +9,7 @@
 	</title>
 
 <para>
-fml-devel (&fmldevel;) のドキュメントでは、SGML の DTD は
+&fml8; のドキュメントでは、SGML の DTD は
 
 	<ulink url="http://www.oasis-open.org/docbook/">
 	DOCBOOK
@@ -72,7 +72,7 @@ HTML のもっと厳密なものだと思って下さい
 そういった概念をどう表現するべきか？を規定したものが DTD (Data Type
 Definition)といえます。
 DTD は自由に定義すれば良いのですが、かなり大変です。
-誰かが作った DTD コレクションが世の中にはあるので、それを
+しかしながら 誰かが作った DTD コレクションが世の中にはあるので、それを
 使うのが便利です。
 我々は DTD として docbook というものを使う
    <footnote>
@@ -394,7 +394,7 @@ SGML を HTML などに翻訳するために、いくつかのツールが必要です。
 </para>
 
 <para>
-&fmldevel; では、以下のプログラムを使って HTML やテキストファイルを作成し
+&fml8; では、以下のプログラムを使って HTML やテキストファイルを作成し
 ています。
 <itemizedlist>
 
@@ -424,7 +424,7 @@ SGML を HTML などに翻訳するために、いくつかのツールが必要です。
 <para>
 もちろん sgmltools がなくても SGML から HTML を作ることができます。
 どのツールを使うかは、あなたがどれを便利に思うか？次第です。
-単に &fmldevel; では、sgmltools を歴史的に使っているだけです。
+単に &fml8; では、sgmltools を歴史的に使っているだけです。
 </para>
 
 <para>
@@ -505,7 +505,7 @@ LISP を知らないとちょっと手が出ないでしょう。
 </para>
 
 <para>
-ちなみに &fmldevel; の DSL の記述は
+ちなみに &fml8; の DSL の記述は
 
    <ulink url="../../../fml/doc/share/sgml/fml.dsl">
    fml/doc/share/sgml/fml.dsl
