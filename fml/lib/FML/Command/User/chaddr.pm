@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.4 2001/12/23 03:50:27 fukachan Exp $
+# $FML: chaddr.pm,v 1.5 2002/02/13 10:41:17 fukachan Exp $
 #
 
 package FML::Command::User::chaddr;
@@ -57,7 +57,7 @@ sub process
     my $member_map    = $config->{ primary_member_map };
     my $recipient_map = $config->{ primary_recipient_map };
     my $cache_dir     = $config->{ db_dir };
-    my $keyword       = $config->{ confirm_keyword };
+    my $keyword       = $config->{ confirm_command_prefix };
     my $command       = $command_args->{ command };
     my $address       = $curproc->{ credential }->sender();
 
