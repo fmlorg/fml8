@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.7 2002/09/11 23:18:01 fukachan Exp $
+# $FML: Lite.pm,v 1.8 2002/09/22 14:56:39 fukachan Exp $
 #
 
 package Calender::Lite;
@@ -38,11 +38,11 @@ Calender::Lite - show a calender (demonstration module)
 
 C<CAUTION:> This module is created just for a demonstration to show
 how to write a module based on FML::Process::* not intended for your
-general use. This module is not enough mature nor insecure.
+general use. This module is not enough mature nor secure.
 
-C<Calenter::lite> is a demonstration module to show how to use and
-build up modules to couple with CPAN and FML modules.  This routine
-needs C<HTML::CalendarMonthSimple>.
+C<Calenter::lite> is also a demonstration module to show how to use
+and build up modules to couple with CPAN and FML modules.  This
+routine needs C<HTML::CalendarMonthSimple>.
 
 It parses files in ~/.schedule/ and output the schedule of this month
 as HTML TABLE by default. To see it, you need a WWW browser
@@ -69,13 +69,13 @@ $args can take the following variables:
 C<CAUTION:>
    The string for ~user is restricted to ^[-\w\d\.\/_]+$.
 
-   PATH is reset atn the last of new() method.
+   PATH is reset at the last of new() method.
 
 =cut
 
 
-# Descriptions: usual constructor. $args is optional, which comes from
-#               parameters from CGI.pm  if fmlsci.cgi uses.
+# Descriptions: usual constructor. $args is optional, passed via CGI.pm
+#               if fmlsci.cgi uses.
 #                    OR
 #               libexec/loaders's $args if fmlsch uses.
 #    Arguments: OBJ($self) HASH_REF($args)
@@ -98,7 +98,7 @@ sub new
     my $pw       = getpwnam($user);
     my $home_dir = $pw->dir;
 
-    # XXX-AUDIT (we should use FML::Restriction ?)
+    # XXX-TODO AUDIT (we should use FML::Restriction ?)
     # simple check (not enough mature).
     # This code is not for security but to avoid -T (taint mode) error ;)
     if ($home_dir =~ /^([-\w\d\.\/_]+)$/) {
@@ -108,7 +108,7 @@ sub new
 	croak("invalid home directory string");
     }
 
-    # search ~/.schedule/ by default.
+    # search files under ~/.schedule/ by default.
     use File::Spec;
     $me->{ _user }          = $user;
     $me->{ _schedule_dir }  = File::Spec->catfile($home_dir, ".schedule");
@@ -120,7 +120,7 @@ sub new
 	}
     }
 
-    # reset PATH
+    # reset PATH to execute w3m.
     $ENV{'PATH'} = '/bin/:/usr/bin:/usr/pkg/bin:/usr/local/bin';
 
     return bless $me, $type;
@@ -173,12 +173,12 @@ sub tmpfilepath
 
 =head2 parse($args)
 
-Parse files in ~/.schedule/ or specified schedule file.
+Parse files in ~/.schedule/ or the specified schedule file.
 
 =cut
 
 
-# Descriptions: parse file(s)
+# Descriptions: parse filee(s).
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: update calender entries in $self object
 #               (actually by _add_entry() calleded here)
@@ -233,6 +233,7 @@ sub parse
 	    while (defined($_ = $dh->read)) {
 		next if $_ =~ /~$/;
 		next if $_ =~ /^\./;
+
 		my $schedule_file = File::Spec->catfile($data_dir, $_);
 		if (-f $schedule_file) {
 		    $self->_analyze($schedule_file, \@pat);
@@ -246,7 +247,7 @@ sub parse
 }
 
 
-# Descriptions: open, read specified $file
+# Descriptions: open, read specified $file and
 #               analyze the line which matches $pattern.
 #    Arguments: OBJ($self) STR($file) STR($pattern)
 # Side Effects: update $self object by _add_entry()
@@ -262,12 +263,12 @@ sub _analyze
     my $fh = new FileHandle $file;
 
     if (defined $fh) {
-      FILE:
+      LINE:
 	while (<$fh>) {
 	    for my $pat (@$pattern) {
 		if (/$pat(.*)/) {
 		    $self->_add_entry($1, $2);
-		    next FILE;
+		    next LINE;
 		}
 	    }
 
@@ -276,7 +277,8 @@ sub _analyze
 		$self->_add_entry($1, $2);
 	    }
 	}
-	close($fh);
+
+	$fh->close();
     }
 }
 
@@ -330,7 +332,7 @@ C<$n> is number or string among C<this>, C<next> and C<last>.
 =cut
 
 
-# Descriptions: print calender for specific month as HTML
+# Descriptions: print calender for specific month as HTML.
 #    Arguments: OBJ($self) HANDLE($fd) STR($month) [STR($year)]
 # Side Effects: none
 # Return Value: none
@@ -380,6 +382,7 @@ XXX: The mode is not used in this module itsef.
      This is a pragma for other module use..
 
 =cut
+
 
 # Descriptions: show the current $mode
 #    Arguments: OBJ($self)
