@@ -11,10 +11,52 @@
 	気をつけてください。
 
 
+2004/07/11
+
+   オーバホールひきつづき実施中です。
+
+   Calendar::Lite 
+	fix comments.
+	fix "a"."b"  -> "ab" form.
+	
+   IO::Adapter 
+   IO::Adapter::AtomicFile DBI File MySQL 
+	fix comments.
+	explicitly use "return".
+	modify error messages.
+	ensure initialized value.
+
+2004/07/07
+
+   Mail::Message::Address 
+	put back initializtion code to 1.3 one.
+	
+2004/07/06
+
+   FML::Command::User::subscribe unsubscribe 
+	always ignore arguments of {subscribe,unsubscribe} command
+	mail requests to ensure more correct confirmation.
+	
+2004/07/01
+
+   FML::Process::Distribute 
+   Mail::Message::ToHTML 
+	reduce error messages
+
 2004/06/30
 
    オーバーホール実施中 (2004/06/27 - )
 
+   FML::Command::Admin::digest digestoff digeston on spool 
+   IO::Adapter 
+   IO::Adapter::Array ErrorStatus NIS UnixGroup 
+   Mail::Bounce 
+   Mail::Bounce::DSN Exim FixBrokenAddress Freeserve GOO 
+                 Postfix19991231 Qmail SimpleMatch Smtpfeed 
+   Mail::Bounce::Language::Japanese 
+   Tie::JournaledDir JournaledFile 
+	overhaul:
+	fix comments and messages. validate initial value.
 
 2004/06/29
 
@@ -7368,4 +7410,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.214 2004/06/27 09:41:21 fukachan Exp $
+$FML: CHANGES.txt,v 1.215 2004/06/29 13:16:24 fukachan Exp $
