@@ -1,0 +1,53 @@
+<!--
+    $FML: chapter.sgml,v 1.1 2001/04/30 10:21:43 fukachan Exp $
+-->
+
+<chapter id="reply">
+
+   <TITLE> fml からメールを送る </TITLE>
+
+<sect1>
+   <title> 概要  </title>
+
+<para>
+送り返すべきメールは
+Mail::Delivery::Queue
+を使い queuue に入れられます。
+</para>
+
+<para>
+queue に入ったメールは、のちに
+FML::Process::QueueManager
+クラスが処理します。
+queue ファイルは queue ディレクトリから pickup され、
+Mail::Message で parse され
+FML::Mailer 経由で
+Mail::Delivery が配送処理をします。
+</para>
+</sect1>
+
+<sect1>
+   <title> queue ディレクトリ  </title>
+
+<para>
+queue ディレクトリは複数のディレクトリからなります。 
+<screen>
+new/
+active/
+deferred/
+info/sender/
+info/recipients/
+</screen>
+info/ には envelope 情報が格納されます。
+</para>
+
+<para>
+queue ファイルを作る時は、一旦 new/ に作成されます。
+queue ファイルを作る作業が終了し、配送準備 OK となったら
+new/ から active/ に移動されます。
+つまり active/ にあるファイルは配送準備ができているものです。
+</para>
+
+</sect1>
+
+</chapter>
