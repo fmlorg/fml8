@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.37 2003/02/11 13:18:54 fukachan Exp $
+# $FML: ToHTML.pm,v 1.38 2003/02/20 04:32:51 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.37 2003/02/11 13:18:54 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.38 2003/02/20 04:32:51 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -777,6 +777,7 @@ sub _text_safe_print
     my $buf = $args->{ data };
     my $fh  = $args->{ fh } || \*STDOUT;
 
+    # XXX-TODO: euc-jp is hard-coded.
     if (defined $buf && $buf) {
 	use Jcode;
 	&Jcode::convert(\$buf, 'euc');
@@ -806,6 +807,7 @@ sub _text_raw_print
 	use FileHandle;
 	my $fh = new FileHandle "> $outf";
 
+	# XXX-TODO: euc-jp is hard-coded.
 	if (defined $buf && $buf) {
 	    use Jcode;
 	    &Jcode::convert(\$buf, 'euc');
@@ -2170,6 +2172,7 @@ sub _print_raw_str
     my ($wh, $str, $code) = @_;
     $code = defined($code) ? $code : 'euc'; # euc-jp by default
 
+    # XXX-TODO: euc-jp is hard-coded.
     if (defined($str) && $str) {
 	use Jcode;
 	warn("code not specified") unless defined $code;
@@ -2238,6 +2241,7 @@ sub __sprintf_safe_str
     my ($attr_pre, $wh, $str, $code) = @_;
     my $rbuf = '';
 
+    # XXX-TODO: euc-jp is hard-coded.
     if (defined($str) && $str) {
 	use Jcode;
 	&Jcode::convert(\$str, defined($code) ? $code : 'euc' );
