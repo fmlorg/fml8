@@ -1,9 +1,9 @@
 <!--
-   $FML$
+   $FML: upgrade.sgml,v 1.1 2003/07/24 15:37:37 fukachan Exp $
    $jaFML: upgrade.sgml,v 1.3 2003/04/15 14:51:39 fukachan Exp $
 -->
 
-<chapter>
+<chapter id="xxxgrade">
 	<title>
 	upgrade/downgrade
 	</title>

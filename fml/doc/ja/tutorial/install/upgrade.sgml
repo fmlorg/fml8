@@ -1,8 +1,8 @@
 <!--
-   $FML: upgrade.sgml,v 1.2 2002/07/06 14:55:17 fukachan Exp $
+   $FML: upgrade.sgml,v 1.3 2003/04/15 14:51:39 fukachan Exp $
 -->
 
-<chapter>
+<chapter id="xxxgrade">
 	<title>
 	アップグレード/ダウングレード
 	</title>
