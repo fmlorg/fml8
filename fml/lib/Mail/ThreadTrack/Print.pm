@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Print.pm,v 1.6 2001/11/05 14:35:47 fukachan Exp $
+# $FML: Print.pm,v 1.7 2001/11/07 04:07:23 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print;
@@ -79,6 +79,9 @@ sub review
     use Mail::Message::MH;
     my $ra = Mail::Message::MH->expand($str, $min, $max);
     my $first = 0;
+
+    if (defined $config->{ reverse_order }) { @$ra = reverse @$ra;}
+
     for my $id (@$ra) {
 	if ($id =~ /^\d+$/) { 
 	    my $tid = $self->_create_thread_id_strings($id);
@@ -330,6 +333,9 @@ sub _valid_buf
 	return 0;
     }
     elsif ($str =~ /\w+\@\w+/) { # mail address ?
+	return 0;
+    }
+    elsif ($str =~ /^\S+\>/) { # quotation ?
 	return 0;
     }
 

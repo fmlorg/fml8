@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: ThreadTrack.pm,v 1.8 2001/11/07 04:08:30 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.9 2001/11/07 04:31:13 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -83,13 +83,15 @@ sub run
     my $ml_name       = $config->{ ml_name };
     my $thread_db_dir = $config->{ thread_db_dir };
     my $spool_dir     = $mydir || $config->{ spool_dir };
-    my $max_id        = $curproc->article_id_max();
+    my $max_id        = defined $options->{ article_id_max } ?
+	$options->{ article_id_max } : $curproc->article_id_max();
     my $ttargs        = {
-	logfp       => \&Log,
-	fd          => \*STDOUT,
-	db_base_dir => $thread_db_dir,
-	ml_name     => $ml_name,
-	spool_dir   => $spool_dir,
+	logfp         => \&Log,
+	fd            => \*STDOUT,
+	db_base_dir   => $thread_db_dir,
+	ml_name       => $ml_name,
+	spool_dir     => $spool_dir,
+	reverse_order => (defined $options->{ reverse } ? 1 : 0),
     };
 
     use Mail::ThreadTrack;

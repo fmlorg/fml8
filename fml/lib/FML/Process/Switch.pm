@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Switch.pm,v 1.29 2001/11/07 03:14:22 fukachan Exp $
+# $FML: Switch.pm,v 1.30 2001/11/07 04:31:13 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -342,7 +342,12 @@ sub _module_specific_options
 	return qw(ctladdr! debug! params=s -c=s);
     }
     elsif ($myname eq 'fmlthread'|| $myname eq 'fmlthread.cgi') {
-	return qw(debug! spool_dir=s base_url=s params=s -f=s -c=s -A=s -R=s);
+	return qw(debug! 
+		  article_id_max=i
+		  spool_dir=s
+		  base_url=s
+		  reverse!
+		  params=s -f=s -c=s);
     }
     elsif ($myname eq 'fmlconf') {
 	return qw(debug! params=s -c=s n!);
