@@ -8,11 +8,6 @@
 	XXX
 
 
-○	content filter をとととせいりせいや 
-
-	fml.org でつかうねんて
-
-
 ○	ちょっと見栄えが？
 
    FML::CGI::ThreadTrack
@@ -180,4 +175,4 @@ sub compare_euc_string
 
 
 ----------
-$FML: 00_MEMO,v 1.51 2002/09/29 05:30:13 fukachan Exp $
+$FML: 00_MEMO,v 1.52 2002/10/04 16:41:29 fukachan Exp $
