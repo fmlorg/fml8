@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.27 2001/08/23 13:10:34 fukachan Exp $
+# $FML: Message.pm,v 1.28 2001/09/23 12:18:13 fukachan Exp $
 #
 
 package Mail::Message;
@@ -1535,6 +1535,24 @@ sub get_encoding_mechanism
     else {
 	return undef;
     }
+}
+
+
+=head2 C<get_offset()>
+
+return offset information in the data.
+return value is ARRAY 
+
+   ($offset_begin, $offset_end)
+
+on the Mail::Message object.
+
+=cut
+
+sub get_offset
+{
+    my ($self) = @_;
+    return( $self->{ offset_begin }, $self->{ offset_end });
 }
 
 
