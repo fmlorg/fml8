@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $Id: loader,v 1.7 2001/02/06 09:44:41 fukachan Exp $ 
+# $Id: loader,v 1.8 2001/02/06 11:26:32 fukachan Exp $ 
 # $FML$
 #
 
@@ -72,15 +72,6 @@ sub Bootstrap
 
     # parse command line options
     GetOptions(\%options, FML::prepare_myname_options($myname));
-    for (@ARGV) {
-	if (-d $_) {
-	    $ml_home_dir = $_;
-	    push(@cf, "$_/config.cf") if -f "$_/config.cf";
-	}
-	elsif (-f $_) {
-	    push(@cf, $_);
-	}
-    }
 
     # 2.1 o.k. try to load main.cf
     my $main_cf        = Standalone::load_cf($options{'c'} || $MainCF,
@@ -88,7 +79,34 @@ sub Bootstrap
 					     );
     my $libexec_dir    = $main_cf->{ libexec_dir };
     my $default_config = $my_default_config || $main_cf->{ default_config };
+    
+    # 2.2 parse @ARGV ..
+    my $ml_home_prefix = $main_cf->{ ml_home_prefix };
+    my $found_cf       = 0;
+    for (@ARGV) {
+	# elena is translated to "/var/spool/ml/elena"
+	unless ($found_cf) {
+	    my $x = "$ml_home_prefix/$_";
+	    if (-d $x && -f "$x/config.cf") {
+		$found_cf = 1;
+		$ml_home_dir = $x;
+		push(@cf, "$x/config.cf"); 
+	    }
+	}
 
+	if (-d $_) {
+	    $ml_home_dir = $_;
+	    if (-f "$_/config.cf") {
+		push(@cf, "$_/config.cf");
+		$found_cf = 1;
+	    }
+	}
+	elsif (-f $_) {
+	    push(@cf, $_);
+	}
+    }
+
+    # 2.3 prepare @cf
     # XXX hmm, .. '/etc/fml/site_default_config.cf' is good ???
     unshift(@cf, '/etc/fml/site_default_config.cf');
     unshift(@cf, $default_config);

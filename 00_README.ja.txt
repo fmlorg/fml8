@@ -24,3 +24,12 @@ root で実行して下さい。それぞれのディレクトリの役割は次の通りです。
 
 ○ ドキュメントは HTML 版だけです。
 このディレクトリにある index.ja.html を見て下さい。
+
+
+○ elena ＭＬの設定の見方
+
+   全部の変数を表示する
+	/usr/local/libexec/fml/fmlconf elena
+
+   デフォルト値と異なる変数を表示する
+	/usr/local/libexec/fml/fmlconf -n elena
