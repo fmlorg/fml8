@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.26 2003/05/12 10:16:41 fukachan Exp $
+# $FML: Auth.pm,v 1.27 2003/08/23 07:24:41 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -131,7 +131,7 @@ check the password if it is valid or not as an administrator.
 sub check_admin_member_password
 {
     my ($self, $curproc, $args, $optargs) = @_;
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $maplist = $config->get_as_array_ref('admin_member_password_maps');
     my $status  = 0;
 

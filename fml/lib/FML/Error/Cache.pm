@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Cache.pm,v 1.12 2003/08/23 04:35:34 fukachan Exp $
+# $FML: Cache.pm,v 1.13 2003/08/23 14:38:00 fukachan Exp $
 #
 
 package FML::Error::Cache;
@@ -213,7 +213,7 @@ sub _open_cache
 {
     my ($self) = @_;
     my $curproc = $self->{ _curproc };
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $type    = $config->{ error_analyzer_cache_type };
     my $dir     = $config->{ error_analyzer_cache_dir  };
     my $mode    = $config->{ error_analyzer_cache_mode } || 'temporal';

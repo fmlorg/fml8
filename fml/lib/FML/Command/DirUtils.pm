@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DirUtils.pm,v 1.13 2003/01/26 03:11:27 fukachan Exp $
+# $FML: DirUtils.pm,v 1.14 2003/08/23 07:24:42 fukachan Exp $
 #
 
 package FML::Command::DirUtils;
@@ -57,7 +57,7 @@ sub new
 sub dir
 {
     my ($self, $curproc, $command_args, $du_args) = @_;
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $path_ls = $config->{ path_ls };
     my $argv    = $du_args->{ argv };
     my $opt_ls  = '';

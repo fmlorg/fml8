@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: dir.pm,v 1.11 2003/01/25 12:48:38 fukachan Exp $
+# $FML: dir.pm,v 1.12 2003/08/23 04:35:30 fukachan Exp $
 #
 
 package FML::Command::Admin::dir;
@@ -59,7 +59,7 @@ sub need_lock { 0;}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config   = $curproc->{ config };
+    my $config   = $curproc->config();
     my $log_file = $config->{ log_file };
     my $options  = $command_args->{ options };
     my $du_args  = {};

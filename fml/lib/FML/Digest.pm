@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Digest.pm,v 1.10 2003/08/23 04:35:27 fukachan Exp $
+# $FML: Digest.pm,v 1.11 2003/08/23 14:37:58 fukachan Exp $
 #
 
 package FML::Digest;
@@ -97,7 +97,7 @@ sub get_digest_id
 {
     my ($self) = @_;
     my $curproc  = $self->{ _curproc };
-    my $config   = $curproc->{ config };
+    my $config   = $curproc->config();
     my $seq_file = $config->{ digest_sequence_file };
 
     return $self->_get_id($seq_file);
@@ -152,7 +152,7 @@ sub set_digest_id
 {
     my ($self, $id) = @_;
     my $curproc  = $self->{ _curproc };
-    my $config   = $curproc->{ config };
+    my $config   = $curproc->config();
     my $seq_file = $config->{ digest_sequence_file };
     my $channel  = $self->get_lock_channel_name();
 
@@ -182,7 +182,7 @@ sub create_multipart_message
     my ($self, $optargs) = @_;
     my $range     = $optargs->{ range };
     my $curproc   = $self->{ _curproc };
-    my $config    = $curproc->{ config };
+    my $config    = $curproc->config();
     my $ml_name   = $config->{ ml_name };
     my $ml_addr   = $config->{ address_for_post };
     my $charset   = $config->{ template_file_charset };

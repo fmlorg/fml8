@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.53 2003/08/23 04:43:41 fukachan Exp $
+# $FML: Configure.pm,v 1.54 2003/08/23 07:24:46 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -72,7 +72,7 @@ sub new
 sub prepare
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'makefml_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
@@ -97,7 +97,7 @@ sub verify_request
     my ($curproc, $args) = @_;
     my $argv   = $curproc->command_line_argv();
     my $len    = $#$argv + 1;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'makefml_verify_request_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
@@ -133,7 +133,7 @@ See <FML::Process::Switch()> on C<$args> for more details.
 sub run
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
     my $myname = $curproc->myname();
     my $argv   = $curproc->command_line_argv();
 
@@ -148,7 +148,7 @@ sub run
 sub finish
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'makefml_finish_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
@@ -273,7 +273,7 @@ See <FML::Process::Switch()> on C<$args> for more details.
 sub _makefml
 {
     my ($curproc, $args) = @_;
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $ml_name = $config->{ ml_name };
     my $myname  = $curproc->myname();
     my $argv    = $curproc->command_line_argv();

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: subscribe.pm,v 1.20 2003/08/23 04:35:33 fukachan Exp $
+# $FML: subscribe.pm,v 1.21 2003/08/23 07:24:44 fukachan Exp $
 #
 
 package FML::Command::User::subscribe;
@@ -70,7 +70,7 @@ sub lock_channel { return 'command_serialize';}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config        = $curproc->{ config };
+    my $config        = $curproc->config();
 
     # XXX we handle primary_* . o.k.
     my $member_map    = $config->{ primary_member_map };

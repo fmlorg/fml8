@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: check.pm,v 1.7 2003/02/13 14:40:43 fukachan Exp $
+# $FML: check.pm,v 1.8 2003/02/14 15:29:02 fukachan Exp $
 #
 
 package FML::Command::Admin::check;
@@ -83,7 +83,7 @@ sub process
 sub check_spool_dir
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config    = $curproc->{ config };
+    my $config    = $curproc->config();
     my $spool_dir = $config->{ spool_dir };
 
     #
@@ -116,7 +116,7 @@ sub check_spool_dir
 sub check_html_archive_dir
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config   = $curproc->{ config };
+    my $config   = $curproc->config();
     my $html_dir = $config->{ html_archive_dir };
 
     print "html_archive_dir ... ";

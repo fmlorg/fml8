@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: rmml.pm,v 1.14 2003/01/25 12:48:39 fukachan Exp $
+# $FML: rmml.pm,v 1.15 2003/08/23 04:35:32 fukachan Exp $
 #
 
 package FML::Command::Admin::rmml;
@@ -141,7 +141,7 @@ sub _remove_ml_home_dir
 sub _remove_aliases
 {
     my ($self, $curproc, $command_args, $params) = @_;
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $ml_name = $params->{ ml_name };
     my $list    = $config->get_as_array_ref('newml_command_mta_config_list');
 

@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.32 2003/08/23 04:35:39 fukachan Exp $
+# $FML: Error.pm,v 1.33 2003/08/23 07:24:47 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -71,7 +71,7 @@ if $use_error_analyzer_program, parse incoming message.
 sub prepare
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'error_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
@@ -107,7 +107,7 @@ dummy.
 sub verify_request
 {
     my ($curproc, $args) = @_;
-    my $config     = $curproc->{ config };
+    my $config     = $curproc->config();
     my $maintainer = $config->{ maintainer };
 
     my $eval = $config->get_hook( 'error_verify_request_start_hook' );
@@ -145,9 +145,9 @@ XXX Each command determines need of lock or not.
 sub run
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
     my $found  = 0;
-    my $pcb    = $curproc->{ pcb };
+    my $pcb    = $curproc->pcb();
     my $msg    = $curproc->incoming_message();
 
     my $eval = $config->get_hook( 'error_run_start_hook' );
@@ -267,8 +267,8 @@ _EOF_
 sub finish
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
-    my $pcb    = $curproc->{ pcb };
+    my $config = $curproc->config();
+    my $pcb    = $curproc->pcb();
 
     my $eval = $config->get_hook( 'error_finish_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }

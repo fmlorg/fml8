@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.73 2003/08/23 14:38:01 fukachan Exp $
+# $FML: Utils.pm,v 1.74 2003/08/25 14:13:58 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -51,8 +51,8 @@ sub config
 {
     my ($curproc) = @_;
 
-    if (defined $curproc->{ config }) {
-	return $curproc->{ config };
+    if (defined $curproc->config()) {
+	return $curproc->config();
     }
     else {
 	return undef;
@@ -68,8 +68,8 @@ sub pcb
 {
     my ($curproc) = @_;
 
-    if (defined $curproc->{ pcb }) {
-	return $curproc->{ pcb };
+    if (defined $curproc->pcb()) {
+	return $curproc->pcb();
     }
     else {
 	return undef;
@@ -638,7 +638,7 @@ not yet implemenetd properly. (?)
 sub ml_name
 {
     my ($curproc) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
 
     if (defined $config->{ ml_name } && $config->{ ml_name }) {
 	return $config->{ ml_name };
@@ -664,7 +664,7 @@ properly, return the default domain defined in /etc/fml/main.cf.
 sub ml_domain
 {
     my ($curproc) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
 
     if (defined $config->{ ml_domain } && $config->{ ml_domain }) {
 	return $config->{ ml_domain };
@@ -919,7 +919,7 @@ sub config_cf_filepath
     my $prefix = $curproc->ml_home_prefix($domain);
 
     unless (defined $ml) {
-	$ml = $curproc->{ config }->{ ml_name };
+	$ml = $curproc->config()->{ ml_name };
     }
 
     use File::Spec;
@@ -1054,7 +1054,7 @@ get ARRAY_REF of address list for the specified map.
 sub get_address_list
 {
     my ($curproc, $map) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
     my $list   = $config->get_as_array_ref( $map );
 
     eval q{ use FML::Command::UserControl;};
@@ -1081,7 +1081,7 @@ which this $map belongs to ?
 sub which_map_nl
 {
     my ($curproc, $map) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
     my $found  = '';
 
   SEARCH_MAPS:
@@ -1209,7 +1209,7 @@ sub language_default
 sub language_of_cgi_message
 {
     my ($curproc) = @_;
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $charset = $config->{ cgi_charset };
 
     return( $charset || $curproc->language_default() );

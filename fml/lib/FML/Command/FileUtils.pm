@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: FileUtils.pm,v 1.12 2003/02/09 12:31:41 fukachan Exp $
+# $FML: FileUtils.pm,v 1.13 2003/08/23 07:24:42 fukachan Exp $
 #
 
 package FML::Command::FileUtils;
@@ -80,7 +80,7 @@ sub delete
 sub remove
 {
     my ($self, $curproc, $command_args, $du_args) = @_;
-    my $config   = $curproc->{ config };
+    my $config   = $curproc->config();
     my $argv     = $du_args->{ options };
     my $is_error = 0;
 

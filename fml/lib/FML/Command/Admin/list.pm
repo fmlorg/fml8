@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: list.pm,v 1.13 2003/01/27 00:02:41 fukachan Exp $
+# $FML: list.pm,v 1.14 2003/08/23 07:24:43 fukachan Exp $
 #
 
 package FML::Command::Admin::list;
@@ -78,7 +78,7 @@ sub process
 sub _show_list
 {
     my ($self, $curproc, $command_args, $options) = @_;
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $maplist = undef;
 
     for my $option (@$options) {

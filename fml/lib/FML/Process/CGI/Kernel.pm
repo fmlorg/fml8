@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.50 2003/08/23 04:35:41 fukachan Exp $
+# $FML: Kernel.pm,v 1.51 2003/08/23 07:24:49 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -108,7 +108,7 @@ sub prepare
 sub _cgi_resolve_ml_specific_variables
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
     my ($ml_home_dir, $config_cf);
 
     # inherit ml_domain from $hints
@@ -578,7 +578,7 @@ execute cgi_menu() given as FML::Command::*
 sub run_cgi_menu
 {
     my ($curproc, $args) = @_;
-    my $pcb          = $curproc->{ pcb };
+    my $pcb          = $curproc->pcb();
     my $command_args = $pcb->get('cgi', 'command_args');
 
     if (defined $command_args) {

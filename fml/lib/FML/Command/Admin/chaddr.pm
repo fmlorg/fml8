@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.17 2003/08/23 04:35:30 fukachan Exp $
+# $FML: chaddr.pm,v 1.18 2003/08/23 07:24:43 fukachan Exp $
 #
 
 package FML::Command::Admin::chaddr;
@@ -69,7 +69,7 @@ sub lock_channel { return 'command_serialize';}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config        = $curproc->{ config };
+    my $config        = $curproc->config();
     my $member_map    = $config->{ 'primary_member_map'    };
     my $recipient_map = $config->{ 'primary_recipient_map' };
     my $options       = $command_args->{ options };

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.174 2003/08/23 05:29:01 fukachan Exp $
+# $FML: Kernel.pm,v 1.175 2003/08/23 07:24:48 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -58,8 +58,8 @@ in the process flow.
 3. initialize current process struct C<$curproc> such as
 
     $curproc->{ main_cf }
-    $curproc->{ config }
-    $curproc->{ pcb }
+    $curproc->config()
+    $curproc->pcb()
 
 For example, this C<main_cf> provides the pointer to /etc/fml/main.cf
 parameters.
@@ -129,11 +129,11 @@ sub new
 
     # 3.2 bind FML::Config object to $curproc
     use FML::Config;
-    $curproc->{ config } = new FML::Config $cfargs;
+    $curproc->config() = new FML::Config $cfargs;
 
     # 3.3 initialize PCB (Process Control Block)
     use FML::PCB;
-    $curproc->{ pcb } = new FML::PCB;
+    $curproc->pcb() = new FML::PCB;
 
     # 3.4
     # object-ify. bless! bless! bless!
@@ -313,7 +313,7 @@ sub unlock
     # initialize
     ($channel, $lock_file) = $curproc->_lock_init($channel);
 
-    my $pcb     = $curproc->{ pcb };
+    my $pcb     = $curproc->pcb();
     my $lockobj = $pcb->get('lock', $channel);
 
     if (defined $lockobj) {
@@ -346,7 +346,7 @@ sub unlock
 sub _lock_init
 {
     my ($curproc, $channel) = @_;
-    my $config    = $curproc->{ config };
+    my $config    = $curproc->config();
     my $home_dir  = $config->{ ml_home_dir };
     my $lock_dir  = $config->{ lock_dir };
     my $lock_type = $config->{ lock_type };
@@ -564,7 +564,7 @@ See C<FML::Header> object for more details.
 sub simple_loop_check
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
     my $header = $curproc->incoming_message_header();
     my $rules  = $config->get_as_array_ref( 'header_loop_check_rules' );
     my $match  = 0;
@@ -616,7 +616,7 @@ sub resolve_ml_specific_variables
     my ($curproc, $args) = @_;
     my ($ml_name, $ml_domain, $ml_home_prefix, $ml_home_dir);
     my ($command, @options, $config_cf_path);
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $myname  = $args->{ myname };
     my $ml_addr = '';
 
@@ -765,7 +765,7 @@ my @delayed_buffer = ();
 sub __debug_ml_xxx
 {
     my ($curproc, $str) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
 
     if (defined $config->{ log_file } && (-w $config->{ log_file })) {
 	for my $buf (@delayed_buffer) { $curproc->log( $buf ); }
@@ -857,12 +857,12 @@ sub load_config_files
     # load configuration variables from given files e.g. /some/where.cf
     # XXX overload variables from each $cf
     for my $cf (@$files) {
-      $curproc->{ config }->overload( $cf );
+      $curproc->config()->overload( $cf );
     }
 
     # XXX We need to expand variables after we load all *cf files.
     # XXX 2001/05/05 changed to dynamic expansion for hook
-    # $curproc->{ config }->expand_variables();
+    # $curproc->config()->expand_variables();
 
     # XXX simple sanity check
     #     MAIL_LIST != MAINTAINER
@@ -886,7 +886,7 @@ sub load_config_files
 sub fix_perl_include_path
 {
     my ($curproc) = @_;
-    my $config    = $curproc->{ config };
+    my $config    = $curproc->config();
 
     # XXX update @INC here since we should do after loading configurations.
     # update @INC for ml local libraries
@@ -938,7 +938,7 @@ sub parse_incoming_message
     $curproc->{ incoming_message }->{ body  }   = $msg->whole_message_body;
 
     # save input message for further investigation
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
     if ($config->yes('use_incoming_mail_cache')) {
 	my $dir     = $config->{ incoming_mail_cache_dir };
 	my $modulus = $config->{ incoming_mail_cache_size };
@@ -1004,7 +1004,7 @@ sub _check_restrictions
     my ($curproc, $args, $type) = @_;
     my $config = $curproc->config();
     my $cred   = $curproc->{ credential }; # user credential
-    my $pcb    = $curproc->{ pcb };
+    my $pcb    = $curproc->pcb();
     my $sender = $cred->sender();
     my $rules  = $config->get_as_array_ref( "${type}_restrictions" );
 
@@ -1389,7 +1389,7 @@ sub _array_is_different
 sub _append_message_into_queue
 {
     my ($curproc, $msg, $args, $recipient, $recipient_maps, $hdr) = @_;
-    my $pcb      = $curproc->{ pcb };
+    my $pcb      = $curproc->pcb();
     my $category = 'reply_message';
     my $class    = 'queue';
     my $rarray   = $pcb->get($category, $class) || [];
@@ -1414,7 +1414,7 @@ sub _append_message_into_queue
 sub _append_message_into_queue2
 {
     my ($curproc, $msg, $args, $recipient, $recipient_maps, $hdr) = @_;
-    my $pcb      = $curproc->{ pcb };
+    my $pcb      = $curproc->pcb();
     my $category = 'reply_message';
     my $class    = 'queue';
     my $rarray   = $pcb->get($category, $class) || [];
@@ -1451,7 +1451,7 @@ sub _append_message_into_queue2
 sub _reply_message_recipient_keys
 {
     my ($curproc, $msg, $args) = @_;
-    my $pcb      = $curproc->{ pcb };
+    my $pcb      = $curproc->pcb();
     my $category = 'reply_message';
     my $class    = 'queue';
     my $rarray   = $pcb->get($category, $class) || [];
@@ -1539,7 +1539,7 @@ This $args is passed through to reply_message().
 sub reply_message_nl
 {
     my ($curproc, $class, $default_msg, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
     my $buf    = $curproc->message_nl($class, $default_msg, $args);
 
     $curproc->caller_info($class, caller) if $debug;
@@ -1585,7 +1585,7 @@ sub reply_message_add_header_info
 sub message_nl
 {
     my ($curproc, $class, $default_msg, $args) = @_;
-    my $config    = $curproc->{ config };
+    my $config    = $curproc->config();
     my $dir       = $config->{ message_template_dir };
     my $local_dir = $config->{ ml_local_message_template_dir };
     my $charset   = $config->{ template_file_charset } || 'en';
@@ -1659,7 +1659,7 @@ Prepare the message and queue it in by C<Mail::Delivery::Queue>.
 sub inform_reply_messages
 {
     my ($curproc, $args) = @_;
-    my $pcb = $curproc->{ pcb };
+    my $pcb = $curproc->pcb();
 
     # We should classify reply messages by
     # a set of ( category,  recipient(s) , + more ? what ??? );
@@ -1700,8 +1700,8 @@ sub inform_reply_messages
 sub queue_in
 {
     my ($curproc, $category, $optargs) = @_;
-    my $pcb          = $curproc->{ pcb };
-    my $config       = $curproc->{ config };
+    my $pcb          = $curproc->pcb();
+    my $config       = $curproc->config();
     my $sender       = $config->{ maintainer };
     my $charset      = $config->{ "${category}_charset" } || 'us-ascii';
     my $subject      = $config->{ "${category}_subject" };
@@ -2012,7 +2012,7 @@ sub clean_up_tmpfiles
 sub temp_file_path
 {
     my ($curproc) = @_;
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $tmp_dir = $config->{ tmp_dir };
 
     $TmpFileCounter++; # ensure uniqueness
@@ -2061,7 +2061,7 @@ C<TODO:>
 sub queue_flush
 {
     my ($curproc, $queue) = @_;
-    my $config    = $curproc->{ config };
+    my $config    = $curproc->config();
     my $queue_dir = $config->{ mail_queue_dir };
 
     eval q{
@@ -2104,7 +2104,7 @@ C<Caution:>
 sub prepare_file_to_return
 {
     my ($curproc, $args) = @_;
-    my $config      = $curproc->{ config };
+    my $config      = $curproc->config();
     my $tmp_dir     = $config->{ tmp_dir };
     my $tmpf        = File::Spec->catfile($tmp_dir, $$);
     my $src_file    = $args->{ src };
@@ -2156,7 +2156,7 @@ sub prepare_file_to_return
 sub open_outgoing_message_channel
 {
     my ($curproc, $optargs) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
 
     # save message for further investigation
     if ($config->yes('use_outgoing_mail_cache')) {
@@ -2216,7 +2216,7 @@ sub parse_exception
 sub set_umask_as_public
 {
     my ($curproc) = @_;
-    my $pcb = $curproc->{ pcb };
+    my $pcb = $curproc->pcb();
 
     # reset umask since html archives should be public open.
     my $saved_umask = umask;
@@ -2232,7 +2232,7 @@ sub set_umask_as_public
 sub reset_umask
 {
     my ($curproc) = @_;
-    my $pcb = $curproc->{ pcb };
+    my $pcb = $curproc->pcb();
     my $saved_umask = $pcb->get('umask', 'saved_umask');
 
     # back to the original umask;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MessageID.pm,v 1.12 2003/08/23 04:35:36 fukachan Exp $
+# $FML: MessageID.pm,v 1.13 2003/08/23 15:33:14 fukachan Exp $
 #
 
 package FML::Header::MessageID;
@@ -168,7 +168,7 @@ generate and return a new message-id.
 sub gen_id
 {
     my ($self, $curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
 
     # XXX-TODO: if $config->{ address_for_post } undefined ?
     $Counter++;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sendmail.pm,v 1.4 2003/03/05 05:36:31 tmu Exp $
+# $FML: Sendmail.pm,v 1.5 2003/05/13 09:30:09 fukachan Exp $
 #
 
 package FML::MTAControl::Sendmail;
@@ -65,7 +65,7 @@ sub sendmail_remove_alias
 sub sendmail_update_alias
 {
     my ($self, $curproc, $params, $optargs) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
     my $prog   = $config->{ path_sendmail };
     my $alias  = $config->{ mail_aliases_file };
 
@@ -152,7 +152,7 @@ sub sendmail_install_virtual_map
 {
     my ($self, $curproc, $params, $optargs) = @_;
     my $template_dir = $curproc->template_files_dir_for_newml();
-    my $config       = $curproc->{ config };
+    my $config       = $curproc->config();
     my $ml_name      = $config->{ ml_name };
     my $ml_domain    = $config->{ ml_domain };
 
@@ -192,7 +192,7 @@ sub sendmail_install_virtual_map
 sub sendmail_remove_virtual_map
 {
     my ($self, $curproc, $params, $optargs) = @_;
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $map     = $config->{ sendmail_virtual_map_file };
     my $key     = $params->{ ml_name };
     my $p       = {
@@ -211,7 +211,7 @@ sub sendmail_remove_virtual_map
 sub sendmail_update_virtual_map
 {
     my ($self, $curproc, $params, $optargs) = @_;
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $makemap = $config->{ path_makemap };
     my $virtual = $config->{ sendmail_virtual_map_file };
 
@@ -245,7 +245,7 @@ get map types supported by makemap.
 sub sendmail_supported_map_types
 {
     my ($self, $curproc, $params, $optargs) = @_;
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $makemap = $config->{ path_makemap };
 
     if (-x $makemap) {

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: unsubscribe.pm,v 1.20 2003/08/23 04:35:33 fukachan Exp $
+# $FML: unsubscribe.pm,v 1.21 2003/08/23 07:24:44 fukachan Exp $
 #
 
 package FML::Command::User::unsubscribe;
@@ -69,7 +69,7 @@ sub lock_channel { return 'command_serialize';}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config        = $curproc->{ config };
+    my $config        = $curproc->config();
 
     # XXX-TODO: wrong to handle only primary_*_map in deluser phase.
     # XXX-TODO: we should check all maps?

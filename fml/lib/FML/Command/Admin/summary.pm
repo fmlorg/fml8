@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: summary.pm,v 1.3 2003/03/28 10:03:38 fukachan Exp $
+# $FML: summary.pm,v 1.4 2003/08/23 04:35:32 fukachan Exp $
 #
 
 package FML::Command::Admin::summary;
@@ -78,7 +78,7 @@ sub process
 sub _summary
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $myname  = $curproc->myname();
     my $argv    = $curproc->command_line_argv();
     my $id_max  = $curproc->article_max_id();

@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.87 2003/08/23 04:35:38 fukachan Exp $
+# $FML: Command.pm,v 1.88 2003/08/23 07:24:46 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -75,7 +75,7 @@ parse the incoming message.
 sub prepare
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'command_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
@@ -112,7 +112,7 @@ verify the sender is a valid member or not.
 sub verify_request
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'command_verify_request_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
@@ -186,8 +186,8 @@ XXX Each command determines need of lock or not.
 sub run
 {
     my ($curproc, $args) = @_;
-    my $pcb = $curproc->{ pcb };
-    my $config = $curproc->{ config };
+    my $pcb = $curproc->pcb();
+    my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'command_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
@@ -272,7 +272,7 @@ queue flush and send back the results or error messages.
 sub finish
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'command_finish_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
@@ -316,7 +316,7 @@ sub _check_context
 sub _config_permit_command
 {
     my ($curproc, $args, $level, $opts) = @_;
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $cred    = $curproc->{ credential }; # user credential
     my $prompt  = $config->{ command_prompt } || '>>>';
     my $comname = $opts->{ comname };
@@ -354,7 +354,7 @@ sub _config_permit_command
 sub _is_safe_syntax
 {
     my ($curproc, $args, $status, $cominfo) = @_;
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $prompt  = $config->{ command_prompt } || '>>>';
     my $level   = $status->{ level };
     my $command = $cominfo->{ command };
@@ -391,7 +391,7 @@ sub _is_safe_syntax
 sub _parse_command_args
 {
     my ($curproc, $args, $fixed_command) = @_;
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $ml_name = $config->{ ml_name };
     my $argv    = $curproc->command_line_argv();
 
@@ -448,7 +448,7 @@ sub _try_admin_auth
 	$obj = new FML::Command::Auth;
     };
     unless ($@) {
-	my $config = $curproc->{ config };
+	my $config = $curproc->config();
 	my $rules  = $config->get_as_array_ref('admin_command_restrictions');
 	for my $rule (@$rules) {
 	    $is_auth = $obj->$rule($curproc, $args, $optargs);
@@ -487,7 +487,7 @@ sub _try_admin_auth
 sub _get_command_mode
 {
     my ($curproc, $args, $status, $command_info) = @_;
-    my $config     = $curproc->{ config };
+    my $config     = $curproc->config();
     my $command    = $command_info->{ command };
     my $comname    = $command_info->{ comname };
     my $comsubname = $command_info->{ comsubname };
@@ -736,7 +736,7 @@ sub __clean_up
 sub __stop_here
 {
     my ($curproc, $args, $status, $cominfo, $orig_command) = @_;
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $prompt  = $config->{ command_prompt } || '>>>';
     my $key     = $status->{ _stop_reason_key };
     my $str     = $status->{ _stop_reason_str };
@@ -764,7 +764,7 @@ sub __stop_here
 sub _evaluate_command_lines
 {
     my ($curproc, $args) = @_;
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $ml_name = $config->{ ml_name };
     my $argv    = $curproc->command_line_argv();
     my $prompt  = $config->{ command_prompt } || '>>>';

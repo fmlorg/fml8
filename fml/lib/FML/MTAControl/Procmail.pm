@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Procmail.pm,v 1.10 2003/03/06 10:11:18 fukachan Exp $
+# $FML: Procmail.pm,v 1.11 2003/03/28 10:32:22 fukachan Exp $
 #
 
 package FML::MTAControl::Procmail;
@@ -38,7 +38,7 @@ set up aliases and virtual maps for procmail.
 sub procmail_install_alias
 {
     my ($self, $curproc, $params, $optargs) = @_;
-    my $config       = $curproc->{ config };
+    my $config       = $curproc->config();
     my $template_dir = $curproc->template_files_dir_for_newml();
 
     use File::Spec;
@@ -64,7 +64,7 @@ sub procmail_install_alias
 sub procmail_remove_alias
 {
     my ($self, $curproc, $params, $optargs) = @_;
-    my $config    = $curproc->{ config };
+    my $config    = $curproc->config();
     my $alias     = $config->{ procmail_aliases_file };
     my $alias_new = $alias."new.$$";
     my $ml_name   = $params->{ ml_name  };
@@ -165,7 +165,7 @@ sub procmail_find_key_in_alias_maps
 sub procmail_get_aliases_as_hash_ref
 {
     my ($self, $curproc, $params, $optargs) = @_;
-    my $config     = $curproc->{ config };
+    my $config     = $curproc->config();
     my $alias_file = $config->{ mail_aliases_file };
     my $key        = $optargs->{ key };
     my $mode       = $optargs->{ mode };

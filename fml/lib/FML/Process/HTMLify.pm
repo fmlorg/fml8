@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: HTMLify.pm,v 1.28 2003/08/23 04:35:39 fukachan Exp $
+# $FML: HTMLify.pm,v 1.29 2003/08/23 07:24:47 fukachan Exp $
 #
 
 package FML::Process::HTMLify;
@@ -66,7 +66,7 @@ sub new
 sub prepare
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'fmlhtmlify_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
@@ -87,7 +87,7 @@ sub prepare
 sub verify_request
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'fmlhtmlify_verify_request_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
@@ -111,7 +111,7 @@ call &FML::Command::HTMLify::convert().
 sub run
 {
     my ($curproc, $args) = @_;
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $argv    = $curproc->command_line_argv();
     my $options = $curproc->command_line_options();
     my $src_dir = $argv->[0];
@@ -168,7 +168,7 @@ _EOF_
 sub finish
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'fmlhtmlify_finish_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.45 2003/03/18 10:37:01 fukachan Exp $
+# $FML: Credential.pm,v 1.46 2003/08/23 04:35:27 fukachan Exp $
 #
 
 package FML::Credential;
@@ -225,7 +225,7 @@ sub is_member
 {
     my ($self, $address) = @_;
     my $curproc     = $self->{ _curproc };
-    my $config      = $curproc->{ config };
+    my $config      = $curproc->config();
     my $member_maps = $config->get_as_array_ref('member_maps');
 
     $self->_is_member({
@@ -243,7 +243,7 @@ sub is_privileged_member
 {
     my ($self, $address) = @_;
     my $curproc     = $self->{ _curproc };
-    my $config      = $curproc->{ config };
+    my $config      = $curproc->config();
     my $member_maps = $config->get_as_array_ref('admin_member_maps');
 
     $self->_is_member({
@@ -261,7 +261,7 @@ sub is_recipient
 {
     my ($self, $address) = @_;
     my $curproc        = $self->{ _curproc };
-    my $config         = $curproc->{ config };
+    my $config         = $curproc->config();
     my $recipient_maps = $config->get_as_array_ref('recipient_maps');
 
     $self->_is_member({
@@ -424,7 +424,7 @@ sub _get_address
 C<addr> matches a system account or not.
 The system accounts are given as
 
-     $curproc->{ config }->{ system_accounts }.
+     $curproc->config()->{ system_accounts }.
 
 =cut
 
@@ -438,7 +438,7 @@ sub match_system_accounts
 {
     my ($self, $addr) = @_;
     my $curproc = $self->{ _curproc };
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
 
     # compare $user part of the sender address
     my ($user, $domain) = split(/\@/, $addr);

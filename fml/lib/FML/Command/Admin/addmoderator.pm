@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: addmoderator.pm,v 1.5 2003/03/18 10:42:42 fukachan Exp $
+# $FML: addmoderator.pm,v 1.6 2003/08/23 04:35:29 fukachan Exp $
 #
 
 package FML::Command::Admin::addmoderator;
@@ -66,7 +66,7 @@ sub lock_channel { return 'command_serialize';}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config        = $curproc->{ config };
+    my $config        = $curproc->config();
     my $member_map    = $config->{ primary_moderator_member_map };
     my $recipient_map = $config->{ primary_moderator_recipient_map };
     my $options       = $command_args->{ options };

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ThreadTrack.pm,v 1.24 2003/02/16 08:33:08 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.25 2003/03/28 10:03:38 fukachan Exp $
 #
 
 package FML::CGI::ThreadTrack;
@@ -54,7 +54,7 @@ C<FML::Process::CGI> base class.
 sub html_start
 {
     my ($curproc, $args) = @_;
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $title   = $config->{ thread_cgi_title }   || 'thread system interface';
     my $color   = $config->{ thread_cgi_bgcolor } || '#E6E6FA';
     my $myname  = $curproc->myname();
@@ -90,7 +90,7 @@ sub html_end
 sub run_cgi_main
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
     my $myname = $config->{ program_name }; # XXX-TODO: valid ?
     my $ttargs = $curproc->_build_threadtrack_param($args);
     my $action = $curproc->safe_param_action() || '';
@@ -147,7 +147,7 @@ sub run_cgi_main
 sub _build_threadtrack_param
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
     my $myname = $config->{ program_name };
     my $option = $curproc->command_line_options();
 
@@ -188,7 +188,7 @@ sub _build_threadtrack_param
 sub run_cgi_navigator
 {
     my ($curproc, $args) = @_;
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $action  = $curproc->safe_cgi_action_name();
     my $target  = $config->{ thread_cgi_target_window } || '_top';
     # XXX-TODO: we should provide $curproc->util->get_ml_list() method ?

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.64 2003/04/19 06:13:00 fukachan Exp $
+# $FML: newml.pm,v 1.65 2003/08/23 04:35:31 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -227,7 +227,7 @@ sub _init_ml_home_dir
 sub _install_template_files
 {
     my ($self, $curproc, $command_args, $params) = @_;
-    my $config       = $curproc->{ config };
+    my $config       = $curproc->config();
     my $template_dir = $curproc->template_files_dir_for_newml();
     my $ml_home_dir  = $params->{ ml_home_dir };
     my $templ_files  =
@@ -266,7 +266,7 @@ sub _install_template_files
 sub _update_aliases
 {
     my ($self, $curproc, $command_args, $params) = @_;
-    my $config    = $curproc->{ config };
+    my $config    = $curproc->config();
     my $ml_name   = $config->{ ml_name };
     my $ml_domain = $config->{ ml_domain };
     my $alias     = $config->{ mail_aliases_file };
@@ -360,7 +360,7 @@ sub _is_mta_alias_maps_has_ml_entry
 sub _setup_mail_archive_dir
 {
     my ($self, $curproc, $command_args, $params) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
     my $dir    = $config->{ html_archive_dir };
 
     unless (-d $dir) {
@@ -382,7 +382,7 @@ sub _setup_cgi_interface
 {
     my ($self, $curproc, $command_args, $params) = @_;
     my $template_dir = $curproc->template_files_dir_for_newml();
-    my $config       = $curproc->{ config };
+    my $config       = $curproc->config();
 
     #
     # 1. create directory path if needed
@@ -480,7 +480,7 @@ sub _install
 sub _setup_listinfo
 {
     my ($self, $curproc, $command_args, $params) = @_;
-    my $config       = $curproc->{ config };
+    my $config       = $curproc->config();
     my $template_dir = $config->{ listinfo_template_dir };
     my $listinfo_dir = $config->{ listinfo_dir };
 

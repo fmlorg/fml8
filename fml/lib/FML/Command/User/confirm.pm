@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: confirm.pm,v 1.22 2003/08/23 04:35:33 fukachan Exp $
+# $FML: confirm.pm,v 1.23 2003/08/23 07:24:43 fukachan Exp $
 #
 
 package FML::Command::User::confirm;
@@ -66,7 +66,7 @@ sub lock_channel { return 'command_serialize';}
 sub notice_cc_recipient
 {
    my ($self, $curproc, $command_args) = @_;
-   my $config     = $curproc->{ config };
+   my $config     = $curproc->config();
    my $maintainer = $config->{ maintainer };
 
    return [ $maintainer ];
@@ -81,7 +81,7 @@ sub notice_cc_recipient
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config        = $curproc->{ config };
+    my $config        = $curproc->config();
 
     # XXX-TODO: correct we handle only primary_*_map here?
     my $member_map    = $config->{ primary_member_map };

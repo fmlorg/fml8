@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.123 2003/08/23 04:43:41 fukachan Exp $
+# $FML: Distribute.pm,v 1.124 2003/08/23 07:24:46 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -75,7 +75,7 @@ adjust ml_* and load configuration files.
 sub prepare
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'distribute_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
@@ -115,7 +115,7 @@ check the mail sender and the mail loop possibility.
 sub verify_request
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'distribute_verify_request_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
@@ -194,7 +194,7 @@ Lastly we unlock the current process.
 sub run
 {
     my ($curproc, $args) = @_;
-    my $config     = $curproc->{ config };
+    my $config     = $curproc->config();
     my $maintainer = $config->{ maintainer };
     my $sender     = $curproc->{'credential'}->{'sender'};
     my $data_type  = 
@@ -215,7 +215,7 @@ sub run
 	    $curproc->_distribute($args);
 	}
 	else {
-	    my $pcb = $curproc->{ pcb };
+	    my $pcb = $curproc->pcb();
 
 	    $curproc->log("deny article submission");
 
@@ -318,7 +318,7 @@ If needed, we send back error messages to the mail sender.
 sub finish
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'distribute_finish_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
@@ -421,7 +421,7 @@ sub _build_article_object
 sub _header_rewrite
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
     my $header = $curproc->article_message_header();
     my $rules  = $config->get_as_array_ref('article_header_rewrite_rules');
     my $id     = $args->{ id };
@@ -450,7 +450,7 @@ sub _deliver_article
 {
     my ($curproc, $args) = @_;
     my $cred    = $curproc->{ credential };
-    my $config  = $curproc->{ config };               # FML::Config   object
+    my $config  = $curproc->config();               # FML::Config   object
     my $message = $curproc->article_message();        # Mail::Message object
     my $header  = $curproc->article_message_header(); # FML::Header   object
     my $body    = $curproc->article_message_body();   # Mail::Message object
@@ -520,8 +520,8 @@ sub _deliver_article
 sub _old_thread_check
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
-    my $pcb    = $curproc->{ pcb };
+    my $config = $curproc->config();
+    my $pcb    = $curproc->pcb();
     my $myname = $curproc->myname();
 
     my $ml_name        = $config->{ ml_name };

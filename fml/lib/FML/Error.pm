@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.23 2003/05/28 14:33:42 fukachan Exp $
+# $FML: Error.pm,v 1.24 2003/08/23 14:37:58 fukachan Exp $
 #
 
 package FML::Error;
@@ -384,7 +384,7 @@ sub deluser
 {
     my ($self, $address) = @_;
     my $curproc = $self->{ _curproc };
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $ml_name = $config->{ ml_name };
 
     use FML::Restriction::Base;

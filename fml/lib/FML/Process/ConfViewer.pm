@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ConfViewer.pm,v 1.22 2003/08/23 04:43:41 fukachan Exp $
+# $FML: ConfViewer.pm,v 1.23 2003/08/24 14:12:18 fukachan Exp $
 #
 
 package FML::Process::ConfViewer;
@@ -69,7 +69,7 @@ sub new
 sub prepare
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'fmlconf_prepare_start_hook' );
     if ($eval) {
@@ -98,7 +98,7 @@ sub verify_request
 {
     my ($curproc, $args) = @_;
     my $argv   = $curproc->command_line_argv();
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'fmlconf_verify_request_start_hook' );
     if ($eval) {
@@ -139,7 +139,7 @@ See <FML::Process::Switch()> on C<$args> for more details.
 sub run
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
     my $myname = $curproc->myname();
     my $argv   = $curproc->command_line_argv();
 
@@ -194,7 +194,7 @@ _EOF_
 sub finish
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'fmlconf_finish_start_hook' );
     if ($eval) {
@@ -224,7 +224,7 @@ run dump_variables of C<FML::Config>.
 sub _fmlconf
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
     my $mode   = $args->{ options }->{ n } ? 'difference_only' : 'all';
     my $argv   = $curproc->command_line_argv();
 

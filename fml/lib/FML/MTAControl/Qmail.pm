@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Qmail.pm,v 1.15 2003/01/11 16:05:16 fukachan Exp $
+# $FML: Qmail.pm,v 1.16 2003/01/27 03:23:17 fukachan Exp $
 #
 
 package FML::MTAControl::Qmail;
@@ -49,7 +49,7 @@ sub qmail_install_alias
 sub qmail_remove_alias
 {
     my ($self, $curproc, $params, $optargs) = @_;
-    my $config       = $curproc->{ config };
+    my $config       = $curproc->config();
     my $template_dir = $curproc->template_files_dir_for_newml();
     my $ml_home_dir  = $params->{ ml_home_dir };
 
@@ -137,7 +137,7 @@ sub qmail_alias_maps
 sub qmail_setup
 {
     my ($self, $curproc, $params, $optargs) = @_;
-    my $config       = $curproc->{ config };
+    my $config       = $curproc->config();
     my $template_dir = $curproc->template_files_dir_for_newml();
     my $ml_home_dir  = $params->{ ml_home_dir };
 
@@ -187,7 +187,7 @@ sub qmail_install_virtual_map
 {
     my ($self, $curproc, $params) = @_;
     my $fmlowner     = $curproc->fml_owner();
-    my $config       = $curproc->{ config };
+    my $config       = $curproc->config();
     my $ml_domain    = $config->{ ml_domain };
     my $virtual      = $config->{ qmail_virtual_map_file };
 

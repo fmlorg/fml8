@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.24 2003/02/15 02:54:25 fukachan Exp $
+# $FML: Menu.pm,v 1.25 2003/02/16 08:33:08 fukachan Exp $
 #
 
 package FML::CGI::Admin::Menu;
@@ -72,7 +72,7 @@ This module has routines needed for the admin CGI.
 sub html_start
 {
     my ($curproc, $args) = @_;
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $myname  = $curproc->myname();
     my $domain  = $curproc->ml_domain(); # must be safe (hard-coded in .cgi)
     my $ml_name = $curproc->cgi_try_get_ml_name($args); # safe ok
@@ -111,11 +111,11 @@ sub html_end
 sub run_cgi_main
 {
     my ($curproc, $args) = @_;
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $address = $curproc->cgi_try_get_address($args);
     my $ml_name = $curproc->cgi_try_get_ml_name($args);
     my $hints   = $curproc->hints();
-    my $pcb     = $curproc->{ pcb };
+    my $pcb     = $curproc->pcb();
     my $mode    = 'admin'; # cgi runs under admin mode (same way as makefml)
 
     # specified command, we need to identify
@@ -213,7 +213,7 @@ sub run_cgi_main
 sub run_cgi_navigator
 {
     my ($curproc, $args) = @_;
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $action  = $curproc->safe_cgi_action_name();
     my $target  = '_top';
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QMail.pm,v 1.16 2003/08/23 07:24:48 fukachan Exp $
+# $FML: QMail.pm,v 1.17 2003/08/23 15:33:14 fukachan Exp $
 #
 
 package FML::Process::QMail;
@@ -67,7 +67,7 @@ C<NOT YET IMPLERMENTED>.
 sub DotQmailExt
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
 
     # get ?
     my $ext = $ENV{'EXT'};

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.19 2003/02/11 11:04:43 fukachan Exp $
+# $FML: Postfix.pm,v 1.20 2003/05/13 09:30:09 fukachan Exp $
 #
 
 package FML::MTAControl::Postfix;
@@ -38,7 +38,7 @@ set up aliases and virtual maps for postfix.
 sub postfix_install_alias
 {
     my ($self, $curproc, $params, $optargs) = @_;
-    my $config       = $curproc->{ config };
+    my $config       = $curproc->config();
     my $template_dir = $curproc->template_files_dir_for_newml();
 
     use File::Spec;
@@ -69,7 +69,7 @@ sub postfix_install_alias
 sub postfix_remove_alias
 {
     my ($self, $curproc, $params, $optargs) = @_;
-    my $config    = $curproc->{ config };
+    my $config    = $curproc->config();
     my $alias     = $config->{ mail_aliases_file };
     my $alias_new = $alias."new.$$";
     my $ml_name   = $params->{ ml_name  };
@@ -129,7 +129,7 @@ sub postfix_remove_alias
 sub postfix_update_alias
 {
     my ($self, $curproc, $params, $optargs) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
     my $prog   = $config->{ path_postalias };
     my $alias  = $config->{ mail_aliases_file };
 
@@ -226,7 +226,7 @@ sub _find_key_in_file
 sub postfix_get_aliases_as_hash_ref
 {
     my ($self, $curproc, $params, $optargs) = @_;
-    my $config     = $curproc->{ config };
+    my $config     = $curproc->config();
     my $alias_file = $config->{ mail_aliases_file };
     my $key        = $optargs->{ key };
     my $mode       = $optargs->{ mode };
@@ -282,7 +282,7 @@ sub postfix_get_aliases_as_hash_ref
 sub postfix_alias_maps
 {
     my ($self, $curproc, $params, $optargs) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
     my $prog   = $config->{ path_postconf };
     my $maps   = '';
 
@@ -312,7 +312,7 @@ sub postfix_alias_maps
 sub postfix_setup
 {
     my ($self, $curproc, $params, $optargs) = @_;
-    my $config       = $curproc->{ config };
+    my $config       = $curproc->config();
     my $template_dir = $curproc->template_files_dir_for_newml();
     my $ml_home_dir  = $params->{ ml_home_dir };
 
@@ -338,7 +338,7 @@ sub postfix_setup
 sub _postfix_rewrite_virtual_params
 {
     my ($self, $curproc, $params, $optargs) = @_;
-    my $config    = $curproc->{ config };
+    my $config    = $curproc->config();
     my $ml_name   = $config->{ ml_name  };
     my $ml_domain = $config->{ ml_domain };
 
@@ -357,7 +357,7 @@ sub postfix_install_virtual_map
 {
     my ($self, $curproc, $params, $optargs) = @_;
     my $template_dir = $curproc->template_files_dir_for_newml();
-    my $config       = $curproc->{ config };
+    my $config       = $curproc->config();
     my $ml_name      = $config->{ ml_name };
     my $ml_domain    = $config->{ ml_domain };
     my $postmap      = $config->{ path_postmap };
@@ -397,7 +397,7 @@ sub postfix_install_virtual_map
 sub postfix_remove_virtual_map
 {
     my ($self, $curproc, $params, $optargs) = @_;
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $map     = $config->{ postfix_virtual_map_file };
     my $key     = $params->{ ml_name };
     my $p       = {
@@ -416,7 +416,7 @@ sub postfix_remove_virtual_map
 sub postfix_update_virtual_map
 {
     my ($self, $curproc, $params, $optargs) = @_;
-    my $config  = $curproc->{ config };
+    my $config  = $curproc->config();
     my $postmap = $config->{ path_postmap };
     my $virtual = $config->{ postfix_virtual_map_file };
 

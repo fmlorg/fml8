@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Digest.pm,v 1.9 2003/08/23 07:24:46 fukachan Exp $
+# $FML: Digest.pm,v 1.10 2003/08/23 15:33:14 fukachan Exp $
 #
 
 package FML::Process::Digest;
@@ -76,7 +76,7 @@ fix @INC.
 sub prepare
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'digest_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
@@ -110,7 +110,7 @@ set up the mail sender.
 sub verify_request
 {
     my ($curproc, $args) = @_;
-    my $config     = $curproc->{ config };
+    my $config     = $curproc->config();
     my $maintainer = $config->{ maintainer };
 
     my $eval = $config->get_hook( 'digest_verify_request_start_hook' );
@@ -148,7 +148,7 @@ Lastly we unlock the current process.
 sub run
 {
     my ($curproc, $args) = @_;
-    my $config     = $curproc->{ config };
+    my $config     = $curproc->config();
     my $maintainer = $config->{ maintainer };
     my $sender     = $curproc->{'credential'}->{'sender'};
 
@@ -207,7 +207,7 @@ If needed, we send back error messages to the mail sender.
 sub finish
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'digest_finish_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }

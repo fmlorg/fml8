@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Mailer.pm,v 1.21 2003/08/23 15:33:11 fukachan Exp $
+# $FML: Mailer.pm,v 1.22 2003/08/25 14:13:57 fukachan Exp $
 #
 
 package FML::Mailer;
@@ -105,7 +105,7 @@ sub send
     #    $curproc is given in usual fml processes.
     #    but not in other programs.
     if (defined $curproc) {
-	my $config  = $curproc->{ config };
+	my $config  = $curproc->config();
 	$maintainer = $config->{ maintainer } if defined $config;
 
 	# default log functions
@@ -181,7 +181,7 @@ sub send
     #
     # main
     #
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
     use Mail::Delivery;
     my $service = new Mail::Delivery {
 	log_function       => $fp,

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Parse.pm,v 1.29 2003/01/11 06:58:45 fukachan Exp $
+# $FML: Parse.pm,v 1.30 2003/08/23 07:24:40 fukachan Exp $
 #
 
 package FML::Parse;
@@ -75,7 +75,7 @@ sub _parse
     $curproc->log("read header=$header_size body=$body_size");
 
     if (defined $msg->envelope_sender()) {
-	my $pcb = $curproc->{ pcb };
+	my $pcb = $curproc->pcb();
 	if (defined $pcb) {
 	    $pcb->set('credential', 'unix-from', $msg->envelope_sender());
 	}

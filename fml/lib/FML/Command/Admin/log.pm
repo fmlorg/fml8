@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: log.pm,v 1.15 2003/02/20 04:32:50 fukachan Exp $
+# $FML: log.pm,v 1.16 2003/08/23 04:35:31 fukachan Exp $
 #
 
 package FML::Command::Admin::log;
@@ -59,7 +59,7 @@ sub need_lock { 0;}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config   = $curproc->{ config };
+    my $config   = $curproc->config();
     my $log_file = $config->{ log_file };
     my $options  = $command_args->{ options };
     my $address  = $command_args->{ command_data } || $options->[ 0 ];
@@ -82,7 +82,7 @@ sub process
 sub cgi_menu
 {
     my ($self, $curproc, $args, $command_args) = @_;
-    my $config   = $curproc->{ config };
+    my $config   = $curproc->config();
     my $log_file = $config->{ log_file };
     my $style    = $curproc->get_print_style();
 
