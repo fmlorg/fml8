@@ -79,7 +79,7 @@ sub add_software_info
     my $fml_version = $config->{ fml_version };
 
     if ($fml_version) {
-	$header->add('X-ML-Server',   $fml_version);
+	$header->add('X-MLServer',   $fml_version);
 	$header->add('List-Software', $fml_version);
     }
 }
