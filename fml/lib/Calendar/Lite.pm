@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.15 2003/08/23 04:35:26 fukachan Exp $
+# $FML: Lite.pm,v 1.16 2003/12/30 08:22:35 fukachan Exp $
 #
 
 package Calendar::Lite;
@@ -196,15 +196,38 @@ sub parse
 	       sprintf("^%04d%02d(\\d{1,2})\\s+(.*)",   $year, $month),
 	       sprintf("^%04d/%02d/(\\d{1,2})\\s+(.*)", $year, $month),
 	       sprintf("^%04d/%d/(\\d{1,2})\\s+(.*)",   $year, $month),
-	       sprintf("^%02d(\\d{1,2})\\s+(.*)",  $month),
-	       sprintf("^%02d/(\\d{1,2})\\s+(.*)", $month),
+
+	       sprintf("^%02d(\\d{1,2})\\s+(.*)",       $month),
+	       sprintf("^%02d/(\\d{1,2})\\s+(.*)",      $month),
+
+	       sprintf("^\\\*/(\\d{1,2})\\s+(.*)"),
 	       );
+
+    if ($data_file && -f $data_file) {
+	$self->_analyze($year, $month, $data_file, \@pat);
+    }
+    elsif (-d $data_dir) {
+	$self->_analyze_dir($year, $month, $data_dir, \@pat);
+    }
+    else {
+	croak("invalid data");
+    }
+}
+
+
+# Descriptions: initialize calender object.
+#    Arguments: OBJ($self) STR($year) STR($month)
+# Side Effects: none
+# Return Value: none
+sub _init_calender
+{
+    my ($self, $year, $month) = @_;
 
     use HTML::CalendarMonthSimple;
     my $cal = new HTML::CalendarMonthSimple('year'=> $year, 'month'=> $month);
 
     if (defined $cal) {
-	$self->{ _schedule } = $cal;
+	$self->{ _calender } = $cal;
     }
     else {
 	croak("cannot create calender object");
@@ -214,32 +237,56 @@ sub parse
     $cal->border(10);
     $cal->header(sprintf("%04d/%02d %s",  $year, $month, "schedule"));
     $cal->bgcolor('pink');
+}
 
-    if ($data_file && -f $data_file) {
-	$self->_analyze($data_file, \@pat);
-    }
-    elsif (-d $data_dir) {
-	use DirHandle;
-	my $dh = new DirHandle $data_dir;
 
-	if (defined $dh) {
-	    my $xdir;
+# Descriptions: parse the specified file.
+#    Arguments: OBJ($self) 
+#               STR($year) STR($month) STR($file) ARRAY_REF($pattern)
+# Side Effects: none
+# Return Value: none
+sub _analyze_file
+{
+    my ($self, $year, $month, $file, $pattern) = @_;
 
-	  DIR:
-	    while (defined($xdir = $dh->read)) {
-		next DIR if $xdir =~ /~$/o;
-		next DIR if $xdir =~ /^\./o;
+    # initialize year+month dependent calender object
+    # since _analyze() adds matched data into this calender object.
+    $self->_init_calender($year, $month);
 
-		use File::Spec;
-		my $schedule_file = File::Spec->catfile($data_dir, $xdir);
-		if (-f $schedule_file) {
-		    $self->_analyze($schedule_file, \@pat);
-		}
+    $self->_analyze($file, $pattern);
+}
+
+
+# Descriptions: parse the specified files in the directory.
+#    Arguments: OBJ($self) 
+#               STR($year) STR($month) STR($data_dir) ARRAY_REF($pattern)
+# Side Effects: none
+# Return Value: none
+sub _analyze_dir
+{
+    my ($self, $year, $month, $data_dir, $pattern) = @_;
+
+    # initialize year+month dependent calender object
+    # since _analyze() adds matched data into this calender object.
+    $self->_init_calender($year, $month);
+
+    use DirHandle;
+    my $dh = new DirHandle $data_dir;
+
+    if (defined $dh) {
+	my $xdir;
+
+      DIR:
+	while (defined($xdir = $dh->read)) {
+	    next DIR if $xdir =~ /~$/o;
+	    next DIR if $xdir =~ /^\./o;
+
+	    use File::Spec;
+	    my $schedule_file = File::Spec->catfile($data_dir, $xdir);
+	    if (-f $schedule_file) {
+		$self->_analyze($schedule_file, $pattern);
 	    }
 	}
-    }
-    else {
-	croak("invalid data");
     }
 }
 
@@ -273,7 +320,7 @@ sub _analyze
 	    }
 
 	    # for example, "*/24 something"
-	    if ($buf =~ /^\*\/(\d+)\s+(.*)/) {
+	    if (0 && $buf =~ /^\*\/(\d+)\s+(.*)/) {
 		$self->_add_entry($1, $2);
 	    }
 	}
@@ -290,10 +337,13 @@ sub _analyze
 sub _add_entry
 {
     my ($self, $day, $buf) = @_;
-    my $cal = $self->{ _schedule };
+    my $cal = $self->{ _calender };
     $day =~ s/^0//;
 
-    $cal->addcontent($day, "<p>". $buf);
+    if (defined $day && defined $buf) {
+	print STDERR "day=$day buf=$buf\n" if 0;
+	$cal->addcontent($day, "<p>". $buf);
+    }
 }
 
 
@@ -317,9 +367,9 @@ sub print
 {
     my ($self, $fd) = @_;
 
-    if (defined $self->{ _schedule }) {
+    if (defined $self->{ _calender }) {
 	$fd = defined $fd ? $fd : \*STDOUT;
-	print $fd $self->{ _schedule }->as_HTML;
+	print $fd $self->{ _calender }->as_HTML;
     }
     else {
 	croak("undefined schedule object");
@@ -368,9 +418,39 @@ sub print_specific_month
 
     print $fh "<A NAME=\"$month\">\n";
     $self->parse( { month => $thismonth, year => $thisyear } );
+
+    # overview if this month.
+    if ($thismonth == $default_month) {
+	print $fh "<pre>\n";
+	$self->_print_specific_day($fh, time);
+	$self->_print_specific_day($fh, time + 24*3600);
+	$self->_print_specific_day($fh, time + 48*3600);
+	print $fh "</pre>\n";
+    }
+
+    # calender style
     $self->print($fh);
 }
 
+
+# Descriptions: print schedule at the day specified by unix time $time.
+#    Arguments: OBJ($self) HANDLE($fh) NUM($time)
+# Side Effects: none
+# Return Value: none
+sub _print_specific_day
+{
+    my ($self, $fh, $time) = @_;
+    my $cal = $self->{ _calender };
+
+    my ($sec,$min,$hour,$mday,$month,$year,$wday) = localtime($time);
+    my $buf = $cal->getcontent($mday) || '';
+    $buf =~ s/^\s*//;
+    $buf =~ s/<p>//g;
+    printf $fh "%02d: %s\n", $mday, $buf;
+}
+
+
+=head1 MODE
 
 =head2 get_mode( )
 
