@@ -72,11 +72,17 @@ db_dir		= $var_dir/db
 #     Examples: /var/spool/ml/elena/var/mqueue
 mqueue_dir	= $var_dir/mqueue
 
-# Descriptions: message template
+# Descriptions: message template (file)
 #      History: /usr/local/fml/drafts/
 #        Value: directory
 #     Examples: /usr/local/share/fml/$fml_version/template/$language
 message_template_dir	= $fml_share_dir/template/$template_file_charset
+
+# Descriptions: message template (paragraph)
+#      History: /usr/local/fml/messages/
+#        Value: directory
+#     Examples: /usr/local/share/fml/$fml_version/message/$language
+message_message_dir	= $fml_share_dir/message/$template_file_charset
 
 =head1	アクセス制御ルール
 
@@ -468,6 +474,7 @@ available_commands		=	help
 					remove
 					resign
 					unsubscribe
+					chaddr
 
 
 available_commands_for_stranger	=	guide

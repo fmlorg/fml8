@@ -44,6 +44,7 @@ available_commands		=	help
 					remove
 					resign
 					unsubscribe
+					chaddr
 
 
 available_commands_for_stranger	=	guide
