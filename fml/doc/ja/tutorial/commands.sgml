@@ -1,13 +1,18 @@
 <!--
-	$FML: commands.sgml,v 1.1 2001/04/24 15:19:14 fukachan Exp $
+	$FML: fmlcommands.sgml,v 1.2 2001/04/26 11:02:39 fukachan Exp $
 -->
 
-<chapter id="commands">
+<chapter id="fmlcommands">
 
-<title>	fml を操作するコマンド </title>
+<title>	fml をメールで操作する </title>
+
+fml にメールでコマンドを送り込むことで、fml に特定の処理をしてもらうこ
+とができます。例えば、メンバーの登録、削除や、過去の記事を取り寄せるな
+どの処理です。
+
 
 <sect1>
-   <title>	コマンドの拡張の仕方の例 </title>
+   <title> コマンドの拡張の仕方の例 </title>
 
 
    <sect2>
