@@ -104,30 +104,26 @@ sub AUTOLOAD
 
 =head1 NAME
 
-Ticket::System.pm - what is this
-
+FML::Ticket::System - ticket system core engine
 
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
 
-=head2 new
-
-=item Function()
-
-
 =head1 AUTHOR
+
+Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 __YOUR_NAME__
+Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself. 
 
 =head1 HISTORY
 
-FML::__MODULE_NAME__.pm appeared in fml5.
+FML::Ticket::System.pm appeared in fml5.
 
 =cut
 
