@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.7 2002/07/12 15:03:27 fukachan Exp $
+# $FML: Postfix.pm,v 1.8 2002/07/17 09:34:20 fukachan Exp $
 #
 
 package FML::MTAControl::Postfix;
@@ -155,11 +155,11 @@ sub postfix_find_key_in_alias_maps
 	    while (<$fh>) {
 		return 1 if /^$key:/;
 	    }
+	    $fh->close;
 	}
 	else {
 	    warn("cannot open $map");
 	}
-	$fh->close;
     }
 
     return 0;
@@ -211,11 +211,11 @@ sub postfix_get_aliases_as_hash_ref
 		$value =~ s/s*$//;
 		$aliases->{ $key } = $value;
 	    }
+	    $fh->close;
 	}
 	else {
 	    warn("cannot open $map");
 	}
-	$fh->close;
     }
 
     return $aliases;
@@ -233,7 +233,7 @@ sub postfix_alias_maps
     my $config = $curproc->{ config };
     my $prog   = $config->{ path_postconf };
 
-    my $maps   = `$prog alias_maps`;
+    my $maps   = `$prog -d alias_maps`;
     $maps      =~ s/,/ /g;
     $maps      =~ s/\s+hash:/ /g;
     $maps      =~ s/\s+dbm:/ /g;
