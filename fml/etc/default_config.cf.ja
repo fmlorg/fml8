@@ -154,7 +154,7 @@ use_lock	= yes
 
 lock_dir	= $var_dir/lock
 
-lock_file	= $lock_dir/simplelock
+lock_file	= $lock_dir/simple_giant_lock
 
 lock_type	= flock
 
