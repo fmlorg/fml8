@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.20 2002/05/13 14:22:53 fukachan Exp $
+# $FML: Utils.pm,v 1.21 2002/05/25 06:58:24 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -212,6 +212,25 @@ sub default_domain
     my $main_cf = $curproc->{ __parent_args }->{ main_cf };
 
     return $main_cf->{ default_domain };
+}
+
+
+# Descriptions: check if $domain is the default one or not.
+#               This is used to check $domain is a virtual domain or not.
+#    Arguments: OBJ($curproc) STR($domain)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub is_default_domain
+{
+    my ($curproc, $domain) = @_;
+    my $default_domain = $curproc->default_domain();
+
+    if ("\L$domain\E" eq "\L$default_domain\E") {
+	return 1;
+    }
+    else {
+	return 0;
+    }
 }
 
 
