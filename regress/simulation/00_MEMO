@@ -3,95 +3,17 @@
 
 	XXX 作業したら TODO/STATUS.txt もアップデートしてね XXX
 
--------------------- 2002-06 AUDIT --------------------
-   FML::Article
+
+○	FML::Article
+
 	subdir の取り扱いが不十分
 	0700 とかハードコードされてるじょ
-
-   FML::CGI::ThreadTrack
-	見栄えを config.cgi などと合わせる方が良いでしょう
-	＃ テーブルベースの見栄え
-
-   FML::Command::Auth
-	パスワードエントリのサーチで、検索範囲が冗長過ぎ
-
-	[BUG]
-	ユーザ名の一致も検査しなはれ
-
-   File::Sequence
-	IO::Adapter 経由にするべきでし
-
-   Tie::JournaledFile
-	IO::Adapter で journaled file をサポートしてほしい
-
-	[BUG] ?
-	この negative cache ってまちがってないか？
-		find() して ->{} すると negative cache
-		が間違って有効になってるんじゃないの？
-
-   FML::Command::Admin::dir
-	cgi_menu() ?
-		ディレクトリ listing してくれる perl module ないかな？
-
-   FML::Command::SendFile
-	Mail::Message::MH を使うように修正
-
-
-   FML::Command::UserControl
-
-	if defined $uc_args->{ is_cgi } && $uc_args->{ is_cgi };
-
-	はよろしくないとおもうなぁ。もうちょっとモジュールに共通する
-	$curproc->is_cgi() みたいなメソッドがほしい感じ？
-
-	プロセスごとに出力モードってのを定義できるようにするべし？
-	or おしえてくれえる $curproc->expected_printing_style() ?
-
-
-   FML::Command::Admin::log
-	    my $is_cgi       = 1 if $args->{ mode } eq 'cgi';
-
-
-   FML::Restriction::
-	RFC 2822 っていってもねぇ… RFC の定義が広すぎるよね
-
-
-   FML::Restriction::Command
-	コマンドのシンタックスチェックはもうちょっと粒度を上げるべきか？
-
-
-   FML::Process::Command
-	_allow_command() が途中
-
-
--------------------- 2002-06 AUDIT --------------------
-
-○	ちょっとコーディングスタイルが古いかな?
-
-   FML::Header
-   FML::Header::Subject
-   File::Sequence
-   Mail::Delivery::* (?)
-   FML/Filter.pm
-   FML/Filter/BodyCheck.pm
-   FML/Filter/HeaderCheck.pm
-
-	ちょっとコーディングスタイルが古いかな?
-	近々に見直すべし
 
 
 ○   [DOC] Delivered-To をけそう tips
 
 
 ○   subject でふぉわーどさきをかえる tips をしこもう
-
-
-○   FML::CGI::Admin:: ではハードコーディングするしかない？
-
-  例 FML::CGI::Admin::User
-	$comname と maps の関係がハードコーディングされてる
-
-	でも、これはしかたないんじゃないかなぁ
 
 
 ○	ドキュメント( tutorial )
@@ -120,6 +42,14 @@
 			ls 	＊不要？
 			file 	＊不要？
 			list 	＊不要？
+
+	* CGI でも不要？
+
+		dir ls file
+
+	   FML::Command::Admin::dir
+		cgi_menu() ?
+		ディレクトリ listing してくれる perl module ないかな？
 
 
 ○	コマンド拡張の仕方
@@ -236,27 +166,6 @@ http://www.cs.utk.edu/~moore/internet-drafts/draft-moore-auto-email-response-00
 	fml/lib/FML/Process/CGI.pm
 	fml/libexec/loader
 
-○ MailCacheDir
-
-    $LOG_MAIL_DIR = $LOG_MAIL_DIR || "$VAR_DIR/Mail";
-    $LOG_MAIL_SEQ = $LOG_MAIL_SEQ || "$LOG_MAIL_DIR/.seq";
-    $LOG_MAIL_FILE_SIZE_MAX = $LOG_MAIL_FILE_SIZE_MAX || 2048;
-
-	へっだをかく
-
-	せんとうの２０４８ばいとだけかく
-	for ($p = 0; $p < $LOG_MAIL_FILE_SIZE_MAX; ) {
-	    $p = index($Envelope{'Body'}, "\n", $p + 1);
-	    if ($p < 0) {
-		last;
-	    }
-	    else {
-		print F substr($Envelope{'Body'}, $pp, $p + 1 - $pp);
-		$pp = $p + 1;
-	    }
-	}
-	close(F);
-
 
 ○	ループチェック
 
@@ -268,6 +177,26 @@ http://www.cs.utk.edu/~moore/internet-drafts/draft-moore-auto-email-response-00
 	$default_umask
 
 	time_zone config?
+
+
+○	ちょっと見栄えが？
+
+   FML::CGI::ThreadTrack
+	見栄えを config.cgi などと合わせる方が良いでしょう
+	＃ テーブルベースの見栄え
+
+○	ちょっとコーディングスタイルが古いかな?
+
+   FML::Header
+   FML::Header::Subject
+   File::Sequence
+   Mail::Delivery::* (?)
+   FML/Filter.pm
+   FML/Filter/BodyCheck.pm
+   FML/Filter/HeaderCheck.pm
+
+	ちょっとコーディングスタイルが古いかな?
+	近々に見直すべし
 
 
 ○ Mail::ThreadTrack 
@@ -471,4 +400,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.34 2002/07/16 10:53:07 fukachan Exp $
+$FML: 00_MEMO,v 1.35 2002/07/17 09:35:50 fukachan Exp $
