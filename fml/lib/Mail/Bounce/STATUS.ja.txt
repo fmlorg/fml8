@@ -9,6 +9,7 @@
 	DSN (RFC1894, e.g. Postfix-release, Sendmail, et. al.)
 		postfix release
 		sendmail 
+		Norton AntiVirus Gateway ?
 
 	old style sendmail error message before DSN
 		SMI-8.6
@@ -118,4 +119,4 @@
 		今は sendmail みたいだ
 
 
-$FML: STATUS.ja.txt,v 1.9 2001/04/15 13:24:18 fukachan Exp $
+$FML: STATUS.ja.txt,v 1.10 2001/04/15 15:58:59 fukachan Exp $
