@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: INET4.pm,v 1.2 2001/06/17 08:57:12 fukachan Exp $
+# $FML: INET4.pm,v 1.3 2001/12/22 09:21:17 fukachan Exp $
 #
 
 package Mail::Delivery::Net::INET4;
@@ -18,6 +18,11 @@ require Exporter;
 @ISA       = qw(Exporter);
 @EXPORT    = qw(connect4);
 
+
+# Descriptions: try connect(2) by IPv4
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: create ipv4 smtp connection
+# Return Value: HANDLE
 sub connect4
 {
     my ($self, $args) = @_;
@@ -96,7 +101,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

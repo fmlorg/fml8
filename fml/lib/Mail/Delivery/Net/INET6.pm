@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: INET6.pm,v 1.6 2001/10/10 09:46:22 fukachan Exp $
+# $FML: INET6.pm,v 1.7 2001/12/22 09:21:17 fukachan Exp $
 #
 
 package Mail::Delivery::Net::INET6;
@@ -18,6 +18,11 @@ require Exporter;
 @ISA     = qw(Exporter);
 @EXPORT  = qw(is_ipv6_ready is_ipv6_mta_syntax connect6);
 
+
+# Descriptions: we have Socket6.pm or not ?
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub _we_can_use_Socket6
 {
     my ($self, $args) = @_;
@@ -37,6 +42,10 @@ sub _we_can_use_Socket6
 }
 
 
+# Descriptions: This host supports IPv6 ?
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: 1 or 0
 sub is_ipv6_ready
 {
     my ($self, $args) = @_;
@@ -50,6 +59,11 @@ sub is_ipv6_ready
 }
 
 
+# Descriptions: $host is IPv6 syntax ?
+#               return (host, port) if IPv6 native format
+#    Arguments: OBJ($self) STR($host)
+# Side Effects: none
+# Return Value: ARRAY(host, port)
 sub is_ipv6_mta_syntax
 {
     my ($self, $host) = @_;
@@ -66,6 +80,10 @@ sub is_ipv6_mta_syntax
 }
 
 
+# Descriptions: try connect(2) by IPv6.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: create IPv6 smtp connection
+# Return Value: none
 sub connect6
 {
     my ($self, $args) = @_;
@@ -207,7 +225,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
