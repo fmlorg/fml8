@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.15 2002/01/13 06:59:50 fukachan Exp $
+# $FML: Sequence.pm,v 1.16 2002/01/13 13:35:25 fukachan Exp $
 #
 
 package File::Sequence;
@@ -194,6 +194,13 @@ To search max_id in hash key,
 
     $self->search_max_id( { hash => \%hash_table });
 
+to search max_id among all keys,
+
+    $self->search_max_id( { 
+	hash => \%hash_table,
+	full_search => 1,
+    });
+
 =cut
 
 
@@ -202,6 +209,36 @@ To search max_id in hash key,
 # Side Effects: none
 # Return Value: NUM
 sub search_max_id
+{
+    my ($self, $args) = @_;
+
+    # full search
+    if (defined $args->{ hash } && defined $args->{ full_search } ) {
+	my $hash = $args->{ hash };
+	my $max  = 0;
+
+	my ($k, $v);
+	while ( ($k, $v) = each %$hash) {
+	    $max = $max > $k ? $max : $k;
+	}
+
+	return $max;
+    }
+    # old style, search max from bottom (e.g. 0 or 1)
+    elsif (defined $args->{ hash }) {
+	$self->_search_max_id_from_bottom($args);
+    }
+    else {
+	warn("no argument");
+    }
+}
+
+
+# Descriptions: search max id number from bottom
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: NUM
+sub _search_max_id_from_bottom
 {
     my ($self, $args) = @_;
     my ($pebot, $k, $v);
