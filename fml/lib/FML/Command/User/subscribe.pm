@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: subscribe.pm,v 1.2 2001/08/26 07:58:39 fukachan Exp $
+# $FML: subscribe.pm,v 1.3 2001/10/10 14:50:03 fukachan Exp $
 #
 
 package FML::Command::User::subscribe;
@@ -41,8 +41,10 @@ sub process
     my $config        = $curproc->{ config };
     my $member_map    = $config->{ primary_member_map };
     my $recipient_map = $config->{ primary_recipient_map };
-    my $options       = $optargs->{ options };
-    my $address       = $optargs->{ address } || $options->[ 0 ];
+    my $cache_dir     = $config->{ db_dir };
+    my $keyword       = $config->{ confirm_keyword };
+    my $command       = $optargs->{ command };
+    my $address       = $curproc->{ credential }->sender();
 
     # fundamental check
     croak("\$member_map is not specified")    unless $member_map;
@@ -57,7 +59,17 @@ sub process
     }
     # if not, try confirmation before subscribe
     else {
-	Log("new subscriber, try confirmation");	
+	Log("new subscriber, try confirmation");
+	use FML::Confirm;
+	my $confirm = new FML::Confirm {
+	    keyword   => $keyword,
+	    cache_dir => $cache_dir,
+	    class     => 'subscribe',
+	    address   => $address,
+	    buffer    => $command,
+	};
+	my $id = $confirm->assign_id;
+	$curproc->reply_message( $id );
     }
 }
 
