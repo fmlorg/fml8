@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML$
+# $FML: Switch.pm,v 1.16 2001/04/03 09:45:43 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -323,8 +323,11 @@ sub _module_specific_options
     elsif ($myname eq 'makefml.cgi') {
 	return qw(debug!);
     }
-    elsif ($myname eq 'fmlsch.cgi' || $myname eq 'fmlsch') {
+    elsif ($myname eq 'fmlsch.cgi') {
 	return qw(debug!);
+    }
+    elsif ($myname eq 'fmlsch') {
+	return qw(debug! -D=s -F=s -m=s);
     }
     else {
 	croak "options for $myname are not defined.\n";
