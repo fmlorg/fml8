@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+# Copyright (C) 2000,2002 Ken'ichi Fukamachi
+#          All rights reserved. 
+#
+# $FML$
+#
+
+exec cvs -d :pserver:anoncvs@anoncvs.fml.org:/exports/cvsroot $*
+
+# not reached here
+echo cannot exec cvs -d :pserver:anoncvs@anoncvs.fml.org:/exports/cvsroot $*
+exit 1
