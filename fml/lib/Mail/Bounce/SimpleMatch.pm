@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: SimpleMatch.pm,v 1.5 2001/04/12 04:43:05 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.6 2001/04/12 11:47:16 fukachan Exp $
 #
 
 
@@ -13,6 +13,8 @@ package Mail::Bounce::SimpleMatch;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+
+@ISA = qw(Mail::Bounce);
 
 =head1 NAME
 
@@ -69,6 +71,12 @@ my $address_trap_regexp = {
     },
 
 
+    'freeml.com' => {
+	'start' => '.',
+	'end'   => 'http\:\/\/www\.freeml\.com\/help\/',
+    },
+
+
     'smail' => {
 	'start' => 'Failed addresses follow:',
 	'end'   => 'Message text follows:',
@@ -110,14 +118,37 @@ sub analyze
 
 	for (my $i = 0; $i < $n; $i++) {
 	    my $buf = $m->nth_paragraph($i + 1); # 1 not 0 for 1st paragraph
-	    if ($debug) { print "{$buf}\n";}
 	    $args->{ buf } = \$buf;
-	    $self->_address_match($args);
+
+	    unless ( $self->look_japanese( $buf ) ) {
+		if ($debug) { print "{$buf}\n";}
+		$self->_address_match($args);
+	    }
+
+	    # we found the mark of "end of error message part". 
+	    last if $self->_reach_end($args);
 	}
     }
     else {
 	print "body object not found\n" if $debug;
     }
+}
+
+
+sub _reach_end
+{
+    my ($self, $args) = @_;
+    my $result = $args->{ result };
+    my $rbuf   = $args->{ buf };
+
+    for my $mta_type (keys %$address_trap_regexp) {
+	next unless $mta_type;
+
+	my $end_regexp = $address_trap_regexp->{ $mta_type }->{ 'end' };
+	return 1 if ($$rbuf =~ /$end_regexp/);
+    }
+
+    0;
 }
 
 
