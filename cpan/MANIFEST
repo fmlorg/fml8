@@ -18,7 +18,7 @@ HTML-Template			2.5		perl (GNU or Artistic)
 
 IO-stringy			1.220		?
 
-Jcode				0.71		perl itself
+Jcode				0.79		perl itself
 
 Log-ErrLogger			1.5		perl itself
 
@@ -37,4 +37,4 @@ VCS-CVS				2.00		perl itself
 
 Text-CSV			0.01		perl itsetlf
 
-$FML: MANIFEST,v 1.5 2002/02/17 06:32:53 fukachan Exp $
+$FML: MANIFEST,v 1.6 2002/03/23 12:53:05 fukachan Exp $
