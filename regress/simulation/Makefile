@@ -28,6 +28,7 @@ allclean: clean
 
 scan:
 	@ (cd ../..; make scan 2>&1) |tee __scan__ || echo 'nothing changed'
+	@ cp __scan__ /tmp/fmlsrc.__scan__
 
 update:
 	@ (cd ../..; make update)
