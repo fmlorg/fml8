@@ -1,5 +1,5 @@
 <!--
-	$FML: devel.sgml,v 1.1 2001/05/19 05:50:39 fukachan Exp $
+	$FML: devel.sgml,v 1.2 2001/05/19 13:51:57 fukachan Exp $
 -->
 
 <chapter id="fml5.todo">
@@ -58,5 +58,14 @@ mead の改造
 
 </sect1>
 
+<!-- ============================================ -->
+<sect1>
+<title> モデレータ </title>
+
+<para>
+モデレータの承認は www でぽん
+</para>
+
+</sect1>
 
 </chapter>
