@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.12 2003/01/11 15:14:26 fukachan Exp $
+# $FML: Subject.pm,v 1.13 2003/01/11 15:16:36 fukachan Exp $
 #
 
 
@@ -52,6 +52,22 @@ my $pattern  = 'Re:|Re\d+:|Re\[\d+\]:|Re\(\d+\):|Re\^\d+:|Re\*\d+:|Re>';
 
 
 =head1 METHODS
+
+=cut
+
+
+# Descriptions: constructor.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: OBJ
+sub new
+{
+    my ($self, $args) = @_;
+    my ($type) = ref($self) || $self;
+    my $me     = {};
+    return bless $me, $type;
+}
+
 
 =head2 C<is_reply($string)>
 
@@ -105,12 +121,12 @@ within C<Subject:>.
 
 
 # Descriptions: remove Re:
-#    Arguments: STR($subject)
+#    Arguments: OBJ($self) STR($subject)
 # Side Effects: none
 # Return Value: STR
 sub cut_off_reply_tag
 {
-    my ($subject) = @_;
+    my ($self, $subject) = @_;
     my ($y, $limit);
 
     # XXX-TODO: method-ify ?
