@@ -36,6 +36,3 @@ link:
 	ln -s lib/fml5/MailingList .
 	ln -s lib/fml5/IO .
 	(cd libexec; ln -s loader fml.pl) 
-
-hier:
-	perl bin/show_hierarchy.pl FML/libkern.pl | uniq
