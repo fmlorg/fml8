@@ -1085,9 +1085,15 @@ outgoing_article_body_size_limit	= $default_mail_body_size_limit
 
 
 # Descriptions:
-#      History:
-#        Value:
-#     Examples:
+#      History: fml8 rearragena fml4 filter functions and integrates them
+#		into one.
+#		Roughly speaking, fml8 filter is composed of the following
+#			$USE_DISTRIBUTE_FILTER
+#			$INCOMING_MAIL_SIZE_LIMIT
+#			ADD_CONTENT_HANDLER()
+#		functions.
+#        Value: yes / no
+#     Examples: yes
 use_article_filter	= 	yes
  
 
@@ -1105,8 +1111,8 @@ article_filter_functions	=	article_size_filter
 =head2	size based filter
 
 
-# Descriptions: use size based filter
-#      History:
+# Descriptions: use size based filter.
+#      History: no
 #        Value: yes / no
 #     Examples:
 use_article_size_filter	=	yes
@@ -1127,7 +1133,8 @@ article_size_filter_rules	=	check_header_size
 
 
 # Descriptions: use header based filter ?
-#      History:
+#      History: disabled by default.
+#               "yes" always if $USE_DISTRIBUTE_FILTER is yes.
 #        Value: yes / no
 #     Examples:
 use_article_header_filter		=	yes
@@ -1136,7 +1143,7 @@ use_article_header_filter		=	yes
 # Descriptions: header filter rules.
 #               first match. 
 #               permit post if no rule matched.
-#      History:
+#      History: fml4 has no check_date rule.
 #        Value:
 #     Examples:
 article_header_filter_rules		=	check_message_id
@@ -1148,7 +1155,8 @@ article_header_filter_rules		=	check_message_id
 
 
 # Descriptions: dummy
-#      History: !MIME of 4.0 content filter
+#      History: disabled by default.
+#		!MIME of 4.0 content filter.
 #        Value: yes / no
 #     Examples:
 use_article_non_mime_filter		=	yes
@@ -1162,7 +1170,7 @@ article_non_mime_filter_rules		=	permit
 
 
 # Descriptions: MIME structure based filter
-#      History: 4.0 content filter
+#      History: 4.0 content filter. disabled by default.
 #        Value: yes / no
 #     Examples:
 use_article_mime_component_filter	=	yes
@@ -1180,7 +1188,9 @@ article_mime_component_filter_rules	= $fml_config_dir/mime_component_filter
 
 
 # Descriptions: use text/plain filter, which is a simple syntax checker.
-#      History: 4.0's EnvelopeFilter
+#      History: 4.0's EnvelopeFilter.
+#		half of the following rules applied when
+#		$USE_DISTRIBUTE_FILTER is enabled.
 #        Value: yes / no
 #     Examples:
 use_article_text_plain_filter		=	yes
@@ -1189,7 +1199,27 @@ use_article_text_plain_filter		=	yes
 # Descriptions: filter rules of text/plain filter.
 #               first match.
 #               permit post if no rule matched.
-#      History:
+#      History: See kern/libenvf.pl for more detail.
+#		[DISABLED BY DEFAULT]
+#
+#			reject_not_iso2022jp_japanese_string
+#				<=> FILTER_ATTR_REJECT_INVALID_JAPANESE
+#			reject_old_fml_command_syntax
+#				<=> FILTER_ATTR_REJECT_COMMAND
+#			reject_japanese_command_syntax
+#				<=> FILTER_ATTR_REJECT_2BYTES_COMMAND
+#
+#		[ENABLED BY DEFAULT]
+#
+#			reject_null_mail_body
+#				<=> FILTER_ATTR_REJECT_NULL_BODY
+#			reject_invalid_fml_command_syntax
+#				<=> FILTER_ATTR_REJECT_INVALID_COMMAND
+#			reject_one_line_message
+#				<=> FILTER_ATTR_REJECT_ONE_LINE_BODY
+#			reject_ms_guid
+#				<=> FILTER_ATTR_REJECT_MS_GUID
+#
 #         Note: permit by default 
 #        Value:
 #     Examples:
@@ -1207,14 +1237,20 @@ article_text_plain_filter_rules	=	reject_not_iso2022jp_japanese_string
 
 
 # Descriptions: infor the filter rejection ?
-#      History: hard-coded in fml 4.0
+#      History: halfly hard-coded in fml 4.0.
+#		notice is always sent to maintainer, 
+#		but not to sender by default.
+#		$FILTER_NOTIFY_REJECTION controlls notice to sender.
 #        Value: yes / no
 #     Examples: yes
 use_article_filter_reject_notice	=	yes
 
 
 # Descriptions: recipients to inform
-#      History: hard-coded in fml 4.0
+#      History: halfly hard-coded in fml 4.0.
+#		notice is always sent to maintainer, 
+#		but not to sender by default.
+#		$FILTER_NOTIFY_REJECTION controlls notice to sender.
 #        Value: maintainer | sender
 #     Examples: maintainer sender
 article_filter_reject_notice_recipients	=	maintainer
