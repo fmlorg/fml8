@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.7 2002/02/02 08:04:53 fukachan Exp $
+# $FML: Utils.pm,v 1.8 2002/04/08 12:44:25 fukachan Exp $
 #
 
 package FML::Language::Japanese::Utils;
@@ -64,6 +64,10 @@ sub is_iso2022jp_string
 sub _look_not_iso2022jp_string
 {
     my ($buf) = @_;
+
+    # trivial check;
+    return 0 unless defined $buf;
+    return 0 unless $buf;
 
     # check 8 bit on
     if ($buf =~ /[\x80-\xFF]/){
