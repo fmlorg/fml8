@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: config_ph.pm,v 1.9 2004/12/09 03:37:39 fukachan Exp $
+# $FML: config_ph.pm,v 1.10 2004/12/09 11:33:32 fukachan Exp $
 #
 
 package FML::Merge::FML4::config_ph;
@@ -340,13 +340,13 @@ sub translate_xxx
 {
     my ($self, $diff, $key, $value) = @_;
 
-    if ($key eq 'SUBJECT_TAG_TYPE') {
-	if ($value eq '[:]') {
-	    my $s;
-	    $s .= "article_header_rewrite_rules += rewrite_article_subject_tag\n\n";
-	    $s .= "article_subject_tag = [\$ml_name:\%05d]\n";
-	    return $s;
-	}
+    if ($key eq 'SUBJECT_TAG_TYPE'  ||
+	$key eq 'BRACKET'           ||
+	$key eq 'BRACKET_SEPARATOR' ||
+	$key eq 'SUBJECT_FREE_FORM' ||
+	$key eq 'SUBJECT_FREE_FORM_REGEXP' ||
+	$key eq 'SUBJECT_FORM_LONG_ID') {
+	return $self->_fix_subject_tag($diff, $key, $value);
     }
     elsif ($key eq 'MAINTAINER') {
 	return "maintainer = $value";
@@ -357,7 +357,7 @@ sub translate_xxx
     elsif ($key eq 'CONTROL_ADDRESS') {
 	return "command_mail_address = $value";
     }
-    elsif ($key eq 'SMTP_SENDER') {   
+    elsif ($key eq 'SMTP_SENDER') {
 	return "smtp_sender = $value";
     }
     elsif ($key eq 'REJECT_ADDR') {
@@ -368,14 +368,127 @@ sub translate_xxx
 	my $port = $diff->{ 'PORT' } || 25;
 	return "smtp_servers = $host:$port";
     }
-    elsif ($key eq 'ADMIN_MEMBER_LIST' ||
-	   $key eq 'MEMBER_LIST' ||
-	   $key eq 'ACTIVE_LIST' ||
-	   $key eq 'PASSWD_FILE') {
-	;
+    elsif ($key eq 'SPOOL_DIR') {
+	return "spool_dir = $value";
+    }
+    elsif ($key eq 'TMP_DIR') {
+	return "tmp_dir = $value";
+    }
+    elsif ($key eq 'ADMIN_MEMBER_LIST') {
+	return "primary_admin_member_map = $value";
+    }
+    elsif ($key eq 'MEMBER_LIST') {
+	return "primary_member_map = $value";
+    }
+    elsif ($key eq 'ACTIVE_LIST') {
+	return "primary_recipient_map = $value";
+    }
+    elsif ($key eq 'PASSWD_FILE') {
+	return "primary_admin_member_password_map = $value";
+    }
+    elsif ($key eq 'LOGFILE') {
+	return "log_file = $value";
+    }
+    elsif ($key eq 'GUIDE_FILE') {
+	return "guide_file = $value";
+    }
+    elsif ($key eq 'OBJECTIVE_FILE') {
+	return "objective_file = $value";
+    }
+    elsif ($key eq 'SEQUENCE_FILE') {
+	return "article_sequence_file = $value";
+    }
+    elsif ($key eq 'SUMMARY_FILE') {
+	return "summary_file = $value";
+    }
+    elsif ($key eq 'SKIP_FIELDS') {
+	return $self->_fix_skip_fields($diff, $key, $value);
+    }
+    elsif ($key eq 'FILE_TO_REGIST') {
+	my $s = '';
+	$s .= "primary_member_map      = $value\n";
+	$s .= "primary_recipient_map   = $value\n";
+	return $s;
+    }
+    elsif ($key eq 'NUM_LOG_MAIL') {
+	return "incoming_mail_cache_size = $value\n";
     }
 
-    return '# UNKNOWN TRANSLATION RULE';
+    return '# ***ERROR*** UNKNOWN TRANSLATION RULE';
+}
+
+
+# Descriptions: handle subject tag related conversion.
+#    Arguments: OBJ($self) HASH_REF($diff) STR($key) STR($value)
+# Side Effects: none
+# Return Value: STR
+sub _fix_skip_fields
+{
+    my ($self, $diff, $key, $value) = @_;
+    my (@fields) = split(/\|/, $value);
+
+    return "unsafe_header_fields = @fields";
+}
+
+
+# Descriptions: handle subject tag related conversion.
+#    Arguments: OBJ($self) HASH_REF($diff) STR($key) STR($value)
+# Side Effects: none
+# Return Value: STR
+sub _fix_subject_tag
+{
+    my ($self, $diff, $key, $value) = @_;
+    my $s = "article_header_rewrite_rules += rewrite_article_subject_tag\n\n";
+
+    # ensure uniqueness
+    return '#    ALREADY TRANSLATED' if $self->{ _subject_tag_fixed };
+    $self->{ _subject_tag_fixed } = 1;
+
+    # variables
+    my $type             = $diff->{ 'SUBJECT_TAG_TYPE' }         || '';
+    my $bracket          = $diff->{ 'BRACKET' }                  || '';
+    my $bracket_sep      = $diff->{ 'BRACKET_SEPARATOR' }        || '';
+    my $free_form        = $diff->{ 'SUBJECT_FREE_FORM' }        || '';
+    my $free_form_regexp = $diff->{ 'SUBJECT_FREE_FORM_REGEXP' } || '';
+    my $free_long_id     = $diff->{ 'SUBJECT_FORM_LONG_ID' }     || 5;
+
+    if ($type eq '[:]') {
+	$s .= "article_subject_tag = [\$ml_name:\%05d]\n";
+    }
+    elsif ($type eq '[,]') {
+	$s .= "article_subject_tag = [\$ml_name,\%05d]\n";
+    }
+    elsif ($type eq '[ ]') {
+	$s .= "article_subject_tag = [\$ml_name \%05d]\n";
+    }
+    elsif ($type eq '(:)') {
+	$s .= "article_subject_tag = (\$ml_name:\%05d)\n";
+    }
+    elsif ($type eq '(,)') {
+	$s .= "article_subject_tag = (\$ml_name,\%05d)\n";
+    }
+    elsif ($type eq '( )') {
+	$s .= "article_subject_tag = (\$ml_name \%05d)\n";
+    }
+    elsif ($type eq '()') {
+	$s .= "article_subject_tag = (\$ml_name)\n";
+    }
+    elsif ($type eq '[]') {
+	$s .= "article_subject_tag = [\$ml_name]\n";
+    }
+    elsif ($type eq '(ID)') {
+	$s .= "article_subject_tag = (\%05d)\n";
+    }
+    elsif ($type eq '[ID]') {
+	$s .= "article_subject_tag = [\%05d]\n";
+    }
+
+    if ($free_long_id != 5) {
+	my $r = sprintf("%%0%dd", $free_long_id);
+	$s =~ s/\%05d/$r/g;
+    }
+
+    return $s;
 }
 
 
