@@ -1,5 +1,5 @@
 dnl
-dnl $FML: configure.in,v 1.21 2002/04/25 04:46:08 fukachan Exp $
+dnl $FML: configure.in,v 1.22 2002/05/28 14:46:18 fukachan Exp $
 dnl
 AC_REVISION($Revision$)
 
@@ -55,6 +55,10 @@ AC_PATH_PROG(PGPK,     pgpk)
 AC_PATH_PROG(PGPS,     pgps)
 AC_PATH_PROG(PGPV,     pgpv)
 AC_PATH_PROG(GPG,      gpg)
+
+AC_PATH_PROG(LESS,     less)
+AC_PATH_PROG(MORE,     more)
+AC_PATH_PROG(W3M,      w3m)
 dnl path_check_end
 
 use_warning=yes
