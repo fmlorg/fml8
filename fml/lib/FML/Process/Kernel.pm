@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.120 2002/07/31 13:22:03 fukachan Exp $
+# $FML: Kernel.pm,v 1.121 2002/08/03 10:35:09 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -203,7 +203,7 @@ sub scheduler_init
 
     use FML::Process::Scheduler;
     my $scheduler = new FML::Process::Scheduler $curproc;
-    $curproc->{ _scheduler } = $scheduler;
+    $curproc->{ scheduler } = $scheduler;
 }
 
 
