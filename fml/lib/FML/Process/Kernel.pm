@@ -90,6 +90,13 @@ sub new
 	}
     }
 
+    # error if we need $ml_home_dir but is not specified.
+    if ($args->{ need_ml_name }) {
+	unless ($cfargs->{ ml_home_dir }) {
+	    croak("specify ml_home_dir or ml_name");
+	}
+    } 
+
     # import $fml_version
     if (defined $args->{ fml_version }) {
 	$cfargs->{ fml_version } = "fml-devel ". $args->{ fml_version };
