@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Ring.pm,v 1.1 2004/04/17 06:18:05 fukachan Exp $
+# $FML: Ring.pm,v 1.2 2004/05/25 03:33:29 fukachan Exp $
 #
 
 package FML::Cache::Ring;
@@ -17,7 +17,7 @@ use File::Spec;
 
 =head1 NAME
 
-FML::Cache::Ring - IO operations to ring buffer which consists of files
+FML::Cache::Ring - IO operations to ring buffer which consists of files.
 
 =head1 SYNOPSIS
 
@@ -128,7 +128,7 @@ sub new
 }
 
 
-# Descriptions: determine the file name to write into
+# Descriptions: determine the file name to write into.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: increment $sequence_file_name
 #               set the file name at ${*$self}{ _file }
@@ -163,13 +163,16 @@ sub _take_file_name
 
 	# updated.
 	my $saved_id = $id;
+
+	# check if $id is rolled over or not.
 	$id = $id % $modulus;
 	if ($saved_id != $id) {
 	    $io->sequence_replace($id);
 	}
 
 	# file.
-	$file = File::Spec->catfile($directory, $filename_prefix.$id);
+	$file = File::Spec->catfile($directory, 
+				    sprintf("%s%s", $filename_prefix, $id));
     }
 
     $self->{ _cache_type } = $cache_type || 'cyclic';
@@ -179,25 +182,27 @@ sub _take_file_name
 }
 
 
-# Descriptions: return the path of file to be written
+# Descriptions: return the path of file to be written.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
 sub cache_file_path
 {
     my ($self) = @_;
-    return $self->{ _opened_file };
+
+    return( $self->{ _opened_file } || '');
 }
 
 
 =head2 open(file, mode)
 
-no argument.
+open file in the buffer.
+The target file is already determined when constructor runs.
 
 =cut
 
 
-# Descriptions: open() a file in the buffer
+# Descriptions: open() cache file in the buffer.
 #    Arguments: OBJ($self) STR($file) STR($mode)
 #               XXX $self is blessed file handle.
 # Side Effects: create ${ *$self } hash to save status information
@@ -320,15 +325,17 @@ sub get
 sub get_latest_value
 {
     my ($self, $key) = @_;
-    my $file = $self->{ _file };
-    my $buf  = $self->_search($file, $key);
 
-    # cheap sanity;
+    # cheap sanity.
     return '' unless defined $key;
 
-    # return cache
+    # 1. return matched value if found in the latest cache.
+    my $file = $self->{ _file };
+    my $buf  = $self->_search($file, $key);
     return $buf if $buf;
 
+    # 2. if not found in the latest cache, search cacheses in the
+    #    cache directory in reverse temporal order.
     my $dir = $self->{ _directory };
     return '' unless $dir;
 
@@ -336,18 +343,18 @@ sub get_latest_value
     opendir($dh, $dir);
 
     my @dh = ();
-    for my $dir (readdir($dh)) { push(@dh, $dir) if $dir =~ /^\d+/;}
+    for my $entry (readdir($dh)) { push(@dh, $entry) if $entry =~ /^\d+/o;}
     @dh = sort { $b <=> $a } @dh;
 
   DIR_ENTRY:
-    for my $_dir (@dh) {
-	next DIR_ENTRY if $_dir =~ /^\./;
-	next DIR_ENTRY if $_dir !~ /^\d/;
+    for my $_dirent (@dh) {
+	next DIR_ENTRY if $_dirent =~ /^\./o;
+	next DIR_ENTRY if $_dirent !~ /^\d/o;
 
-	# XXX-TODO: corrct rule to ignore /^\d{1,2}$/; ?
-	next DIR_ENTRY if $_dir =~ /^\d{1,2}$/;
+	# XXX-TODO: rule ignoring /^\d{1,2}$/ is correct ?
+	next DIR_ENTRY if $_dirent =~ /^\d{1,2}$/;
 
-	$file = File::Spec->catfile($dir, $_dir);
+	$file = File::Spec->catfile($dir, $_dirent);
 	$buf  = $self->_search($file, $key);
 
 	last DIR_ENTRY if $buf;
@@ -358,7 +365,7 @@ sub get_latest_value
 }
 
 
-# Descriptions: search value for $key in the $file
+# Descriptions: search value for $key in the $file.
 #    Arguments: OBJ($self) STR($file) STR($key)
 # Side Effects: none
 # Return Value: STR
@@ -373,7 +380,7 @@ sub _search
     return '' unless defined $file;
     return '' unless $file;
 
-    # negative cache
+    # XXX-TODO: negative cache is needed ?
     # XXX-TODO: when negative cache is expired ? this code is correct ?
     return '' if defined $hash->{ $file };
     $hash->{ $file } = 1;
@@ -436,7 +443,7 @@ sub set
     my $fh = $self->open;
 
     if (defined $fh) {
-	print $fh $key, "\t", $value, "\n";
+	printf $fh "%s\t%s\n", $key, $value;
 	$self->close;
     }
 }
