@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Merge.pm,v 1.7 2004/03/17 14:20:47 fukachan Exp $
+# $FML: Merge.pm,v 1.8 2004/03/18 13:25:54 fukachan Exp $
 #
 
 package FML::Merge;
@@ -40,18 +40,18 @@ sub new
     };
 
     # import variables: ml_* ...
-    for my $x (keys %$params) {
-	$me->{ "_$x" } = $params->{ $x } if defined $params->{ $x };
-    };
+    use FML::Merge::Config;
+    my $m_config = new FML::Merge::Config $params;
+    $me->{ _m_config } = $m_config;
 
     # back up to $ml_home_dir/.fml4rc/ directory.
     #    $ml_home_dir/.fml4rc/
     #    $ml_home_dir/.fml4rc/etc/
     use File::Spec;
-    my $ml_home_dir = $params->{ ml_home_dir } || '';
+    my $ml_home_dir = $m_config->get('ml_home_dir');
     if ($ml_home_dir) {
 	my $x_dir = File::Spec->catfile($ml_home_dir, ".fml4rc");
-	$me->{ _backup_dir } = $x_dir;
+	$m_config->set('backup_dir', $x_dir);
 	$curproc->mkdir($x_dir, "mode=private") unless -d $x_dir;
 
 	$x_dir = File::Spec->catfile($ml_home_dir, ".fml4rc", "etc");
@@ -99,15 +99,16 @@ back up old configuration files.
 # Return Value: none
 sub backup_old_config_files
 {
-    my ($self) = @_;
+    my ($self)   = @_;
+    my $m_config = $self->{ _m_config };
 
     use FML::Merge::FML4::Config;
     my $config = new FML::Merge::FML4::Config;
     my $files  = $config->get_old_config_files();
     for my $f (@$files) {
 	my $mode = $self->_need_copy() ? "copy" : $config->backup_mode($f);
-	my $src  = $self->old_file_path($f);
-	my $dst  = $self->backup_file_path($f);
+	my $src  = $m_config->old_file_path($f);
+	my $dst  = $m_config->backup_file_path($f);
 
 	if (-f $src) {
 	    if ($mode eq 'move') {
@@ -118,6 +119,9 @@ sub backup_old_config_files
 		printf STDERR "copying: %-30s -> %-30s\n", $src, $dst;
 		use IO::Adapter::AtomicFile;
 		IO::Adapter::AtomicFile->copy($src, $dst);
+		unless (-f $dst) {
+		    croak("$dst not created");
+		}
 	    }
 	    else {
 		print STDERR "error:   unknown mode (DO NOTHING).\n";
@@ -128,8 +132,8 @@ sub backup_old_config_files
     # continuous use: summary, log, seq ...
     my $cont_files = $config->get_continuous_use_files();
     for my $f (@$cont_files) {
-	my $src  = $self->backup_file_path($f);
-	my $dst  = $self->new_file_path($f);
+	my $src  = $m_config->backup_file_path($f);
+	my $dst  = $m_config->new_file_path($f);
 	printf STDERR "copying: %-30s -> %-30s\n", $src, $dst;
 	use IO::Adapter::AtomicFile;
         IO::Adapter::AtomicFile->copy($src, $dst);	
@@ -144,8 +148,9 @@ sub backup_old_config_files
 sub _need_copy
 {
     my ($self)       = @_;
-    my $old_home_dir = $self->{ _src_dir };
-    my $ml_home_dir  = $self->{ _ml_home_dir };
+    my $m_config     = $self->{ _m_config };
+    my $old_home_dir = $m_config->get('src_dir');
+    my $ml_home_dir  = $m_config->get('ml_home_dir');
 
     if ($old_home_dir ne $ml_home_dir) {
 	return 1;
@@ -188,14 +193,15 @@ not yet implementd.
 # Return Value: none
 sub disable_old_include_files
 {
-    my ($self) = @_;
+    my ($self)   = @_;
+    my $m_config = $self->{ _m_config };
 
     use FML::Merge::FML4::Config;
     my $config = new FML::Merge::FML4::Config;
     my $files  = $config->get_old_include_files();
 
     for my $f (@$files) {
-	my $file = $self->old_file_path($f);
+	my $file = $m_config->old_file_path($f);
 	print STDERR "disable: $file\n";
 	use IO::Adapter::AtomicFile;
         IO::Adapter::AtomicFile->copy($file, "$file.bak");
@@ -221,14 +227,15 @@ sub disable_old_include_files
 # Return Value: none
 sub enable_old_include_files
 {
-    my ($self) = @_;
+    my ($self)   = @_;
+    my $m_config = $self->{ _m_config };
 
     use FML::Merge::FML4::Config;
     my $config = new FML::Merge::FML4::Config;
     my $files  = $config->get_old_include_files();
 
     for my $f (@$files) {
-	my $file = $self->old_file_path($f);
+	my $file = $m_config->old_file_path($f);
 	print STDERR "enable $file\n";
 	print STDERR "   mv $file.bak $file\n";
     }
@@ -251,12 +258,12 @@ convert fml4 list files to fml8 style ones.
 # Return Value: none
 sub convert_list_files
 {
-    my ($self)  = @_;
-    my $curproc = $self->{ _curproc };
-    my $params  = $self->{ _params } || {};
+    my ($self)   = @_;
+    my $curproc  = $self->{ _curproc };
+    my $m_config = $self->{ _m_config };
 
     use FML::Merge::FML4::List;
-    my $list = new FML::Merge::FML4::List $curproc, $params;
+    my $list = new FML::Merge::FML4::List $curproc, $m_config;
     $list->convert();
 }
 
@@ -276,12 +283,11 @@ merge fml4 config.ph into fm8 config.cf file.
 # Return Value: none
 sub merge_into_config_cf
 {
-    my ($self)  = @_;
-    my $curproc = $self->{ _curproc };
-    my $params  = $self->{ _params } || {};
+    my ($self)   = @_;
+    my $m_config = $self->{ _m_config };
 
     # files to compare.
-    my $old_config_ph     = $self->old_file_path("config.ph");
+    my $old_config_ph     = $m_config->old_file_path("config.ph");
     my $default_config_ph = "/tmp/default_config.ph";
 
     use FML::Merge::FML4::config_ph;
@@ -299,7 +305,8 @@ sub merge_into_config_cf
 sub _inject_into_config_cf
 {
     my ($self, $diff) = @_;
-    my $config_cf = $self->new_file_path("config.cf");
+    my $m_config  = $self->{ _m_config };
+    my $config_cf = $m_config->new_file_path("config.cf");
     my $tmp       = "$config_cf.new.$$";
 
     print STDERR "merging: $config_cf\n";
@@ -375,53 +382,6 @@ sub _sort_order
     $y = "zzz_$y" if $y =~ /HOOK/o;
 
     $x cmp $y;
-}
-
-
-=head1 UTILITIES
-
-=cut
-
-
-# Descriptions: return file path at the source dir.
-#    Arguments: OBJ($self) STR($file)
-# Side Effects: none
-# Return Value: STR
-sub old_file_path
-{
-    my ($self, $file) = @_;
-    my $old_home_dir  = $self->{ _src_dir };
-
-    use File::Spec;
-    return File::Spec->catfile($old_home_dir, $file);
-}
-
-
-# Descriptions: return file path at $ml_home_dir.
-#    Arguments: OBJ($self) STR($file)
-# Side Effects: none
-# Return Value: STR
-sub new_file_path
-{
-    my ($self, $file) = @_;
-    my $ml_home_dir   = $self->{ _ml_home_dir };
-
-    use File::Spec;
-    return File::Spec->catfile($ml_home_dir, $file);
-}
-
-
-# Descriptions: return file path at backup-ed dir e.g. $ml_home_dir/.fml4rc.
-#    Arguments: OBJ($self) STR($file)
-# Side Effects: none
-# Return Value: STR
-sub backup_file_path
-{
-    my ($self, $file) = @_;
-    my $back_up_dir   = $self->{ _backup_dir };
-
-    use File::Spec;
-    return File::Spec->catfile($back_up_dir, $file);
 }
 
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: List.pm,v 1.3 2004/03/17 04:30:20 fukachan Exp $
+# $FML: List.pm,v 1.4 2004/03/18 13:25:56 fukachan Exp $
 #
 
 package FML::Merge::FML4::List;
@@ -28,16 +28,16 @@ FML::Merge::FML4::List - convert member list files.
 
 
 # Descriptions: constructor.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($m_config)
 # Side Effects: none
 # Return Value: OBJ
 sub new
 {
-    my ($self, $curproc, $params) = @_;
+    my ($self, $curproc, $m_config) = @_;
     my ($type) = ref($self) || $self;
     my $me     = { 
-	_curproc => $curproc,
-	_params  => $params,
+	_curproc  => $curproc,
+	_m_config => $m_config,
     };
 
     return bless $me, $type;
@@ -50,12 +50,8 @@ sub new
 # Return Value: none
 sub convert
 {
-    my ($self)  = @_;
-    my $curproc = $self->{ _curproc };
-    my $params  = $self->{ _params } || {};
-
-    use FML::Merge;
-    my $merge = new FML::Merge $curproc, $params;
+    my ($self)   = @_;
+    my $m_config = $self->{ _m_config };
 
     use FML::Merge::FML4::Config;
     my $config = new FML::Merge::FML4::Config;
@@ -67,7 +63,7 @@ sub convert
 	$fp =~ s/-/_/g;
 	$fp =~ s@/@_@g;
 	if ($self->can($fp)) {
-	    $self->$fp($merge);
+	    $self->$fp($m_config);
 	}
 	else {
 	    croak("cannot convert $file");
@@ -77,76 +73,76 @@ sub convert
 
 
 # Descriptions: convert fml4 actives to fml8 recipients.
-#    Arguments: OBJ($self) OBJ($merge)
+#    Arguments: OBJ($self) OBJ($m_config)
 # Side Effects: create fml8 file.
 # Return Value: none
 sub _convert_actives
 {
-    my ($self, $merge) = @_;
-    my $src = $merge->backup_file_path('actives');
-    my $dst = $merge->new_file_path('recipients');
+    my ($self, $m_config) = @_;
+    my $src = $m_config->backup_file_path('actives');
+    my $dst = $m_config->new_file_path('recipients');
 
     $self->_write_without_comment($src, $dst);
 } 
 
 
 # Descriptions: convert fml4 members to fml8 members.
-#    Arguments: OBJ($self) OBJ($merge)
+#    Arguments: OBJ($self) OBJ($m_config)
 # Side Effects: create fml8 file.
 # Return Value: none
 sub _convert_members
 {
-    my ($self, $merge) = @_;
-    my $src = $merge->backup_file_path('members');
-    my $dst = $merge->new_file_path('members');
+    my ($self, $m_config) = @_;
+    my $src = $m_config->backup_file_path('members');
+    my $dst = $m_config->new_file_path('members');
 
     $self->_write_without_comment($src, $dst);
 } 
 
 
 # Descriptions: convert fml4 members-admin to fml8 {recipients,members}-admin.
-#    Arguments: OBJ($self) OBJ($merge)
+#    Arguments: OBJ($self) OBJ($m_config)
 # Side Effects: create fml8 file.
 # Return Value: none
 sub _convert_members_admin
 {
-    my ($self, $merge) = @_;
-    my $src = $merge->backup_file_path('members-admin');
-    my $dst = $merge->new_file_path('members-admin');
+    my ($self, $m_config) = @_;
+    my $src = $m_config->backup_file_path('members-admin');
+    my $dst = $m_config->new_file_path('members-admin');
 
     $self->_write_without_comment($src, $dst);
 
-    $dst = $merge->new_file_path('recipients-admin');
+    $dst = $m_config->new_file_path('recipients-admin');
     $self->_write_without_comment($src, $dst);
 } 
 
 
 # Descriptions: convert fml4 moderators to fml8 {recipients,members}-moderator.
-#    Arguments: OBJ($self) OBJ($merge)
+#    Arguments: OBJ($self) OBJ($m_config)
 # Side Effects: create fml8 file.
 # Return Value: none
 sub _convert_moderators
 {
-    my ($self, $merge) = @_;
-    my $src = $merge->backup_file_path('moderators');
-    my $dst = $merge->new_file_path('members-moderator');
+    my ($self, $m_config) = @_;
+    my $src = $m_config->backup_file_path('moderators');
+    my $dst = $m_config->new_file_path('members-moderator');
 
     $self->_write_without_comment($src, $dst);
 
-    $dst = $merge->new_file_path('recipients-moderator');
+    $dst = $m_config->new_file_path('recipients-moderator');
     $self->_write_without_comment($src, $dst);
 } 
 
 
 # Descriptions: convert fml4 etc/passwd to fml8 etc/passwd-admin.
-#    Arguments: OBJ($self) OBJ($merge)
+#    Arguments: OBJ($self) OBJ($m_config)
 # Side Effects: create fml8 file.
 # Return Value: none
 sub _convert_etc_passwd
 {
-    my ($self, $merge) = @_;
-    my $src = $merge->backup_file_path('etc/passwd');
-    my $dst = $merge->new_file_path('etc/passwd-admin');
+    my ($self, $m_config) = @_;
+    my $src = $m_config->backup_file_path('etc/passwd');
+    my $dst = $m_config->new_file_path('etc/passwd-admin');
 
     print STDERR "warning: etc/passwrd conversion not yet implemented\n";
 } 
