@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.1.2.2 2003/06/02 00:03:32 fukachan Exp $
+# $FML: DB.pm,v 1.1.2.3 2003/06/02 23:27:11 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -17,19 +17,22 @@ use lib qw(../../../../fml/lib
 	   ../../../../img/lib
 	   );
 
-my $version = q$FML: DB.pm,v 1.1.2.2 2003/06/02 00:03:32 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.1.2.3 2003/06/02 23:27:11 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 my $debug = 1;
 
 my $keepalive = 1;
 
+#     map = { key => value } (normal order hash)
+# inv_map = { value => key } (inverted hash)
+#             or
+#           { value => "key key2 key3 ..."  } (inverted hash)
 my (@table_list) = qw(
 		      from who date subject to cc reply_to
 
 		      message_id
-		      message_id_to_key
-		      message_id_to_key_list
+		      inv_message_id
 
 		      ref_key_list
 		      next_key
@@ -40,7 +43,7 @@ my (@table_list) = qw(
 		      subdir
 
 		      month 
-		      month_to_key_list
+		      inv_month
 
 		      hint
 		      );
@@ -170,7 +173,7 @@ sub analyze
 
     my $db = $self->db_open();
 
-    $self->_update_id_max($db, $id);
+    $self->_update_max_id($db, $id);
 
     $self->_db_set($db, 'date',     $id, $date);     # Sun Jun 1 13:46:15 ...
     $self->_db_set($db, 'from',     $id, $from);     # rudo@nuinui.net
@@ -184,15 +187,12 @@ sub analyze
     $self->_db_set($db, 'id',       $id, $id);       # 100
 
     if ($mid) {
-	$self->_db_set($db, 'message_id',        $id, $mid); # 20030601rudo@nui
-	$self->_db_set($db, 'message_id_to_key', $mid, $id); # REVERSE_MAP
-
-	# { message_id => id1 id2 id3 ... } where id* refers this $mid.
-	$self->_db_add_list_entry($db, 'message_id_to_key_list', $mid, $id);
+	$self->_db_set($db, 'message_id',     $id, $mid); # 20030601rudo@nui
+	$self->_db_set($db, 'inv_message_id', $mid, $id); # REVERSE_MAP
     }
 
     # HASH { YYYY/MM => (id1 id2 id3 ..) }
-    $self->_db_add_list_entry($db, 'month_to_key_list', $month, $id);
+    $self->_db_array_add($db, 'inv_month', $month, $id);
 
     $self->_analyze_thread($db, $msg, $hdr);
 
@@ -202,11 +202,11 @@ sub analyze
 }
 
 
-# Descriptions: update $id_max in hint.
+# Descriptions: update $max_id in hint.
 #    Arguments: OBJ($self) HASH_REF($db) NUM($id)
 # Side Effects: update hint in $db
 # Return Value: none
-sub _update_id_max
+sub _update_max_id
 {
     my ($self, $db, $id) = @_;
 
@@ -215,13 +215,13 @@ sub _update_id_max
     unless ($self->{ _is_attachment }) {
 	_PRINT_DEBUG("mode = parent");
 
-	my $id_max = $self->_db_get($db, 'hint', 'id_max') || 0;
-	if (defined $id_max && $id_max) {
-	    my $value = $id_max < $id ? $id : $id_max;
-	    $self->_db_set($db, 'hint', 'id_max', $value);
+	my $max_id = $self->_db_get($db, 'hint', 'max_id') || 0;
+	if (defined $max_id && $max_id) {
+	    my $value = $max_id < $id ? $id : $max_id;
+	    $self->_db_set($db, 'hint', 'max_id', $value);
 	}
 	else {
-	    $self->_db_set($db, 'hint', 'id_max', $id);
+	    $self->_db_set($db, 'hint', 'max_id', $id);
 	}
     }
     else {
@@ -230,48 +230,48 @@ sub _update_id_max
 }
 
 
-# Descriptions: analyze thread information based on
-#                In-Reply-To: and References.
+# Descriptions: analyze thread information based on In-Reply-To: 
+#               and References. It updates HASH_REF(ref_key_list).
+#
+#               For example, "article 101" is a reply to "article 100"
+#               and references: shows 101 refers 90 and 91.
+#               "article 102" is a reply to 101 but without references.
+#               "article 91" is a reply to 90.
+#                       ref_key_list = {
+#                                101 => "102"
+#                                100 => "101",
+#                                 90 => "91 101",
+#                                 91 => "101",
+#                       };
+#
 #    Arguments: OBJ($self) HASH_REF($db) OBJ($msg) OBJ($hdr)
 # Side Effects: update db
 # Return Value: none
 sub _analyze_thread
 {
     my ($self, $db, $msg, $hdr) = @_;
-    my $id           = $self->get_key();
+    my $current_key  = $self->get_key();
     my $ra_ref       = $self->_address_clean_up($hdr->get('references'));
     my $ra_inreplyto = $self->_address_clean_up($hdr->get('in-reply-to'));
     my $in_reply_to  = $ra_inreplyto->[0] || '';
+    my %uniq         = ();
+    my $count        = 0;
 
-    # I. prepare and save thread related information 
-    #   1. analyze In-Reply-To: and prepare REVERSE MAP for them.
-    #   2. apply the same logic for all message-id's in References:
-    my %uniq  = ();
-    my $count = 0;
-
+    # search order is artibrary (see comments above).
   MSGID_SEARCH:
     for my $mid (@$ra_inreplyto, @$ra_ref) {
 	next MSGID_SEARCH unless defined $mid;
 
 	# ensure uniqueness
-	_PRINT_DEBUG("DUP: $mid") if $uniq{$mid};
 	next MSGID_SEARCH if $uniq{$mid};
 	$uniq{$mid} = 1;
+
 	$count++;
 
-	# REVERSE_MAP { message-id => (id1 id2 id3 ...)
-	$self->_db_add_list_entry($db, 'message_id_to_key_list', $mid, $id);
-
-	# we extract id1 from MAP { message-id => $idlist = (id1 id2 id3 ...) }
-	# and define id1 = $head_id.
-	# XXX $id_list is not ARRAY but STR such as "id1 id2 id3 ...";
-	my $id_list = $self->_db_get($db, 'message_id_to_key_list', $mid);
-	my $head_id = _head_of_list_str($id_list) || 0;
-
-	# REVERSE_MAP { head_id(id1) => (id1 id2 id3 ...) }
-	if ($head_id && $head_id != $id) {
-	    $self->_db_add_list_entry($db, 'ref_key_list', $head_id, $id);
-	    _PRINT_DEBUG("THREAD SEARCH: $head_id => $id ($id_list)");
+	my $head_id = $self->_db_get($db, 'inv_message_id', $mid) || 0;
+	if ($head_id && $head_id != $current_key) {
+	    $self->_db_array_add($db, 'ref_key_list', $head_id, $current_key);
+	    _PRINT_DEBUG("THREAD SEARCH: $head_id => $current_key");
 	}
 	else {
 	    _PRINT_DEBUG("THREAD SEARCH: NOT FOUND");
@@ -287,14 +287,12 @@ sub _analyze_thread
     my $idp = 0;
     if (defined $in_reply_to) {
 	# XXX idp (id pointer) = id1 by _head_of_list_str( (id1 id2 id3 ...)
-	my $id_list = 
-	    $self->_db_get($db, 'message_id_to_key_list', $in_reply_to);
-	$idp = _head_of_list_str($id_list);
+	$idp = $self->_db_get($db, 'inv_message_id', $in_reply_to);
     }
     # 2. if not found, try to use References: "in reverse order"
     elsif (@$ra_ref) {
 	my (@rra) = reverse(@$ra_ref);
-	$idp = $rra[0];
+	$idp = $rra[0] || 0;
     }
     # 3. no link to previous one found
     else {
@@ -303,20 +301,20 @@ sub _analyze_thread
 
     # 4. if $idp (link to previous message) found, 
     if (defined($idp) && $idp && $idp =~ /^\d+$/) {
-	if ($idp != $id) {
-	    $self->_db_set($db, 'prev_key', $id, $idp);
+	if ($idp != $current_key) {
+	    $self->_db_set($db, 'prev_key', $current_key, $idp);
 	}
 
 	# We should not overwrite "id => next_key" assinged already.
 	# We should preserve the first "id => next_key" value.
 	# but we may overwride it if "id => id (itself)", wrong link.
 	my $nid = $self->_db_get($db, 'next_key', $idp) || 0;
-	unless ($nid && $nid != $idp && $id != $idp) {
-	    $self->_db_set($db, 'next_key', $idp, $id);
+	unless ($nid && $nid != $idp && $current_key != $idp) {
+	    $self->_db_set($db, 'next_key', $idp, $current_key);
 	}
     }
     else {
-	_PRINT_DEBUG("no prev thread link (id=$id)");
+	_PRINT_DEBUG("no prev thread link (key=$current_key)");
     }
 }
 
@@ -413,7 +411,7 @@ sub _str_to_array_ref
 #    Arguments: HASH_REF($db) STR($dbname) STR($key) STR($value)
 # Side Effects: update database
 # Return Value: none
-sub _db_add_list_entry
+sub _db_array_add
 {
     my ($self, $db, $table, $key, $value) = @_;
     my $found = 0;
