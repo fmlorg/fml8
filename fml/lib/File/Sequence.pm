@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.29 2002/11/17 08:00:37 fukachan Exp $
+# $FML: Sequence.pm,v 1.30 2002/12/23 14:35:32 fukachan Exp $
 #
 
 package File::Sequence;
@@ -365,14 +365,14 @@ sub _search_max_id_from_top
       PEBOT_SEARCH:
 	while ($pebot > 0) {
 	    last PEBOT_SEARCH if defined $hash->{ $pebot - $unit };
-	    last PEBOT_SEARCH if(($pebot - $unit) <= 0);
+	    last PEBOT_SEARCH if ($pebot - $unit) <= 0;
 	    $pebot -= $unit;
 	}
 
 	# decrement by 1.
 	while(! defined $hash->{ $pebot - 1 }) {
 	    $pebot--;
-	    return 0 if($pebot <= 0);
+	    return 0 if $pebot <= 0;
 	}
 
 	return $pebot;

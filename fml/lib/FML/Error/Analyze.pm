@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.16 2003/01/07 08:38:32 fukachan Exp $
+# $FML: Analyze.pm,v 1.17 2003/01/25 12:48:41 fukachan Exp $
 #
 
 package FML::Error::Analyze;
@@ -87,7 +87,7 @@ sub simple_count
 	if (defined $bufarray) {
 	    for my $buf (@$bufarray) {
 		($time, $status, $reason) = split(/\s+/, $buf);
-		next if((time - $time) > (86400*$daylimit));
+		next if ((time - $time) > (86400*$daylimit));
 		if ($buf =~ /status=5/i) {
 		    $count++;
 		    $summary->{ $addr } = $count;
@@ -138,7 +138,7 @@ sub simple_count2
 	if (defined $bufarray) {
 	    for my $buf (@$bufarray) {
 		($time, $status, $reason) = split(/\s+/, $buf);
-		next if((time - $time) > (86400*$daylimit));
+		next if ((time - $time) > (86400*$daylimit));
 		if ($buf =~ /status=5/i) {
 		    $count++;
 		    $summary->{ $addr } = $count;
@@ -205,7 +205,7 @@ sub error_continuity
 	if (defined $bufarray) {
 	    for my $buf (@$bufarray) {
 		($time, $status, $reason) = split(/\s+/, $buf);
-		next if((time - $time) > (86400*$daylimit));
+		next if ((time - $time) > (86400*$daylimit));
 
 		if ($buf =~ /status=5/i) {
 		    unless (defined $summary->{ $addr }) {
@@ -275,7 +275,7 @@ sub error_continuity2
 	if (defined $bufarray) {
 	    for my $buf (@$bufarray) {
 		($time, $status, $reason) = split(/\s+/, $buf);
-		next if((time - $time) > (86400*$daylimit));
+		next if ((time - $time) > (86400*$daylimit));
 
 		if ($buf =~ /status=5/i) {
 		    unless (defined $summary->{ $addr }) {

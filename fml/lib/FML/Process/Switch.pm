@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.82 2003/01/05 05:13:49 fukachan Exp $
+# $FML: Switch.pm,v 1.83 2003/01/11 16:05:20 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -314,9 +314,9 @@ sub _module_specific_options
 		  reverse!
 		  params=s -f=s -c=s);
     }
-    elsif($myname eq 'thread.cgi'    ||
-	  $myname eq 'fmlthread.cgi' ||
-	  $myname eq 'threadview.cgi') {
+    elsif ($myname eq 'thread.cgi'    ||
+	   $myname eq 'fmlthread.cgi' ||
+	   $myname eq 'threadview.cgi') {
 	return ();
     }
     elsif ($myname eq 'fmlconf') {

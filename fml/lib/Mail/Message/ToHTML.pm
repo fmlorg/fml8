@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.32 2003/01/11 15:14:25 fukachan Exp $
+# $FML: ToHTML.pm,v 1.33 2003/01/11 15:16:35 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.32 2003/01/11 15:14:25 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.33 2003/01/11 15:16:35 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -1782,11 +1782,12 @@ sub update_id_index
     my $id_max = $db->{ _info }->{ id_max };
 
     $self->_print_ul($wh, $db, $code);
-    if($order eq 'reverse') {
+    if ($order eq 'reverse') {
 	for my $id ( reverse (1 .. $id_max )) {
 	    $self->_print_li_filename($wh, $db, $id, $code);
 	}
-    } else {
+    } 
+    else {
 	for my $id ( 1 .. $id_max ) {
 	    $self->_print_li_filename($wh, $db, $id, $code);
 	}
@@ -1970,12 +1971,13 @@ sub _update_id_monthly_index
     my (@list) = split(/\s+/, $db->{ _monthly_idlist }->{ $this_month });
 
     $self->_print_ul($wh, $db, $code);
-    if($order eq 'reverse') {
+    if ($order eq 'reverse') {
 	for my $id (reverse sort {$a <=> $b} @list) {
 	    next unless $id =~ /^\d+$/;
 	    $self->_print_li_filename($wh, $db, $id, $code);
 	}
-    } else {
+    } 
+    else {
 	for my $id (sort {$a <=> $b} @list) {
 	    next unless $id =~ /^\d+$/;
 	    $self->_print_li_filename($wh, $db, $id, $code);
