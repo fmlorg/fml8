@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.38 2002/01/16 13:34:03 fukachan Exp $
+# $FML: Lite.pm,v 1.39 2002/02/01 12:04:02 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -15,7 +15,7 @@ use Carp;
 my $debug = 0;
 my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::HTML::Lite</A>";
 
-my $version = q$FML: Lite.pm,v 1.38 2002/01/16 13:34:03 fukachan Exp $;
+my $version = q$FML: Lite.pm,v 1.39 2002/02/01 12:04:02 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -311,7 +311,7 @@ sub _disable_html_tag_in_file
 #    Arguments: OBJ($self) NUM($id)
 # Side Effects: none
 # Return Value: STR or UNDEF
-sub message_filename
+sub html_filename
 {
     my ($self, $id) = @_;
 
@@ -328,7 +328,7 @@ sub message_filename
 #    Arguments: OBJ($self) NUM($id)
 # Side Effects: none
 # Return Value: STR
-sub message_filepath
+sub html_filepath
 {
     my ($self, $id) = @_;
     my $html_base_dir = $self->{ _html_base_directory };
@@ -361,7 +361,7 @@ sub _init_htmlfy_rfc822_message
     if (defined $args->{ id }) {
 	my $html_base_dir = $self->{ _html_base_directory };
 	$id  = $args->{ id };
-	$dst = $self->message_filepath($id);
+	$dst = $self->html_filepath($id);
     }
     # this object is an attachment if parent_id is specified.
     elsif (defined $args->{ parent_id }) {
@@ -828,7 +828,7 @@ sub cache_message_info
 
     _PRINT_DEBUG("   cache_message_info( id=$id ) running");
 
-    $db->{ _filename }->{ $id } = $self->message_filename($id);
+    $db->{ _filename }->{ $id } = $self->html_filename($id);
     $db->{ _filepath }->{ $id } = $dst;
 
     # HASH { $id => Date: }
@@ -1195,7 +1195,7 @@ sub evaluate_relation
     my $db   = $self->{ _db };
     my $file = $db->{ _filepath }->{ $id };
 
-    my $next_file      = $self->message_filepath( $id + 1 );
+    my $next_file      = $self->html_filepath( $id + 1 );
     my $prev_id        = $id > 1 ? $id - 1 : undef;
     my $next_id        = $id + 1 if -f $next_file;
     my $prev_thread_id = $db->{ _prev_id }->{ $id } || undef;
@@ -1216,10 +1216,10 @@ sub evaluate_relation
 	}
     }
 
-    my $link_prev_id        = $self->message_filename($prev_id);
-    my $link_next_id        = $self->message_filename($next_id);
-    my $link_prev_thread_id = $self->message_filename($prev_thread_id);
-    my $link_next_thread_id = $self->message_filename($next_thread_id);
+    my $link_prev_id        = $self->html_filename($prev_id);
+    my $link_next_id        = $self->html_filename($next_id);
+    my $link_prev_thread_id = $self->html_filename($prev_thread_id);
+    my $link_next_thread_id = $self->html_filename($next_thread_id);
 
     my $subject = {};
     if (defined $prev_id) {
