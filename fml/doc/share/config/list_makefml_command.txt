@@ -8,7 +8,9 @@ bye
 byeadmin
 byepriv
 chaddr
+changepassword
 check
+chpass
 deladmin
 delmoderator
 deluser
@@ -20,6 +22,7 @@ edit
 file
 get
 htmlify
+initpass
 list
 log
 ls
@@ -28,6 +31,7 @@ newml
 off
 on
 pass
+passwd
 password
 remove
 resign
