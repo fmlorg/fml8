@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.21 2002/11/19 14:13:22 fukachan Exp $
+# $FML: Queue.pm,v 1.22 2002/12/20 03:50:27 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -106,14 +106,14 @@ sub new
       File::Spec->catfile($dir, "info", "recipients", $id);
 
     # create directories in queue if not exists.
-    for ($dir,
-	 File::Spec->catfile($dir, "active"),
-	 File::Spec->catfile($dir, "new"),
-	 File::Spec->catfile($dir, "deferred"),
-	 File::Spec->catfile($dir, "info"),
-	 File::Spec->catfile($dir, "info", "sender"),
-	 File::Spec->catfile($dir, "info", "recipients")) {
-	-d $_ || _mkdirhier($_);
+    for my $_dir ($dir,
+		File::Spec->catfile($dir, "active"),
+		File::Spec->catfile($dir, "new"),
+		File::Spec->catfile($dir, "deferred"),
+		File::Spec->catfile($dir, "info"),
+		File::Spec->catfile($dir, "info", "sender"),
+		File::Spec->catfile($dir, "info", "recipients")) {
+	-d $_dir || _mkdirhier($_dir);
     }
 
     return bless $me, $type;
@@ -213,10 +213,11 @@ sub list
     my $dh = new DirHandle $dir;
     if (defined $dh) {
 	my @r = ();
+	my $file;
 
-	while (defined ($_ = $dh->read)) {
-	    next unless /^\d+/;
-	    push(@r, $_);
+	while (defined ($file = $dh->read)) {
+	    next unless $file =~ /^\d+/o;
+	    push(@r, $file);
 	}
 
 	return \@r;
@@ -268,9 +269,10 @@ sub getidinfo
     # recipient array
     $fh = new FileHandle File::Spec->catfile($dir, "info", "recipients", $id);
     if (defined $fh) {
-	while (defined( $_ = $fh->getline)) {
-	    s/[\n\s]*$//;
-	    push(@recipients, $_);
+	my $buf;
+	while (defined($buf = $fh->getline)) {
+	    $buf =~ s/[\n\s]*$//;
+	    push(@recipients, $buf);
 	}
 	$fh->close;
     }
@@ -402,7 +404,7 @@ sub set
 	my $fh = new FileHandle ">> $qf_recipients";
 	if (defined $fh) {
 	    # XXX-TODO: validate $value == ARRAY_REF.
-	    for (@$value) { print $fh $_, "\n";}
+	    for my $rcpt (@$value) { print $fh $rcpt, "\n";}
 	    $fh->close;
 	}
     }
@@ -415,8 +417,10 @@ sub set
 		my $obj = new IO::Adapter $map;
 		if (defined $obj) {
 		    $obj->open();
-		    while ($_ = $obj->get_next_key()) {
-			print $fh $_, "\n";
+
+		    my $buf;
+		    while ($buf = $obj->get_next_key()) {
+			print $fh $buf, "\n";
 		    }
 		    $obj->close();
 		}
@@ -482,11 +486,11 @@ sub remove
 {
     my ($self) = @_;
 
-    for ($self->{ _new_qf },
-	 $self->{ _active_qf },
-	 $self->{ _info }->{ sender },
-	 $self->{ _info }->{ recipients }) {
-	unlink $_ if -f $_;
+    for my $f ($self->{ _new_qf },
+	       $self->{ _active_qf },
+	       $self->{ _info }->{ sender },
+	       $self->{ _info }->{ recipients }) {
+	unlink $f if -f $f;
     }
 }
 
@@ -500,10 +504,10 @@ sub valid
     my ($self) = @_;
     my $ok = 0;
 
-    for ($self->{ _active_qf },
-	 $self->{ _info }->{ sender },
-	 $self->{ _info }->{ recipients }) {
-	$ok++ if -f $_ && -s $_;
+    for my $f ($self->{ _active_qf },
+	       $self->{ _info }->{ sender },
+	       $self->{ _info }->{ recipients }) {
+	$ok++ if -f $f && -s $f;
     }
 
     ($ok == 3) ? 1 : 0;
@@ -531,7 +535,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
