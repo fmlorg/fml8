@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: errormessage.sgml,v 1.1 2001/05/31 12:32:18 fukachan Exp $
 -->
 
 <sect1>
@@ -71,11 +71,9 @@ catgets(catd, set_id, msg_id, char *s);
 	</para>
 	</footnote>
 例えば、次のような使い方をします。
-<example>
 <screen>
 printf(catgets(catd, 30,  4,  "%s: Internal match error.\n"), progname);
 </screen>
-</example>
 この時、
 locale の定義ファイル(
 例: /usr/pkg/share/nls/ja_JP.EUC/プログラム名.cat
@@ -87,7 +85,26 @@ locale の定義ファイル(
 
 <sect3>
    <title>
+   fml 5.0: とりあえずの方針     
    </title>
+
+<para>
+特定の一つのキーワードだけ変えたい場合に便利なのは、
+一つのキーワードごとに別のファイルにしておくことです。
+とりあえず、その方法を試してみることにします。
+</para>
+
+<para>
+そういうわけで
+<screen>
+FML::Message::ja::キーワード
+</screen>
+というクラスをじゃんじゃん作る。例えば
+<screen>
+FML::Message::ja::not_found
+</screen>
+などと2、300個のファイルが作られることになる（まじか？）。
+</para>
 
 </sect3>
 
