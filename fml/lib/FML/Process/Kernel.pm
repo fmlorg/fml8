@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.205 2004/01/03 01:53:47 fukachan Exp $
+# $FML: Kernel.pm,v 1.206 2004/01/14 13:39:58 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1323,7 +1323,8 @@ sub logerror
 }
 
 
-# Descriptions: informational message CUI shows into STDERR.
+# Descriptions: informational message CUI shows logged 
+#               and forwarded into STDERR.
 #    Arguments: OBJ($curproc) STR($msg) HASH_REF($msg_args)
 # Side Effects: none
 # Return Value: none
@@ -1336,7 +1337,7 @@ sub ui_message
 
     $curproc->log_message($msg, {
 	msg_args => $msg_args,
-	level    => 'info',
+	level    => $msg_args->{ level } || 'info',
 	caller   => \@c,
     });
 }
