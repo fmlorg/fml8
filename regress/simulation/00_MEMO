@@ -17,9 +17,7 @@
 	値をよろしく変換する （←ここがむずかしー）
 
 
-[TODO]	libexec/error の改良
-
-   「エラーメールのフォワードについて改良せな」
+[TODO]	libexec/error エラーメールのフォワードについて改良
 
 	X-Sequence: fml-devel 451
 
@@ -32,7 +30,8 @@
 	ヘッダ情報＋そのエラーメールのアドレスの分析レポートとかなんか
 	付けてやれやーとかちょっと思っているっす。
 
-   「このＭＬはもうありません」
+
+[TODO]	「このＭＬはもうありません」
 
 	libexec/relocated , Process/Relocated とかじゃだめだね。
 	libexec/ の下の全部のプログラム全部が対応するべきのような…
@@ -260,6 +259,11 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 
+[TODO]	HOOK のガイドライン？
+
+	どの HOOK あたりで、なにをかくべきか？
+
+
 [TODO]	01_RFC_IO_ADAPTER.txt
 [TODO]	01_RFC_UPGRADE.txt
 
@@ -341,4 +345,4 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 ----------
-$FML: 00_MEMO,v 1.82 2003/05/25 16:10:06 fukachan Exp $
+$FML: 00_MEMO,v 1.83 2003/05/26 13:10:12 fukachan Exp $
