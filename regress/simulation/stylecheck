@@ -1,0 +1,53 @@
+#!/usr/bin/env perl
+#
+# $FML$
+#
+
+use strict;
+use Carp;
+
+my $in_perldoc = 0;
+my $package    = '';
+my $fn         = '';
+my $PrevARGV   = '';
+my $num_file   = 0;
+ 
+while (<>) {
+    next if /^\#/;
+
+    if ($ARGV ne $PrevARGV) {
+	$in_perldoc = 0;
+	$package    = '';
+	$fn         = '';	
+	$PrevARGV = $ARGV;
+	$num_file++;
+	print STDERR "reset $num_file $ARGV\n" if $ENV{'debug'};
+    }
+
+    $in_perldoc = 1 if /^=/;
+
+    if (/^package (\S+);/) { 
+	$package = $1;
+	next;
+    }
+
+    if (/^=cut/) { 
+	$in_perldoc = 0;
+	next;
+    }
+
+    if (/^sub (\S+)/) {
+	$fn = $1;
+
+	if ($in_perldoc) {
+	    print STDERR "${package}::$fn is in document ???\n";
+	}
+	else {
+	    print STDERR "${package}::$fn is ok\n" if $ENV{'debug'};
+	}
+    }
+
+	if (/^1\;\s*$/ && $in_perldoc) {
+	    print STDERR "${package} ends in document ???\n";
+	}
+}
