@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ErrorStatus.pm,v 1.1 2001/04/08 13:25:37 fukachan Exp $
+# $FML: ErrorStatus.pm,v 1.2 2001/12/22 09:21:00 fukachan Exp $
 #
 
 package ErrorStatus;
@@ -58,6 +58,10 @@ return $message which is saved by C<error_set($msg)>.
 =cut
 
 
+# Descriptions: set the error message
+#    Arguments: OBJ($self) STR($mesg)
+# Side Effects: update OBJ
+# Return Value: STR
 sub error_set
 {
     my ($self, $mesg) = @_;
@@ -65,23 +69,35 @@ sub error_set
 }
 
 
+# Descriptions: get the error message
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
 sub error
 {
-    my ($self, $args) = @_;
+    my ($self) = @_;
     return $self->{'_error_reason'};
 }
 
 
+# Descriptions: get the error message
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
 sub errstr
 {
-    my ($self, $args) = @_;
+    my ($self) = @_;
     return $self->{'_error_reason'};
 }
 
 
+# Descriptions: clear the error message
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
 sub error_clear
 {
-    my ($self, $args) = @_;
+    my ($self) = @_;
     my $msg = $self->{'_error_reason'};
     undef $self->{'_error_reason'} if defined $self->{'_error_reason'};
     undef $self->{'_error_action'} if defined $self->{'_error_action'};
@@ -95,7 +111,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
