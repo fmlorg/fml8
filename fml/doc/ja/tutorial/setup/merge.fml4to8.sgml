@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: merge.fml4to8.sgml,v 1.1 2004/03/18 08:59:35 fukachan Exp $
 -->
 
 
@@ -91,6 +91,65 @@ fml8 は fml4 を一旦忘れて、一から再設計、再コーディングされたソフトウ
 
 <para>
 また、対応関係があったとしても、一対一対応でないものも多いです。
+</para>
+
+<para>
+いくつかの例をあげよう。
+</para>
+
+<para>
+「登録されたユーザからのみ投稿が可能」なのは fml4 でも fml8 でもデフォ
+ルトです。もし、誰からの投稿も許す場合、fml4 では
+<screen>
+$PERMIT_POST_FROM = "anyone";
+</screen>
+としますが、fml8 では
+<screen>
+article_post_restrictions = reject_system_special_accounts
+                            permit_anyone
+                            reject
+</screen>
+となります。
+</para>
+
+<para>
+デフォルトでは「Subjectのタグがない」。これも同じです。
+しかしながら変更はこうなります。fml4 での
+<screen>
+$SUBJECT_TAG_TYPE = '[:]';
+</screen>
+は fml8 の
+<screen>
+article_header_rewrite_rules += rewrite_article_subject_tag
+article_subject_tag = [$ml_name:%05d]
+</screen>
+に相当します。
+</para>
+
+<para>
+「members コマンドなどが使えない」これは fml8 ではデフォルトです。
+fml4 の以下のコマンドに対応するものは不要です。
+<screen>
+&DENY_PROCEDURE('member');
+&DENY_PROCEDURE('active');
+&DENY_PROCEDURE('members');
+&DENY_PROCEDURE('actives');
+&DENY_PROCEDURE('status');
+&DENY_PROCEDURE('stat');
+</screen>
+</para>
+
+<para>
+fml4 以前および fml4 非推奨設定の状態では「フィルタは使わない」ように
+なっています。しかし、fml8 では「フィルタを使う」がデフォルトです。
+そのため、場合によっては 
+/etc/fml/site_default_config.cf で一度「デフォルトでは使わない」に設定
+を変更し、その上で、あらためて以下の例外ルールを適用する必要があります。
+</para>
+
+<para>
+fml4 と異なり、subscribe, chaddr, unsubscribe はconfirmation が必須と
+なっています。現状、confirmation を抑制することは出来ません。
 </para>
 
 </sect1>
