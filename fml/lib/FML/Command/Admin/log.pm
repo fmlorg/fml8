@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: log.pm,v 1.25 2004/02/01 14:39:00 fukachan Exp $
+# $FML: log.pm,v 1.26 2004/02/15 04:38:29 fukachan Exp $
 #
 
 package FML::Command::Admin::log;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::log - log file operations
+FML::Command::Admin::log - log file operations.
 
 =head1 SYNOPSIS
 
@@ -45,7 +45,7 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
@@ -69,7 +69,7 @@ sub process
 }
 
 
-# Descriptions: show cgi menu
+# Descriptions: show cgi menu.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none
@@ -99,9 +99,9 @@ sub _show_log
     my $line_max   = 0;
     my $charset    = $curproc->get_charset($is_cgi ? "cgi" : "log_file");
 
-    # run "tail -30 log" by default.
+    # run "tail -100 log" by default.
     my $config       = $curproc->config();
-    my $last_n_lines = $config->{ log_command_tail_starting_location } || 30;
+    my $last_n_lines = $config->{ log_command_tail_starting_location } || 100;
 
     use Mail::Message::Encode;
     my $encode = new Mail::Message::Encode;
