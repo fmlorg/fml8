@@ -1043,9 +1043,9 @@ error_analyzer_cache_size		=	14
 
 # Descriptions: FML::Error::Analyze 中の関数名。
 #      History: none
-#        Value: simple_count
+#        Value: simple_count / error_continuity
 #     Examples: simple_count
-error_analyzer_function			=	simple_count
+error_analyzer_function			=	error_continuity
 
 
 # Descriptions: simple_count のエラー回数の上限

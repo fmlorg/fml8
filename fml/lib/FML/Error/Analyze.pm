@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.2 2002/08/07 15:06:58 fukachan Exp $
+# $FML: Analyze.pm,v 1.1 2002/08/16 00:59:34 fukachan Exp $
 #
 
 package FML::Error::Analyze;
@@ -91,7 +91,7 @@ sub simple_count
 }
 
 
-sub simple_count_by_day
+sub error_continuity
 {
     my ($self, $curproc, $data) = @_;
     my ($addr, $bufarray, $count);
