@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: unsubscribe.pm,v 1.10 2002/03/19 08:00:18 fukachan Exp $
+# $FML: unsubscribe.pm,v 1.11 2002/03/19 10:12:45 fukachan Exp $
 #
 
 package FML::Command::Admin::unsubscribe;
@@ -97,13 +97,13 @@ sub cgi_menu
     my ($self, $curproc, $args, $command_args) = @_;
     my $r = '';
 
-    eval q{ 
+    eval q{
 	use FML::CGI::Admin::User;
 	my $obj = new FML::CGI::Admin::User;
 	$obj->cgi_menu($curproc, $args, $command_args);
     };
     if ($r = $@) {
-	croak($r); 
+	croak($r);
     }
 }
 

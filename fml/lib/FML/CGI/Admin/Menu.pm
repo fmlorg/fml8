@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.5 2002/03/19 08:02:05 fukachan Exp $
+# $FML: Menu.pm,v 1.6 2002/03/20 07:31:54 fukachan Exp $
 #
 
 package FML::CGI::Admin::Menu;
@@ -75,7 +75,7 @@ sub html_start
     my $title   = "${ml_name}\@${domain} configuration interface";
     my $color   = $config->{ cgi_main_menu_color } || '#FFFFFF';
     my $charset = $config->{ cgi_charset } || 'euc-jp';
-    
+
     # o.k start html
     print start_html(-title   => $title,
 		     -lang    => $charset,
@@ -154,7 +154,7 @@ sub run_cgi_navigator
     my $ml_list = $curproc->get_ml_list($args);
     my $address = $curproc->safe_param_address() || '';
     my $config  = $curproc->{ config };
-    my $command_list = 
+    my $command_list =
 	$config->get_as_array_ref('available_commands_for_admin_cgi');
 
     # main menu
@@ -165,14 +165,14 @@ sub run_cgi_navigator
     print start_form(-action=>$action, -target=>$target);
 
     print "mailing list:\n";
-    print scrolling_list(-name    => 'ml_name', 
+    print scrolling_list(-name    => 'ml_name',
 			 -values  => $ml_list,
 			 -default => $ml_name,
 			 -size    => 5);
     print "\n<BR>\n";
 
     print "  command:\n";
-    print scrolling_list(-name   => 'command', 
+    print scrolling_list(-name   => 'command',
 			 -values => $command_list,
 			 -size   => 5);
     print "\n<BR>\n";

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: password.pm,v 1.14 2002/03/19 10:12:45 fukachan Exp $
+# $FML: password.pm,v 1.1 2002/03/23 14:24:38 fukachan Exp $
 #
 
 package FML::Command::Admin::password;
@@ -77,7 +77,7 @@ sub process
 sub rewrite_prompt
 {
     my ($self, $curproc, $command_args, $rbuf) = @_;
-    
+
     if (defined $rbuf) {
 	$$rbuf =~ s/^(.*(password|pass)\s+).*/$1 ********/;
     }

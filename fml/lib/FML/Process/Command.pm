@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.39 2002/03/22 15:30:44 fukachan Exp $
+# $FML: Command.pm,v 1.40 2002/03/23 12:22:03 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -311,12 +311,12 @@ sub _auth_admin
 	my $config = $curproc->{ config };
 	my $rules  = $config->get_as_array_ref('admin_command_restrictions');
 	for my $rule (@$rules) {
-	    if ($rule eq 'reject') { 
+	    if ($rule eq 'reject') {
 		return 0;
 	    }
 
 	    $is_auth = $obj->$rule($curproc, $args, $optargs);
-	    if ($is_auth) { 
+	    if ($is_auth) {
 		return $is_auth;
 	    }
 	    else {
@@ -363,9 +363,9 @@ sub _evaluate_command
     my $eval = $config->get_hook( 'command_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
-    # 
+    #
     # credential
-    # 
+    #
     my $cred      = $curproc->{ credential };
     my $is_member = $cred->is_member($curproc, $args);
 
@@ -374,9 +374,9 @@ sub _evaluate_command
     my $is_admin  = $cred->is_privileged_member($curproc, $args);
     my $is_auth   = 0;
 
-    # 
+    #
     # main loop
-    # 
+    #
     my ($command, $comname, $comsubname, $opts);
 
     # firstly, prompt (for politeness :) to show processing ...
@@ -425,7 +425,7 @@ sub _evaluate_command
 
 		$data =~ s/.*(password|pass)\s+//;
 		my $optargs = { address => $sender, password => $data };
-		
+
 		# try auth by FML::Command::Auth;
 		$is_auth = $curproc->_auth_admin($args, $optargs);
 		Log("authenticated as an ML administrator") if $is_auth;

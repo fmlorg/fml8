@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.1 2002/03/22 15:30:45 fukachan Exp $
+# $FML: Auth.pm,v 1.2 2002/03/23 14:24:35 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -43,14 +43,14 @@ sub new
 
 
 sub reject
-{ 
+{
     return 0;
 }
 
 
 sub check_password
 {
-    my ($self, $curproc, $args, $optargs) = @_; 
+    my ($self, $curproc, $args, $optargs) = @_;
     my $config   = $curproc->{ config };
     my $maplist  = $config->get_as_array_ref('admin_member_passwd_maps');
     my $address  = $optargs->{ address };
@@ -79,7 +79,7 @@ sub check_password
 		if ($p_infile eq $p_input) {
 		    Log("check_password: password match");
 		    return 1;
-		} 
+		}
             }
         }
     }

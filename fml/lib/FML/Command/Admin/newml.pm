@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.18 2002/03/19 13:18:16 fukachan Exp $
+# $FML: newml.pm,v 1.19 2002/03/20 03:19:03 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -136,7 +136,7 @@ sub _install_template_files
     my $template_dir = $curproc->template_files_dir_for_newml();
     my $ml_home_dir  = $params->{ ml_home_dir };
 
-    my $newml_template_files = 
+    my $newml_template_files =
 	$config->get_as_array_ref('newml_command_template_files');
     for my $file (@$newml_template_files) {
 	my $src = File::Spec->catfile($template_dir, $file);
@@ -189,9 +189,9 @@ sub _setup_cgi_interface
     my $template_dir = $curproc->template_files_dir_for_newml();
     my $config       = $curproc->{ config };
 
-    # 
+    #
     # 1. create directory path if needed
-    # 
+    #
     eval q{ use File::Utils qw(mkdirhier);};
     croak($@) if $@;
 
@@ -205,9 +205,9 @@ sub _setup_cgi_interface
 	}
     }
 
-    # 
+    #
     # 2. disable CGI access by creating a dummy .htaccess
-    # 
+    #
     {
 	use File::Spec;
 	my $src   = File::Spec->catfile($template_dir, 'dot_htaccess');
@@ -218,9 +218,9 @@ sub _setup_cgi_interface
 	_install($src, $dst, $params);
     }
 
-    # 
+    #
     # 3. install admin/{menu,config,thread}.cgi
-    # 
+    #
     {
 	use File::Spec;
 	my $libexec_dir = $config->{ fml_libexec_dir };
@@ -248,9 +248,9 @@ sub _setup_cgi_interface
 	}
     }
 
-    # 
+    #
     # 4. install ml-admin/
-    # 
+    #
 }
 
 

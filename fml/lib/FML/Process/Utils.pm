@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.15 2002/03/18 15:22:36 fukachan Exp $
+# $FML: Utils.pm,v 1.16 2002/03/20 03:20:45 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -178,7 +178,7 @@ sub command_line_options
 
 =head2 ml_domain()
 
-not yet implemenetd properly. 
+not yet implemenetd properly.
 Anyway, return the default domain defined in /etc/fml/main.cf.
 
 =cut
@@ -446,7 +446,7 @@ sub article_id_max
 
 return hints as HASH_REF.
 It is useful to switch process behabiour based on this hints.
-This function is used in CGI processes typically to verify 
+This function is used in CGI processes typically to verify
 whether the current process runs in admin mode or user mode ? et.al.
 
 =cut

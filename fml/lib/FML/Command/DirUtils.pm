@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DirUtils.pm,v 1.2 2002/03/24 12:32:36 fukachan Exp $
+# $FML: DirUtils.pm,v 1.3 2002/03/26 04:01:12 fukachan Exp $
 #
 
 package FML::Command::DirUtils;
@@ -16,7 +16,7 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Command::DirUtils - utilities for directory handling 
+FML::Command::DirUtils - utilities for directory handling
 
 =head1 SYNOPSIS
 
@@ -59,7 +59,7 @@ sub dir
     my $opt_ls  = '';
 
     # option
-    if (defined($du_args->{ opt_ls }) && 
+    if (defined($du_args->{ opt_ls }) &&
 	$du_args->{ opt_ls } =~ /^-[A-Za-z]+$/) {
 	$opt_ls = $du_args->{ opt_ls };
     }

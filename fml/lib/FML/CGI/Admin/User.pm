@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.4 2002/03/18 15:21:31 fukachan Exp $
+# $FML: User.pm,v 1.1 2002/03/19 08:11:54 fukachan Exp $
 #
 
 package FML::CGI::Admin::User;
@@ -41,28 +41,28 @@ sub cgi_menu
     my $address = $curproc->safe_param_address() || '';
     my $config  = $curproc->{ config };
 
-    # 
+    #
     my $address_list = $curproc->get_recipient_list();
     my $comname      = $command_args->{ comname };
-    my $command_list = 
+    my $command_list =
 	$config->get_as_array_ref('available_commands_for_admin_cgi');
 
 
     print start_form(-action=>$action, -target=>$target);
 
     print table( { -border => undef },
-		Tr( undef, 
+		Tr( undef,
 		   td([
 		       "ML: ",
-		      scrolling_list(-name   => 'ml_name', 
-				     -values => $ml_list, 
+		      scrolling_list(-name   => 'ml_name',
+				     -values => $ml_list,
 				     -size   => 5)
 		      ])
 		   ),
-		Tr( undef, 
+		Tr( undef,
 		   td([
 		       "command: ",
-		       scrolling_list(-name    => 'command', 
+		       scrolling_list(-name    => 'command',
 				      -values  => $command_list,
 				      -default => $comname,
 				      -size    => 1)
@@ -82,7 +82,7 @@ sub cgi_menu
 		Tr( undef,
 		   td([
 		       "",
-		       scrolling_list(-name   => 'address_selected', 
+		       scrolling_list(-name   => 'address_selected',
 				      -values => $address_list,
 				      -size   => 5)
 		       ]),

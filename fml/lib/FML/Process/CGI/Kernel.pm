@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.19 2002/03/20 07:31:09 fukachan Exp $
+# $FML: Kernel.pm,v 1.20 2002/03/20 08:00:29 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -147,7 +147,7 @@ C<run_cgi()> prepares tables by the following granularity.
 
 C<run_cgi_main()> shows at the center and
 C<run_cgi_navigation_bar()> at the west by default.
-You can specify the location by configure() access method. 
+You can specify the location by configure() access method.
 
 =cut
 
@@ -171,7 +171,7 @@ sub run
 
 sub _error_string
 {
-    my ($r) = @_; 
+    my ($r) = @_;
 
     if ($r =~ /ERROR\.INSECURE/) {
 	print "<B>Error! insecure input.</B>\n";
@@ -194,11 +194,11 @@ sub _drive_cgi_by_table
     my ($curproc, $args) = @_;
     my $r = '';
 
-    # 
+    #
     #   nw   north  ne
     #   west center east
     #   sw   south  se
-    # 
+    #
     # table starts.
     print "<table border=0 cellspacing=\"0\" cellpadding=\"5\">\n";
 
@@ -428,7 +428,7 @@ sub run_cgi_options
 
     print "Language:\n";
     my $langlist = [ 'Japanese', 'English' ];
-    print scrolling_list(-name    => 'language', 
+    print scrolling_list(-name    => 'language',
 			 -values  => $langlist,
 			 -size    => 1);
 
@@ -456,8 +456,8 @@ sub run_cgi_menu
     my $cmd = "FML::Command::Admin::$comname";
     my $obj = undef;
 
-    eval qq{ 
-	use $cmd; 
+    eval qq{
+	use $cmd;
 	\$obj = new $cmd;
     };
 

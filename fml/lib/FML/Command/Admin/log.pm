@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: log.pm,v 1.14 2002/03/19 10:12:45 fukachan Exp $
+# $FML: log.pm,v 1.1 2002/03/19 11:13:45 fukachan Exp $
 #
 
 package FML::Command::Admin::log;
@@ -98,7 +98,7 @@ sub _show_log
 
     use FileHandle;
     my $fh = new FileHandle $log_file;
-    if (defined $fh) { 
+    if (defined $fh) {
 	while (<$fh>) { $maxline++;}
 	$fh->close();
 
