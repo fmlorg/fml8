@@ -1,6 +1,24 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/04/23
+
+   FML::Process::Distribute Kernel.pm 
+	fix errro message and enable the rejected message forwarding
+	
+   FML::Command::Admin::newml 
+	check alias duplication
+	enable cgi
+	
+   FML::Restriction::Base 
+	define $ml_name_specified
+	
+   FML::CGI::Admin::Menu 
+   FML::Process::CGI::Kernel 
+   FML::CGI::Admin::ML 
+	define cgi_try_get_ml_name()
+	enabled newml and rmml on CGI.
+
 2002/04/22
 
    FML::Process::CGI::Kernel 
@@ -2144,4 +2162,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.68 2002/04/21 14:07:10 fukachan Exp $
+$FML: CHANGES.txt,v 1.69 2002/04/22 13:56:09 fukachan Exp $
