@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Base.pm,v 1.6 2002/03/24 11:18:09 fukachan Exp $
+# $FML: Base.pm,v 1.7 2002/03/26 03:59:44 fukachan Exp $
 #
 
 package FML::Restriction::Base;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Restriction::Base -- define safe data class
+FML::Restriction::Base -- define safe data representations
 
 =head1 SYNOPSIS
 
@@ -24,7 +24,7 @@ FML::Restriction::Base -- define safe data class
 
 =head1 DESCRIPTION
 
-FML::Restriction::Base provides data type considered as safe.
+FML::Restriction::Base provides data regexp considered as safe.
 
 =head1 METHODS
 
@@ -51,24 +51,48 @@ sub new
 
 =head1 Basic Parameter Definition for common use
 
-   %basic_variable
+We permit the variable name representation as a subset of RFC
+definitions for conveninece and security.
+
+=head2 domain name
+
+A domain name is case insensitive (see RFC). For example, 
+   fml.org
+   FML.org
+   123.f-m-l.org
+
+=head2 user
+
+Very restricted since strict 822 or 2822 representation is very
+difficult and may be insecure in some cases.
+
+By the way, "_" is derived from lotus notes ? Anyway we permit "_" for
+convenience.
+
+=head2 mail address
+
+off cource, "user@domain", described above.
 
 =cut
 
-
+my $domain_regexp  = '[-A-Za-z0-9\.]+';
+my $user_regexp    = '[-A-Za-z0-9\._]+';
 my %basic_variable =
     (
-     'address'           => '[-A-Za-z0-9_\.]+\@[-A-Za-z0-9\.]+',
-     'address_specified' => '[-A-Za-z0-9_\.]+\@[-A-Za-z0-9\.]+',
-     'address_selected'  => '[-A-Za-z0-9_\.]+\@[-A-Za-z0-9\.]+',
+     # address, user and domain et.al.
+     'address'           => $user_regexp.'\@'.$domain_regexp,
+     'address_specified' => $user_regexp.'\@'.$domain_regexp,
+     'address_selected'  => $user_regexp.'\@'.$domain_regexp,
+     'domain'            => $domain_regexp,
+     'user'              => $user_regexp,
+     'ml_name'           => $user_regexp,
 
-     'user'              => '[-A-Za-z0-9_\.]+',
-     'ml_name'           => '[-A-Za-z0-9_\.]+',
+     # fml specific parameters
      'action'            => '[-A-Za-z_]+',
      'command'           => '[-A-Za-z_]+',
      'article_id'        => '\d+',
 
-     # directory
+     # file, directory et.al.
      'directory'         => '[-a-zA-Z0-9]+',
      'file'              => '[-a-zA-Z0-9]+',
      );
@@ -81,6 +105,16 @@ my %basic_variable =
 sub basic_variable
 {
     return \%basic_variable;
+}
+
+
+#
+# debug
+#
+if ($0 eq __FILE__) {
+    for my $k (keys %basic_variable) { 
+	printf "%-20s => %s\n", $k, $basic_variable{ $k };
+    }
 }
 
 

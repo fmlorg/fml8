@@ -3,7 +3,7 @@
 # Copyright (C) 2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: CGI.pm,v 1.3 2001/12/22 09:21:11 fukachan Exp $
+# $FML: CGI.pm,v 1.4 2001/12/23 12:19:14 fukachan Exp $
 #
 
 package FML::Restriction::CGI;
@@ -17,13 +17,13 @@ use FML::Restriction::Base;
 
 =head1 NAME
 
-FML::Restriction::CGI -- define safe data class for CGI module
+FML::Restriction::CGI -- define safe data regexp for CGI module
 
 =head1 SYNOPSIS
 
     use FML::Restriction::CGI;
     $safe = new FML::Restriction::CGI;
-    my $regexp = $safe->regexp();
+    my $regexp = $safe->method_regexp();
 
 =head1 DESCRIPTION
 
@@ -85,6 +85,26 @@ sub method_regexp
     }
 
     return \%cgi_methond;
+}
+
+
+#
+# debug
+#
+if ($0 eq __FILE__) {
+    my $safe   = new FML::Restriction::CGI;
+    my $regexp = $safe->param_regexp();
+
+    print "-- safe parameter regexp\n";
+    for my $k (keys %$regexp) {
+	printf "%-20s => %s\n", $k, $regexp->{ $k };
+    }
+
+    $regexp = $safe->method_regexp();
+    print "\n-- safe method regexp\n";
+    for my $k (keys %$regexp) {
+	printf "%-20s => %s\n", $k, $regexp->{ $k };
+    }
 }
 
 
