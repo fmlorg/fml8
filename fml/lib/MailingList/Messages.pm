@@ -234,6 +234,7 @@ sub _create
     elsif (defined $filename) {
 	if (-f $filename) {
 	    undef $self->{ content };
+	    $self->{ header }     = build_mime_header($self, $args);
 	    $self->{ filename }   = $filename;
 	    $self->{ _on_memory } = 0; # not on memory
 	}
@@ -379,15 +380,21 @@ sub _print_messsage_on_disk
 
     # \n -> \r\n
     my $raw_print_mode = 1 if defined $self->{ _raw_print };
-
-    my $filename = $self->{ filename };
+    my $header   = $self->{ header }   || undef;
+    my $filename = $self->{ filename } || undef;
     my $logfp    = $self->{ _log_function };
     $logfp       = ref($logfp) eq 'CODE' ? $logfp : undef;
 
-    # open he file
+    # 1. print content header if exists
+    if (defined $header) {
+	$header =~ s/\n/\r\n/g unless (defined $raw_print_mode);
+	print $fd $header;
+	print $fd ($raw_print_mode ? "\n" : "\r\n");
+    }
+
+    # 2. print content body: write each line in buffer
     use FileHandle;
     my $fh = new FileHandle $filename;
-
     if (defined $fh) {
 	my $buf;
 
@@ -588,6 +595,24 @@ sub _get_mime_header
     else {
 	return ('', $pos_begin);
     }
+}
+
+
+sub build_mime_header
+{
+    my ($self, $args) = @_;
+    my $buf;
+    my $content_type = $args->{ content_type };
+    my $charset      = $args->{ charset } || 'us-ascii';
+
+    $buf .= "Content-Type: $content_type" if defined $content_type;
+    $buf .= ";\n\tcharset=$charset" if $charset;
+
+    # use File::Basename;
+    # my $fn = basename($args->{ filename } || '');
+    # $buf .= ";\n\tfilename=\"$fn\"" if $fn;
+
+    return ($buf ? $buf."\n" : undef);
 }
 
 
