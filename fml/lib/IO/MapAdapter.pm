@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML: MapAdapter.pm,v 1.26 2001/04/03 09:45:45 fukachan Exp $
+# $FML: MapAdapter.pm,v 1.27 2001/04/08 13:25:39 fukachan Exp $
 #
 
 package IO::MapAdapter;
@@ -313,6 +313,43 @@ sub replace
 	undef;
     }
 }
+
+
+=head2 C<find($regexp [,$args])>
+
+search $regexp in C<map> and return the line which matches C<$regexp>.
+It searches C<$regexp> in case insenssitive by default.
+You can change the search behaviour by C<$args> (HASH REFERENCE).
+
+    $args = {
+	case_sensitive => 1, # case senssitive
+    };
+
+=cut
+
+sub find
+{
+    my ($self, $regexp, $args) = @_;
+    my $case_sensitive = $args->{ case_sensitive } ? 1 : 0;
+    my $x;
+
+    # forward the request to SUPER class
+    if ($self->SUPER::can('_find')) { $self->_find($regexp, $args);}
+
+    # search regexp by reading the specified map.
+    $self->open;
+    while (defined ($x = $self->get_next_value())) {
+	if ($case_sensitive) {
+	    last if $x =~ /$regexp/;
+	}
+	else {
+	    last if $x =~ /$regexp/i;
+	}
+    }	   
+    $self->close;
+    $x;
+}
+
 
 
 # Descriptions: destructor
