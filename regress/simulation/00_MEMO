@@ -67,6 +67,9 @@
 
 [TODO]	case insensitive of user part of user@domain
 
+	$user_auth_mail_addr_check_type = 
+		case_sensitive / case_insensitive	?
+
 
 [TODO]	rmml したＭＬをふっかつさせることは？
 
@@ -80,18 +83,7 @@
 	newml --reuse ? --rewind ? --return ?
 	こんなかんじ？
 
-
-[TODO]	ドメイン制御をするコマンドを作る
-
-	ドメイン全部きれいに一発で抹殺するには？
-
-	rmml を連発で実行しまくる rmdomain ってのがあればいい？
-
-	コマンド
-		newdomain
-		rmdomain
-
-	main.cf は virtual_maps -> domain_maps にするべきだろうか？
+	それより、renew かなぁ
 
 
 [TODO]	エラーをどのように呼びだし側へ組織的に伝えるか？
@@ -468,4 +460,4 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 ----------
-$FML: 00_MEMO,v 1.94 2003/11/15 02:54:58 fukachan Exp $
+$FML: 00_MEMO,v 1.95 2003/11/17 04:02:26 fukachan Exp $
