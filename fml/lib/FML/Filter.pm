@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.16 2002/10/21 13:31:26 fukachan Exp $
+# $FML: Filter.pm,v 1.17 2002/10/26 04:03:31 fukachan Exp $
 #
 
 package FML::Filter;
@@ -28,19 +28,22 @@ where C<$message> is C<Mail::Message> object.
 
 top level dispatcher for FML filtering engine.
 It consists of two types, header and body filtering engines.
-Detail of rules is found in
-L<FML::Filter::HeaderCheck> and L<FML::Filter::BodyCheck>.
+The detail of rules is found in
+L<FML::Filter::Header>,
+L<FML::Filter::TextPlain>,
+and
+L<FML::Filter::MimeComponent>.
 
 =head1 METHODS
 
 =head2 C<new()>
 
-standard constructor.
+constructor.
 
 =cut
 
 
-# Descriptions: standard constructor.
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -65,7 +68,7 @@ sub article_filter
 
     if (defined $message) {
 	my $functions = $config->get_as_array_ref('article_filter_functions');
-	my $status = 0;
+	my $status    = 0;
 
       FUNCTION:
 	for my $function (@$functions) {
@@ -83,6 +86,8 @@ sub article_filter
 
 	return $status if $status;
     }
+
+    return undef;
 }
 
 
@@ -102,6 +107,7 @@ sub _apply_article_header_filter
 	# overwrite filter rules based on FML::Config
 	my $rules = $config->get_as_array_ref('article_header_filter_rules');
 
+	# ovewrite rules
 	if (defined $rules) {
 	    $obj->rules( $rules );
 	}
@@ -140,7 +146,7 @@ sub _apply_article_non_mime_filter
 		return 0;
 	    }
 
-	    # XXX implement this!
+	    # XXX-TODO: implement this!
 	    if ($rule eq 'reject') {
 		;
 	    }
