@@ -1,0 +1,30 @@
+<sect1 id="setup.qmail.aliases">
+	<title>
+	メールサーバの設定 (qmail)
+	</title>
+
+<para>
+makefml newml は次のような qmail 用の設定ファイルを作ります。
+<screen>
+~/.qmail-fml:org-elena
+~/.qmail-fml:org-elena-ctl
+</screen>
+よって
+<screen>
+/var/qmail/control/virtualdomains
+</screen>
+に、あらかじめ次のような設定を仕込んでおけば、
+makefml newml を実行するだけで 
+qmail でも自動的にＭＬが有効になります。
+<screen>
+fml.org:fml-fml.org
+</screen>
+</para>
+
+<warning>
+<para>
+この設定は、ＭＬ用に一つのドメインをまるまる使うことを前提としています。
+</para>
+</warning>
+
+</sect1>

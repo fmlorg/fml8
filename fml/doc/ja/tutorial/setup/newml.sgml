@@ -1,0 +1,95 @@
+<!--
+   $FML: newml.sgml,v 1.3 2002/07/02 10:39:39 fukachan Exp $
+-->
+
+
+<chapter id="setup.newml">
+	<title>
+	UNIX 上でＭＬを作成する
+	</title>
+
+
+<sect1>
+	<title>
+	makefml newml でＭＬを作る
+	</title>
+
+<para>
+makefml を使ってＭＬを作成します。
+使い方は &fml4; と同様です。
+<screen>
+% su fml
+% makefml newml elena
+</screen>
+</para>
+
+
+<para>
+この時、makefml newml は以下のような処理をします。
+
+<itemizedlist>
+
+   <listitem>
+        <para>
+	/var/spool/ml/elena へ
+	<screen>
+	config.cf
+	include
+	include-ctl
+	</screen>
+	などを作る(適宜、elena やドメインの値を変換しながら)
+        </para>
+   </listitem>
+
+   <listitem>
+        <para>
+	/var/spool/ml/etc/mail/aliases に elena の設定を仕込む。
+	postalias で /var/spool/ml/etc/mail/aliases.db を再生成する。
+        </para>
+   </listitem>
+
+   <listitem>
+        <para>
+	<screen>
+	~fml/public_html/$domain/$ml/
+	</screen>
+	例えば elena@fml.org なら
+	<screen>
+	~fml/public_html/fml.org/elena/
+	</screen>
+	を用意する。
+	ここに HTML 化された記事が自動的に作られることになる(でふぉると)。
+        </para>
+   </listitem>
+
+   <listitem>
+        <para>
+	CGI インターフェイスを用意する。
+	ドメインで一番偉いインターフェイス(そのドメインのＭＬは全部操
+	作できる)が
+	<screen>
+	~fml/public_html/cgi-bin/fml/$domain/admin/menu.cgi
+	</screen>
+	また、各ＭＬで一番偉いインターフェイス(そのＭＬの操作ができる)
+	<screen>
+	~fml/public_html/cgi-bin/fml/$domain/ml-admin/menu.cgi
+	</screen>
+        </para>
+   </listitem>
+
+</itemizedlist>
+</para>
+
+</sect1>
+
+
+<!-- メールサーバの設定について -->
+&sect.setup.postfix;
+&sect.setup.qmail;
+
+
+<!-- 各ＭＬの設定について -->
+&sect.setup.config.cf;
+
+
+</chapter>
