@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Print.pm,v 1.9 2001/11/08 14:17:39 fukachan Exp $
+# $FML: Print.pm,v 1.10 2001/11/09 10:42:07 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print;
@@ -24,6 +24,8 @@ Mail::ThreadTrack::Print - print out thread relation
 =head1 DESCRIPTION
 
 =head1 METHODS
+
+=head2 review()
 
 =head2 C<summary(>)
 
@@ -63,76 +65,51 @@ It is also larger if $status is C<open>.
 =cut
 
 
-sub review
+sub _load_library
 {
-    my ($self, $str, $min, $max) = @_;
-    my $config    = $self->{ _config };
-    my $spool_dir = $config->{ spool_dir };
-    my $fd        = $self->{ _fd } || \*STDOUT;
-    my %uniq      = ();
+    my ($self) = @_;
 
-    # modify Print parameters 
-    $self->{ _article_summary_lines } = 5;
-
-    $self->db_open();
-    my $rh = $self->{ _hash_table };
-
-    use Mail::Message::MH;
-    my $ra = Mail::Message::MH->expand($str, $min, $max);
-    my $first = 0;
-
-    if (defined $config->{ reverse_order }) { @$ra = reverse @$ra;}
-
-    for my $id (@$ra) {
-	if ($id =~ /^\d+$/) { 
-	    my $tid = $self->_create_thread_id_strings($id);
-	    # check thread id $tid exists really ?
-	    if (defined $rh->{ _articles }->{ $tid }) {
-		printf $fd "\n>Thread-Id: %-10s  %s\n", $tid;
-
-		# change treatment for the fisrt article in this thread
-		$first = 1;
-
-		# show all articles in this thread
-	      ARTICLE:
-		for my $aid (split(/\s+/, $rh->{ _articles }->{ $tid })) {
-		    # ensure uniquness
-		    next ARTICLE if $uniq{ $aid };
-		    $uniq{ $aid } = 1;
-
-		    if ($first) {
-			undef $self->{ _no_header_summary };
-			$first = 0;
-		    }
-		    else {
-			$self->{ _no_header_summary } = 1;
-		    }
-
-		    my $file = File::Spec->catfile($spool_dir, $aid);
-		    if (-f $file) {
-			print $fd $self->__article_summary($file);
-			print $fd "\n";
-		    }
-		}
-	    }
-	}
-    }
-
-    $self->db_close();
+    require Mail::ThreadTrack::Print::Message;
+    require Mail::ThreadTrack::Print::Sort;
+    unshift(@ISA, qw(
+		   Mail::ThreadTrack::Print::Message
+		   Mail::ThreadTrack::Print::Sort
+		     ));
 }
 
 
 sub summary
 {
+    my ($self, @opts) = @_;
+
+    $self->_load_library();
+    $self->db_open();
+    $self->do_summary(@opts);
+    $self->db_close();
+}
+
+
+sub review
+{
+    my ($self, @opts) = @_;
+
+    $self->_load_library();
+    $self->db_open();
+    $self->do_review(@opts);
+    $self->db_close();
+}
+
+
+
+sub do_summary
+{
     my ($self) = @_;
     my ($tid, $status, $thread_id);
     my $mode = $self->get_mode || 'text';
+    my $fd   = $self->{ _fd } || \*STDOUT;
 
     # rh: thread id list, which is ARRAY REFERENCE tied to db_dir/*db's
     $thread_id = $self->list_up_thread_id();
-
-    # self->{ _hash_table } is tied to DB's.
-    $self->db_open();
 
     if (@$thread_id) {
 	# sort the thread output order it out by cost
@@ -140,9 +117,9 @@ sub summary
 	$self->sort($thread_id);
 
 	if ($mode eq 'html') {
-	    print "<TABLE BORDER=4>\n" if $mode eq 'html';
+	    print $fd "<TABLE BORDER=4>\n";
 	    $self->_print_thread_summary($thread_id);
-	    print "</TABLE>\n" if $mode eq 'html';
+	    print $fd "</TABLE>\n";
 	}
 	else {
 	    $self->_print_thread_summary($thread_id);
@@ -151,9 +128,6 @@ sub summary
 	    $self->_print_article_summary($thread_id);
 	}
     }
-
-    # self->{ _hash_table } is untied from DB's.
-    $self->db_close();
 }
 
 
@@ -245,133 +219,76 @@ sub _print_article_summary
 	    }
 
 	    # show only the first article of this thread $tid
-	    (@aid) = split(/\s+/, $rh->{ _articles }->{ $tid });
-	    $aid  = $aid[0];
-	    $file = File::Spec->catfile($spool_dir, $aid);
-	    if (-f $file) {
-		print $fd $self->__article_summary($file);
-	    }
-	}
-    }
-}
-
-
-sub __article_summary
-{
-    my ($self, $file) = @_;
-    my (@header) = ();
-    my $buf      = '';
-    my $line     = $self->{ _article_summary_lines } || 3;
-    my $mode     = $self->get_mode || 'text';
-    my $padding  = $mode eq 'text' ? '   ' : '';
-
-    use FileHandle;
-    my $fh = new FileHandle $file;
-
-    if (defined $fh) {
-      LINE:
-	while (<$fh>) {
-	    # nuke useless lines
-	    next LINE if /^\>/;
-	    next LINE if /^\-/;
-
-	    # header
-	    if (1 ../^$/) {
-		push(@header, $_);
-	    }
-	    # body part
-	    else {
-		next LINE if /^\s*$/;
-
-		# ignore mail header like patterns
-		next LINE if /^X-[-A-Za-z0-9]+:/i;
-		next LINE if /^Return-[-A-Za-z0-9]+:/i;
-		next LINE if /^Mime-[-A-Za-z0-9]+:/i;
-		next LINE if /^Content-[-A-Za-z0-9]+:/i;
-		next LINE if /^(To|From|Subject|Reply-To|Received):/i;
-		next LINE if /^(Message-ID|Date):/i;
-
-		# pick up effetive the first $line lines
-		if (_valid_buf($_)) {
-		    $line--;
-		    $buf .= $padding. $_;
+	    if (defined $rh->{ _articles }->{ $tid }) {
+		(@aid) = split(/\s+/, $rh->{ _articles }->{ $tid });
+		$aid  = $aid[0];
+		$file = File::Spec->catfile($spool_dir, $aid);
+		if (-f $file) {
+		    print $fd $self->message_summary($file);
 		}
-		last LINE if $line < 0;
 	    }
 	}
-	close($fh);
+    }
+}
 
-	if (defined $self->{ _no_header_summary }) {
-	    return STR2EUC( $buf );
+
+sub do_review
+{
+    my ($self, $str, $min, $max) = @_;
+    my $config    = $self->{ _config };
+    my $spool_dir = $config->{ spool_dir };
+    my $fd        = $self->{ _fd } || \*STDOUT;
+    my $rh        = $self->{ _hash_table };
+    my %uniq      = ();
+
+    # modify Print parameters 
+    $self->{ _article_summary_lines } = 5;
+
+    use Mail::Message::MH;
+    my $ra = Mail::Message::MH->expand($str, $min, $max);
+    my $first = 0;
+
+    if (defined $config->{ reverse_order }) { @$ra = reverse @$ra;}
+
+  ID_LIST:
+    for my $id (@$ra) {
+	next ID_LIST unless defined $id;
+
+	if ($id =~ /^\d+$/) {
+	    # create thread identifier string: e.g. 100 -> elena/100
+	    my $tid = $self->_create_thread_id_strings($id);
+
+	    # check thread id $tid exists really ?
+	    if (defined $rh->{ _articles }->{ $tid }) {
+		printf $fd "\n>Thread-Id: %-10s  %s\n", $tid;
+
+		# different treatment for the fisrt article in this thread
+		$first = 1;
+
+		# show all articles in this thread
+	      ARTICLE:
+		for my $aid (split(/\s+/, $rh->{ _articles }->{ $tid })) {
+		    # ensure uniquness
+		    next ARTICLE if $uniq{ $aid };
+		    $uniq{ $aid } = 1;
+
+		    if ($first) {
+			undef $self->{ _no_header_summary };
+			$first = 0;
+		    }
+		    else {
+			$self->{ _no_header_summary } = 1;
+		    }
+
+		    my $file = File::Spec->catfile($spool_dir, $aid);
+		    if (-f $file) {
+			print $fd $self->message_summary($file);
+			print $fd "\n";
+		    }
+		}
+	    }
 	}
-	else {
-	    use Mail::Header;
-	    my $h = new Mail::Header \@header;
-	    my $header_info = $self->_header_summary({
-		header  => $h,
-		padding => $padding,
-	    });
-	    return STR2EUC( $header_info ."\n". $buf );
-	}
     }
-    else {
-	return undef;
-    }
-}
-
-
-sub _valid_buf
-{
-    my ($str) = @_;
-    $str = STR2EUC( $str );
-
-    if ($str =~ /^[\>\#\|\*\:\;]/) {
-	return 0;
-    }
-    elsif ($str =~ /^in /) { # quotation ?
-	return 0;
-    }
-    elsif ($str =~ /\w+\@\w+/) { # mail address ?
-	return 0;
-    }
-    elsif ($str =~ /^\S+\>/) { # quotation ?
-	return 0;
-    }
-
-    return 1;
-}
-
-
-sub _delete_subject_tag_like_string
-{
-    my ($str) = @_;
-    use Mail::Message::Utils;
-    return Mail::Message::Utils::remove_subject_tag_like_string($str);
-}
-
-
-sub _header_summary
-{
-    my ($self, $args) = @_;
-    my $from    = $args->{ header }->get('from');
-    my $subject = $args->{ header }->get('subject');
-    my $padding = $args->{ padding };
-
-    $subject = decode_mime_string($subject, { charset => 'euc-japan' });
-    $subject =~ s/\n/ /g;
-    $subject = _delete_subject_tag_like_string($subject);
-
-    $from    = decode_mime_string($from, { charset => 'euc-japan' });
-    $from    =~ s/\n/ /g;
-
-    my $br = $self->get_mode eq 'html' ? '<BR>' : '';
-
-    # return buffer
-    my $r = '';
-    $r .= STR2EUC( $padding. "   From: ". $from ."$br\n" );
-    $r .= STR2EUC( $padding. "Subject: ". $subject ."$br\n" );
-
-    return $r;
 }
 
 
