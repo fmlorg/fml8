@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Parse.pm,v 1.21 2002/01/16 13:33:58 fukachan Exp $
+# $FML: Parse.pm,v 1.22 2002/01/16 13:43:19 fukachan Exp $
 #
 
 package FML::Parse;
@@ -23,7 +23,7 @@ FML::Parse - parse the incoming message
 
 =head1 SYNOPSIS
 
-    ($r_header, $r_body) = new FML::Parse \*STDIN;
+    ($r_header, $r_body) = new FML::Parse $curproc, \*STDIN;
 
 =head1 DESCRIPTION
 
