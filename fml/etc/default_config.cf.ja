@@ -87,7 +87,7 @@ smtp_servers		=	[::1]:25
 
 use_header_rewrite	=	yes
 
-use_header_checks	=	yes
+use_header_check	=	yes
 
 
 header_check_rules	=	validate_message_id
