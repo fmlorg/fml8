@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.38 2002/03/22 11:40:27 fukachan Exp $
+# $FML: Command.pm,v 1.39 2002/03/22 15:30:44 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -327,6 +327,9 @@ sub _auth_admin
     else {
 	return 0;
     }
+
+    # deny transition to admin mode by default
+    return 0;
 }
 
 
@@ -413,12 +416,19 @@ sub _evaluate_command
 	}
 	# Case: "admin" command is exceptional. try priviledged mode.
 	elsif ($comname =~ /$admin_prefix/) {
-	    unless ($is_auth) { # for the first time ?
+	    if ($is_auth) {
+		Log("admin auth already: $command");
+	    }
+	    else { # for the first time ?
 		my $sender  = $curproc->{'credential'}->{'sender'};
-		my $optargs = { address => $sender, data => $command };
+		my $data    = $command;
 
+		$data =~ s/.*(password|pass)\s+//;
+		my $optargs = { address => $sender, password => $data };
+		
 		# try auth by FML::Command::Auth;
 		$is_auth = $curproc->_auth_admin($args, $optargs);
+		Log("authenticated as an ML administrator") if $is_auth;
 	    }
 
 	    if ($is_admin && $is_auth) {
@@ -472,8 +482,6 @@ sub _evaluate_command
 	use FML::Command;
 	my $obj = new FML::Command;
 	if (defined $obj) {
-	    $curproc->reply_message("\n$prompt $orig_command");
-
 	    # arguments to pass off to each method
 	    my $command_args = {
 		command_mode => $mode,
@@ -485,7 +493,14 @@ sub _evaluate_command
 		args         => $args,
 	    };
 
+	    # rewrite prompt e.g. to hide the password
+	    $obj->rewrite_prompt($curproc, $command_args, \$orig_command);
+
+	    # reply buffer
+	    $curproc->reply_message("\n$prompt $orig_command");
+
 	    # execute command ($comname method) under eval().
+	    # XXX $obj = FML::Command object NOT FML::Command::$mode::$command
 	    eval q{
 		$obj->$comname($curproc, $command_args);
 	    };
