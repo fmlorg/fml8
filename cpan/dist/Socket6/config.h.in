@@ -1,0 +1,12 @@
+/* config.h.in.  Generated automatically from configure.in by autoheader.  */
+
+#undef HAVE_PL_SV_UNDEF
+
+#undef HAVE_GETADDRINFO
+#undef HAVE_GETHOSTBYNAME2
+#undef HAVE_GETNAMEINFO
+#undef HAVE_INET_NTOP
+#undef HAVE_INET_PTON
+
+#undef HAVE_SOCKADDR_SA_LEN
+#undef HAVE_SOCKADDR_IN6_SIN6_SCOPE_ID
