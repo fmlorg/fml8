@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: HTMLify.pm,v 1.13 2002/03/31 03:39:14 fukachan Exp $
+# $FML: HTMLify.pm,v 1.14 2002/04/08 12:44:25 fukachan Exp $
 #
 
 package FML::Process::HTMLify;
@@ -127,19 +127,35 @@ sub run
 	croak("no such source directory");
     }
 
+    my ($is_subdir_exists, $subdirs) = _check_subdir_exists($src_dir);
+    if ($is_subdir_exists) { Log("looks subdir exists");}
+
     if (defined $dst_dir) {
         unless (-d $dst_dir) {
             use File::Utils qw(mkdirhier);
             mkdirhier($dst_dir, 0755);
         }
 
-	eval q{
-	    use Mail::Message::ToHTML;
-	    &Mail::Message::ToHTML::htmlify_dir($src_dir, {
-		directory => $dst_dir,
-	    });
-	};
-	croak($@) if $@;
+	if ($is_subdir_exists) {
+	    for my $xdir (@$subdirs) {
+		eval q{
+		    use Mail::Message::ToHTML;
+		    &Mail::Message::ToHTML::htmlify_dir($xdir, {
+			directory => $dst_dir,
+		    });
+		};
+		croak($@) if $@;
+	    }
+	}
+	else {
+	    eval q{
+		use Mail::Message::ToHTML;
+		&Mail::Message::ToHTML::htmlify_dir($src_dir, {
+		    directory => $dst_dir,
+		});
+	    };
+	    croak($@) if $@;
+	}
     }
     else {
         croak("no destination directory\n");
@@ -147,6 +163,32 @@ sub run
 
     $eval = $config->get_hook( 'fmlhtmlify_run_end_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+}
+
+
+sub  _check_subdir_exists
+{
+    my ($src_dir) = @_;
+    my $status = 0;
+    my $subdir = '';
+    my @subdir = ();
+
+    use File::Spec;
+    use DirHandle;
+    my $dh = new DirHandle $src_dir;
+    if (defined $dh) {
+	while (defined($_ = $dh->read)) { 
+	    next if /^\./;
+	    $subdir = File::Spec->catfile($src_dir, $_);
+
+	    if ($subdir) {
+		push(@subdir, $subdir);
+		$status = 1;
+	    }
+	}
+    }
+
+    return( $status, \@subdir );
 }
 
 
