@@ -1,6 +1,76 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/04/27
+
+   Mail::Message 
+	check more data by defined()
+	
+   FML::Process::Kernel 
+	modified to not using FileHandle::pipe()
+	add methods to prepare and clean up temporary files
+	implement parse_exception()
+	implement message_nl() to separete message converter into natural
+	language and message handling parts
+	
+   FML::Process::CGI::Kernel Param.pm 
+	convert exception syntax into the new style. See FNF
+	convert message to natual language if could
+	
+2002/04/26
+
+   FML::Process::Flow 
+	run clean_up_tmpfiles() finally
+
+   FML::Process::Kernel 
+	fix typo
+	define "permit_commands_for_stranger" (only define not implemented :)
+	
+   FML::Process::Command 
+   FML::Command::DataCheck 
+	permit_commands_for_stranger works
+	
+   variables	
+	add rule permit_commands_for_stranger for $command_restrictions
+
+2002/04/25
+
+   variables	
+	rename variable::available_commands_for_xxx -> commands_for_xxx
+	
+   FML::Command::Admin::htmlify 
+	check $use_html_archive value before action
+
+   FML::MTAControl 
+	implement get_aliases_as_hash_ref()
+	new() accepts { mta_type => ... } argument
+	
+   FML::Process::Switch 
+   FML::Process::Alias 
+	new utility::fmlalias e.g. shows not only fml but all alias entries
+	
+   Mail::Message 
+	check defined($InComingMessage) before $body_size estimation
+
+2002/04/24
+
+   FML::Header::Subject 
+	replace subject to Subject
+	
+   define $path_postconf
+	
+   File::Utils 
+	define append()
+	
+   FML::Command::Admin::{newml, rmml}
+	use File::Utils and FML::MTAControl to share codes.
+	
+   FML::Command::Admin::newml 
+	check $ml_name duplication over all $alias_maps (postfix case)
+
+   FML::Filter::ContentCheck 
+	bugfix object argument
+
 2002/04/23
 
    FML::Process::Distribute Kernel.pm 
@@ -2162,4 +2232,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.69 2002/04/22 13:56:09 fukachan Exp $
+$FML: CHANGES.txt,v 1.70 2002/04/23 14:32:45 fukachan Exp $
