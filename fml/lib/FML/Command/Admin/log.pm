@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: log.pm,v 1.2 2002/03/30 11:08:35 fukachan Exp $
+# $FML: log.pm,v 1.3 2002/04/07 05:02:23 fukachan Exp $
 #
 
 package FML::Command::Admin::log;
@@ -138,7 +138,7 @@ sub _html_to_text
 {
     my ($str) = @_;
 
-    eval q{ 
+    eval q{
 	use HTML::FromText;
     };
     unless ($@) {

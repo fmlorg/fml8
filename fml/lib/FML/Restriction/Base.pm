@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Base.pm,v 1.7 2002/03/26 03:59:44 fukachan Exp $
+# $FML: Base.pm,v 1.8 2002/04/06 02:42:39 fukachan Exp $
 #
 
 package FML::Restriction::Base;
@@ -56,7 +56,7 @@ definitions for conveninece and security.
 
 =head2 domain name
 
-A domain name is case insensitive (see RFC). For example, 
+A domain name is case insensitive (see RFC). For example,
    fml.org
    FML.org
    123.f-m-l.org
@@ -112,7 +112,7 @@ sub basic_variable
 # debug
 #
 if ($0 eq __FILE__) {
-    for my $k (keys %basic_variable) { 
+    for my $k (keys %basic_variable) {
 	printf "%-20s => %s\n", $k, $basic_variable{ $k };
     }
 }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.4 2002/03/31 12:11:04 fukachan Exp $
+# $FML: ToHTML.pm,v 1.5 2002/04/06 02:02:19 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -16,10 +16,10 @@ use Carp;
 
 my $is_strict_warn = 0;
 my $debug = 0;
-my $URL   = 
+my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.4 2002/03/31 12:11:04 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.5 2002/04/06 02:02:19 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -1255,7 +1255,7 @@ sub _update_relation
 	    }
 	}
 	else {
-	    unless (defined $file) { 
+	    unless (defined $file) {
 		$new = $old = '(null string)';
 	    }
 	    warn("cannot open   $old (id=$id)\n") unless defined $rh;
@@ -1372,12 +1372,12 @@ sub evaluate_safe_preamble
     }
 
     if (defined $link_prev_thread_id) {
-	$preamble .= 
+	$preamble .=
 	    "<A HREF=\"${prefix}$link_prev_thread_id\">[Prev by Thread]</A>\n";
     }
     else {
 	if (defined $link_prev_id) {
-	    $preamble .= 
+	    $preamble .=
 		"<A HREF=\"${prefix}$link_prev_id\">[Prev by Thread]</A>\n";
 	}
 	else {
@@ -1386,12 +1386,12 @@ sub evaluate_safe_preamble
     }
 
     if (defined $link_next_thread_id) {
-	$preamble .= 
+	$preamble .=
 	    "<A HREF=\"${prefix}$link_next_thread_id\">[Next by Thread]</A>\n";
     }
     else {
 	if (defined $link_next_id) {
-	    $preamble .= 
+	    $preamble .=
 		"<A HREF=\"${prefix}$link_next_id\">[Next by Thread]</A>\n";
 	}
 	else {
@@ -1443,7 +1443,7 @@ sub evaluate_safe_footer
 
     if (defined $link_prev_thread_id) {
 	$footer .= "<BR>\n";
-	$footer .= 
+	$footer .=
 	    "<A HREF=\"${prefix}$link_prev_thread_id\">Prev by Thread: ";
 	if (defined $subject->{ prev_thread_id }) {
 	    $footer .= _sprintf_safe_str($subject->{ prev_thread_id });
@@ -1453,7 +1453,7 @@ sub evaluate_safe_footer
 
     if (defined $link_next_thread_id) {
 	$footer .= "<BR>\n";
-	$footer .= 
+	$footer .=
 	    "<A HREF=\"${prefix}$link_next_thread_id\">Next by Thread: ";
 	if (defined $subject->{ next_thread_id }) {
 	    $footer .= _sprintf_safe_str($subject->{ next_thread_id });

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: unsubscribe.pm,v 1.9 2002/02/18 14:14:53 fukachan Exp $
+# $FML: unsubscribe.pm,v 1.10 2002/04/06 14:46:13 fukachan Exp $
 #
 
 package FML::Command::User::unsubscribe;
@@ -86,7 +86,7 @@ sub process
     # try confirmation before unsubscribe
     else {
 	Log("unsubscriber request, try confirmation");
-	eval q{ 
+	eval q{
 	    use FML::Confirm;
 	};
 	if ($@) {

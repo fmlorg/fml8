@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.2 2002/02/17 03:13:47 fukachan Exp $
+# $FML: Lite.pm,v 1.3 2002/04/03 03:39:32 fukachan Exp $
 #
 
 package Calender::Lite;
@@ -93,7 +93,7 @@ sub new
 
     # XXX-AUDIT (we should use FML::Restriction ?)
     # simple check (not enough mature).
-    # This code is not for security but to avoid -T (taint mode) error ;) 
+    # This code is not for security but to avoid -T (taint mode) error ;)
     if ($home_dir =~ /^([\w\d\.\/]+)$/) {
 	$home_dir = $1;
     }

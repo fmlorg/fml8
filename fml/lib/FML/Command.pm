@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.23 2002/03/23 12:20:25 fukachan Exp $
+# $FML: Command.pm,v 1.24 2002/04/07 05:08:23 fukachan Exp $
 #
 
 package FML::Command;
@@ -112,7 +112,7 @@ sub AUTOLOAD
     # mode
     my $mode = 'User';
     if (defined $command_args->{ command_mode }) {
-	$mode = 
+	$mode =
 	    $command_args->{ command_mode } =~ /admin/i ? 'Admin' : 'User';
     }
 
