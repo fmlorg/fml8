@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML$
+# $FML: INET6.pm,v 1.1.1.1 2001/04/03 09:53:30 fukachan Exp $
 #
 
 package Mail::Delivery::Net::INET6;
@@ -89,9 +89,6 @@ sub connect6
 	$self->{_socket} = undef;
 	return undef;
     }
-
-    $self->{_socket} = undef;
-    return undef;
 
     eval q{
 	use IO::Handle;
