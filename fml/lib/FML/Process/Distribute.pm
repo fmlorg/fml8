@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.149 2004/05/25 03:54:28 fukachan Exp $
+# $FML: Distribute.pm,v 1.150 2004/06/24 10:40:25 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -547,6 +547,14 @@ sub _deliver_article
 	$queue->set('recipient_maps', $maps);
 
 	$queue->in($message);
+	my $n = $queue->write_count();
+	$curproc->log("queue: size=$n written");
+	if ($queue->error()) {
+	    my $error = $queue->error();
+	    $curproc->logerror("queue: $error");
+	    $fatal = 1;
+	}
+
 	$queue->lock( { lock_before_runnable => "yes" } );
 	unless ($queue->setrunnable()) {
 	    $curproc->logerror("queue: cannot setrunnable");

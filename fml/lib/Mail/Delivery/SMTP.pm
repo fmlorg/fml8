@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.29 2004/05/16 12:25:59 fukachan Exp $
+# $FML: SMTP.pm,v 1.30 2004/05/18 00:14:11 fukachan Exp $
 #
 
 
@@ -654,6 +654,12 @@ sub _fallback_into_queue
 		}
 
 		$queue->in( $msg ) || croak("fail to queue in");
+		{
+		    my $error;
+		    if ($error = $queue->error()) { Log("fallback: $error");}
+		    my $n = $queue->write_count();
+		    Log("queue: size=$n written");
+		}
 		unless ($queue->setrunnable()) {
 		    croak("fail to queue in");
 		}

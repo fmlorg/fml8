@@ -4,12 +4,14 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.93 2004/04/15 09:36:56 tmu Exp $
+# $FML: Message.pm,v 1.94 2004/05/24 15:38:00 fukachan Exp $
 #
 
 package Mail::Message;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
+	    $debug_thread_unsafe_id
+	    %debug_write_count
 	    $override_print_mode
 	    $override_log_function);
 use Carp;
@@ -1059,6 +1061,9 @@ It sets the mode to be C<raw>.
 sub print
 {
     my ($self, $fd) = @_;
+
+    $debug_thread_unsafe_id++;
+    $self->_set_write_count(0);
     $self->_print($fd);
 }
 
@@ -1162,6 +1167,10 @@ sub _is_head_message
 sub _print_messsage_on_memory
 {
     my ($self, $fd, $args) = @_;
+    my $write_count = $self->_get_write_count();
+
+    # check if IO::Handle error handling supported.
+    my $has_error = $fd->can('error') && $fd->can('clearerr') ? 1 : 0;
 
     # \n -> \r\n
     my $raw_print_mode = 1 if $override_print_mode eq 'raw';
@@ -1187,7 +1196,14 @@ sub _print_messsage_on_memory
     if (defined $header) {
 	$header =~ s/\n/\r\n/g unless (defined $raw_print_mode);
 	print $fd $header;
+	unless ($has_error && $fd->error) {
+	    $write_count += length($header);
+	}
+	    
 	print $fd ($raw_print_mode ? "\n" : "\r\n");
+	unless ($has_error && $fd->error) { 
+	    $write_count += $raw_print_mode ? 1 : 2;
+	}
 
 	# XXX we need to print header separator only if valid body exists.
 	# XXX but it seems difficult ... ;)
@@ -1205,6 +1221,8 @@ sub _print_messsage_on_memory
 		}
 	    }
 	}
+
+	$self->_set_write_count($write_count);
     }
 
     # skip the first rfc822 header (which is the real header for delivery).
@@ -1218,6 +1236,7 @@ sub _print_messsage_on_memory
 	my $r = substr($$data, $pp, $p_end - $pp);
 	print STDERR "output($pp, $p_end) = {$r}\n";
     }
+
   SMTP_IO:
     while (1) {
 	$p = index($$data, "\n", $pp);
@@ -1261,12 +1280,22 @@ sub _print_messsage_on_memory
 	    $buf =~ s/^\./../;
 	}
 
+	if ($debug > 1) {
+	    print STDERR "===> print($buf);\n";
+	}
+
 	print $fd $buf;
 	&$logfp($buf) if $logfp;
+
+	unless ($has_error && $fd->error) {
+	    $write_count += length($buf);
+	}
 
 	last SMTP_IO if $p < 0;
 	$pp = $p + 1;
     }
+
+    $self->_set_write_count($write_count);
 }
 
 
@@ -1277,6 +1306,10 @@ sub _print_messsage_on_memory
 sub _print_messsage_on_disk
 {
     my ($self, $fd, $args) = @_;
+    my $write_count = $self->_get_write_count();
+
+    # check if IO::Handle error handling supported.
+    my $has_error = $fd->can('error') && $fd->can('clearerr') ? 1 : 0;
 
     # \n -> \r\n
     my $raw_print_mode = 1 if $override_print_mode eq 'raw';
@@ -1289,7 +1322,14 @@ sub _print_messsage_on_disk
     if (defined $header) {
 	$header =~ s/\n/\r\n/g unless (defined $raw_print_mode);
 	print $fd $header;
+	unless ($has_error && $fd->error) {
+	    $write_count += length($header);
+	}
+
 	print $fd ($raw_print_mode ? "\n" : "\r\n");
+	unless ($has_error && $fd->error) { 
+	    $write_count += $raw_print_mode ? 1 : 2;
+	}
     }
 
     # 2. print content body: write each line in buffer
@@ -1310,12 +1350,41 @@ sub _print_messsage_on_disk
 
 	    print $fd $buf;
 	    &$logfp($buf) if $logfp;
+
+	    unless ($has_error && $fd->error) {
+		$write_count += length($buf);
+	    }
 	}
 	close($fh);
     }
     else {
 	carp("cannot open $filename");
     }
+
+    $self->_set_write_count($write_count);
+}
+
+
+# Descriptions: save length written.
+#    Arguments: OBJ($self) NUM($write_count)
+# Side Effects: update $self.
+# Return Value: none
+sub _set_write_count
+{
+    my ($self, $write_count) = @_;
+
+    $debug_write_count{ $debug_thread_unsafe_id } = $write_count;
+}
+
+
+# Descriptions: save length written.
+#    Arguments: OBJ($self) NUM($write_count)
+# Side Effects: update $self.
+# Return Value: none
+sub _get_write_count
+{
+    my ($self, $write_count) = @_;
+    return( $debug_write_count{ $debug_thread_unsafe_id } || 0 );
 }
 
 
@@ -2142,6 +2211,18 @@ sub is_empty
 
     # false
     return 0;
+}
+
+
+# Descriptions: return length which are written successfully.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
+sub write_count
+{
+    my ($self) = @_;
+
+    return $self->_get_write_count();
 }
 
 

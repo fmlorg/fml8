@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.36 2004/05/24 15:18:33 fukachan Exp $
+# $FML: Queue.pm,v 1.37 2004/05/25 03:43:02 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -379,10 +379,40 @@ sub in
 	    $self->error_set("write error");
 	}
 	$fh->close;
+
+	my $write_count = $self->{ _write_count } = $msg->write_count();
+
+	use File::stat;
+	my $try_count = 3;
+	my $ok = 0;
+      TRY:
+	while ($try_count-- > 0) {
+	    my $st = stat($qf);
+	    if ($st->size == $write_count) {
+		$ok = 1;
+		last TRY;
+	    }
+	    sleep 1;
+	}
+
+	unless ($ok) {
+	    $self->error_set("write error: size mismatch");
+	}
     }
 
     # check the existence and the size > 0.
     return( (-e $qf && -s $qf) ? 1 : 0 );
+}
+
+
+# Descriptions: return num of bytes written successfully.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
+sub write_count
+{
+    my ($self) = @_;
+    return $self->{ _write_count };
 }
 
 
