@@ -1636,16 +1636,6 @@ listinfo_base_dir	= $fml_owner_home_dir/public_html/fml/listinfo
 listinfo_dir	= $listinfo_base_dir/$ml_domain/$ml_name
 
 
-=head2	newml command
-
-
-# Descriptions: template files used in running "makefml newml"
-#        Value: ARRAY
-#     Examples:
-newml_command_template_files 	=	config.cf
-
-
-
 =head2	inform filter rejection
 
 
@@ -1670,6 +1660,34 @@ command_mail_filter_reject_notice_recipients	=	maintainer
 #        Value: multipart / string
 #     Examples: string
 command_mail_filter_reject_notice_data_type	=	string
+
+
+=head2	newml command
+
+
+# Descriptions: template files used in running "makefml newml"
+#        Value: ARRAY
+#     Examples:
+newml_command_template_files 		=	config.cf
+
+
+# Descriptions: fml_owner value used by newml command.
+#               this value is a destination where error mail are forwardeded.
+#               user "fml" by default (same as $fml_owner in main.cf).
+#        Value: STR
+#     Examples:
+newml_command_ml_admin_default_address 	=	$fml_owner
+
+
+
+=head2	list command
+
+
+# Descriptions: default map to show by list command.
+#      History: none
+#        Value: ARRAY
+#     Examples:
+list_command_default_maps		=	$recipient_maps
 
 
 =head2	log command
