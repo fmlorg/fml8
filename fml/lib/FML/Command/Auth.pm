@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.6 2002/05/27 08:59:15 fukachan Exp $
+# $FML: Auth.pm,v 1.7 2002/05/28 13:36:59 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -74,6 +74,10 @@ sub permit_anyone
 }
 
 
+# Descriptions: permit if admin_member_maps has the sender
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args) HASH_REF($optargs)
+# Side Effects: none
+# Return Value: NUM
 sub permit_admin_member_maps
 {
     my ($self, $curproc, $args, $optargs) = @_;
@@ -84,6 +88,8 @@ sub permit_admin_member_maps
 	Log("found in admin_member_maps");
 	return 1;
     }
+
+    return 0;
 }
 
 
