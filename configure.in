@@ -1,5 +1,5 @@
 dnl
-dnl $FML: configure.in,v 1.20 2002/04/24 03:14:06 fukachan Exp $
+dnl $FML: configure.in,v 1.21 2002/04/25 04:46:08 fukachan Exp $
 dnl
 AC_REVISION($Revision$)
 
@@ -42,6 +42,7 @@ AC_PATH_PROG(NEWALIASES, newaliases)
 AC_PATH_PROG(POSTFIX,    postfix)
 AC_PATH_PROG(POSTALIAS,  postalias)
 AC_PATH_PROG(POSTCONF,   postconf)
+AC_PATH_PROG(POSTMAP,    postmap)
 
 AC_PATH_PROG(NKF,      nkf)
 AC_PATH_PROG(KAKASI,   kakasi)
