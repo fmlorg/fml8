@@ -29,6 +29,14 @@ article_header_rewrite_rules	+=	rewrite_article_subject_tag
 article_subject_tag = [\U$ml_name\E %05d)
 
 #
+# smtp test
+#
+smtp_recipient_limit	=	1
+
+smtp_servers		+=	127.0.0.1:3128
+				127.0.0.1:6025
+
+#
 # for error simulation
 #
 error_analyzer_function	=	simple_count
