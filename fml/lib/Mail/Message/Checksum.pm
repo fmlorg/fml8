@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Checksum.pm,v 1.1 2001/12/22 16:07:09 fukachan Exp $
+# $FML: Checksum.pm,v 1.2 2002/04/11 23:15:26 fukachan Exp $
 #
 
 package Mail::Message::Checksum;
@@ -95,7 +95,7 @@ sub md5
 {
     my ($self, $r_data) = @_;
 
-    if ($self->{ _type } eq 'native') {
+    if (defined($self->{ _type }) && ($self->{ _type } eq 'native')) {
 	$self->_md5_native($r_data);
     }
     else {
