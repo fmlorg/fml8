@@ -1,0 +1,154 @@
+<!--
+   $FML$
+-->
+
+
+<chapter id="operations.backup">
+	<title>
+	設定のバックアップ
+	</title>
+
+
+<para>
+fml8 の設定にかんしては、これら(最少で２つ)のディレクトリ以下のファイ
+ルをバックアップしておけば良いです。
+<screen>
+/etc/fml/
+$ml_home_prefix	(たとえば /var/spool/ml/、ドメインごとに異なります)
+</screen>
+ただ、これら全部をバックアップすると、記事やログファイルなどあらゆるも
+のが含まれているので、サイズは大きいです。
+</para>
+
+<para>
+また、MTA の設定もバックアップしておくとよいでしょう。
+Postfixなら、/etc/postfixです。
+</para>
+
+<para>
+よって、まとめると、その３つ(正確には２＋fml8が管轄しているドメインの
+数)のディレクトリということになります。
+<screen>
+/etc/postfix/
+/etc/fml/
+$ml_home_prefix	(たとえば /var/spool/ml/、ドメインごとに異なります)
+</screen>
+</para>
+
+<para>
+もう少し、詳しく説明します。
+</para>
+
+
+<sect1 id="operations.backup.fml8">
+	<title>
+	fml8 の設定をバックアップする
+	</title>
+
+<para>
+fml8 の設定にかんしては、この２つのディレクトリ以下のファイルをバック
+アップしておけば良いのですが、ただ、これだと記事やログファイルなどあら
+ゆるものが含まれているので、サイズが大きいです。
+<screen>
+/etc/fml/
+$ml_home_prefix	(たとえば /var/spool/ml/、ドメインごとに異なります)
+</screen>
+</para>
+
+<para>
+ディスクの安い昨今では、何も気にせず、この階層を全部バックアップしてお
+くほうがよいとおもいます。
+</para>
+
+<para>
+しかしながら、できるだけ設定だけを残したいという場合には、特定のディレ
+クトリを無視してバックアップするか、以下の各ファイルを個別にバックアッ
+プしていくようにします。
+</para>
+
+
+<sect2>
+	<title>
+	設定ファイルのバックアップ
+	</title>
+
+<para>
+個別にバックアップしようとすると結構めんどうです。
+</para>
+
+<para>
+まず、fml8 では、ファイル名に .cf がついているファイルが設定を書くファ
+イルです。正確には
+<screen> 
+key = value
+</screen> 
+形式の設定ファイルです。この形式のファイルには
+<screen>
+/etc/fml/main.cf
+/etc/fml/site_default_config.cf
+/ＭＬのホームディレクトリ/config.cf
+</screen>
+などがあります。
+</para>
+
+<para>
+また、これら以外にも、シンタックスの異なる
+<screen>
+/etc/fml/mime_component_filter
+/etc/fml/ml_home_prefix
+</screen>
+などのファイルがあります。このファイルの形式は空白区切りです。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	メンバーリストのバックアップ
+	</title>
+
+<para>
+アドレスのリストは
+<screen>
+/ＭＬのホームディレクトリ/members*
+/ＭＬのホームディレクトリ/recipients*
+</screen>
+です。通常の記事配送については、recipientsとmembersになりますが、その
+他の用途の場合では「members-用途」のような拡張子がついています。そのた
+め、members* recipients* をバックアップの対象にしておくと良いわけです。
+</para>
+
+<para>
+なお、リモート管理で使うパスワードファイルは
+<screen>
+/ＭＬのホームディレクトリ/etc/passwd-用途
+</screen>
+です。etc/ 以下もバックアップしましょう。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	特定のディレクトリ以外、全部バックアップする
+	</title>
+
+<para>
+たぶん、以下のディレクトリを除いて全部をバックアップすると楽で良いはず
+です。
+<screen>
+spool	記事
+tmp	中間ファイル
+var	各種のデータ
+</screen>
+</para>
+
+</sect2>
+
+
+</sect1>
+
+
+</chapter>
