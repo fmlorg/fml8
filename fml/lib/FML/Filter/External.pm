@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: External.pm,v 1.1 2004/05/25 03:39:50 fukachan Exp $
+# $FML: External.pm,v 1.2 2004/05/25 16:11:32 fukachan Exp $
 #
 
 package FML::Filter::External;
@@ -63,6 +63,7 @@ sub spawn
 	\$ext_filter->process(\$curproc, \$msg);
     };
 
+    # XXX-TODO: exit(75) if timeout.
     my $r;
     if ($r = $@) {
 	$curproc->logerror($@);

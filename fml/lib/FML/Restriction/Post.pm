@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.11 2004/03/14 06:49:26 fukachan Exp $
+# $FML: Post.pm,v 1.12 2004/04/23 04:10:38 fukachan Exp $
 #
 
 package FML::Restriction::Post;
@@ -114,6 +114,7 @@ sub permit_member_maps
 	# $curproc->reply_message( "   your address: $sender" );
 
 	# save reason for later use.
+	# XXX the deny reason is first match.
 	unless ($curproc->restriction_state_get_deny_reason()) {
 	    $curproc->restriction_state_set_deny_reason($rule);
 	}
@@ -136,6 +137,7 @@ sub reject
     my ($self, $rule, $sender) = @_;
     my $curproc = $self->{ _curproc };
 
+    # XXX the deny reason is first match.
     unless ($curproc->restriction_state_get_deny_reason()) {
 	$curproc->restriction_state_set_deny_reason($rule);
     }

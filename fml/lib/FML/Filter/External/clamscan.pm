@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: clamscan.pm,v 1.1 2004/06/24 11:01:33 fukachan Exp $
+# $FML: clamscan.pm,v 1.2 2004/06/26 11:43:08 fukachan Exp $
 #
 
 package FML::Filter::External::clamscan;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Filter::External::clamscan - SpamAssassin interface.
+FML::Filter::External::clamscan - clamav interface.
 
 =head1 SYNOPSIS
 
@@ -22,7 +22,9 @@ FML::Filter::External::clamscan - SpamAssassin interface.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
+
+constructor.
 
 =cut
 
@@ -40,7 +42,7 @@ sub new
 }
 
 
-# Descriptions: check if the current message looks a spam.
+# Descriptions: check if the current message looks a virus.
 #    Arguments: OBJ($self) OBJ($curproc)
 # Side Effects: none
 # Return Value: NUM(1 or 0) (1 if spam)
@@ -73,6 +75,8 @@ sub process
 sub _check
 {
     my ($self, $curproc, $program) = @_;
+
+    # XXX-TODO: configurable.
     my $opts = "--quiet --mbox";
 
     use FileHandle;
@@ -84,6 +88,7 @@ sub _check
 	$msg->print($wh);
 	$wh->close();
 
+	# XXX-TODO: correct ?
 	unless (-f $tmp_file) {
 	    return 0;
 	}

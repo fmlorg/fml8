@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.39 2004/03/23 06:34:15 fukachan Exp $
+# $FML: SendFile.pm,v 1.40 2004/04/23 04:10:31 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -18,7 +18,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::Command::SendFile - utility functions to send back file(s)
+FML::Command::SendFile - utility functions to send back file(s).
 
 =head1 SYNOPSIS
 
@@ -50,7 +50,7 @@ C<FML::Command::Admin> modules.
 # Descriptions: return the number of files specified in $command_args.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: none
-# Return Value: none
+# Return Value: NUM
 sub num_files_in_send_article_args
 {
     my ($self, $curproc, $command_args) = @_;
@@ -137,7 +137,7 @@ sub send_article
 }
 
 
-# Descriptions: check the argument and expand it if needed
+# Descriptions: check the argument and expand it if needed.
 #    Arguments: OBJ($self) OBJ($curproc) STR($fn)
 # Side Effects: none
 # Return Value: ARRAY_REF as [ $fist .. $last ]
@@ -181,12 +181,12 @@ sub send_file
     my $config    = $curproc->config();
 
     # XXX get_charset() take Accpet-Language: header field into account.
-    my $charset  = $curproc->get_charset("reply_message");
+    my $charset   = $curproc->get_charset("reply_message");
 
     # XXX-TODO: who validate $filename and $filepath ?
     $curproc->log("send_file: $filepath");
 
-    # template substitution: kanji code, $varname expansion et. al.
+    # template substitution: kanji code, $varname expansion et.al.
     # we prepare file to send back which has proper kanji code et.al.
     my $params = {
 	src         => $filepath,

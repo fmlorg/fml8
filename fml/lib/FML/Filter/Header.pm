@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.8 2004/01/21 03:52:00 fukachan Exp $
+# $FML: Header.pm,v 1.9 2004/02/01 14:52:50 fukachan Exp $
 #
 
 package FML::Filter::Header;
@@ -16,7 +16,7 @@ use ErrorStatus qw(error_set error error_clear);
 
 =head1 NAME
 
-FML::Filter::Header - filter based on mail header content
+FML::Filter::Header - filter based on mail header content.
 
 =head1 SYNOPSIS
 
@@ -150,7 +150,7 @@ sub check_message_id
 }
 
 # Descriptions: validate the date in the given message $msg.
-#               This routine checks missing date field
+#               This routine checks missing date field.
 #    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: croak()
 # Return Value: none

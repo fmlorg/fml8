@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: FileUtils.pm,v 1.16 2004/02/15 04:38:27 fukachan Exp $
+# $FML: FileUtils.pm,v 1.17 2004/04/23 04:10:30 fukachan Exp $
 #
 
 package FML::Command::FileUtils;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::FileUtils - utilities to handle files
+FML::Command::FileUtils - utilities to handle files.
 
 =head1 SYNOPSIS
 
@@ -25,12 +25,12 @@ FML::Command::FileUtils - utilities to handle files
 
 =head2 new()
 
-standard constructor.
+constructor.
 
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -60,7 +60,7 @@ in FML::Restriction class.
 =cut
 
 
-# Descriptions: remove files
+# Descriptions: remove files.
 #    Arguments: OBJ($self) VARARGS(@p)
 # Side Effects: remove files
 # Return Value: same as remove()
@@ -71,7 +71,7 @@ sub delete
 }
 
 
-# Descriptions: remove files
+# Descriptions: remove files.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($command_args) HASH_REF($du_args)
 # Side Effects: none

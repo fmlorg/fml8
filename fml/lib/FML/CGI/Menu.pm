@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.10 2004/03/31 05:28:17 fukachan Exp $
+# $FML: Menu.pm,v 1.11 2004/03/31 12:34:26 fukachan Exp $
 #
 
 package FML::CGI::Menu;
@@ -21,7 +21,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::CGI::Menu - provides CGI control function for the specific domain
+FML::CGI::Menu - provides CGI control function for the specific domain.
 
 =head1 SYNOPSIS
 
@@ -65,7 +65,7 @@ This module has routines needed for the admin CGI.
 =cut
 
 
-# Descriptions: print out HTML header + body former part
+# Descriptions: print out HTML header + body former part.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
@@ -89,7 +89,7 @@ sub html_start
 }
 
 
-# Descriptions: print out body latter part
+# Descriptions: print out body latter part.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
@@ -204,7 +204,7 @@ sub run_cgi_main
 }
 
 
-# Descriptions: show menu (table based menu)
+# Descriptions: show menu (table based menu).
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
@@ -265,7 +265,7 @@ execute cgi_menu() given as FML::Command::*
 =cut
 
 
-# Descriptions: execute FML::Command
+# Descriptions: show meu.
 #    Arguments: OBJ($curproc)
 # Side Effects: load module
 # Return Value: none
@@ -279,12 +279,12 @@ sub run_cgi_menu
 
 =head2 run_cgi_help()
 
-help.
+show help.
 
 =cut
 
 
-# Descriptions: show help
+# Descriptions: show help.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
@@ -321,12 +321,12 @@ sub run_cgi_help
 
 =head2 run_cgi_command_help()
 
-command_help.
+show command dependent help.
 
 =cut
 
 
-# Descriptions: show command_dependent help
+# Descriptions: show command dependent help.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
@@ -381,7 +381,7 @@ sub _gen_msg_args
 L<CGI>,
 L<FML::Process::CGI>
 and
-L<FML::Process::Flow>
+L<FML::Process::Flow>.
 
 =head1 CODING STYLE
 

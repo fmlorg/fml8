@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.94 2004/04/17 11:37:56 fukachan Exp $
+# $FML: Config.pm,v 1.95 2004/05/24 15:41:28 fukachan Exp $
 #
 
 package FML::Config;
@@ -30,7 +30,7 @@ $current_context = '__default__';
 
 =head1 NAME
 
-FML::Config -- manipulate fml8 configuration file
+FML::Config -- manipulate fml8 configuration name space.
 
 =head1 SYNOPSIS
 
@@ -224,7 +224,7 @@ them to %_fml_config.
 =cut
 
 
-# Descriptions: load file
+# Descriptions: load file.
 #    Arguments: OBJ($self) STR($file)
 # Side Effects: none
 # Return Value: none
@@ -235,7 +235,7 @@ sub overload
 }
 
 
-# Descriptions: load file
+# Descriptions: load file.
 #    Arguments: OBJ($self) STR($file)
 # Side Effects: none
 # Return Value: none
@@ -330,6 +330,7 @@ sub _read_file
 
 	    if ($mode eq 'raw') { # save comment buffer
 		if ($buf =~ /^\s*\#/o) { $comment_buffer .= $buf;}
+		# XXX-TODO: next LINE ?
 	    }
 	    else { # by default, nuke trailing "\n"
 		chomp $buf;
@@ -411,7 +412,7 @@ sub __update_config
 }
 
 
-# Descriptions: append $value into $config
+# Descriptions: append $value into $config object.
 #    Arguments: HASH_REF($config)
 #               STR($key) STR($value) STR($name_space) STR($mode)
 # Side Effects: update $config
@@ -506,7 +507,7 @@ appearing order.
 my $config_hold_space = {};
 
 
-# Descriptions: read $file and push the content into $config
+# Descriptions: read $file and push the content into $config object.
 #    Arguments: OBJ($self) STR($file)
 # Side Effects: open file
 # Return Value: none
@@ -548,7 +549,7 @@ sub read
 }
 
 
-# Descriptions: save $config into $file
+# Descriptions: save $config into $file file.
 #    Arguments: OBJ($self) STR($file)
 # Side Effects: rewrite $file
 # Return Value: none
@@ -665,7 +666,7 @@ sub __hash_copy
 }
 
 
-# Descriptions: update config in the next level name space e.g. [mysql:xxx]
+# Descriptions: update config in the next level name space e.g. [mysql:xxx].
 #    Arguments: OBJ($config)
 # Side Effects: update config
 # Return Value: none
@@ -684,7 +685,7 @@ sub _expand_nextlevel
 }
 
 
-# Descriptions: variable expansion
+# Descriptions: variable expansion.
 #    Arguments: OBJ($config) HASH_REF($hints)
 # Side Effects: variable expansion in $config
 # Return Value: none
@@ -838,7 +839,7 @@ return 0 if not.
 =cut
 
 
-# Descriptions: return 1 if the value of the key is "yes"
+# Descriptions: return 1 if the value of the key is "yes".
 #    Arguments: OBJ($self) STR($key)
 # Side Effects: none
 # Return Value: 1 or 0
@@ -863,7 +864,7 @@ sub yes
 }
 
 
-# Descriptions: return 1 if the value of the key is "no"
+# Descriptions: return 1 if the value of the key is "no".
 #    Arguments: OBJ($self) STR($key)
 # Side Effects: none
 # Return Value: 1 or 0
@@ -1083,7 +1084,7 @@ tie() IO.
 =cut
 
 
-# Descriptions: begin op for tie() with %_fml_config
+# Descriptions: begin op for tie() with %_fml_config.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -1097,7 +1098,7 @@ sub TIEHASH
 
 
 
-# Descriptions: FETCH op for tie() with %_fml_config
+# Descriptions: FETCH op for tie() with %_fml_config.
 #    Arguments: OBJ($self) STR($key)
 # Side Effects: none
 # Return Value: STR
@@ -1132,7 +1133,7 @@ sub FETCH
 }
 
 
-# Descriptions: STORE op for tie() with %_fml_config
+# Descriptions: STORE op for tie() with %_fml_config.
 #    Arguments: OBJ($self) STR($key) STR($value)
 # Side Effects: update %_fml_config
 # Return Value: STR or UNDEF
@@ -1154,7 +1155,7 @@ sub STORE
 }
 
 
-# Descriptions: DELETE op for tie() with %_fml_config
+# Descriptions: DELETE op for tie() with %_fml_config.
 #    Arguments: OBJ($self) STR($key)
 # Side Effects: update %_fml_config
 # Return Value: none
@@ -1168,7 +1169,7 @@ sub DELETE
 }
 
 
-# Descriptions: CLEAR op for tie() with %_fml_config
+# Descriptions: CLEAR op for tie() with %_fml_config.
 #    Arguments: OBJ($self)
 # Side Effects: update %_fml_config
 # Return Value: none
@@ -1181,7 +1182,7 @@ sub CLEAR
 }
 
 
-# Descriptions: FIRSTKEY op for tie() with %_fml_config
+# Descriptions: FIRSTKEY op for tie() with %_fml_config.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
@@ -1199,7 +1200,7 @@ sub FIRSTKEY
 }
 
 
-# Descriptions: NEXTKEY op for tie() with %_fml_config
+# Descriptions: NEXTKEY op for tie() with %_fml_config.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.105 2004/03/31 12:53:52 fukachan Exp $
+# $FML: Switch.pm,v 1.106 2004/05/19 09:03:07 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -17,7 +17,7 @@ use File::Spec;
 
 =head1 NAME
 
-FML::Process::Switch - dispatch a module suitable with the program name
+FML::Process::Switch - dispatch a module suitable with the program name.
 
 =head1 SYNOPSIS
 
@@ -79,7 +79,7 @@ We pass it to C<load_module()> later.
 =cut
 
 
-# Descriptions: the second phase of bootstrap
+# Descriptions: the second phase of bootstrap.
 #    Arguments: STR($main_cf_file) HASH_REF($main_cf)
 # Side Effects: none
 # Return Value: same as FML::Process::Flow::ProcessStart()
@@ -216,7 +216,7 @@ sub main::Bootstrap2
 }
 
 
-# Descriptions: try to save the error message
+# Descriptions: try to save the error message.
 #    Arguments: HASH_REF($main_cf) STR($s)
 # Side Effects: save message to a log file if could
 # Return Value: none
@@ -276,7 +276,7 @@ C<$args> is like this:
 =cut
 
 
-# Descriptions: top level process switch
+# Descriptions: top level process switch.
 #               emulates "use $package" but $package is dynamically
 #               determined by e.g. $0.
 #    Arguments: STR($myname) HASH_REF($args)
@@ -311,7 +311,7 @@ sub load_module
 # Return Value: HASH_REF
 sub _overload_main_cf
 {
-    my ($main_cf) = @_;
+    my ($main_cf)   = @_;
     my $new_main_cf = {};
     my $config_dir  = $main_cf->{ default_config_dir };
 
@@ -338,7 +338,7 @@ sub _overload_main_cf
 }
 
 
-# Descriptions: return the suitable getopt options
+# Descriptions: return the suitable getopt options.
 #    Arguments: HASH_REF($main_cf) STR($name)
 # Side Effects: none
 # Return Value: ARRAY_REF (getopt parameters)

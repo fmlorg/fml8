@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.4 2004/01/22 15:01:01 fukachan Exp $
+# $FML: Control.pm,v 1.5 2004/02/15 04:38:33 fukachan Exp $
 #
 
 package FML::MTA::Control;
@@ -29,7 +29,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::MTA::Control - utilities to handle MTA specific configurations
+FML::MTA::Control - utilities to handle MTA specific configurations.
 
 =head1 SYNOPSIS
 
@@ -55,7 +55,7 @@ and
 my $default_mta = 'postfix';
 
 
-# Descriptions: ordinary constructor.
+# Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($ctl_args)
 # Side Effects: none
 # Return Value: OBJ
@@ -72,7 +72,7 @@ sub new
 }
 
 
-# Descriptions: $mta_type is valid or not.
+# Descriptions: check if $mta_type is valid or not.
 #    Arguments: OBJ($self) STR($mta_type)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
@@ -112,7 +112,7 @@ sub setup
 }
 
 
-# Descriptions: update alias.db from alias file
+# Descriptions: update alias.db from alias file.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
@@ -131,7 +131,7 @@ sub update_alias
 }
 
 
-# Descriptions: find key in alias maps
+# Descriptions: find key in alias maps.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: none
@@ -151,7 +151,7 @@ sub find_key_in_alias_maps
 }
 
 
-# Descriptions: return aliases as HASH_REF
+# Descriptions: return aliases as HASH_REF.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: HASH_REF

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.12 2004/03/12 11:45:54 fukachan Exp $
+# $FML: Utils.pm,v 1.13 2004/04/18 05:59:44 fukachan Exp $
 #
 
 package FML::Process::CGI::Utils;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Process::CGI::Utils - utility for FML::Process::CGI::Kernel
+FML::Process::CGI::Utils - utility for FML::Process::CGI::Kernel.
 
 =head1 SYNOPSIS
 
@@ -44,7 +44,7 @@ sub cgi_var_ml_name
 }
 
 
-# Descriptions: return $ml_domain defined in *.cgi programd .
+# Descriptions: return $ml_domain defined in *.cgi programd.
 #               ml_domain is hard-coded, not dependent on cgi_var_cgi_mode.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
@@ -91,7 +91,7 @@ sub cgi_var_ml_name_list
 }
 
 
-# Descriptions: return address map
+# Descriptions: return address map.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: STR
@@ -105,7 +105,7 @@ sub cgi_var_address_map
 }
 
 
-# Descriptions: return list of address map
+# Descriptions: return list of address map.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -129,7 +129,7 @@ sub cgi_var_myname
 }
 
 
-# Descriptions: return command list
+# Descriptions: return available command list in cgi mode.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -143,6 +143,7 @@ sub cgi_var_available_command_list
 	return $config->get_as_array_ref('admin_cgi_allowed_commands');
     }
     else {
+	# XXX-TODO: commands_for_ml_admin_cgi -> ml_admin_cgi_allowed_commands
 	return $config->get_as_array_ref('commands_for_ml_admin_cgi');
     }
 }
@@ -159,7 +160,7 @@ sub cgi_var_action
 }
 
 
-# Descriptions: return action name.
+# Descriptions: return frame target name.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: STR

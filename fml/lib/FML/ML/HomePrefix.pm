@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HomePrefix.pm,v 1.4 2004/04/23 04:10:34 fukachan Exp $
+# $FML: HomePrefix.pm,v 1.5 2004/04/27 13:23:25 fukachan Exp $
 #
 
 package FML::ML::HomePrefix;
@@ -33,7 +33,7 @@ FML::ML::HomePrefix - create, rename and delete ml_home_prefix dir.
 =cut
 
 
-# Descriptions: standard constructor.
+# Descriptions: constructor.
 #    Arguments: OBJ($self) OBJ($curproc)
 # Side Effects: none
 # Return Value: OBJ

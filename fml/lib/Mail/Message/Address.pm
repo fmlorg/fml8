@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Address.pm,v 1.4 2004/06/29 10:03:48 fukachan Exp $
+# $FML: Address.pm,v 1.5 2004/07/06 23:55:58 fukachan Exp $
 #
 
 package Mail::Message::Address;
@@ -26,7 +26,7 @@ This class is an adapter for Mail::Address for convenience.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 constructor.
 

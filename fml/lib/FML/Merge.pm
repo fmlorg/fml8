@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Merge.pm,v 1.8 2004/03/18 13:25:54 fukachan Exp $
+# $FML: Merge.pm,v 1.9 2004/03/20 02:43:02 fukachan Exp $
 #
 
 package FML::Merge;
@@ -22,6 +22,8 @@ FML::Merge - merge other system configurations to fml8 ones.
 =head1 DESCRIPTION
 
 =head2 new($curproc, $params)
+
+constructor.
 
 =cut
 
@@ -286,6 +288,7 @@ sub merge_into_config_cf
     my ($self)   = @_;
     my $m_config = $self->{ _m_config };
 
+    # XXX-TODO: "/tmp/default_config.ph" ???
     # files to compare.
     my $old_config_ph     = $m_config->old_file_path("config.ph");
     my $default_config_ph = "/tmp/default_config.ph";

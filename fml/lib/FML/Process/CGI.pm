@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: CGI.pm,v 1.23 2002/12/22 03:46:20 fukachan Exp $
+# $FML: CGI.pm,v 1.24 2004/01/02 14:42:43 fukachan Exp $
 #
 
 package FML::Process::CGI;
@@ -18,7 +18,7 @@ use FML::Process::CGI::Param;
 
 =head1 NAME
 
-FML::Process::CGI - CGI basic functions
+FML::Process::CGI - CGI basic functions.
 
 =head1 SYNOPSIS
 

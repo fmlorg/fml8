@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: rmdomain.pm,v 1.4 2003/11/16 23:49:12 fukachan Exp $
+# $FML: rmdomain.pm,v 1.5 2003/12/28 13:23:16 fukachan Exp $
 #
 
 package FML::Command::Admin::rmdomain;
@@ -28,7 +28,7 @@ an alias of C<FML::Command::Admin::dir>.
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -41,7 +41,7 @@ sub new
 }
 
 
-# Descriptions: not need lock in the first time
+# Descriptions: not need lock in the first time.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)

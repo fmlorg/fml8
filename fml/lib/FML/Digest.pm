@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Digest.pm,v 1.18 2004/04/11 13:02:15 fukachan Exp $
+# $FML: Digest.pm,v 1.19 2004/04/23 04:10:27 fukachan Exp $
 #
 
 package FML::Digest;
@@ -115,7 +115,7 @@ sub get_article_id
 }
 
 
-# Descriptions: return the last article id sent back as digest
+# Descriptions: return the last sequence id sent back as digest.
 #    Arguments: OBJ($self) STR($seq_file)
 # Side Effects: none
 # Return Value: NUM
@@ -143,7 +143,7 @@ sub _get_id
 }
 
 
-# Descriptions: return the last article id sent back as digest.
+# Descriptions: set digest id.
 #    Arguments: OBJ($self) NUM($id)
 # Side Effects: none
 # Return Value: NUM

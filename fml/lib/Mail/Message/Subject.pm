@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2004 Ken'ichi Fukamachi
 #
-# $FML: Subject.pm,v 1.3 2004/03/28 11:11:55 fukachan Exp $
+# $FML: Subject.pm,v 1.4 2004/06/23 00:05:38 fukachan Exp $
 #
 
 package Mail::Message::Subject;
@@ -66,7 +66,7 @@ sub delete_dup_reply_tag
 
     # XXX-TODO: care for not Japanese string!
     # XXX-TODO: call this module if $subject is Japanese or English.
-    # XXX-TODO: but what should we do when the code is not the two ?
+    # XXX-TODO: but what should we do when the code is not the two above ?
     if (1) {
 	use Mail::Message::Language::Japanese::Subject;
 	my $sbj  = new Mail::Message::Language::Japanese::Subject;
@@ -116,6 +116,7 @@ sub delete_tag
     my ($self, $tag) = @_;
     my $subject = $self->as_str();
 
+    # XXX $subject SHOULD BE MIME DECODED ALREADY. 
     # for example, ml_name = elena
     # if $tag has special regexp such as \U$ml_name\E or \L$ml_name\E
     if (defined $tag) {

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.59 2004/04/27 13:28:06 fukachan Exp $
+# $FML: Credential.pm,v 1.60 2004/07/11 15:43:36 fukachan Exp $
 #
 
 package FML::Credential;
@@ -46,8 +46,14 @@ So this hash is accessible in public.
 
 =head2 new()
 
-bind $self to the module internal C<\%Credential> hash and return the
-hash reference as an object.
+constructor. It bind $self to the module internal C<\%Credential> hash
+and return the hash reference as an object.
+
+ASSMPUTION:
+
+We assume one process has one credential since the mail sender must be
+unique. It must be one credential even if context switching of
+processing mailing list occurs.
 
 =cut
 
@@ -115,7 +121,7 @@ sub _reconfigure
 }
 
 
-# Descriptions: dummy
+# Descriptions: dummy.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -135,7 +141,7 @@ compare user part case insensitively.
 =cut
 
 
-# Descriptions: compare user part case sensitively (default)
+# Descriptions: compare user part case sensitively.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: none
@@ -192,7 +198,7 @@ For example, consider these two addresses:
             rudo@nuinui.net
             rudo@sapporo.nuinui.net
 
-These addresses differs. But
+These addresses differ. But
 
             rudo@fml.nuinui.net
             rudo@sapporo.fml.nuinui.net
@@ -471,7 +477,7 @@ sub matched_address
 }
 
 
-# Descriptions: save the last matched address
+# Descriptions: save the last matched address.
 #    Arguments: OBJ($self) STR($address)
 # Side Effects: update $self->{ _last_matched_address };
 # Return Value: STR
@@ -482,7 +488,7 @@ sub _save_address
 }
 
 
-# Descriptions: return the last matched address
+# Descriptions: return the last matched address.
 #    Arguments: OBJ($self) STR($address)
 # Side Effects: none
 # Return Value: STR
@@ -546,7 +552,7 @@ process.
 
 =cut
 
-# Descriptions: return the mail sender
+# Descriptions: return the mail sender.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR(mail address)
@@ -599,7 +605,7 @@ return the number of C<level>.
 =cut
 
 
-# Descriptions: set address comparison level
+# Descriptions: set address comparison level.
 #    Arguments: OBJ($self) NUM($level)
 # Side Effects: change private variables in object
 # Return Value: NUM
@@ -616,7 +622,7 @@ sub set_compare_level
 }
 
 
-# Descriptions: return address comparison level
+# Descriptions: return address comparison level.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: NUM
@@ -642,7 +648,7 @@ sub get_compare_level
 # XXX-TODO: remove get() and set(), which are not used ?
 
 
-# Descriptions: get value for the specified key
+# Descriptions: get value for the specified key.
 #    Arguments: OBJ($self) STR($key)
 # Side Effects: change object
 # Return Value: STR
@@ -660,7 +666,7 @@ sub get
 }
 
 
-# Descriptions: set value for $key to be $value
+# Descriptions: set value for $key to be $value.
 #    Arguments: OBJ($self) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR

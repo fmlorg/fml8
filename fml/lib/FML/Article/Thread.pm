@@ -3,7 +3,7 @@
 # Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Thread.pm,v 1.8 2004/03/31 12:38:08 fukachan Exp $
+# $FML: Thread.pm,v 1.9 2004/04/23 04:10:26 fukachan Exp $
 #
 
 package FML::Article::Thread;
@@ -395,6 +395,7 @@ sub check_if_article_is_reply_message
     # 2) it looks subject has a reply tag ?
     use FML::Header::Subject;
     my $subj = new FML::Header::Subject;
+    # XXX need $subject is already decoded.
     if ($subj->is_reply($subject)) {
 	$thread->set_article_status($id, $state_followed);
     }

@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #
-# $FML: Log.pm,v 1.27 2003/09/13 09:04:51 fukachan Exp $
+# $FML: Log.pm,v 1.28 2004/01/02 14:42:45 fukachan Exp $
 #
 
 package FML::Log;
@@ -18,7 +18,7 @@ use FML::Credential;
 
 =head1 NAME
 
-FML::Log - logging functions
+FML::Log - logging functions.
 
 =head1 SYNOPSIS
 
@@ -78,7 +78,7 @@ same as Log("error: $message", $args);
 =cut
 
 
-# Descriptions: write message $msg to logfile
+# Descriptions: write message $msg to logfile.
 #    Arguments: STR($mesg) HASH_REF($args)
 # Side Effects: update logfile
 # Return Value: none

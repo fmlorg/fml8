@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: List.pm,v 1.4 2004/03/18 13:25:56 fukachan Exp $
+# $FML: List.pm,v 1.5 2004/03/20 02:43:04 fukachan Exp $
 #
 
 package FML::Merge::FML4::List;
@@ -22,7 +22,9 @@ FML::Merge::FML4::List - convert member list files.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
+
+constructor.
 
 =cut
 
@@ -72,7 +74,7 @@ sub convert
 }
 
 
-# Descriptions: convert fml4 actives to fml8 recipients.
+# Descriptions: convert fml4 actives to fml8 recipients file.
 #    Arguments: OBJ($self) OBJ($m_config)
 # Side Effects: create fml8 file.
 # Return Value: none
@@ -86,7 +88,7 @@ sub _convert_actives
 } 
 
 
-# Descriptions: convert fml4 members to fml8 members.
+# Descriptions: convert fml4 members to fml8 members file.
 #    Arguments: OBJ($self) OBJ($m_config)
 # Side Effects: create fml8 file.
 # Return Value: none
@@ -100,7 +102,8 @@ sub _convert_members
 } 
 
 
-# Descriptions: convert fml4 members-admin to fml8 {recipients,members}-admin.
+# Descriptions: convert fml4 members-admin to
+#               fml8 {recipients,members}-admin file.
 #    Arguments: OBJ($self) OBJ($m_config)
 # Side Effects: create fml8 file.
 # Return Value: none
@@ -117,7 +120,8 @@ sub _convert_members_admin
 } 
 
 
-# Descriptions: convert fml4 moderators to fml8 {recipients,members}-moderator.
+# Descriptions: convert fml4 moderators to 
+#               fml8 {recipients,members}-moderator file.
 #    Arguments: OBJ($self) OBJ($m_config)
 # Side Effects: create fml8 file.
 # Return Value: none

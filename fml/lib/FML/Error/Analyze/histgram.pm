@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: histgram.pm,v 1.9 2004/04/23 04:10:33 fukachan Exp $
+# $FML: histgram.pm,v 1.10 2004/05/22 06:19:52 fukachan Exp $
 #
 
 package FML::Error::Analyze::histgram;
@@ -17,7 +17,7 @@ my $debug = 1;
 
 =head1 NAME
 
-FML::Error::Analyze::histgram - cost evaluator
+FML::Error::Analyze::histgram - cost evaluator.
 
 =head1 SYNOPSIS
 
@@ -72,7 +72,7 @@ but sum up count as the delta.
 =cut
 
 
-# Descriptions: error continuity based cost counting
+# Descriptions: error continuity based cost counting.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($data)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -171,7 +171,7 @@ sub _histgram
 }
 
 
-# Descriptions: return array list with 0 padding (debug)
+# Descriptions: return array list with 0 padding (debug).
 #    Arguments: ARRAY_REF($ra)
 # Side Effects: none
 # Return Value: STR
@@ -204,7 +204,7 @@ sub summary
 # Descriptions: return addresses to be removed.
 #    Arguments: OBJ($self)
 # Side Effects: none
-# Return Value: HASH_REF
+# Return Value: ARRAY_REF
 sub removal_address
 {
     my ($self) = @_;

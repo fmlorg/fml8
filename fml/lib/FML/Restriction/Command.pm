@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.13 2004/03/14 08:51:15 fukachan Exp $
+# $FML: Command.pm,v 1.14 2004/03/18 13:29:39 fukachan Exp $
 #
 
 package FML::Restriction::Command;
@@ -18,7 +18,7 @@ push(@ISA, qw(FML::Restriction::Post));
 
 =head1 NAME
 
-FML::Restriction::Command - safe regexp allowed as a command
+FML::Restriction::Command - command mail restrictions.
 
 =head1 SYNOPSIS
 
@@ -60,6 +60,7 @@ sub permit_user_command
     my ($match, $reason) = $self->SUPER::permit_member_maps($rule, $sender);
 
     # 2) command match anonymous one ?
+    # XXX-TODO: deny reason is first match ? last match ?
     if ($match) {
 	if ($reason eq 'reject') {
 	    my $_rule = "permit_member_maps";
@@ -105,6 +106,7 @@ sub permit_anonymous_command
 	$curproc->log("debug: match: rule=$rule comname=$comname");
 	return("matched", "permit");
     }
+    # XXX-TODO: not need deny reason logging ?
 
     return(0, undef);
 }
@@ -134,6 +136,7 @@ sub permit_admin_member_maps
 	$curproc->log("found in admin_member_maps");
 	return("matched", "permit");
     }
+    # XXX-TODO: not need deny reason logging ?
 
     return(0, undef);
 }
@@ -158,6 +161,7 @@ sub check_admin_member_password
 	return("matched", "permit");
     }
     else {
+	# XXX-TODO: not need deny reason logging ?
 	$curproc->log("admin password: auth fail");
 	return(0, undef);
     }

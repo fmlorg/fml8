@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: List.pm,v 1.11 2004/02/15 04:38:26 fukachan Exp $
+# $FML: List.pm,v 1.12 2004/04/18 05:59:42 fukachan Exp $
 #
 
 package FML::CGI::List;
@@ -14,7 +14,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use CGI qw/:standard/; # load standard CGI routines
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -27,7 +27,7 @@ sub new
 }
 
 
-# Descriptions: show address list
+# Descriptions: show address list.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: none
 # Return Value: none

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: User.pm,v 1.8 2004/01/02 14:50:29 fukachan Exp $
+# $FML: User.pm,v 1.9 2004/01/18 13:56:05 fukachan Exp $
 #
 
 package FML::CGI::User;
@@ -14,7 +14,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use CGI qw/:standard/; # load standard CGI routines
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -44,11 +44,15 @@ sub cgi_menu
     my $address_list = [];
     my $selected_key = '';
 
-    # XXX-TODO: who verified $ml_name and $comname ?
+    # 
+    # XXX $comman_args are checked already.
+    #     $command_args are passed in the following way: 
+    #       FML::CGI::Menu::run_cgi_main et.al. builds/checks $command_args.
+    #       FML::CGI::Menu -(via PCB)-> cgi_execute_cgi_menu() -> cgi_menu().
+    # 
 
-    # XXX-TODO: we should enable configurable by config files.
-
-    # which address list to show at the scrolling list
+    # XXX-TODO: commnd list shoul be configurable by config files.
+    # which address list to show at the scrolling list.
     if ($comname eq 'subscribe'   ||
 	$comname eq 'adduser'     ||
 	$comname eq 'useradd'     ||

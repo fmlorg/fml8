@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.8 2004/01/01 07:29:27 fukachan Exp $
+# $FML: Config.pm,v 1.1 2004/03/20 02:43:03 fukachan Exp $
 #
 
 package FML::Merge::Config;
@@ -16,7 +16,7 @@ use File::Spec;
 
 =head1 NAME
 
-FML::Merge::Config - handle configurations
+FML::Merge::Config - handle configurations.
 
 =head1 SYNOPSIS
 
@@ -24,7 +24,9 @@ FML::Merge::Config - handle configurations
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
+
+constructor.
 
 =cut
 

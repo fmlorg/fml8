@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sendmail.pm,v 1.3 2004/01/23 09:17:37 fukachan Exp $
+# $FML: Sendmail.pm,v 1.4 2004/04/10 12:41:29 fukachan Exp $
 #
 
 package FML::MTA::Control::Sendmail;
@@ -17,7 +17,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::MTA::Control::Sendmail - handle sendmail specific configurations
+FML::MTA::Control::Sendmail - handle sendmail specific configurations.
 
 =head1 SYNOPSIS
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: config_ph.pm,v 1.4 2004/03/17 12:53:16 fukachan Exp $
+# $FML: config_ph.pm,v 1.5 2004/03/18 13:25:57 fukachan Exp $
 #
 
 package FML::Merge::FML4::config_ph;
@@ -24,7 +24,9 @@ FML::Merge::FML4::config_ph - handle fml4's config.ph file.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
+
+constructor.
 
 =cut
 

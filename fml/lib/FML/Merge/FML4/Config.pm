@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.3 2004/03/17 13:30:42 fukachan Exp $
+# $FML: Config.pm,v 1.4 2004/03/18 13:25:56 fukachan Exp $
 #
 
 package FML::Merge::FML4::Config;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Merge::FML4::Config - what files we need to merge
+FML::Merge::FML4::Config - what files we need to merge.
 
 =head1 SYNOPSIS
 
@@ -23,7 +23,9 @@ FML::Merge::FML4::Config - what files we need to merge
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
+
+constructor.
 
 =cut
 
@@ -192,7 +194,7 @@ my $ml_home_dir_backup_target_files = {
 };
 
 
-# Descriptions: return files to back up.
+# Descriptions: return list of files to back up.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -265,7 +267,7 @@ sub get_continuous_use_files
 }
 
 
-# Descriptions: return backup mode.
+# Descriptions: check if we should backup this $file.
 #    Arguments: OBJ($self) STR($file)
 # Side Effects: none
 # Return Value: STR

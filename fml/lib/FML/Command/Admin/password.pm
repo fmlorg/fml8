@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: password.pm,v 1.13.2.1 2004/03/04 04:00:20 fukachan Exp $
+# $FML: password.pm,v 1.14 2004/03/04 04:30:13 fukachan Exp $
 #
 
 package FML::Command::Admin::password;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::password - authenticate the remote admin password
+FML::Command::Admin::password - authenticate the remote admin password.
 
 =head1 SYNOPSIS
 
@@ -45,21 +45,21 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
 
 
-# Descriptions: lock channel
+# Descriptions: lock channel.
 #    Arguments: none
 # Side Effects: none
 # Return Value: STR
 sub lock_channel { return 'command_serialize';}
 
 
-# Descriptions: rewrite buffer to hide the password phrase in $rbuf
+# Descriptions: rewrite buffer to hide the password phrase in $rbuf.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args) STR_REF($rbuf)
 # Side Effects: none
 # Return Value: none

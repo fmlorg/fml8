@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: bogofilter.pm,v 1.1 2004/05/25 03:39:50 fukachan Exp $
+# $FML: bogofilter.pm,v 1.2 2004/06/24 10:40:24 fukachan Exp $
 #
 
 package FML::Filter::External::bogofilter;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Filter::External::bogofilter - Bogo Filter interface.
+FML::Filter::External::bogofilter - bogofilter interface.
 
 =head1 SYNOPSIS
 
@@ -22,7 +22,9 @@ FML::Filter::External::bogofilter - Bogo Filter interface.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
+
+constructor.
 
 =cut
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Checksum.pm,v 1.10 2003/08/23 05:15:14 fukachan Exp $
+# $FML: Checksum.pm,v 1.11 2004/01/24 09:03:59 fukachan Exp $
 #
 
 package Mail::Message::Checksum;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-Mail::Message::Checksum - utilities for checksum
+Mail::Message::Checksum - utilities for checksum.
 
 =head1 SYNOPSIS
 
@@ -26,14 +26,14 @@ Mail::Message::Checksum - utilities for checksum
 
 =head2 new()
 
-the constructor.
+constructor.
 It checks we can use MD5 perl module or we need to use external programs
 such as C<md5>, C<cksum>, et.al.
 
 =cut
 
 
-# Descriptions: ordinary constructor.
+# Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: OBJ
@@ -193,7 +193,7 @@ See POSIX 1003.2 for more details.
 =cut
 
 
-# Descriptions: return the traditional checksum of the given $file
+# Descriptions: return the traditional checksum of the given $file.
 #    Arguments: OBJ($self) STR($file)
 # Side Effects: none
 # Return Value: ARRAY(STR, STR)
@@ -202,6 +202,7 @@ sub cksum2
     my ($self, $file) = @_;
     my ($crc, $total, $nr, $buf, $r);
 
+    # XXX-TODO: style
     $crc = $total = 0;
     if (open($file, $file)) {
         while (($nr = sysread($file, $buf, 1024)) > 0) {

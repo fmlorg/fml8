@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Parse.pm,v 1.8 2002/09/22 14:57:04 fukachan Exp $
+# $FML: Parse.pm,v 1.9 2004/01/02 14:42:48 fukachan Exp $
 #
 
 
@@ -32,7 +32,7 @@ sub new
 
 =head1 NAME
 
-Mail::Message::Parse - parse a mail message
+Mail::Message::Parse - parse a mail message.
 
 =head1 SYNOPSIS
 

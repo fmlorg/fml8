@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #
-# $FML: Spool.pm,v 1.11 2003/03/03 15:53:50 fukachan Exp $
+# $FML: Spool.pm,v 1.12 2004/01/24 09:04:00 fukachan Exp $
 #
 
 package Mail::Message::Spool;
@@ -12,7 +12,7 @@ use Carp;
 
 =head1 NAME
 
-Mail::Message::Spool - utilities to handle directory such as article spool
+Mail::Message::Spool - utilities to handle directory such as article spool.
 
 =head1 SYNOPSIS
 
@@ -29,7 +29,7 @@ directory such as article spool.
 
 =head2 new()
 
-standard constructor.
+constructor.
 
 =cut
 

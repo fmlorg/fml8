@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newdomain.pm,v 1.6 2004/01/02 14:49:25 fukachan Exp $
+# $FML: newdomain.pm,v 1.7 2004/01/02 16:08:38 fukachan Exp $
 #
 
 package FML::Command::Admin::newdomain;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::newdomain - declare a new domain we use
+FML::Command::Admin::newdomain - declare a new domain we use.
 
 =head1 SYNOPSIS
 
@@ -28,7 +28,7 @@ declare a new domain we use.
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -41,14 +41,14 @@ sub new
 }
 
 
-# Descriptions: not need lock in the first time
+# Descriptions: not need lock in the first time.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 0;}
 
 
-# Descriptions: declare a new domain we use
+# Descriptions: declare a new domain we use.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: forward request to dir module
 # Return Value: none

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: simple_count.pm,v 1.8 2004/04/23 04:10:33 fukachan Exp $
+# $FML: simple_count.pm,v 1.9 2004/05/22 06:19:52 fukachan Exp $
 #
 
 package FML::Error::Analyze::simple_count;
@@ -17,7 +17,7 @@ my $debug = 1;
 
 =head1 NAME
 
-FML::Error::Analyze::simple_count - simple cost evaluator
+FML::Error::Analyze::simple_count - simple cost evaluator.
 
 =head1 SYNOPSIS
 
@@ -53,7 +53,7 @@ The cost to sum up varies according to the status code.
 =cut
 
 
-# Descriptions: main dispatcher
+# Descriptions: main dispatcher.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($data)
 # Side Effects: none
 # Return Value: none
@@ -142,7 +142,7 @@ sub summary
 # Descriptions: return addresses to be removed.
 #    Arguments: OBJ($self)
 # Side Effects: none
-# Return Value: HASH_REF
+# Return Value: ARRAY_REF
 sub removal_address
 {
     my ($self) = @_;
@@ -151,7 +151,7 @@ sub removal_address
 }
 
 
-# Descriptions: print address and the summary
+# Descriptions: print address and the summary.
 #    Arguments: OBJ($self) STR($addr)
 # Side Effects: none
 # Return Value: none

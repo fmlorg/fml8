@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Calendar.pm,v 1.7 2004/01/01 08:48:38 fukachan Exp $
+# $FML: Calendar.pm,v 1.8 2004/01/01 23:52:09 fukachan Exp $
 #
 
 package FML::CGI::Calendar;
@@ -19,7 +19,7 @@ use FML::Process::CGI;
 
 =head1 NAME
 
-FML::CGI::Calendar - CGI module to show calendar as HTML TABLE (DEMO)
+FML::CGI::Calendar - CGI module to show calendar as HTML TABLE (DEMO).
 
 =head1 SYNOPSIS
 
@@ -61,12 +61,12 @@ print out the navigator and closing of html.
 sub html_start
 {
     my ($curproc) = @_;
-    my $config  = $curproc->config();
-    my $user    = $curproc->safe_param_user;
-    my $myname  = $curproc->myname();
-    my $title   = "$user schedule";
-    my $color   = '#E6E6FA';
-    my $charset = $curproc->get_charset("cgi");
+    my $config    = $curproc->config();
+    my $user      = $curproc->safe_param_user;
+    my $myname    = $curproc->myname();
+    my $title     = "$user schedule";
+    my $color     = '#E6E6FA';
+    my $charset   = $curproc->get_charset("cgi");
 
     # o.k start html
     print start_html(-title   => $title,
@@ -145,7 +145,7 @@ sub run_cgi_main
 }
 
 
-# Descriptions: show menu (table based menu)
+# Descriptions: show menu (table based menu) (dummy).
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
@@ -156,7 +156,7 @@ sub run_cgi_navigator
 }
 
 
-# Descriptions: show menu (table based menu)
+# Descriptions: show menu (table based menu) (dummy).
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none

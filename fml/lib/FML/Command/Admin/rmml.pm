@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: rmml.pm,v 1.24 2004/01/01 23:52:13 fukachan Exp $
+# $FML: rmml.pm,v 1.25 2004/01/02 14:45:05 fukachan Exp $
 #
 
 package FML::Command::Admin::rmml;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::rmml - remove the specified mailing list
+FML::Command::Admin::rmml - remove the specified mailing list.
 
 =head1 SYNOPSIS
 
@@ -38,7 +38,7 @@ and the corresponding alias entries.
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -51,7 +51,7 @@ sub new
 }
 
 
-# Descriptions: not need lock in the first time
+# Descriptions: not need lock in the first time.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
@@ -114,6 +114,7 @@ sub cgi_menu
     my ($self, $curproc, $command_args) = @_;
     my $r = '';
 
+    # XXX-TODO: $commnad_args checked ?
     eval q{
         use FML::CGI::ML;
         my $obj = new FML::CGI::ML;

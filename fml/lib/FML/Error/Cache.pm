@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Cache.pm,v 1.21 2004/04/23 04:10:33 fukachan Exp $
+# $FML: Cache.pm,v 1.22 2004/05/22 06:19:52 fukachan Exp $
 #
 
 package FML::Error::Cache;
@@ -39,12 +39,12 @@ where C<$bounce_info) follows:
 
 =head2 new()
 
-standard constructor.
+constructor.
 
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($curproc)
 # Side Effects: none
 # Return Value: OBJ
@@ -83,19 +83,19 @@ dummy.
 =cut
 
 
-# Descriptions: none
+# Descriptions: dummy.
 #    Arguments: none
 # Side Effects: none
 # Return Value: none
 sub open  { 1;}
 
-# Descriptions: none
+# Descriptions: dummy.
 #    Arguments: none
 # Side Effects: none
 # Return Value: none
 sub close { 1;}
 
-# Descriptions: none
+# Descriptions: dummy.
 #    Arguments: none
 # Side Effects: none
 # Return Value: none
@@ -232,7 +232,7 @@ sub _open_cache
     my $config  = $curproc->config();
     my $dir     = $config->{ error_mail_analyzer_cache_dir  };
 
-    # parameters: but not used now.
+    # parameters.
     my %db   = ();
     my $type = $config->{ error_mail_analyzer_cache_type };
     my $mode = $config->{ error_mail_analyzer_cache_mode } || 'temporal';

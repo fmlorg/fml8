@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.65 2004/05/25 04:04:43 fukachan Exp $
+# $FML: Article.pm,v 1.66 2004/05/28 03:53:50 fukachan Exp $
 #
 
 package FML::Article;
@@ -19,7 +19,7 @@ use FML::Article::Sequence;
 
 =head1 NAME
 
-FML::Article - manipulate an ML article and related information
+FML::Article - manipulate an ML article and related information.
 
 =head1 SYNOPSIS
 
@@ -129,7 +129,7 @@ If the variable C<$use_spool> is 'yes', this routine works.
 =cut
 
 
-# Descriptions: spool in the article
+# Descriptions: spool in the article specified by $id.
 #    Arguments: OBJ($self) NUM($id)
 # Side Effects: create article in ML spool
 # Return Value: none
@@ -150,10 +150,10 @@ sub spool_in
 	    $curproc->mkdir($spool_dir, "mode=private");
 	}
 
-	# translate the article path e.g. spool/1900,  spool/2/1900
+	# translate id to the article path e.g. spool/1900, spool/2/1900.
 	my $file = $self->filepath($id);
 
-	# verify and create subdir if not found before spool in.
+	# verify and create subdir if not found before spooling in.
 	if ($use_subdir) {
 	    my $dir = $self->subdirpath($id);
 	    unless (-d $dir) {

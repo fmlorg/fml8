@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.27 2004/02/15 04:38:31 fukachan Exp $
+# $FML: Analyze.pm,v 1.28 2004/04/23 04:10:33 fukachan Exp $
 #
 
 package FML::Error::Analyze;
@@ -41,10 +41,12 @@ FML::Error::Analyze - provide model specific analyzer routines.
 
 =head2 new()
 
+constructor.
+
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($curproc)
 # Side Effects: none
 # Return Value: OBJ
@@ -75,7 +77,7 @@ return addresses to be removed.
 =cut
 
 
-# Descriptions: return summary
+# Descriptions: return summary as HASH_REF.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: HASH_REF
@@ -93,7 +95,7 @@ sub summary
 }
 
 
-# Descriptions: return removal address candidates
+# Descriptions: return removal address candidates as HASH_REF.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -128,14 +130,12 @@ sub print
 
 =head2 AUTOLOAD()
 
-the command dispatcher.
-It hooks up the C<$command> request and loads the module in
-C<FML::Command::$MODE::$command>.
+the command dispatcher kicking up FML::Error::Analyze::COMMAND class.
 
 =cut
 
 
-# Descriptions: run FML::Error::Analyze::XXX()
+# Descriptions: run FML::Error::Analyze::XXX().
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($anal_data)
 # Side Effects: load appropriate module
 # Return Value: none

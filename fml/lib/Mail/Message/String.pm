@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: String.pm,v 1.6 2004/03/27 09:25:13 fukachan Exp $
+# $FML: String.pm,v 1.7 2004/03/31 02:48:22 fukachan Exp $
 #
 
 package Mail::Message::String;
@@ -35,7 +35,9 @@ Mail::Message::String - base class of string used in message (header).
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
+
+constructor.
 
 =cut
 
@@ -75,7 +77,7 @@ get (converted) data in this object as string (same as as_str()).
 =cut
 
 
-# Descriptions: initialize data in this object.
+# Descriptions: set string data in this object.
 #    Arguments: OBJ($self) STR($str)
 # Side Effects: none
 # Return Value: OBJ
@@ -86,7 +88,7 @@ sub set
 }
 
 
-# Descriptions: get data in this object as string (same as as_str()).
+# Descriptions: get string data in this object as string (same as as_str()).
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -99,12 +101,12 @@ sub get
 
 =head2 as_str()
 
-return data (converted data) by string.
+return data (converted data) as string.
 
 =cut
 
 
-# Descriptions: return data (converted data) by string.
+# Descriptions: return data (converted data) as string.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR

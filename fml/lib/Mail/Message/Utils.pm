@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.9 2003/08/23 04:35:48 fukachan Exp $
+# $FML: Utils.pm,v 1.10 2004/01/24 09:04:00 fukachan Exp $
 #
 
 package Mail::Message::Utils;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-Mail::Message::Utils - utility functions for Mail::Message
+Mail::Message::Utils - utility functions for Mail::Message.
 
 =head1 SYNOPSIS
 

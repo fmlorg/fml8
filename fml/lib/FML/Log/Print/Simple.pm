@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Simple.pm,v 1.3 2004/01/22 12:34:23 fukachan Exp $
+# $FML: Simple.pm,v 1.4 2004/01/23 09:17:38 fukachan Exp $
 #
 
 package FML::Log::Print::Simple;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Log::Print::Simple - simplest print out engine
+FML::Log::Print::Simple - simplest print out engine.
 
 =head1 SYNOPSIS
 
@@ -44,7 +44,7 @@ sub new
 }
 
 
-# Descriptions: add message to message queue.
+# Descriptions: add message to module internal message queue.
 #    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: update queue.
 # Return Value: none

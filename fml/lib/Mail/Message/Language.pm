@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #
-# $FML: Language.pm,v 1.3 2004/02/29 15:57:26 fukachan Exp $
+# $FML: Language.pm,v 1.4 2004/02/29 15:59:41 fukachan Exp $
 #
 
 package Mail::Message::Language;
@@ -10,7 +10,7 @@ use strict;
 
 =head1 NAME
 
-Mail::Message::Language - handle *-Language:
+Mail::Message::Language - handle *-Language: field.
 
 =head1 SYNOPSIS
 

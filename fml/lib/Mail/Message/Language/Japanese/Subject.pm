@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.15 2003/07/21 13:26:05 fukachan Exp $
+# $FML: Subject.pm,v 1.16 2003/08/23 04:35:48 fukachan Exp $
 #
 
 
@@ -21,7 +21,7 @@ use Jcode;
 
 =head1 NAME
 
-Mail::Message::Language::Japanese::Subject - functions for Japanese subject
+Mail::Message::Language::Japanese::Subject - functions for Japanese subject.
 
 =head1 SYNOPSIS
 
@@ -120,7 +120,7 @@ within C<Subject:>.
 # レレレ対策
 
 
-# Descriptions: remove Re:
+# Descriptions: remove Re: strings.
 #    Arguments: OBJ($self) STR($subject)
 # Side Effects: none
 # Return Value: STR
@@ -157,11 +157,11 @@ See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 
- Ken'ichi Fukamachi
+Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

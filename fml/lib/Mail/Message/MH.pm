@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #
-# $FML: MH.pm,v 1.17 2004/01/24 09:04:00 fukachan Exp $
+# $FML: MH.pm,v 1.18 2004/03/27 09:25:45 fukachan Exp $
 #
 
 package Mail::Message::MH;
@@ -10,7 +10,7 @@ use strict;
 
 =head1 NAME
 
-Mail::Message::MH - utilities to handle MH style format
+Mail::Message::MH - utilities to handle MH style format.
 
 =head1 SYNOPSIS
 

@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Digest.pm,v 1.19 2004/04/23 04:10:36 fukachan Exp $
+# $FML: Digest.pm,v 1.20 2004/05/22 11:42:54 fukachan Exp $
 #
 
 package FML::Process::Digest;
@@ -167,6 +167,8 @@ sub run
 
 
 =head2 help()
+
+show help.
 
 =cut
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.78 2004/02/15 04:38:29 fukachan Exp $
+# $FML: newml.pm,v 1.79 2004/03/16 12:53:40 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::newml - set up a new mailing list
+FML::Command::Admin::newml - set up a new mailing list.
 
 =head1 SYNOPSIS
 
@@ -38,7 +38,7 @@ install config.cf, include, include-ctl et. al.
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -51,14 +51,14 @@ sub new
 }
 
 
-# Descriptions: not need lock in the first time
+# Descriptions: not need lock in the first time.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 0;}
 
 
-# Descriptions: set up a new mailing list
+# Descriptions: set up a new mailing list.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: create mailing list directory,
 #               install config.cf, include, include-ctl et. al.
@@ -162,6 +162,7 @@ sub cgi_menu
     my ($self, $curproc, $command_args) = @_;
     my $r = '';
 
+    # XXX-TODO: $command_args checked ?
     eval q{
         use FML::CGI::ML;
         my $obj = new FML::CGI::ML;

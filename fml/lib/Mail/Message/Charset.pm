@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #
-# $FML: Charset.pm,v 1.3 2004/02/06 13:29:47 fukachan Exp $
+# $FML: Charset.pm,v 1.4 2004/02/26 12:59:07 fukachan Exp $
 #
 
 package Mail::Message::Charset;
@@ -10,7 +10,7 @@ use strict;
 
 =head1 NAME
 
-Mail::Message::Charset - charset map
+Mail::Message::Charset - charset map.
 
 =head1 SYNOPSIS
 
@@ -209,7 +209,7 @@ sub new
 }
 
 
-# Descriptions: return default charset.
+# Descriptions: return default charset for internal usage.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -220,7 +220,7 @@ sub internal_default_charset
 }
 
 
-# Descriptions: return default charset.
+# Descriptions: return default charset for message handling.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -231,7 +231,7 @@ sub message_default_charset
 }
 
 
-# Descriptions: get charset info: e.g. japanese => euc-jp.
+# Descriptions: convert charset info: e.g. japanese => euc-jp.
 #    Arguments: OBJ($self) STR($language)
 # Side Effects: none
 # Return Value: STR
@@ -243,7 +243,7 @@ sub language_to_internal_charset
 }
 
 
-# Descriptions: get charset info: e.g. ja or japanese => iso-2022-jp.
+# Descriptions: convert charset info: e.g. ja or japanese => iso-2022-jp.
 #    Arguments: OBJ($self) STR($language)
 # Side Effects: none
 # Return Value: STR

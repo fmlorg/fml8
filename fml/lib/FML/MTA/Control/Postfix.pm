@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.3 2004/01/23 09:17:37 fukachan Exp $
+# $FML: Postfix.pm,v 1.4 2004/04/10 12:41:29 fukachan Exp $
 #
 
 package FML::MTA::Control::Postfix;
@@ -17,7 +17,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::MTA::Control::Postfix - handle postfix specific configurations
+FML::MTA::Control::Postfix - handle postfix specific configurations.
 
 =head1 SYNOPSIS
 
@@ -142,7 +142,7 @@ sub postfix_update_alias
 }
 
 
-# Descriptions: find key in aliases
+# Descriptions: find key in aliases.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: none
@@ -229,7 +229,7 @@ sub _find_key_in_file
 
 
 
-# Descriptions: get { key => value } in aliases.
+# Descriptions: get aliases info as HASH_REF.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: none
@@ -416,6 +416,9 @@ sub postfix_remove_virtual_map
 	key => $key,
 	map => $map,
     };
+
+    # XXX-TODO: _remove_postfix_style_virtual (private method) 
+    # XXX-TODO: NOT CROSS AMONG modules.
     $self->_remove_postfix_style_virtual($curproc, $params, $optargs, $p);
 }
 

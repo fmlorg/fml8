@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.4 2004/01/23 09:17:36 fukachan Exp $
+# $FML: Control.pm,v 1.5 2004/02/15 04:38:32 fukachan Exp $
 #
 
 package FML::ML::Control;
@@ -23,10 +23,14 @@ FML::ML::Control - create, rename and delete ml_home_dir.
 
 =head1 METHODS
 
+=head2 new()
+
+constructor.
+
 =cut
 
 
-# Descriptions: standard constructor.
+# Descriptions: constructor.
 #    Arguments: OBJ($self) OBJ($curproc)
 # Side Effects: none
 # Return Value: OBJ
@@ -485,7 +489,7 @@ sub remove_ml_home_dir
 }
 
 
-# Descriptions: remove aliases entry
+# Descriptions: remove aliases entry.
 #    Arguments: OBJ($self)
 #               OBJ($curproc)
 #               HASH_REF($command_args)
@@ -503,6 +507,7 @@ sub remove_aliases
 	use FML::MTA::Control;
 
 	for my $mta (@$list) {
+	    # XXX-TODO: $optargs = { mta_type => $mta } valid ?
 	    my $optargs = { mta_type => $mta };
 	    my $obj = new FML::MTA::Control;
 	    $obj->remove_alias($curproc, $params, $optargs);
