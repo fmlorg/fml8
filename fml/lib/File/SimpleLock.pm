@@ -11,9 +11,7 @@ package File::SimpleLock;
 use vars qw(%LockedFileHandle %FileIsLocked @ISA $Error);
 use strict;
 use Carp;
-use File::Errors;
-
-@ISA = qw(File::Errors);
+use ErrorMessages::Status qw(error_set error error_reset);
 
 =head1 NAME
 
@@ -96,7 +94,7 @@ sub _simple_flock
 	eval q{
 	    $r = flock($fh, &LOCK_EX);
 	};
-	$self->error_reason($@) if $@;
+	$self->error_set($@) if $@;
 
 	if ($r) {
 	    $FileIsLocked{ $file } = 1;
@@ -104,7 +102,7 @@ sub _simple_flock
 	}
     }
     else {
-	$self->error_reason("cannot open $file");
+	$self->error_set("cannot open $file");
     }
 
     return 0;
@@ -124,7 +122,7 @@ sub _simple_funlock
     eval q{
 	$r = flock($fh, &LOCK_UN);
     };
-    $self->error_reason($@) if $@;
+    $self->error_set($@) if $@;
 
     if ($r) {
 	delete $FileIsLocked{ $file };
@@ -139,7 +137,7 @@ sub _simple_funlock
 =head1 SEE ALSO
 
 L<FileHandle>,
-L<File::Errors>,
+L<ErrorMessages::Status>,
 
 =head1 AUTHOR
 

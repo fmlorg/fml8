@@ -8,30 +8,31 @@
 # $FML$
 #
 
-package File::Errors;
+package ErrorMessages::Status;
+
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
 
 require Exporter;
 @ISA       = qw(Exporter);
-@EXPORT_OK = qw(error_reason error error_reset);
+@EXPORT_OK = qw(error_set error error_reset);
 
 =head1 NAME
 
-File::Errors - error handling utilities
+ErrorMessages::Status - error handling component
 
 =head1 SYNOPSIS
 
-Consider C<Something> class module
+Use this module in your C<Something> class module like this:
 
    package Something;
-   use File::Errors qw(error_reason error error_reset);
+   use ErrorMessages::Status qw(error_set error error_reset);
 
    sub xxx
    {
       if something errors ...
-      $self->error_reason( error reason );
+      $self->error_set( why this error occurs ... );
    }
 
 You use C<Something> module like this.
@@ -47,18 +48,18 @@ simple utility functions to manipulate error messages.
 
 =head1 METHODS
 
-=head2 C<error_reason($message)>
+=head2 C<error_set($message)>
 
 save $message as an error message.
 
 =head2 C<error()>
 
-return $message which is saved by C<error_reason($msg)>.
+return $message which is saved by C<error_set($msg)>.
 
 =cut
 
 
-sub error_reason
+sub error_set
 {
     my ($self, $mesg) = @_;
     $self->{'_error_reason'} = $mesg;
@@ -95,7 +96,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-File::Errors appeared in fml5 mailing list driver package.
+ErrorMessages::Status appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

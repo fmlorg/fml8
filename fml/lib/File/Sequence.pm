@@ -12,7 +12,7 @@ package File::Sequence;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
-use File::Errors qw(error_reason error error_reset);
+use ErrorMessages::Status qw(error_set error error_reset);
 
 =head1 NAME
 
@@ -96,7 +96,7 @@ sub increment_id
     my $seq_file = $file || $self->{ _sequence_file };
 
     unless ($seq_file) {
-	$self->error_reason("the sequence file is not specified");
+	$self->error_set("the sequence file is not specified");
 	return 0;
     };
 
@@ -115,7 +115,7 @@ sub increment_id
 	$rh->close;
     }
     else {
-	$self->error_reason("cannot open the sequence file");
+	$self->error_set("cannot open the sequence file");
 	return 0;
     }
 

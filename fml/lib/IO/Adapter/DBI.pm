@@ -11,6 +11,7 @@ package IO::Adapter::DBI;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+use ErrorMessages::Status qw(error_set error error_reset);
 
 =head1 NAME
 
@@ -69,12 +70,12 @@ sub execute
 	    return $res;
 	}
 	else {
-	    $self->error_reason( $DBI::errstr );
+	    $self->error_set( $DBI::errstr );
 	    return undef;
 	}
     }
     else {
-	$self->error_reason( $DBI::errstr );
+	$self->error_set( $DBI::errstr );
 	return undef;
     }
 }
@@ -105,7 +106,7 @@ sub open
     # try to connect
     my $dbh = DBI->connect($dsn, $user, $password);
     unless (defined $dbh) { 
-	$self->error_reason( $DBI::errstr );
+	$self->error_set( $DBI::errstr );
 	return undef;
     }
 
@@ -127,26 +128,6 @@ sub close
     $dbh->disconnect if defined $dbh;
     delete $self->{ _res };
     delete $self->{ _dbh };
-}
-
-
-=head2 C<error_reason($mesg)>
-
-=head2 C<error()>
-
-=cut
-
-sub error_reason
-{
-    my ($self, $mesg) = @_;
-    $self->{ _error } = $mesg;
-}
-
-
-sub error
-{
-    my ($self) = @_;
-    return $self->{ _error };
 }
 
 

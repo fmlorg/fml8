@@ -13,6 +13,7 @@ package IO::Adapter::File;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+use ErrorMessages::Status qw(error_set error error_reset);
 
 =head1 NAME
 
@@ -106,7 +107,7 @@ sub _read_open
 	return $fh;
     }
     else {
-	$self->_error_reason("Error: cannot open file=$file flag=$flag");
+	$self->error_set("Error: cannot open file=$file flag=$flag");
 	return undef;
     }
 }
@@ -261,7 +262,7 @@ sub add
 	$fh->close;
     }
     else {
-	$self->_error_reason("Error: cannot open file=$self->{ _file }");
+	$self->error_set("Error: cannot open file=$self->{ _file }");
 	return undef;
     }
 
@@ -295,7 +296,7 @@ sub delete
 	$wh->close;
     }
     else {
-	$self->_error_reason("Error: cannot open file=$self->{ _file }");
+	$self->error_set("Error: cannot open file=$self->{ _file }");
 	return undef;
     }
 }
@@ -330,7 +331,7 @@ sub replace
 	$wh->close;
     }
     else {
-	$self->_error_reason("Error: cannot open file=$self->{ _file }");
+	$self->error_set("Error: cannot open file=$self->{ _file }");
 	return undef;
     }
 }

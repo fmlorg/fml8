@@ -94,7 +94,7 @@ sub configure
 	$me->{ _schema } = $pkg;
     }
     else {
-	error_reason($self, $@);
+	error_set($self, $@);
 	return undef;
     }
 }
@@ -140,7 +140,7 @@ sub get_next_value
 	join(" ", @row);
     }
     else {
-	$self->error_reason( $DBI::errstr );
+	$self->error_set( $DBI::errstr );
 	undef;
     }
 }

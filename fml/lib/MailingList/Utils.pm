@@ -13,6 +13,7 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK 
 	    $LogFunctionPointer $SmtpLogFunctionPointer);
 use Carp;
+use ErrorMessages::Status qw(error_set error error_reset);
 
 require Exporter;
 @ISA = qw(Exporter);
@@ -25,7 +26,7 @@ require Exporter;
 	     $LogFunctionPointer
 	     $SmtpLogFunctionPointer
 
-	     _error_reason
+	     error_set 
 	     error 
 	     error_reset 
 
@@ -140,49 +141,19 @@ sub _smtplog
 
 =head1 METHODS FOR ERROR MESSAGES AND STATUS CODES
 
-=head2 C<error_reason($mesg)>
+=head2 C<error_set($mesg)>
 
 save C<$mesg>.
 
 =head2 C<error()>
 
-return the latest error message which saved by C<error_reason()>.
+return the latest error message which saved by C<error_set()>.
 
 =head2 C<error_reset()>
 
-reset the error buffer which C<error_reason()> and C<error()> use.
+reset the error buffer which C<error_set()> and C<error()> use.
 
 =cut
-
-sub _error_reason
-{
-    my ($self, $mesg) = @_;
-    $self->{'_error_reason'} = $mesg;
-}
-
-
-sub error_reason
-{
-    my ($self, $mesg) = @_;
-    $self->_error_reason($mesg);
-}
-
-
-sub error
-{
-    my ($self, $args) = @_;
-    return $self->{'_error_reason'};
-}
-
-
-sub error_reset
-{
-    my ($self, $args) = @_;
-    my $msg = $self->{'_error_reason'};
-    undef $self->{'_error_reason'} if defined $self->{'_error_reason'};
-    undef $self->{'_error_action'} if defined $self->{'_error_action'};
-    return $msg;
-}
 
 
 #################################################################

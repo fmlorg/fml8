@@ -13,7 +13,7 @@ package FML::Ticket::System;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use FML::Errors qw(error_reason error error_reset);
+use ErrorMessages::Status qw(error_set error error_reset);
 use FML::Log qw(Log LogWarn LogError);
 
 
@@ -104,7 +104,7 @@ sub _init_ticket_db_dir
 	unless (-d $db_dir) {
 	    use File::Utils qw(mkdirhier);
 	    mkdirhier($db_dir, $config->{ default_directory_mode }) || do {
-		$self->error_reason( File::Utils->error() );
+		$self->error_set( File::Utils->error() );
 		return undef;
 	    };
 	}
@@ -169,7 +169,7 @@ sub increment_id
     use File::Sequence;
     my $sfh = new File::Sequence { sequence_file => $seq_file };
     my $id  = $sfh->increment_id;
-    $self->error_reason( $sfh->error );
+    $self->error_set( $sfh->error );
 
     $id;
 }

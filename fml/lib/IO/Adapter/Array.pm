@@ -13,6 +13,7 @@ package IO::Adapter::Array;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+use ErrorMessages::Status qw(error_set error error_reset);
 
 =head1 NAME
 
@@ -84,7 +85,7 @@ sub open
     my $r_array = $self->{ _array_reference};
 
     if ($flag ne 'r') {
-	$self->_error_reason("Error: type=$self->{_type} is read only.");
+	$self->error_set("Error: type=$self->{_type} is read only.");
 	return undef;
     }
 

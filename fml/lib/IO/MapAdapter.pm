@@ -12,6 +12,7 @@ package IO::MapAdapter;
 use vars qw(@ISA @ORIG_ISA $FirstTime);
 use strict;
 use Carp;
+use ErrorMessages::Status qw(error_set error error_reset);
 
 BEGIN {}
 END   {}
@@ -150,7 +151,7 @@ sub new
 	}
 	else {
 	    my $s = "IO::MapAdapter::new: map='$map' is unknown.";
-	    _error_reason($me, $s);
+	    error_set($me, $s);
 	}
     }
 
@@ -160,7 +161,7 @@ sub new
 
     eval qq{ require $pkg; $pkg->import();};
     $pkg->configure($me, $args) if $pkg->can('configure');
-    _error_reason($me, $@) if $@;
+    error_set($me, $@) if $@;
 
     return bless $me, $type;
 }
@@ -201,7 +202,7 @@ sub open
 	$self->SUPER::open( { flag => $flag } );
     }
     else {
-	$self->_error_reason("Error: type=$self->{_type} is unknown type.");
+	$self->error_set("Error: type=$self->{_type} is unknown type.");
     }
 }
 
@@ -272,7 +273,7 @@ sub add
 	$self->SUPER::add($address);
     }
     else {
-	$self->_error_reason("Error: add() method is not supported.");
+	$self->error_set("Error: add() method is not supported.");
 	undef;
     }
 }
@@ -290,7 +291,7 @@ sub delete
 	$self->SUPER::delete($regexp);
     }
     else {
-	$self->_error_reason("Error: delete() method is not supported.");
+	$self->error_set("Error: delete() method is not supported.");
 	undef;
     }
 }
@@ -308,7 +309,7 @@ sub replace
 	$self->SUPER::replace($regexp, $value);
     }
     else {
-	$self->_error_reason("Error: replace() method is not supported.");
+	$self->error_set("Error: replace() method is not supported.");
 	undef;
     }
 }
@@ -326,29 +327,6 @@ sub DESTROY
     undef $self;
 }
 
-
-# Descriptions: log the error message in the object
-#               internal use fucntion.
-#    Arguments: $self $mesg
-#               $mesg is the error message string.
-# Side Effects: $self->{ _error_reason } is set to $mesg.
-# Return Value: $mesg
-sub _error_reason
-{
-    my ($self, $mesg) = @_;
-    $self->{ _error_reason } = $mesg;
-}
-
-
-# Descriptions: return the error message
-#    Arguments: $self
-# Side Effects: none
-# Return Value: error message
-sub error
-{
-    my ($self) = @_;
-    return $self->{ _error_reason };
-}
 
 =head2
 

@@ -10,6 +10,7 @@ package FML::Config;
 use strict;
 use Carp;
 use vars qw(%_fml_config %_default_fml_config);
+use ErrorMessages::Status qw(error_set error error_reset);
 
 
 =head1 NAME
@@ -146,20 +147,6 @@ sub dump_variables
 }
 
 
-sub _log
-{
-   my ($self, $msg) = @_;
-   $self->{ _error_message } = $msg;
-}
-
-
-sub error
-{
-   my ($self) = @_;
-   $self->{ _error_message };
-}
-
-
 sub get
 {
     my ($self, $key) = @_;
@@ -216,7 +203,7 @@ sub load_file
 	$fh->close;
     }
     else {
-	$self->_log("Error: cannot open $file");
+	$self->error_set("Error: cannot open $file");
     }
 
     # first time
