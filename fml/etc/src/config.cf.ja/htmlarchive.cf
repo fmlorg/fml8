@@ -10,4 +10,4 @@ use_html_archive	=	yes
 #      History:
 #        Value: yes / no
 #     Examples:
-html_archive_dir	= $fml_owner_home_dir/public_html/mlarchive/$ml_name
+html_archive_dir	= $fml_owner_home_dir/public_html/mlarchive/$ml_domain/$ml_name
