@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Confirm.pm,v 1.7 2002/09/22 14:56:40 fukachan Exp $
+# $FML: Confirm.pm,v 1.8 2002/09/28 09:27:42 fukachan Exp $
 #
 
 package FML::Confirm;
@@ -77,12 +77,12 @@ sub new
 
 =head2 assign_id()
 
-assing new id for current object.
+assign new id for current object.
 
 =cut
 
 
-# Descriptions: assing new id for current object
+# Descriptions: assign new id for current object
 #    Arguments: OBJ($self)
 # Side Effects: update databse
 # Return Value: STR
@@ -109,7 +109,7 @@ sub assign_id
 }
 
 
-# Descriptions: open databse
+# Descriptions: open database by Tie::JournaledDir.
 #    Arguments: OBJ($self) STR($id) STR($comment)
 # Side Effects: open database, mkdir if needed
 # Return Value: HASH_REF to dabase
@@ -117,6 +117,8 @@ sub _open_db
 {
     my ($self, $id, $comment) = @_;
     my (%db) = ();
+
+    # XXX-TODO: dir_mode hard-coded.
     my $mode = $self->{ _dir_mode } || 0700;
 
     use File::Spec;
@@ -138,7 +140,7 @@ sub _open_db
 }
 
 
-# Descriptions: close database
+# Descriptions: close database.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: none
@@ -185,7 +187,7 @@ find database value for $id
 
 # Descriptions: find value for $id
 #    Arguments: OBJ($self) STR($id)
-# Side Effects: update object
+# Side Effects: update $self->{ _found };
 # Return Value: STR
 sub find
 {
@@ -250,7 +252,7 @@ sub get_address
 =head2 is_expired($found, $howold)
 
 request for $id is expired or not.
-specify $found (database value) for $it as argument.
+specify $found (database value) for $id as argument.
 
 =cut
 
@@ -261,6 +263,7 @@ specify $found (database value) for $it as argument.
 # Return Value: 1 or 0
 sub is_expired
 {
+    # XXX-TODO: strange argument ? should be is_expired($id) ?
     my ($self, $found, $howold) = @_;
     my ($time, $commont) = split(/\s+/, $found);
 

@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.73 2002/09/24 14:23:10 fukachan Exp $
+# $FML: Config.pm,v 1.74 2002/12/18 04:35:25 fukachan Exp $
 #
 
 package FML::Config;
@@ -156,9 +156,9 @@ set value for key.
 =cut
 
 
-# Descriptions: get vaule for $key
+# Descriptions: get vaule for $key.
 #    Arguments: OBJ($self) STR($key)
-# Side Effects: update internal area
+# Side Effects: none
 # Return Value: STR
 sub get
 {
@@ -174,9 +174,9 @@ sub get
 }
 
 
-# Descriptions: get vaule for $key
+# Descriptions: get vaule(s) for $key as ARRAY_REF.
 #    Arguments: OBJ($self) STR($key)
-# Side Effects: update internal area
+# Side Effects: none
 # Return Value: ARRAY_REF
 sub get_as_array_ref
 {
@@ -195,7 +195,7 @@ sub get_as_array_ref
 }
 
 
-# Descriptions: set vaule for $key
+# Descriptions: set vaule for $key.
 #               flag on we need to re-evaludate variable expansion.
 #    Arguments: OBJ($self) STR($key)
 # Side Effects: update internal area
@@ -218,7 +218,7 @@ sub set
 
 # Descriptions: inform we need to expand variables again.
 #    Arguments: OBJ($self)
-# Side Effects: update internal area
+# Side Effects: flag on we should re-evaludate configuration data.
 # Return Value: NUM(1)
 sub update
 {
@@ -259,6 +259,7 @@ sub load_file
     my ($self, $file) = @_;
     my $config = \%_fml_config;
 
+    # XXX-TODO: check if -f $file here.
     # read configuration file
     $self->_read_file({
 	file   => $file,
@@ -320,35 +321,35 @@ sub _read_file
 	while (<$fh>) {
 	    # Example: [mysql:fml]
 	    #   switched to the new name space.
-	    if (/^\[([\w\d\:]+)\]\s*$/) {
+	    if (/^\[([\w\d\:]+)\]\s*$/o) {
 		$name_space = "[$1]";
 	    }
 
 	    if ($after_cut) {
-		$hook     .= $_ unless /^=/;
-		$after_cut = 0  if /^=\w+/;
+		$hook     .= $_ unless /^=/o;
+		$after_cut = 0  if /^=\w+/o;
 		next;
 	    }
-	    $after_cut = 1 if /^=cut/; # end of postfix format
+	    $after_cut = 1 if /^=cut/o; # end of postfix format
 
-	    if (/^=/) { # ignore special keywords of pod formats
+	    if (/^=/o) { # ignore special keywords of pod formats
 		$name_space = '';
 		next;
 	    }
 
 	    if ($mode eq 'raw') { # save comment buffer
-		if (/^\s*\#/) { $comment_buffer .= $_;}
+		if (/^\s*\#/o) { $comment_buffer .= $_;}
 	    }
 	    else { # by default, nuke trailing "\n"
 		chomp;
 	    }
 
 	    # case 1. "key = value1"
-	    if (/^([A-Za-z0-9_]+)\s*(=)\s*(.*)/   ||
-		/^([A-Za-z0-9_]+)\s*(\+=)\s*(.*)/ ||
-		/^([A-Za-z0-9_]+)\s*(\-=)\s*(.*)/) {
+	    if (/^([A-Za-z0-9_]+)\s*(=)\s*(.*)/o   ||
+		/^([A-Za-z0-9_]+)\s*(\+=)\s*(.*)/o ||
+		/^([A-Za-z0-9_]+)\s*(\-=)\s*(.*)/o) {
 		my ($key, $xmode, $value) = ($1, $2, $3);
-		$xmode  =~ s/=//;
+		$xmode  =~ s/=//o;
 		$value  =~ s/\s*$//o;
 		$curkey = $key;
 
@@ -365,7 +366,7 @@ sub _read_file
 		}
 	    }
 	    # case 2. "^\s+value2"
-	    elsif (/^\s+(.*)/ && defined($curkey)) {
+	    elsif (/^\s+(.*)/o && defined($curkey)) {
 		my $value = $1;
 		__append_config($config, $curkey, $value, $name_space);
 	    }
@@ -373,6 +374,7 @@ sub _read_file
 	$fh->close;
 
 	# save hook configuration in FML::Config name space (global).
+	# XXX Each hook continues to grow when new codes are given.
 	$_fml_user_hooks .= $hook if defined $hook;
     }
     else {
@@ -381,9 +383,9 @@ sub _read_file
 }
 
 
-# Descriptions: update $config
+# Descriptions: update $config by re-evaluating variables relation.
 #    Arguments: OBJ($obj) STR($key) STR($value) STR($name_space) STR($mode)
-# Side Effects: update $config
+# Side Effects: update $config on memory. 
 # Return Value: none
 sub __update_config
 {
@@ -442,6 +444,7 @@ sub _evaluate
     my ($config, $key, $mode, $value, $name_space) = @_;
     my @buf = ();
 
+    # XXX-TODO: we need apply s/\s*//; ?
     if ($name_space) {
 	if (defined $config->{ $name_space }->{ $key }) {
 	    @buf = split(/\s+/, $config->{ $name_space }->{ $key });
@@ -458,6 +461,7 @@ sub _evaluate
 	push(@buf, $value);
     }
     # - $value = remove $value from the values of $key
+    # XXX-TODO: it works well when "-= value1 value2" is given ?
     elsif ($mode eq '-') {
 	my @newbuf = ();
 
@@ -561,6 +565,7 @@ sub write
     if (defined $fh) {
 	$fh->autoflush(1);
 
+	# XXX-TODO: it works well ?
 	# XXX it works not well ??? ( regist() not works ??)
 	# XXX get variable list modified in this process
 	my $newkeys = $self->{ _newly_added_keys };
@@ -671,7 +676,7 @@ sub _expand_nextlevel
 
 
 # Descriptions: variable expansion
-#    Arguments: OBJ($config)
+#    Arguments: OBJ($config) HASH_REF($hints)
 # Side Effects: variable expansion in $config
 # Return Value: none
 sub _expand_variables
@@ -812,6 +817,7 @@ sub yes
 {
     my ($self, $key) = @_;
 
+    # XXX-TODO: case-sensitive ?
     if (defined $_fml_config{$key}) {
 	$_fml_config{$key} eq 'yes' ? 1 : 0;
     }
@@ -829,6 +835,7 @@ sub no
 {
     my ($self, $key) = @_;
 
+    # XXX-TODO: case-sensitive ?
     if (defined $_fml_config{$key}) {
 	$_fml_config{$key} eq 'no' ? 1 : 0;
     }
@@ -851,6 +858,7 @@ sub has_attribute
     return 0 unless defined $attribute;
 
     if (defined $_fml_config_result{$key}) {
+	# XXX-TODO: nuke \s* here ?
 	my (@attribute) = split(/\s+/, $_fml_config_result{$key});
 
       ATTR:
@@ -1049,6 +1057,8 @@ sub FETCH
 {
     my ($self, $key) = @_;
 
+    # XXX-TODO: how to handle next level ?
+
     if ($need_expansion_variables) {
 	$self->expand_variables();
 	$need_expansion_variables = 0;
@@ -1081,6 +1091,8 @@ sub STORE
 {
     my ($self, $key, $value) = @_;
 
+    # XXX-TODO: how to handle next level ?
+
     # inform fml we need to expand variable again when FETCH() is
     # called.
     if (defined $value && $value =~ /\$/) {
@@ -1101,6 +1113,7 @@ sub DELETE
 {
     my ($self, $key) = @_;
 
+    # XXX-TODO: handle the next level.
     delete $_fml_config_result{$key};
     delete $_fml_config{$key};
 }
@@ -1130,6 +1143,8 @@ sub FIRSTKEY
     $self->{ '_keys' } = \@keys;
 
     my $keys = $self->{ _keys };
+
+    # XXX-TODO: BUG: return each()
     shift @$keys;
 }
 
@@ -1142,6 +1157,8 @@ sub NEXTKEY
 {
     my ($self) = @_;
     my $keys = $self->{ '_keys' };
+
+    # XXX-TODO: BUG: return each()
     shift @$keys;
 }
 
