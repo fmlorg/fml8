@@ -24,7 +24,7 @@ if [ "X$*" != X ];then
 	list=$*
 else
 	pwd=`pwd`
-	list=$pwd/example
+	list=$pwd/../testmails/text=plain
 fi
 
 (cd ../../fml/etc/;sh .gen.sh)
