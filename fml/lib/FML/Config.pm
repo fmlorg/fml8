@@ -150,7 +150,7 @@ sub _expand_variables
 	    $org = $config->{ $x };
 	    
 	    $config->{$x} =~ 
-		s/\$([a-z_]+)/(defined $config->{$1} ? $config->{$1} : '')/ge;
+		s/\$([a-z_]+[a-z0-9])/(defined $config->{$1} ? $config->{$1} : '')/ge;
 
 	    last EXPANSION_LOOP if $config->{ $x } !~ /\$/o;
 	    last EXPANSION_LOOP if $org eq $config->{ $x };
