@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: JournaledFile.pm,v 1.5 2001/06/17 08:57:11 fukachan Exp $
+# $FML: JournaledFile.pm,v 1.6 2001/08/05 04:22:03 fukachan Exp $
 #
 
 package Tie::JournaledFile;
@@ -101,6 +101,7 @@ sub TIEHASH
 {
     my ($self, $args) = @_;
     my ($type) = ref($self) || $self;
+    $args->{ last_match } = 1;
     new($self, $args);
 }
 
