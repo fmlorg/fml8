@@ -37,7 +37,8 @@ To add the address
 
 To delete it
 
-    $obj->delete( $address );
+    $regexp = "^$address";
+    $obj->delete( $regexp );
 
 =head1 DESCRIPTION
 
@@ -239,7 +240,7 @@ sub close
 
 =head2 C<add($address)>
 
-add $address to this map.
+add (append) $address to this map.
 
 =cut
 
@@ -265,6 +266,37 @@ sub add
 
     print $wh $addr, "\n";
     $wh->close;
+}
+
+
+=head2 C<delete($regexp)>
+
+delete lines which matches $regexp from this map.
+
+=cut
+
+sub delete
+{
+    my ($self, $regexp) = @_;
+
+    $self->open("w");
+
+    my $fh = $self->{ _fh };
+    my $wh = $self->{ _wh };
+
+    if (defined $fh) {
+      FILE_IO:
+	while (<$fh>) {
+	    next FILE_IO if /$regexp/;
+	    print $wh $_;
+	}
+	close($fh);
+	$wh->close;
+    }
+    else {
+	$self->_error_reason("Error: cannot open file=$self->{ _file }");
+	return undef;
+    }
 }
 
 

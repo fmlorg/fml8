@@ -227,18 +227,36 @@ sub get_recipient { my ($self) = @_; $self->get_next_value;}
 =cut
 
 # Descriptions: 
-#    Arguments: $self $args
+#    Arguments: $self $address
 # Side Effects: 
 # Return Value: none
 sub add
 {
-    my ($self, $addr) = @_;
+    my ($self, $address) = @_;
 
     if ($self->can('add')) {
-	$self->SUPER::add($addr);
+	$self->SUPER::add($address);
     }
     else {
 	$self->_error_reason("Error: add() method is not supported.");
+	undef;
+    }
+}
+
+
+# Descriptions: 
+#    Arguments: $self $address
+# Side Effects: 
+# Return Value: none
+sub delete
+{
+    my ($self, $address) = @_;
+
+    if ($self->can('delete')) {
+	$self->SUPER::delete($address);
+    }
+    else {
+	$self->_error_reason("Error: delete() method is not supported.");
 	undef;
     }
 }
