@@ -2,14 +2,7 @@
 
 	ErrorStatus.pm
 	IO/Adapter/ErrorStatus.pm
-	Mail/Bounce/ErrorStatus.pm
 	Mail/Delivery/ErrorStatus.pm
-	Mail/Message/ErrorStatus.pm
-	
-	Mail/HTML/Lite.pm
-	
-	Mail/ThreadTrack/HeaderRewrite.pm
-	Mail/ThreadTrack/Print.pm
 
 -------------------------------------------------------
 
