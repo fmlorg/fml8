@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.7 2003/01/01 02:06:22 fukachan Exp $
+# $FML: Deadline.pm,v 1.1 2003/11/22 05:41:52 fukachan Exp $
 #
 
 package FML::Data::Deadline;
@@ -154,10 +154,12 @@ sub _open_db
     my $db    = $self->{ _journal_db };
     my $dir   = $self->{ _cache_dir };
     my $class = $self->{ _class };
-    my $_db   = $db->open($dir, $class);
 
-    $self->{ _db } = $_db;
-    return $_db;
+    if (defined $db) {
+	my $_db = $db->open($dir, $class);
+	$self->{ _db } = $_db;
+	return $_db;
+    }
 }
 
 
@@ -169,7 +171,9 @@ sub _close_db
 {
     my ($self) = @_;
     my $db = $self->{ _journal_db };
-    $db->close();
+    if (defined $db) {
+	$db->close();
+    }
 }
 
 
