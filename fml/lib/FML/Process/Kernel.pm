@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.86 2002/04/15 03:46:44 fukachan Exp $
+# $FML: Kernel.pm,v 1.87 2002/04/23 14:10:33 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -479,7 +479,7 @@ The restriction rules follows the order of C<command_restrictions>.
 sub permit_post
 {
     my ($curproc, $args) = @_;
-    $curproc->_check_resitrictions($args, 'post');
+    $curproc->_check_restrictions($args, 'post');
 }
 
 
@@ -490,7 +490,7 @@ sub permit_post
 sub permit_command
 {
     my ($curproc, $args) = @_;
-    $curproc->_check_resitrictions($args, 'command');
+    $curproc->_check_restrictions($args, 'command');
 }
 
 
@@ -499,7 +499,7 @@ sub permit_command
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
-sub _check_resitrictions
+sub _check_restrictions
 {
     my ($curproc, $args, $type) = @_;
     my $config = $curproc->{ config };
@@ -536,6 +536,9 @@ sub _check_resitrictions
 		$pcb->set("check_restrictions", "deny_reason", $rule);
 		return 0;
 	    }
+	}
+	elsif ($rule eq 'permit_commands_for_stranger') {
+		return 0;
 	}
 	elsif ($rule eq 'reject') {
 	    $pcb->set("check_restrictions", "deny_reason", $rule);
