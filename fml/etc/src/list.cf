@@ -11,6 +11,7 @@ log.cf
 spool.cf
 htmlarchive.cf
 command.cf
+error.cf
 threadtrack.cf
 dbms.cf
 cgi.cf

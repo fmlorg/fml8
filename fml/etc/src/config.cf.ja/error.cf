@@ -1,0 +1,7 @@
+=head1	
+
+# Descriptions: use libexe/fml/{error,mead} or not
+#      History:
+#        Value: yes
+#     Examples: yes / no
+use_error_analyzer	=	yes
