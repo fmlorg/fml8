@@ -1,0 +1,15 @@
+<chapter id="test">
+	<title>
+	テスト
+	</title>
+
+<warning>
+<para>
+テストの前に
+newml の際の重複チェックを効かせるために
+postfix の aliases をきちんと追加して下さい。
+これをしないと root ＭＬとか作れちゃいます:-)
+</para>
+</warning>
+
+</chapter>
