@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML$
+# $FML: emul_error.sh,v 1.1 2002/11/25 14:30:57 fukachan Exp $
 #
 
 DO () {
@@ -29,5 +29,7 @@ for msg in $list
 do
    DO $msg
 done
+
+printf "\n\n" ; fml elena error
 
 exit 0
