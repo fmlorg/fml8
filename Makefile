@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.17 2001/07/01 14:07:40 fukachan Exp $
+# $FML: Makefile,v 1.18 2001/07/15 12:18:36 fukachan Exp $
 #
 
 CONV = doc/bin/text2html.pl
@@ -20,7 +20,7 @@ install:
 scan:
 	@ cvs -n update 2>&1 |grep -v : || echo ''
 
-update:
+update: fml/etc/paths.cf.in
 	@ cvs update -d -P|grep -v : || echo ''
 
 clean:
@@ -44,3 +44,8 @@ _html:
 
 ja.doc:
 	@ (cd fml/doc/ja/; make clean; make ; make clean)
+
+
+fml/etc/paths.cf.in: configure.in
+	./fml/utils/bin/gen_paths.cf.pl configure.in > fml/etc/paths.cf.in.new
+	mv fml/etc/paths.cf.in.new fml/etc/paths.cf.in
