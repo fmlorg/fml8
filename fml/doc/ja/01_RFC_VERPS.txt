@@ -1,0 +1,39 @@
+		Mail::Delivery の VERPs 対応
+
+
+$service = new Mail::Delivery {
+    log_function       => $fp,
+    smtp_log_function  => $sfp,
+    smtp_log_handle    => $handle,
+};
+
+$service->deliver(
+	      {
+		  'smtp_servers'    => $config->{'smtp_servers'},
+		  'smtp_sender'     => $config->{'smtp_sender'},
+		  'recipient_maps'  => $config->{recipient_maps},
+		  'recipient_limit' => $config->{smtp_recipient_limit},
+		  'message'         => $message,
+		  map_params        => $config,
+
+
+	# で、verps だが？
+	# MTA のひんとは？ 
+
+			use_verp	=> yes
+			verp_params	=> {
+				styles => {
+					postfix_style	=>	'XVERP',
+					qmail_style 	=> 	'-@[]',
+				},
+
+				mta_hints => {
+					server-A	=> postfix
+					server-B	=> qmail
+				}
+			},
+	      });
+
+
+
+
