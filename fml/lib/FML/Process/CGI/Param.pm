@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Param.pm,v 1.1.1.1 2001/11/08 15:35:32 fukachan Exp $
+# $FML: Param.pm,v 1.2 2001/11/09 00:07:10 fukachan Exp $
 #
 
 package FML::Process::CGI::Param;
@@ -42,10 +42,11 @@ It provides basic functions and flow.
 @EXPORT_OK = qw(safe_param %allow_regexp);
 
 my %allow_regexp = (
-		    'address' => '[-a-z0-9_]@[-A-Z0-9\.]+',
-		    'ml_name' => '[-a-z0-9_]+',
-		    'method'  => '[a-z]+',
-		    'user'    => '[-a-z0-9_]+',
+		    'address'    => '[-a-z0-9_]@[-A-Z0-9\.]+',
+		    'ml_name'    => '[-a-z0-9_]+',
+		    'action'     => '[a-z]+',
+		    'user'       => '[-a-z0-9_]+',
+		    'article_id' => '\d+',
 		    );
 
 
