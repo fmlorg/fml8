@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Install.pm,v 1.14 2004/07/23 04:09:44 fukachan Exp $
+# $FML: Install.pm,v 1.15 2004/07/23 15:59:00 fukachan Exp $
 #
 
 package FML::Install;
@@ -751,9 +751,15 @@ sub is_valid_owner
     my ($self, $user) = @_;
 
     use User::pwent;
-    my $pw = getpwnam($user) || croak("no such user: $user");
+    my $pw = getpwnam($user) || do {
+	my $r = "no such user: $user";
+	my $s = $self->message_nl("installer.no_such_user", $r);
+	croak($r);
+    };
     if ($pw->uid == 0) {
-	croak("user should be not ROOT!");
+	my $r = "user should be not ROOT!";
+	my $s = $self->message_nl("installer.no_root_user", $r);
+	croak($r);
     }
 
     return 1;
@@ -769,7 +775,11 @@ sub is_valid_group
     my ($self, $group) = @_;
 
     use User::grent;
-    my $gr = getgrnam($group) || croak("no such group: $group");
+    my $gr = getgrnam($group) || do {
+	my $r = "no such group: $group";
+	my $s = $self->message_nl("installer.no_such_group", $r);
+	croak($r);
+    };
 
     return 1;
 }
@@ -992,6 +1002,58 @@ sub md5
 
 
 =head1 MESSAGE MANIPULATION
+
+=head2 message_nl($clss, $default_msg)
+
+return message by natural language.
+
+=cut
+
+
+# Descriptions: return message by natural language.
+#    Arguments: OBJ($self) STR($class) STR($default_msg)
+# Side Effects: none
+# Return Value: STR
+sub message_nl
+{
+    my ($self, $class, $default_msg) = @_;
+    my $charset ||= 'us-ascii';
+
+    use File::Spec;
+    $class =~ s@\.@/@g; # XXX . -> /
+
+    my $msg_dir  = File::Spec->catfile("fml", "share", "message");
+    my $msg_file = File::Spec->catfile($msg_dir, $charset, $class);
+
+    if (-f $msg_file) {
+	return $self->_import_message_from_file($msg_file);
+    }
+    else {
+	return $default_msg;
+    }
+}
+
+
+# Descriptions: get message from file.
+#    Arguments: OBJ($self) STR($file)
+# Side Effects: none
+# Return Value: STR
+sub _import_message_from_file
+{
+    my ($self, $file) = @_;
+    my $buf = '';
+
+    use FileHandle;
+    my $fh = new FileHandle $file;
+    if (defined $fh) {
+        my $xbuf;
+        while ($xbuf = <$fh>) { $buf .= $xbuf;}
+        $fh->close();
+    }
+
+    return $buf;
+}
+
 
 =head2 enable_message()
 
