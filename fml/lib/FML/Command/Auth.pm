@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.19 2003/01/03 07:06:39 fukachan Exp $
+# $FML: Auth.pm,v 1.20 2003/01/11 16:05:14 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -12,10 +12,6 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD $debug);
 use Carp;
 use FML::Log qw(Log LogWarn LogError);
-
-# always use this module's crypt
-BEGIN { $Crypt::UnixCrpyt::OVERRIDE_BUILTIN = 1 }
-use Crypt::UnixCrypt;
 
 
 =head1 NAME
@@ -162,10 +158,13 @@ sub check_admin_member_password
 	# if this $map has this $user entry,
 	# try to check { user => password } relation.
 	if (defined $pwent) {
+	    use FML::Crypt;
+	    my $crypt = new FML::Crypt;		
+
 	  PASSWORD_ENTRY:
 	    for my $r (@$pwent) {
 		my ($u, $p_infile) = split(/\s+/, $r);
-		my $p_input        = crypt( $password, $p_infile );
+		my $p_input        = $crypt->unix_crypt($password, $p_infile);
 
 		# XXX-TODO: is_same_assress() validates input ???
 		# XXX-TODO: we need to validate addresses here ???
@@ -173,7 +172,9 @@ sub check_admin_member_password
 		if ($cred->is_same_address($u, $address)) {
 		    # 1.2 password match ?
 		    if ($p_infile eq $p_input) {
-			Log("check_admin_member_password: password match") if $debug;
+			if ($debug) {
+			    Log("check_admin_member_password: password match");
+			}
 			return 1;
 		    }
 		}
