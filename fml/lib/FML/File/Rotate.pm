@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Rotate.pm,v 1.2 2004/04/17 13:23:52 fukachan Exp $
+# $FML: Rotate.pm,v 1.3 2004/04/18 02:11:46 fukachan Exp $
 #
 
 package FML::File::Rotate;
@@ -17,7 +17,7 @@ END   {}
 
 =head1 NAME
 
-FML::File::Rotate - file rotatation utilities
+FML::File::Rotate - file rotatation utilities.
 
 =head1 SYNOPSIS
 
@@ -49,7 +49,7 @@ some programs such as /usr/bin/newsyslog (MIT athena project) do.
 
 =head2 new($curproc)
 
-ordinary constructor.
+constructor.
 
 =cut
 
@@ -69,12 +69,28 @@ sub new
 
 =head1 PARAMETERS
 
+=head2 set_max_size($size)
+
+set max_size.
+
+=head2 get_max_size()
+
+get max_size.
+
+=head2 set_num_backlog($num)
+
+set number of backlog files.
+
+=head2 get_num_backlog()
+
+get number of backlog files.
+
 =cut
 
 
 # Descriptions: set max_size.
 #    Arguments: OBJ($self) NUM($size)
-# Side Effects: update $self
+# Side Effects: update $self.
 # Return Value: none
 sub set_max_size
 {
@@ -91,12 +107,12 @@ sub set_max_size
 
 
 # Descriptions: get max_size.
-#    Arguments: OBJ($self) NUM($size)
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: NUM
 sub get_max_size
 {
-    my ($self, $size) = @_;
+    my ($self) = @_;
 
     return( $self->{ _max_size } || 300*1024 );
 }
@@ -140,10 +156,10 @@ determine whether the time to do comes or not.
 =cut
 
 
-# Descriptions: determine the time to rotate
+# Descriptions: determine if the time to rotate comes.
 #    Arguments: OBJ($self) STR($file)
 # Side Effects: none
-# Return Value: 1 (time comes!) or 0
+# Return Value: NUM(1 (time comes!) or 0)
 sub is_time_to_rotate
 {
     my ($self, $file) = @_;
