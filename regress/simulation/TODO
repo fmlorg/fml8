@@ -26,3 +26,9 @@ default signal handling
 MIME Content Handler(include backword compatible)
 
 log suffix extension
+
+
+chaddr を認証の前にトラップすること( libtrap.pl )
+
+
+5.0 では ReloadMySelf() って必要ないような気がするが…
