@@ -131,7 +131,7 @@ sub _makefml
 	$curproc->unlock();
     }
     else {
-	croak("unknown makefml method");
+	warn("Error: makefml has no such command=$command\n");
     }
 }
 
