@@ -247,7 +247,7 @@ sub _connect
 
     # 1. try to connect(2) $args->{ _mta } by IPv6 if we can use Socket6.
     if ($self->is_ipv6_ready($args)) {
-	$self->_connect6($args);
+	$self->connect6($args);
 	my $socket = $self->{_socket};
 	return $socket if defined $socket;
     }

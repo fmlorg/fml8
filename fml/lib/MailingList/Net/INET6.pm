@@ -17,7 +17,7 @@ use MailingList::Utils;
 require Exporter;
 
 @ISA       = qw(Exporter);
-@EXPORT    = qw(is_ipv6_ready is_ipv6_mta_syntax _connect6);
+@EXPORT    = qw(is_ipv6_ready is_ipv6_mta_syntax connect6);
 
 sub _we_can_use_Socket6
 {
@@ -67,7 +67,7 @@ sub is_ipv6_mta_syntax
 }
 
 
-sub _connect6
+sub connect6
 {
     my ($self, $args) = @_;
     my $mta = $args->{ _mta };
@@ -85,7 +85,7 @@ sub _connect6
 
     # hmm, invalid MTA
     unless ($host && $port) {
-	Log("_connect6: cannot find mta=$mta");
+	Log("connect6: cannot find mta=$mta");
 	$self->{_socket} = undef;
 	return undef;
     }
@@ -149,7 +149,7 @@ MailingList::Net::INET6 - establish tcp connection over IPv6
 =head1 SYNOPSIS
 
     if ($self->is_ipv6_ready($args)) {
-	$self->_connect6($args);
+	$self->connect6($args);
     }
 
 =head1 DESCRIPTION
@@ -164,7 +164,7 @@ over IPv6. It is used within C<MailingList::SMTP> module.
 It checks whether your environment has Socket6.pm or not?
 If Socket6 module exists, we assume your operating system is IPv6 ready!
 
-=item C<_connect6()>
+=item C<connect6()>
 
 try L<connect(2)>. 
 If it succeeds, returned 
@@ -174,7 +174,7 @@ $self->{ _socket } is undef.
 
 Avaialble arguments follows:
 
-    _connect6( { _mta => $mta });
+    connect6( { _mta => $mta });
 
 $mta is a hostname or [raw_ipv6_addr]:port form, for example, 
 [::1]:25.
