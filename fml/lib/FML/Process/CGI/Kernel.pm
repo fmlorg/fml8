@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.58 2003/10/14 07:04:34 fukachan Exp $
+# $FML: Kernel.pm,v 1.59 2003/10/14 10:55:26 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -95,10 +95,32 @@ sub prepare
     $curproc->_cgi_resolve_ml_specific_variables( $args );
     $curproc->load_config_files( $args->{ cf_list } );
     $curproc->fix_perl_include_path();
+    $curproc->_set_charset();
 
     print header(-type    => "text/html; charset=$charset",
 		 -charset => $charset,
 		 -target  => "_top");
+}
+
+
+# Descriptions: update the current charset
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: none
+sub _set_charset
+{
+    my ($curproc) = @_;
+    my $lang = $curproc->cgi_var_language();
+
+    if ($lang =~ /japanese/i) {
+	$curproc->set_charset("template_file", 'euc-jp');
+    }
+    elsif ($lang =~ /english/i) {
+	$curproc->set_charset("template_file", 'us-ascii');
+    }
+    else {
+	$curproc->set_charset("template_file", 'us-ascii');	
+    }
 }
 
 
