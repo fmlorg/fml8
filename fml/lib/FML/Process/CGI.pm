@@ -56,7 +56,7 @@ sub new
 
     # we should get $ml_name from HTTP.
     my $ml_home_prefix = $args->{ ml_home_prefix };
-    my $ml_name        = param('ml_name');
+    my $ml_name        = param('ml_name') || croak("not get ml_name from HTTP");
     my $ml_home_dir    = $ml_home_prefix .'/'. $ml_name;
 
     # fix $args { cf_list, ml_home_dir };

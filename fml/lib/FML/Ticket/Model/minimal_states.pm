@@ -71,6 +71,8 @@ sub new
     my $config  = $curproc->{ config };
     my $ml_name = $config->{ ml_name };
 
+    croak("specify \$ml_name\n") unless defined $ml_name;
+
     $me->{ _fd }     = $args->{ fd } || \*STDOUT; 
     $me->{ _db_dir } = $config->{ ticket_db_dir } ."/". $ml_name;
     $me->_init_ticket_db_dir($curproc, $args) || do {
@@ -837,7 +839,7 @@ sub _show_ticket_by_html_table
     print "<TD>$tid\n";
     print "<TD>";
 
-    my $aid = (split(/\s+/, $articles))[0];
+    $aid = (split(/\s+/, $articles))[0];
     my $buf = $self->_article_summary( $spool_dir ."/". $aid );
     $buf    =~ s/\n/<BR>\n/g;
     print $buf;
