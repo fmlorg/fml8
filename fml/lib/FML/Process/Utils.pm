@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.121 2004/07/23 15:59:11 fukachan Exp $
+# $FML: Utils.pm,v 1.122 2004/07/26 05:46:35 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -515,6 +515,29 @@ sub _cat
 	    syswrite($out, $buf);
 	}
 	$fh->close();
+    }
+}
+
+
+# Descriptions: chown utility.
+#    Arguments: OBJ($self) STR($owner) STR($group) VAR_ARG(@argv)
+# Side Effects: change owner and group of $dir
+# Return Value: none
+sub chown
+{
+    my ($curproc, $owner, $group, @argv) = @_;
+
+    use User::pwent;
+    my $pw  = getpwnam($owner) || croak("no such user: $owner");
+    my $uid = $pw->uid;
+
+    use User::grent;
+    my $gr  = getgrnam($group) || croak("no such group: $group");
+    my $gid = $gr->gid;
+
+    for my $file (@argv) {
+	print STDERR "chown $uid, $gid, $file\n" if $debug;
+	chown $uid, $gid, $file;
     }
 }
 
