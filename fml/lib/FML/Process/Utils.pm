@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.99 2003/12/30 03:46:35 fukachan Exp $
+# $FML: Utils.pm,v 1.100 2004/01/01 23:52:18 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -788,6 +788,65 @@ sub command_line_options
     my $args = $curproc->{ __parent_args };
 
     return $args->{ options };
+}
+
+
+=head2 set_config_files_list($cf_file_path_array)
+
+set configuration file (.cf) to internal list.
+
+=head2 append_to_config_files_list($cf_file_path)
+
+append configuration file (.cf) to internal list.
+
+=head2 get_config_files_list()
+
+get configuration files (*.cf) list as ARRAY_REF.
+
+=cut
+
+
+# Descriptions: set configuration file (.cf) to internal list.
+#    Arguments: OBJ($curproc) ARRAY_REF($path)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub set_config_files_list
+{
+    my ($curproc, $path) = @_;
+    my $args = $curproc->{ __parent_args };
+
+    if (ref($path) eq 'ARRAY') {
+	$args->{ cf_list } = $path || [];
+    }
+    else {
+	$curproc->logerror("set_config_files_list: invalid input");
+    }
+}
+
+# Descriptions: append configuration file (.cf) to internal list.
+#    Arguments: OBJ($curproc) STR($path)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub append_to_config_files_list
+{
+    my ($curproc, $path) = @_;
+    my $args = $curproc->{ __parent_args };
+
+    my $p = $args->{ cf_list } || [];
+    push(@$p, $path);
+    $args->{ cf_list } = $p;
+}
+
+# Descriptions: get configuration files (*.cf) list as ARRAY_REF.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub get_config_files_list
+{
+    my ($curproc) = @_;
+    my $args = $curproc->{ __parent_args };
+
+    return( $args->{ cf_list } || [] );
 }
 
 
