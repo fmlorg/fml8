@@ -23,19 +23,6 @@ FML::Command::subscribe - subscribe a new member
 
 =head1 METHODS
 
-=head2 C<new()>
-
-=cut
-
-sub new
-{
-    my ($self) = @_;
-    my ($type) = ref($self) || $self;
-    my $me     = {};
-    return bless $me, $type;
-}
-
-
 =head2 C<subscribe( $address )>
 
 =cut

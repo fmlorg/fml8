@@ -23,17 +23,7 @@ FML::Command::unsubscribe - remove the specified member
 
 =head1 METHODS
 
-=head2 C<new()>
-
 =cut
-
-sub new
-{
-    my ($self) = @_;
-    my ($type) = ref($self) || $self;
-    my $me     = {};
-    return bless $me, $type;
-}
 
 
 sub unsubscribe

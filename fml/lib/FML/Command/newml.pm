@@ -27,21 +27,7 @@ FML::Command::newml - make a new mailing list
 
 =head1 METHODS
 
-=head2 C<new()>
-
-=cut
-
-
-sub new
-{
-    my ($self) = @_;
-    my ($type) = ref($self) || $self;
-    my $me     = {};
-    return bless $me, $type;
-}
-
-
-=head2 C<newml( $ml_name )>
+=head2 C<newml($curproc, $args)>
 
 =cut
 
@@ -50,6 +36,7 @@ sub newml
 {
     my ($self, $curproc, $args) = @_;
     my $config        = $curproc->{ config };
+    my $main_cf       = $curproc->{ main_cf };
     my $member_map    = $config->{ primary_member_map };
     my $recipient_map = $config->{ primary_recipient_map };
     my $ml_name       = $args->{ ml_name };
@@ -57,7 +44,21 @@ sub newml
     # fundamental check
     croak("\$ml_name is not specified")    unless $ml_name;
 
-    my $ml_home_prefix = $curproc->{ ml_home_prefix };
+    my $ml_home_prefix     = $main_cf->{ ml_home_prefix };
+    my $ml_home_dir        = "$ml_home_prefix/$ml_name";
+
+    use File::Utils qw(mkdirhier copy);
+    unless (-d $ml_home_dir) {
+	mkdirhier( $ml_home_dir, $config->{ default_dir_mode } || 0755 );
+
+	my $default_config_dir = $main_cf->{ default_config_dir };
+	my $src = $default_config_dir ."/config.cf";
+	my $dst = $ml_home_dir . "/" . 'config.cf';
+	copy($src, $dst);
+    }
+    else {
+	warn("$ml_name already exists");
+    }
 }
 
 

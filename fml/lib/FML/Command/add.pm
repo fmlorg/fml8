@@ -13,7 +13,14 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
+use FML::Command::subscribe;
 @ISA = qw(FML::Command::subscribe);
+
+sub add
+{
+    my ($self, $curproc, $args) = @_;
+    $self->SUPER::subscribe($curproc, $args);
+}
 
 =head1 NAME
 

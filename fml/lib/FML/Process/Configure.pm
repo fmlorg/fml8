@@ -102,58 +102,30 @@ sub _makefml
     my $myname  = $args->{ myname };
     my $argv    = $args->{ ARGV };
 
-    my ($command, $ml_name, @options) =  @$argv;
+    my ($method, $ml_name, @options) =  @$argv;
 
-    if ($command eq 'newml' ||
-	$command eq 'add' || $command eq 'subscribe' ||
-	$command eq 'bye' || $command eq 'unsubscribe') {
-	my $method = $curproc->_which_makefml_method($command);
-	my $pkg    = "FML::Command::${method}";
+    # arguments to pass off to each method
+    my $optargs = {
+	command => $method,
+	ml_name => $ml_name,
+	options => \@options,
+	argv    => $argv,
+	args    => $args,
+    };
 
-	# local scope
-	local(@ISA) = ($pkg, @ISA);
-
-	# arguments to pass off to each method
-	my $args = {
-	    command => $command,
-	    ml_name => $ml_name,
-	    options => \@options,
-	    argv    => $argv,
-	};
-
-	eval qq{ require $pkg; $pkg->import();};
-	if ($@) { Log($@); croak("command=$command is not supported.");}
-
-	# here we go
-	$curproc->lock();
-	my $obj  = $pkg->new;
-	$obj->$method($curproc, $args);
-	$curproc->unlock();
-    }
-    else {
-	warn("Error: makefml has no such command=$command\n");
-    }
+    # here we go
+    $curproc->lock() if $curproc->_makefml_require_lock($method);
+    require FML::Command;
+    my $obj = new FML::Command;
+    $obj->$method($curproc, $optargs);
+    $curproc->unlock() if $curproc->_makefml_require_lock($method);
 }
 
 
-# Descriptions: 
-#    Arguments: $self $command
-# Side Effects: none
-# Return Value: method name
-sub _which_makefml_method
+sub _makefml_require_lock
 {
     my ($self, $command) = @_;
-    my $method = {
-	'add'          => 'subscribe',
-	'subscribe'    => 'subscribe',
-
-	'bye'          => 'unsubscribe',
-	'unsubscribe'  => 'unsubscribe',
-
-	'newml'        => 'newml',
-    };
-
-    $method->{ $command };
+    $command eq 'newml' ? 0 : 1;
 }
 
 

@@ -13,7 +13,15 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
+use FML::Command::unsubscribe;
 @ISA = qw(FML::Command::unsubscribe);
+
+sub bye
+{
+    my ($self, $curproc, $args) = @_;
+    $self->SUPER::unsubscribe($curproc, $args);
+}
+
 
 =head1 NAME
 
