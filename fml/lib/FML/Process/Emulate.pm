@@ -3,7 +3,7 @@
 # Copyright (C) 2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Emulate.pm,v 1.2 2004/11/23 13:36:59 fukachan Exp $
+# $FML: Emulate.pm,v 1.3 2004/11/25 12:25:56 fukachan Exp $
 #
 
 package FML::Process::Emulate;
@@ -193,15 +193,17 @@ sub generate_config_cf_from_config_ph
     my $config_ph_path = $fallback_args->{ config_cf_path };
     $config_ph_path    =~ s/config.cf/config.ph/;
 
-    if (-f $config_ph_path && -f $config_cf_path) {
-	# OK, DO NOTHING.
-    }
-    elsif (! -f $config_ph_path && -f $config_cf_path) {
+    use File::stat;
+    my $stat_ph = stat($config_ph_path);
+    my $stat_cf = stat($config_cf_path);
+    if (! -f $config_ph_path && -f $config_cf_path) {
 	# fml8 normal case.
 	# OK, DO NOTHING.
     }
-    elsif (-f $config_ph_path && ! -f $config_cf_path) {
+    elsif (($stat_ph->mtime > $stat_cf->mtime) ||
+	   (-f $config_ph_path && ! -f $config_cf_path)) {
 	# fml4 -> fml8 case (config.ph -> config.cf).
+	$curproc->log("generate config.cf from config.ph");
 	use File::Basename;
 	my $ml_home_dir = dirname($config_cf_path);
 	my $params = {
@@ -210,6 +212,9 @@ sub generate_config_cf_from_config_ph
 	    target_system => "fml4",
 	};
 	$curproc->_fml4_merge($params);
+    }
+    elsif (-f $config_ph_path && -f $config_cf_path) {
+	# OK, DO NOTHING.
     }
     else {
 	;
@@ -240,7 +245,7 @@ sub _fml4_merge
     #   3. run newml --force.
     use FML::ML::Control;
     my $control = new FML::ML::Control;
-    $control->install_template_files($curproc, {}, $params);
+    $control->install_config_cf($curproc, {}, $params);
 
     # 4. convert files if needed.
     $merge->convert_list_files();

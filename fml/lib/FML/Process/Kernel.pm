@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.244 2004/11/30 04:14:59 fukachan Exp $
+# $FML: Kernel.pm,v 1.245 2004/12/05 16:19:10 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -822,7 +822,12 @@ sub resolve_ml_specific_variables
 	# we try to fallback something when config.cf not exists.
 	# Example: when fml.pl firstly runs without config.cf (fml8) file,
 	#          fml.pl should generate config.cf and continue to run.
-	unless (-f $config_cf_path) {
+	my $config_ph_path = $config_cf_path;
+	$config_ph_path    =~ s/config.cf/config.ph/;	
+	use File::stat;
+	my $stat_ph = stat($config_ph_path);
+	my $stat_cf = stat($config_cf_path);
+	if ((! -f $config_cf_path) || ($stat_ph->mtime > $stat_cf->mtime)) {
 	    my $fallback       = $resolver_args->{ fallback } || undef;
 	    my $fallback_args  = {
 		config_cf_path => $config_cf_path,
