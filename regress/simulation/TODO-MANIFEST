@@ -7,10 +7,6 @@ MAINTAINER_SIGNATURE:
 
 ML_FN:		(Elena Lolabrigita ML)
 
-TMP_DIR:	tmp
-
-VAR_DIR:	var
-VARLOG_DIR:	var/log
 VARRUN_DIR:	var/run
 VARDB_DIR:	var/db
 
