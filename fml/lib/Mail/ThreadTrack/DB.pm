@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: DB.pm,v 1.10 2001/11/07 04:07:02 fukachan Exp $
+# $FML: DB.pm,v 1.11 2001/11/09 13:30:57 fukachan Exp $
 #
 
 package Mail::ThreadTrack::DB;
@@ -166,8 +166,9 @@ sub db_close
 sub db_mkdb
 {
     my ($self, $min_id, $max_id) = @_;
-    my $config    = $self->{ _config };
-    my $spool_dir = $config->{ spool_dir };
+    my $config     = $self->{ _config };
+    my $spool_dir  = $config->{ spool_dir };
+    my $saved_args = $self->{ _saved_args }; # original $args 
 
     use Mail::Message;
     use File::Spec;
@@ -175,9 +176,10 @@ sub db_mkdb
     my $count = 0;
     print STDERR "db_mkdb: $min_id -> $max_id\n" if $debug;
     for my $id ( $min_id .. $max_id ) {
-	print STDERR "." if $count++ % 25 == 0;
+	print STDERR "." if $count++ % 10 == 0;
 	print STDERR "process $id\n" if $debug;
 
+	# XXX this code is workaround, we should create more clever way.
 	# XXX overwrite (tricky)
 	$self->{ _config }->{ article_id } = $id;
 
@@ -186,6 +188,10 @@ sub db_mkdb
 	my $fh   = new FileHandle $file;
 	my $msg  = Mail::Message->parse({ fd => $fh });
 	$self->analyze($msg);
+
+	# XXX this code is workaround, we should create more clever way.
+	# XXX remove current status (tricky ;)
+	delete $self->{ _status };
     }
     print STDERR "\n" if $count > 0;
 }
