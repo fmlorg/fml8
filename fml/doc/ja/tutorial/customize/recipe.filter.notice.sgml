@@ -1,0 +1,54 @@
+<!--
+   $FML: @recipe_template,v 1.1 2003/01/07 11:39:13 fukachan Exp $
+-->
+
+
+<qandaentry>
+
+<question>
+<para>
+フィルタで弾いた時に、エラーメールをどこへ返す
+</para>
+</question>
+
+<answer>
+
+<para>
+デフォルトでは
+<screen>
+use_article_filter_reject_notice	=	yes
+article_filter_reject_notice_recipient	=	admin
+</screen>
+となっている。
+つまり、エラーメールを返し、返す先はＭＬの管理者だ。
+</para>
+
+
+<para>
+返送する先を送信者( From: のアドレス )にするには
+<screen>
+article_filter_reject_notice_recipient	=	sender
+</screen>
+とする。
+</para>
+
+
+<para>
+ＭＬの管理者と送信者( From: のアドレス )の両方に返すには
+<screen>
+article_filter_reject_notice_recipient	=	admin sender
+</screen>
+とする。
+</para>
+
+
+<para>
+そもそもエラーメールを返さないようにするには、
+<screen>
+use_article_filter_reject_notice	=	no
+</screen>
+</para>
+
+</answer>
+
+</qandaentry>

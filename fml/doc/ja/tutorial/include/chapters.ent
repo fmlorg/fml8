@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.67 2003/03/12 00:18:30 fukachan Exp $
+	$FML: chapters.ent,v 1.68 2003/04/12 15:20:02 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -71,6 +71,12 @@
 <!entity recipe.header.tag.uppercase SYSTEM "customize/recipe.header.tag.uppercase.sgml">
 <!entity recipe.header.tag.lowercase SYSTEM "customize/recipe.header.tag.lowercase.sgml">
 
+<!-- フィルタ -->
+<!entity chapter.customize.filter    SYSTEM "customize/filter.sgml">
+<!entity recipe.filter.notice.sgml   SYSTEM "customize/recipe.filter.notice.sgml.sgml">
+
+
+
 <!entity sect.usage.guide           SYSTEM "usage/guide.sgml">
 <!entity sect.usage.subscribe       SYSTEM "usage/subscribe.sgml">
 <!entity sect.usage.unsubscribe     SYSTEM "usage/unsubscribe.sgml">
@@ -107,6 +113,7 @@
 <!entity chapter.policy           SYSTEM "policy.sgml">
 
 <!entity chapter.filename         SYSTEM "internals/filename.sgml">
+<!entity chapter.filter           SYSTEM "internals/filter.sgml">
 
 
 <!-- 配送 -->

@@ -1,0 +1,388 @@
+<!--
+   $FML$
+-->
+
+<chapter id="internals.filter">
+	<title>
+	フィルタ
+	</title>
+
+
+<sect1>
+	<title>
+	フィルタの概要
+	</title>
+
+<para>
+フィルタには大きく分けて３種類あります。
+ヘッダ、
+メール本文、
+MIME 構造を元にしたフィルタ(mime component filter)です。
+メール本文に対するフィルタには MIME でないものをどうするか？
+text/plain に対してより厳しいシンタックスチェックを行なうフィルタも
+あるので、大きく分けると４つといえるかも。
+<screen>
+header
+
+body
+	non-mime
+		permit / reject (4.0 の content filter の !MIME)
+
+	mime component filter
+		4.0 の content filter
+
+	text/plain filter
+			ja, en, ... (言語依存)
+			非言語依存パート (M$ GUID scanner みたいな)
+		先頭部分の text/plain パートに対する
+		シンタックスチェック
+</screen>
+本当はこれ以外に、外部の virus scanner なりに飛ばす迂回路が必要だと思
+うんだけど今はまだ考えてない。とりあえず、それは postfix でやってくだ
+さい。
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	mime component filter のルール構成法
+	</title>
+
+<para>
+fml 4.0 の content filter とは異なり、
+&fmldevel; の mime component filter は
+<screen>
+text/plain 	permit
+text/html	reject
+*		permit
+</screen>
+みたいなフォーマットで書く。
+</para>
+
+<para>
+MIME が前提なので、!MIME なんてのはない。が、text/plain と 
+multipart/mixed 中の text/plain を区別するために、こういう書き方である
+必要があるとおもう。
+<screen>
+全体			部分		アクション
+----------------------------------------------
+text/plain 		*		permit
+multipart/mixed		text/plain	permit
+multipart/mixed		text/html	reject
+multipart/mixed		image/*		cutoff
+*			*		permit
+</screen>
+さらに、将来はこういうのもありか？
+<screen>
+text/plain 		:uuencoded:	cutoff
+text/plain 		:size>500k	cutoff
+</screen>
+</para>
+
+<para>
+ルールの構成上の問題点はいくつかある。
+</para>
+
+<sect2>
+	<title>
+	first match vs last match ?
+	</title>
+
+<para>
+アクションには first match のものとそうでないものがある。
+reject は first match だが、cutoff は first match ではない。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	permit の意味
+	</title>
+
+<para>
+では、permit はどうだろうか？実のところ、文脈依存と考えられるのだが、
+どうするとよいだろうか？たとえば、multipart のメールの中身が
+<screen>
+text/plain + image/jpeg + text/html
+</screen>
+のように３つの異なるタイプのパートからなる場合、どういうルールなら曖昧
+さがないだろうか？結論をいえば、cutoff や reject を指定するタイプのルー
+ルしかうまく機能しない、つまり「特定の○○を削除ないしは拒否する」こと
+ならうまくできるといえる。ゆえにデフォルトは permit にするしかないんだ
+ともいえる。
+</para>
+
+<para>
+『permit は「個別に許す」という意味である』説と、
+『permit は「メール全体を許す」という意味である』説の両方がある。
+たとえば、
+<screen>
+text/plain	*	permit
+*		*	reject
+</screen>
+は text/plain は許す、それ以外のいかなる型も許さない。
+これは text/plain に曖昧さがないので OK。
+</para>
+
+<para>
+一方、『permit は「メール全体を許す」という意味である』説だが、たとえ
+ば text/plain のメールだけを許したいとしよう。 直観的にはこう書くだろ
+う。
+<screen>
+text/plain	*	permit
+*		*	reject
+</screen>
+しかし、これは permit が即 OK の意味でないとすると
+<screen>		
+*	*	reject
+</screen>
+と一緒になってしまう。だから permit は"メール全体を OK としてルールと
+の照らし合わせ処理をそこで終りにする"という意味にしないといけない。
+よって、次のようなルールはありえない。
+<screen>
+text/plain 		*		permit
+multipart/mixed		text/plain	permit
+multipart/mixed		text/html	reject
+multipart/mixed		image/*		cutoff
+*			*		permit
+</screen>
+というのは、このルールは次のように書いても同じだからである。
+<screen>
+text/plain 		*		permit
+multipart/mixed		text/html	reject
+multipart/mixed		image/*		cutoff
+*			*		permit
+</screen>
+つまり permit 命令で処理が終ってしまうとすれば、multipart に対しては事
+実上使ってはいけないことになる。『デフォルトの処理』か『text/plain * 』
+のようなものに対してのみ permit 命令は意味がある。
+</para>
+
+<para>
+以下、first match を前提に、事例を考えてみよう。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	ケーススタディ: デフォルトの挙動
+	</title>
+
+<para>
+暗黙のデフォルトルールは、他の header や text フィルタとの整合性を考え
+ると、「とりあえず通す」だろうか？
+<screen>
+*		*	permit
+</screen>
+これは content filter の「ルールをうまく書けない」という別の理由によっ
+ても支持されるだろう。
+</para>
+
+<para>
+なお、デフォルトの挙動を reject に変更するには * * reject を最後に付け
+加えれば良いだけだ。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	ケーススタディ: text/plain (全体)のみをゆるす
+	</title>
+
+<para>
+<screen>
+text/plain	*	permit
+*		*	reject
+</screen>
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	ケーススタディ: text/plain があれば何でも許す
+	</title>
+
+<para>
+text/plain があれば何でも許す。それ以外の型は拒否する。
+これは簡単なルールが書けない例だ。
+<screen>
+text/plain	*		permit
+multipart/*	text/plain	permit
+*		*		reject
+</screen>
+しかし、このルールでは
+<screen>
+text/plain + text/plain + text/plain
+</screen>
+でも、
+<screen>
+text/plain + text/plain + image/jpeg
+</screen>
+でもどっちも OK になってしまうのね。だめじゃん。
+もっとも not オペレータ(!)があれば、解決は可能だ。
+<screen>
+text/plain	*		permit
+multipart/*	!text/plain	reject
+multipart/*	text/plain	permit
+*		*		reject
+</screen>
+たぶん、これが期待される plain/text のみを通すルールだろう
+
+</sect2>
+
+
+<sect2>
+	<title>
+	ケーススタディ: 
+	text/html (全体) および text/html を含む multipart だけを拒否
+	</title>
+
+<para>
+<screen>
+text/html	*		reject
+multipart/*	text/html	reject
+*		*		permit
+</screen>
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	ケーススタディ: むずかしい例？
+	</title>
+
+<para>
+じゃ、これはどうよ？これは簡単なルールが書けない例だな。
+<screen>
+text/plain	*		permit
+multipart/*	text/plain	permit
+multipart/*	*		reject
+*		*		reject
+</screen>
+multipart の中身が text/plain からのみなるメールなら許す。つまり、
+<screen>
+text/plain + text/plain + text/plain
+</screen>
+は、OK。でも、
+<screen>
+text/plain + text/plain + image/jpeg
+text/plain + image/jpeg + text/html
+</screen>
+これらも 2 番めのルールで permit されてしまう。
+だめじゃん。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	ケーススタディ: 前の例のバリエーションで reject ではなく cutoff
+	</title>
+
+<para> 
+前の例のバリエーションで reject ではなく cutoff。
+<screen>   
+text/plain	*		permit
+multipart/*	image/*		cutoff
+multipart/*	text/plain	permit
+*		*		reject
+</screen>
+つまり
+<screen>
+text/plain + text/plain + text/plain
+</screen>
+は、OK。一方、
+<screen>
+text/plain + text/plain + image/jpeg
+</screen>
+のメールは image/jpeg 部分を削って、3番めのルールで permit される。でも、
+<screen>
+text/plain + image/jpeg + text/html
+</screen>
+も通過しちゃいます。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	ケーススタディ: 前の例で cutoff + permit にすると？
+	</title>
+
+<para>
+<screen>
+text/plain	*		permit
+multipart/*	image/*		cutoff
+multipart/*	image/*		permit
+multipart/*	text/plain	permit
+*		*		reject
+</screen>
+なら、
+<screen>
+text/plain + text/plain + text/plain
+text/plain + text/plain + image/jpeg
+text/plain + text/plain + text/html
+</screen>
+みな OK だが、ルールのマッチする場所が異なる。
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	議論: mime component filter に必要な機能とは？
+	</title>
+
+<para>
+以下は、fml-help ＭＬによるアンケートのまとめです。
+</para>
+
+<para>
+結論を先に書くと、いまの機能でいいようだ。content filter の起源となっ
+た cutoff の機能はもう不要みたい。
+</para>
+
+<para>
+さて、content filter の使い方をいくつか考えてみよう。
+<screen>
+(1) text/plain と multipart の text/plain だけは通す
+	text/plain じゃないメールなんて○○ ML では不要
+	だいたい virus つきかもしれないじゃん
+
+(2) multipart で text/plain 以外があるようなメールは拒否
+	virus つきかもしれないじゃん
+
+(3) multipart の text/html 部分を削る
+	いわゆる html メール
+	＃ついでに text/plain に戻す(やりすぎかも…)？
+
+(4) multipart の image/* 部分だけを削る
+	画像なんてＭＬに送るなよぉ
+
+(5) text/html のメールなんて spam に決まってるから捨てる
+</screen>
+まとめると、通常は (1) でよいということに決まりのようだ。
+規模とポリシー(きびしくできるか否かなど)によって(2)もアリかもしれない。
+例えば社内ＭＬのようにメールの型を厳しくできないＭＬは、そもそも 
+mime component filter を on にしない。
+</para>
+
+</sect1>
+
+
+</chapter>
