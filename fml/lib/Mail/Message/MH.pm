@@ -2,14 +2,14 @@
 #
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #
-# $FML: MH.pm,v 1.4 2002/04/08 12:44:29 fukachan Exp $
+# $FML: MH.pm,v 1.5 2002/05/19 07:47:05 fukachan Exp $
 #
 
 package Mail::Message::MH;
 
 =head1 NAME
 
-Mail::Message::MH - utilities for MH style format
+Mail::Message::MH - utilities to handle MH style format
 
 =head1 SYNOPSIS
 
@@ -22,7 +22,7 @@ Mail::Message::MH - utilities for MH style format
 
 =head2 expand($str, [$min, $max])
 
-return HASH ARRAY of numbers specified by the following format:
+return ARRAY_REF of numbers specified by the following format:
 
     100
     100-110
@@ -82,20 +82,21 @@ sub expand
 	return _expand_range($max - $1 + 1, $max);
     }
 
-    undef;
+    return [];
 }
 
 
 # Descriptions: make an array from $fist to $last number
 #    Arguments: NUM($first_number) NUM($last_number)
 # Side Effects: none
-# Return Value: ARRAY_REF as [ $first .. $last ]
+# Return Value: ARRAY_REF (as [ $first .. $last ])
 sub _expand_range
 {
     my ($first, $last) = @_;
+    my (@fn) = ();
 
-    my (@fn);
     for ($first .. $last) { push(@fn, $_);}
+
     return \@fn;
 }
 
