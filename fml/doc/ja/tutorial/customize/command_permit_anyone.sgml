@@ -1,5 +1,5 @@
 <!--
-   $FML: command_permit_anyone.sgml,v 1.1 2002/07/29 09:32:57 fukachan Exp $
+   $FML: command_permit_anyone.sgml,v 1.2 2003/01/05 08:00:59 fukachan Exp $
 -->
 
 <sect1 id="config.command.permitanyone">
@@ -8,10 +8,10 @@
 	</title>
 
 <para>
-command_restrictions はコマンドメールの利用を許すメンバーを定義してい
+command_mail_restrictions はコマンドメールの利用を許すメンバーを定義してい
 ます。
 <screen>
-command_restrictions = permit_anyone
+command_mail_restrictions = permit_anyone
 </screen>
 これで、ＭＬのメンバーか否かを問わず誰でもコマンドメールが使えます。
 </para>

@@ -1,5 +1,5 @@
 <!--
-   $FML: makefml.sgml,v 1.6 2002/07/28 23:33:43 fukachan Exp $
+   $FML: makefml.sgml,v 1.7 2003/04/15 14:51:46 fukachan Exp $
 -->
 
 
@@ -200,12 +200,21 @@ off の反対
 % makefml list elena recipient
 </screen>
 は受信者のリストを表示します。
-この形式でいいのか疑問なんですが…
 </para>
 
-<!--
- XXX-TODO この形式でいいのか疑問なんですが… (makefml list elena recipient)
--->
+<para>
+実際には、config.cf で利用可能な任意のマップの表示が可能です。
+<screen>
+% makefml list elena MAP名
+</screen>
+なお、長い変数名を打ち込むのも大変なので、
+primary_xxx_map や
+xxx_maps は
+<screen>
+% makefml list elena xxx
+</screen>
+と省略しても良いことになっています。  
+</para>
 
 </sect1>
 
@@ -230,8 +239,8 @@ config.cf などをエディタで編集して下さい。
 
 <warning>
 <para>
-fml 管理者は(当然:-)、
-リモート管理のための諸設定をすることができます。
+makefml を使える管理者が一番偉い人です。当然:-)、
+(より権限の弱い)リモート管理のための諸設定をすることができます。
 </para>
 </warning>
 

@@ -1,5 +1,5 @@
 <!--
-   $FML: recipe.filter.notice.sgml,v 1.1 2003/04/13 03:29:01 fukachan Exp $
+   $FML: recipe.filter.notice.sgml,v 1.2 2003/04/15 14:51:37 fukachan Exp $
 -->
 
 
@@ -19,8 +19,8 @@
 use_article_filter_reject_notice	=	yes
 article_filter_reject_notice_recipient	=	maintainer sender
 </screen>
-となっている。
-つまり、エラーメールを返し、返す先はＭＬの管理者だ。
+となっています。
+つまり、エラーメールを返し、返す先はＭＬの管理者です。
 </para>
 
 
@@ -29,7 +29,7 @@ article_filter_reject_notice_recipient	=	maintainer sender
 <screen>
 article_filter_reject_notice_recipient	=	sender
 </screen>
-とする。
+としてください。
 </para>
 
 
@@ -38,7 +38,7 @@ article_filter_reject_notice_recipient	=	sender
 <screen>
 article_filter_reject_notice_recipient	=	maintainer sender
 </screen>
-とする。
+としてください。
 </para>
 
 
@@ -47,6 +47,7 @@ article_filter_reject_notice_recipient	=	maintainer sender
 <screen>
 use_article_filter_reject_notice	=	no
 </screen>
+としてください。
 </para>
 
 </answer>

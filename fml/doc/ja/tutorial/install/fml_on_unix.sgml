@@ -1,5 +1,5 @@
 <!--
-   $FML: fml_on_unix.sgml,v 1.5 2003/04/15 14:51:39 fukachan Exp $
+   $FML: fml_on_unix.sgml,v 1.6 2003/11/24 04:44:57 fukachan Exp $
 -->
 
 <chapter id="install.fml.unix">
@@ -57,7 +57,7 @@ make install を実行すると、configure が生成する etc/fml/install.cf を
 ユーザ名や基本的なディレクトリ構成などは configure の引数で変更して下さい。
 変更できる変数は以下のものです。configure --help で表示されます。
 fml では各ディレクトリにさらに /fml といった suffix をつけます。
-変更できるのはその直前の prefix 部分までです。
+変更できるのは、その直前の prefix 部分までです。
 <screen>
 変数            configure のデフォルト値    fml の利用するディレクトリ
 --------------------------------------------------------
@@ -239,8 +239,8 @@ Now you must run "make install".
           <entry> /usr/local/etc/fml	</entry>
           <entry>
 	基本設定ファイルを置く場所。
-	( &fml4; の /usr/local/fml/.fml や default_config.ph 相当)
-
+	&fml4; の /usr/local/fml/.fml や default_config.ph 相当を置く場所。
+	/usr/local/etc/fml/main.cf では、
 	バージョンやライブラリの場所(ディレクトリ)などを指定する。
           </entry>
         </row>
@@ -268,7 +268,7 @@ Now you must run "make install".
           <entry>
 	メッセージなどのテンプレートを置く( &fml4; の 
 		/usr/local/fml/messages/ 相当)。
-	言語依存です。
+	この下に言語依存のサブディレクトリが作られます。
 	  </entry>
         </row>
 
@@ -286,6 +286,12 @@ Now you must run "make install".
 		なお、ドメインごとに別の prefix を用意して下さい。
 		たとえば fml.org 用は /var/spool/ml で、
 		nuinui.net 用には /var/spool/nuinui.net などのように。
+
+		また、バーチャルドメインについて、くわしくは
+		<link linkend="virtualdomain">
+		<xref linkend="virtualdomain">
+		</link>
+		を参照して下さい。
 	  </entry>
         </row>
       </tbody>
@@ -333,14 +339,15 @@ make install はユーザ root で実行して下さい。
 
 <para>
 必要なら /usr/local/etc/fml/main.cf を編集して下さい。
-configure があなたの環境に合わせて main.cf を書換えしているはずなので
-configure のオプション指定が正しければ、
-編集の必要はまずないです。 
+
+configure が、あなたの環境に合わせて main.cf を書換えしているはずなの
+でconfigure のオプション指定が正しければ、編集の必要は、まずないです。
 </para>
 
 <para>
-mani.cf は大枠の最も基本的な設定です。より細かな設定は fml の動作の指
-定などは site_default_config.cf の役割です。
+mani.cf は大枠の最も基本的な設定です。より細かな設定、たとえばサイト共
+通の fml の動作指定などは site_default_config.cf の役割です。各ＭＬ固
+有の設定は、各ＭＬのホームディレクトリにあるconfig.cfファイルです。
 </para>
 
 <!-- main.cf の見本 -->
@@ -359,7 +366,7 @@ mani.cf は大枠の最も基本的な設定です。より細かな設定は fml の動作の指
 /usr/local/etc/fml/site_default_config.cf 
 <footnote>
 <para>
-これは &fml4; の site_init.ph に相当するものです。
+これは &fml4; の site_force.ph に相当するものです。
 </para>
 </footnote>
 です。必要に応じて編集してください。
@@ -371,10 +378,10 @@ mani.cf は大枠の最も基本的な設定です。より細かな設定は fml の動作の指
 </para>
 
 <para>
-デフォルトでは見本として:)
+デフォルトでは&fml4;兼、見本として:)
 subject のタグをつけない設定とフィルタ関連の設定だけが入っています。
 <screen>
-# $FML: fml_on_unix.sgml,v 1.5 2003/04/15 14:51:39 fukachan Exp $
+# $FML: fml_on_unix.sgml,v 1.6 2003/11/24 04:44:57 fukachan Exp $
 #
 #               site default_config.cf EXAMPLE
 #
@@ -421,16 +428,25 @@ use_mime_component_filter	=	yes
 
 <para>
 デフォルトではすべてのフィルタが有効です。
+&fml4; の推奨設定に相当しています。
 </para>
 
 <para>
-特に mime component filter が問題です。
-mime component filter が有効なので、デフォルトでは
-ＭＬへの投稿が許されるのは text/plain のメールのみです。
+まぁフィルタのかけすぎという見解もあるかもしれませんが、
+デフォルトは厳しい方にしてあります。
 </para>
 
 <para>
-mime component filter を無効にするには
+フィルタがかかっているのはよいのですが、mime component filter のデフォ
+ルトをどうすれば良いのかは基準が曖昧です。デフォルトではＭＬへの投稿が
+許されるのは text/plain のメールのみとしてあります。これで text/html 
+な惚けメールも、添付ファイルで送られてくるウィルスもデフォルトでは通り
+ません。
+</para>
+
+<para>
+(すべてのＭＬで)
+ mime component filter を無効にするには
 site_default_config.cf で
 <screen>
 use_mime_component_filter	=	no
@@ -475,8 +491,8 @@ newdomain コマンドについては
 </para>
 
 <para>
-一方、site_default_config.cf はドメインに関わらず適用されることに注意
-してください。
+site_default_config.cf はドメインに関わらず適用されることに注意してく
+ださい。バーチャルドメインにも適用されます。
 </para>
 </warning>
 

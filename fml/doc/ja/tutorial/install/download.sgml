@@ -1,5 +1,5 @@
 <!--
-   $FML: download.sgml,v 1.1 2002/07/04 10:58:59 fukachan Exp $
+   $FML: download.sgml,v 1.2 2002/07/06 14:55:17 fukachan Exp $
 -->
 
 <chapter id="download">
@@ -16,8 +16,8 @@
 
 <para>
 fml-devel のソースは
-	<ulink url="ftp://ftp.fml.org/pub/fml-devel/">
-	ftp://ftp.fml.org/pub/fml-devel/
+	<ulink url="ftp://ftp.fml.org/pub/fml8/">
+	ftp://ftp.fml.org/pub/fml8/
 	</ulink>
 から、 ftp で入手できます。
 </para>
@@ -30,13 +30,14 @@ fml-devel のソースは
 
 <para>
 なお daily snapshot もあります。
+全自動で作られているので、特定の日のバージョンはうまく動かないかも知れ
+ません。
+</para>
 
+<para>
 <ulink url="ftp://ftp.fml.org/pub/fml/daily-snapshots/fml-devel/source/">
 ftp://ftp.fml.org/pub/fml/daily-snapshots/fml-devel/source/
 </ulink>
-
-全自動で作られているので、特定の日のバージョンはうまく動かないかも知れ
-ません。
 </para>
 
 </sect1>

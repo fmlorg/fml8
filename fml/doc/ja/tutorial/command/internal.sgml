@@ -1,5 +1,5 @@
 <!--
-   $FML: internal.sgml,v 1.6 2003/04/15 14:51:36 fukachan Exp $
+   $FML: internal.sgml,v 1.7 2004/03/12 14:04:09 fukachan Exp $
 -->
 
 <sect1 id="fml.command.internal.change">
@@ -11,6 +11,25 @@
 <para>
 コマンドの典型である『ファイルを送り返す』だけの help コマンドを例にと
 り、相違点を説明しましょう。
+</para>
+
+<para>
+&fml4; では、適当な関数、たとえば myProcHelpFileSendBack を作り、
+%LocalProcedure に書いておきます。
+<screen>
+%LocalProcedure = (
+                    'help',     'myProcHelpFileSendBack',
+                );
+</screen>
+myProcHelpFileSendBack をあえて書き下すと、つぎのようなものでしょう。
+<screen>
+sub myProcHelpFileSendBack
+{
+    local($proc, *Fld, *e, *misc) = @_;
+    my $UJA_FILE = "/some/where/help";
+    &SendFile($Envelope{'Addr2Reply:'}, "UJA $ML_FN", $UJA_FILE);
+}
+</screen>
 </para>
 
 <para>
@@ -36,7 +55,7 @@ sub process
 {
     my ($self, $curproc, $optargs) = @_;
     my $config    = $curproc->{ config };
-    my $charset   = $config->{ reply_message_charset_ja };
+    my $charset   = $config->{ report_mail_charset_ja };
     my $help_file = $config->{ help_file };
 
     # template substitution: kanji code, $varname expansion et. al.
@@ -62,8 +81,12 @@ sub process
 ここで $curproc はハッシュリファレンスで、&fml4; の %Envelope におおむ
 ね相当します。名前の通り、UNIX カーネルでおなじみの current process 構
 造体へのポインタのようなもので、プロセスに関連するいろいろなデータ構造
-やオブジェクトへのリファレンスを含んでいます。そして $config ハッシュ
-として蓄えられている設定変数空間は、&fml4; ではグローバル変数です。
+やオブジェクトへのリファレンスを含んでいます。
+</para>
+
+<para>
+変数は、&fml4; ではグローバル変数群です。一方 &fml8; では $config オブ
+ジェクトを通じてアクセスできる設定変数空間の中にあります。
 </para>
 
 <para>
@@ -77,10 +100,10 @@ $curproc->reply_message() は引数によって振舞いがことなりますが、
 </para>
 
 <para>
-キューに入れられたメッセージ群は、プロセスの終了直前に一通のメールとし
-て組み立てなおされ、Mail::Delivery クラス経由で送信されます。メッセー
-ジキューの種類がファイルとメッセージが混在していれば、適宜 MIME マルチ
-パートのメッセージが生成されます。
+キューに入れられたメッセージ群は、プロセスの終了直前に受信者ごとにメッ
+セージはまとめられ一通のメールとして組み立てなおされ、Mail::Delivery 
+クラス経由で送信されます。メッセージキューの種類がファイルとメッセージ
+が混在していれば、適宜 MIME マルチパートのメッセージが生成されます。
 </para>
 
 <para>

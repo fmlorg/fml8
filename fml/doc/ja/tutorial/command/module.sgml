@@ -1,5 +1,5 @@
 <!--
-   $FML: module.sgml,v 1.3 2002/07/07 01:57:11 fukachan Exp $
+   $FML: module.sgml,v 1.4 2003/04/15 14:51:36 fukachan Exp $
 -->
 
 
@@ -18,11 +18,11 @@
 <para>
 FML::Command:: クラスは以下のような構成になっています。
 <screen>
-FML::Command		FML::Command クラス以下への入口
+FML::Command		FML::Command クラス以下への入口、dispatcher
 FML::Command::User	ユーザ用コマンド群
 FML::Command::Admin	管理者用コマンド群
 </screen>
-例えば、(コマンドメールでの)ユーザ用のコマンドの場合
+例えば、(コマンドメールでの)ユーザ用コマンドの場合
 FML::Command を経由して
 FML::Command::User::コマンド
 モジュールを使うことになります。

@@ -1,5 +1,5 @@
 <!--
-   $FML: language.sgml,v 1.4 2002/07/06 14:55:19 fukachan Exp $
+   $FML: language.sgml,v 1.5 2003/04/15 14:51:42 fukachan Exp $
 -->
 
 
@@ -9,20 +9,23 @@
 	</title>
 
 <para>
-メッセージの多国語化のために、
+&fml8; では、メッセージの多国語化のために、
 reply_message_nl()
 	<footnote>
 	<para>
 	FML::Process::Kernel を参照
 	</para>
 	</footnote>
-を使い、
+メソッドを使い、
 <screen>
 $curproc->reply_message_nl('error.already_member',
 			   'already member',
 			   { _arg_address => $address });
 </screen>
-のような呼び出し方をします。
+のような呼び出し方をすることにしています。
+</para>
+
+<para>
 この関数は
 /usr/local/share/fml/バージョン/message/言語名/error/already_member
 というテンプレートを用いてメッセージを構築します。
@@ -31,11 +34,12 @@ $curproc->reply_message_nl('error.already_member',
 <para>
 メッセージ中の $_arg_変数名、例えば、
 <screen>
-$_args_address
+$_arg_address
 </screen>
-はハッシュリファレンスとして与えられた引数へ展開されます。
-メッセージテンプレート中の $_arg_address は、その値で
-展開されます。
+はハッシュリファレンスとして与えられた引数の値へ展開されます。
+上の例でいえば、
+メッセージテンプレート中の $_arg_address が引数中の 
+_arg_address の値で展開されます。
 </para>
 
 <para>

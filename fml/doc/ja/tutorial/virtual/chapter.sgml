@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.sgml,v 1.2 2003/04/15 14:51:47 fukachan Exp $
+   $FML: chapter.sgml,v 1.3 2003/11/24 04:44:58 fukachan Exp $
 -->
 
 <chapter id="virtualdomain">
@@ -133,7 +133,7 @@ http://lists/~fml/cgi-bin/fml/$domain/admin/config.cgi
 
 <para>
 解決しないといけない問題はディレクトリのパスが変わること。
-/etc/fml/ の変更だけで解決できないか？
+/usr/local/etc/fml/ の変更だけで解決できないか？
 
 いや、include ファイルがこんな風になっているが、
 <screen>

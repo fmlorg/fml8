@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: backup.sgml,v 1.1 2004/03/25 04:10:03 fukachan Exp $
 -->
 
 
@@ -13,11 +13,11 @@
 fml8 の設定にかんしては、これら(最少で２つ)のディレクトリ以下のファイ
 ルをバックアップしておけば良いです。
 <screen>
-/etc/fml/
+/usr/local/etc/fml/
 $ml_home_prefix	(たとえば /var/spool/ml/、ドメインごとに異なります)
 </screen>
 ただ、これら全部をバックアップすると、記事やログファイルなどあらゆるも
-のが含まれているので、サイズは大きいです。
+のが含まれているので注意して下さい。
 </para>
 
 <para>
@@ -30,17 +30,17 @@ Postfixなら、/etc/postfixです。
 数)のディレクトリということになります。
 <screen>
 /etc/postfix/
-/etc/fml/
+/usr/local/etc/fml/
 $ml_home_prefix	(たとえば /var/spool/ml/、ドメインごとに異なります)
 </screen>
 </para>
 
 <para>
-もう少し、詳しく説明します。
+以下で、もう少し、詳しく説明します。
 </para>
 
 
-<sect1 id="operations.backup.fml8">
+<sect1 id="operations.backup.fml8.include">
 	<title>
 	fml8 の設定をバックアップする
 	</title>
@@ -50,7 +50,7 @@ fml8 の設定にかんしては、この２つのディレクトリ以下のファイルをバック
 アップしておけば良いのですが、ただ、これだと記事やログファイルなどあら
 ゆるものが含まれているので、サイズが大きいです。
 <screen>
-/etc/fml/
+/usr/local/etc/fml/
 $ml_home_prefix	(たとえば /var/spool/ml/、ドメインごとに異なります)
 </screen>
 </para>
@@ -73,7 +73,8 @@ $ml_home_prefix	(たとえば /var/spool/ml/、ドメインごとに異なります)
 	</title>
 
 <para>
-個別にバックアップしようとすると結構めんどうです。
+個別にバックアップしようとすると結構めんどうですが、ファイル名の命名ルー
+ルを頼りに対象を絞り込むと少しは楽になります。
 </para>
 
 <para>
@@ -84,8 +85,8 @@ key = value
 </screen> 
 形式の設定ファイルです。この形式のファイルには
 <screen>
-/etc/fml/main.cf
-/etc/fml/site_default_config.cf
+/usr/local/etc/fml/main.cf
+/usr/local/etc/fml/site_default_config.cf
 /ＭＬのホームディレクトリ/config.cf
 </screen>
 などがあります。
@@ -94,10 +95,15 @@ key = value
 <para>
 また、これら以外にも、シンタックスの異なる
 <screen>
-/etc/fml/mime_component_filter
-/etc/fml/ml_home_prefix
+/usr/local/etc/fml/mime_component_filter
+/usr/local/etc/fml/ml_home_prefix
 </screen>
 などのファイルがあります。このファイルの形式は空白区切りです。
+</para>
+
+<para>
+ただ、/usr/local/etc/fml/ 以下にログとかはないので、
+何も考えずに全部バックアップしておいて良いと思います。
 </para>
 
 </sect2>
@@ -129,15 +135,17 @@ key = value
 
 </sect2>
 
+</sect1>
 
-<sect2>
+
+<sect1 id="operations.backup.fml8.exclude">
 	<title>
-	特定のディレクトリ以外、全部バックアップする
+	fml8 の設定をバックアップする: 特定のディレクトリ以外、全部
 	</title>
 
 <para>
-たぶん、以下のディレクトリを除いて全部をバックアップすると楽で良いはず
-です。
+対象を絞るより、以下のディレクトリを除いて全部をバックアップすると楽で
+良いはずです。
 <screen>
 spool	記事
 tmp	中間ファイル
@@ -145,8 +153,10 @@ var	各種のデータ
 </screen>
 </para>
 
-</sect2>
-
+<para>
+rsync でバックアップする場合なら、--exclude オプションなどで、これらの
+ターゲットだけを抜くとかできるはずです。
+</para>
 
 </sect1>
 

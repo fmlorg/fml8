@@ -1,5 +1,5 @@
 <!--
-   $FML: merge.fml4to8.sgml,v 1.2 2004/03/18 14:51:25 fukachan Exp $
+   $FML: merge.fml4to8.sgml,v 1.3 2004/03/31 06:28:19 fukachan Exp $
 -->
 
 
@@ -31,7 +31,7 @@ fml4 の $DIR ($ml_home_dirにあたるもの)、
 <para>
 上書きしてしまうと、一斉に移行を強制することになるし、失敗した時が痛過
 ぎます。やっぱり、少しずつ移行していきたいよね？また、少しずつ移行する
-場合にも、出来れば、逆戻りができたほうがいい。
+場合にも、出来れば、逆戻りができたほうがいいでしょう。
 </para>
 
 <para>
@@ -94,16 +94,22 @@ fml8 は fml4 を一旦忘れて、一から再設計、再コーディングされたソフトウ
 </para>
 
 <para>
-いくつかの例をあげよう。
+以下、いくつかの例をあげます。
 </para>
+
+
+<sect2>
+	<title>
+	誰でも投稿可能にしたい
+	</title>
 
 <para>
 「登録されたユーザからのみ投稿が可能」なのは fml4 でも fml8 でもデフォ
-ルトです。もし、誰からの投稿も許す場合、fml4 では
+ルトです。もし誰でも投稿可能にしたいなら、fml4 (の config.ph ファイル)では
 <screen>
 $PERMIT_POST_FROM = "anyone";
 </screen>
-としますが、fml8 では
+としますが、fml8 (の config.cf)では
 <screen>
 article_post_restrictions = reject_system_special_accounts
                             permit_anyone
@@ -112,19 +118,35 @@ article_post_restrictions = reject_system_special_accounts
 となります。
 </para>
 
+</sect2>
+
+<sect2>
+	<title>
+	Subject タグ
+	</title>
+
 <para>
-デフォルトでは「Subjectのタグがない」。これも同じです。
-しかしながら変更はこうなります。fml4 での
+デフォルトでは「Subjectのタグがない」。
+これも &fml4; と &fml8; で同じです。
+そして、fml4 での
 <screen>
 $SUBJECT_TAG_TYPE = '[:]';
 </screen>
 は fml8 の
 <screen>
 article_header_rewrite_rules += rewrite_article_subject_tag
-article_subject_tag = [$ml_name:%05d]
+
+article_subject_tag           = [$ml_name:%05d]
 </screen>
-に相当します。
+に相当しています。
 </para>
+
+</sect2>
+
+<sect2>
+	<title>
+	特定のコマンドを使えなくする
+	</title>
 
 <para>
 「members コマンドなどが使えない」これは fml8 ではデフォルトです。
@@ -142,15 +164,20 @@ fml4 の以下のコマンドに対応するものは不要です。
 <para>
 fml4 以前および fml4 非推奨設定の状態では「フィルタは使わない」ように
 なっています。しかし、fml8 では「フィルタを使う」がデフォルトです。
-そのため、場合によっては 
-/etc/fml/site_default_config.cf で一度「デフォルトでは使わない」に設定
-を変更し、その上で、あらためて以下の例外ルールを適用する必要があります。
+</para>
+
+<para>
+そのため、場合によっては /usr/local/etc/fml/site_default_config.cf で
+一度「デフォルトでは使わない」に設定を変更し、その上で、あらためて以下
+の例外ルールを適用する必要があります。
 </para>
 
 <para>
 fml4 と異なり、subscribe, chaddr, unsubscribe はconfirmation が必須と
 なっています。現状、confirmation を抑制することは出来ません。
 </para>
+
+</sect2>
 
 </sect1>
 
@@ -233,6 +260,24 @@ fml4 の aliases ファイルから該当するＭＬ部分の設定を削除
 fml8 の aliases ファイルに該当するＭＬ部分の設定を追加
 </screen>
 が必要です。
+</para>
+
+<para>
+逆に
+aliases
+の重複さえなければ、
+同じシステム上に
+&fml4;
+と
+&fml8;
+が存在しても問題ありません。
+もちろん同一ＭＬが
+&fml4;
+と
+&fml8;
+の双方に存在しても問題ありませんが、
+実際に動くのは、
+もちろんいづれか(MTA から起動されるようになっている)一方だけです。
 </para>
 
 </sect1>

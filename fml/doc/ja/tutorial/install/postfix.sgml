@@ -1,5 +1,5 @@
 <!--
-   $FML: postfix.sgml,v 1.2 2002/07/06 14:55:17 fukachan Exp $
+   $FML: postfix.sgml,v 1.3 2003/04/15 14:51:39 fukachan Exp $
 -->
 
 <sect1 id="install.postfix">
@@ -63,14 +63,31 @@ virtual_maps	=	hash:/var/spool/nuinui.net/etc/postfix/virtual
 <warning>
 
 <para>
+&fml8; が作る virtual_maps のファイルは Postfix スタイルの 
+virtual_maps です。最近の Postfix には sendmail スタイルというのもあり
+ますが、ここでは昔からある postfix スタイルを使っているということに注
+意して下さい。
+</para>
+
+<para>
 mydestination にデフォルトのドメイン(おそらく $mydomain )がちゃんと追
 加されていることを確認して下さい。しかし、バーチャルドメイン(ここでは 
 nuinui.net)は mydestination に追加する必要はありません。注意して下さい。
 </para>
 
 <para>
-また、バーチャルドメインが増えるたびに alias_maps には新しいドメインの 
-aliaes を追加する必要がありますが、virtual_maps の変更は不要です。
+バーチャルドメインが増えるたびに alias_maps には新しいドメインの 
+aliaes を、virtual_maps にも virtual ファイルを追加する必要があります。
+</para>
+
+<para>
+ちなみに、最近の postfix では virtual_alias_maps というのが正しい変数
+名ですが、デフォルト(/etc/postfix/main.cf.default)で
+<screen>
+virtual_alias_maps = $virtual_maps 
+</screen>
+となっているため、
+virtual_maps でも virtual_alias_maps でもかまいません。
 </para>
 
 </warning>

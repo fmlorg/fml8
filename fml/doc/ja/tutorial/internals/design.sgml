@@ -1,10 +1,10 @@
 <!--
-   $FML: design.sgml,v 1.8 2002/07/06 14:55:18 fukachan Exp $
+   $FML: design.sgml,v 1.9 2003/04/15 14:51:40 fukachan Exp $
 -->
 
 <chapter id="design">
 	<title>
-	原案: &fmldevel; (仮名) のデザインコンセプト
+	原案: &fml8; (仮名) のデザインコンセプト
 	</title>
 
 
@@ -22,7 +22,7 @@
 <ulink url="http://www.fml.org/software/fml-devel/">
 fml-devel
 </ulink>
-とも呼ばれている &fmldevel; プロジェクトは、
+とも呼ばれている &fml8; プロジェクトは、
 &fml4; の再構想(refactoring)とその実装(例)の構築
 を行なっています。
 </PARA>
@@ -51,7 +51,7 @@ http://www.fml.org/software/fml-devel/
 </PARA>
 
 <para>
-ものによっては &fmldevel; 用に作られたモジュールを &fml4; へ輸入/輸出
+ものによっては &fml8; 用に作られたモジュールを &fml4; へ輸入/輸出
 することも検討しています。IPv6 はすでに輸出されました。たとえば 4.0 で
 も独立性の高い mead (エラーメール解析プログラム)などはその良い例だろう
 し、新機能を提供するモジュールなども再輸入(輸出)可能なものは順次マージ
@@ -59,12 +59,12 @@ http://www.fml.org/software/fml-devel/
 </PARA>
 
 <para>
-これらのマージおよび 4.0 自体のコードの保守をしつつ 4.0 および &fmldevel; は
+これらのマージおよび 4.0 自体のコードの保守をしつつ 4.0 および &fml8; は
 並行開発されていく予定です。
 そのため 4.0 系は stable に近い current という位置付けになります。
 そして 4.0 の bug fix は 4.0.x (4.0.1 4.0.2 …)としてまとめられリリー
 スれていく予定です。
-逆に &fmldevel; は本当の開発用のコード( fml-current )ということになります。
+逆に &fml8; は本当の開発用のコード( fml-current )ということになります。
 </PARA>
 
 </sect1>
@@ -87,7 +87,7 @@ http://www.fml.org/software/fml-devel/
 
    <listitem>
 	<para>
-	全部 perl module 形式 (要 &fmldevel;04 以降)
+	全部 perl module 形式 (要 perl 5.00504 以降)
 	</para>
    </listitem>
 
@@ -161,7 +161,7 @@ http://www.fml.org/software/fml-devel/
 
 		   <listitem>
 			<para>
-				SQL (プロトタイプは実装済み)
+				SQL (MySQL は実装済み)
 			</para>
 		   </listitem>
 
@@ -219,7 +219,7 @@ http://www.fml.org/software/fml-devel/
 	<entry>	</entry>
 	<entry> イメージ/モティーフ</entry>
 	<entry>
-		&fml4; から &fmldevel; へは、
+		&fml4; から &fml8; へは、
 		sendmail から postfix への移行のようなイメージで。
 		最低限の config.ph コンバータは用意する。
 	</entry>
@@ -302,7 +302,7 @@ http://www.fml.org/software/fml-devel/
 	</row>
 
 	<row>
-	<entry> 手づかず </entry>
+	<entry> done. (でも lmtp を実装してない;-) </entry>
 	<entry> queue manager </entry>
 	<entry>
 		再送処理のため (e.g.  smtpfeed )
@@ -311,7 +311,7 @@ http://www.fml.org/software/fml-devel/
 
 
 	<row>
-	<entry> may be </entry>
+	<entry>  </entry>
 	<entry> tools </entry>
 	<entry>
 		BSD make を使わない。
@@ -356,7 +356,7 @@ http://www.fml.org/software/fml-devel/
 
 <sect1 id="design.releng">
 	<TITLE>
-	リリース・エンジニアリングについて
+	リリース・エンジニアリングについて (目標！)
 	</TITLE>
 
 <para>

@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: recipe.header.tag.lowercase.sgml,v 1.1 2002/10/29 03:32:21 fukachan Exp $
 -->
 
 
@@ -19,7 +19,7 @@ Unix 上では、たいてい小文字を使うので、ＭＬ名前も小文字でしょう。
 <screen>
 article_subject_tag = [\L$ml_name\E:%05d]
 </screen>
-(注意: 2002/10/29 以降の snapshot を使ってください)。 
+(注意: この機能を使う場合には 2002/10/29 以降の snapshot を使ってください)。 
 </para>
 </answer>
 

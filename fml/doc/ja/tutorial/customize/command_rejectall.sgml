@@ -1,5 +1,5 @@
 <!--
-   $FML: command_rejectall.sgml,v 1.2 2003/01/05 08:00:59 fukachan Exp $
+   $FML: command_rejectall.sgml,v 1.3 2003/04/15 14:51:36 fukachan Exp $
 -->
 
 <sect1 id="config.command.rejectall">
@@ -11,14 +11,16 @@
 コマンドプロセスが起動しても、即効で終了するようにすることができます。
 これが(aliases を編集することをのぞけば)一番確実な方法です。
 <screen>
-use_command_mail_program	=	no
+use_command_mail_function	=	no
 </screen>
 </para>
 
 <para>
 プロセスが動いてしまうのですが、別解として次のやり方もありでしょう。
 <screen>
-command_restrictions = reject
+use_command_mail_function = yes
+
+command_mail_restrictions = reject
 </screen>
 こう設定すると(メンバー以外の人に送り返すはずの) guide すら返送されず、
 何をしても「あなたはメンバーでない」という一点張りの答を返すだけです。

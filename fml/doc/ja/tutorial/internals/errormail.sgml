@@ -1,5 +1,5 @@
 <!--
-   $FML: errormail.sgml,v 1.2 2003/11/24 14:37:34 fukachan Exp $
+   $FML: errormail.sgml,v 1.3 2004/02/24 14:26:58 fukachan Exp $
 -->
 
 
@@ -13,8 +13,8 @@ libexec/error は &fml4; の libexec/mead に相当するものです。
 </para>
 
 <para>
-$use_error_analyzer_program を yes にすると、エラー解析機能が有効にな
-ります。ちなみに、デフォルトで $use_error_analyzer_program は yes つま
+$use_error_mail_analyzer_function を yes にすると、エラー解析機能が有効にな
+ります。ちなみに、デフォルトで $use_error_mail_analyzer_function は yes つま
 りエラー解析機能は有効になっています。このへんは &fml4; と異なります。
 &fml8; では、&fml4; でよく使う機能は始めから有効になっています。
 </para>

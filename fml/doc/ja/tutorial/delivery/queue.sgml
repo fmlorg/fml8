@@ -1,5 +1,5 @@
 <!--
-    $FML: queue.sgml,v 1.2 2003/04/13 04:36:11 fukachan Exp $
+    $FML: queue.sgml,v 1.3 2003/04/15 14:51:37 fukachan Exp $
 -->
 
 <sect1 id="message.reply">
@@ -37,7 +37,7 @@ fml にリクエストをした人です。
 <screen>
 $curproc->reply_message( {
         type        => "text/plain; charset=iso-2022-jp",
-        path        => "/etc/fml/main.cf",
+        path        => "/usr/local/etc/fml/main.cf",
         filename    => "main.cf",
         disposition => "main.cf example",
     });

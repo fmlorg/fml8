@@ -1,5 +1,5 @@
 <!--
-   $FML: extension.sgml,v 1.9 2003/04/13 04:36:10 fukachan Exp $
+   $FML: extension.sgml,v 1.10 2003/04/15 14:51:36 fukachan Exp $
 -->
 
 
@@ -12,7 +12,7 @@
 
 <sect1 id="fml.command.hack.commandmail">
 	<title>
-	コマンドの拡張: コマンドメール
+	コマンドの拡張: コマンドメールの場合
 	</title>
 
 
@@ -52,7 +52,7 @@ FML::Command 以下から適当に cut and paste して
 というファイルを置き、site_default_config.cf に許可するコマンドリスト
 に追加してください。
 <screen>
-commands_for_user += uja
+user_command_mail_allowed_commands += uja
 </screen>
 </para>
 
@@ -73,7 +73,7 @@ FML::Command 以下から適当に cut and paste して
 というファイルを置き、site_default_config.cf に許可するコマンドリスト
 に追加してください。
 <screen>
-commands_for_privileged_user += uja
+admin_command_mail_allowed_commands += uja
 </screen>
 </para>
 
@@ -84,7 +84,7 @@ commands_for_privileged_user += uja
 
 <sect1 id="fml.command.hack.makefml">
 	<title>
-	コマンドの拡張: makefml
+	コマンドの拡張: makefml の場合
 	</title>
 
 
@@ -117,7 +117,7 @@ FML::Command 以下から適当に cut and paste して
 </screen>
 というファイルを置けば有効になります
 モジュールを置くだけで有効になります。
-commands_for_ 系の変数の設定変更は不要です。
+*_allowed_commands 系の変数の設定変更は不要です。
 </para>
 
 
@@ -127,7 +127,7 @@ commands_for_ 系の変数の設定変更は不要です。
 
 <sect1 id="fml.command.hack.cgi">
 	<title>
-	コマンドの拡張: CGI
+	コマンドの拡張: CGI の場合
 	</title>
 
 
@@ -161,7 +161,7 @@ FML::Command 以下から適当に cut and paste して
 というファイルを置き、site_default_config.cf に許可するコマンドリスト
 に追加してください。
 <screen>
-commands_for_admin_cgi += uja
+admin_cgi_allowed_commands += uja
 </screen>
 </para>
 

@@ -1,5 +1,5 @@
 <!--
-   $FML: post.sgml,v 1.6 2002/09/28 14:14:07 fukachan Exp $
+   $FML: post.sgml,v 1.7 2003/04/15 14:51:46 fukachan Exp $
 -->
 
 <sect1 id="usage.post">
@@ -81,20 +81,25 @@ fml ブートローダ
 
 
 <para>
-libexec/loader は etc/fml/main.cf を読みこみます。
-fml_version 変数から使うべきライブラリのバージョンを決めます。
-例えば fml_vesrion が current-20010501 となっていたら
-/usr/local/lib/fml/current-20010501/ 以下にあるライブラリを使うといった
-具合です。
+/usr/local/libexec/loader は /usr/local/etc/fml/main.cf を読みこみます。
+fml_version 変数から使うべきライブラリのバージョンを決めます。例えば 
+fml_vesrion が current-20010501 となっていたら
+/usr/local/lib/fml/current-20010501/ 以下にあるライブラリを使うといっ
+た具合です。
 </para>
 
 <para>
-@INC を設定した後、
-loader は FML::Process::Switch をロードし、
-$0 を調べます。
-その名前から自分の仕事は配送処理だと知ります。
-配送処理なので
-FML::Process::Distribute をロードし、配送処理に移ります。
+@INC を設定した後、loader (/usr/local/libexec/fml/distribute の実体) 
+は FML::Process::Switch をロードし、$0 を調べます。その名前から自分の
+仕事は配送処理だと知ります。
+</para>
+
+<para>
+loader は /usr/local/etc/fml/defaults/バージョン/modules ファイルを調べ、
+ロードするべきモジュールが
+FML::Process::Distribute 
+だと知ります。
+最後に、このクラスをロードし、配送処理に移ります。
 </para>
 
 </sect2>

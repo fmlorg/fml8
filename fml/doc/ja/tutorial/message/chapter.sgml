@@ -1,16 +1,18 @@
 <!--
-   $FML: chapter.sgml,v 1.4 2002/07/06 14:55:19 fukachan Exp $
+   $FML: chapter.sgml,v 1.5 2003/04/15 14:51:42 fukachan Exp $
 -->
 
 <chapter id="mail.manipulation">
-   <title> メッセージ(メール)の操作 </title>
+	<title>
+	メッセージ(メール)の操作
+	</title>
 
 <para>
-メール(オブジェクト)を扱う関数の詳細については
+メール(オブジェクト)を扱うメソッドの詳細については
 <link linkend="module.mail.message">
 Mail::Message クラス
 </link>
-を見て下さい。
+のほうを見て下さい。
 このクラスが基本的な操作法を提供しています。
 Mail::Bounce や Mail::Delivery を始め、
 あらゆる関数がこのクラスに依存しています。
@@ -19,19 +21,19 @@ Mail::Bounce や Mail::Delivery を始め、
 
 <!-- ======================================= -->
 <sect1>
-   <title> Mail::Message クラス </title>
+	<title>
+	Mail::Message クラス
+	</title>
 
 <para>
-メールはヘッダに始まりボディ(メール本文)が続きます。
-multipart のように、
-ボディは複数の部分(パート)から成ることもあります。
+メールはヘッダに始まりボディ(メール本文)が続きます。MIME/Multipart の
+ように、ボディは複数の部分(パート)から成ることもあります。
 </para>
 
 <para>
-メールの配送処理だけを考えると、
-メール本文の細部の構造を気にする必要はありません。
-一方で、フィルタリングを始めとして、メール本文の解析を
-必要としている処理は多々あります。
+メールの配送処理だけを考えると、メール本文の細部の構造を気にする必要は
+ありません。一方で、フィルタリングを始めとして、メール本文の解析を必要
+としている処理は多々あります。
 </para>
 
 <para>
@@ -67,7 +69,9 @@ Mail::Bounce や Mail::Delivery を始め、
 
 <!-- ======================================= -->
 <sect1>
-   <title> Mail::Message::Parse クラス </title>
+	<title>
+	Mail::Message::Parse クラス
+	</title>
 
 <para>
 ダミーの派生クラスです。
@@ -88,7 +92,9 @@ Mail::Bounce や Mail::Delivery を始め、
 
 <!-- ======================================= -->
 <sect1>
-   <title> Mail::Message::Compose クラス </title>
+	<title>
+	Mail::Message::Compose クラス
+	</title>
 
 <para>
 これはメールを構築する際に用いるクラスですが、単なるアダプタです。

@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: directory.sgml,v 1.3 2003/04/15 14:51:40 fukachan Exp $
 -->
 
 <chapter id="directory">
@@ -14,6 +14,8 @@
 	</title>
 
 <para>
+たとえば、HTML化された記事は、こんな階層に置かれていますが、どうでしょ
+う？
 <screen>
 200201/msg○○.html
 </screen>

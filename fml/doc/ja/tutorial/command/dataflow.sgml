@@ -1,5 +1,5 @@
 <!--
-   $FML: dataflow.sgml,v 1.1 2002/12/25 11:50:42 fukachan Exp $
+   $FML: dataflow.sgml,v 1.2 2004/03/12 14:04:09 fukachan Exp $
 -->
 
 
@@ -47,7 +47,7 @@
 
 <para>
 2) メンバーだけに許されるコマンドの場合、
-   command_restrictionsのルールに従って他の条件を確認し、
+   command_mail_restrictionsのルールに従って他の条件を確認し、
    許されたなら、呼び出しルーチンへ処理が移ります。
 </para>
 
@@ -63,7 +63,7 @@ FML::Command 経由でコマンドが実行されます。
 admin コマンドの実行は、ここでは行なわれません。
 「admin ...」コマンドは、まず一般ユーザ権限で実行され、
 FML::Command::User::admin クラスが呼び出されます。
-この中で、$admin_command_restrictions に基づいて、リモート権限があるか？
+この中で、$admin_command_mail_restrictions に基づいて、リモート権限があるか？
 が確認され、もう一度 FML::Command 経由で管理者権限の
 「FML::Command::Admin::コマンド」クラスが呼び出されます。
 </para>

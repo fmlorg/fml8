@@ -1,17 +1,17 @@
 <!--
-   $FML: main.cf.sgml,v 1.7 2002/09/15 02:11:24 fukachan Exp $
+   $FML: main.cf.sgml,v 1.8 2003/04/15 14:51:41 fukachan Exp $
 -->
 
 <sect2 id="main.cf">
 	<title>
-	例: /etc/fml/main.cf
+	例: /usr/local/etc/fml/main.cf
 	</title>
 
 <para>
-/etc/fml/main.cf は各ＭＬの設定ではありません。fml のバージョンなどメ
-タレベルの依存性を解決するための設定ファイルで、fml のプログラム群が起
-動する時に参照します。また、main.cf には ディレクトリやプロセスのユー
-ザの指定など最も基本的な情報のみが書かれています。
+/usr/local/etc/fml/main.cf は各ＭＬの設定ではありません。fml のバージョ
+ンなどメタレベルの依存性を解決するための設定ファイルで、fml のプログラ
+ム群が起動する時に参照します。また、main.cf には ディレクトリやプロセ
+スのユーザの指定など最も基本的な情報のみが書かれています。
 </para>
 
 <para>
@@ -29,7 +29,7 @@ main.cf のフォーマットは他の .cf と同様
 
 <screen>
 #
-# $FML: main.cf.sgml,v 1.7 2002/09/15 02:11:24 fukachan Exp $
+# $FML: main.cf.sgml,v 1.8 2003/04/15 14:51:41 fukachan Exp $
 #
 
 # fml version
@@ -54,10 +54,10 @@ exec_prefix		=	${prefix}
 
 # $config_dir holds the global main configuration and
 # several version-dependent default configurations
-# Example: /etc/fml
-config_dir		= 	/etc/fml
+# Example: /usr/local/etc/fml
+config_dir		= 	/usr/local/etc/fml
 
-# Example: /etc/fml/defaults/$fml_version
+# Example: /usr/local/etc/fml/defaults/$fml_version
 default_config_dir	=	$config_dir/defaults/$fml_version
 
 # defined for convenience, for example, we need this variable
@@ -98,12 +98,12 @@ default_domain		=	fml.org
 
 # version dependent default_config.cf location
 # whic holds
-# Example: /etc/fml/defaults/8.0/default_config.cf
+# Example: /usr/local/etc/fml/defaults/8.0/default_config.cf
 default_config_cf	=	$default_config_dir/default_config.cf
 
 
 # domain specific configurations
-# Example: /etc/fml/domains/fml.org/default_config.cf
+# Example: /usr/local/etc/fml/domains/fml.org/default_config.cf
 domain_default_config 	=	$config_dir/domains/$default_domain/config.cf
 
 

@@ -1,8 +1,8 @@
 <!--
-   $FML: chapter.sgml,v 1.6 2002/07/07 01:57:10 fukachan Exp $
+   $FML: chapter.sgml,v 1.7 2002/12/25 11:50:42 fukachan Exp $
 -->
 
-<chapter>
+<chapter id="fml.command.modules">
 	<title>
 	コマンド(コマンドメール、makefml、CGI)
 	</title>

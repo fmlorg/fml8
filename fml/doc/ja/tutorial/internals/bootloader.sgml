@@ -1,5 +1,5 @@
 <!--
-   $FML: bootloader.sgml,v 1.9 2003/03/09 08:29:10 fukachan Exp $
+   $FML: bootloader.sgml,v 1.10 2003/04/15 14:51:40 fukachan Exp $
 -->
 
 <chapter id="bootloader">
@@ -108,7 +108,7 @@ FML::Process::Mead       >-|    |
 	<para>
 	libexec/loader (wrapper)
 	Bootstrap() を実行する。
-	fml.pl などはこの loader へのシンボリックリンクです。
+	libexec/distribute などは、皆この loader へのシンボリックリンクです。
 	/usr/local/libexec/fml/ を参照して下さい。
 	</para>
    </listitem>
@@ -191,7 +191,8 @@ $process->finish($args);
 </para>
 
 <para>
-以下、２、３の走り書き/おぼえがきを残しておきます。
+以下、内部構造について、２、３の走り書き/おぼえがきを残しておきます。
+一応、こういった構造を鑑みて、prepare() のあたりに持ってきているわけです。 
 <screen>
 main::Bootstrap()
 

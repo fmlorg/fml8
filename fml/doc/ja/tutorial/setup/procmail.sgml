@@ -1,5 +1,5 @@
 <!--
-   $FML: procmail.sgml,v 1.2 2002/07/06 14:55:20 fukachan Exp $
+   $FML: procmail.sgml,v 1.3 2003/04/15 14:51:44 fukachan Exp $
 -->
 
 <sect1 id="setup.procmail">
@@ -16,16 +16,20 @@
 
 <para>
 このような場合には、メールのヘッダの To: や Cc: を見て、適切に fml を
-実行する必要があります。そして、&fmldevel; ではユーザが procmail など
-の振分ツールを使うだろうと期待しています :-)そのため、&fmldevel; に振
-り分けツールは用意されていません。OS のパッケージシステムなどを使って
-振り分けツールをインストールして下さい。
+実行する必要があります。
 </para>
 
 <para>
-makefml は newml の際に、~/.procmailrc の見本を 
-/var/spool/ml/etc/procmail/procmailrc 
-に作るので、適宜利用してみて下さい。
+こういった場合、&fmldevel; ではユーザが procmail などの振分ツールを使
+うだろうと期待しています:-)そのため、&fmldevel; に振り分けツールは用意
+されていません。OS のパッケージシステムなどを使って振り分けツールをイ
+ンストールして下さい。
+</para>
+
+<para>
+なお makefml は newml の際に、~/.procmailrc の見本を 
+/var/spool/ml/etc/procmail/procmailrc に作るので、適宜利用してみて下さ
+い。
 </para>
 
 

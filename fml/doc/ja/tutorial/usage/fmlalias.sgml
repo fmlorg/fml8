@@ -1,10 +1,10 @@
 <!--
-   $FML: fmlalias.sgml,v 1.4 2002/07/28 06:26:58 fukachan Exp $
+   $FML: fmlalias.sgml,v 1.1 2002/11/09 14:16:19 fukachan Exp $
 -->
 
 <sect1 id="usage.fmlalias">
 	<title>
-	設定を表示する (fmlalias コマンド)
+	エイリアスの一覧を表示する (fmlalias コマンド)
 	</title>
 
 <para>

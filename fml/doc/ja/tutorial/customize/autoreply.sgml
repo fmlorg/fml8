@@ -1,5 +1,5 @@
 <!--
-   $FML: autoreply.sgml,v 1.1 2002/07/29 09:32:57 fukachan Exp $
+   $FML: autoreply.sgml,v 1.2 2003/01/05 08:00:59 fukachan Exp $
 -->
 
 <sect1 id="config.autoreply">
@@ -9,28 +9,37 @@
 
 <para>
 配送プロセス( libexec/distribute )を改造して
-/etc/fml/help ファイルを送り返すことを考えます。
+/some/where/help ファイルを送り返すことを考えます。
 例えば help@fml.org ＭＬを作り、このアドレスにメールを送ると
-ヘルプファイルを送り返すというものです。
+(うむをいわさず:-)ヘルプファイルを送り返すというものです。
+</para>
+
+<para>
 この場合の config.cf の例はこのようになります。
 <screen>
-post_restrictions = permit_anyone
+article_post_restrictions = permit_anyone
 </screen>
-=cut の後に hook を書きます。
+config.cf ファイルの =cut 行以降に hook を書きます。
 <screen>
 $distribute_run_start_hook = q{
 
         $curproc->reply_message( {
                 type        => "text/plain; charset=iso-2022-jp",
-                path        => "/etc/fml/help",
+                path        => "/some/where/help",
                 filename    => "help",
                 disposition => "help example",
         });
 
-        $curproc->refuse_further_processing();
+        $curproc->stop_this_process();
 
 };
 </screen>
+最後の
+<screen>
+$curproc->stop_this_process();
+</screen>
+が &fml4; の $DO_NOTHING 変数にあたりますが、&fml8; ではメソッドです。
+これで、このHOOK以降、正常の処理が無視されるようになります。 
 </para>
 
 </sect1>

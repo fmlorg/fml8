@@ -1,5 +1,5 @@
 <!--
-   $FML: newml.sgml,v 1.5 2003/11/24 04:44:58 fukachan Exp $
+   $FML: newml.sgml,v 1.6 2003/12/21 03:19:14 fukachan Exp $
 -->
 
 
@@ -28,7 +28,19 @@ makefml を使ってＭＬを作成します。
 <screen>
 % su fml
 % makefml newml elena
+   ... 処理の様子が出力される(略) ...
 </screen>
+デフォルトの/var/spool/ml以外にパスを切替えたい場合は
+makefml newdomain コマンドでパスを指定して下さい。
+<screen>
+% su root
+# makefml newdomain fml.org /var/spool/virtual/fml.org
+# exit
+% su fml
+% makefml newml elena
+   ... 処理の様子が出力される(略) ...
+</screen>
+
 </para>
 
 
@@ -52,7 +64,8 @@ makefml を使ってＭＬを作成します。
    <listitem>
         <para>
 	/var/spool/ml/etc/mail/aliases に elena の設定を仕込む。
-	postalias で /var/spool/ml/etc/mail/aliases.db を再生成する。
+	postalias コマンドで
+	/var/spool/ml/etc/mail/aliases.db を再生成する。
         </para>
    </listitem>
 
@@ -70,6 +83,7 @@ makefml を使ってＭＬを作成します。
 
    <listitem>
         <para>
+	HTML 化された記事を置く場所として以下の階層を用意する/作る。
 	<screen>
 	~fml/public_html/fml/mlarchive/$domain/$ml/
 	</screen>
@@ -120,16 +134,19 @@ makefml を使ってＭＬを作成します。
 makefml を使ってＭＬを作成します。
 使い方は &fml4; と同様ですが、ＭＬ名にきちんとドメインまでつけて下さい。
 <screen>
+% su root
+# makefml newdomain nuinui.net /var/spool/virtual/nuinui.net
+# exit
 % su fml
-% makefml newdomain nuinui.net /var/spool/virtual/nuinui.net
 % makefml newml elena@nuinui.net
 </screen>
 </para>
 
 <para>
 newdomainコマンドでは、ドメインと使うml_home_prefixディレクトリのペア
-を指定します。このコマンドは /etc/fml/ml_home_prefix ファイルの編集を
-代行します。上の例では ml_home_prefix ファイルに次の行を追加します。
+を指定します。このコマンドは /usr/local/etc/fml/ml_home_prefix ファイ
+ルの編集を代行します。上の例では ml_home_prefix ファイルに次の行を追加
+します。
 <screen>
 nuinui.net /var/spool/virtual/nuinui.net
 </screen>

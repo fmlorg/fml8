@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: ml.hier.ml,v 1.1 2002/07/29 12:16:19 fukachan Exp $
 
    階層化されたＭＬ: $member_maps $recipient_maps をよろしく書く
 
@@ -47,6 +47,16 @@ member_maps 	+=	$ml_home_dir/../sales-3/members
 post_restrictions	=	permit_anyone
 </screen>
 と設定してしまうのもアリでしょう。
+</para>
+
+<para>
+ここではファイルで管理する例を取り上げています。
+これは簡単で、すぐに実行できるというのがよいところです。
+</para>
+
+<para>
+しかしながら、MySQL なりで組織図とメール配送のリストを管理するほうが現
+代的ではあるでしょう。準備も保守も、それなりに必要となりますが
 </para>
 
 </sect1>

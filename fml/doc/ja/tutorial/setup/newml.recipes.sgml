@@ -1,5 +1,5 @@
 <!--
-   $FML: @recipe_template,v 1.1 2003/01/07 11:39:13 fukachan Exp $
+   $FML: newml.recipes.sgml,v 1.1 2003/12/21 03:19:14 fukachan Exp $
 -->
 
 
@@ -30,9 +30,8 @@ ${ml_name}-admin: 管理者のメールアドレス
 $newml_command_ml_admin_default_address 
 変数の値が入ります。
 
-デフォルトでは、どのＭＬでも
-/etc/fml/main.cf で定義されている管理者のアドレス $fml_owner 
-が使われます。
+デフォルトでは、どのＭＬでも /usr/local/etc/fml/main.cf で定義されてい
+る管理者のアドレス $fml_owner が使われます。
 
 それ以外のものにしたい場合、
 $newml_command_ml_admin_default_address 
@@ -72,9 +71,9 @@ newml_command_mta_config_list に MTA のリストが定義されています。
 <screen>
 newml_command_mta_config_list -= qmail
 </screen>
-
+としてください。~/.qmail-* ファイルの生成がされなくなります。
 </para>
-~/.qmail-* の生成が止まります。
+
 </answer>
 
 </qandaentry>

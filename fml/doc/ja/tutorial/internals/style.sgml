@@ -1,5 +1,5 @@
 <!--
-   $FML: style.sgml,v 1.10 2003/11/30 09:16:55 fukachan Exp $
+   $FML: style.sgml,v 1.11 2004/03/31 06:29:38 fukachan Exp $
 -->
 
 <chapter id="programingstyle">
@@ -60,7 +60,7 @@ mail は「いわゆるメール」つまり messager/rfc822 形式のものです。
 fml システムへ入力されるものも mail だし、出ていくものも mail です。
 それらは mail から派生したサブクラスと考えられるため、
 「PREFIX_mail_属性」形式に統一する方が良いでしょう。
-が、ものすごく厳密にやると逆にわけ分からないので程ほどに。
+が、ものすごく厳密にやると、逆に、わけがわからないのでほどほどに。
 </para>
 
 <para>
@@ -78,7 +78,7 @@ use_report_mail_何とか
 report_mail_何とか
 </screen>
 この例でも、厳密には outgoing_report_mail とかするべきなんでしょうけど、
-そこまではやらないのが程ほどってところですね。
+そこまではやらないのがほどほどってところですね。
 </para>
 
 <para>
@@ -99,7 +99,7 @@ use_command_mail_header_なんとか
 <link linkend="list.variables.by.class">
 クラスの階層構造
 </link>
-で現すと、こーんな感じになるとおもいます。
+であらわすと、こーんな感じになるとおもいます。
 <screen>
 command {
 	SOMETHING_command
@@ -335,7 +335,7 @@ Srting::is_japanese_string()
 	libexec/ や libkern.pl にある関数は、
 	main:: に記述される部分は基本的なフローを記述している。
 	これらは基本的な枠組を示すものであるため、
-	 $CurProc (C でいえば struct *curproc にあたるもの)
+	$curproc (C でいえば struct *curproc にあたるもの)
 	を受け渡す、構造化プログラミング的な書き方をしている。
 </para>
 
