@@ -6,7 +6,7 @@
 This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
 to generate various output formats.
 
-$FML: fml-devel.sgml,v 1.1.1.1 2001/04/22 16:17:17 fukachan Exp $
+$FML: fml-devel.sgml,v 1.2 2001/04/23 11:41:49 fukachan Exp $
 -->
 
 <book>
@@ -52,6 +52,10 @@ $FML: fml-devel.sgml,v 1.1.1.1 2001/04/22 16:17:17 fukachan Exp $
 
   <chapter id="intro">
     &intro;
+  </chapter>
+
+  <chapter id="bootloader">
+    &bootloader;
   </chapter>
 
 

@@ -1,0 +1,149 @@
+<!--
+	$FML$
+-->
+
+<title> バージョン依存性を解決するための fml ブートローダ </title>
+
+<para>
+
+fml 5.0 にはインストールされている fml のバージョン依存性を考慮するた
+めに、実行時には本章で述べるようなブートストラップの過程があります。
+
+<programlisting>
+boot していくイメージ
+
+libexec/loader -> 
+     FML::Process::Switch -> 
+         FML::Process::Flow -> 
+              FML::Process::それぞれのプログラムのモジュール
+</programlisting>
+</para>
+
+
+<sect1>
+<title> 例: 配送の場合 </title>
+
+<para>
+loader から次々と呼ばれていく様子は、例えば配送処理の場合、次のよう
+になる。
+
+<programlisting>
+libexec/loader は FML::Process::Switch をロードし、
+FML::Process::Distribute を実行すると決める。
+
+FML::Process::Flow::ProcessStart() は引数として
+FML::Process::Distribute を渡され、
+FML::Process::Distribute を実行していく。
+</programlisting>
+</para>
+</sect1>
+
+
+<sect1>
+<title> FML::Process:: クラスの階層構造 </title>
+
+<para>
+<programlisting>
+FML::Process::Distribute >-|
+FML::Process::Command    >-|-- FML::Process::Kernel
+FML::Process::Mead       >-|    |   
+                                |-use-a FML::Parse
+                                |-use-a FML::Config
+                                |-use-a FML::Log
+                                |-use-a  ... その他 ...
+</programlisting>
+
+=&gt;
+<ulink url="../../../fml/lib/FML/Process/programs.ja.html">
+FML::Process::それぞれのプログラムのモジュールについて
+</ulink>
+
+</para>
+</sect1>
+
+
+<sect1>
+<title> ブートしていく順番について </title>
+
+<itemizedlist>
+
+   <listitem>
+	<para>
+	 libexec/loader (wrapper)
+	Bootstrap() を実行する。
+	fml.pl などはこの loader へのシンボリックリンクです。
+	/usr/local/libexec/fml/ を参照して下さい。
+	</para>
+   </listitem>
+
+   <listitem>
+   <itemizedlist>
+	<listitem>
+	<para>
+	   /etc/fml/main.cf を読み込む。
+		読み込むと fml のバージョンが分かる。
+		default_config.cf はバージョン依存であるので、
+		ここでまずバージョンを評価しなければいけないことに注意。
+	</para>
+	</listitem>
+
+	<listitem>
+	<para>
+	 	( fml.pl を例にとると)
+		@ARGV を評価し、
+		どのＭＬの config.cf 群をロードすればいいのかを準備する。
+		変数の評価と展開には libexec/Standalone.pm を用います。
+
+		これはあまりよくないような気がします。
+		libexec/ を @INC に加えないといけないこと、
+		libexec/loader と libexec/Standalone.pm の２つが
+		入れ換えないといけないものになってしまうので。
+	</para>
+	</listitem>
+
+	<listitem>
+	<para>
+		次に
+		FML::Process::Switch
+		( バージョン依存 )ファイルを
+		ロードします。
+	</para>
+
+	   <itemizedlist>
+		<listitem>
+		<para>
+		Bootstrap2() および ProcessSwitch() を実行し、
+		配送用、コマンドモード用などの各
+		プログラム/プロセスなどへ制御を移します(分岐する)。
+		この時は $0 から自分の名前を知り、
+		どのプロセスへ分岐すればいいのかを判断しています。
+		</para>
+		</listitem>
+
+		<listitem>
+		<para>
+		(ポリモーフィズムの例)
+		モジュールをダイナミックバインディングし、
+		該当するプロセスオブジェクトを生成する。
+		そして、プロセスをスタートさせます。
+
+		FML::Process::Flow の中に、
+		どのように fml プロセスを実行するかが
+		定義されています。
+<programlisting>
+$process = new FML::Process::なにか;
+$process->prepare($args);
+$process->run($args);
+$process->finish($args);
+</programlisting>
+		のように実行されています。
+		各プロセスは、それぞれについて適当な関数を
+		用意してください。
+		</para>
+		</listitem>
+	   </itemizedlist>
+	</listitem>
+   </itemizedlist>
+   </listitem>
+</itemizedlist>
+</sect1>

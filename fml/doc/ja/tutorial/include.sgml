@@ -6,6 +6,7 @@
 <!entity terms     SYSTEM "terms.sgml">
 <!entity intro     SYSTEM "intro.sgml">
 <!entity install   SYSTEM "install.sgml">
+<!entity bootloader   SYSTEM "bootloader.sgml">
 <!entity reference SYSTEM "reference.sgml">
 
 <!-- ²èÁü -->
