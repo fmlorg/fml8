@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.75 2003/02/13 11:02:09 fukachan Exp $
+# $FML: Message.pm,v 1.76 2003/04/18 14:37:47 tmu Exp $
 #
 
 package Mail::Message;
@@ -689,14 +689,93 @@ sub whole_message_body
 }
 
 
-# Descriptions: return the incoming message on memory as string reference
-#    Arguments: OBJ($self)
+=head2 whole_message_as_str($args)
+
+To extract the first 2048 bytes in the whole message (body), 
+specify the following parameters in $args.
+
+    $args = {
+	start => 0,
+	end   => 2048,
+	type  => 'exact',
+    };
+
+By default, parameters
+
+    $args = {
+	start  => 0,
+	end    => 2048,
+	indent => '   ',
+    };
+
+It returns the text until the first null line over the first 2048
+bytes.
+
+=cut
+
+
+# Descriptions: return the incoming message on memory as string
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
-# Return Value: STR_REF
-sub whole_message_as_string_ref
+# Return Value: STR
+sub whole_message_as_str
 {
-    my ($self) = @_;
-    return $self->{ __data };
+    my ($self, $args) = @_;
+    my $r_data = $self->{ __data };
+    my $start  = $args->{ start } || 0;
+    my $end    = $args->{ end }   || 2048; # the first 2048 bytes by default.
+    my $type   = $args->{ type }  || 'find paragraph boundary if could';
+    my $indent = $args->{ indent } || '   ';
+    my $hdrobj = $self->whole_message_header();
+    my $header = $hdrobj->as_string();
+    my $s      = '';
+
+    if ($type eq 'exact') {
+	$s = substr($$r_data, $start, $end - $start);
+    }
+    else {
+	$s = _fuzzy_substr($r_data, $start, $end);
+    }
+
+    # XXX line -> ${indent}line for your eyes.
+    $s = sprintf("%s\n%s", $header, $s);
+    $s =~ s/^/$indent/;
+    $s =~ s/\n/\n$indent/g;
+
+    return $s;
+}
+
+
+# Descriptions: paragraph based extraction of the body head part.
+#    Arguments: STR_REF($r_data) NUM($start) NUM($end)
+# Side Effects: none
+# Return Value: STR
+sub _fuzzy_substr
+{
+    my ($r_data, $start, $end) = @_;
+    my $max = 4196;
+    my $p = index($$r_data, "\n\n", $end);
+
+    # if not found, return the first $max bytes.
+    $p = $p > 0 ? $p : $max;
+
+    if ($p <= $max) {
+	return substr($$r_data, $start, $p - $start);
+    } 
+    else {
+	my ($last_p, $i);
+	$i = 10;
+	$p = 0;
+
+      PAR:
+	while ($i-- > 0) {
+	    $p = index($$r_data, "\n\n", $p + 1);
+	    last PAR if $p > $max;  
+	    $last_p = $p;
+	}
+
+	return substr($$r_data, $start, $last_p - $start);
+    }
 }
 
 
