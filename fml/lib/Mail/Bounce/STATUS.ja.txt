@@ -96,7 +96,6 @@
   * MTA
 
 	Novell GroupWise
-	SMTP32
 
   * 特定の ISP など
 	
@@ -111,4 +110,4 @@
 		今は sendmail みたいだ
 
 
-$FML: STATUS.ja.txt,v 1.5 2001/04/13 03:58:51 fukachan Exp $
+$FML: STATUS.ja.txt,v 1.6 2001/04/13 04:52:11 fukachan Exp $
