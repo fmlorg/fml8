@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Convert.pm,v 1.10 2002/09/11 23:18:11 fukachan Exp $
+# $FML: Convert.pm,v 1.11 2002/09/22 14:56:48 fukachan Exp $
 #
 
 
@@ -24,8 +24,6 @@ FML::Config::Convert -- variable expansion for __variable__
     my $out = new FileHandle "> $dst.$$";
 
     if (defined $in && defined $out) {
-        chmod 0644, "$dst.$$";
-
         &FML::Config::Convert::convert($in, $out, $config);
 
         $out->close();
@@ -88,7 +86,9 @@ sub convert_file
    my $out = new FileHandle "> " . $dst_tmp;
 
     if (defined $in && defined $out) {
-	chmod 0644, $dst_tmp;
+	use File::stat;
+	my $stat = stat($src);
+	my $mode = $stat->mode;
 
 	eval q{ convert($in, $out, $config);};
 	croak($@) if $@;
@@ -96,6 +96,7 @@ sub convert_file
 	$out->close();
 	$in->close();
 
+	chmod $mode, $dst_tmp;
 	rename($dst_tmp, $dst) || croak("fail to rename $dst");
     }
     else {
