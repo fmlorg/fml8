@@ -1,0 +1,124 @@
+		RFC: ドメイン(default + virtual)の操作の統合
+
+
+	利点:
+		設定を、ＭＬを用意するのに必要な操作のほぼ全部をコマンド
+		操作にすることで自動チェックが効く。
+
+		誤操作相談が減る（かも）。
+
+		ひっこしが楽になる（はず）。
+
+	欠点:	ツールを作る時(最初)だけは気合いが要るねぇ;-)
+
+
+I. あらたに「makefml newdomain」コマンドを創設する。
+
+	% makefml newdomain ドメイン ディレクトリ
+
+	このコマンドは、ディレクトリを用意し、さらに 
+	/etc/fml/ml_home_prefix ファイルに「ドメイン ディレクトリ」の
+	行を付け加える。
+
+	/etc/fml/main.cf では、次のように定義を修正する。
+	＃ virtual 部分は互換性を取るためだけ。
+	＃ ml_home_prefix ファイルが一応、正式。
+	＃ 中身は「ドメインと$ml_home_prefixの対応関係」を記している。
+
+	ml_home_prefix_maps	=	$config_dir/ml_home_prefix
+					$virtual_maps
+
+	virtual_maps		=	$config_dir/virtual
+
+	注意:	/var/spool/ml および ml_home_prefix ファイルに 
+		writable permission がないとエラーになる。
+
+  例: 各ドメインごとに使うディレクトリを用意する
+
+	% makefml newdomain fml.org    /var/spool/ml/fml.org
+	% makefml newdomain nuinui.net /var/spool/ml/nuinui.net
+		...
+
+  例: デフォルトドメイン(fml.org)について fml4 との互換性を保つ
+
+	% makefml newdomain fml.org /var/spool/ml
+
+
+II. あらたに「makefml rmdomain」コマンドを創設する。
+
+	% makefml rmdomain ドメイン
+
+	このコマンドは、/etc/fml/ml_home_prefix ファイルから該当するド
+	メイン行を削除する。
+	ディレクトリには何もしない。
+
+	~fml/.qmail-ドメイン-* ファイル群を消す。
+
+
+III. では、引越しのために、「makefml changemlhomeprefix」は作れるか？
+
+	- ん〜難しいかな?;-)
+	- こんな長いコマンド名はちょっと…良い案募集
+
+	% makefml changemlhomeprefix ドメイン 旧ディレクトリ 新ディレクトリ
+
+  例: （たぶん、こういう操作が必要のはずで、それを自動化する)
+
+	% makefml changemlhomeprefix fml.org
+
+	(0. MTA を停止)
+
+	1. ディレクトリを変更する。
+
+		旧ディレクトリ -> 新ディレクトリ
+
+	2. fml8 が作る MTA 用の設定を変更する。
+
+		/var/spool/ml/etc 以下のファイル
+		(例: /var/spool/ml/etc/mail/aliases)
+		の中に埋め込まれているディレクトリ名を変更して回り、
+		.db などを再生成する。
+
+	3. MTA の設定を変更する。内容は MTA 依存。
+
+		postfix の場合、virtual_maps と alias_maps 
+
+	(4. MTA リスタート)
+
+
+IV. では、ドメイン名を変更したい場合は？
+
+	- ん〜難しいかな?;-)
+	- こんなコマンド名では曖昧かなぁ。良い案募集
+
+	% makefml changedomain 旧ドメイン 新ドメイン
+
+  例: （たぶん、こういう操作が必要のはずで、それを自動化する)
+
+	(0. MTA を停止)
+
+	1. 全ＭＬの MTA 用設定ファイルを変更して回る。
+
+		例：
+		/var/spool/ml/elena/include-ctl
+		/var/spool/ml/elena/include
+		/var/spool/ml/elena/include-error
+
+	2. fml8 が用意する MTA 用設定ファイルを変更する
+
+		/var/spool/ml/etc/mail/aliases
+		/var/spool/ml/etc/procmail/procmailrc
+		~fml/.qmail-$ml_domain-$ml_name
+
+		/etc/fml/ 以下のファイル
+			main.cf
+
+	3. MTA の設定を変更する。内容は MTA 依存。
+
+		postfix の場合、virtual_maps と alias_maps 
+
+	(4. MTA リスタート)
+
+
+------------------------------------------------
+$FML$
