@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.79 2002/12/21 12:15:54 fukachan Exp $
+# $FML: Switch.pm,v 1.80 2003/01/02 15:51:01 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -354,7 +354,10 @@ sub _module_specific_options
 	return qw(debug! help! -I=s convert! style=s srcdir=s);
     }
     elsif ($myname eq 'fmlsuper') {
-	return qw(debug! help! s! p! v!);
+	return qw(debug! help!);
+    }
+    elsif ($myname eq 'fmlerror') {
+	return qw(debug! help!);
     }
     else {
 	croak "no such program $myname.\n";
@@ -475,6 +478,9 @@ sub _module_we_use
     }
     elsif ($name eq 'fmlsuper') {
 	$pkg = 'FML::Process::Super';
+    }
+    elsif ($name eq 'fmlerror') {
+	$pkg = 'FML::Process::ErrorViewer';
     }
     else {
 	return '';
