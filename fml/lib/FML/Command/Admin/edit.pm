@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: edit.pm,v 1.13 2002/12/15 14:09:27 fukachan Exp $
+# $FML: edit.pm,v 1.14 2003/01/25 12:48:38 fukachan Exp $
 #
 
 package FML::Command::Admin::edit;
@@ -54,7 +54,7 @@ sub new
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
-sub need_lock { 1;}
+sub need_lock { 0;}
 
 
 # Descriptions: run "vi" or the specified editor to edit config.cf.

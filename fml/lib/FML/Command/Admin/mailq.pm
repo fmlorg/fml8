@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: mailq.pm,v 1.1 2003/03/14 03:44:16 fukachan Exp $
+# $FML: mailq.pm,v 1.2 2003/03/14 06:53:22 fukachan Exp $
 #
 
 package FML::Command::Admin::mailq;
@@ -49,7 +49,7 @@ sub new
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
-sub need_lock { 1;}
+sub need_lock { 0;}
 
 
 # Descriptions: change delivery mode from real time to digest.

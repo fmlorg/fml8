@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: help.pm,v 1.14 2002/09/22 14:56:47 fukachan Exp $
+# $FML: help.pm,v 1.15 2002/12/15 13:46:30 fukachan Exp $
 #
 
 package FML::Command::User::help;
@@ -53,7 +53,7 @@ sub new
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
-sub need_lock { 1;}
+sub need_lock { 0;}
 
 
 # Descriptions: send help file by FML::Command::SendFile.
