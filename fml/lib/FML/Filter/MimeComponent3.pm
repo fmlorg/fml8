@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent3.pm,v 1.5 2002/12/24 10:05:18 fukachan Exp $
+# $FML: MimeComponent3.pm,v 1.6 2002/12/24 10:19:46 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -53,9 +53,8 @@ my $debug = 0;
 # default rules
 my $filter_rules = [
 		    ['text/plain',   '*',  'permit'],
-		    ['text/*',       '*',  'reject'],
+		    ['text/html' ,   '*',  'reject'],
 		    ['multipart/*',  '*',  'reject'],
-		    ['*',            '*',  'reject'],
 		    ];
 
 
