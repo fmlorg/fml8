@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: ThreadTrack.pm,v 1.12 2001/11/07 09:28:28 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.13 2001/11/09 11:28:41 fukachan Exp $
 #
 
 package Mail::ThreadTrack;
@@ -226,10 +226,6 @@ sub list_up_thread_id
 {
     my ($self) = @_;
     my ($tid, $status, @thread_id);
-
-    # self->{ _hash_table } is tied to DB's.
-    $self->db_open();
-
     my $rh_status = $self->{ _hash_table }->{ _status };
     my $mode      = 'default';
 
@@ -241,8 +237,6 @@ sub list_up_thread_id
 
 	push(@thread_id, $tid);
     }
-
-    $self->db_close();
 
     \@thread_id;
 }
