@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Kernel.pm,v 1.6 2001/11/11 23:34:00 fukachan Exp $
+# $FML: Kernel.pm,v 1.7 2001/11/13 03:42:47 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -139,6 +139,33 @@ sub run
     $curproc->html_start($args);
     $curproc->run_cgi($args);
     $curproc->html_end($args);
+}
+
+
+=head2 get_ml_list($args)
+
+get HASH ARRAY of valid mailing lists.
+
+=cut
+
+
+sub get_ml_list
+{
+    my ($curproc, $args) = @_;
+    my $config = $curproc->{ config };
+
+    use DirHandle;
+    my $dh = new DirHandle $config->{ ml_home_prefix };
+    my @dirlist;
+    my $prefix = $config->{ ml_home_prefix };
+    while ($_ = $dh->read()) {
+	next if /^\./;
+	next if /^\@/;
+	push(@dirlist, $_) if -f "$prefix/$_/config.cf";
+    }
+    $dh->close;
+
+    return \@dirlist;
 }
 
 

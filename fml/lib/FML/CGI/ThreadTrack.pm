@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: ThreadTrack.pm,v 1.7 2001/11/11 23:42:05 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.8 2001/11/12 02:19:19 fukachan Exp $
 #
 
 package FML::CGI::ThreadTrack;
@@ -173,25 +173,6 @@ sub _show_guide
     print "<HR>\n";
 }
 
-
-sub get_ml_list
-{
-    my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
-
-    use DirHandle;
-    my $dh = new DirHandle $config->{ ml_home_prefix };
-    my @dirlist;
-    my $prefix = $config->{ ml_home_prefix };
-    while ($_ = $dh->read()) {
-	next if /^\./;
-	next if /^\@/;
-	push(@dirlist, $_) if -f "$prefix/$_/config.cf";
-    }
-    $dh->close;
-
-    return \@dirlist;
-}
 
 =head1 SEE ALSO
 
