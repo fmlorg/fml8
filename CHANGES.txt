@@ -12,6 +12,47 @@
 	fml-devel-20040313 では、変数命名のルールが大きく変わりました。
 	気をつけてください。
 
+2004/03/15-17
+
+   fml4 の設定を fml8 のものへ半自動変換するツールを実装した。
+   implement basic fml4 to fml8 converter.
+
+	注意: 変換ルールは、まだまだ、チューニングが必要。
+
+   FML::Merge::* 
+	implement preliminary config.cf translator.
+
+   FML::Merge 
+	tune key output order.
+	postpone some variables e.g. *_HOOK.
+
+   FML::Merge::FML4::config_ph 
+	bug fix article_subject_tag conversion rule
+	oops, fix missing escapes
+	
+   FML::Merge::FML4::Config 
+	install some files to be used continuously e.g. seq, summary,
+	log, ...
+
+   FML::Command::Admin::newml 
+	implement {set,get}_force_mode().
+	modified to use it.
+	
+   FML::Command::Admin::merge 
+	disable_include_files() -> disable_old_include_files()
+
+   * several bug fixes
+
+   FML::Credential 
+	run _reconfigure in constructor, too.
+	delay $config evaluation
+
+   IO::Adapter::File 
+	modify touch() to use FileHandle not IO::File
+
+   FML::Process::Distribute 
+	implement toggle of filter function by $use_article_filter
+
 2004/03/14
 
   コマンドメールまわりを書き直す（その２）  
@@ -6491,4 +6532,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.188 2004/03/12 15:59:50 fukachan Exp $
+$FML: CHANGES.txt,v 1.189 2004/03/14 14:20:08 fukachan Exp $
