@@ -89,8 +89,8 @@ sub parse
     my @pat;
     $pat[0] = sprintf("^%04d%02d(\\d{1,2})\\s+(.*)",  $year, $month);
     $pat[1] = sprintf("^%04d/%02d/(\\d{1,2})\\s+(.*)", $year, $month);
-    $pat[2] = sprintf("^%02d(\\d{1,2})\\s+(.*)", $year, $month);
-    $pat[3] = sprintf("^%02d/(\\d{1,2})\\s+(.*)", $year, $month);
+    $pat[2] = sprintf("^%02d(\\d{1,2})\\s+(.*)",  $month);
+    $pat[3] = sprintf("^%02d/(\\d{1,2})\\s+(.*)", $month);
 
     # 
     use HTML::CalendarMonthSimple;
@@ -106,7 +106,7 @@ sub parse
 
     $cal->width('50%');
     $cal->border(10);
-    $cal->header("$year/$month schedule");
+    $cal->header(sprintf("%04d/%02d %s",  $year, $month, "schedule"));
     $cal->bgcolor('pink');
 
     if (-f $data_file) {
@@ -129,6 +129,7 @@ sub _parse
 {
     my ($self, $day, $buf) = @_;
     my $cal = $self->{ _schedule };
+	$day =~ s/^0//;
     $cal->addcontent($day, "<p>". $buf);
 }
 
