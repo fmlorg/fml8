@@ -49,3 +49,8 @@ ticket_sequence_file	=	$ml_home_dir/ticket.seq
 #     Examples: /var/spool/ml/@db@/ticket
 ticket_db_dir		=	$shared_db_dir/ticket
 
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+ticket_cgi_base_url	=	/cgi-bin/fmlticket.cgi
