@@ -107,6 +107,10 @@ commands_for_privileged_user	=	subscribe
 					send
 					password
 					pass
+					changepassword
+					chpass
+					initpass
+					passwd
 					dir
 					ls
 					file
