@@ -1,0 +1,22 @@
+Return-Path: <>
+Received: by ahodori.fml.org (Postfix)
+	id 69641867F1; Mon, 31 Mar 2003 08:35:13 +0900 (JST)
+Delivered-To: fukachan@ahodori.fml.org
+Received: from sn1.nuinui.net (sn1.nuinui.net [10.20.30.5])
+	by ahodori.fml.org (Postfix) with ESMTP id B73C0867F0
+	for <elena-admin+rudo=nuinui.net@fml.org>; Mon, 31 Mar 2003 08:35:08 +0900 (JST)
+Received: from e500-m.ctrl.nuinui.net (e500-m.ctrl.nuinui.net [10.20.30.8])
+	by sn1.nuinui.net (8.9.3/3.7W) with SMTP id IAA25467
+	for <elena-admin+rudo=nuinui.net@fml.org>; Mon, 31 Mar 2003 08:33:10 +0900 (JST)
+Message-Id: <200303302333.IAA25467@sn1.nuinui.net>
+From: E500_SMTP_Mail_Service@nuinui.net
+Date: Mon, 31 Mar 2003 08:35:16 +0900 (JST)
+To: <elena-admin+rudo=nuinui.net@fml.org>
+Subject: Returned Mail - Error During Delivery
+
+------ Failed Recipients ------
+
+<rudo@nuinui.net>: Requested action not taken: mailbox unavailable. [SMTP Error Code 550]
+-------- Returned Mail --------
+
+以下、オリジナルの記事(ヘッダ＋本文)全部
