@@ -6,8 +6,7 @@
 
 ○	IO::Adapter の改造
 
-
-	FML/Credential.pm	*	argv がだめ
+	AtomicFile の場所
 
 
 ○	FML::Article
@@ -406,4 +405,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.36 2002/07/19 03:46:53 fukachan Exp $
+$FML: 00_MEMO,v 1.37 2002/07/23 12:58:12 fukachan Exp $
