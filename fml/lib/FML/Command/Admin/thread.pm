@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: thread.pm,v 1.4 2003/08/23 04:35:32 fukachan Exp $
+# $FML: thread.pm,v 1.5 2004/03/28 13:05:55 fukachan Exp $
 #
 
 package FML::Command::Admin::thread;
@@ -108,8 +108,9 @@ sub _new_switch
     elsif ($command eq 'list') {
 	$th_args->{ range } = $range || '';
 	$article_thread->print_list($th_args);
+	$article_thread->print_one_line_summary($th_args);
     }
-    elsif ($command eq 'open' | $command eq 'reopen') {
+    elsif ($command eq 'open' || $command eq 'reopen') {
 	$th_args->{ range } = $range || '';
 	$article_thread->open_thread_status($th_args);
     }
