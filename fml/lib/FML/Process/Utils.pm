@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.57 2003/02/01 04:34:33 fukachan Exp $
+# $FML: Utils.pm,v 1.58 2003/02/09 12:31:45 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -519,6 +519,28 @@ sub myname
     my $args = $curproc->{ __parent_args };
 
     return $args->{ myname };
+}
+
+
+# Descriptions: return the current action name, 
+#               which syntax is checked by regexp.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub safe_cgi_action_name
+{
+    my ($curproc) = @_;
+    my $name = $curproc->myname();
+
+    use FML::Restriction::Base;
+    my $safe = new FML::Restriction::Base;
+
+    if ($safe->regexp_match('action', $name)) {
+	return $name;
+    }
+    else {
+	return undef;
+    }
 }
 
 
