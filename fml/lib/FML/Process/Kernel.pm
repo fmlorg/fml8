@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.50 2001/09/13 13:47:48 fukachan Exp $
+# $FML: Kernel.pm,v 1.51 2001/09/13 14:36:45 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -127,7 +127,11 @@ sub new
     if ($0 =~ /loader/) {
 	eval q{
 	    require Data::Dumper; Data::Dumper->import();
+	    print "// FML::Process::Kernel::new()\n";
+	    $Data::Dumper::Varname = 'curproc';
 	    print Dumper( $curproc );
+	    $Data::Dumper::Varname = 'args';
+	    print Dumper( $args );
 	    sleep 3;
 	};
     }
