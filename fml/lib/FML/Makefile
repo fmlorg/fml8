@@ -10,6 +10,7 @@ index.ja.html: *.pm
 	(cd Process; make html)
 	(cd Ticket/Model; make html)
 	(cd Ticket; make html)
+	(cd CGI; make html)
 	../../../doc/bin/dir2url.pl > index.ja.html
 
 _clean:
