@@ -1,5 +1,5 @@
 #
-# $FML: RULES.txt,v 1.1 2004/03/20 04:51:37 fukachan Exp $
+# $FML: RULES.txt,v 1.2 2004/12/09 03:38:11 fukachan Exp $
 #     BASED ON fml/cf/MANIFEST 1.104
 #
 #	.use_fml4_value		そのまま使う
@@ -156,11 +156,11 @@
 
 .if PERMIT_COMMAND_FROM == members_only
 	.if REJECT_COMMAND_HANDLER == reject
-		.not_yet_implemented		
+		.fml8_default
 
 .if PERMIT_COMMAND_FROM == members_only
 	.if REJECT_COMMAND_HANDLER == auto_subscribe
-		.fml8_default
+		.unavailble
 
 .if PERMIT_COMMAND_FROM == members_only
 	.if REJECT_COMMAND_HANDLER == ignore
@@ -1856,7 +1856,7 @@
 # # value: address
 # SMTP_SENDER:
 .if SMTP_SENDER
-	?
+	.convert
 
 
 # # IF $NOT_TRACE_SMTP IS 1 (default 0), we log the SMTP session to $SMTP_LOG
