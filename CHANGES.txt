@@ -1,6 +1,98 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/05/28
+
+   variables
+	error_analyzer_function::error_continuity -> histgram
+	define $error_analyzer_function_list
+	
+   FML::Error 
+   FML::Error::{Analyze,Cache}
+   FML::Error::Analyze::{histgram,simple_count}
+	restructuring under FML::Error class to be more extensible.
+	
+	move main part of print() to FML::Error::Analyzer::* modules.
+	So, print() format depends on FML::Error::Analyzer::* class.
+	
+   FML::Command::Admin::error 
+	list up summary for each algorithm defined in
+	$error_analyzer_function_list.
+
+2003/05/27
+
+   Mail::Message::ToHTML 
+	print text in "unknown MIME encoding" case.
+	try to validate key and value in hash operation but ... (?)
+
+2003/05/26
+
+   IO::Adapter::{Array,DBI,File}
+	remove not used method:
+	- get_value_as_str()
+	- get_value_as_array_ref()
+
+2003/05/20
+
+   FML::Command::Admin::error 
+	disable lock since FML::Error locks itself if needed.
+	
+   FML::Command::Admin::error 
+   FML::Error 
+	move the status dump code from FML::Command::Admin:error to
+	FML::Error.
+
+2003/05/16
+
+   Mail::Message::ToHTML 
+	bug fix masking of raw From::address
+
+2003/05/14
+
+   FML::Filter 
+   FML::Process::Command 
+   FML::Filter::Size 
+	implement size limit filter for both article and command mail.
+
+	入力に対するサイズ制限フィルタを実装しました。
+
+2003/05/13
+
+   FML::Filter 
+   FML::Process::Distribute 
+	use $_arg_address not $_arg_sender
+	
+	use "reject_notice_preamble" in filter rejection notice.
+	it describes:
+	o the reason why we do not use mime::multipart.
+	o this message is not from you but somebody forged.
+
+	フィルタが弾いた時に注意書きをつける。
+
+   FML::MTAControl::Postfix Sendmail 
+	check the existence of path_* programs
+
+2003/05/12
+
+   FML::Command::Auth 
+   FML::Command::Admin::chaddr changepassword deladmin delmoderator 
+		        digest off on unsubscribe 
+	we should operate only $primary_*_map not $*_maps in deleting the user
+	address.
+
+	メールアドレスを削除するコードの修正
+		常に primary_*_map にのみ追加/削除を行なう。
+
+2003/05/08
+
+   FML::Filter 
+	add $msg_args at article_filter_reject_notice()
+
+   Mail::Message 
+	whole_message_as_str():
+	o indent is null by default.
+	o fix the trailing indent replace.
+
 2003/05/05
 
    variables and configure
@@ -4758,4 +4850,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.142 2003/04/29 12:44:00 fukachan Exp $
+$FML: CHANGES.txt,v 1.143 2003/05/06 14:55:03 fukachan Exp $
