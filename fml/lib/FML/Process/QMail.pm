@@ -8,7 +8,7 @@
 # $FML$
 #
 
-package FML::__HERE_IS_YOUR_MODULE_NAME__;
+package FML::Process::QMail;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
@@ -28,9 +28,7 @@ sub new
 
 =head1 NAME
 
-NOT YET MERGED
-
-FML::__HERE_IS_YOUR_MODULE_NAME__.pm - what is this
+NOT YET MERGED - qmail-ext
 
 =head1 SYNOPSIS
 
@@ -46,18 +44,18 @@ FML::__HERE_IS_YOUR_MODULE_NAME__.pm - what is this
 
 =head1 AUTHOR
 
-__YOUR_NAME__
+Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 __YOUR_NAME__
+Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself. 
 
 =head1 HISTORY
 
-FML::__HERE_IS_YOUR_MODULE_NAME__.pm appeared in fml5.
+FML::Process::QMail appeared in fml5.
 
 =cut
 
