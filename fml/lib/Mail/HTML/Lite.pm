@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.22 2001/10/27 14:51:42 fukachan Exp $
+# $FML: Lite.pm,v 1.23 2001/10/27 14:56:30 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -15,7 +15,7 @@ use Carp;
 my $debug = $ENV{'debug'} ? 1 : 0;
 my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::HTML::Lite</A>";
 
-my $version = q$FML: Lite.pm,v 1.22 2001/10/27 14:51:42 fukachan Exp $;
+my $version = q$FML: Lite.pm,v 1.23 2001/10/27 14:56:30 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -174,18 +174,11 @@ sub htmlfy_rfc822_message
 	if ($type eq 'text/rfc822-headers') {
 	    $self->mhl_separator($wh);
 	    my $header = $self->_format_header($msg);
-	    $self->_text_print({ 
+	    $self->_text_safe_print({ 
 		fh   => $wh,
 		data => $header,
 	    });
 	    $self->mhl_separator($wh);
-	}
-	# text/plain case.
-	elsif ($type eq 'text/plain') {
-	    $self->_text_print({ 
-		fh   => $wh,
-		data => $m->data_in_body_part(),
-	    });
 	}
 	# message/rfc822 case
 	elsif ($type eq 'message/rfc822') {
@@ -214,28 +207,47 @@ sub htmlfy_rfc822_message
 		unlink $tmpf;
 	    }
 	}
-	# e.g. image/gif case
+	# text/plain case.
+	elsif ($type eq 'text/plain') {
+	    $self->_text_safe_print({ 
+		fh   => $wh,
+		data => $m->data_in_body_part(),
+	    });
+	}
+	# create a separete file for attachment
 	else {
 	    $attach++;
 
 	    # write attachement into a separete file
-	    my $outf = _gen_attachment_filename($dst, $attach, $type);
-	    my $enc  = $msg->get_encoding_mechanism;
+	    my $outf    = _gen_attachment_filename($dst, $attach, $type);
+	    my $enc     = $m->get_encoding_mechanism;
+	    my $msginfo = { message => $m };
 
-	    # e.g. text/html case 
-	    if ($type =~ /^text/ && (not $enc)) {
-		# XXX-BAD
-		$self->_text_print_by_raw_mode({ 
-		    message => $m,
-		    file    => $outf,
-		});
+	    # e.g. text/xxx case (e.g. text/html case) 
+	    if ($type =~ /^text/) {
+		my $tmpf = $self->_create_temporary_filename();
+		$msginfo->{ file } = $tmpf;
+
+		# once create temporary file
+		_PRINT_DEBUG("attachment: type=$type attach=$attach enc=$enc");
+		if ($enc) {
+		    $self->_binary_print($msginfo);
+		}
+		else {
+		    $self->_text_raw_print($msginfo);
+		}
+
+		# disable html tag
+		if (-f $tmpf) {
+		    $msginfo->{ description } = "(HTML TAGs are disabled)";
+		    _rewrite_html_file($tmpf, $outf);
+		    unlink $tmpf;
+		}
 	    }
 	    # e.g. image/gif, but this case includes encoded "text/html".
 	    else {
-		$self->_binary_print({ 
-		    message => $m,
-		    file    => $outf,
-		});
+		$msginfo->{ file } = $outf;
+		$self->_binary_print($msginfo);
 	    }
 
 	    # show inline href appeared in parent html.
@@ -245,6 +257,7 @@ sub htmlfy_rfc822_message
 		type   => $type,
 		num    => $attach,
 		file   => $outf,
+		info   => $msginfo,
 	    });
 	}
     }
@@ -253,6 +266,23 @@ sub htmlfy_rfc822_message
     $self->mhl_separator($wh);
     $self->mhl_footer($wh);
     $self->html_end($wh);
+}
+
+
+sub _rewrite_html_file
+{
+    my ($inf, $outf) = @_;
+
+    use FileHandle;
+    my $rh = new FileHandle $inf;
+    my $wh = new FileHandle "> $outf";
+    if (defined $rh) {
+	my $buf = '';
+	while (<$rh>) { $buf .= $_;}
+	_print_safe_buf($wh, $buf);
+	$wh->close;
+	$rh->close;
+    }
 }
 
 
@@ -454,11 +484,23 @@ sub _set_output_channel
 #    Arguments: $self $args
 # Side Effects: 
 # Return Value: none
-sub _create_temporary_file
+sub _create_temporary_filename
 {
     my ($self, $msg) = @_;
     my $db_dir  = $self->{ _html_base_directory };
-    my $tmpf    = "$db_dir/tmp$$";
+
+    return "$db_dir/tmp$$";
+}
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub _create_temporary_file
+{
+    my ($self, $msg) = @_;
+    my $tmpf = $self->_create_temporary_filename();
     
     use FileHandle;
     my $wh = new FileHandle "> $tmpf";
@@ -501,14 +543,20 @@ sub _print_inline_object
     my $type = $args->{ type };
     my $num  = $args->{ num };
     my $file = $self->_relative_path($args->{ file });
+    my $desc = '';
     my $inline = defined( $args->{ inline } ) ? 1 : 0;
 
+    if (defined $args->{ info }->{ description }) {
+	$desc = $args->{ info }->{ description };
+    }
+
     if ($inline && $type =~ /image/) {
-	print $wh "<BR><IMG SRC=\"$file\">\n";
+	print $wh "<BR><IMG SRC=\"$file\">$desc\n";
     }
     else {
 	my $t = $file;
-	print $wh "<BR><A HREF=\"$file\" TARGET=\"$t\"> $type $num </A><BR>\n";
+	print $wh "<BR><A HREF=\"$file\" TARGET=\"$t\"> $type $num </A>";
+	print $wh "$desc<BR>\n";
     }
 }
 
@@ -541,18 +589,25 @@ my @header_field = qw(From To Cc Subject Date
 sub _format_header
 {
     my ($self, $msg) = @_;
-    my ($buf);
+    my ($buf, $buf40);
     my $hdr = $msg->rfc822_message_header;
     my $header_field = \@header_field;
 
     # header
+    $buf40 .= "<SPAN CLASS=mailheaders>\n";
     for my $field (@$header_field) {
 	if (defined($hdr->get($field))) {
+	    $buf40 .= "<SPAN CLASS=${field}>\n";
 	    $buf .= "${field}: ";
+	    $buf40 .= "</SPAN>\n";
+
 	    my $xbuf = $hdr->get($field); 
+	    $buf40 .= "<SPAN CLASS=${field}-value>\n";
 	    $buf .= $xbuf =~ /=\?iso/i ? $self->_decode_mime_string($xbuf) : $xbuf;
+	    $buf40 .= "</SPAN>\n";
 	}
     }
+    $buf40 .= "</SPAN>\n";
 
     return($buf);
 }
@@ -574,7 +629,7 @@ return $str;
 #    Arguments: $self $args
 # Side Effects: 
 # Return Value: none
-sub _text_print
+sub _text_safe_print
 {
     my ($self, $args) = @_;
     my $buf = $args->{ data };
@@ -593,7 +648,7 @@ sub _text_print
 #    Arguments: $self $args
 # Side Effects: 
 # Return Value: none
-sub _text_print_by_raw_mode
+sub _text_raw_print
 {
     my ($self, $args) = @_;
     my $msg  = $args->{ message }; # Mail::Message object
@@ -634,10 +689,23 @@ sub _binary_print
 
 	if (defined $fh) {
 	    $fh->autoflush(1);
-
-	    use MIME::Base64;
 	    binmode($fh);
-	    print $fh decode_base64( $msg->data_in_body_part() );
+
+	    if ($enc eq 'base64') {
+		use MIME::Base64;
+		print $fh decode_base64( $msg->data_in_body_part() );
+	    }
+	    elsif ($enc eq 'quoted-printable') {
+		use MIME::QuotedPrint;
+		print $fh decode_qp( $msg->data_in_body_part() );
+	    }
+	    elsif ($enc eq '7bit') {
+		_print_safe_str($fh, $msg->data_in_body_part());
+	    }
+	    else {
+		croak("unknown MIME encoding enc=$enc");
+	    }
+
 	    $fh->close();
 	}
     }
@@ -1717,9 +1785,8 @@ sub _print_safe_buf
 sub __print_safe_str
 {
     my ($attr_pre, $wh, $str, $code) = @_;
-    my (@c) = caller;
 
-    if (defined $str) {
+    if (defined($str) && defined($code)) {
 	use Jcode;
 	&Jcode::convert(\$str, $code);
     }
@@ -1781,7 +1848,7 @@ sub _print_li_filename
     _print_raw_str($wh, "<LI>\n", $code);
     _print_raw_str($wh, "<A HREF=\"$filename\">\n", $code);
     _print_safe_str($wh, $subject, $code);
-    _print_raw_str($wh, "\n", $code);
+    _print_raw_str($wh, ",\n", $code);
     _print_safe_str($wh, "$who\n", $code);
     _print_raw_str($wh, "</A>\n", $code);
 }
