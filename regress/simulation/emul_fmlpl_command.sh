@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML: emul_command.sh,v 1.5 2004/03/14 07:01:08 fukachan Exp $
+# $FML: emul_fmlpl_command.sh,v 1.1 2004/11/24 02:15:11 fukachan Exp $
 #
 
 buf=$PWD/__command$$__
@@ -38,7 +38,8 @@ DO () {
    )
 }
 
-(cd ../../fml/etc/;sh .gen.sh)
+(cd ../../fml/etc/; cp config.cf.ja config.cf )
+(cd ../../fml/etc/; sh .gen.sh)
 
 cat ./../testmails/$header_file > $buf
 cat >> $buf

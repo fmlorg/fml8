@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML: emul_post.sh,v 1.5 2004/05/19 13:50:45 fukachan Exp $
+# $FML: emul_fmlpl_post.sh,v 1.1 2004/11/24 02:15:12 fukachan Exp $
 #
 
 debug=${debug:-1}
@@ -36,7 +36,8 @@ else
 	list=$pwd/../testmails/text=plain
 fi
 
-(cd ../../fml/etc/;sh .gen.sh)
+(cd ../../fml/etc/; cp config.cf.ja config.cf )
+(cd ../../fml/etc/; sh .gen.sh)
 
 for msg in $list
 do
