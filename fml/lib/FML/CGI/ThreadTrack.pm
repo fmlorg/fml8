@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: ThreadTrack.pm,v 1.9 2001/11/13 15:18:07 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.10 2001/11/17 04:03:36 fukachan Exp $
 #
 
 package FML::CGI::ThreadTrack;
@@ -142,7 +142,7 @@ sub _build_param
 	db_base_dir   => $thread_db_dir,
 	ml_name       => $ml_name,
 	spool_dir     => $spool_dir,
-	reverse_order => 1,
+	reverse_order => 0,
     };
 
     # import some variables
