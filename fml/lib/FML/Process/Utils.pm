@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.96 2003/12/24 14:23:36 fukachan Exp $
+# $FML: Utils.pm,v 1.97 2003/12/25 10:28:07 tmu Exp $
 #
 
 package FML::Process::Utils;
@@ -182,6 +182,33 @@ sub incoming_message
     else {
 	return undef;
     }
+}
+
+
+# Descriptions: set the incoming_message cached file path.
+#    Arguments: OBJ($curproc) STR($path)
+# Side Effects: none
+# Return Value: none
+sub set_incoming_message_cache_file_path
+{
+    my ($curproc, $path) = @_;
+    my $pcb = $curproc->pcb();
+    if ($path) {
+	$pcb->set("incoming_message", "file_path", $path);
+    }
+}
+
+
+# Descriptions: get the incoming_message cached file path.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub get_incoming_message_cache_file_path
+{
+    my ($curproc) = @_;
+    my $pcb  = $curproc->pcb();
+    my $path = $pcb->set("incoming_message", "file_path");
+    return( $path || '' );  
 }
 
 
