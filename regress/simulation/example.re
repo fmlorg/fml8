@@ -10,6 +10,7 @@ To: rudo@nuinui.net
 Reply-To: rudo@nuinui.net
 Subject: Re: [elena:00300] test 01
 	appended_mesg
+ [elena #00000100]
 Message-Id: <20010102080803.1BCBE15024@iris.fml.org>
 Date: Tue,  2 Jan 2001 17:08:03 +0900 (JST)
 
