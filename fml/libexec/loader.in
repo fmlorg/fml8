@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: loader.in,v 1.5 2001/11/27 04:00:20 fukachan Exp $
+# $FML: loader.in,v 1.6 2001/11/27 08:38:38 fukachan Exp $
 #
 
 eval 'exec @PERL@ -S $0 ${1+"$@"}'
@@ -117,13 +117,10 @@ sub Bootstrap
 	eval q{ &Bootstrap2($main_cf_file, $main_cf);};
 	if ($@) {
 	    my $reason = $@;
-	    if (defined($main_cf->{ debug })) {
-		__CROAK("fail to execute Bootstrap2($main_cf_file)", $reason);
-	    }
-	    else {
+	    unless (defined($main_cf->{ debug })) {
 		$reason =~ s/[\n\s]*\s+at\s+.*$//m;
-		__CROAK($reason, $reason);
 	    }
+	    __CROAK("fail to execute Bootstrap2($main_cf_file)", $reason);
 	}
     }
     else {
