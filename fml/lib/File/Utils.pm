@@ -20,7 +20,7 @@ require Exporter;
 
 =head1 NAME
 
-File::Utils.pm - error handling utilities
+File::Utils - error handling utilities
 
 =head1 SYNOPSIS
 

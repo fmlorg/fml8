@@ -19,7 +19,7 @@ require Exporter;
 
 =head1 NAME
 
-File::Errors.pm - error handling utilities
+File::Errors - error handling utilities
 
 =head1 SYNOPSIS
 
@@ -39,23 +39,15 @@ When you use Something module,
 	unless ($obj->error) { $obj->do_somting( ...); };
 
 
-=head1 DESCRIPTION
+=head1 METHODS
 
-=head1 AUTHOR
+=head2 C<error_reason($message)>
 
-Ken'ichi Fukamachi
+save $message
 
-=head1 COPYRIGHT
+=head2 C<error()>
 
-Copyright (C) 2001 Ken'ichi Fukamachi
-
-All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
-
-=head1 HISTORY
-
-File::Errors appeared in fml5 mailing list driver package.
-See C<http://www.fml.org/> for more details.
+return $message which is saved by C<error_reason($msg)>.
 
 =cut
 
@@ -82,6 +74,26 @@ sub error_reset
     undef $self->{'_error_action'} if defined $self->{'_error_action'};
     return $msg;
 }
+
+
+
+=head1 AUTHOR
+
+Ken'ichi Fukamachi
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001 Ken'ichi Fukamachi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself. 
+
+=head1 HISTORY
+
+File::Errors appeared in fml5 mailing list driver package.
+See C<http://www.fml.org/> for more details.
+
+=cut
 
 
 1;

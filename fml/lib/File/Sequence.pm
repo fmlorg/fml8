@@ -44,9 +44,19 @@ $id becomes 0, 1, 2, 0, 1, 2...
 
 =head1 DESCRIPTION
 
+File::Sequence module maintains the sequence number for something, 
+for example, the article number.
+
+For extension, you can generate cyclic number by this module.
+If you so, use the C<modulus> parameter in new() method.
+
+
 =head2 C<new($args)>
 
-$args->{ sequence_file } is the file holding the current sequence number.
+$args->{ sequence_file } is the file holding the current sequence
+number.
+$args->{ modulus } is the modulus when you want to get a cyclic
+number.
 
 =head2 C<increment_id([$file])>
 
@@ -58,6 +68,10 @@ require Exporter;
 @ISA = qw(Exporter);
 
 
+# Descriptions: constructor
+#    Arguments: $self $args
+# Side Effects: object itself holds a few local _variables
+# Return Value: object
 sub new
 {
     my ($self, $args) = @_;
@@ -69,6 +83,12 @@ sub new
 }
 
 
+# Descriptions: increment sequence
+#    Arguments: $self [$file]
+#               If $file is not specified, 
+#               the sequence_file parameter in new().
+# Side Effects: the number holded in $file is incremented
+# Return Value: number (sequence number)
 sub increment_id
 {
     my ($self, $file) = @_;
