@@ -1,4 +1,4 @@
-# $FML: site_default_config.cf.in,v 1.3 2002/06/01 15:05:10 fukachan Exp $
+# $FML: site_default_config.cf.in,v 1.4 2002/08/26 03:45:41 fukachan Exp $
 #
 #               site default_config.cf EXAMPLE
 #
@@ -15,6 +15,8 @@
 # We want to disable the subject tag in articles by default.
 article_header_rewrite_rules	-=	rewrite_article_subject_tag
 
+# mime based comonent filter
+use_mime_component_filter	=	@use_mime_component_filter@
 
 
 # [site specific options]

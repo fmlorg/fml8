@@ -1,5 +1,5 @@
 dnl
-dnl $FML: configure.in,v 1.23 2002/06/30 05:01:22 fukachan Exp $
+dnl $FML: configure.in,v 1.24 2002/09/09 23:16:20 fukachan Exp $
 dnl
 AC_REVISION($Revision$)
 
@@ -103,6 +103,14 @@ AC_ARG_WITH(default_domain,
 AC_SUBST(default_domain)
 
 
+use_mime_component_filter=yes
+AC_ARG_WITH(mime-component-filter, 
+[  --without-mime-component-filter  disable mime_component_filter],
+    use_mime_component_filter=$withval)
+AC_SUBST(use_mime_component_filter)
+
+
+
 AC_SUBST(SHELL)
 
 AC_OUTPUT(\
@@ -151,6 +159,8 @@ echo "      fml process group: $fml_group"
 echo "             fmlconfdir: $fmlconfdir"
 echo "             mlspooldir: $mlspooldir"
 echo "         default domain: $default_domain"
+echo ""
+echo "      mime based filter: $use_mime_component_filter"
 echo ""
 echo "Now you must run \"make install\"."
 echo ""
