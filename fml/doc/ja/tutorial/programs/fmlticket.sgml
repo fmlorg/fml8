@@ -1,0 +1,31 @@
+<!--
+	$FML$
+-->
+
+<sect1 id="fmlticket">
+
+<title> fmlticket (/usr/local/bin/fmlticket) </title>
+
+<para>
+
+fmlticket は引数にコマンドとＭＬ名をとります。
+チケットシステムへのインターフェイスです。
+まだ製作途中です。
+
+<example>
+close されていないチケット一覧を表示
+<screen>
+% fmlticket list elena
+</screen>
+</example>
+
+<example>
+チケットを close する。
+<screen>
+% fmlticket close elena チケット番号
+</screen>
+</example>
+
+</para>
+
+</sect1>

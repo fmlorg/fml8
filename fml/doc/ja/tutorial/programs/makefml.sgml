@@ -1,0 +1,36 @@
+<!--
+	$FML$
+-->
+
+<sect1 id="fmldoc">
+
+<title> fmldoc (/usr/local/bin/fmldoc) </title>
+
+<para>
+makefml の使い方は fml 4.0 の makefml と同様です。
+現在使えるコマンドは以下のものだけです。
+
+<itemizedlist>
+	<listitem>
+	<para>
+	メンバーの登録
+	</para>
+	</listitem>
+
+	<listitem>
+	<para>
+	メンバーの削除
+	</para>
+	</listitem>
+
+	<listitem>
+	<para>
+	ＭＬの作成( newml )
+	</para>
+	</listitem>
+
+</itemizedlist>
+
+</para>
+
+</sect1>
