@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Merge.pm,v 1.3 2004/03/17 04:30:19 fukachan Exp $
+# $FML: Merge.pm,v 1.4 2004/03/17 06:08:23 fukachan Exp $
 #
 
 package FML::Merge;
@@ -277,7 +277,7 @@ sub _inject_diff_into_config_cf
     my ($k, $v, $x);
 
     print $wh "\n";
-    print $wh "# START OF MERGE\n";
+    print $wh "# BEGIN OF CONFIG CONVERSION\n";
     print $wh "\n";
 
     use FML::Merge::FML4::config_ph;
@@ -291,7 +291,7 @@ sub _inject_diff_into_config_cf
     }
 
     print $wh "\n";
-    print $wh "# END OF MERGE\n";
+    print $wh "# END OF CONFIG CONVERSION\n";
     print $wh "\n";
 }
 
