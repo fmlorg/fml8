@@ -1,4 +1,4 @@
-		admin コマンド体系
+		makefml および admin コマンド体系
 		Last Modified: $Date$
 
   [基本のシンタックス]
@@ -24,6 +24,8 @@
 	admin del		← (互換性)
 	admin unsubscribe	← (互換性)
 
+	admin usermod		属性変更のため？
+
 
 ○ リモート管理者の登録/削除
 
@@ -33,6 +35,9 @@
 
 	admin admindel		← メイン、他は alias
 	admin deladmin
+
+
+	admin adminmod		属性変更のため？
 
 
 ○ モデレータの登録/削除
@@ -45,6 +50,8 @@
 	admin delmoderator
 
 
+	admin moderatormod		属性変更のため？
+
 
 ----------
-$FML: 00_MEMO,v 1.31 2002/07/07 12:48:26 fukachan Exp $
+$FML: 01_RFC_COMMAND_SYNTAX.txt,v 1.1 2002/07/12 13:36:30 fukachan Exp $
