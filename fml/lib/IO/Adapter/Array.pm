@@ -14,7 +14,36 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
+=head1 NAME
 
+IO::Adapter::Array.pm - emulation of IO for the ARRAY
+
+=head1 SYNOPSIS
+
+    use IO::Adapter::Array;
+
+    $map = [ 1, 2, 3];
+    $obj = new IO::Adapter::Array $map;
+    $obj->open;
+    while ($x = $obj->get_next_value) { print $x;}
+    $obj->close;
+
+=head1 DESCRIPTION
+
+emulate IO operation for the ARRAY.
+
+=head1 METHODS
+
+=item C<new()>
+
+constructor. It is a dummy in fact now.
+
+=cut
+
+# Descriptions: constructor
+#    Arguments: $self
+# Side Effects: none
+# Return Value: object
 sub new
 {
     my ($self) = @_;
@@ -24,6 +53,30 @@ sub new
 }
 
 
+=head2
+
+=item C<open($args)>
+
+open IO for the array. $args is a hash reference. 
+The option follows:
+
+   $args = {
+                  flag => $flag
+      _array_reference => ARRAY_REFERENCE
+   }
+
+$flag is "r" only now.
+
+=cut
+
+# Descriptions: open() emulation
+#    Arguments: $self $args
+#               $args = {
+#                              flag => $flag
+#                  _array_reference => ARRAY_REFERENCE
+#               }
+# Side Effects: malloc @members array
+# Return Value: ARRAY REFERENCE
 sub open
 {
     my ($self, $args) = @_;
@@ -39,10 +92,26 @@ sub open
 }
 
 
-# raw line reading
+=head2
+
+=item C<getline()>
+
+the same as get_next_value().
+
+=item C<get_next_value()>
+
+return the next element of the array
+
+=cut
+
+# Descriptions: forwarded to get_next_value()
 sub getline { get_next_value(@_);} 
 
 
+# Descriptions: return the next element of the array
+#    Arguments: $self $args
+# Side Effects: increment the counter in the object
+# Return Value: the next element
 sub get_next_value
 {
     my ($self, $args) = @_;
@@ -52,6 +121,11 @@ sub get_next_value
 }
 
 
+# Descriptions: return the current position in the array, that is,
+#               which element in the array
+#    Arguments: $self
+# Side Effects: none
+# Return Value: the current number of element
 sub getpos
 {
     my ($self) = @_;
@@ -59,6 +133,11 @@ sub getpos
 }
 
 
+# Descriptions: set the postion in the array
+#    Arguments: $self $pos
+#               $pos is the integer number.
+# Side Effects: reset counter in the object
+# Return Value: update position
 sub setpos
 {
     my ($self, $pos) = @_;
@@ -66,6 +145,11 @@ sub setpos
 }
 
 
+# Descriptions: whether end of the array is not now
+#    Arguments: $self
+# Side Effects: none
+# Return Value: 1 or 0. 
+#               return 1 if the element reaches the end of the array.
 sub eof
 {
     my ($self) = @_;
@@ -73,27 +157,34 @@ sub eof
 }
 
 
+# Descriptions: close() is a fake.
+#    Arguments: $self
+# Side Effects: none
+# Return Value: none
 sub close
 {
     my ($self) = @_;
 }
 
 
-=head1 NAME
+=head2
 
-IO::Adapter::Array.pm - what is this
+=item C<getpos()>
 
-=head1 SYNOPSIS
+return the current position in the array
 
-=head1 DESCRIPTION
+=item C<setpos($pos)>
 
-=head1 CLASSES
+set the current position to $pos -th element.
 
-=head1 METHODS
+=item C<eof()>
 
-=item C<new()>
+whether the current position reaches the end of the array or not.
+If so, return 1.
 
-... what is this ...
+=item C<close()>
+
+end of IO operation. It is a dummy.
 
 =head1 AUTHOR
 
