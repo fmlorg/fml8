@@ -1,6 +1,32 @@
 		CHANGES
 		$Date$
 
+2001/08/26
+
+   FML::Credential
+	implement has_address_in_map() method and is_member() uses this. 
+	has_address_in_map() searches the address in the specified map.
+
+   IO::Adapter クラス
+	touch() メソッドを追加
+	XXX file タイプ以外では無意味。ダミー
+
+   FML::Command:: クラスの再構成
+
+	FML::Command.pm		FML::Command クラス以下への入口
+	FML::Command::ACL	ACL
+	FML::Command::Utils	よもやまの定義
+	FML::Command::User	ユーザ用コマンド群
+	FML::Command::Admin	ユーザ用コマンド群
+
+		newml edit などは Admin のみ
+
+
+2001/08/24
+
+  regress/
+	add&enable FML::Config {+,-}= overload test tools
+
 2001/08/23
 
    FML::Config の拡張
@@ -147,5 +173,5 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.7 2001/08/19 15:02:16 fukachan Exp $
+$FML: CHANGES.txt,v 1.8 2001/08/23 14:31:36 fukachan Exp $
 
