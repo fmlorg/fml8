@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.52 2002/12/24 10:19:47 fukachan Exp $
+# $FML: Utils.pm,v 1.53 2003/01/11 16:05:20 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -912,13 +912,19 @@ sub get_ml_list
     my @dirlist = ();
 
     if (defined $dh) {
-	while ($_ = $dh->read()) {
-	    next if /^\./;
-	    next if /^\@/;
+	use FML::Restriction::Base;
+	my $safe    = new FML::Restriction::Base;
+	my $ml_name = '';
 
-	    # XXX-TODO: check $ml_name matches FML::Restriction::Base ?
-	    $cf = File::Spec->catfile($prefix, $_, "config.cf");
-	    push(@dirlist, $_) if -f $cf;
+	while ($ml_name = $dh->read()) {
+	    next if $ml_name =~ /^\./o;
+	    next if $ml_name =~ /^\@/o;
+
+	    # XXX permit $ml_name matched by FML::Restriction::Base.
+	    if ($safe->regexp_match('ml_name', $ml_name)) {
+		$cf = File::Spec->catfile($prefix, $ml_name, "config.cf");
+		push(@dirlist, $ml_name) if -f $cf;
+	    }
 	}
 	$dh->close;
     }
