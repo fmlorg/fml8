@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.12 2002/11/07 08:38:23 fukachan Exp $
+# $FML: Postfix.pm,v 1.13 2002/12/18 04:03:52 fukachan Exp $
 #
 
 package FML::MTAControl::Postfix;
@@ -348,7 +348,12 @@ sub postfix_remove_virtual_map
     my $virtual     = $config->{ postfix_virtual_map_file };
     my $virtual_new = $virtual . 'new'. $$;
 
-    print STDERR "removing $key in $virtual\n";
+    if (-f $virtual) {
+	print STDERR "removing $key in $virtual\n";
+    }
+    else {
+	return;
+    }
 
     use FileHandle;
     my $rh = new FileHandle $virtual;
@@ -395,8 +400,10 @@ sub postfix_update_virtual_map
     my $postmap = $config->{ path_postmap };
     my $virtual = $config->{ postfix_virtual_map_file };
 
-    print STDERR "updating $virtual database\n";
-    system "$postmap $virtual";
+    if (-f $virtual) {
+	print STDERR "updating $virtual database\n";
+	system "$postmap $virtual";
+    }
 }
 
 
