@@ -13,7 +13,7 @@ use_log		=	yes
 log_file	=	$ml_home_dir/log
 
 # Descriptions: ログとりのタイプ (syslog は未実装)
-#      History: fml 5.0 new
+#      History: fml 8.0 new
 #        Value: file / syslog
 #     Examples:
 log_type	=	file

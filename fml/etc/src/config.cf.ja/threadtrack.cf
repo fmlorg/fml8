@@ -2,7 +2,7 @@
 
 
 # Descriptions: スレッド追跡システムを使うか
-#      History: fml 5.0 new
+#      History: fml 8.0 new
 #        Value: yes / no
 #     Examples:
 use_thread_track	=	yes

@@ -1,10 +1,10 @@
 #
-# $FML: main.cf.in,v 1.11 2002/04/01 05:02:38 fukachan Exp $
+# $FML: main.cf.in,v 1.12 2002/04/01 23:41:09 fukachan Exp $
 #
 
 # fml version
 #   This is important
-# Example: fml 5.0
+# Example: fml 8.0
 #          fml-current YYYYMMDD
 #          fml-devel YYYYMMDD
 fml_version	=	__fml_version__
@@ -68,7 +68,7 @@ default_domain		=	@default_domain@
 
 # version dependent default_config.cf location
 # whic holds
-# Example: /etc/fml/defaults/5.0/default_config.cf
+# Example: /etc/fml/defaults/8.0/default_config.cf
 default_config_cf	=	$default_config_dir/default_config.cf
 
 
