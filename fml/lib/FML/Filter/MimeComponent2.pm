@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent.pm,v 1.1 2002/09/30 11:00:54 fukachan Exp $
+# $FML: MimeComponent2.pm,v 1.1 2002/10/21 07:35:43 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -24,6 +24,20 @@ FML::Filter::MimeComponent - filter based on mail MIME component
 
 C<FML::Filter::MimeComponent> is a MIME content filter.
 
+=head1 INTERNAL PRESENTATION FOR FILTER RULES
+
+Our filter rule is a list of the following components:
+
+    (whole message type, message type, action)
+
+For example, 
+
+    $rules = (
+	      (text/plain   *  permit),
+	      (multipart/*  *  reject),
+	      (*            *  reject),
+	    );
+
 =head1 METHODS
 
 =head2 C<new()>
@@ -34,6 +48,15 @@ usual constructor.
 
 
 my $debug = 0;
+
+
+# default rules
+my $filter_rules = [
+		    ['text/plain',   '*',  'permit'],
+		    ['text/*',       '*',  'reject'],
+		    ['multipart/*',  '*',  'reject'],
+		    ['*',            '*',  'reject'],
+		    ];
 
 
 # Descriptions: constructor.
@@ -80,33 +103,43 @@ sub mime_component_check
     my ($data_type, $prevmp, $nextmp, $mp, $action);
     my $is_match = 0;
     my $i = 1;
+    my $j = 1;
 
     # whole message type
     my $whole_data_type = $msg->whole_message_header_data_type();
-    
-  MSG:
-    for ($mp = $msg; $mp; $mp = $mp->{ next }) {
-	$data_type = $mp->data_type();
 
-	# skip 
-	# 1. the header part of the whole RFC822 message.
-	# 2. parts of Mail::Message internal use.
-	next MSG if ($data_type eq "text/rfc822-headers");
-	next MSG if ($data_type =~ "multipart\.");
+    # debug info
+    if (1) { $self->dump_message_structure($msg);}
 
-	# o.k. apply our filter rules.
-	print STDERR "\n   msg($i) ($whole_data_type, $data_type)\n"; 
-	$action = 
-	    $self->_rule_match($msg, $args, $mp, $whole_data_type);
+  RULE:
+    for my $rule (@$filter_rules) {
+	print STDERR "\n    rule ${j}: (@$rule)\n";
+	$j++;
 
-	if ($action eq 'reject' || $action eq 'permit') {
-	    print STDERR "\n\t! action = $action. stop here.\n";
-	    $is_match = 1;
-	    last MSG;
+      MSG:
+	for ($mp = $msg, $i = 1; $mp; $mp = $mp->{ next }) {
+	    $data_type = $mp->data_type();
+
+	    # skip 
+	    # 1. the header part of the whole RFC822 message.
+	    # 2. parts of Mail::Message internal use.
+	    next MSG if ($data_type eq "text/rfc822-headers");
+	    next MSG if ($data_type =~ "multipart\.");
+
+	    # o.k. apply our filter rules.
+	    print STDERR "\n\tmsg($i) type=$data_type\n"; 
+	    $action = 
+		$self->_rule_match($msg, $rule, $mp, $whole_data_type);
+
+	    if ($action eq 'reject' || $action eq 'permit') {
+		print STDERR "\n\t! action = $action. stop here.\n";
+		$is_match = 1;
+		last RULE;
+	    }
+
+	    # prepare for the next _rule_match().
+	    $i++;
 	}
-
-	# prepare for the next _rule_match().
-	$i++;
     }
 
     my $decision = $is_match ? $action : $default_action;
@@ -116,65 +149,29 @@ sub mime_component_check
 }
 
 
-=head1 INTERNAL PRESENTATION FOR FILTER RULES
-
-Our filter rule is a list of the following components:
-
-    (whole message type, message type, action)
-
-For example, 
-
-    $rules = (
-	      (text/plain   *  permit),
-	      (multipart/*  *  reject),
-	      (*            *  reject),
-	    );
-
-=cut
-
-
-my $filter_rules = [
-		    ['text/plain',   '*',  'permit'],
-		    ['multipart/*',  'image/*',  'reject'],
-		    ];
-
-
 # Descriptions: 
-#    Arguments: OBJ($self) OBJ($msg) HASH_REF($args) 
+#    Arguments: OBJ($self) OBJ($msg) ARRAY_REF($rule)
 #               OBJ($mp) STR($whole_type)
 # Side Effects: "reject" and "permit" affects nothing.
 #               "cutoff" changes the chain of Mail::Message OBJs.
 # Return Value: none
 sub _rule_match
 {
-    my ($self, $msg, $args, $mp, $whole_type) = @_;
-    my $type = $mp->data_type();
-    my $i    = 0;
+    my ($self, $msg, $rule, $mp, $whole_type) = @_;
+    my ($r_whole_type, $r_type, $r_action) = @$rule;
+    my $type                               = $mp->data_type();
 
-    if ($debug) {
-	print STDERR "\twhole_type = $whole_type\n";
-	print STDERR "\t      type = $type\n";
-    }
-
-    for my $rule (@$filter_rules) {
-	$i++;
-
-	my ($r_whole_type, $r_type, $r_action) = @$rule;
-	print STDERR 
-	    "\n\trule ${i}: ($r_whole_type, $r_type, $r_action)\n";
-
-	if (__regexp_match($whole_type, $r_whole_type)) {
-	    if (__regexp_match($type, $r_type)) {
-		print STDERR "\t\t* checked. => $r_action\n";
-		return $r_action;
-	    }
-	    else {
-		print STDERR "\t\tnot check (type not matched)\n";
-	    }
+    if (__regexp_match($whole_type, $r_whole_type)) {
+	if (__regexp_match($type, $r_type)) {
+	    print STDERR "\t\t* checked. => $r_action\n";
+	    return $r_action;
 	}
 	else {
-	    print STDERR "\t\tnot check (whole_type not matched)\n";
+	    print STDERR "\t\tnot check (type not matched)\n";
 	}
+    }
+    else {
+	print STDERR "\t\tnot check (whole_type not matched)\n";
     }
 }
 
@@ -213,24 +210,6 @@ sub __regexp_match
 }
 
 
-# Descriptions: print filter rules.
-#    Arguments: none
-# Side Effects: none
-# Return Value: none
-sub dump_filter_rules
-{
-    my $i = 0;
-    
-    for my $rule (@$filter_rules) {
-	$i++;
-	printf STDERR "%15s: %20s %20s %10s\n", "rule ${i}", @$rule;
-    }
-
-    printf STDERR "%15s: %20s %20s %10s\n", "default rule", 
-    "*", "*", $default_action;
-}
-
-
 #
 #sub _cutoff
 #{
@@ -249,6 +228,93 @@ sub dump_filter_rules
 #
 
 
+=head1 utilities
+
+=cut
+
+
+# Descriptions: read rule file.
+#               XXX we should enhance this to use IO::Adapter.
+#    Arguments: OBJ($self) STR($file)
+# Side Effects: update filter rules.
+# Return Value: none
+sub read_filter_rule_from_file
+{
+    my ($self, $file) = @_;
+    my ($whole_type, $type, $action);
+
+    use FileHandle;
+    my $fh = new FileHandle $file;
+
+    if (defined $fh) {
+	my $rules = [];
+
+	while (<$fh>) {
+	    next if /^#/o;
+	    next if /^\s*$/o;
+
+	    ($whole_type, $type, $action) = split(/\s+/, $_);
+	    push(@$rules, [ $whole_type, $type, $action ] );
+	}
+
+	$fh->close();
+
+	if (@$rules) {
+	    $filter_rules = $rules;
+	}
+	else {
+	    use Carp;
+	    carp("no valid filter rules");
+	}
+    }
+}
+
+
+sub dump_message_structure
+{
+    my ($self, $msg) = @_;
+    my ($data_type, $prevmp, $nextmp, $mp, $action, $i);
+    my $whole_data_type = $msg->whole_message_header_data_type();
+
+    print STDERR "\t[message structure]\n";
+    print STDERR "\t\twhole_type = $whole_data_type\n";
+
+  MSG:
+    for ($mp = $msg, $i = 1; $mp; $mp = $mp->{ next }) {
+	$data_type = $mp->data_type();
+	next MSG if ($data_type eq "text/rfc822-headers");
+	next MSG if ($data_type =~ "multipart\.");
+	print STDERR "\t\t$data_type\n";
+	$i++;
+    }
+}
+
+
+# Descriptions: print filter rules.
+#    Arguments: none
+# Side Effects: none
+# Return Value: none
+sub dump_filter_rules
+{
+    my $i = 0;
+    
+    for my $rule (@$filter_rules) {
+	$i++;
+	printf STDERR "%15s: %20s %20s %10s\n", "rule ${i}", @$rule;
+    }
+
+    printf STDERR "%15s: %20s %20s %10s\n", "default rule", 
+    "*", "*", $default_action;
+}
+
+
+=head1 DEBUG
+
+    perl -I PERL_INCLUDE_PATH MimeComponent2.pm -c RULE_FILE @FILES
+
+=cut
+
+
 # 
 # debug
 #
@@ -258,9 +324,17 @@ if ($0 eq __FILE__) {
 	use FileHandle;
 	use File::Basename;
 	use Mail::Message;
+	use Getopt::Long;
+	my $opt = {};
+	GetOptions($opt, qw(debug! -c=s));
 
+	# rule ?
 	print STDERR "* current filter rules:\n";
 	my $obj = new FML::Filter::MimeComponent;
+	if (defined $opt->{ 'c' }) {
+	    my $file = $opt->{ 'c' };
+	    $obj->read_filter_rule_from_file($file);
+	}
 	$obj->dump_filter_rules();
 	print STDERR "\n";
 
@@ -301,6 +375,8 @@ This FML::Filter::MimeComponent module is rewritten based on the first
 version to be able to handle enhanced filter rules.
 
 2002/09/30: rename ContentCheck to MimeComponent.
+
+2002/10/21: fully rewritten by fukachan@fml.org.
 
 =cut
 
