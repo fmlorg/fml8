@@ -1,21 +1,9 @@
-etc/defaults/basic.cf.ja
-etc/defaults/delivery.cf.ja
-etc/defaults/header.cf.ja
-etc/defaults/system_dependence.cf.ja
-etc/defaults/tickets.cf.ja
-etc/defaults/cgi.cf.ja
-
 Dialect/Japanese/String.pm
 Dialect/Japanese/Subject.pm
 Dialect/Japanese/Utils.pm
 
-FML/Article.pm
-FML/Checksum.pm
 FML/Config.pm
 FML/Credential.pm
-FML/Header.pm
-FML/Log.pm
-FML/Messages.pm
 
 CGI/TicketSystem.pm
 
@@ -30,9 +18,6 @@ Process/TicketSystem.pm
 Process/CGI.pm
 
 Ticket/System.pm
-
-File/RingBuffer.pm
-File/Utils.pm
 
 MailingList/Net/INET4.pm
 MailingList/Net/INET6.pm
