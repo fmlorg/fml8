@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.73 2004/03/12 04:22:53 fukachan Exp $
+# $FML: Header.pm,v 1.74 2004/03/12 11:45:47 fukachan Exp $
 #
 
 package FML::Header;
@@ -305,41 +305,44 @@ sub add_rfc2369
     my $object_type = defined $rw_args->{ type } ? $rw_args->{ type } : '';
 
     # addresses
-    my $post       = $config->{ article_post_address };
-    my $command    = $config->{ command_mail_address };
-    my $maintainer = $config->{ maintainer };
     my $use_command_mail_function = $config->yes('use_command_mail_function');
+    my $command      = $config->{ command_mail_address } || '';
+    my $use_command  = 0;
+    if ($command && $use_command_mail_function) {
+	$use_command = 1;
+    }
 
-    # information for list-id
-    my $ml_name = $config->{ ml_name };
-    my $id      = "$ml_name mailing list <$post>"; $id =~ s/\@/./g;
+    # information for list-*
+    my $ml_name     = $config->{ ml_name };
+    my $maintainer  = $config->{ maintainer } || '';
+    my $default     = 
+	$maintainer ? "contact maintainer <$maintainer>" : 'unavailable';
+    my $post        = $config->{ article_post_address } || '';
+    my $base_url    = "mailto:${command}?body=";
+    my $list_id     = "$ml_name mailing list <$post>"; $list_id =~ s/\@/./g;
+    my $list_owner  = $maintainer ? "<mailto:${maintainer}>" : 'maintainer';
+    my $list_post   = $post ? "<mailto:${post}>" : 'unavailable';
+    my $list_help   = $use_command ? "<${base_url}help>"        : $default;
+    my $list_subs   = $use_command ? "<${base_url}subscribe>"   : $default;
+    my $list_unsub  = $use_command ? "<${base_url}unsubscribe>" : $default;
 
     # See RFC2369 for more details
     if ($object_type eq 'MIME::Lite') {
 	my $msg = $rw_args->{ message };
-	$msg->attr('List-ID'    => $id) if $id;
-	$msg->attr('List-Post'  => "<mailto:${post}>") if $post;
-	$msg->attr('List-Owner' => "<mailto:${maintainer}>") if $maintainer;
-	if ($command && $use_command_mail_function) {
-	    $msg->attr('List-Help' =>  "<mailto:${command}?body=help>");
-	    $msg->attr('List-Subscribe' =>
-		       "<mailto:${command}?body=subscribe>");
-	    $msg->attr('List-UnSubscribe' =>
-		       "<mailto:${command}?body=unsubscribe>");
-	}
+	$msg->attr('List-ID'          => $list_id);
+	$msg->attr('List-Owner'       => $list_owner);
+	$msg->attr('List-Post'        => $list_post);
+	$msg->attr('List-Help'        => $list_help);
+	$msg->attr('List-Subscribe'   => $list_subs);
+	$msg->attr('List-UnSubscribe' => $list_unsub);
     }
     else {
-	$header->add('List-ID',    $id) if $id;
-	$header->add('List-Post',  "<mailto:${post}>")       if $post;
-	$header->add('List-Owner', "<mailto:${maintainer}>") if $maintainer;
-
-	if ($command && $use_command_mail_function) {
-	    $header->add('List-Help', "<mailto:${command}?body=help>");
-	    $header->add('List-Subscribe',
-			 "<mailto:${command}?body=subscribe>");
-	    $header->add('List-UnSubscribe',
-			 "<mailto:${command}?body=unsubscribe>");
-	}
+	$header->add('List-ID',          $list_id);
+	$header->add('List-Owner',       $list_owner);
+	$header->add('List-Post',        $list_post);
+	$header->add('List-Help',        $list_help);
+	$header->add('List-Subscribe',   $list_subs);
+	$header->add('List-UnSubscribe', $list_unsub);
     }
 }
 
