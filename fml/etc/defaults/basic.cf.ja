@@ -1,19 +1,24 @@
 =head1	基本的なパラメータ
 
-# domain	= fml.org
-# fqdn		= mx0.fml.org
-
-
 =head2	ＭＬの管理者
 
 # Descriptions: いわゆるＭＬの管理者、エラーメールの返る先
 #      History: fml 4.0 の $MAINTAINER
 #        Value: rfc822_address
+#     Examples: elena-admin@fml.org
 maintainer	=
 
 
 =head2	default modes
 
+# Descriptions: ファイルを作成する時のデフォルトモード
+#      History:
+#        Value:
+#     Examples:
 default_file_mode	=	0600
 
+# Descriptions: ディレクトリを作成する時のデフォルトモード
+#      History:
+#        Value:
+#     Examples:
 default_directory_mode	=	0755

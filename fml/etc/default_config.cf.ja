@@ -1,21 +1,26 @@
 =head1	基本的なパラメータ
 
-# domain	= fml.org
-# fqdn		= mx0.fml.org
-
-
 =head2	ＭＬの管理者
 
 # Descriptions: いわゆるＭＬの管理者、エラーメールの返る先
 #      History: fml 4.0 の $MAINTAINER
 #        Value: rfc822_address
+#     Examples: elena-admin@fml.org
 maintainer	=
 
 
 =head2	default modes
 
+# Descriptions: ファイルを作成する時のデフォルトモード
+#      History:
+#        Value:
+#     Examples:
 default_file_mode	=	0600
 
+# Descriptions: ディレクトリを作成する時のデフォルトモード
+#      History:
+#        Value:
+#     Examples:
 default_directory_mode	=	0755
 
 =head1	ディレクトリ
@@ -130,15 +135,26 @@ system_accounts		=	root
 
 =head1		MTA の設定
 
-# ひとつの SMTP トランザクションで MTA に渡す受信者の数の上限
-# デフォルトは postfix にあわせて 1000
+# Descriptions: ひとつの SMTP トランザクションで MTA に渡す受信者の数の上限
+#               デフォルトは postfix にあわせて 1000
+#      History: 4.0 で直接対応するものはない。
+#               $MCI_SMTP_HOSTS は似ているがちょっと違う
+#        Value: number
+#     Examples: 
 recipient_limit		=	1000
 
-# デフォールトの MTA は自分自身( localhost ) 
+# Descriptions: デフォールトの MTA は自分自身( localhost ) 
+#               IPv6 の loopback がデフォルトなのがおしゃれ :-)
+#      History: fml 4.0 の $HOST
+#        Value: host:port
+#     Examples:
 smtp_servers		=	[::1]:25
 				127.0.0.1:25
 
-# MAIL FROM:<$smtp_sender>
+# Descriptions: SMTP の MAIL FROM:<$smtp_sender> で使うパラメータ
+#      History: fml 4.0 の $SMTP_SENDER
+#        Value: mail_address (RFC822 の addrspec)
+#     Examples: elena-admin@fml.org
 smtp_sender		=	$maintainer
 
 =head1	ヘッダの操作
@@ -328,24 +344,57 @@ available_commands		=	help
 					unsubscribe
 					chaddr
 
-=head1	Tickets / Trouble Tickets System
+=head1	チケットシステム
 
-
+# Descriptions: チケットシステムを使うか
+#      History: fml 5.0 new
+#        Value: yes / no
+#     Examples:
 use_ticket		=	yes
 
+# Descriptions: チケットシステムのモデル
+#               ドライバ名ともいう
+#      History: fml 5.0 new
+#        Value: string
+#     Examples:
 ticket_model		=	toymodel
 
+# Descriptions: チケットにつけるＭＬ名
+#               複数のＭＬにまたがったチケットを追跡するために
+#               必要
+#      History: fml 5.0 new
+#        Value: string
+#     Examples: elena
 ticket_subject_tag_name	=	$ml_name
 
+# Descriptions: チケット番号のシンタックス
+#      History: fml 5.0 new
+#        Value:
+#     Examples: elena_#00001010
 ticket_id_syntax	=	$ml_name_#%08d
 
-# please use [] or () or {} for the ends
+# Descriptions: Subject につけるチケット番号のシンタックス
+#               []  ()  {} などを $ticket_id_syntax の
+#               前後につけてもらうとわかりやすそう
+#      History: fml 5.0 new
+#        Value:
+#     Examples: [elena_#00001010]
 ticket_subject_tag	=	[$ticket_id_syntax]
 
+# Descriptions: チケット番号を保存するファイル
+#      History: fml 5.0 new
+#        Value: filename
+#     Examples: /var/spool/ml/elena/ticket.seq
 ticket_sequence_file	=	$ml_home_dir/ticket.seq
 
-# top directory
+# Descriptions: チケット関連データを保存するディレクトリ
+#               実際にはこの下に elena/article.db のように
+#               サブディレクトリがおかれる
+#      History: fml 5.0 new
+#        Value: directory
+#     Examples: /var/spool/ml/@db@/ticket
 ticket_db_dir		=	$shared_db_dir/ticket
+
 
 =head1	データベース管理システムとの連携
 
@@ -436,8 +485,16 @@ ldap_query_filter	=
 
 =head1	CGI 関連の設定
 
+# Descriptions: デフォルトの CHARSET 
+#      History:
+#        Value:
+#     Examples:
 cgi_default_charset	=	euc-jp
 
+# Descriptions: CGI の表示の CHARSET 
+#      History:
+#        Value:
+#     Examples:
 cgi_charset		=	$cgi_default_charset
 
 =head1	プログラムのパス名
@@ -502,17 +559,35 @@ path_pgps	=
 path_pgpv	=	
 
 
-=head1	システム依存
+=head1	システム依存 (主に BSD との非互換性を記述している)
 
 #
 # 注意: デフォールトは NetBSD
 #
 
+# Descriptions: getpwuid(2) があるか？
+#      History:
+#        Value: yes / no
+#     Examples:
 has_getpwuid	=	yes
 
+# Descriptions: getpwgid(2) があるか？
+#      History:
+#        Value: yes / no
+#     Examples:
 has_getpwgid	=	yes
 
+# Descriptions: alarm(2) があるか？
+#      History:
+#        Value: yes / no
+#     Examples:
 has_alarm	=	yes
+
+# Descriptions: select(2) があるか？
+#      History:
+#        Value: yes / no
+#     Examples:
+has_select	=	yes
 
 
 =head1 フック's

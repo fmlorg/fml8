@@ -1,18 +1,51 @@
-=head1	Tickets / Trouble Tickets System
+=head1	チケットシステム
 
-
+# Descriptions: チケットシステムを使うか
+#      History: fml 5.0 new
+#        Value: yes / no
+#     Examples:
 use_ticket		=	yes
 
+# Descriptions: チケットシステムのモデル
+#               ドライバ名ともいう
+#      History: fml 5.0 new
+#        Value: string
+#     Examples:
 ticket_model		=	toymodel
 
+# Descriptions: チケットにつけるＭＬ名
+#               複数のＭＬにまたがったチケットを追跡するために
+#               必要
+#      History: fml 5.0 new
+#        Value: string
+#     Examples: elena
 ticket_subject_tag_name	=	$ml_name
 
+# Descriptions: チケット番号のシンタックス
+#      History: fml 5.0 new
+#        Value:
+#     Examples: elena_#00001010
 ticket_id_syntax	=	$ml_name_#%08d
 
-# please use [] or () or {} for the ends
+# Descriptions: Subject につけるチケット番号のシンタックス
+#               []  ()  {} などを $ticket_id_syntax の
+#               前後につけてもらうとわかりやすそう
+#      History: fml 5.0 new
+#        Value:
+#     Examples: [elena_#00001010]
 ticket_subject_tag	=	[$ticket_id_syntax]
 
+# Descriptions: チケット番号を保存するファイル
+#      History: fml 5.0 new
+#        Value: filename
+#     Examples: /var/spool/ml/elena/ticket.seq
 ticket_sequence_file	=	$ml_home_dir/ticket.seq
 
-# top directory
+# Descriptions: チケット関連データを保存するディレクトリ
+#               実際にはこの下に elena/article.db のように
+#               サブディレクトリがおかれる
+#      History: fml 5.0 new
+#        Value: directory
+#     Examples: /var/spool/ml/@db@/ticket
 ticket_db_dir		=	$shared_db_dir/ticket
+
