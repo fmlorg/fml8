@@ -318,11 +318,14 @@ chaddr_command_auth_type	=	confirmation
 unsubscribe_command_auth_type	=	confirmation
 
 
+=head2	newml command
+
+
 # Descriptions: ＭＬ作成時 (makefml newml)の際に作られる
 #		テンプレートファイル
 #        Value: ARRAY
 #     Examples:
-newml_command_template_files 	=	config.cf
+newml_command_template_files 		=	config.cf
 
 
 # Descriptions: ＭＬ作成時の際に作われる fml_owner の値の指定。
@@ -333,11 +336,17 @@ newml_command_template_files 	=	config.cf
 newml_command_ml_admin_default_address 	=	$fml_owner
 
 
+=head2	list command
+
+
 # Descriptions: 引数で指定しない時に、list コマンドが表示するべきマップ
 #      History: none
 #        Value: ARRAY
 #     Examples:
 list_command_default_maps		=	$recipient_maps
+
+
+=head	log command
 
 
 # Descriptions: 最後の何行を表示するか？つまり tail -100 log の 100 の部分。
