@@ -325,6 +325,40 @@ recipient_maps		=	$primary_recipient_map
 				file:$ml_home_dir/actives
 
 
+=head2 まとめおくり
+
+
+# Descriptions: ダミー
+#      History: none
+#        Value: filename
+#     Examples:
+primary_digest_member_map	=	$primary_member_map
+
+
+# Descriptions: ダミー
+#      History: none
+#        Value: list of filenames
+#     Examples:
+digest_member_maps		=	$primary_member_maps
+
+
+# Descriptions: まとめ送りをする受信者のリスト
+#               XXX map のタイプによっては書き込みできないこともある
+#               XXX (例: unix.group )
+#      History: fml 4.0 では $ACTIVE_LIST のオプションとして実装
+#        Value: filename
+#     Examples: /var/spool/ml/elena/recipients-digest
+primary_digest_recipient_map	=	 file:$ml_home_dir/recipients-digest
+
+
+# Descriptions: すべてのまとめ送りをするべき受信者のリスト
+#      History: fml 4.0 の $ACTIVE_LIST @ACTIVE_LIST のオプションとして実装
+#        Value: a list of filenames
+#     Examples: file:$ml_home_dir/recipients-digest
+#		unix.group:fml
+digest_recipient_maps		=	$primary_recipient_map
+
+
 =head2 リモート管理者メンバーとみなされるのは誰か？
 
 # Descriptions: 登録などの際に対象となるメンバーリスト
