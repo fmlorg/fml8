@@ -82,8 +82,8 @@ db_dir		= $var_dir/db
 
 =head2 スケジューラ
 
-# Descriptions: スケジューラのキューディレクトリ
+# Descriptions: イヴェントのキューディレクトリ
 #      History: none
 #        Value: directory
-#     Examples: /var/spool/ml/elena/var/scheduler
-scheduler_queue_dir	= $var_dir/scheduler/queue
+#     Examples: /var/spool/ml/elena/var/event
+event_queue_dir	= $var_dir/event/queue
