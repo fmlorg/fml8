@@ -1,5 +1,5 @@
 <!--
-	$FML: docbook.sgml,v 1.3 2001/04/26 08:57:46 fukachan Exp $
+	$FML: docbook.sgml,v 1.4 2001/04/26 11:31:18 fukachan Exp $
 -->
 
 <appendix id="docbook">
@@ -18,25 +18,12 @@ fml-devel (fml 5.0) のドキュメントでは、SGML の DTD は
 </para>
 
 <para>
-SGML の書き方については
-
-	<ulink url="http://www.freebsd.org/tutorials/docproj-primer/index.html">
-	FreeBSD の初心者向けチュートリアル
-	</ulink>
-
-などを参照して下さい。
-SGML のタグの一覧は
-	
-	<ulink url="http://www.oasis-open.org/docbook/documentation/reference/html/docbook.html">
-	DOCBOOK definitive guide (O'reilly)
-	</ulink>
-
-のオンライン版を参照すると良いでしょう。
+ここでは、SGML を書くために最小限必要な知識についてメモします。
 </para>
 
-
 <para>
-また、本 Appendix で、２、３の典型的な SGML テンプレートをメモしておくので
+基本的な SGML の書式は、当たり前ですが、正しい HTML の書き方と同様です。
+本 Appendix で、２、３の典型的な SGML テンプレートをメモしておくので、
 それらを適当に切り剥ぎしていけばなんとかなるはずです。
 </para>
 
@@ -54,7 +41,7 @@ book スタイルの典型的な SGML のテンプレートは次のようになります。
 &lt;!doctype book public "-//OASIS//DTD DocBook V3.1//EN" [
 	&lt;!entity % include SYSTEM "include.sgml"&gt; %include;
 ]&gt;
-&lt;book id="相互参照のためのID"&gt;
+&lt;book&gt;
 
   &amp;bookinfo;
   &amp;preface; 
@@ -76,13 +63,19 @@ book スタイルの典型的な SGML のテンプレートは次のようになります。
 </screen>
 
 <para>
-2 行目は include.sgml を include する命令です。
-C 言語の #include や
-perl の require() と同様です。
+part や title は文字通りの意味です。
 </para>
 
 <para>
-そして、 include.sgml の中では次のような命令が定義されています。
+ここで注目するべきは、SYSTEM というキーワードのある、
+2 行目です。
+これは include.sgml を include する命令です。
+C 言語の #include や
+perl の require() と同様の働きをしています。
+</para>
+
+<para>
+さらに、 include.sgml の中では次のような命令が定義されています。
 
 <screen>
 &lt;!-- include する SGML ファイル群 --&gt;
@@ -94,11 +87,11 @@ perl の require() と同様です。
 &amp;bookinfo;
 命令で 
 bookinfo.sgml 
-が include するようになります。
+が include されるようになります。
 
 このようにして、文書本体と
-include するヘッダファイルもどきを
-別々のファイルに分離することができます。
+include するべき定義ファイルを
+分離することができます。
 </para>
 
 </sect1>
@@ -303,14 +296,25 @@ SGML を HTML などに翻訳するために、いくつかのツールが必要です。
    </listitem>
 
 </itemizedlist>
+
+多くの OS では附属のパッケージシステムで一発ポン！てなもんでしょう。
 </para>
 
 <para>
-これらのプログラムをインストール後、
-fml/doc/sgml/catalog.sample 
+適宜、これらのプログラムをインストール後、
+fml/doc/share/sgml/catalog.sample 
 を参考にして
-/etc/sgml/catalog を編集して下さい。
+/etc/sgml/catalog を編集する必要があるかも知れません。
 </para>
+
+
+<para>
+SGML からの変換には
+fml/doc/share/sgml/ にある fml.dtd fml.dsl も使っています。
+これらは各 Makefile 内に
+定義(jade に与えるオプション -c や -d オプション)が記述されています。
+</para>
+
 
 <warning>
 <para>
@@ -322,6 +326,65 @@ openjade をうまく compile できないことがありました。
 うまくいかない時はまっさらにして全部やり直してみましょう。
 </para>
 </warning>
+
+</sect1>
+
+<!--  =========================================================  -->
+<sect1>
+
+<title> 見栄えを変更する </title>
+
+<para>
+SGML は論理的な構造を記述している言語です。
+HTML の各ページに URL をつけたいとか、画像をつけたいといった
+”見栄えの記述”は直接はできません。
+</para>
+
+<para>
+そこで、見栄えは DSL により記述をすることになります。
+しかしながら、DSL は本質的に LISP (List Processre) 言語なので、
+LISP を知らないとちょっと手が出ないでしょう。
+</para>
+
+<para>
+見栄えは誰かが頑張った結果だけ使えということなのかもしれません。
+</para>
+
+<para>
+ちなみに fml 5.0 の DSL の記述は
+
+   <ulink url="../../../fml/doc/share/sgml/fml.dsl">
+   fml/doc/share/sgml/fml.dsl
+   </ulink>
+
+にあります。
+こういったものを書かないと見栄えを変えることができません ;)
+</para>
+
+</sect1>
+
+
+<sect1>
+   <title>
+   その他の情報源 
+   </title>
+
+<para>
+SGML の書き方については
+
+	<ulink url="http://www.freebsd.org/tutorials/docproj-primer/index.html">
+	FreeBSD の初心者向けチュートリアル
+	</ulink>
+
+などを参照して下さい。
+SGML のタグの一覧は
+	
+	<ulink url="http://www.oasis-open.org/docbook/documentation/reference/html/docbook.html">
+	DOCBOOK definitive guide (O'reilly)
+	</ulink>
+
+のオンライン版を参照すると良いでしょう。
+</para>
 
 </sect1>
 
