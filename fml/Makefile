@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.7 2001/04/27 05:10:26 fukachan Exp $
+# $FML: Makefile,v 1.8 2001/07/01 14:07:55 fukachan Exp $
 #
 
 PERL = perl -w -I ../img/lib -I ../cpan/lib -I ./lib -I ./libexec
@@ -13,7 +13,7 @@ update:
 	@ cvs update -dAP|grep -v : || echo ''
 
 check:
-	@ for x in `find lib* -type f -print|grep pm|grep -v CPAN` ; do $(PERL) -c $$x || echo '' ;done
+	@ for x in `find lib* -type f -print | grep 'pm$$' | grep -v CPAN` ; do $(PERL) -c $$x || echo '' ;done
 	@ for x in libexec/loader ; do $(PERL) -c $$x || echo '' ;done
 
 clean:
