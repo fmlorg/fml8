@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: SimpleMatch.pm,v 1.15 2001/04/15 14:35:35 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.16 2001/04/21 16:54:24 fukachan Exp $
 #
 
 
@@ -144,15 +144,16 @@ my $reason_trap_regexp = {
 sub analyze
 {
     my ($self, $msg, $result) = @_;
+    my $m;
 
-    # process control block
+    # variables to hold current states
     my $args = {
 	state  => 0,
 	result => $result, 
     };
 
     # skip the first header part and search "text/*" in the body part(s). 
-    my $m = $msg->rfc822_message_body_head;
+    $m = $msg->rfc822_message_body_head;
     $m = $m->find( { data_type_regexp => 'text' } );
 
     if (defined $m) {
@@ -232,10 +233,12 @@ sub _address_match
 
       SCAN:
 	for (@buf) {
-	    print "scan($args->{ mta_type })> $_\n" if $debug;
-	    last SCAN if /$end_regexp/;
+	    print "scan($args->{ mta_type })|state=$args->{state}> $_\n"
+		if $debug;
+	    last SCAN if $end_regexp && /$end_regexp/;
 
-	    if (/(\S+\@\S+)/) { 
+	    if (/(\S+\@\S+)/) {
+		if ($debug) { print "trap address ($1)\n";}
 		my $addr = $self->address_clean_up($mta_type, $1);
 		if ($addr) {
 		    $result->{ $addr }->{ 'Final-Recipient' } = $addr;
