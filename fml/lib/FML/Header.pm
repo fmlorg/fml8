@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML: Header.pm,v 1.34 2001/04/23 08:32:44 fukachan Exp $
+# $FML: Header.pm,v 1.35 2001/05/19 03:24:51 fukachan Exp $
 #
 
 package FML::Header;
@@ -224,7 +224,7 @@ sub add_software_info
 {
     my ($header, $config, $args) = @_;
     my $fml_version = $config->{ fml_version };
-    my $object_type = defined $args->{ type } ? $args->{ type } : undef;
+    my $object_type = defined $args->{ type } ? $args->{ type } : '';
 
     if ($fml_version) {
 	if ($object_type eq 'MIME::Lite') {
@@ -243,7 +243,7 @@ sub add_software_info
 sub add_rfc2369
 {
     my ($header, $config, $args) = @_;
-    my $object_type = defined $args->{ type } ? $args->{ type } : undef;
+    my $object_type = defined $args->{ type } ? $args->{ type } : '';
 
     # addresses
     my $post       = $config->{ address_for_post };
