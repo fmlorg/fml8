@@ -1,7 +1,7 @@
 #-*- perl -*-
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.53 2002/02/17 03:13:47 fukachan Exp $
+# $FML: Config.pm,v 1.54 2002/02/17 09:31:10 fukachan Exp $
 #
 
 package FML::Config;
@@ -807,7 +807,14 @@ sub FETCH
 	$need_expansion_variables = 0;
     }
 
-    defined($_fml_config_result{$key}) ? $_fml_config_result{$key} : undef;
+    if (defined($_fml_config_result{$key})) {
+	my $x = $_fml_config_result{$key};
+	$x =~ s/\s*$//;
+	$x;
+    }
+    else {
+	undef;
+    }
 }
 
 
