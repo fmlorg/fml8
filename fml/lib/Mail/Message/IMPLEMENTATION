@@ -4,13 +4,13 @@
 	get($table, $key)
 	set($table, $key, 4value)
 
-		thread_summary($key)
+		get_thread_summary($key)
 
  $msg ---> Mail::Message::ToHTML
                 |     A
                 |     |
         new()   |     |
-    add($msg)   |     | thread_summary() 
+    add($msg)   |     | get_thread_summary() 
     set()       |     | get()
                 |     |
                 V     |

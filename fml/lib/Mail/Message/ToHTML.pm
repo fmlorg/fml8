@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.63 2004/02/15 04:38:37 fukachan Exp $
+# $FML: ToHTML.pm,v 1.64 2004/02/24 14:36:53 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.63 2004/02/15 04:38:37 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.64 2004/02/24 14:36:53 fukachan Exp $;
 my $versionid = 0;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $versionid = "$1";
@@ -394,7 +394,7 @@ sub _html_file_subdir_name
 
     if ($subdir_style eq 'yyyymm') {
 	my $hdr = $self->{ _current_hdr  };
-	$subdir = $ndb->msg_time($hdr, 'yyyymm');
+	$subdir = $ndb->get_time_from_header($hdr, 'yyyymm');
 
 	use File::Spec;
 	my $xsubdir = File::Spec->catfile($html_base_dir, $subdir);
@@ -1179,7 +1179,7 @@ sub evaluate_links_relation
     my ($self, $id) = @_;
     my $ndb = $self->ndb();
 
-    return $ndb->tohtml_thread_summary($id);
+    return $ndb->get_tohtml_thread_summary($id);
 }
 
 

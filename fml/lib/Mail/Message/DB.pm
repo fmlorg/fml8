@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.13 2004/01/24 09:03:59 fukachan Exp $
+# $FML: DB.pm,v 1.14 2004/02/15 04:38:37 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -26,7 +26,7 @@ use lib qw(../../../../fml/lib
 	   ../../../../img/lib
 	   );
 
-my $version = q$FML: DB.pm,v 1.13 2004/01/24 09:03:59 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.14 2004/02/15 04:38:37 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 # special value
@@ -247,8 +247,8 @@ sub analyze
     my ($self, $msg) = @_;
     my $hdr    = $msg->whole_message_header;
     my $id     = $self->get_key();
-    my $month  = $self->msg_time($hdr, 'yyyy/mm');
-    my $subdir = $self->msg_time($hdr, 'yyyymm');
+    my $month  = $self->get_time_from_header($hdr, 'yyyy/mm');
+    my $subdir = $self->get_time_from_header($hdr, 'yyyymm');
 
     #
     # XXX-TODO: analyze() must not be here ?
@@ -452,7 +452,7 @@ sub _analyze_thread
 
 retrieve summary on thread et.al.
 
-=head2 thread_summary($id).
+=head2 get_thread_summary($id).
 
 return the following thread summary around the primary key $id.
 
@@ -479,7 +479,7 @@ For example, supporse $id 5 and the thread link is (3 5 6):
 #    Arguments: OBJ($self) NUM($id)
 # Side Effects: none
 # Return Value: HASH_REF
-sub thread_summary
+sub get_thread_summary
 {
     my ($self, $id)    = @_;
     my ($fn_prev_id, $fn_next_id, $fn_prev_thread_id,
@@ -569,11 +569,11 @@ sub thread_summary
 #    Arguments: OBJ($self) NUM($id)
 # Side Effects: none
 # Return Value: HASH_REF
-sub tohtml_thread_summary
+sub get_tohtml_thread_summary
 {
     my ($self, $id)    = @_;
     my $db             = $self->db_open();
-    my $summary        = $self->thread_summary($id);
+    my $summary        = $self->get_thread_summary($id);
     my $prev_id        = $summary->{ prev_id };
     my $next_id        = $summary->{ next_id };
     my $prev_thread_id = $summary->{ prev_thread_id };
@@ -799,7 +799,7 @@ sub _decode_mime_string
 #    Arguments: OBJ($self) OBJ($hdr) STR($type)
 # Side Effects: none
 # Return Value: STR
-sub msg_time
+sub get_time_from_header
 {
     my ($self, $hdr, $type) = @_;
 

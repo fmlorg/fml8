@@ -1,4 +1,4 @@
-o msg_time() は、Utils へ？
+o get_time_from_header() は、Utils へ？
 
 
 o set_article_file_path() / get_article_file_path() ?
