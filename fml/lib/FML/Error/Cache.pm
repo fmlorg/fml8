@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Cache.pm,v 1.18 2004/01/31 14:12:17 fukachan Exp $
+# $FML: Cache.pm,v 1.19 2004/02/26 08:24:32 fukachan Exp $
 #
 
 package FML::Error::Cache;
@@ -222,7 +222,7 @@ following a set of key ($address) and value.
 =cut
 
 
-# Descriptions: open the cache database for File::CacheDir.
+# Descriptions: open the cache database for Tie::Journaled*.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: HASH_REF
