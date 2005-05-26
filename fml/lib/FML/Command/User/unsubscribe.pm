@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: unsubscribe.pm,v 1.31 2004/07/06 13:36:54 fukachan Exp $
+# $FML: unsubscribe.pm,v 1.32 2004/07/23 15:59:05 fukachan Exp $
 #
 
 package FML::Command::User::unsubscribe;
@@ -94,7 +94,7 @@ sub process
 
     # XXX extension: fml --allow-send-message or fml --allow-reply-message
     unless ($cred->sender()) {
-	if ($curproc->allow_reply_message()) {
+	if ($curproc->is_allow_reply_message()) {
 	    $cred->set_sender($address);
 	}
     }
@@ -141,7 +141,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
