@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+# Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.66 2004/07/11 15:43:39 fukachan Exp $
+# $FML: Configure.pm,v 1.67 2004/12/05 16:19:09 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -140,7 +140,8 @@ sub run
 }
 
 
-# Descriptions: send if --allow-send-message or --allow-reply-message
+# Descriptions: send a report mail 
+#               if --allow-send-message or --allow-reply-message
 #               option specified.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
@@ -154,7 +155,7 @@ sub finish
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     # --allow-send-message or --allow-reply-message option specified.
-    if ($curproc->allow_reply_message()) {
+    if ($curproc->is_allow_reply_message()) {
 	$curproc->inform_reply_messages();
 	$curproc->queue_flush();
     }
@@ -267,7 +268,7 @@ C<@$argv> ( $argv = $args->{ ARGV } ).
 C<Caution:>
 C<$args> is passed from parrent libexec/loader.
 We construct a new struct C<$command_args> here to pass parameters
-to child objects.
+to the child objects.
 C<FML::Command::$command> object takes them as arguments not pure
 C<$args>. It is a little mess. Pay attention.
 
@@ -290,6 +291,7 @@ sub _makefml
     my ($method, $argv_ml_name, @options);
 
     # XXX hmm, HARD-CODED but no idea.
+    # XXX-TODO etc/modules defines the syntax. See it.
     if ($myname eq 'makefml') {
 	($method, $argv_ml_name, @options) =  @$argv;
     }
@@ -309,8 +311,8 @@ sub _makefml
 	options      => \@options,
 	argv         => $argv,
 
-	# save raw argv for {new,rm}domain commands, which need to
-	# interpret $ml_name as ml_domain.
+	# save raw argv for {new,rm}domain commands, which need 
+	# for some programs to interprete $ml_name as ml_domain.
 	canon_argv   => {
 	    ml_name  => $argv_ml_name,
 	    method   => $method,
@@ -377,7 +379,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
