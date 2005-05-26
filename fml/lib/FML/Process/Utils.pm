@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.127 2004/12/05 16:19:11 fukachan Exp $
+# $FML: Utils.pm,v 1.128 2004/12/15 13:53:08 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -295,7 +295,7 @@ create directory $dir if needed.
 
 
 #
-# XXX-TODO: $curproc->mkdir() is strage.
+# XXX-TODO: $curproc->mkdir() is strange.
 # XXX-TODO: hmm, we create a new subcleass such as $curproc->util->mkdir() ?
 # XXX-TODO: or $utils = $curproc->utils(); $utils->mkdir(dir, mode); ?
 # XXX-TODO: we need FML::Utils class ?
@@ -399,7 +399,7 @@ sub _mkpath_str
 }
 
 
-# XXX-TODO: $curproc->mkfile() is strage.
+# XXX-TODO: $curproc->mkfile() is strange.
 
 # Descriptions: create a file.
 #    Arguments: OBJ($curproc) STR($file)
@@ -422,7 +422,7 @@ sub mkfile
 }
 
 
-# XXX-TODO: $curproc->touch() is strage.
+# XXX-TODO: $curproc->touch() is strange.
 
 # Descriptions: create a file.
 #    Arguments: OBJ($curproc) STR($file)
@@ -435,7 +435,7 @@ sub touch
 }
 
 
-# XXX-TODO: $curproc->copy() is strage.
+# XXX-TODO: $curproc->copy() is strange.
 
 # Descriptions: copy $dst to $src in atomic way.
 #    Arguments: OBJ($curproc) STR($src) STR($dst)
@@ -451,7 +451,7 @@ sub copy
 }
 
 
-# XXX-TODO: $curproc->append() is strage.
+# XXX-TODO: $curproc->append() is strange.
 
 # Descriptions: append content within $src file into $dst file.
 #    Arguments: OBJ($curproc) STR($src) STR($dst)
@@ -482,7 +482,7 @@ sub append
 }
 
 
-# XXX-TODO: $curproc->cat() is strage.
+# XXX-TODO: $curproc->cat() is strange.
 
 # Descriptions: concantenate files to STDOUT.
 #    Arguments: OBJ($curproc) ARRAY_REF($files) HANDLE($out)
@@ -808,28 +808,6 @@ sub is_need_ml_name
 }
 
 
-# Descriptions: check $str with $class regexp defined in FML::Restriction.
-#    Arguments: OBJ($curproc) STR($class) STR($str)
-# Side Effects: none
-# Return Value: NUM(1 or 0)
-sub is_safe_syntax
-{
-    my ($curproc, $class, $str) = @_;
-
-    # XXX-TODO: REMOVE
-
-    use FML::Restriction::Base;
-    my $safe = new FML::Restriction::Base;
-
-    if ($safe->regexp_match($class, $str)) {
-	return 1;
-    }
-    else {
-	return 0;
-    }
-}
-
-
 # Descriptions: return raw @ARGV of the current process,
 #               where @ARGV is before getopts() applied
 #    Arguments: OBJ($curproc)
@@ -1140,8 +1118,8 @@ sub __ml_home_prefix_from_main_cf
 	my ($prefix_maps) = __get_ml_home_prefix_maps($main_cf);
 	if (@$prefix_maps) {
 	    $found = $curproc->___search_in_ml_home_prefix_maps($main_cf,
-						      $domain,
-						      $prefix_maps);
+								$domain,
+								$prefix_maps);
 	}
 
 	if ($found) {
@@ -1446,7 +1424,7 @@ sub is_under_mta_process
 }
 
 
-=head2 allow_reply_message()
+=head2 is_allow_reply_message()
 
 return 1 if we can send messages to the sender or specified address.
 return 0 if not.
@@ -1463,7 +1441,7 @@ But makefml command do not.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
-sub allow_reply_message
+sub is_allow_reply_message
 {
     my ($curproc) = @_;
     my $option    = $curproc->command_line_options();
@@ -1601,6 +1579,7 @@ sub which_map
 	my $maps = $config->get_as_array_ref("${mode}_maps");
 	for my $m (@$maps) {
 	    if ($map eq $m) {
+		# XXX-TODO: first match ok?
 		$found = $mode;
 		last SEARCH_MAPS;
 	    }
@@ -1809,7 +1788,7 @@ sub get_charset
     # search charset most preferred by Accpet-Language: in our templates.
     else {
 	# XXX Accept-Language: affets $reply_message_charset and $cgi_charset.
-	# XXX $reply_mesage_charset indirectry affets $template_file_charset.
+	# XXX $reply_mesage_charset indirectly affets $template_file_charset.
 	# XXX So, we need to check Accept-Language: information.
 	my $acpt_lang_list = $curproc->get_accept_language_list() || [];
 
@@ -2145,7 +2124,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
