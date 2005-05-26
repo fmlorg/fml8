@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Japanese.pm,v 1.10 2004/01/24 09:00:55 fukachan Exp $
+# $FML: Japanese.pm,v 1.11 2004/06/30 03:05:17 fukachan Exp $
 #
 
 #
@@ -91,9 +91,9 @@ sub _japanese_address_match
     my $rbuf   = $args->{ buf };
     my $buf    = $$rbuf;
 
-    # XXX-TODO: use Mail::Message::Encode.
-    use Jcode;
-    &Jcode::convert(\$buf, 'euc');
+    use Mail::Message::Encode;
+    my $encode = new Mail::Message::Encode;
+    $encode->convert_str_ref(\$buf, 'euc-jp');
 
     print STDERR "rbuf={$buf}\n" if $debug;
 
@@ -133,7 +133,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

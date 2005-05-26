@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: FixBrokenAddress.pm,v 1.11 2004/01/24 09:00:54 fukachan Exp $
+# $FML: FixBrokenAddress.pm,v 1.12 2004/06/30 03:05:16 fukachan Exp $
 #
 
 
@@ -21,7 +21,7 @@ my $debug = 0;
 
 =head1 NAME
 
-Mail::Bounce::FixBrokenAddress - handle irregular error message.
+Mail::Bounce::FixBrokenAddress - fix invalid address.
 
 =head1 SYNOPSIS
 
@@ -76,7 +76,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

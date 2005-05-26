@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Bounce.pm,v 1.27 2004/01/24 09:03:56 fukachan Exp $
+# $FML: Bounce.pm,v 1.28 2004/06/30 03:05:15 fukachan Exp $
 #
 
 package Mail::Bounce;
@@ -49,7 +49,7 @@ object.
 
 For non DSN pattern,
 try to analyze it by using modules in C<Mail::Bounce::>
-which can recognize MTA specific and domian specific patterns.
+which can recognize MTA specific and domain specific patterns.
 
 For example,
 
@@ -113,7 +113,7 @@ for C<Mail::Bounce::> modules, for example, C<Mail::Bounce::DSN>.
 C<Mail::Bounce::$model::analyze( \$msg, \$result )>
 method in each module is the actual model specific analyzer.
 C<$result> has an answer of analyze if the error message pattern is
-already known.
+one of already known formats.
 
 =cut
 
@@ -152,6 +152,7 @@ sub analyze
 	};
 	croak($@) if $@;
 
+	# FOUND! if found, this loop ends here for FIRST MATCH.
 	if (keys %$result) {
 	    print STDERR "\n   match $module\n" if $debug;
 	    last MODEL;
@@ -291,7 +292,7 @@ It is rarely used.
 =cut
 
 
-# Descriptions: clean up address for further use
+# Descriptions: clean up address for further use.
 #    Arguments: OBJ($self) STR($hint) STR($addr)
 # Side Effects: none
 # Return Value: STR
@@ -301,7 +302,7 @@ sub address_clean_up
 
     if ($debug) { print STDERR "address_clean_up($hint, $addr)\n";}
 
-    # nuke predecing and trailing strings around user@domain pattern
+    # remove prepended and trailing strings around user@domain pattern.
     my $prev_addr = $addr;
     do {
 	$prev_addr = $addr;
@@ -341,7 +342,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
