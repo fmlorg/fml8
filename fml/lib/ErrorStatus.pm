@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ErrorStatus.pm,v 1.9 2004/07/11 14:20:09 fukachan Exp $
+# $FML: ErrorStatus.pm,v 1.10 2004/07/23 13:16:30 fukachan Exp $
 #
 
 package ErrorStatus;
@@ -13,11 +13,6 @@ package ErrorStatus;
 # XXX-TODO: we should not use ErrorStatus module, is'nt it?
 # XXX-TODO: FML/Config.pm
 # XXX-TODO: FML/Credential.pm
-# XXX-TODO: FML/Filter.pm
-# XXX-TODO: FML/Filter/Header.pm
-# XXX-TODO: FML/Filter/MimeComponent.pm
-# XXX-TODO: FML/Filter/MimeComponent3.pm
-# XXX-TODO: FML/Filter/TextPlain.pm
 # XXX-TODO: File/Sequence.pm
 # XXX-TODO: File/SimpleLock.pm
 #
@@ -129,7 +124,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
