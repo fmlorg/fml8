@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.70 2004/10/28 03:33:48 fukachan Exp $
+# $FML: Article.pm,v 1.71 2004/12/05 16:19:04 fukachan Exp $
 #
 
 package FML::Article;
@@ -124,7 +124,7 @@ sub _setup_article_template
 =head2 spool_in($id)
 
 save the article to the file name C<$id> in the article spool.
-If the variable C<$use_spool> is 'yes', this routine works.
+If the variable C<$use_article_spool> is 'yes', this routine works.
 
 =cut
 
@@ -138,12 +138,12 @@ sub spool_in
     my ($self, $id) = @_;
     my $curproc     = $self->{ _curproc };
     my $config      = $curproc->config();
-    my $spool_dir   = $config->{ spool_dir };
-    my $use_subdir  = $config->{ spool_type } eq 'subdir' ? 1 : 0;
-    my $channel     = $self->get_lock_channel_name();
 
-    # XXX-TODO: use_spool -> use_article_spool ?
-    if ($config->yes( 'use_spool' )) {
+    if ($config->yes('use_article_spool')) {
+	my $spool_dir  = $config->{ spool_dir };
+	my $use_subdir = $config->{ spool_type } eq 'subdir' ? 1 : 0;
+	my $channel    = $self->get_lock_channel_name();
+
 	$curproc->lock($channel);
 
 	unless (-d $spool_dir) {
@@ -211,7 +211,7 @@ sub spool_in
 }
 
 
-# Descriptions: When we fail to create article file,
+# Descriptions: When we fail to create an article file,
 #               we try to save the original message at least.
 #               So, we try to save article content from incoming queue.
 #    Arguments: OBJ($self) OBJ($curproc) NUM($id) STR($article_file)
@@ -321,7 +321,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
