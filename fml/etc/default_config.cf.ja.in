@@ -1170,6 +1170,41 @@ use_log_computer_output	=	no
 #     Examples: FML::Log::Print::Simple
 log_computer_output_engine	=	FML::Log::Print::Simple
 
+
+=head2	syslog
+
+
+# Descriptions: リモートのsyslogホストに転送する場合、そのホストを指定する。
+#      History: none
+#        Value: STR
+#     Examples: log.example.co.jp
+log_syslog_host		=	
+
+# Descriptions: すべてのメッセージの前に現れる文字列
+#      History: none
+#        Value: STR
+#     Examples:
+log_syslog_ident	=	fml/$program_name
+
+# Descriptions: see syslog(3)
+#      History: none
+#        Value: MIX (pid ndelay nowait)
+#     Examples:
+log_syslog_options	=	pid
+
+# Descriptions: see syslog(3)
+#      History: none
+#        Value: SELECT (mail ...)
+#     Examples: mail
+log_syslog_facility	=	mail
+
+# Descriptions: see syslog(3)
+#      History: none
+#        Value: SELECT (info ...)
+#     Examples: info
+log_syslog_priority	=	info
+
+
 =head1	配送プロセス
 
 =head2	プロセス
@@ -1579,6 +1614,33 @@ article_spam_filter_bogofilter_options		=	-e
 
 
 
+=head2	ARTICLE VIRUS FILTER CONFIGURATIONS
+
+
+# Descriptions:
+#      History:
+#        Value: YES_OR_NO
+#     Examples:
+use_article_virus_filter	=	no
+
+
+# Descriptions: list up driver names used as virus checker.
+#      History: none
+#        Value: MIX ( virusassassin virusc bogofilter )
+#     Examples: bogofilter
+article_virus_filter_functions	=	clamav
+
+
+=head3	ClamAV
+
+
+# Descriptions: --mbox needed for mail files.
+#      History: none
+#        Value: COMMAND_LINE_OPTIONS
+#     Examples: --quiet --mbox
+article_virus_filter_clamav_options		=	--quiet --mbox
+
+
 =head1	記事および記事のスプール
 
 
@@ -1587,6 +1649,13 @@ article_spam_filter_bogofilter_options		=	-e
 #        Value: YES_OR_NO
 #     Examples:
 use_spool	= 	yes
+
+
+# Descriptions: 記事をスプールディレクトリに保存する
+#      History: none
+#        Value: YES_OR_NO
+#     Examples: yes
+use_article_spool	= ${use_spool:-yes}
 
 
 # Descriptions: スプールのタイプ
@@ -1711,6 +1780,21 @@ html_archive_charset_en		=	us-ascii
 #        Value: YES_OR_NO
 #     Examples: yes / no
 use_command_mail_function = ${use_command_mail_program:-yes}
+
+
+# Descriptions: コマンドメールの返事の先頭に
+#		「こちらは fml8 です…」と自己紹介するか否か？
+#      History: none
+#        Value: YES_OR_NO
+#     Examples: yes / no
+use_command_mail_reply_preamble = yes
+
+
+# Descriptions: コマンドメールの返事の最後に処理結果のサマリをつけるか否か？
+#      History: none
+#        Value: YES_OR_NO
+#     Examples: yes / no
+use_command_mail_reply_trailor = yes
 
 
 
@@ -2997,16 +3081,28 @@ sql_find	=	select fml_address from $sql_table
 # $article_digest_verify_request_end_hook = q{ 1;};
 # $article_digest_verify_request_start_hook = q{ 1;};
 # $article_filter_end_hook = q{ 1;};
+# $article_filter_end_hook = q{ 1;};
+# $article_filter_start_hook = q{ 1;};
 # $article_filter_start_hook = q{ 1;};
 # $article_header_rewrite_end_hook = q{ 1;};
+# $article_header_rewrite_end_hook = q{ 1;};
+# $article_header_rewrite_start_hook = q{ 1;};
 # $article_header_rewrite_start_hook = q{ 1;};
 # $article_post_finish_end_hook = q{ 1;};
+# $article_post_finish_end_hook = q{ 1;};
+# $article_post_finish_start_hook = q{ 1;};
 # $article_post_finish_start_hook = q{ 1;};
 # $article_post_prepare_end_hook = q{ 1;};
+# $article_post_prepare_end_hook = q{ 1;};
+# $article_post_prepare_start_hook = q{ 1;};
 # $article_post_prepare_start_hook = q{ 1;};
 # $article_post_run_end_hook = q{ 1;};
+# $article_post_run_end_hook = q{ 1;};
+# $article_post_run_start_hook = q{ 1;};
 # $article_post_run_start_hook = q{ 1;};
 # $article_post_verify_request_end_hook = q{ 1;};
+# $article_post_verify_request_end_hook = q{ 1;};
+# $article_post_verify_request_start_hook = q{ 1;};
 # $article_post_verify_request_start_hook = q{ 1;};
 # $command_mail_filter_end_hook = q{ 1;};
 # $command_mail_filter_start_hook = q{ 1;};
@@ -3019,12 +3115,20 @@ sql_find	=	select fml_address from $sql_table
 # $command_mail_verify_request_end_hook = q{ 1;};
 # $command_mail_verify_request_start_hook = q{ 1;};
 # $distribute_finish_end_hook = q{ 1;};
+# $distribute_finish_end_hook = q{ 1;};
+# $distribute_finish_start_hook = q{ 1;};
 # $distribute_finish_start_hook = q{ 1;};
 # $distribute_prepare_end_hook = q{ 1;};
+# $distribute_prepare_end_hook = q{ 1;};
+# $distribute_prepare_start_hook = q{ 1;};
 # $distribute_prepare_start_hook = q{ 1;};
 # $distribute_run_end_hook = q{ 1;};
+# $distribute_run_end_hook = q{ 1;};
+# $distribute_run_start_hook = q{ 1;};
 # $distribute_run_start_hook = q{ 1;};
 # $distribute_verify_request_end_hook = q{ 1;};
+# $distribute_verify_request_end_hook = q{ 1;};
+# $distribute_verify_request_start_hook = q{ 1;};
 # $distribute_verify_request_start_hook = q{ 1;};
 # $error_mail_analyzer_finish_end_hook = q{ 1;};
 # $error_mail_analyzer_finish_start_hook = q{ 1;};
