@@ -8,6 +8,13 @@
 use_spool	= 	yes
 
 
+# Descriptions: 記事をスプールディレクトリに保存する
+#      History: none
+#        Value: YES_OR_NO
+#     Examples: yes
+use_article_spool	= ${use_spool:-yes}
+
+
 # Descriptions: スプールのタイプ
 #		記事のスプールディレクトリを階層化するか？
 #               デフォルトでは平面的にファイルを配置する
