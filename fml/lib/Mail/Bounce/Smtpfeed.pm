@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Smtpfeed.pm,v 1.9 2004/01/24 09:03:57 fukachan Exp $
+# $FML: Smtpfeed.pm,v 1.10 2004/06/30 03:05:17 fukachan Exp $
 #
 
 
@@ -13,6 +13,8 @@ package Mail::Bounce::Smtpfeed;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+
+@ISA = qw(Mail::Bounce);
 
 =head1 NAME
 
@@ -49,17 +51,14 @@ sub analyze
     my $header = $m->nth_paragraph( 1 );
     my $addr   = '';
 
-    #
-    # XXX-TODO: code below is correct ?
-    #
-
     if ($header =~
 	/^To: \(original recipient in envelope at \S+\) <(\S+)>/) {
 	$addr = $1;
 	$addr =~ s/\s*$//o;
 
+	# set up return buffer
 	if ($addr) {
-	    # set up return buffer
+	    $addr = $self->address_clean_up($addr, $addr);
 	    $result->{ $addr }->{ 'Final-Recipient' } = $addr;
 	    $result->{ $addr }->{ 'Status' }          = '5.x.y';
 	    $result->{ $addr }->{ 'hints' }           = 'smtpfeed';
@@ -78,7 +77,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Qmail.pm,v 1.10 2004/01/24 09:03:57 fukachan Exp $
+# $FML: Qmail.pm,v 1.11 2004/06/30 03:05:16 fukachan Exp $
 #
 
 
@@ -13,6 +13,8 @@ package Mail::Bounce::Qmail;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+
+@ISA = qw(Mail::Bounce);
 
 =head1 NAME
 
@@ -59,8 +61,7 @@ sub analyze
 		    $data =~ s/\n/ /go;
 		    if ($data =~ /\<(\S+\@\S+)\>:\s*(.*)/) {
 			($addr, $reason) = ($1, $2);
-
-			# XXX-TODO: we should use $self->address_clean_up() ?
+			$addr = $self->address_clean_up($addr, $addr);
 
 			my $status = '5.x.y';
 			if ($data =~ /\#(\d+\.\d+\.\d+)/) {
@@ -97,7 +98,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

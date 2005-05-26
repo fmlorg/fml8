@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004 MURASHITA Takuya
+#  Copyright (C) 2003,2004,2005 MURASHITA Takuya
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Freeserve.pm,v 1.5 2004/06/30 03:05:16 fukachan Exp $
+# $FML: Freeserve.pm,v 1.6 2004/07/10 00:42:00 fukachan Exp $
 #
 
 #
@@ -16,6 +16,8 @@ package Mail::Bounce::Freeserve;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+
+@ISA = qw(Mail::Bounce);
 
 =head1 NAME
 
@@ -64,8 +66,8 @@ sub analyze
 	my $addr = $1;
 
 	# set up return buffer if $addr is found.
-	# XXX-TODO: we should use $self->address_clean_up() ?
 	if ($addr) {
+	    $addr = $self->address_clean_up($addr, $addr);
 	    $result->{ $addr }->{ 'Final-Recipient' } = $addr;
 	    $result->{ $addr }->{ 'Status' }          = '4.x.y';
 	    $result->{ $addr }->{ 'hints' }           = 'freeserve.ne.jp';
@@ -84,7 +86,7 @@ MURASHITA Takuya
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004 MURASHITA Takuya
+Copyright (C) 2003,2004,2005 MURASHITA Takuya
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

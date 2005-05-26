@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: GOO.pm,v 1.11 2004/01/24 09:03:57 fukachan Exp $
+# $FML: GOO.pm,v 1.12 2004/06/30 03:05:16 fukachan Exp $
 #
 
 
@@ -13,6 +13,8 @@ package Mail::Bounce::GOO;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+
+@ISA = qw(Mail::Bounce);
 
 =head1 NAME
 
@@ -54,9 +56,8 @@ sub analyze
 	my $addr = $1;
 
 	# set up return buffer if $addr is found.
-	# XXX-TODO: we should use $self->address_clean_up() ?
 	if ($addr) {
-	    $addr =~ s/\s*$//o;
+	    $addr = $self->address_clean_up($addr, $addr);
 	    $result->{ $addr }->{ 'Final-Recipient' } = $addr;
 	    $result->{ $addr }->{ 'Status' }          = '5.x.y';
 	    $result->{ $addr }->{ 'hints' }           = 'goo.ne.jp';
@@ -75,7 +76,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
