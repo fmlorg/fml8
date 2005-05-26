@@ -1,8 +1,8 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #
-# $FML: Log.pm,v 1.28 2004/01/02 14:42:45 fukachan Exp $
+# $FML: Log.pm,v 1.29 2004/07/23 13:16:32 fukachan Exp $
 #
 
 package FML::Log;
@@ -41,12 +41,6 @@ or specify arguments in the hash reference
 
 FML::Log contains several interfaces to write log messages, for
 example, log files, syslog() (not yet implemented).
-
-=cut
-
-#
-# XXX-TODO: FML::Log -> syslog().
-#
 
 =head2 Log( $message [, $args])
 
@@ -96,6 +90,25 @@ sub Log
     return undef unless defined $mesg;
     return undef unless $mesg;
 
+    # XXX allow "log_type = file, syslog", o.k.?
+    if ($config->{ log_type } =~ /syslog/) {
+	my $ident    = $config->{ log_syslog_ident }    || 'fml8';
+	my $logopt   = $config->{ log_syslog_options }  || 'pid';
+	my $facility = $config->{ log_syslog_facility } || 'local0';
+	my $priority = $config->{ log_syslog_priority } || 'info';
+	my $host     = $config->{ log_syslog_host }     || '';
+
+	use Sys::Syslog;
+	if ($host) { $Sys::Syslog::host = $host;}
+	openlog($ident, $logopt, $facility);
+	syslog($priority, $mesg);
+	closelog();
+    }
+    unless ($config->{ log_type } =~ /file/) {
+	# e.g. log_type = syslog (== syslog only)
+	return;
+    }
+
     # parse arguments
     $log_file = $args->{ log_file } if defined $args->{ log_file };
     $priority = $args->{ priority } if defined $args->{ priority };
@@ -143,7 +156,7 @@ sub Log
 	    use File::Basename;
 	    my $name = basename($0);
 	    my $pid  = $config->{ _pid };
-	    my $iam  = $name."[${pid}]:";
+	    my $iam  = "${name}[${pid}]:";
 	    print $fh $rdate->{'log_file_style'}, " ", $iam, " ", $mesg;
 	    print $fh "\n";
 	}
@@ -164,7 +177,7 @@ sub LogWarn
     my ($mesg, $args) = @_;
 
     eval q{
-	Log("warn: ".$mesg, $args);
+	Log("warn: $mesg", $args);
     };
     if ($@) {
 	# XXX valid use of STDERR
@@ -183,7 +196,7 @@ sub LogError
     my ($mesg, $args) = @_;
 
     eval q{
-	Log("error: ".$mesg, $args);
+	Log("error: $mesg", $args);
     };
     if ($@) {
 	# XXX valid use of STDERR
@@ -208,7 +221,7 @@ Ken'ichi Fukamachi <F<fukachan@fml.org>>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
