@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.97 2004/07/23 15:58:59 fukachan Exp $
+# $FML: Config.pm,v 1.98 2004/11/21 05:32:05 fukachan Exp $
 #
 
 package FML::Config;
@@ -71,7 +71,7 @@ data manipulation of set() and get() is assymetric and asynchronous.
 C<set(key,value)> saves the value for a key in C<%fml_config>.
 
 C<get(key)> returns the value for a key in C<%fml_config_result>,
-which is value expanded C<%fml_config>.
+which is value expanded from C<%fml_config>.
 The expansion is done when C<get()> is called not when C<set()> is
 called.
 
@@ -424,10 +424,10 @@ sub __append_config
     $value =~ s/\s*$//o;
 
     if ($name_space) {
-	$config->{ $name_space }->{ $key } .= " ". $value;
+	$config->{ $name_space }->{ $key } .= sprintf(" %s", $value);
     }
     else {
-	$config->{ $key } .= " ". $value;
+	$config->{ $key } .= sprintf(" %s", $value);
     }
 }
 
@@ -556,7 +556,7 @@ sub read
 sub merge_to_file
 {
     my ($self, $file, $hash_ref) = @_;
-    my $done = 0;
+    my $done = 0; # NOT USED ?
 
     my ($rh, $wh) = IO::Adapter::AtomicFile->rw_open($file);
 
@@ -616,7 +616,7 @@ sub write
     my $fh = IO::Adapter::AtomicFile->open($file);
 
     # 2. back up config.cf firstly
-    my $status = IO::Adapter::AtomicFile->copy($file, $file.".bak");
+    my $status = IO::Adapter::AtomicFile->copy($file, "${file}.bak");
     unless ($status) {
 	croak "cannot backup $file";
     }
@@ -1324,7 +1324,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
