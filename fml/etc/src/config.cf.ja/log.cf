@@ -133,3 +133,38 @@ use_log_computer_output	=	no
 #        Value: CLASS
 #     Examples: FML::Log::Print::Simple
 log_computer_output_engine	=	FML::Log::Print::Simple
+
+
+=head2	syslog
+
+
+# Descriptions: リモートのsyslogホストに転送する場合、そのホストを指定する。
+#      History: none
+#        Value: STR
+#     Examples: log.example.co.jp
+log_syslog_host		=	
+
+# Descriptions: すべてのメッセージの前に現れる文字列
+#      History: none
+#        Value: STR
+#     Examples:
+log_syslog_ident	=	fml/$program_name
+
+# Descriptions: see syslog(3)
+#      History: none
+#        Value: MIX (pid ndelay nowait)
+#     Examples:
+log_syslog_options	=	pid
+
+# Descriptions: see syslog(3)
+#      History: none
+#        Value: SELECT (mail ...)
+#     Examples: mail
+log_syslog_facility	=	mail
+
+# Descriptions: see syslog(3)
+#      History: none
+#        Value: SELECT (info ...)
+#     Examples: info
+log_syslog_priority	=	info
+
