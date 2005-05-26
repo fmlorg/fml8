@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Summary.pm,v 1.21 2004/04/23 04:10:26 fukachan Exp $
+# $FML: Summary.pm,v 1.22 2004/07/11 15:43:37 fukachan Exp $
 #
 
 package FML::Article::Summary;
@@ -68,7 +68,7 @@ sub print
 }
 
 
-# Descriptions: prepare infomation on article $id for later use
+# Descriptions: prepare information on article $id for later use.
 #               such as $id, $address, $subject et.al.
 #    Arguments: OBJ($self) NUM($id)
 # Side Effects: none
@@ -86,7 +86,7 @@ sub _prepare_info
 	$article = $self->{ _article };
     }
     else {
-	# XXX we need article object to use $article->filepath() mthod.
+	# XXX we need article object to use $article->filepath() method.
 	use FML::Article;
 	$article = new FML::Article $curproc;
     }
@@ -196,6 +196,10 @@ sub _fml4_compatible_style_one_line_summary
 
 =head1 UTILITIES
 
+=head2 append($article, $id)
+
+append summary information for article $id into the article summary file.
+
 =cut
 
 
@@ -272,11 +276,11 @@ sub dump
     my $article_summary_file = $config->{ "article_summary_file" };
 
     if (-f $article_summary_file) {
-	my $fh = new FileHandle $article_summary_file;
-	if (defined $fh && defined $wh) {
+	my $rh = new FileHandle $article_summary_file;
+	if (defined $rh && defined $wh) {
 	    my $buf;
-	    while ($buf = <$fh>) { print $wh $buf;}
-	    $fh->close();
+	    while ($buf = <$rh>) { print $wh $buf;}
+	    $rh->close();
 	}
     }
 }
@@ -292,7 +296,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
