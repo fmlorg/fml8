@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2004 Ken'ichi Fukamachi
+#  Copyright (C) 2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: clamscan.pm,v 1.3 2004/07/23 13:16:38 fukachan Exp $
+# $FML: clamscan.pm,v 1.4 2004/07/23 15:59:06 fukachan Exp $
 #
 
 package FML::Filter::External::clamscan;
@@ -51,10 +51,13 @@ sub process
     my ($self, $curproc) = @_;
     my $config  = $curproc->config();
     my $program = $config->{ path_clamscan } || '';
+    my $_opts   = "--quiet --mbox";
+    my $opts    = $config->{ article_virus_filter_clamav_options } || $_opts;
 
     if ($program) {
 	if (-x $program) {
-	    return $self->_check($curproc, $program);
+	    my $_program = sprintf("%s %s", $program, $opts);
+	    return $self->_check($curproc, $_program);
 	}
 	else {
 	    $curproc->logerror("$program not exists");
@@ -76,9 +79,6 @@ sub _check
 {
     my ($self, $curproc, $program) = @_;
 
-    # XXX-TODO: configurable.
-    my $opts = "--quiet --mbox";
-
     use FileHandle;
     my $tmp_file = $curproc->temp_file_path();
     my $wh       = new FileHandle "> $tmp_file";
@@ -94,7 +94,7 @@ sub _check
 	}
 
 	my $status = 0;
-	system "$program $opts $tmp_file";
+	system "$program $tmp_file";
 	if ($status = $?) {
 	    if ($status == 1) {
 		my $r = "virus found by clamav";
@@ -124,7 +124,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2004 Ken'ichi Fukamachi
+Copyright (C) 2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
