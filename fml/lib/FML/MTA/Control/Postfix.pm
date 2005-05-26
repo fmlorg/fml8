@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.5 2004/07/23 13:16:40 fukachan Exp $
+# $FML: Postfix.pm,v 1.6 2004/07/23 15:59:07 fukachan Exp $
 #
 
 package FML::MTA::Control::Postfix;
@@ -44,7 +44,7 @@ sub postfix_install_alias
     use File::Spec;
     my $alias = $config->{ mail_aliases_file };
     my $src   = File::Spec->catfile($template_dir, 'aliases');
-    my $dst   = $alias . "." . $$;
+    my $dst   = sprintf("%s.%s", $alias, $$);
 
     # update params with considering virtual domain support if needed.
     my $xparams = {};
@@ -68,7 +68,7 @@ sub postfix_remove_alias
     my ($self, $curproc, $params, $optargs) = @_;
     my $config    = $curproc->config();
     my $alias     = $config->{ mail_aliases_file };
-    my $alias_new = $alias."new.$$";
+    my $alias_new = sprint("%s.%s.%s", $alias, "new", $$);
     my $ml_name   = $params->{ ml_name  };
     my $ml_domain = $params->{ ml_domain };
     my $removed   = 0;
@@ -246,14 +246,17 @@ sub postfix_get_aliases_as_hash_ref
 
     # $0 -n shows fml only aliases
     if ($mode eq 'fmlonly') {
-	$maps = [ $alias_file ];
+	my $_alias_file = $alias_file;
+	$_alias_file =~ s/^\s*\w+://;
+	$_alias_file =~ s/\s*$//;
+	$maps = [ $_alias_file ];
     }
 
   MAP:
     for my $map (@$maps) {
 	$curproc->ui_message("scan key = $key, map = $map") if $debug;
 
-	# XXX-TODO: correct? file:/some/where/map ignored too ?
+	# XXX this map has no prefix such as file:, hash:, dbm:, ... 
 	if ($map =~ /^\w+:/) {
 	    $curproc->ui_message("* ignored $map");
 	    next MAP;
@@ -377,11 +380,10 @@ sub postfix_install_virtual_map
     use File::Spec;
     my $virtual = $config->{ postfix_virtual_map_file };
     my $src     = File::Spec->catfile($template_dir, 'postfix_virtual');
-    my $dst     = $virtual . "." . $$;
+    my $dst     = sprintf("%s.%s", $virtual, $$);
     $curproc->ui_message("updating $virtual");
 
-    # XXX-TODO: correct for 2nd virtual domain ?
-    # at the first time
+    # create a virtual file for each domain at the first time.
     unless( -f $virtual) {
 	use FileHandle;
 	my $fh = new FileHandle ">> $virtual";
@@ -417,9 +419,7 @@ sub postfix_remove_virtual_map
 	map => $map,
     };
 
-    # XXX-TODO: _remove_postfix_style_virtual (private method)
-    # XXX-TODO: NOT CROSS AMONG modules.
-    $self->_remove_postfix_style_virtual($curproc, $params, $optargs, $p);
+    $self->remove_postfix_style_virtual($curproc, $params, $optargs, $p);
 }
 
 
@@ -457,7 +457,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
