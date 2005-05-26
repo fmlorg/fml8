@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sendmail.pm,v 1.4 2004/04/10 12:41:29 fukachan Exp $
+# $FML: Sendmail.pm,v 1.5 2004/07/23 13:16:40 fukachan Exp $
 #
 
 package FML::MTA::Control::Sendmail;
@@ -159,7 +159,7 @@ sub sendmail_install_virtual_map
     use File::Spec;
     my $virtual = $config->{ sendmail_virtual_map_file };
     my $src     = File::Spec->catfile($template_dir, 'postfix_virtual');
-    my $dst     = $virtual . "." . $$;
+    my $dst     = sprintf("%s.%s", $virtual, $$);
     $curproc->ui_message("updating $virtual");
 
     # at the first time
@@ -169,7 +169,8 @@ sub sendmail_install_virtual_map
 	if (defined $fh) {
 	    print $fh "#\n";
 	    print $fh "# you need to specify $ml_domain ";
-	    print $fh "as a destination in sendmail.cf.\n";
+	    print $fh "as a destination (Class w) in sendmail.cf.\n";
+	    print $fh "# For example, Cwlocalhost $ml_domain ...\n";
 	    print $fh "#\n";
 	    $fh->close();
 	}
@@ -198,7 +199,7 @@ sub sendmail_remove_virtual_map
 	key => $key,
 	map => $map,
     };
-    $self->_remove_postfix_style_virtual($curproc, $params, $optargs, $p);
+    $self->remove_postfix_style_virtual($curproc, $params, $optargs, $p);
 }
 
 
@@ -214,7 +215,6 @@ sub sendmail_update_virtual_map
     my $makemap = $config->{ path_makemap };
     my $virtual = $config->{ sendmail_virtual_map_file };
 
-    # XXX-TODO: NOT IMPLEMENTED
     if (-f $virtual) {
 	$curproc->ui_message("updating $virtual database");
 
@@ -272,7 +272,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
