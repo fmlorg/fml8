@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Install.pm,v 1.17 2004/09/29 05:05:40 fukachan Exp $
+# $FML: Install.pm,v 1.18 2004/11/25 12:05:12 fukachan Exp $
 #
 
 package FML::Install;
@@ -171,7 +171,7 @@ In addition, chmod() if $mode specified.
 sub convert
 {
     my ($self, $src, $dst, $mode) = @_;
-    my $tmp = $dst. ".new.$$";
+    my $tmp = sprintf("%s.%s.%s", $dst, "new", $$);
     my $in  = new FileHandle $src;
     my $out = new FileHandle "> $tmp";
 
@@ -612,7 +612,7 @@ sub install_loader
     my $libexec_dir = $config->{ libexec_dir };
     my $cur_loader  = File::Spec->catfile($install_root,
 					  $libexec_dir, "loader");
-    my $tmp         = $cur_loader . ".$$";
+    my $tmp         = sprintf("%s.%s", $cur_loader, $$);
 
     $self->_copy($loader, $tmp);
     chmod 0755, $tmp;
@@ -1150,7 +1150,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
