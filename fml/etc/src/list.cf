@@ -16,6 +16,7 @@ log.cf
 distribute.cf
 article.cf
 spam.cf
+virus.cf
 spool.cf
 summary.cf
 htmlarchive.cf
