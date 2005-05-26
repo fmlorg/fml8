@@ -1,0 +1,26 @@
+=head2	ARTICLE VIRUS FILTER CONFIGURATIONS
+
+
+# Descriptions:
+#      History:
+#        Value: YES_OR_NO
+#     Examples:
+use_article_virus_filter	=	no
+
+
+# Descriptions: list up driver names used as virus checker.
+#      History: none
+#        Value: MIX ( virusassassin virusc bogofilter )
+#     Examples: bogofilter
+article_virus_filter_functions	=	clamav
+
+
+=head3	ClamAV
+
+
+# Descriptions: --mbox needed for mail files.
+#      History: none
+#        Value: COMMAND_LINE_OPTIONS
+#     Examples: --quiet --mbox
+article_virus_filter_clamav_options		=	--quiet --mbox
+
