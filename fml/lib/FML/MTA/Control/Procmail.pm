@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Procmail.pm,v 1.4 2004/04/10 12:41:29 fukachan Exp $
+# $FML: Procmail.pm,v 1.5 2004/07/23 13:16:40 fukachan Exp $
 #
 
 package FML::MTA::Control::Procmail;
@@ -44,7 +44,7 @@ sub procmail_install_alias
     use File::Spec;
     my $alias = $config->{ procmail_aliases_file };
     my $src   = File::Spec->catfile($template_dir, 'procmailrc');
-    my $dst   = $alias . "." . $$;
+    my $dst   = sprintf("%s.%s", $alias, $$);
 
     $self->_install($src, $dst, $params);
 
@@ -64,7 +64,7 @@ sub procmail_remove_alias
     my ($self, $curproc, $params, $optargs) = @_;
     my $config    = $curproc->config();
     my $alias     = $config->{ procmail_aliases_file };
-    my $alias_new = $alias."new.$$";
+    my $alias_new = sprintf("%s.%s.%s", $alias, "new", $$);
     my $ml_name   = $params->{ ml_name  };
     my $ml_domain = $params->{ ml_domain };
     my $removed   = 0;
@@ -110,7 +110,7 @@ sub procmail_remove_alias
 }
 
 
-# Descriptions: regenerate aliases.db.
+# Descriptions: regenerate aliases.db (not needed, so dummy).
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
@@ -172,6 +172,7 @@ sub procmail_get_aliases_as_hash_ref
     my $maps       = $self->procmail_alias_maps($curproc, $optargs);
     my $aliases    = {};
 
+    # XXX-TODO: correct ?
     # $0 -n shows fml only aliases
     if ($mode eq 'fmlonly') {
 	$maps = [ $alias_file ];
@@ -301,7 +302,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

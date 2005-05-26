@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Tiny.pm,v 1.1 2003/03/11 06:17:11 fukachan Exp $
+# $FML: Tiny.pm,v 1.2 2003/08/23 04:35:34 fukachan Exp $
 #
 
 package FML::Config::Tiny;
@@ -74,7 +74,7 @@ sub read
                 $config->{$key}   = $value;
             }
             if ($buf =~ /^\s+(.*)/) {
-                $config->{ $curkey }  .= " ". $1;
+                $config->{ $curkey } .= " $1";
             }
         }
         $fh->close;
@@ -97,7 +97,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003 Ken'ichi Fukamachi
+Copyright (C) 2003,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

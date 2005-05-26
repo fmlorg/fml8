@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent.pm,v 1.11 2004/04/23 04:10:34 fukachan Exp $
+# $FML: MimeComponent.pm,v 1.12 2004/07/23 12:41:12 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -12,7 +12,7 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
 	    $recursive_level $recursive_max_level);
 use Carp;
-use ErrorStatus qw(error_set error error_clear);
+use FML::Filter::ErrorStatus qw(error_set error error_clear);
 
 =head1 NAME
 
@@ -214,7 +214,7 @@ sub mime_component_check
 	for my $key (keys %$reason) {
 	    if ($key ne 'reject') {
 		$_reason .=
-		    $_reason ? " + ".$reason->{ $key } : $reason->{ $key };
+		    $_reason ? " + $reason->{ $key }" : $reason->{ $key };
 	    }
 
 	    if ($key eq 'permit') {
@@ -625,7 +625,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

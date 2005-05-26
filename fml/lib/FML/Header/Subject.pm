@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.46 2004/07/23 12:44:49 fukachan Exp $
+# $FML: Subject.pm,v 1.47 2004/07/23 15:59:06 fukachan Exp $
 #
 
 package FML::Header::Subject;
@@ -66,7 +66,7 @@ sub rewrite_article_subject_tag
     my ($self, $header, $config, $rw_args) = @_;
     my ($in_code, $out_code);
 
-    # XXX-TODO: need $article_subject_tag expaned already e.g. "\Lmlname\E"
+    # XXX-TODO: need $article_subject_tag expanded already e.g. "\Lmlname\E"
     # XXX-TODO: we should include this exapansion method within this module?
     my $tag     = $config->{ article_subject_tag };
     my $subject = $header->get('subject');
@@ -91,7 +91,7 @@ sub rewrite_article_subject_tag
 
     # add(prepend) the rewrited tag with mime encoding.
     $tag = sprintf($tag, $rw_args->{ id });
-    my $new_subject = $tag." ".$subject;
+    my $new_subject = sprintf("%s %s", $tag, $subject);
     $new_subject = $obj->encode_mime_string($new_subject, 'base64', $in_code);
     $header->replace('Subject', $new_subject);
 }
@@ -281,7 +281,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

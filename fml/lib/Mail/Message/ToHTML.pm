@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.71 2004/07/26 05:47:23 fukachan Exp $
+# $FML: ToHTML.pm,v 1.72 2004/11/14 14:14:14 tmu Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.71 2004/07/26 05:47:23 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.72 2004/11/14 14:14:14 tmu Exp $;
 my $versionid = 0;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $versionid = "$1";
@@ -473,7 +473,7 @@ sub _init_htmlfy_rfc822_message
     }
     # last resort: give unique identifier
     elsif (defined $args->{ dst }) {
-	$id  = time.".".$$;
+	$id  = sprintf("%s.%s", time, $$);
 	$dst = $args->{ dst };
     }
     # oops ;) wrong call of this function
@@ -2534,7 +2534,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

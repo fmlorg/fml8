@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: AtomicFile.pm,v 1.14 2004/07/11 15:25:52 fukachan Exp $
+# $FML: AtomicFile.pm,v 1.15 2004/07/23 15:59:13 fukachan Exp $
 #
 
 package IO::Adapter::AtomicFile;
@@ -135,7 +135,7 @@ sub open
     # temporary file
     unless (defined $Counter) { $Counter = 0;}
     $Counter++;
-    my $temp = $file.".new.".$$.$Counter;
+    my $temp = sprintf("%s.%s.%s.%s", $file, "new", $$, $Counter);
     ${*$self}{ _orig_file } = $file;
     ${*$self}{ _temp_file } = $temp;
 
@@ -306,7 +306,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MessageID.pm,v 1.22 2004/03/12 04:22:54 fukachan Exp $
+# $FML: MessageID.pm,v 1.23 2004/07/23 12:43:55 fukachan Exp $
 #
 
 package FML::Header::MessageID;
@@ -169,10 +169,13 @@ generate and return a new message-id.
 sub gen_id
 {
     my ($self, $config) = @_;
+    my $addr = $config->{ article_post_address };
 
     # XXX-TODO: if $config->{ article_post_address } undefined ?
     $Counter++;
-    return "<".time.".$$.$Counter." . $config->{ article_post_address } . ">";
+
+    # "<".time.".$$.$Counter." . $config->{ article_post_address } . ">";
+    return sprintf("<%d.%d.%s.%s>", time, $$, $Counter, $addr);
 }
 
 
@@ -186,7 +189,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

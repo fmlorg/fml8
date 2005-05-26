@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DocViewer.pm,v 1.32 2004/04/23 04:10:36 fukachan Exp $
+# $FML: DocViewer.pm,v 1.33 2004/07/11 15:43:39 fukachan Exp $
 #
 
 package FML::Process::DocViewer;
@@ -49,7 +49,7 @@ load default configuration files and fix @INC.
 
 =head2 verify_request($args)
 
-show help unless @ARGV.
+show help unless @ARGV specified.
 
 =cut
 
@@ -156,7 +156,7 @@ sub _fmldoc
     # add path for perl executatbles e.g. /usr/local/bin
     eval q{
 	use Config;
-	$ENV{'PATH'} .= ":". $Config{ scriptdir };
+	$ENV{'PATH'} .= sprintf(":%s", $Config{ scriptdir });
 	exec 'perldoc', @opts, @$argv;
     };
     croak($@);
@@ -230,7 +230,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
