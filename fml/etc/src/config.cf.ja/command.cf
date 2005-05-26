@@ -11,6 +11,21 @@
 use_command_mail_function = ${use_command_mail_program:-yes}
 
 
+# Descriptions: コマンドメールの返事の先頭に
+#		「こちらは fml8 です…」と自己紹介するか否か？
+#      History: none
+#        Value: YES_OR_NO
+#     Examples: yes / no
+use_command_mail_reply_preamble = yes
+
+
+# Descriptions: コマンドメールの返事の最後に処理結果のサマリをつけるか否か？
+#      History: none
+#        Value: YES_OR_NO
+#     Examples: yes / no
+use_command_mail_reply_trailor = yes
+
+
 
 =head2	コマンド プロンプト
 

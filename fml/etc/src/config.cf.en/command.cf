@@ -11,6 +11,20 @@
 use_command_mail_function = ${use_command_mail_program:-yes}
 
 
+# Descriptions: add self introduction into the preamble of command mail reply. 
+#      History: none
+#        Value: YES_OR_NO
+#     Examples: yes / no
+use_command_mail_reply_preamble = yes
+
+
+# Descriptions: add processing summary into the trailor of command mail reply.
+#      History: none
+#        Value: YES_OR_NO
+#     Examples: yes / no
+use_command_mail_reply_trailor = yes
+
+
 =head2	size limit
 
 
