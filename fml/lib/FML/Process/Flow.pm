@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Flow.pm,v 1.26 2004/05/25 03:35:16 fukachan Exp $
+# $FML: Flow.pm,v 1.27 2004/07/11 15:43:39 fukachan Exp $
 #
 
 package FML::Process::Flow;
@@ -37,7 +37,7 @@ programs kicked by MTA, command line interfaces and CGI's.
     # XXX private method to show help ASAP.
     # XXX we need to trap here since $process object is clarified after
     # XXX $pkg->new() above.
-    $process->_trap_help($args);
+    $process->sysflow_trap_help($args);
 
     # e.g. parse the incoming message (e.g. STDIN)
     $process->prepare($args);
@@ -82,15 +82,13 @@ sub ProcessStart
     # XXX private method to show help ASAP
     # XXX we need to trap here since $process object is clarified after
     # XXX $pkg->new() above.
-    # XXX-TODO: we should not cross _*() private methods over modules.
-    $process->_trap_help($args);
+    $process->sysflow_trap_help($args);
 
     # e.g. parse the incoming message (e.g. STDIN)
     $process->prepare($args);
 
     # close and reopen STDERR to record log messages written into STDERR.
-    # XXX-TODO: we should not cross _*() private methods over modules.
-    $process->_reopen_stderr_channel();
+    $process->sysflow_reopen_stderr_channel();
 
     # validate the request, for example,
     #    permit post from the sender,
@@ -104,8 +102,7 @@ sub ProcessStart
     $process->finish($args);
 
     # flush stderr channel log.
-    # XXX-TODO: we should not cross _*() private methods over modules.
-    $process->_finalize_stderr_channel($args);
+    $process->sysflow_finalize_stderr_channel($args);
 
     # clean up temporary files
     $process->clean_up_tmpfiles();
@@ -126,7 +123,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
