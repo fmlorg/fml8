@@ -1,8 +1,8 @@
 #-*- perl -*-
 #
-# Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+# Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #
-# $FML: MH.pm,v 1.18 2004/03/27 09:25:45 fukachan Exp $
+# $FML: MH.pm,v 1.19 2004/07/23 13:16:45 fukachan Exp $
 #
 
 package Mail::Message::MH;
@@ -66,7 +66,10 @@ sub expand
 	    my $ra0 = $self->expand($s, $min, $max);
 	    for my $element (@$ra0) { push(@$ra, $element);}
 	}
-	return $ra;
+
+	# $str may be not sorted.
+	my (@raa) = sort {$a <=> $b} @$ra;
+	return \@raa;
     }
 
     if ($str eq 'all') {
@@ -112,7 +115,7 @@ sub expand
 }
 
 
-# Descriptions: make an array from $fist to $last number.
+# Descriptions: make an array from $first to $last number.
 #    Arguments: NUM($first) NUM($last)
 # Side Effects: none
 # Return Value: ARRAY_REF (as [ $first .. $last ])
@@ -127,10 +130,13 @@ sub _expand_range
 }
 
 
+#
+# debug
+#
 if ($0 eq __FILE__) {
     eval q{
 	my $mh = new Mail::Message::MH;
-	for (qw(1,2,3 1,10,last:20 100 100-110 first-110 190-last first
+	for (qw(1,2,3 4,2,1 1,10,last:20 100 100-110 first-110 190-last first
 	      first:10 last last:10)) {
 	    print "\n[$_] => ";
 	    my $a = $mh->expand($_, 1, 200);
@@ -150,7 +156,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
