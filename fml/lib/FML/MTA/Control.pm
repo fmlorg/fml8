@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.5 2004/02/15 04:38:33 fukachan Exp $
+# $FML: Control.pm,v 1.6 2004/07/23 13:16:40 fukachan Exp $
 #
 
 package FML::MTA::Control;
@@ -287,19 +287,15 @@ sub _install
 #               HASH_REF($p)
 # Side Effects: update virtual_map
 # Return Value: none
-sub _remove_postfix_style_virtual
+sub remove_postfix_style_virtual
 {
     my ($self, $curproc, $params, $optargs, $p) = @_;
     my $removed = 0;
     my $key     = $p->{ key };
 
-    #
-    # XXX-TODO: ERROR: this module is private but used over modules.
-    #
-
     use File::Spec;
     my $virtual     = $p->{ map };
-    my $virtual_new = $virtual . 'new'. $$;
+    my $virtual_new = sprintf("%s.%s.%s", $virtual, 'new', $$);
 
     if (-f $virtual) {
 	$curproc->ui_message("removing $key in $virtual");
@@ -356,7 +352,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
