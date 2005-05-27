@@ -295,11 +295,29 @@ reject_not_iso2022jp_japanese_string
 </row>
 <row>
 <entry>
+article_virus_filter_clamav_options</entry>
+<entry>
+ --mbox needed for mail files.</entry>
+<entry>
+--quiet --mbox
+   </entry>
+</row>
+<row>
+<entry>
 article_virus_filter_drivers</entry>
 <entry>
  ウィルスチェッカとして使う外部プログラム</entry>
 <entry>
 clamscan
+   </entry>
+</row>
+<row>
+<entry>
+article_virus_filter_functions</entry>
+<entry>
+ list up driver names used as virus checker.</entry>
+<entry>
+clamav
    </entry>
 </row>
 <row>
@@ -1046,6 +1064,42 @@ log_rotate_size</entry>
  ログファイルのサイズが、</entry>
 <entry>
 300000
+   </entry>
+</row>
+<row>
+<entry>
+log_syslog_facility</entry>
+<entry>
+ see syslog(3)</entry>
+<entry>
+mail
+   </entry>
+</row>
+<row>
+<entry>
+log_syslog_ident</entry>
+<entry>
+ すべてのメッセージの前に現れる文字列</entry>
+<entry>
+fml/$program_name
+   </entry>
+</row>
+<row>
+<entry>
+log_syslog_options</entry>
+<entry>
+ see syslog(3)</entry>
+<entry>
+pid
+   </entry>
+</row>
+<row>
+<entry>
+log_syslog_priority</entry>
+<entry>
+ see syslog(3)</entry>
+<entry>
+info
    </entry>
 </row>
 <row>
@@ -1826,6 +1880,15 @@ no
 </row>
 <row>
 <entry>
+use_article_spool</entry>
+<entry>
+ 記事をスプールディレクトリに保存する</entry>
+<entry>
+${use_spool:-yes}
+   </entry>
+</row>
+<row>
+<entry>
 use_article_text_plain_filter</entry>
 <entry>
  先頭の text/plain 部分に対するフィルタ。</entry>
@@ -1858,6 +1921,24 @@ use_command_mail_function</entry>
  コマンドメールを使うか？</entry>
 <entry>
 ${use_command_mail_program:-yes}
+   </entry>
+</row>
+<row>
+<entry>
+use_command_mail_reply_preamble</entry>
+<entry>
+ コマンドメールの返事の先頭に</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_command_mail_reply_trailor</entry>
+<entry>
+ コマンドメールの返事の最後に処理結果のサマリをつけるか否か？</entry>
+<entry>
+yes
    </entry>
 </row>
 <row>

@@ -105,13 +105,19 @@ article {
           $use_article_spam_filter
    }
 
+   article_spool { 
+          $use_article_spool
+   }
+
    article_text_plain_filter { 
           $article_text_plain_filter_rules
           $use_article_text_plain_filter
    }
 
    article_virus_filter { 
+    ?     $article_virus_filter_clamav_options
     ?     $article_virus_filter_drivers
+          $article_virus_filter_functions
           $article_virus_filter_rules
           $use_article_virus_filter
    }
@@ -150,7 +156,6 @@ command {
     ?     $command_mail_reply_prompt
           $command_mail_restrictions
           $use_command_mail_function
-    ?     $user_command_mail_allowed_commands
    }
 
    command_mail_filter { 
@@ -166,6 +171,14 @@ command {
 
    command_mail_invalid_command { 
           $command_mail_invalid_command_limit
+   }
+
+   command_mail_reply_preamble { 
+          $use_command_mail_reply_preamble
+   }
+
+   command_mail_reply_trailor { 
+          $use_command_mail_reply_trailor
    }
 
    command_mail_size_filter { 
@@ -273,6 +286,7 @@ unsubscribe_command {
 user_command {
 
    user_command { 
+    ?     $user_command_mail_allowed_commands
    }
 }
 
@@ -446,6 +460,11 @@ log {
     ?     $log_file_charset_ja
     ?     $log_file_default_charset
           $log_format_type
+    ?     $log_syslog_facility
+    ?     $log_syslog_host
+    ?     $log_syslog_ident
+    ?     $log_syslog_options
+    ?     $log_syslog_priority
           $log_type
           $use_log
    }
