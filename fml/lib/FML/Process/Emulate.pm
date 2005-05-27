@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2004 Ken'ichi Fukamachi
+# Copyright (C) 2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Emulate.pm,v 1.4 2004/12/09 04:53:41 fukachan Exp $
+# $FML: Emulate.pm,v 1.5 2004/12/19 11:04:43 fukachan Exp $
 #
 
 package FML::Process::Emulate;
@@ -190,6 +190,7 @@ sub _fml4_emulate_error_process
     # |/usr/local/fml/libexec/mead.pl \
     #  -E /usr/local/fml -S /var/spool/ml -D /var/spool/ml/elena
 
+    # XXX-TODO: disabled for test ?
     $curproc->log("start as error mail analyzer mode");
 
     exit(0);
@@ -225,6 +226,7 @@ sub _fml4_emulate_digest_process
     # /usr/local/fml/msend.pl /var/spool/ml/elena
     $curproc->log("start as article digest mode");
 
+    # XXX-TODO: disabled for test ?
     exit(0);
 
     eval q{
@@ -292,7 +294,7 @@ sub generate_config_cf_from_config_ph
 	# OK, DO NOTHING.
     }
     else {
-	;
+	# ? abnormal ???
     }
 }
 
@@ -307,7 +309,6 @@ sub _fml4_merge
     my $src_dir = $params->{ src_dir }       || undef;
     my $system  = $params->{ target_system } || undef;
 
-    # XXX-TODO: configurable.
     use FML::Merge;
     my $merge = new FML::Merge $curproc, $params;
     $merge->set_target_system($system);
@@ -345,7 +346,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2004 Ken'ichi Fukamachi
+Copyright (C) 2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 reEmulate it and/or modify it under the same terms as Perl itself.

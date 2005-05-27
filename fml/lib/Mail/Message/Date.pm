@@ -1,8 +1,8 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #
-# $FML: Date.pm,v 1.27 2004/02/15 04:38:37 fukachan Exp $
+# $FML: Date.pm,v 1.28 2004/07/23 13:10:42 fukachan Exp $
 #
 
 package Mail::Message::Date;
@@ -579,6 +579,9 @@ sub _speculate_timezone
 }
 
 
+#
+# debug
+#
 if ($0 eq __FILE__) {
     print "// 1. time zone.\n";
     print "default\ttimezone = ", _speculate_timezone(), "\n";
@@ -614,7 +617,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

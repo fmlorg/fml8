@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2004 Ken'ichi Fukamachi
+#  Copyright (C) 2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Rotate.pm,v 1.4 2004/07/23 12:39:17 fukachan Exp $
+# $FML: Rotate.pm,v 1.5 2004/07/23 15:59:05 fukachan Exp $
 #
 
 package FML::File::Rotate;
@@ -41,9 +41,9 @@ C<rotation> renames and rearranges files like this:
     mv file.0 file.1
     mv file   file.0
 
-In old age, shell script does this but
+In old age, a shell script does this but
 in modern unix,
-some programs such as /usr/bin/newsyslog (MIT athena project) do.
+some programs such as /usr/bin/newsyslog (MIT athena project) do it.
 
 =head1 METHODS
 
@@ -71,19 +71,19 @@ sub new
 
 =head2 set_max_size($size)
 
-set max_size.
+set the maximum size.
 
 =head2 get_max_size()
 
-get max_size.
+get the maximum size.
 
 =head2 set_num_backlog($num)
 
-set number of backlog files.
+set the number of backlog files.
 
 =head2 get_num_backlog()
 
-get number of backlog files.
+get the number of backlog files.
 
 =cut
 
@@ -151,7 +151,7 @@ sub get_num_backlog
 =head2 is_time_to_rotate()
 
 C<stat()> the file correspoinding to the object and
-determine whether the time to do comes or not.
+determine whether the time to rotate comes or not.
 
 =cut
 
@@ -175,7 +175,7 @@ sub is_time_to_rotate
 
 =head2 rotate($file)
 
-rename files to rotate it.
+rename files to rotate.
 
     rm file.4
     mv file.3 file.4
@@ -187,7 +187,7 @@ rename files to rotate it.
 =cut
 
 
-# Descriptions: rotate file.
+# Descriptions: rotate files.
 #    Arguments: OBJ($self) STR($file)
 # Side Effects: rename in proper way and unlink the oldest file if needed.
 # Return Value: none
@@ -224,7 +224,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2004 Ken'ichi Fukamachi
+Copyright (C) 2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

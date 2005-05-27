@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HomePrefix.pm,v 1.6 2004/07/23 13:16:39 fukachan Exp $
+# $FML: HomePrefix.pm,v 1.7 2004/10/03 12:07:52 fukachan Exp $
 #
 
 package FML::ML::HomePrefix;
@@ -147,6 +147,7 @@ sub add
 	$curproc->logwarn("$dir already exist. reuse it.");
     }
     else {
+	# XXX proper mode ?
 	$curproc->mkdir($dir);
 	if (-d $dir) {
 	    $curproc->log("$dir created");
@@ -247,7 +248,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

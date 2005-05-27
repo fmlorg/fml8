@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2004 Ken'ichi Fukamachi
+#  Copyright (C) 2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: String.pm,v 1.8 2004/07/23 13:16:45 fukachan Exp $
+# $FML: String.pm,v 1.9 2004/07/23 15:59:16 fukachan Exp $
 #
 
 package Mail::Message::String;
@@ -158,7 +158,7 @@ sub mime_encode
 	print "\tencode($str, $encode, $out_code, $in_code)\n";
     }
 
-    # XXX-TODO: we cannot mime-encode not iso-2022-jp string.
+    # XXX-TODO: we cannot mime-encode non iso-2022-jp string.
     use Mail::Message::Encode;
     my $obj = new Mail::Message::Encode;
     $str    = $obj->encode_mime_string($str, $encode, $out_code, $in_code);
@@ -264,7 +264,7 @@ In fact, this module return the mime encoded string as iso-2022-jp
 sub charcode_convert
 {
     my ($self, $out_code, $in_code) = @_;
-    my $str       = $self->as_str();
+    my $str = $self->as_str();
 
     # speculate internal code we should use for this string.
     $out_code ||= $self->_speculate_internal_code();
@@ -403,11 +403,11 @@ sub unfold
 }
 
 
-=head2 is_citation($data)
+=head2 is_citation()
 
 $data looks a citation or not.
 
-=head2 is_signature($data)
+=head2 is_signature()
 
 $data looks a citation or not.
 
@@ -520,7 +520,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2004 Ken'ichi Fukamachi
+Copyright (C) 2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

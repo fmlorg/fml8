@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ConfViewer.pm,v 1.30 2004/04/23 04:10:36 fukachan Exp $
+# $FML: ConfViewer.pm,v 1.31 2004/07/11 15:43:39 fukachan Exp $
 #
 
 package FML::Process::ConfViewer;
@@ -48,7 +48,7 @@ show help unless @ARGV.
 =cut
 
 
-# Descriptions: constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: FML::Process::ConfViewer object
@@ -88,10 +88,10 @@ sub prepare
 }
 
 
-# Descriptions: check @ARGV, call help() if needed
+# Descriptions: check @ARGV, call help() if needed.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: exit ASAP.
-#               longjmp() to help() if appropriate
+#               longjmp() to help() if needed.
 # Return Value: none
 sub verify_request
 {
@@ -234,7 +234,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

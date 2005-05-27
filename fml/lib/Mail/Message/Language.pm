@@ -1,8 +1,8 @@
 #-*- perl -*-
 #
-# Copyright (C) 2003,2004 Ken'ichi Fukamachi
+# Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
 #
-# $FML: Language.pm,v 1.4 2004/02/29 15:59:41 fukachan Exp $
+# $FML: Language.pm,v 1.5 2004/07/23 13:16:44 fukachan Exp $
 #
 
 package Mail::Message::Language;
@@ -20,6 +20,12 @@ Mail::Message::Language - handle *-Language: field.
 =head1 DESCRIPTION
 
 =head1 METHODS
+
+=head2 accept_language_list()
+
+return list of languages to accept as ARRAY_REF.
+
+XXX THIS CLASS IS USED ONLY WITHIN Mail::Message CLASS.
 
 =cut
 
@@ -62,7 +68,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

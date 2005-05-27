@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Info.pm,v 1.2 2004/01/21 03:40:44 fukachan Exp $
+# $FML: Info.pm,v 1.3 2004/07/23 13:09:49 fukachan Exp $
 #
 
 package FML::User::Info;
@@ -60,7 +60,7 @@ information.
 =cut
 
 
-# Descriptions: update user database based on header infomation.
+# Descriptions: update user database based on header information.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($info)
 # Side Effects: update db.
 # Return Value: none
@@ -94,7 +94,11 @@ sub import_from_mail_header
 
 =head2 set_gecos($address, $gecos)
 
+update gecos database.
+
 =head2 get_gecos($address)
+
+get information from gecos database.
 
 =cut
 
@@ -127,7 +131,11 @@ sub get_gecos
 
 =head2 set_subscribe_date($address, $subscribe_date)
 
+update subscribe_date database.
+
 =head2 get_subscribe_date($address)
+
+get information from subscribe_date database.
 
 =cut
 
@@ -166,7 +174,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.81 2005/01/01 07:16:12 fukachan Exp $
+# $FML: Header.pm,v 1.82 2005/01/23 00:54:36 fukachan Exp $
 #
 
 package FML::Header;
@@ -172,7 +172,7 @@ For example, C<text/plain>, C<mime/multipart> and et. al.
 # Return Value: STR or UNDEF
 sub data_type
 {
-    my ($header) = @_;
+    my ($header)     = @_;
     my $content_type = $header->get('content-type');
 
     if (defined $content_type) {

@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Param.pm,v 1.22 2004/01/21 03:40:43 fukachan Exp $
+# $FML: Param.pm,v 1.23 2004/07/23 13:08:56 fukachan Exp $
 #
 
 package FML::Process::CGI::Param;
@@ -109,6 +109,7 @@ sub safe_paramlist
     $key = $safe_method_regexp->{ $key };
     for my $x (param()) {
 	if ($x =~ /^$key$/) {
+	    # XXX-TODO: $value is checked ???
 	    my $value = defined param($x) ? param($x) : '';
 	    if ($numregexp == 1) { push(@list, [ $1, $value ] );}
 	    if ($numregexp == 2) { push(@list, [ $1, $2, $value ] );}
@@ -136,7 +137,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

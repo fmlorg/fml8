@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Alias.pm,v 1.3 2004/07/11 15:43:40 fukachan Exp $
+# $FML: Alias.pm,v 1.4 2004/07/23 13:16:44 fukachan Exp $
 #
 
 package FML::Sys::Alias;
@@ -18,7 +18,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::Sys::Alias - get mail alias infomation on this system.
+FML::Sys::Alias - get mail alias information on this system.
 
 =head1 SYNOPSIS
 
@@ -49,7 +49,7 @@ sub new
 }
 
 
-# Descriptions: get entrise in $file (e.g. /etc/mail/aliases)
+# Descriptions: get entries in $file (e.g. /etc/mail/aliases).
 #    Arguments: OBJ($self) STR($file)
 # Side Effects: none
 # Return Value: HASH_REF
@@ -110,7 +110,7 @@ sub expand
 }
 
 
-# Descriptions: expand $key
+# Descriptions: expand $key and return the result as ARRAY_REF.
 #    Arguments: OBJ($self) STR($key) ARRAY_REF($value) NUM($recursive)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -182,7 +182,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

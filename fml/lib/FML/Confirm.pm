@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Confirm.pm,v 1.16 2004/01/18 14:03:55 fukachan Exp $
+# $FML: Confirm.pm,v 1.17 2004/07/23 04:02:46 fukachan Exp $
 #
 
 package FML::Confirm;
@@ -52,7 +52,8 @@ constructor. The argument follows:
 	cache_dir => "/some/where",
     };
 
-This class uses FML::Cache::Journal as database internally.
+This class uses journaled database FML::Cache::Journal as database
+internally.
 
 =cut
 
@@ -106,7 +107,8 @@ sub assign_id
     my $cksum  = new Mail::Message::Checksum;
     my $md5sum = $cksum->md5( \$string );
 
-    # XXX-TODO: o.k.? $id is returned but not saved within object ?
+    # $id is returned but not primary key.
+    # $md5sum is the primary key in the database.
     # 1. build id
     my $id = "$keyword $class $md5sum";
 
@@ -313,7 +315,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

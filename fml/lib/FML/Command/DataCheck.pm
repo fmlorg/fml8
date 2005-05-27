@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DataCheck.pm,v 1.15 2004/04/23 04:10:30 fukachan Exp $
+# $FML: DataCheck.pm,v 1.16 2004/06/26 11:47:55 fukachan Exp $
 #
 
 package FML::Command::DataCheck;
@@ -89,7 +89,7 @@ sub parse_command_arguments
 
 
 #
-# XXX-TODO: find_special_keyword() NOT USED ?
+# XXX-TODO: find_special_keyword() NOT USED ? YES. REMOVE IT.
 #
 
 
@@ -132,7 +132,7 @@ sub find_special_keyword
 
 
 #
-# XXX-TODO: find_anonymous_command_mail_allowed_commands() NOT USED?
+# XXX-TODO: find_anonymous_command_mail_allowed_commands() NOT USED? YES. RM!
 #
 
 
@@ -202,7 +202,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

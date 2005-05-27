@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Parse.pm,v 1.34 2004/07/11 15:43:37 fukachan Exp $
+# $FML: Parse.pm,v 1.35 2004/12/05 16:19:05 fukachan Exp $
 #
 
 package FML::Parse;
@@ -28,7 +28,8 @@ FML::Parse - parse the incoming message.
 
 FML::Parse parses the incoming message. C<new()> analyses the data
 injected from STDIN channel, by default, and split it to a set of mail
-header and body.  C<new()> returns a C<Mail::Message> object chain.
+header and body objects. C<new()> returns a C<Mail::Message> object
+chain.
 
 =head1 METHODS
 
@@ -105,7 +106,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

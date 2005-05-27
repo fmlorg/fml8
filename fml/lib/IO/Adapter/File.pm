@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.59 2004/07/23 15:59:14 fukachan Exp $
+# $FML: File.pm,v 1.60 2004/08/14 05:02:00 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -768,6 +768,7 @@ sub sequence_replace
 	if (defined $rh) {
 	    my $id = $self->_read_one_word($rh);
 	    unless ($new_id == $id) {
+		# XXX-TODO: need to rollback ?
 		$self->error_set("fail to save id");
 	    }
 	    $rh->close();
@@ -809,7 +810,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

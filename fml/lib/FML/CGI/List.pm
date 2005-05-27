@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: List.pm,v 1.12 2004/04/18 05:59:42 fukachan Exp $
+# $FML: List.pm,v 1.13 2004/07/23 13:16:33 fukachan Exp $
 #
 
 package FML::CGI::List;
@@ -51,6 +51,7 @@ sub cgi_menu
     # check $map_default included in $map_list.
     unless ($config->has_attribute("cgi_menu_address_map_select_list",
 				   $map_default)) {
+	# XXX-TODO: nl ?
 	croak("invalid map: $map_default");
     }
 
@@ -98,7 +99,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

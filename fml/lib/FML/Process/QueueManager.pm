@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.33 2005/01/19 13:49:09 fukachan Exp $
+# $FML: QueueManager.pm,v 1.34 2005/01/23 00:54:39 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -96,6 +96,7 @@ sub send
 	$ra = [ $id ];
     }
     else {
+	# XXX-TODO: customizable
 	$queue->set_policy("fair-queue");
 	$ra = $queue->list();
 	unless (@$ra) {
@@ -180,7 +181,7 @@ sub _send
     use FML::Mailer;
     my $obj = new FML::Mailer $curproc;
 
-    # XXX-TODO: ? no lock for recipient maps here ???
+    # XXX lock for recipient maps is NOT needed since already a copy.
     # XXX queue is already locked and need no lock for recipient maps here.
     my $r   = $obj->send({
 	sender     => $info->{ sender },
@@ -224,6 +225,7 @@ sub cleanup
     my $queue = new Mail::Delivery::Queue { directory => $queue_dir };
     $queue->set_log_function($fp);
 
+    # XXX-TODO: customizable. $mail_queue_max_lifetime = 5d ?
     my $list  = $queue->list_all() || [];
     my $limit = 5 * 24 * 3600; # 5 days.
     my $now   = time;

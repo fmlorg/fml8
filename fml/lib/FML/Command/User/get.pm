@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.22 2004/04/23 04:15:58 fukachan Exp $
+# $FML: get.pm,v 1.23 2004/06/26 11:47:58 fukachan Exp $
 #
 
 package FML::Command::User::get;
@@ -80,6 +80,7 @@ sub check_limit
     my $total_num_req = $total + $nreq;
     $pcb->set('command', 'get_command_total_num_request', $total_num_req);
 
+    # XXX-TODO: same limit value ?
     if ($total_num_req > $limit) {
 	$curproc->reply_message_nl('command.exceed_total_request_limit',
 				   'total requests exceed limit',
@@ -130,7 +131,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

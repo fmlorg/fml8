@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+# Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Addr.pm,v 1.18 2004/04/23 04:10:35 fukachan Exp $
+# $FML: Addr.pm,v 1.19 2004/07/11 15:43:38 fukachan Exp $
 #
 
 package FML::Process::Addr;
@@ -236,7 +236,7 @@ sub _fmladdr
     my $list = $sys->get_user_list();
 
     for my $user (keys %$list) {
-	# hmm, user is important than alias ? or not ?
+	# XXX MTA looks prefer alias then user, ok ?
 	unless (defined $aliases->{ $user }) {
 	    $aliases->{ $user } = "$user (LOCAL USER)";
 	}
@@ -261,7 +261,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

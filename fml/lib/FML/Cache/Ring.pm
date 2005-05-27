@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2004 Ken'ichi Fukamachi
+#  Copyright (C) 2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Ring.pm,v 1.3 2004/06/26 11:32:18 fukachan Exp $
+# $FML: Ring.pm,v 1.4 2004/07/23 15:59:02 fukachan Exp $
 #
 
 package FML::Cache::Ring;
@@ -45,11 +45,10 @@ You can specify C<file_name> parameter.
 
 If so, the file names become _smtplog.0, _smtplog.1, ...
 
-The cache data is limited by size.
-
-You can use FML::Cache::Ring based on time not size.
-It is time based expiretion.
-If you so, use new() like this:
+The cache data is limited by the number of files, so approximately
+size by default. Instead of number fo files, you can limit
+FML::Cache::Ring based on time. It is time based expiretion. If you
+so, use new() like this:
 
    $obj = new FML::Cache::Ring {
        directory  => '/some/where',
@@ -114,8 +113,7 @@ END   {}
 #               forward new() request to superclass (IO::File)
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
-# Return Value: OBJ
-#               XXX $self is blessed file handle.
+# Return Value: OBJ (blessed as a file handle).
 sub new
 {
     my ($self, $args) = @_;
@@ -483,7 +481,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2004 Ken'ichi Fukamachi
+Copyright (C) 2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

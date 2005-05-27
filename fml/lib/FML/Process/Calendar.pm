@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+# Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Calendar.pm,v 1.14 2004/07/11 15:43:38 fukachan Exp $
+# $FML: Calendar.pm,v 1.15 2004/12/23 12:32:05 fukachan Exp $
 #
 
 package FML::Process::Calendar;
@@ -39,7 +39,7 @@ constructor.
 
 =head2 prepare($args)
 
-load default configuration file to use path_* variables.
+load default configuration file to use $path_* variables.
 
 =head2 verify_request($args)
 
@@ -51,7 +51,7 @@ main routine.
 
 parse files under ~$user/.schedule/ directory and summarize it.
 
-Lastly, use w3m to show schedul as html table.
+Lastly, use w3m to show schedule as html table.
 
 =head2 finish($args)
 
@@ -131,11 +131,13 @@ sub run
     $mode             = $option->{ m } if defined $option->{ m };
     my $schedule_dir  = $option->{ D } if defined $option->{ D };
     my $schedule_file = $option->{ F } if defined $option->{ F };
-    my $schargs  = {
+    my $schargs       = {
 	schedule_dir  => $schedule_dir,
 	schedule_file => undef,
     };
-    my $schedule = new FML::Demo::Calendar $schargs;
+
+    # create a scheduler object.
+    my $schedule      = new FML::Demo::Calendar $schargs;
 
     # prepare output channel
     my $tmpf     = $schedule->tmpfilepath;
@@ -150,7 +152,7 @@ sub run
     # set output mode
     $schedule->set_mode( $mode );
 
-    # -a option: show three calendars for this, next and last month.
+    # -a option: show three monthly calendars for this, next and last month.
     if (defined($option->{ a })) {
 	for my $month ('this', 'next', 'last') {
 	    $schedule->print_specific_month($wh, $month);
@@ -229,7 +231,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

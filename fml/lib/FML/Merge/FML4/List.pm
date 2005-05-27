@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2004 Ken'ichi Fukamachi
+#  Copyright (C) 2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: List.pm,v 1.6 2004/07/23 13:16:41 fukachan Exp $
+# $FML: List.pm,v 1.7 2004/07/23 15:59:08 fukachan Exp $
 #
 
 package FML::Merge::FML4::List;
@@ -148,6 +148,7 @@ sub _convert_etc_passwd
     my $src = $m_config->backup_file_path('etc/passwd');
     my $dst = $m_config->new_file_path('etc/passwd-admin');
 
+    # XXX-TODO: NOT YET IMPLEMENTED
     print STDERR "warning: etc/passwrd conversion not yet implemented\n";
 }
 
@@ -204,7 +205,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2004 Ken'ichi Fukamachi
+Copyright (C) 2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

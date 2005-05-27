@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.48 2005/01/01 08:36:29 fukachan Exp $
+# $FML: Error.pm,v 1.49 2005/01/23 00:54:38 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -96,12 +96,12 @@ sub prepare
 
 =head2 verify_request($args)
 
-dummy.
+set up maintainer.
 
 =cut
 
 
-# Descriptions: dummy.
+# Descriptions: set up maintainer.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: 1 or 0

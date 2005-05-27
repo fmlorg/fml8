@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: INET6.pm,v 1.14 2004/01/24 09:03:58 fukachan Exp $
+# $FML: INET6.pm,v 1.15 2004/06/29 10:05:29 fukachan Exp $
 #
 
 package Mail::Delivery::Net::INET6;
@@ -131,6 +131,7 @@ sub connect6
 	    # check only IPv6 case here.
 	    next ADDR_ENTRY if $family != AF_INET6;
 
+	    # XXX-TODO: timeout customizable
 	    $fh = new IO::Socket;
 	    socket($fh, $family, $type, $proto) || do {
 		# XXX-TODO: need error_clear() some where ???
@@ -227,7 +228,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

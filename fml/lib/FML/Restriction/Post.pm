@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.15 2004/11/14 11:18:23 fukachan Exp $
+# $FML: Post.pm,v 1.16 2004/12/05 16:19:13 fukachan Exp $
 #
 
 package FML::Restriction::Post;
@@ -98,9 +98,9 @@ sub permit_member_maps
     my $curproc = $self->{ _curproc };
     my $cred    = $curproc->{ credential };
 
-    # Q: the mail sender is a ML member?
+    # Q: the mail sender is an ML member?
     if ($cred->is_member($sender)) {
-	# A: Yes, we permit to distribute this article.
+	# A: Yes, we permit this article to distribute.
 	return("matched", "permit");
     }
     else {
@@ -147,10 +147,15 @@ sub reject
 
 =head1 EXTENSION
 
+=head2 check_article_thread($rule, $sender)
+
+check references and permit post of this article if it refers this
+thread.
+
 =cut
 
 
-# Descriptions: check references and permit this message 
+# Descriptions: check references and permit this article
 #               if it refers this thread.
 #    Arguments: OBJ($self) STR($rule) STR($sender)
 # Side Effects: none
@@ -201,7 +206,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2004 Ken'ichi Fukamachi
+#  Copyright (C) 2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Merge.pm,v 1.16 2004/12/29 08:21:50 fukachan Exp $
+# $FML: Merge.pm,v 1.17 2004/12/30 04:35:48 fukachan Exp $
 #
 
 package FML::Merge;
@@ -83,6 +83,7 @@ sub set_target_system
     my ($self, $system) = @_;
 
     # dummy yet.
+    # XXX-TODO: DUMMY.
 }
 
 
@@ -460,7 +461,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2004 Ken'ichi Fukamachi
+Copyright (C) 2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

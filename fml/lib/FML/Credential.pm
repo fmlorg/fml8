@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.61 2004/07/23 13:16:31 fukachan Exp $
+# $FML: Credential.pm,v 1.62 2004/07/23 15:59:00 fukachan Exp $
 #
 
 package FML::Credential;
@@ -35,7 +35,7 @@ FML::Credential - functions to authenticate the mail sender.
 =head1 DESCRIPTION
 
 a collection of utilitity functions to authenticate the sender of the
-message which kicks off this proces.
+message which kicks off this process.
 
 =head2 User credential information
 
@@ -708,7 +708,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

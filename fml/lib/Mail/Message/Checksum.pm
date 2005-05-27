@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Checksum.pm,v 1.11 2004/01/24 09:03:59 fukachan Exp $
+# $FML: Checksum.pm,v 1.12 2004/07/23 13:16:44 fukachan Exp $
 #
 
 package Mail::Message::Checksum;
@@ -153,7 +153,7 @@ sub _md5_by_program
 	use FileHandle;
 	my ($rh, $wh) = FileHandle::pipe;
 
-	# XXX-TODO: UNIX only.
+	# XXX UNIX only o.k. MD5 and Digest::MD5 are available on M$.
 	eval qq{ require IPC::Open2; IPC::Open2->import();};
 	my $pid = open2($rh, $wh, $self->{ _program });
 	if (defined $pid) {
@@ -268,7 +268,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
