@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2003,2004 Ken'ichi Fukamachi
+# Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Fake.pm,v 1.9 2004/02/15 04:38:34 fukachan Exp $
+# $FML: Fake.pm,v 1.10 2004/04/23 04:10:38 fukachan Exp $
 #
 
 package FML::Process::Fake;
@@ -89,7 +89,7 @@ sub prepare
 
 parse the header of incoming message to check to: and cc: fields.
 
-If one of them matches the domain to fake, we need to start emulate
+If one of them matches the domain to fake, we need to start to emulate
 something in run() method running phase.
 
 =cut
@@ -208,9 +208,9 @@ sub _faker_init
     my $faker_domain     = $argv->[0];
     $faker_domain        =~ s/^\@//;
 
-    # XXX-TODO: we should chdir(ml_home_prefix of $faker_domain).
-    # anyway chdir(2) to the default domain's ml_home_prefix before
-    # actions for emergency logging.
+    # XXX we should chdir(ml_home_prefix of $faker_domain).
+    # XXX anyway chdir(2) to the default domain's ml_home_prefix
+    # XXX before actions for emergency logging.
     chdir $work_dir || exit(1);
 
     my $ml_home_dir  = File::Spec->catfile($work_dir, 'faker');
@@ -226,12 +226,15 @@ sub _faker_init
     $curproc->scheduler_init();
     $curproc->log_message_init();
 
-    # XXX-TODO: hmm, good syntax ???
-    # XXX-TODO: $curproc->is_valid_domain_syntax($faker_domain) ...
     # XXX-TODO: $domain->valid() style is better?
     # we assume
-    # VIRTUAL  @domain faker=domain@${default_domain}
-    # ALIAS    faker=domain: "|/usr/local/libexec/fml/faker @domain"
+    # 
+    # [/etc/postfix/virtual]
+    #         @domain faker=domain@${default_domain}
+    # 
+    # [default_domain's alias file]
+    #         faker=domain: "|/usr/local/libexec/fml/faker @domain"
+    # 
     if ($curproc->is_valid_domain_syntax($faker_domain)) {
 	$curproc->set_emul_domain($faker_domain);
     }
@@ -281,13 +284,15 @@ sub _faker_verify_request
 	    }
 	}
 
+	# 2.1 save valid addresses to pcb.
 	unless ($curproc->_faker_analyze_address(\@mail_addresses)) {
 	    $curproc->logerror("cannot find valid faker_domain");
 	    exit(1);
 	}
     }
     else {
-	croak("no header");
+	$curproc->logerror("no valid header");
+	croak("no valid header");
     }
 }
 
@@ -321,6 +326,7 @@ sub _faker_main
 
 	$curproc->_faker_process_switch($args, $ml_name, $ml_domain);
 
+	# XXX-TODO why 2nd chance ???
 	if ($curproc->is_valid_ml($ml_name, $ml_domain)) {
 	    $curproc->log("ml found: $ml_name");
 	    $curproc->_faker_process_switch($args, $ml_name, $ml_domain);
@@ -490,7 +496,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
