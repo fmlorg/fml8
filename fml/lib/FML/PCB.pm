@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: PCB.pm,v 1.19 2004/07/23 04:10:15 fukachan Exp $
+# $FML: PCB.pm,v 1.20 2004/07/23 15:59:00 fukachan Exp $
 #
 
 package FML::PCB;
@@ -43,7 +43,12 @@ Typically, $curproc is composed like this:
 
     $curproc = {
 		pcb => {
-		    key => value,
+		    __default__  => {
+			key => value,
+		    },
+		    $ml_addresss => {
+			key => value,
+		    },
 		},
 
 		incoming_message => $r_msg,
@@ -72,7 +77,7 @@ sub new
 
     # XXX-TODO: PCB is needed to prepare for each ml_name@ml_domain ?
     unless (defined %_fml_PCB) { %_fml_PCB = ();}
-    my $me = \%_fml_PCB;
+    my $me = {};
 
     # import variables
     if (defined $pcb_args) {
@@ -80,7 +85,11 @@ sub new
 	while (($k, $v) = each %$pcb_args) { set($me, $k, $v);}
     }
 
-    return bless $me, $self;
+    bless $me, $self;
+
+    $_fml_PCB{ $current_context } = $me;
+
+    return $me;
 }
 
 
@@ -120,8 +129,8 @@ sub get
 {
     my ($self, $category, $key) = @_;
 
-    if (defined $self->{ $category }->{ $key }) {
-	return $self->{ $category }->{ $key };
+    if (defined $_fml_PCB{ $current_context }->{ $category }->{ $key }) {
+	return $_fml_PCB{ $current_context }->{ $category }->{ $key };
     }
     else {
 	return undef;
@@ -136,7 +145,8 @@ sub get
 sub set
 {
     my ($self, $category, $key, $value) = @_;
-    $self->{ $category }->{ $key } = $value;
+
+    $_fml_PCB{ $current_context }->{ $category }->{ $key } = $value;
 }
 
 
@@ -150,7 +160,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
