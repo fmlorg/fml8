@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledDir.pm,v 1.24 2004/06/30 03:05:17 fukachan Exp $
+# $FML: JournaledDir.pm,v 1.25 2004/07/23 15:59:16 fukachan Exp $
 #
 
 package Tie::JournaledDir;
@@ -18,7 +18,7 @@ $debug = 0;
 
 =head1 NAME
 
-Tie::JournaledDir - tie hash to journaled style directory cache.
+Tie::JournaledDir - tie hash to journaled style files in a directory.
 
 =head1 SYNOPSIS
 
@@ -58,10 +58,10 @@ It enables easy automatic expiration.
 
 At least you need to specify C<dir> as the cache dir.
 
-C<unit> is optional, "day" by default.
-C<unit> is number (seconds) or keyword "day".
+C<unit> is optional. It is a number (seconds) or keyword "day".
+"day" by default.
 
-C<limit> is number. It is the range of units to search.
+C<limit> is a number. It is the range of units to search.
 
 For example,
 
@@ -105,7 +105,7 @@ my $debug = 0;
 #                   unit => number (seconds)
 #                  limit => number (days)
 #               }
-# Side Effects: import _match_style into $self
+# Side Effects: import _match_style into $self.
 # Return Value: OBJ
 sub new
 {
@@ -120,10 +120,10 @@ sub new
     my $expire = $args->{ 'expire' } ||   120; # 120 days.
 
     # sanity.
-    unless ($dir) { croak("dir unspecified");}
+    unless ($dir) { croak("Tie::JournaledDir: dir unspecified");}
 
-    # reverse order file list to search
-    # since we need to find latest value.
+    # reverse order file list to search is required
+    # since we need to find the latest value.
     my @filelist = ();
     for (my $i = 0; $i < $limit; $i++) {
 	$filelist[ $i ] = _file_name($unit, $dir, $i);
@@ -213,7 +213,7 @@ sub TIEHASH
 }
 
 
-# Descriptions: hash{} access to file in the cache directory
+# Descriptions: hash{} access to files in the cache directory
 #               by Tie::JournaledFile sequentially.
 #               XXX file list in the directory is given by new().
 #    Arguments: OBJ($self) STR($key)
@@ -228,7 +228,8 @@ sub FETCH
   FILE:
     for my $f (@$files) {
 	if (-f $f) {
-	    # XXX reverse order: firstly, try last match in the latest file.
+	    # XXX the file list is already in reverse order 
+	    # XXX since we nned to do last match in the latest file.
 	    my $obj = new Tie::JournaledFile {
 		'match_condition' => 'last',
 		'file'            => $f,
@@ -278,7 +279,7 @@ sub __gen_hash
 
     use FileHandle;
   FILE:
-    for my $f (reverse @$files) {
+    for my $f (reverse @$files) { # XXX normal time order.
 	next FILE unless -f $f;
 
 	tie %db, 'Tie::JournaledFile', {
@@ -301,7 +302,7 @@ sub __gen_hash
 
 # Descriptions: return the first key in hash on memory.
 #    Arguments: OBJ($self)
-# Side Effects: __gen_hash() creates hash on momery.
+# Side Effects: __gen_hash() creates a hash table on momery.
 # Return Value: ARRAY(STR, STR)
 sub FIRSTKEY
 {
@@ -319,7 +320,6 @@ sub FIRSTKEY
 
 
 # Descriptions: fetch the next key in the cache.
-#               file to search changes automatically by Tie::JournaledFile.
 #    Arguments: OBJ($self) STR($lastkey)
 # Side Effects: seek $self->{ _hash } by each().
 # Return Value: ARRAY(STR, STR)
@@ -390,12 +390,10 @@ not
 
    KEY => VALUE
 
-This behaviour is by default.
-
 =cut
 
 
-# Descriptions: get all values for the key as ARRAY_REF.
+# Descriptions: return all values for the key as ARRAY_REF.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: HASH_REF
@@ -458,7 +456,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
