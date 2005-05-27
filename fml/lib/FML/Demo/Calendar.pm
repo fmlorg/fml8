@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2004 Ken'ichi Fukamachi
+#  Copyright (C) 2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.22 2004/07/11 15:01:50 fukachan Exp $
+# $FML: Calendar.pm,v 1.1 2004/12/23 12:32:04 fukachan Exp $
 #
 
 package FML::Demo::Calendar;
@@ -88,7 +88,7 @@ sub new
     my $me     = {};
     my $user   = $args->{ user } || $ENV{'USER'};
 
-    # default directory holding schdule file(s): ~/.schedule/ by default
+    # default directory holding schdule file(s): ~/.schedule/ by default.
     use User::pwent;
     unless (defined $user) {
 	my $p = getpwuid($<);
@@ -98,7 +98,6 @@ sub new
     my $pw       = getpwnam($user);
     my $home_dir = $pw->dir;
 
-    # XXX-TODO: NOT USE FML::* outside FML:: name space.
     # simple check (not enough mature).
     # This code is not for security but to avoid -T (taint mode) error ;)
     use FML::Restriction::Base;
@@ -220,7 +219,7 @@ sub parse
 #    Arguments: OBJ($self) STR($year) STR($month)
 # Side Effects: none
 # Return Value: none
-sub _init_Calendar
+sub _init_calendar
 {
     my ($self, $year, $month) = @_;
 
@@ -228,7 +227,7 @@ sub _init_Calendar
     my $cal = new HTML::CalendarMonthSimple('year'=> $year, 'month'=> $month);
 
     if (defined $cal) {
-	$self->{ _Calendar } = $cal;
+	$self->{ _calendar } = $cal;
     }
     else {
 	croak("cannot create Calendar object");
@@ -252,7 +251,7 @@ sub _analyze_file
 
     # initialize year+month dependent Calendar object
     # since _analyze() adds matched data into this Calendar object.
-    $self->_init_Calendar($year, $month);
+    $self->_init_calendar($year, $month);
 
     $self->_analyze($file, $pattern);
 }
@@ -269,7 +268,7 @@ sub _analyze_dir
 
     # initialize year+month dependent Calendar object
     # since _analyze() adds matched data into this Calendar object.
-    $self->_init_Calendar($year, $month);
+    $self->_init_calendar($year, $month);
 
     use DirHandle;
     my $dh = new DirHandle $data_dir;
@@ -338,7 +337,7 @@ sub _analyze
 sub _add_entry
 {
     my ($self, $day, $buf) = @_;
-    my $cal = $self->{ _Calendar };
+    my $cal = $self->{ _calendar };
     $day =~ s/^0//;
 
     if (defined $day && defined $buf) {
@@ -365,9 +364,9 @@ sub print_as_html
 {
     my ($self, $fd) = @_;
 
-    if (defined $self->{ _Calendar }) {
+    if (defined $self->{ _calendar }) {
 	$fd = defined $fd ? $fd : \*STDOUT;
-	print $fd $self->{ _Calendar }->as_HTML;
+	print $fd $self->{ _calendar }->as_HTML;
     }
     else {
 	croak("undefined schedule object");
@@ -439,7 +438,7 @@ sub print_specific_month
 sub _print_specific_day
 {
     my ($self, $fh, $time) = @_;
-    my $cal = $self->{ _Calendar };
+    my $cal = $self->{ _calendar };
 
     my ($sec,$min,$hour,$mday,$month,$year,$wday) = localtime($time);
     my $buf = $cal->getcontent($mday) || '';
@@ -505,7 +504,7 @@ Ken'chi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2004 Ken'chi Fukamachi
+Copyright (C) 2004,2005 Ken'chi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
