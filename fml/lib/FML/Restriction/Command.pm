@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.15 2004/07/23 13:16:43 fukachan Exp $
+# $FML: Command.pm,v 1.16 2004/12/05 16:19:13 fukachan Exp $
 #
 
 package FML::Restriction::Command;
@@ -87,7 +87,8 @@ sub permit_user_command
 }
 
 
-# Descriptions: permit this command even if $sender is a stranger.
+# Descriptions: permit specific anonymous command 
+#               even if $sender is a stranger.
 #    Arguments: OBJ($self) STR($rule) STR($sender) HASH_REF($v_args)
 # Side Effects: none
 # Return Value: ARRAY(STR, STR)
@@ -116,12 +117,12 @@ sub permit_anonymous_command
 
 =head2 permit_admin_member_maps($rule, $sender)
 
-permit if admin_member_maps has the sender.
+permit if admin_member_maps includes the sender in it.
 
 =cut
 
 
-# Descriptions: permit if admin_member_maps has the sender.
+# Descriptions: permit if admin_member_maps includes the sender in it.
 #    Arguments: OBJ($self) STR($rule) STR($sender)
 # Side Effects: none
 # Return Value: ARRAY(STR, STR)
@@ -172,7 +173,7 @@ sub check_admin_member_password
 
 =cut
 
-# Descriptions: $s looks secure as a command ?
+# Descriptions: check if the input string looks secure as a command ?
 #    Arguments: OBJ($self) STR($s)
 # Side Effects: none
 #      History: fml 4.0's SecureP()
@@ -237,7 +238,9 @@ sub command_regexp_match
 	    }
 	}
 	else {
-	    croak("FML::Restriction::Command: wrong data");
+	    my $curproc = $self->{ _curproc };
+	    $curproc->logerror("FML::Restriction::Command: wrong data");
+	    $r = 0;
 	}
     }
     else {
@@ -258,7 +261,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
