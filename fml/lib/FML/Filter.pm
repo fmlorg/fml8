@@ -1,17 +1,17 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.43 2004/07/23 04:04:07 fukachan Exp $
+# $FML: Filter.pm,v 1.44 2004/12/05 16:19:04 fukachan Exp $
 #
 
 package FML::Filter;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use ErrorStatus qw(error_set error error_clear);
+use FML::Filter::ErrorStatus qw(error_set error error_clear);
 
 # debug
 my $debug = 0;
@@ -198,7 +198,9 @@ sub _apply_article_non_mime_filter
 
       RULE:
 	for my $rule (@$rules) {
-	    $curproc->log("filter: article_non_mime_filter.check $rule") if $debug;
+	    if ($debug) {
+		$curproc->log("filter: article_non_mime_filter.check $rule");
+	    }
 
 	    if ($rule eq 'permit') {
 		return 0;
@@ -598,7 +600,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
