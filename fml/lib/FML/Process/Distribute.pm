@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.157 2004/11/03 23:26:52 fukachan Exp $
+# $FML: Distribute.pm,v 1.158 2004/12/05 16:19:09 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -573,6 +573,11 @@ sub _deliver_article
 
 	$curproc->unlock($lock_channel);
     }
+    else {
+	# XXX-TODO: o.k. ? 
+	$curproc->logerror("queue: cannot initialize queue system");
+	$fatal = 1;
+    }
 
     # 2. distribute article
     my $fp  = sub { $curproc->logdebug(@_);}; # pointer to the log function
@@ -611,6 +616,9 @@ sub _deliver_article
 	unless ($fatal) {
 	    $recipient_maps = $queue->recipients_file_path($qid);
 	}
+    }
+    else {
+	# XXX-TODO ?
     }
 
     $curproc->lock($lock_channel) unless defined $queue;
@@ -754,7 +762,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
