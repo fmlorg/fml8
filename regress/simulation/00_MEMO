@@ -57,13 +57,6 @@
 	Mail/Delivery/Queue.pm:	$msg->print($fh);
 
 
-[TODO]	使ってないモジュール?
-
-		FML::Data::Deadline
-		FML::Process::QMail
-		FML::Sys::Alias
-
-
 [TODO]	変数名なんだが… *_mta_config_list は困ったな
 
 		newml_command_mta_config_list
@@ -129,6 +122,10 @@
 	}
 
 
+======================================================================
+○	ACL 拡張
+
+
 [TODO]	xxx_restrictions = pgp_signature_check ?
 
 
@@ -167,11 +164,6 @@
 
 
 [TODO]	IO::Adapter::LDAP
-
-
-[TODO]	IO::Adapter の SQL まわりの改良を？
-
-	ん？もういいのかな？
 
 
 [TODO]	IO::Adapter の PostgreSQL
@@ -272,14 +264,18 @@
 	FML::Process::Fake
 
 
-[TODO]	2004/06 のオーバホールの残り
+[TODO]	2005/05 のオーバホールの残り
 
+   * 重たいので後回しにされてるもの
+	Mail/Delivery/Queue.pm
+	Mail/Delivery/SMTP.pm
 
-	FML/Process/Fake.pm
-	FML/Process/QMail.pm
-	FML/Data/Deadline.pm
+	Mail/Message.pm
+	Mail/Message/ToHTML.pm
 
-   [THREAD, DB and HTML]
+	FML/Filter/MimeComponent.pm
+
+   * スレッド関連のモジュール (2004/06 のオーバホールの残り?)
 	FML/Article/Thread.pm
 	FML/CGI/Thread.pm
 	Mail/Message/Thread.pm
@@ -289,14 +285,6 @@
 	Mail/Message/DB.pm
 	FML/Command/Admin/thread.pm
 	FML/Command/Admin/htmlify.pm
-
-   [SMTP and MAIL QUEUE HANDLING]
-	FML/Process/Distribute.pm
-	Mail/Delivery/SMTP.pm
-	FML/Process/Kernel.pm
-	Mail/Message.pm
-
-	---->8 ---->8 ---->8 ---->8 ---->8 ---->8 ---->8 ---->8
 
    * IN/OUT のチェック
 	Mail/Message/ToHTML.pm
@@ -317,6 +305,10 @@
 	FML::Filter::TextPlain
 	FML::Filter::Header
 
+   * 使ってないモジュール?
+	FML::Data::Deadline
+	FML::Process::QMail
+	FML::Sys::Alias
 
 ----------
-$FML: 00_MEMO,v 1.117 2004/11/20 02:03:58 fukachan Exp $
+$FML: 00_MEMO,v 1.118 2004/12/23 22:15:45 fukachan Exp $
