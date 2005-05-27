@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledFile.pm,v 1.31 2004/01/24 09:04:01 fukachan Exp $
+# $FML: JournaledFile.pm,v 1.32 2004/06/30 03:05:18 fukachan Exp $
 #
 
 package Tie::JournaledFile;
@@ -33,7 +33,7 @@ or access in hash style
 
 where the format of "cache.txt" is
 
-   key value
+   key value (key\s+value)
 
 for each line. For example
 
@@ -41,8 +41,10 @@ for each line. For example
      kenken north fox
      .....
 
-By default, FETCH() returns the first value with the key.
-It meas first match.
+If you specify match_condition as "last", FETCH() returns the first
+value with the key. It means "last match". If you specify
+match_condition as "first", it behaves as "first match".
+"last match" by default.
 
    use Tie::JournaledFile;
    tie %db, 'Tie::JournaledFile', {
@@ -51,8 +53,8 @@ It meas first match.
    };
    print $db{ rudo }, "\n";
 
-If you print out the latest value for C<$key>, specify C<last> by
-match_condition. The value returned is the last matched line with the
+If you get the latest value for C<$key>, specify C<last> by
+match_condition. The returned value is the last matched line with the
 key in the file.
 
 =head2 WHEN YOU USE "FIRST MATCH" ?
@@ -65,7 +67,7 @@ The first match is meaningfull only when you need to check the
 existence of the primary key regardless of the vlaue.
 
 
-=head2 KNOWN BUG
+=head2 KNOWN BUGS
 
 YOU CANNOT USE SPACE (\s+) IN THE KEY.
 
@@ -102,13 +104,16 @@ sub new
 	if ($condition eq 'first' || $condition eq 'last') {
 	    $me->{ '_match_condition' } = $condition;
 	}
+	else {
+	    croak("Tie::JournaledFile: invalid condition");
+	}
     }
 
     return bless $me, $type;
 }
 
 
-# Descriptions: tie() operation stars.
+# Descriptions: tie() operation starts.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: initialize object
 # Return Value: OBJ
@@ -121,7 +126,7 @@ sub TIEHASH
 }
 
 
-# Descriptions: tie() fetch op.
+# Descriptions: tie() fetch operation.
 #    Arguments: OBJ($self) STR($key)
 # Side Effects: none
 # Return Value: STR
@@ -133,7 +138,7 @@ sub FETCH
 }
 
 
-# Descriptions: tie() store op.
+# Descriptions: tie() store operation.
 #    Arguments: OBJ($self) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR
@@ -145,7 +150,7 @@ sub STORE
 }
 
 
-# Descriptions: op for keys() and each().
+# Descriptions: operations for keys() and each().
 #    Arguments: OBJ($self)
 # Side Effects: initialize $self->{ _hash }.
 # Return Value: ARRAY(STR, STR)
@@ -163,7 +168,9 @@ sub FIRSTKEY
 	while ($buf = <$fh>) {
 	    # XXX always overwritten. it means "last match" condition.
 	    ($k, $v) = split(/\s+/, $buf, 2);
-	    $hash->{ $k } = $v if $k;
+	    if (defined $k && defined $v) {
+		$hash->{ $k } = $v if $k;
+	    }
 	}
 	$fh->close();
     }
@@ -176,7 +183,7 @@ sub FIRSTKEY
 }
 
 
-# Descriptions: tie() keys op (next op).
+# Descriptions: tie() keys operation (next operation).
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
@@ -197,20 +204,20 @@ sub NEXTKEY
 
 =head2 get_all_values_as_hash_ref()
 
-return { key => values } for all keys.
+return a set of { key => value } for all keys.
 The returned value is HASH REFERECE for the KEY as follows:
 
    KEY => [
 	   VALUE1,
 	   VALUE2,
-	   vlaue3,
+	   VALUE3,
 	   ];
 
 not
 
    KEY => VALUE
 
-which is by default.
+by default.
 
 =cut
 
@@ -241,15 +248,17 @@ sub get_all_values_as_hash_ref
 
 		($k, $v) = split(/\s+/, $buf, 2);
 
-		if (defined $hash->{ $k }) {
-		    $a = $hash->{ $k };
-		}
-		else {
-		    $a = [];
-		}
+		if (defined $k && defined $v) {
+		    if (defined $hash->{ $k }) {
+			$a = $hash->{ $k };
+		    }
+		    else {
+			$a = [];
+		    }
 
-		push(@$a, $v);
-		$hash->{ $k } = $a;
+		    push(@$a, $v);
+		    $hash->{ $k } = $a;
+		}
 	    }
 	    $fh->close();
 	}
@@ -290,14 +299,14 @@ sub find
 
 # Descriptions: real function to search $key.
 #               This routine is used at find() and FETCH() methods.
-#               return the value with the $key
+#               return the value with the $key.
 #               $self->{ '_match_condition' } conrolls the matching algorithm
-#               is either of the fist or last match.
+#               which is either of the first or last match.
 #    Arguments: OBJ($self) STR($key) STR($mode)
 #               $key is the string to search.
 #               $mode selects the return value style, scalar or array.
 # Side Effects: none
-# Return Value: SCALAR or ARRAY_REF
+# Return Value: STR or ARRAY_REF
 sub _fetch
 {
     my ($self, $key, $mode) = @_;
@@ -328,16 +337,18 @@ sub _fetch
 	chomp $buf;
 
 	($xkey, $xvalue) = split(/\s+/, $buf, 2);
-	if ($xkey eq $key) {
-	    $value = $xvalue; # save the value for $key
+	if (defined $xkey && defined $xvalue) {
+	    if ($xkey eq $key) {
+		$value = $xvalue; # save the value for $key
 
-	    if ($mode eq 'array' || $mode eq 'array_ref') {
-		push(@values, $value);
-	    }
-	    if ($mode eq 'scalar') {
-		# firstmatch: exit loop ASAP if the $key is found.
-		if ($self->{ '_match_condition' } eq 'first') {
-		    last LINE;
+		if ($mode eq 'array' || $mode eq 'array_ref') {
+		    push(@values, $value);
+		}
+		if ($mode eq 'scalar') {
+		    # firstmatch: exit loop ASAP if the $key is found.
+		    if ($self->{ '_match_condition' } eq 'first') {
+			last LINE;
+		    }
 		}
 	    }
 	}
@@ -354,13 +365,13 @@ sub _fetch
 	return \@values;
     }
     else {
-	croak("JournaledFile: invalid mode");
+	croak("Tie::JournaledFile: invalid mode");
     }
 }
 
 
-# Descriptions: wrapper to put "key => value" pair to cache file.
-#               It emulates hash value upates.
+# Descriptions: wrapper to put "key => value" pair into the cache file.
+#               It emulates hash value update.
 #    Arguments: OBJ($self) STR($key) STR($value)
 #               that is, $key => $value
 # Side Effects: update cache file by _puts()
@@ -373,7 +384,7 @@ sub _store
 }
 
 
-# Descriptions: append given string to cache file.
+# Descriptions: append the given string into the cache file.
 #    Arguments: OBJ($self) STR($string)
 # Side Effects: update cache file
 # Return Value: 1 or throw exception by croak()
@@ -410,7 +421,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
