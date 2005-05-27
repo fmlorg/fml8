@@ -1,17 +1,17 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: TextPlain.pm,v 1.10 2004/02/01 14:52:50 fukachan Exp $
+# $FML: TextPlain.pm,v 1.11 2004/07/23 12:41:56 fukachan Exp $
 #
 
 package FML::Filter::TextPlain;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use ErrorStatus qw(error_set error error_clear);
+use FML::Filter::ErrorStatus qw(error_set error error_clear);
 
 
 =head1 NAME
@@ -568,7 +568,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

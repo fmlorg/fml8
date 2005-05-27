@@ -1,17 +1,17 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2004 Ken'ichi Fukamachi
+#  Copyright (C) 2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: External.pm,v 1.4 2004/07/23 15:59:05 fukachan Exp $
+# $FML: External.pm,v 1.5 2004/08/13 15:02:48 fukachan Exp $
 #
 
 package FML::Filter::External;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use ErrorStatus qw(error_set error error_clear);
+use FML::Filter::ErrorStatus qw(error_set error error_clear);
 
 =head1 NAME
 
@@ -89,7 +89,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2004 Ken'ichi Fukamachi
+Copyright (C) 2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

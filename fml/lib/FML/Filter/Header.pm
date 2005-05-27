@@ -1,17 +1,17 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.9 2004/02/01 14:52:50 fukachan Exp $
+# $FML: Header.pm,v 1.10 2004/07/23 13:16:38 fukachan Exp $
 #
 
 package FML::Filter::Header;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use ErrorStatus qw(error_set error error_clear);
+use FML::Filter::ErrorStatus qw(error_set error error_clear);
 
 
 =head1 NAME
@@ -22,7 +22,7 @@ FML::Filter::Header - filter based on mail header content.
 
 =head1 DESCRIPTION
 
-C<FML::Filter::Header> is the collectoin of filter rules based on mail
+C<FML::Filter::Header> is the collection of filter rules based on mail
 header content.
 
 =head1 METHODS
@@ -175,7 +175,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
