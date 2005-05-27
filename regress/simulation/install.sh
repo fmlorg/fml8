@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML: install.sh,v 1.16 2004/09/29 06:00:52 fukachan Exp $
+# $FML: install.sh,v 1.17 2004/12/08 06:43:08 fukachan Exp $
 #
 
 prefix=/usr/local
@@ -36,6 +36,13 @@ fi
 sudo rm -f $conf_dir/fml/main.cf 
 sudo rm -f $conf_dir/fml/site_default_config.cf 
 sudo rm -f /usr/local/libexec/fml/loader
-( cd ../..; sudo make install )
+
+date=`date +%C%y%m%d`
+(
+	cd ../..;
+	echo "7.98.1-$date" > .version
+	sudo make install
+	rm -f .version
+)
 
 sudo -v
