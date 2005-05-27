@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Encode.pm,v 1.18 2004/04/27 13:35:31 fukachan Exp $
+# $FML: Encode.pm,v 1.19 2004/07/23 13:11:21 fukachan Exp $
 #
 
 package Mail::Message::Encode;
@@ -55,7 +55,7 @@ sub new
 	eval q{ use Encode;};
 	croak("cannot load Encode") if $@;
     }
-    elsif ($] <= 5.006001) {
+    elsif (1 && $] <= 5.006001) {
 	eval q{ use Jcode;};
 	croak("cannot load Jcode") if $@;
     }
@@ -673,7 +673,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
