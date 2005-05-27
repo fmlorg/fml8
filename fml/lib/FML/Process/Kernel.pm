@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.252 2005/01/01 08:56:40 fukachan Exp $
+# $FML: Kernel.pm,v 1.253 2005/01/23 00:54:38 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -74,7 +74,7 @@ parameters.
 =cut
 
 
-# Descriptions: constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: allocate the current process table on memory
 # Return Value: OBJ(FML::Process::Kernel object)
@@ -82,7 +82,7 @@ sub new
 {
     my ($self, $args) = @_;
     my ($curproc)     = {}; # alloc memory as the struct current_process.
-    my ($cfargs)      = {};
+    my ($cfargs)      = {}; # parameters to export into $config object.
 
     # XXX [CAUTION]
     # XXX MOVE PARSER FROM Process::Switch to HERE
@@ -95,7 +95,7 @@ sub new
 	}
     }
 
-    # 1.2 import XXX_dir variables as fml_XXX_dir from /etc/fml/main.cf.
+    # 1.2 import XXX variables as fml_XXX from /etc/fml/main.cf.
     #     ( *_dir *_maps *_cf ).
     for my $main_cf_var (qw(
 			    config_dir
@@ -124,7 +124,7 @@ sub new
     # 1.3 import $fml_version
     if (defined $args->{ fml_version }) {
 	$cfargs->{ fml_version } =
-	    sprintf("fml-devel %s", $args->{ fml_version });
+	    sprintf("fml %s", $args->{ fml_version });
     }
 
     # 1.4 overwrite variables by -o options
@@ -227,7 +227,7 @@ sub is_process_time_limit
 }
 
 
-# Descriptions: set up default signal handling
+# Descriptions: set up default signal handling.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
@@ -244,7 +244,7 @@ sub _signal_init
 }
 
 
-# Descriptions: set up default printing style handling
+# Descriptions: set up default printing style handling.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
@@ -269,7 +269,7 @@ sub _credential_init
 }
 
 
-# Descriptions: activate scheduler
+# Descriptions: activate scheduler.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
@@ -283,11 +283,11 @@ sub scheduler_init
 }
 
 
-# Descriptions: show help and exit here, (ASAP)
+# Descriptions: show help and exit here, (ASAP).
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: longjmp() to help
 # Return Value: none
-sub _trap_help
+sub sysflow_trap_help
 {
     my ($curproc, $args) = @_;
     my $option = $curproc->command_line_options();
@@ -311,7 +311,7 @@ a set of the header and the body object.
 
 =cut
 
-# Descriptions: preliminary works before the main part
+# Descriptions: preliminary works before the main part starts.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: same as parse_incoming_message()
@@ -335,7 +335,7 @@ unlock a giant lock if the channel is not specified.
 =cut
 
 
-# Descriptions: lock the channel
+# Descriptions: lock the specified channel.
 #    Arguments: OBJ($curproc) STR($channel)
 # Side Effects: none
 # Return Value: none
@@ -429,7 +429,7 @@ sub _lock_init
     my $lock_dir  = $config->{ lock_dir };
     my $lock_type = $config->{ lock_type };
 
-    # our lock channel
+    # default lock channel to ensure the existence of channel.
     $channel ||= 'giantlock';
 
     unless (-d $home_dir) {
@@ -565,7 +565,7 @@ a side effect.
 =cut
 
 # Descriptions: validate the sender address and do a few things
-#               as a side effect
+#               as a side effect.
 #    Arguments: OBJ($curproc)
 # Side Effects: set the return value of $curproc->sender().
 #               stop the current process if needed.
@@ -573,8 +573,8 @@ a side effect.
 sub verify_sender_credential
 {
     my ($curproc) = @_;
-    my $msg  = $curproc->{'incoming_message'};
-    my $from = $msg->{'header'}->get('from');
+    my $header    = $curproc->incoming_message_header();
+    my $from      = $header->get('from');
 
     use Mail::Address;
     my ($addr, @addrs) = Mail::Address->parse($from);
@@ -604,7 +604,7 @@ sub verify_sender_credential
     if ($from) {
 	$curproc->log("sender: $from");
 
-	# check $from should match safe address regexp.
+	# check if $from should match safe address regexp.
 	use FML::Restriction::Base;
 	my $safe = new FML::Restriction::Base;
 	if ($safe->regexp_match('address', $from)) {
@@ -625,7 +625,7 @@ sub verify_sender_credential
 
 =head2 simple_loop_check($args)
 
-loop checks following rules of
+loop checks the following rules of
 $config->{ incoming_mail_header_loop_check_rules }.
 The autual check is done by header->C<$rule()> for a C<rule>.
 See C<FML::Header> object for more details.
@@ -633,7 +633,7 @@ See C<FML::Header> object for more details.
 =cut
 
 
-# Descriptions: top level dispatcher for simple loop checks
+# Descriptions: top level dispatcher for simple loop checks.
 #    Arguments: OBJ($curproc)
 # Side Effects: stop the current process if needed.
 # Return Value: none
@@ -677,7 +677,7 @@ sub _commit_message_id_cache_update_transaction
     my $config    = $curproc->config();
     my $header    = $curproc->incoming_message_header();
 
-    # XXX-TODO: more granuar
+    # XXX-TODO: more granulated
     if (defined $header) {
 	if ($header->can('update_message_id_cache')) {
 	    $header->update_message_id_cache($config);
@@ -717,6 +717,7 @@ sub resolve_ml_specific_variables
     my $myname  = $curproc->myname();
     my $ml_addr = '';
 
+    # XXX-TODO: HARD-CODED.
     # XXX-TODO: $config should determine makefml like argument or not ?
     # XXX-TODO: for example, if ($config->is_makefml_argv_style( $myname ) {;}
     # 1. virtual domain or not ?
@@ -751,7 +752,7 @@ sub resolve_ml_specific_variables
 		$ml_addr = $ml_name;
 	    }
 	    else {
-		$ml_addr = $ml_name . '@'. $default_domain;
+		$ml_addr = sprintf("%s%s%s", $ml_name, '@', $default_domain);
 	    }
 	}
     }
@@ -759,9 +760,10 @@ sub resolve_ml_specific_variables
 	use FML::Restriction::Base;
 	my $safe = new FML::Restriction::Base;
 
-	# XXX searching of ml_addr by the first match. ok?
+	# XXX the first match entry of ml_addr, o.k. ?
 	# "fmlconf -n elena@fml.org" works ? yes
 	# "fmlconf -n elena" works ?         yes
+	# what is a wrong case ???
       ARGV:
 	for my $arg (@ARGV) {
 	    if ($safe->regexp_match('address', $arg)) {
@@ -780,11 +782,11 @@ sub resolve_ml_specific_variables
 		next ARGS if $arg =~ /^\-/o; # options
 
 		if ($safe->regexp_match('ml_name', $arg)) {
-		    $ml_addr = $arg. '@' . $default_domain;
+		    $ml_addr = sprintf("%s%s%s", $arg, '@', $default_domain);
 		}
 	    }
 	}
-    }
+    } # if myname eq 'fml', ...
 
     # 1.2 set up ml_* in config space.
     # 1.2(a) ml@domain found. It may be specified in command line args.
@@ -864,7 +866,7 @@ sub resolve_ml_specific_variables
 		    use File::Spec;
 		    my $_cf_path = File::Spec->catfile($arg, "config.cf");
 
-		    if (-f $config_cf_path) {
+		    if (-f $_cf_path) {
 			$config_cf_path = $_cf_path;
 
 			use File::Basename;
@@ -934,7 +936,7 @@ sub __debug_ml_xxx
 # Return Value: HASH_REF
 sub _find_ml_home_dir_in_argv
 {
-    my ($curproc) = @_;
+    my ($curproc)      = @_;
     my $ml_home_prefix = $curproc->ml_home_prefix();
     my $ml_home_dir    = '';
     my $found_cf       = 0;
@@ -944,7 +946,7 @@ sub _find_ml_home_dir_in_argv
   ARGV:
     for my $argv (@ARGV) {
 	# 1. for the first time
-	#  a) speculate "/var/spool/ml/$_" looks a $ml_home_dir
+	#  a) speculate "/var/spool/ml/$argv" looks a $ml_home_dir
 	#     (== default $ml_home_dir)?
 	unless ($found_cf) {
 	    my $x  = File::Spec->catfile($ml_home_prefix, $argv);
@@ -960,16 +962,23 @@ sub _find_ml_home_dir_in_argv
 
 	# 2. /var/spool/ml/elena looks a $ml_home_dir ?
 	if (-d $argv) {
-	    $ml_home_dir = $argv;
 	    my $cf = File::Spec->catfile($argv, "config.cf");
 	    if (-f $cf) {
+		$found_cf    = 1;
+		$ml_home_dir = $argv;
 		push(@cf, $cf);
-		$found_cf = 1;
 	    }
 	}
 	# 3. looks a file, so /var/spool/ml/elena/config.cf ?
-	elsif (-f $argv) {
+	elsif (-f $argv && $argv =~ /\.cf$/o) {
+	    $curproc->logwarn("argv ($argv) is a config.cf ?");
+	    use File::Basename;
+	    $ml_home_dir = dirname($argv);
 	    push(@cf, $argv);
+	}
+	# 4. unknown case.
+	else {
+	    $curproc->logdebug("unknown argv: $argv");
 	}
     }
 
@@ -988,7 +997,7 @@ $config->get() of FETCH() method is called.
 
 =cut
 
-# Descriptions: load configuration files and evaluate variables
+# Descriptions: load configuration files and evaluate variables.
 #    Arguments: OBJ($curproc) ARRAY_REF($files)
 # Side Effects: none
 # Return Value: none
@@ -1018,7 +1027,7 @@ sub load_config_files
     if ($curproc->is_under_mta_process()) {
 	# XXX simple sanity check
 	#     MAIL_LIST != MAINTAINER
-	my $maintainer = $config->{ maintainer }       || '';
+	my $maintainer = $config->{ maintainer }           || '';
 	my $ml_address = $config->{ article_post_address } || '';
 
 	unless ($maintainer) {
@@ -1406,7 +1415,6 @@ sub _log_message_queue_append
     my $msg_queue = $curproc->{ log_message_queue };
 
     if (defined $msg_queue) {
-	$msg->{ time } = time;
 	$msg_queue->add($msg);
     }
     else {
@@ -1418,7 +1426,7 @@ sub _log_message_queue_append
 }
 
 
-# Descriptions: log message queue
+# Descriptions: print contents in log message queue.
 #    Arguments: OBJ($curproc)
 # Side Effects: set up $curproc->{ log_message_queue }.
 # Return Value: none
@@ -1477,6 +1485,7 @@ sub log_message
 
     # update message queue
     $curproc->_log_message_queue_append({
+	time  => time,
 	buf   => $msg,
 	level => $level,
 	hints => {
@@ -1488,7 +1497,7 @@ sub log_message
 }
 
 
-# Descriptions: log message
+# Descriptions: log message.
 #    Arguments: OBJ($curproc) STR($msg) HASH_REF($msg_args)
 # Side Effects: none
 # Return Value: none
@@ -1576,8 +1585,8 @@ sub logdebug
 }
 
 
-# Descriptions: informational message CUI shows logged
-#               and forwarded into STDERR.
+# Descriptions: log informational message CUI shows
+#               and forward it into STDERR, too.
 #    Arguments: OBJ($curproc) STR($msg) HASH_REF($msg_args)
 # Side Effects: none
 # Return Value: none
@@ -1633,8 +1642,9 @@ If given, makefml/fml ignores message output.
 =cut
 
 
-# Descriptions: reply message interface.
-#               It injects messages into message queue on memory in fact.
+# Descriptions: top level reply message interface.
+#               It injects the specified message into the system 
+#               global message queue on memory in fact. 
 #               inform_reply_messages() recollects them and send it later.
 #    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($rm_args)
 # Side Effects: none
@@ -1657,7 +1667,7 @@ sub reply_message
 }
 
 
-# Descriptions: reply message interface.
+# Descriptions: reply message interface for each charset.
 #               It injects messages into message queue on memory in fact.
 #               inform_reply_messages() recollects them and send it later.
 #    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($rm_args) HASH_REF($charsets)
@@ -1671,7 +1681,7 @@ sub _reply_message_queuein
     $curproc->caller_info($msg, caller) if $debug;
 
     # process running under MTA can handle reply messages by mail.
-    unless ($curproc->allow_reply_message()) {
+    unless ($curproc->is_allow_reply_message()) {
 	unless ($curproc->error_message_get_count("disable_reply_message")) {
 	    $curproc->logwarn("(debug) $myname disables reply_message()");
 	    $curproc->error_message_set_count("disable_reply_message");
@@ -1974,7 +1984,7 @@ This $args is passed through to reply_message().
 =cut
 
 
-# Descriptions: set reply message with translation to natual language
+# Descriptions: set reply message with translation to natual language.
 #    Arguments: OBJ($curproc) STR($class) STR($default_msg) HASH_REF($rm_args)
 # Side Effects: none
 # Return Value: none
@@ -1998,7 +2008,7 @@ sub reply_message_nl
 }
 
 
-# Descriptions: set reply message with translation to natual language
+# Descriptions: set reply message with translation to natual language.
 #    Arguments: OBJ($curproc)
 #               STR($class) STR($default_msg) HASH_REF($rm_args)
 #               HASH_REF($charsets)
@@ -2193,7 +2203,7 @@ sub get_preferred_languages
 }
 
 
-# Descriptions: return preferred languages e.g. [ ja ], [ ja en ]...
+# Descriptions: return preferred charsets e.g. iso-2022-jp, us-ascii, ...
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -2288,7 +2298,7 @@ Prepare the message and queue it in by C<Mail::Delivery::Queue>.
 #               text/plain if only "text" is defined.
 #               msg = header + get(message, text)
 #                      OR
-#               multipart/mixed if both "text" and "queue" is defined.
+#               multipart/mixed if both "text" and "queue" are defined.
 #               $r  = get(message, queue)
 #               msg = header + "text" + $r->[0] + $r->[1] + ...
 #
@@ -2386,7 +2396,7 @@ sub queue_in
 
 	# we need multipart style or not ?
 	if (defined $a->{'recipient_attr'}) {
-	    my $attr  = $a->{ recipient_attr }->{ $rcptkey };
+	    my $attr = $a->{ recipient_attr }->{ $rcptkey };
 
 	    # count up non text message in the queue
 	    for my $attr (keys %$attr) {
@@ -2543,6 +2553,7 @@ sub queue_in
 	    next QUEUE unless $r eq $rcptkey;
 
 	    if ($t eq 'Mail::Message') {
+		# XXX-TODO: meaningless ?
 		$curproc->_append_rfc822_message($q, $msg);
 	    }
 	    else {
@@ -2615,7 +2626,7 @@ sub queue_in
 }
 
 
-# Descriptions: append message in $msg_in into $msg_out
+# Descriptions: append message in $msg_in into $msg_out.
 #    Arguments: OBJ($curproc) OBJ($msg_in) OBJ($msg_out)
 # Side Effects: create a new $tmpfile
 #               update garbage collection queue (clean_up_queue)
@@ -2653,7 +2664,7 @@ sub _append_rfc822_message
 }
 
 
-# Descriptions: insert $file into garbage collection queue (clean_up_queue)
+# Descriptions: insert $file into garbage collection queue (clean_up_queue).
 #    Arguments: OBJ($curproc) STR($file)
 # Side Effects: update $curproc->{ __clean_up_tmpfiles };
 # Return Value: none
@@ -2671,7 +2682,7 @@ sub _add_into_clean_up_queue
 }
 
 
-# Descriptions: remove garbage collection queue (clean_up_queue)
+# Descriptions: remove garbage collection queue (clean_up_queue).
 #    Arguments: OBJ($curproc)
 # Side Effects: remove files in $curproc->{ __clean_up_tmpfiles }
 # Return Value: none
@@ -2728,7 +2739,7 @@ sub clean_up_incoming_queue
 }
 
 
-# Descriptions: return the temporary file path you can use
+# Descriptions: return the temporary file path you can use.
 #    Arguments: OBJ($curproc)
 # Side Effects: update the counter to ensure file name uniqueness
 # Return Value: STR
@@ -2780,7 +2791,7 @@ sub global_tmp_dir_path
 }
 
 
-# Descriptions: add some info into header
+# Descriptions: add some information into header.
 #    Arguments: OBJ($config) OBJ($msg)
 # Side Effects: none
 # Return Value: none
@@ -2840,7 +2851,7 @@ sub queue_flush
 }
 
 
-=head2 expand_variables_in_file
+=head2 prepare_file_to_return($pf_args)
 
 expand $xxx variables in template (e.g. $help_file).  return file name
 string, which is a new template converted by this routine.
@@ -2873,7 +2884,7 @@ sub prepare_file_to_return
     my ($curproc, $pf_args) = @_;
     my $config      = $curproc->config();
     my $tmp_dir     = $config->{ tmp_dir };
-    my $tmpf        = File::Spec->catfile($tmp_dir, $$);
+    my $tmpf        = $curproc->temp_file_path();
     my $src_file    = $pf_args->{ src };
     my $charset_out = $pf_args->{ charset };
 
@@ -2890,6 +2901,7 @@ sub prepare_file_to_return
 	    $obj = new Mail::Message::Encode;
 	};
 
+	# XXX-TODO: NL
 	if (defined $obj) {
 	    my $buf;
 	    while ($buf = <$rh>) {
@@ -2947,7 +2959,7 @@ sub open_outgoing_message_channel
 }
 
 
-# Descriptions: parse exception error message and return (key, reason)
+# Descriptions: parse exception error message and return (key, reason).
 #    Arguments: OBJ($curproc) STR($exception)
 # Side Effects: none
 # Return Value: ARRAY(STR, STR)
@@ -2969,7 +2981,7 @@ sub parse_exception
 #    Arguments: OBJ($curproc)
 # Side Effects: close(STDERR)
 # Return Value: none
-sub _reopen_stderr_channel
+sub sysflow_reopen_stderr_channel
 {
     my ($curproc) = @_;
     my $config    = $curproc->config();
@@ -2979,7 +2991,8 @@ sub _reopen_stderr_channel
 	$curproc->is_under_mta_process() ||
 	defined $option->{ quiet }  || defined $option->{ q } ||
 	$config->yes('use_log_dup') || $option->{ 'log-dup' } ||
-	$config->yes('use_log_computer_output') || $option->{'log-computer-output'}) {
+	$config->yes('use_log_computer_output') || 
+	$option->{'log-computer-output'}) {
 	my $tmpfile = $curproc->temp_file_path();
 	my $pcb     = $curproc->pcb();
 	$pcb->set("stderr", "logfile", $tmpfile);
@@ -2994,7 +3007,7 @@ sub _reopen_stderr_channel
 #    Arguments: OBJ($curproc)
 # Side Effects: close(STDERR)
 # Return Value: none
-sub _finalize_stderr_channel
+sub sysflow_finalize_stderr_channel
 {
     my ($curproc) = @_;
     my $config    = $curproc->config();
@@ -3042,7 +3055,7 @@ sub _finalize_stderr_channel
 =cut
 
 
-# Descriptions: set umask as 000 for public use
+# Descriptions: set umask as 000 for public use.
 #    Arguments: OBJ($curproc)
 # Side Effects: update umask
 #               save the current umask in PCB
@@ -3059,7 +3072,7 @@ sub set_umask_as_public
 }
 
 
-# Descriptions: back to the saved umask in PCB
+# Descriptions: back to the saved umask in PCB.
 #    Arguments: OBJ($curproc)
 # Side Effects: umask
 # Return Value: NUM
@@ -3074,7 +3087,7 @@ sub reset_umask
 }
 
 
-# Descriptions: close.
+# Descriptions: whether we should be quiet or not ?
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
@@ -3089,7 +3102,8 @@ sub be_quiet
 	$curproc->is_under_mta_process() ||
 	defined $option->{ quiet }  || defined $option->{ q } ||
 	$config->yes('use_log_dup') || $option->{ 'log-dup' } ||
-	$config->yes('use_log_computer_output') || $option->{'log-computer-output'}) {
+	$config->yes('use_log_computer_output') ||
+	$option->{'log-computer-output'}) {
 	return 1;
     }
     else {
@@ -3110,8 +3124,9 @@ sub finalize
     my $option    = $curproc->command_line_options();
 
     if ($config->yes('use_log_dup') || $option->{ 'log-dup' } ||
-	$config->yes('use_log_computer_output') || $option->{'log-computer-output'}) {
-	$curproc->_finalize_stderr_channel();
+	$config->yes('use_log_computer_output') ||
+	$option->{'log-computer-output'}) {
+	$curproc->sysflow_finalize_stderr_channel();
 	$curproc->_log_message_print();
     }
 
