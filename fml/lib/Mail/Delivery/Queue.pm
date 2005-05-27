@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.49 2004/12/15 06:46:19 fukachan Exp $
+# $FML: Queue.pm,v 1.50 2004/12/15 13:16:42 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -409,7 +409,8 @@ sub _update_schedule_info
     my $cur_sleep = $hint->find("SLEEP") || 300;
     $cur_sleep =~ s/^.*SLEEP\s+//;
     $cur_sleep =~ s/\s*$//;
-    my $new_sleep = ($cur_sleep || 300 ) * 2;
+    my $new_sleep = int( ($cur_sleep || 300 ) * (1 + rand(1)) );
+    $new_sleep = $new_sleep < 4000 ? $new_sleep : 4000;
     $hint->delete("SLEEP");
     $hint->add("SLEEP", [ $new_sleep ]);
     $info->{ sleep } = $new_sleep;
@@ -1459,7 +1460,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
