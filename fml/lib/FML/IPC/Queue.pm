@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.8 2004/07/23 15:21:23 fukachan Exp $
+# $FML: Queue.pm,v 1.9 2004/07/23 15:59:07 fukachan Exp $
 #
 
 package FML::IPC::Queue;
@@ -125,6 +125,7 @@ sub _append_msg_into_queue_dir
     my $tmpfile = File::Spec->catfile($queue_dir, $tmptmp);
     my $q_file  = File::Spec->catfile($queue_dir, $tmpname);
 
+    my $cur_umask = umask(077);
     use FileHandle;
     my $wh = new FileHandle "> $tmpfile";
     if (defined $wh) {
@@ -138,6 +139,7 @@ sub _append_msg_into_queue_dir
 	}
 	$wh->close();
     }
+    umask($cur_umask);
 
     if (-s $tmpfile) {
 	# initialized to unlocked state (lock == executable bit).
@@ -348,7 +350,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
