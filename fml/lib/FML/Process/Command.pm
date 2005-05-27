@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.110 2004/07/23 15:59:08 fukachan Exp $
+# $FML: Command.pm,v 1.111 2004/12/05 16:19:08 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -287,9 +287,8 @@ sub _command_process_loop
     my $comlines  = $msg->message_text_as_array_ref();
     my $context   = {};
 
-    # XXX-TODO: toggle on/off
     # firstly, prompt (for politeness :) to show processing ...
-    {
+    if ($config->yes('use_command_mail_reply_preamble')) {
 	my $whoami    = "Hi, I am fml8 system for $ml_domain domain.";
 	my $result_is = "result for your command requests follows:";
 	$curproc->reply_message_nl("system.whoami",  $whoami);
@@ -500,13 +499,16 @@ sub _command_execute
 sub _add_reply_message_trailor
 {
     my ($curproc) = @_;
+    my $config    = $curproc->config();
 
-    # info
-    $curproc->reply_message("\ncommand processing results:");
-    $curproc->reply_message("   processed = $num_processed");
-    $curproc->reply_message("   error     = $num_error");
-    $curproc->reply_message("   ignored   = $num_ignored");
-    $curproc->reply_message("   total     = $num_total");
+    # trailor info
+    if ($config->yes('use_command_mail_reply_trailor')) {
+	$curproc->reply_message("\ncommand processing results:");
+	$curproc->reply_message("   processed = $num_processed");
+	$curproc->reply_message("   error     = $num_error");
+	$curproc->reply_message("   ignored   = $num_ignored");
+	$curproc->reply_message("   total     = $num_total");
+    }
 
     # send back the original input message if needed.
     my $msg = $curproc->incoming_message();
@@ -537,7 +539,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
