@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.83 2004/10/09 12:04:18 fukachan Exp $
+# $FML: Kernel.pm,v 1.84 2004/12/05 16:19:12 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -425,15 +425,18 @@ sub cgi_execute_command
 {
     my ($curproc, $command_args) = @_;
 
-    # XXX-TODO: who validate $comname, $commode ?
+    # XXX Only FML::CGI::Skin::Base calls cgi_execute_command() now.
+    # XXX comname are the result returned by $curproc->safe_param_command().
+    # XXX command_mode is hard-coded in FML::CGI::Skin::Base.
     my $commode = $command_args->{ command_mode };
     my $comname = $command_args->{ comname };
     my $config  = $curproc->config();
 
+    # XXX $comname is one of strings defined in the config file, 
+    # XXX NOT user defined one.
     unless ($config->has_attribute("admin_cgi_allowed_commands", $comname)) {
 	$curproc->logerror("cgi deny command: mode=$commode level=cgi");
 
-	# XXX-TODO: validate $comname (CSS).
 	my $buf = $curproc->message_nl("cgi.deny",
 				       "Error: deny $comname command");
 	print $buf, "<BR>\n";
@@ -447,13 +450,11 @@ sub cgi_execute_command
     use FML::Command;
     my $obj = new FML::Command;
     if (defined $obj) {
-	my $comname = $command_args->{ comname };
 	eval q{
 	    $obj->$comname($curproc, $command_args);
 	};
 	unless ($@) {
 	    # XXX-TODO: NL
-	    # XXX-TODO: validate $comname (CSS).
 	    print "OK! $comname succeed.\n";
 	}
 	else {
@@ -494,6 +495,7 @@ sub run_cgi_title
     my $role      = '';
     my $title     = '';
 
+    # XXX-TODO: customizable
     if ($myname =~ /thread/) {
 	$role  = "for thread view";
     }
@@ -559,8 +561,9 @@ sub run_cgi_date
 {
     my ($curproc) = @_;
 
-    # XXX-TODO: NOT IMPLEMENTED. NOT USE `date`;
-    print `date`;
+    use Mail::Message::Date;
+    my $date = new Mail::Message::Date time;
+    print $date->mail_header_style();
 }
 
 
@@ -635,7 +638,7 @@ sub cgi_execute_cgi_menu
     $curproc->cgi_menu_back_to_top();
 
     if (defined $command_args) {
-	# XXX-TODO: validate $comname
+	# XXX-TODO: who validate $comname (in FML::CGI::Skin) ?
 	my $comname = $command_args->{ comname };
 	my $cmd     = "FML::Command::Admin::$comname";
 	my $obj     = undef;
@@ -751,8 +754,9 @@ sub cgi_try_get_address
     }
 
     if ($address) {
-	# XXX-TODO: not use $curproc->is_safe_syntax() ?
-	if ($curproc->is_safe_syntax('address', $address)) {
+	use FML::Restriction::Base;
+	my $safe = new FML::Restriction::Base;
+	if ($safe->regexp_match('address', $address)) {
 	    return $address;
 	}
 	else {
@@ -805,8 +809,9 @@ sub cgi_try_get_ml_name
     }
 
     if ($ml_name) {
-	# XXX-TODO: not use $curproc->is_safe_syntax() ?
-	if ($curproc->is_safe_syntax('ml_name', $ml_name)) {
+	use FML::Restriction::Base;
+	my $safe = new FML::Restriction::Base;
+	if ($safe->regexp_match('ml_name', $ml_name)) {
 	    return $ml_name;
 	}
 	else {
@@ -836,8 +841,9 @@ sub safe_cgi_action_name
     my ($curproc) = @_;
     my $name = $curproc->myname();
 
-    # XXX-TODO: not use $curproc->is_safe_syntax() ?
-    if ($curproc->is_safe_syntax('action', $name)) {
+    use FML::Restriction::Base;
+    my $safe = new FML::Restriction::Base;
+    if ($safe->regexp_match('action', $name)) {
 	return $name;
     }
     else {
@@ -891,7 +897,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
