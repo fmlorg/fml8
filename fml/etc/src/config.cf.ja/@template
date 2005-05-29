@@ -1,6 +1,8 @@
 # Descriptions:
 #      History:
 #        Value: YES_OR_NO
+#        Value: FILE
+#        Value: DIR
 #        Value: CF_FILE		注: .cf スタイルのファイル
 #        Value: UNIX_SS_FILE	注: Unix伝統のスペース区切り形式ファイル
 #        Value: SELECT ( ... )	注: 選択肢から一つを選ぶ場合
