@@ -2841,6 +2841,46 @@ path_bogofilter           = @BOGOFILTER@
 #     Examples:
 path_clamscan             = @CLAMSCAN@
 
+
+=head2 editors
+
+
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
+path_vi             	= @VI@
+
+
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
+path_ng             	= @NG@
+
+
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
+path_mule             	= @MULE@
+
+
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
+path_emacs             	= @EMACS@
+
+
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
+path_xemacs             = @XEMACS@
+
+
+
 =head1	system dependence (incompatibility against BSD)
 
 #

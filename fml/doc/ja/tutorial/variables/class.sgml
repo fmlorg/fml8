@@ -579,6 +579,7 @@ path {
           $path_cksum
           $path_clamscan
           $path_compress
+          $path_emacs
           $path_gpg
           $path_gpgsplit
           $path_gpgv
@@ -593,8 +594,10 @@ path {
           $path_makemap
           $path_md5
           $path_more
+          $path_mule
           $path_namazu
           $path_newaliases
+          $path_ng
           $path_nkf
           $path_perl
           $path_pgp
@@ -614,7 +617,9 @@ path {
           $path_sum
           $path_tar
           $path_uuencode
+          $path_vi
           $path_w3m
+          $path_xemacs
           $path_zcat
    }
 }
