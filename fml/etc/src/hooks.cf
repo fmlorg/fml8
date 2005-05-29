@@ -96,6 +96,14 @@
 # $fmlhtmlify_run_start_hook = q{ 1;};
 # $fmlhtmlify_verify_request_end_hook = q{ 1;};
 # $fmlhtmlify_verify_request_start_hook = q{ 1;};
+# $fmlpgp_finish_end_hook = q{ 1;};
+# $fmlpgp_finish_start_hook = q{ 1;};
+# $fmlpgp_prepare_end_hook = q{ 1;};
+# $fmlpgp_prepare_start_hook = q{ 1;};
+# $fmlpgp_run_end_hook = q{ 1;};
+# $fmlpgp_run_start_hook = q{ 1;};
+# $fmlpgp_verify_request_end_hook = q{ 1;};
+# $fmlpgp_verify_request_start_hook = q{ 1;};
 # $makefml_finish_end_hook = q{ 1;};
 # $makefml_finish_start_hook = q{ 1;};
 # $makefml_prepare_end_hook = q{ 1;};
