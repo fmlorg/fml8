@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: install.cf.in,v 1.17 2004/11/21 06:58:52 fukachan Exp $
+# $FML: install.cf.in,v 1.18 2004/12/19 11:04:43 fukachan Exp $
 #
 
 
@@ -105,6 +105,14 @@ bin_programs	=	fml
 			makefml
 			fmlsch
 			fmlhtmlify
+			fmlpgp
+			fmlpgp5
+			fmlpgpe
+			fmlpgpk
+			fmlpgps
+			fmlpgpv
+			fmlgpg
+			fmlgpgv
 
 
 libexec_programs 	=	fml.pl
