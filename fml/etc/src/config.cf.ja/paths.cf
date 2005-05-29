@@ -187,6 +187,20 @@ path_pgpv                 = @PGPV@
 path_gpg                  = @GPG@
 
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
+path_gpgv                 = @GPGV@
+
+
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
+path_gpgsplit             = @GPGSPLIT@
+
+
 =head2	utilities
 
 # Descriptions:
