@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.16 2004/12/05 16:19:13 fukachan Exp $
+# $FML: Post.pm,v 1.17 2005/05/27 03:03:39 fukachan Exp $
 #
 
 package FML::Restriction::Post;
@@ -193,6 +193,70 @@ sub check_article_thread
 	$curproc->logdebug("check_article_thread unmatched.");
 	return(0, undef);
     }
+}
+
+
+# Descriptions: check PGP signature in message.
+#    Arguments: OBJ($self) STR($rule) STR($sender)
+# Side Effects: none
+# Return Value: NUM
+sub check_pgp_signature
+{
+    my ($self, $rule, $sender) = @_;
+    my $curproc = $self->{ _curproc };
+    my $config  = $curproc->config();
+    my $file    = $curproc->get_incoming_message_cache_file_path();
+    my $match   = 0;
+    my $pgp     = undef;
+
+    $self->_reset_pgp_environment();
+
+    eval q{
+	use Crypt::OpenPGP;
+	$pgp = new Crypt::OpenPGP;
+    };
+    if ($@) {
+	$curproc->logerror("check_pgp_signature need Crypt::OpenPGP.");
+	$curproc->logerror($@);
+	return(0, undef);
+    }
+
+    my $ret = $pgp->verify(SigFile => $file);
+    unless ($pgp->errstr) {
+	if ($ret) {
+	    $curproc->log("pgp signature found: $ret");
+	    $match = 1;
+	}
+    }
+
+    if ($match) {
+	$curproc->log("check_pgp_signature matched.");
+	return("matched", "permit");
+    }
+    else {
+	$curproc->log("check_pgp_signature unmatched.");
+	return(0, undef);
+    }
+}
+
+
+# Descriptions: modify PGP related environment variables.
+#    Arguments: OBJ($self)
+# Side Effects: PGP related environment variables modified.
+# Return Value: none
+sub _reset_pgp_environment
+{
+    my ($self)  = @_;
+    my $curproc = $self->{ _curproc };
+    my $config  = $curproc->config();
+
+    # PGP2/PGP5/PGP6
+    my $pgp_config_dir = $config->{ pgp_config_dir };
+    $ENV{'PGPPATH'}    = $pgp_config_dir;
+
+    # GPG
+    my $gpg_config_dir = $config->{ gpg_config_dir };
+    $ENV{'GNUPGHOME'}  = $gpg_config_dir;
 }
 
 
