@@ -20,6 +20,7 @@ virus.cf
 spool.cf
 summary.cf
 htmlarchive.cf
+pgp.cf
 command.cf
 error.cf
 threadtrack.cf
