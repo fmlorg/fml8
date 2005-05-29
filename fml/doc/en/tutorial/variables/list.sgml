@@ -802,6 +802,15 @@ get_command_request_limit</entry>
 </row>
 <row>
 <entry>
+gpg_config_dir</entry>
+<entry>
+ GNU Pvivary Guard</entry>
+<entry>
+$etc_dir/gpg
+   </entry>
+</row>
+<row>
+<entry>
 guide_file</entry>
 <entry>
  guilde file</entry>
@@ -1358,6 +1367,15 @@ outgoing_mail_header_x_ml_name</entry>
  ml name in both X-ML-Name: and X-Sequence header fields.</entry>
 <entry>
 $ml_name
+   </entry>
+</row>
+<row>
+<entry>
+pgp_config_dir</entry>
+<entry>
+ Pretty Good Privacy</entry>
+<entry>
+$etc_dir/pgp
    </entry>
 </row>
 <row>

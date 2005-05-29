@@ -1769,6 +1769,24 @@ html_archive_charset_ja		=	euc-jp
 html_archive_charset_en		=	us-ascii
 
 
+=head1 PGP
+
+
+# Descriptions: Pretty Good Privacy
+#      History:  
+#        Value: DIR
+#     Examples: /var/spool/ml/elena/etc/pgp
+pgp_config_dir = $etc_dir/pgp
+
+
+# Descriptions: GNU Pvivary Guard
+#      History: 
+#        Value: DIR
+#     Examples: /var/spool/ml/elena/etc/gpg
+gpg_config_dir = $etc_dir/gpg
+
+
+
 =head1	コマンドの定義
 
 =head2	プロセス
@@ -2818,6 +2836,20 @@ path_pgpv                 = @PGPV@
 #        Value: FILE
 #     Examples:
 path_gpg                  = @GPG@
+
+
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
+path_gpgv                 = @GPGV@
+
+
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
+path_gpgsplit             = @GPGSPLIT@
 
 
 =head2	utilities

@@ -580,6 +580,8 @@ path {
           $path_clamscan
           $path_compress
           $path_gpg
+          $path_gpgsplit
+          $path_gpgv
           $path_gunzip
           $path_gzcat
           $path_gzip
@@ -787,10 +789,12 @@ _dir$ {
           $db_dir
           $etc_dir
           $event_queue_dir
+          $gpg_config_dir
           $listinfo_base_dir
           $listinfo_dir
           $listinfo_template_dir
           $ml_admin_cgi_base_dir
+          $pgp_config_dir
           $shared_db_dir
           $tmp_dir
           $udb_base_dir
