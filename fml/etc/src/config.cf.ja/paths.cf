@@ -275,3 +275,43 @@ path_bogofilter           = @BOGOFILTER@
 #        Value: FILE
 #     Examples:
 path_clamscan             = @CLAMSCAN@
+
+
+=head2 editors
+
+
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
+path_vi             	= @VI@
+
+
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
+path_ng             	= @NG@
+
+
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
+path_mule             	= @MULE@
+
+
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
+path_emacs             	= @EMACS@
+
+
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
+path_xemacs             = @XEMACS@
+
+
