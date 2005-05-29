@@ -1,0 +1,17 @@
+=head1 PGP
+
+
+# Descriptions: Pretty Good Privacy
+#      History:  
+#        Value: DIR
+#     Examples: /var/spool/ml/elena/etc/pgp
+pgp_config_dir = $etc_dir/pgp
+
+
+# Descriptions: GNU Pvivary Guard
+#      History: 
+#        Value: DIR
+#     Examples: /var/spool/ml/elena/etc/gpg
+gpg_config_dir = $etc_dir/gpg
+
+
