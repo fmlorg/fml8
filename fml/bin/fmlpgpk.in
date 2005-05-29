@@ -1,0 +1,17 @@
+#! /bin/sh
+#
+#  Copyright (C) 2005 Ken'ichi Fukamachi
+#   All rights reserved. This program is free software; you can
+#   redistribute it and/or modify it under the same terms as Perl itself.
+#
+# $FML: fmlpgpk.in,v 1.3 2002/04/01 23:40:53 fukachan Exp $
+#
+
+prefix=/usr/local
+exec_prefix=${prefix}
+libexec_dir=${exec_prefix}/libexec/fml
+
+exec $libexec_dir/fmlpgpk $*
+
+echo 'not reach here'
+exit 0;
