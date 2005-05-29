@@ -1,6 +1,6 @@
 #! /bin/sh
 
-# From configure.in Revision: 1.42 
+# From configure.in Revision: 1.43 
 
 # Guess values for system-dependent variables and create Makefiles.
 # Generated automatically using autoconf version 2.13 
@@ -1783,11 +1783,81 @@ else
   echo "$ac_t""no" 1>&6
 fi
 
+# Extract the first word of "gpgv", so it can be a program name with args.
+set dummy gpgv; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:1790: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_GPGV'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$GPGV" in
+  /*)
+  ac_cv_path_GPGV="$GPGV" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_GPGV="$GPGV" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_GPGV="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+GPGV="$ac_cv_path_GPGV"
+if test -n "$GPGV"; then
+  echo "$ac_t""$GPGV" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "gpgsplit", so it can be a program name with args.
+set dummy gpgsplit; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:1825: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_GPGSPLIT'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$GPGSPLIT" in
+  /*)
+  ac_cv_path_GPGSPLIT="$GPGSPLIT" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_GPGSPLIT="$GPGSPLIT" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_GPGSPLIT="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+GPGSPLIT="$ac_cv_path_GPGSPLIT"
+if test -n "$GPGSPLIT"; then
+  echo "$ac_t""$GPGSPLIT" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
 
 # Extract the first word of "less", so it can be a program name with args.
 set dummy less; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1791: checking for $ac_word" >&5
+echo "configure:1861: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_LESS'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1822,7 +1892,7 @@ fi
 # Extract the first word of "more", so it can be a program name with args.
 set dummy more; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1826: checking for $ac_word" >&5
+echo "configure:1896: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_MORE'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1857,7 +1927,7 @@ fi
 # Extract the first word of "w3m", so it can be a program name with args.
 set dummy w3m; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1861: checking for $ac_word" >&5
+echo "configure:1931: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_W3M'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1894,7 +1964,7 @@ fi
 # Extract the first word of "spamassassin", so it can be a program name with args.
 set dummy spamassassin; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1898: checking for $ac_word" >&5
+echo "configure:1968: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_SPAMASSASSIN'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1929,7 +1999,7 @@ fi
 # Extract the first word of "spamd", so it can be a program name with args.
 set dummy spamd; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1933: checking for $ac_word" >&5
+echo "configure:2003: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_SPAMD'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1964,7 +2034,7 @@ fi
 # Extract the first word of "spamc", so it can be a program name with args.
 set dummy spamc; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1968: checking for $ac_word" >&5
+echo "configure:2038: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_SPAMC'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1999,7 +2069,7 @@ fi
 # Extract the first word of "bogofilter", so it can be a program name with args.
 set dummy bogofilter; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:2003: checking for $ac_word" >&5
+echo "configure:2073: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_BOGOFILTER'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2036,7 +2106,7 @@ fi
 # Extract the first word of "clamscan", so it can be a program name with args.
 set dummy clamscan; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:2040: checking for $ac_word" >&5
+echo "configure:2110: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_CLAMSCAN'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2067,6 +2137,184 @@ if test -n "$CLAMSCAN"; then
 else
   echo "$ac_t""no" 1>&6
 fi
+
+
+# editors
+# Extract the first word of "vi", so it can be a program name with args.
+set dummy vi; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:2147: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_VI'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$VI" in
+  /*)
+  ac_cv_path_VI="$VI" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_VI="$VI" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_VI="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+VI="$ac_cv_path_VI"
+if test -n "$VI"; then
+  echo "$ac_t""$VI" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "ng", so it can be a program name with args.
+set dummy ng; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:2182: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_NG'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$NG" in
+  /*)
+  ac_cv_path_NG="$NG" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_NG="$NG" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_NG="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+NG="$ac_cv_path_NG"
+if test -n "$NG"; then
+  echo "$ac_t""$NG" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "mule", so it can be a program name with args.
+set dummy mule; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:2217: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_MULE'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$MULE" in
+  /*)
+  ac_cv_path_MULE="$MULE" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_MULE="$MULE" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_MULE="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+MULE="$ac_cv_path_MULE"
+if test -n "$MULE"; then
+  echo "$ac_t""$MULE" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "emacs", so it can be a program name with args.
+set dummy emacs; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:2252: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_EMACS'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$EMACS" in
+  /*)
+  ac_cv_path_EMACS="$EMACS" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_EMACS="$EMACS" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_EMACS="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+EMACS="$ac_cv_path_EMACS"
+if test -n "$EMACS"; then
+  echo "$ac_t""$EMACS" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "xemacs", so it can be a program name with args.
+set dummy xemacs; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:2287: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_XEMACS'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$XEMACS" in
+  /*)
+  ac_cv_path_XEMACS="$XEMACS" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_XEMACS="$XEMACS" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_XEMACS="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+XEMACS="$ac_cv_path_XEMACS"
+if test -n "$XEMACS"; then
+  echo "$ac_t""$XEMACS" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
 
 
 
@@ -2305,6 +2553,14 @@ trap 'rm -fr `echo "\
 	fml/bin/fmldoc \
 	fml/bin/fmlhtmlify \
 	fml/bin/fmlsch \
+	fml/bin/fmlpgp  \
+	fml/bin/fmlpgp5 \
+	fml/bin/fmlpgpe \
+	fml/bin/fmlpgpk \
+	fml/bin/fmlpgps \
+	fml/bin/fmlpgpv \
+	fml/bin/fmlgpg  \
+	fml/bin/fmlgpgv \
 	fml/bin/fml \
 	fml/bin/makefml \
 	" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
@@ -2374,6 +2630,8 @@ s%@PGPK@%$PGPK%g
 s%@PGPS@%$PGPS%g
 s%@PGPV@%$PGPV%g
 s%@GPG@%$GPG%g
+s%@GPGV@%$GPGV%g
+s%@GPGSPLIT@%$GPGSPLIT%g
 s%@LESS@%$LESS%g
 s%@MORE@%$MORE%g
 s%@W3M@%$W3M%g
@@ -2382,6 +2640,11 @@ s%@SPAMD@%$SPAMD%g
 s%@SPAMC@%$SPAMC%g
 s%@BOGOFILTER@%$BOGOFILTER%g
 s%@CLAMSCAN@%$CLAMSCAN%g
+s%@VI@%$VI%g
+s%@NG@%$NG%g
+s%@MULE@%$MULE%g
+s%@EMACS@%$EMACS%g
+s%@XEMACS@%$XEMACS%g
 s%@fmlconfdir@%$fmlconfdir%g
 s%@mlspooldir@%$mlspooldir%g
 s%@fml_owner@%$fml_owner%g
@@ -2446,6 +2709,14 @@ CONFIG_FILES=\${CONFIG_FILES-"\
 	fml/bin/fmldoc \
 	fml/bin/fmlhtmlify \
 	fml/bin/fmlsch \
+	fml/bin/fmlpgp  \
+	fml/bin/fmlpgp5 \
+	fml/bin/fmlpgpe \
+	fml/bin/fmlpgpk \
+	fml/bin/fmlpgps \
+	fml/bin/fmlpgpv \
+	fml/bin/fmlgpg  \
+	fml/bin/fmlgpgv \
 	fml/bin/fml \
 	fml/bin/makefml \
 	"}
