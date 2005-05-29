@@ -1772,18 +1772,72 @@ html_archive_charset_en		=	us-ascii
 =head1 PGP
 
 
-# Descriptions: Pretty Good Privacy
-#      History:  
-#        Value: DIR
-#     Examples: /var/spool/ml/elena/etc/pgp
-pgp_config_dir = $etc_dir/pgp
+=head2 authentication by pgp
 
 
-# Descriptions: GNU Pvivary Guard
-#      History: 
+# Descriptions: pgp configurations for article authentication.
+#      History: $DIST_AUTH_KEYRING_DIR
 #        Value: DIR
-#     Examples: /var/spool/ml/elena/etc/gpg
-gpg_config_dir = $etc_dir/gpg
+#     Examples: /var/spool/ml/elena/etc/article_post_auth/pgp
+article_post_auth_pgp_config_dir	= $etc_dir/article_post_auth/pgp
+
+# Descriptions: pgp configurations for (user) commnad mail authentication.
+#      History: none
+#        Value: DIR
+#     Examples: /var/spool/ml/elena/etc/command_mail_auth/pgp
+command_mail_auth_pgp_config_dir	= $etc_dir/command_mail_auth/pgp
+
+# Descriptions: pgp configurations for admin commnad mail authentication.
+#      History: $ADMIN_AUTH_KEYRING_DIR
+#        Value: DIR
+#     Examples: /var/spool/ml/elena/etc/admin_command_mail_auth/pgp
+admin_command_mail_auth_pgp_config_dir	= $etc_dir/admin_command_mail_auth/pgp
+
+
+=head2 encryption by pgp
+
+
+# Descriptions: pgp configurations for article encryption.
+#      History: $DIST_ENCRYPT_KEYRING_DIR
+#        Value: DIR
+#     Examples: /var/spool/ml/elena/etc/article_post_encrypt/pgp
+article_post_encrypt_pgp_config_dir	= $etc_dir/article_post_encrypt/pgp
+
+
+
+=head1 GPG
+
+
+=head2 authentication by gpg
+
+
+# Descriptions: gpg configurations for article authentication.
+#      History: $DIST_AUTH_KEYRING_DIR
+#        Value: DIR
+#     Examples: /var/spool/ml/elena/etc/article_post_auth/gpg
+article_post_auth_gpg_config_dir	= $etc_dir/article_post_auth/gpg
+
+# Descriptions: gpg configurations for (user) commnad mail authentication.
+#      History: none
+#        Value: DIR
+#     Examples: /var/spool/ml/elena/etc/command_mail_auth/gpg
+command_mail_auth_gpg_config_dir	= $etc_dir/command_mail_auth/gpg
+
+# Descriptions: gpg configurations for admin commnad mail authentication.
+#      History: $ADMIN_AUTH_KEYRING_DIR
+#        Value: DIR
+#     Examples: /var/spool/ml/elena/etc/admin_command_mail_auth/gpg
+admin_command_mail_auth_gpg_config_dir	= $etc_dir/admin_command_mail_auth/gpg
+
+
+=head2 encryption by gpg
+
+
+# Descriptions: gpg configurations for article encryption.
+#      History: $DIST_ENCRYPT_KEYRING_DIR
+#        Value: DIR
+#     Examples: /var/spool/ml/elena/etc/article_post_encrypt/gpg
+article_post_encrypt_gpg_config_dir	= $etc_dir/article_post_encrypt/gpg
 
 
 
@@ -3238,6 +3292,14 @@ sql_find	=	select fml_address from $sql_table
 # $fmlhtmlify_run_start_hook = q{ 1;};
 # $fmlhtmlify_verify_request_end_hook = q{ 1;};
 # $fmlhtmlify_verify_request_start_hook = q{ 1;};
+# $fmlpgp_finish_end_hook = q{ 1;};
+# $fmlpgp_finish_start_hook = q{ 1;};
+# $fmlpgp_prepare_end_hook = q{ 1;};
+# $fmlpgp_prepare_start_hook = q{ 1;};
+# $fmlpgp_run_end_hook = q{ 1;};
+# $fmlpgp_run_start_hook = q{ 1;};
+# $fmlpgp_verify_request_end_hook = q{ 1;};
+# $fmlpgp_verify_request_start_hook = q{ 1;};
 # $makefml_finish_end_hook = q{ 1;};
 # $makefml_finish_start_hook = q{ 1;};
 # $makefml_prepare_end_hook = q{ 1;};
