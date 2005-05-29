@@ -1,5 +1,5 @@
 dnl
-dnl $FML: configure.in,v 1.41 2004/05/02 00:02:52 fukachan Exp $
+dnl $FML: configure.in,v 1.42 2004/09/29 05:07:32 fukachan Exp $
 dnl
 AC_REVISION($Revision$)
 
@@ -59,6 +59,8 @@ AC_PATH_PROG(PGPK,     pgpk)
 AC_PATH_PROG(PGPS,     pgps)
 AC_PATH_PROG(PGPV,     pgpv)
 AC_PATH_PROG(GPG,      gpg)
+AC_PATH_PROG(GPGV,     gpgv)
+AC_PATH_PROG(GPGSPLIT, gpgsplit)
 
 AC_PATH_PROG(LESS,     less)
 AC_PATH_PROG(MORE,     more)
@@ -72,6 +74,14 @@ AC_PATH_PROG(BOGOFILTER,   bogofilter)
 
 # virus checker
 AC_PATH_PROG(CLAMSCAN,     clamscan)
+
+# editors
+AC_PATH_PROG(VI,       vi)
+AC_PATH_PROG(NG,       ng)
+AC_PATH_PROG(MULE,     mule)
+AC_PATH_PROG(EMACS,    emacs)
+AC_PATH_PROG(XEMACS,   xemacs)
+
 
 dnl path_check_end
 
@@ -168,6 +178,14 @@ AC_OUTPUT(\
 	fml/bin/fmldoc \
 	fml/bin/fmlhtmlify \
 	fml/bin/fmlsch \
+	fml/bin/fmlpgp  \
+	fml/bin/fmlpgp5 \
+	fml/bin/fmlpgpe \
+	fml/bin/fmlpgpk \
+	fml/bin/fmlpgps \
+	fml/bin/fmlpgpv \
+	fml/bin/fmlgpg  \
+	fml/bin/fmlgpgv \
 	fml/bin/fml \
 	fml/bin/makefml \
 	)
