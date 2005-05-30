@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Encode.pm,v 1.19 2004/07/23 13:11:21 fukachan Exp $
+# $FML: Encode.pm,v 1.20 2005/05/27 01:22:51 fukachan Exp $
 #
 
 package Mail::Message::Encode;
@@ -539,7 +539,7 @@ sub decode_base64_string
 
     if ($lang eq 'japanese') {
 	eval q{
-	    use MIME::Base64;
+	    use MIME::Base64::Perl;
 	    $str_out = decode_base64( $str );
 	};
 
@@ -569,7 +569,7 @@ sub decode_qp_string
 
     if ($lang eq 'japanese') {
 	eval q{
-	    use MIME::QuotedPrint;
+	    use MIME::QuotedPrint::Perl;
 	    $str_out = decode_qp( $str );
 	};
 	return $str if $@;
@@ -583,6 +583,42 @@ sub decode_qp_string
     }
 
     return $self->convert($str_out, $out_code, $in_code);
+}
+
+
+# Descriptions: decode mime encoded string.
+#    Arguments: OBJ($self) STR($buf)
+# Side Effects: none
+# Return Value: STR
+sub raw_decode_base64
+{
+    my ($self, $buf) = @_;
+    my $rbuf = '';
+
+    eval q{
+	use MIME::Base64::Perl;
+	$rbuf = decode_base64($buf);
+    };
+
+    return( $rbuf || $buf );
+}
+
+
+# Descriptions: decode mime encoded string.
+#    Arguments: OBJ($self) STR($buf)
+# Side Effects: none
+# Return Value: STR
+sub raw_decode_qp
+{
+    my ($self, $buf) = @_;
+    my $rbuf = '';
+
+    eval q{
+	use MIME::QuotedPrint::Perl;
+	$rbuf = decode_qp($buf);
+    };
+
+    return( $rbuf || $buf );
 }
 
 
