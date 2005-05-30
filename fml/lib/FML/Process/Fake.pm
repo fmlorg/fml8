@@ -3,7 +3,7 @@
 # Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Fake.pm,v 1.10 2004/04/23 04:10:38 fukachan Exp $
+# $FML: Fake.pm,v 1.11 2005/05/27 01:02:56 fukachan Exp $
 #
 
 package FML::Process::Fake;
@@ -226,7 +226,6 @@ sub _faker_init
     $curproc->scheduler_init();
     $curproc->log_message_init();
 
-    # XXX-TODO: $domain->valid() style is better?
     # we assume
     # 
     # [/etc/postfix/virtual]
@@ -313,7 +312,7 @@ sub _faker_main
 
     # 3. validate and create a new $ml_name\@$faker_domain if needed.
     # 4. start emulation.
-    my $ml_list   = $pcb->get("faker", "ml_user_part_list");
+    my $ml_list   = $curproc->get_emul_ml_list();
     my $ml_domain = $curproc->get_emul_domain();
     for my $ml_name (@$ml_list) {
 	if ($curproc->is_valid_ml($ml_name, $ml_domain)) {
@@ -372,8 +371,8 @@ sub _faker_analyze_address
 	}
     }
 
-    $pcb->set("faker", "ml_user_part_list", \@ml);
-    $pcb->set("faker", "user_list",         \@user);
+    $curproc->set_emul_ml_list(\@ml);
+    $curproc->set_emul_user_list(\@user);
 
     return $found;
 }
@@ -425,7 +424,15 @@ sub _faker_process_switch
 }
 
 
-=head1 FML::Process::Utils
+=head1 Utilities
+
+=head2 is_valid_domain_syntax($domain)
+
+validate domain syntax.
+
+=head2 is_valid_ml($ml_name, $ml_domain)
+
+validate the existence of mailing list.
 
 =cut
 
@@ -462,6 +469,17 @@ sub is_valid_ml
 }
 
 
+=head2 set_emul_domain($ml_domain)
+
+save domain libexec/faker handles.
+
+=head2 get_emul_domain()
+
+get domain libexec/faker handles.
+
+=cut
+
+
 # Descriptions: save domain libexec/faker handles.
 #    Arguments: OBJ($curproc) STR($ml_domain)
 # Side Effects: update PCB.
@@ -483,6 +501,76 @@ sub get_emul_domain
     my ($curproc) = @_;
     my $pcb = $curproc->pcb();
     return $pcb->get("faker", "domain");
+}
+
+
+=head2 set_emul_ml_list($list)
+
+save ml_name list in pcb.
+
+=head2 get_emul_ml_list()
+
+get ml_name list in pcb.
+
+=cut
+
+
+# Descriptions: save ml_name list in pcb.
+#    Arguments: OBJ($curproc) ARRAY_REF($list)
+# Side Effects: update pcb.
+# Return Value: none
+sub set_emul_ml_list
+{
+    my ($curproc, $list) = @_;
+    my $pcb = $curproc->pcb();
+    $pcb->get("faker", "ml_user_part_list", $list);
+}
+
+
+# Descriptions: 
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub get_emul_ml_list
+{
+    my ($curproc) = @_;
+    my $pcb = $curproc->pcb();
+    return $pcb->get("faker", "ml_user_part_list");
+}
+
+
+=head2 set_emul_user_list($list)
+
+save user list in pcb.
+
+=head2 get_emul_user_list()
+
+get user list in pcb.
+
+=cut
+
+
+# Descriptions: save user list in pcb.
+#    Arguments: OBJ($curproc) ARRAY_REF($list)
+# Side Effects: update pcb.
+# Return Value: none
+sub set_emul_user_list
+{
+    my ($curproc, $list) = @_;
+    my $pcb = $curproc->pcb();
+    $pcb->get("faker", "user_list", $list);
+}
+
+
+# Descriptions: 
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub get_emul_user_list
+{
+    my ($curproc) = @_;
+    my $pcb = $curproc->pcb();
+    return $pcb->get("faker", "user_list");
 }
 
 
