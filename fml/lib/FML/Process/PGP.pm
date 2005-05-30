@@ -3,7 +3,7 @@
 # Copyright (C) 2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Addr.pm,v 1.20 2005/05/27 03:03:36 fukachan Exp $
+# $FML: PGP.pm,v 1.1 2005/05/30 02:24:14 fukachan Exp $
 #
 
 package FML::Process::PGP;
@@ -286,6 +286,43 @@ sub _setup_pgp_environment
     unless (-d $gpg_config_dir) {
 	$curproc->mkdir($gpg_config_dir, "mode=private");
     }
+
+    # 
+    # CONVENSIONAL NAME.
+    # 
+    $curproc->_symlink_admin_dir("pgp");
+    $curproc->_symlink_admin_dir("gpg");
+}
+
+
+# Descriptions: symlink to conventional naming dir if needed.
+#    Arguments: OBJ($curproc) STR($pgp)
+# Side Effects: create symlink(2) if needed.
+# Return Value: none
+sub _symlink_admin_dir
+{
+    my ($curproc, $pgp) = @_;
+    my $config = $curproc->config();
+    my $dir    = $config->{"admin_command_mail_auth_${pgp}_config_dir"};
+    my $alias  = $config->{"admin_command_mail_auth_${pgp}_config_dir_alias"};
+
+    my $cur_dir = `pwd`;
+    chomp $cur_dir;
+
+    if (-d $dir && ! -h $alias) {
+	use File::Basename;
+	if (dirname($dir) eq dirname($alias)) {
+	    chdir dirname($dir);
+	    my $_dir   = basename($dir);
+	    my $_alias = basename($alias);
+	    symlink($_dir, $_alias);
+	}
+	else {
+	    symlink($dir, $alias);
+	}
+    }
+
+    chdir $cur_dir;
 }
 
 
