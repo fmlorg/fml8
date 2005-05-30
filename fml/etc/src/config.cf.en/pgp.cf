@@ -7,20 +7,27 @@
 # Descriptions: pgp configurations for article authentication.
 #      History: $DIST_AUTH_KEYRING_DIR
 #        Value: DIR
-#     Examples: /var/spool/ml/elena/etc/article_post_auth/pgp
-article_post_auth_pgp_config_dir	= $etc_dir/article_post_auth/pgp
+#     Examples: /var/spool/ml/elena/etc/pgp-article-post-auth
+article_post_auth_pgp_config_dir	= $etc_dir/pgp-article-post-auth
 
 # Descriptions: pgp configurations for (user) commnad mail authentication.
 #      History: none
 #        Value: DIR
-#     Examples: /var/spool/ml/elena/etc/command_mail_auth/pgp
-command_mail_auth_pgp_config_dir	= $etc_dir/command_mail_auth/pgp
+#     Examples: /var/spool/ml/elena/etc/pgp-command-mail-auth
+command_mail_auth_pgp_config_dir	= $etc_dir/pgp-command-mail-auth
 
 # Descriptions: pgp configurations for admin commnad mail authentication.
 #      History: $ADMIN_AUTH_KEYRING_DIR
 #        Value: DIR
-#     Examples: /var/spool/ml/elena/etc/admin_command_mail_auth/pgp
-admin_command_mail_auth_pgp_config_dir	= $etc_dir/admin_command_mail_auth/pgp
+#     Examples: /var/spool/ml/elena/etc/pgp-admin-command-mail-auth
+admin_command_mail_auth_pgp_config_dir	= $etc_dir/pgp-admin-command-mail-auth
+
+# Descriptions: conventional naming 
+#		(symlink to $admin_command_mail_auth_pgp_config_dir).
+#      History: $ADMIN_AUTH_KEYRING_DIR
+#        Value: DIR
+#     Examples: /var/spool/ml/elena/etc/pgp-admin
+admin_command_mail_auth_pgp_config_dir_alias	= $etc_dir/pgp-admin
 
 
 =head2 encryption by pgp
@@ -29,8 +36,8 @@ admin_command_mail_auth_pgp_config_dir	= $etc_dir/admin_command_mail_auth/pgp
 # Descriptions: pgp configurations for article encryption.
 #      History: $DIST_ENCRYPT_KEYRING_DIR
 #        Value: DIR
-#     Examples: /var/spool/ml/elena/etc/article_post_encrypt/pgp
-article_post_encrypt_pgp_config_dir	= $etc_dir/article_post_encrypt/pgp
+#     Examples: /var/spool/ml/elena/etc/pgp-article-post-encrypt
+article_post_encrypt_pgp_config_dir	= $etc_dir/pgp-article-post-encrypt
 
 
 
@@ -43,20 +50,28 @@ article_post_encrypt_pgp_config_dir	= $etc_dir/article_post_encrypt/pgp
 # Descriptions: gpg configurations for article authentication.
 #      History: $DIST_AUTH_KEYRING_DIR
 #        Value: DIR
-#     Examples: /var/spool/ml/elena/etc/article_post_auth/gpg
-article_post_auth_gpg_config_dir	= $etc_dir/article_post_auth/gpg
+#     Examples: /var/spool/ml/elena/etc/gpg-article-post-auth
+article_post_auth_gpg_config_dir	= $etc_dir/gpg-article-post-auth
 
 # Descriptions: gpg configurations for (user) commnad mail authentication.
 #      History: none
 #        Value: DIR
-#     Examples: /var/spool/ml/elena/etc/command_mail_auth/gpg
-command_mail_auth_gpg_config_dir	= $etc_dir/command_mail_auth/gpg
+#     Examples: /var/spool/ml/elena/etc/gpg-command-mail-auth
+command_mail_auth_gpg_config_dir	= $etc_dir/gpg-command-mail-auth
 
 # Descriptions: gpg configurations for admin commnad mail authentication.
 #      History: $ADMIN_AUTH_KEYRING_DIR
 #        Value: DIR
-#     Examples: /var/spool/ml/elena/etc/admin_command_mail_auth/gpg
-admin_command_mail_auth_gpg_config_dir	= $etc_dir/admin_command_mail_auth/gpg
+#     Examples: /var/spool/ml/elena/etc/gpg-admin-command-mail-auth
+admin_command_mail_auth_gpg_config_dir	= $etc_dir/gpg-admin-command-mail-auth
+
+
+# Descriptions: conventional naming 
+#		(symlink to $admin_command_mail_auth_gpg_config_dir).
+#      History: $ADMIN_AUTH_KEYRING_DIR
+#        Value: DIR
+#     Examples: /var/spool/ml/elena/etc/gpg-admin
+admin_command_mail_auth_gpg_config_dir_alias	= $etc_dir/gpg-admin
 
 
 =head2 encryption by gpg
@@ -65,7 +80,7 @@ admin_command_mail_auth_gpg_config_dir	= $etc_dir/admin_command_mail_auth/gpg
 # Descriptions: gpg configurations for article encryption.
 #      History: $DIST_ENCRYPT_KEYRING_DIR
 #        Value: DIR
-#     Examples: /var/spool/ml/elena/etc/article_post_encrypt/gpg
-article_post_encrypt_gpg_config_dir	= $etc_dir/article_post_encrypt/gpg
+#     Examples: /var/spool/ml/elena/etc/gpg-article-post-encrypt
+article_post_encrypt_gpg_config_dir	= $etc_dir/gpg-article-post-encrypt
 
 
