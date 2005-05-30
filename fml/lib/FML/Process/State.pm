@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: State.pm,v 1.16 2004/09/28 13:37:10 fukachan Exp $
+# $FML: State.pm,v 1.17 2004/12/05 16:19:11 fukachan Exp $
 #
 
 package FML::Process::State;
@@ -479,6 +479,54 @@ sub command_context_get_admin_password
     my $class  = sprintf("admin_password_ml_name=%s", $cur_ml);
 
     return( $pcb->get("process_command", "admin_password") || '' );
+}
+
+
+# Descriptions: remote administrator is authenticated.
+#               state is ml specific.
+#    Arguments: OBJ($curproc) NUM($req)
+# Side Effects: update pcb.
+# Return Value: NUM
+sub command_context_set_try_admin_auth_request
+{
+    my ($curproc, $req) = @_;
+    my $pcb    = $curproc->pcb();
+    my $cur_ml = $curproc->command_context_get_ml_name();
+    my $class  = sprintf("try_admin_auth_request_ml_name=%s", $cur_ml);
+
+    $pcb->set("process_command", $class, 1);
+}
+
+
+# Descriptions: remote administrator is authenticated.
+#               state is ml specific.
+#    Arguments: OBJ($curproc) NUM($req)
+# Side Effects: update pcb.
+# Return Value: NUM
+sub command_context_reset_try_admin_auth_request
+{
+    my ($curproc, $req) = @_;
+    my $pcb    = $curproc->pcb();
+    my $cur_ml = $curproc->command_context_get_ml_name();
+    my $class  = sprintf("try_admin_auth_request_ml_name=%s", $cur_ml);
+
+    $pcb->set("process_command", $class, 0);
+}
+
+
+# Descriptions: check if remote administrator is authenticated.
+#               state is ml specific.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: NUM
+sub command_context_get_try_admin_auth_request
+{
+    my ($curproc) = @_;
+    my $pcb    = $curproc->pcb();
+    my $cur_ml = $curproc->command_context_get_ml_name();
+    my $class  = sprintf("try_admin_auth_request_ml_name=%s", $cur_ml);
+
+    return( $pcb->get("process_command", $class) || 0 );
 }
 
 
