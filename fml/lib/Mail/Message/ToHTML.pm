@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.72 2004/11/14 14:14:14 tmu Exp $
+# $FML: ToHTML.pm,v 1.73 2005/05/26 10:23:00 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.72 2004/11/14 14:14:14 tmu Exp $;
+my $version = q$FML: ToHTML.pm,v 1.73 2005/05/26 10:23:00 fukachan Exp $;
 my $versionid = 0;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $versionid = "$1";
@@ -926,17 +926,13 @@ sub _binary_print
 	    $fh->autoflush(1);
 	    binmode($fh);
 
+	    use Mail::Message::Encode;
+	    my $encode = new Mail::Message::Encode;
 	    if ($enc eq 'base64') {
-		eval q{
-		    use MIME::Base64;
-		    print $fh decode_base64( $msg->message_text() );
-		};
+		print $fh $encode->raw_decode_base64( $msg->message_text() );
 	    }
 	    elsif ($enc eq 'quoted-printable') {
-		eval q{
-		    use MIME::QuotedPrint;
-		    print $fh decode_qp( $msg->message_text() );
-		};
+		print $fh $encode->raw_decode_qp( $msg->message_text() );
 	    }
 	    elsif ($enc eq '7bit') {
 		_print_safe_str($fh, $msg->message_text());

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: TextPlain.pm,v 1.11 2004/07/23 12:41:56 fukachan Exp $
+# $FML: TextPlain.pm,v 1.12 2005/05/27 01:47:05 fukachan Exp $
 #
 
 package FML::Filter::TextPlain;
@@ -276,13 +276,13 @@ sub _decode_mime_buffer
     # cheap diagnostic check
     return $buf unless $encoding;
 
+    use Mail::Message::Encode;
+    my $encode = new Mail::Message::Encode;
     if ($encoding eq 'base64') {
-	use MIME::Base64;
-	$buf = decode_base64($buf);
+	$buf = $encode->raw_decode_base64($buf);
     }
     elsif ($encoding eq 'quoted-printable') {
-	use MIME::QuotedPrint;
-	$buf = decode_qp($buf);
+	$buf = $encode->raw_decode_qp($buf);
     }
 
     return $buf;
