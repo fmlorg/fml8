@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.16 2004/12/05 16:19:13 fukachan Exp $
+# $FML: Command.pm,v 1.17 2005/05/27 01:20:59 fukachan Exp $
 #
 
 package FML::Restriction::Command;
@@ -166,6 +166,105 @@ sub check_admin_member_password
 	$curproc->logerror("admin password: auth fail");
 	return(0, undef);
     }
+}
+
+
+=head2 check_pgp_signature
+
+=cut
+
+
+# Descriptions: check PGP signature in message.
+#    Arguments: OBJ($self) STR($rule) STR($sender) HASH_REF($context)
+# Side Effects: none
+# Return Value: NUM
+sub check_pgp_signature
+{
+    my ($self, $rule, $sender, $context) = @_;
+    my $curproc  = $self->{ _curproc };
+    my $config   = $curproc->config();
+    my $in_admin = $curproc->command_context_get_try_admin_auth_request();
+    my $mode     = $in_admin ? "admin" : "user";
+    my $file     = $curproc->get_incoming_message_cache_file_path();
+    my $match    = 0;
+    my $pgp      = undef;
+
+    if ($mode eq 'admin') {
+	$self->_setup_pgp_environment("admin_command_mail_auth");
+    }
+    else {
+	$self->_setup_pgp_environment("command_mail_auth");
+    }
+
+    eval q{
+	use Crypt::OpenPGP;
+	$pgp = new Crypt::OpenPGP;
+    };
+    if ($@) {
+	$curproc->logerror("check_pgp_signature need Crypt::OpenPGP.");
+	$curproc->logerror($@);
+	$self->_reset_pgp_environment();
+	return(0, undef);
+    }
+
+    my $ret = $pgp->verify(SigFile => $file);
+    unless ($pgp->errstr) {
+	if ($ret) {
+	    $curproc->log("pgp signature found: $ret");
+	    $match = 1;
+	}
+    }
+    $self->_reset_pgp_environment();
+
+    $curproc->logdebug("$mode command_mail checks by pgp");
+    if ($match) {
+	$curproc->log("check_pgp_signature matched.");
+	return("matched", "permit");
+    }
+    else {
+	$curproc->logdebug("check_pgp_signature unmatched.");
+	return(0, undef);
+    }
+}
+
+
+# Descriptions: modify PGP related environment variables.
+#    Arguments: OBJ($self) STR($mode)
+# Side Effects: PGP related environment variables modified.
+# Return Value: none
+sub _setup_pgp_environment
+{
+    my ($self, $mode) = @_;
+    my $curproc = $self->{ _curproc };
+    my $config  = $curproc->config();
+
+    # PGP2/PGP5/PGP6
+    my $pgp_config_dir = $config->{ "${mode}_pgp_config_dir" };
+    $ENV{'PGPPATH'}    = $pgp_config_dir;
+
+    # GPG
+    my $gpg_config_dir = $config->{ "${mode}_gpg_config_dir" };
+    $ENV{'GNUPGHOME'}  = $gpg_config_dir;
+
+    unless (-d $pgp_config_dir) {
+        $curproc->mkdir($pgp_config_dir, "mode=private");
+    }
+
+    unless (-d $gpg_config_dir) {
+        $curproc->mkdir($gpg_config_dir, "mode=private");
+    }
+}
+
+
+# Descriptions: reset PGP related environment variables.
+#    Arguments: OBJ($self)
+# Side Effects: PGP related environment variables modified.
+# Return Value: none
+sub _reset_pgp_environment
+{
+    my ($self) = @_;
+    delete $ENV{'PGPPATH'};
+    delete $ENV{'GNUPGHOME'};
 }
 
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: admin.pm,v 1.10 2004/07/23 15:59:04 fukachan Exp $
+# $FML: admin.pm,v 1.11 2004/12/05 16:19:07 fukachan Exp $
 #
 
 package FML::Command::User::admin;
@@ -223,6 +223,7 @@ sub _apply_new_admin_command_mail_restrictions
     my $sender  = $opt_args->{ address } || '';
 
     # initialize admin command specific area to pass it to sub layer.
+    $curproc->command_context_set_try_admin_auth_request();
     $context->{ admin_option } = $opt_args || {};
 
     # command restriction rules
@@ -253,6 +254,7 @@ sub _apply_new_admin_command_mail_restrictions
 
     # delete admin command specific data area.
     delete $context->{ admin_option };
+    $curproc->command_context_reset_try_admin_auth_request();
 
     # determine action.
     if ($match) {
