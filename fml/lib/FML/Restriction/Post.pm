@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.17 2005/05/27 03:03:39 fukachan Exp $
+# $FML: Post.pm,v 1.18 2005/05/29 00:44:12 fukachan Exp $
 #
 
 package FML::Restriction::Post;
@@ -209,7 +209,7 @@ sub check_pgp_signature
     my $match   = 0;
     my $pgp     = undef;
 
-    $self->_reset_pgp_environment();
+    $self->_setup_pgp_environment();
 
     eval q{
 	use Crypt::OpenPGP;
@@ -218,6 +218,7 @@ sub check_pgp_signature
     if ($@) {
 	$curproc->logerror("check_pgp_signature need Crypt::OpenPGP.");
 	$curproc->logerror($@);
+	$self->_reset_pgp_environment();
 	return(0, undef);
     }
 
@@ -228,13 +229,14 @@ sub check_pgp_signature
 	    $match = 1;
 	}
     }
+    $self->_reset_pgp_environment();
 
     if ($match) {
 	$curproc->log("check_pgp_signature matched.");
 	return("matched", "permit");
     }
     else {
-	$curproc->log("check_pgp_signature unmatched.");
+	$curproc->logdebug("check_pgp_signature unmatched.");
 	return(0, undef);
     }
 }
@@ -244,19 +246,31 @@ sub check_pgp_signature
 #    Arguments: OBJ($self)
 # Side Effects: PGP related environment variables modified.
 # Return Value: none
-sub _reset_pgp_environment
+sub _setup_pgp_environment
 {
     my ($self)  = @_;
     my $curproc = $self->{ _curproc };
     my $config  = $curproc->config();
 
     # PGP2/PGP5/PGP6
-    my $pgp_config_dir = $config->{ pgp_config_dir };
+    my $pgp_config_dir = $config->{ article_post_auth_pgp_config_dir };
     $ENV{'PGPPATH'}    = $pgp_config_dir;
 
     # GPG
-    my $gpg_config_dir = $config->{ gpg_config_dir };
+    my $gpg_config_dir = $config->{ article_post_auth_gpg_config_dir };
     $ENV{'GNUPGHOME'}  = $gpg_config_dir;
+}
+
+
+# Descriptions: reset PGP related environment variables.
+#    Arguments: OBJ($self)
+# Side Effects: PGP related environment variables modified.
+# Return Value: none
+sub _reset_pgp_environment
+{
+    my ($self) = @_;
+    delete $ENV{'PGPPATH'};
+    delete $ENV{'GNUPGHOME'};
 }
 
 
