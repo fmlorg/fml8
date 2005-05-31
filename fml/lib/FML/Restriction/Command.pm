@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.17 2005/05/27 01:20:59 fukachan Exp $
+# $FML: Command.pm,v 1.18 2005/05/30 03:28:07 fukachan Exp $
 #
 
 package FML::Restriction::Command;
@@ -185,7 +185,7 @@ sub check_pgp_signature
     my $config   = $curproc->config();
     my $in_admin = $curproc->command_context_get_try_admin_auth_request();
     my $mode     = $in_admin ? "admin" : "user";
-    my $file     = $curproc->get_incoming_message_cache_file_path();
+    my $file     = $curproc->incoming_message_get_cache_file_path();
     my $match    = 0;
     my $pgp      = undef;
 

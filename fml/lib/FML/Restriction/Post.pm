@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.18 2005/05/29 00:44:12 fukachan Exp $
+# $FML: Post.pm,v 1.19 2005/05/30 03:32:34 fukachan Exp $
 #
 
 package FML::Restriction::Post;
@@ -205,7 +205,7 @@ sub check_pgp_signature
     my ($self, $rule, $sender) = @_;
     my $curproc = $self->{ _curproc };
     my $config  = $curproc->config();
-    my $file    = $curproc->get_incoming_message_cache_file_path();
+    my $file    = $curproc->incoming_message_get_cache_file_path();
     my $match   = 0;
     my $pgp     = undef;
 

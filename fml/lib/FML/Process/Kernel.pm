@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.254 2005/05/27 04:37:36 fukachan Exp $
+# $FML: Kernel.pm,v 1.255 2005/05/31 13:04:38 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1170,7 +1170,7 @@ sub parse_incoming_message
 	    # (> modules) runs simultaneously, $path may be
 	    # overwritten by the next content. Instead, use $queue_file
 	    # since $queue_file (queue/incoming/ID) is unique.
-	    $curproc->set_incoming_message_cache_file_path($queue_file);
+	    $curproc->incoming_message_set_cache_file_path($queue_file);
 	}
     }
 
