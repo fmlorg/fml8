@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.253 2005/01/23 00:54:38 fukachan Exp $
+# $FML: Kernel.pm,v 1.254 2005/05/27 04:37:36 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1068,7 +1068,7 @@ sub fix_perl_include_path
 }
 
 
-=head2 parse_incoming_message($args)
+=head2 parse_incoming_message()
 
 C<preapre()> method calls this to
 parse the message to a set of header and body.
@@ -1164,9 +1164,13 @@ sub parse_incoming_message
 		}
 	    }
 
-	    # save the cache file path.
-	    my $path = $obj->cache_file_path();
-	    $curproc->set_incoming_message_cache_file_path($path);
+	    # XXX "my $path = $obj->cache_file_path();" is wrong.
+	    # old implementation saves the FML::Cache::Ring file path
+	    # for later use. But it is ambiguous. When many processes
+	    # (> modules) runs simultaneously, $path may be
+	    # overwritten by the next content. Instead, use $queue_file
+	    # since $queue_file (queue/incoming/ID) is unique.
+	    $curproc->set_incoming_message_cache_file_path($queue_file);
 	}
     }
 
@@ -1267,7 +1271,7 @@ sub _inject_charset_hints
 
 =head1 CREDENTIAL
 
-=head2 premit_post($args)
+=head2 premit_post()
 
 permit posting.
 The restriction rules follows the order of C<article_post_restrictions>.
