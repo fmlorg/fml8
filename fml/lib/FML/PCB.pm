@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: PCB.pm,v 1.20 2004/07/23 15:59:00 fukachan Exp $
+# $FML: PCB.pm,v 1.21 2005/05/27 03:03:32 fukachan Exp $
 #
 
 package FML::PCB;
@@ -114,9 +114,17 @@ You must specify C<category>, C<key> and the C<value>.
 # Return Value: none
 sub dump_variables
 {
-    my ($k, $v);
-    while (($k, $v) = each %_fml_PCB) {
-	print "${k}: $v\n";
+    my $pcb = $_fml_PCB{ $current_context } || {};
+
+    my ($k, $v, $xk, $xv);
+    while (($k, $v) = each %$pcb) {
+	while (($xk, $xv) = each %$v) {
+	    printf "%-21s => {\n", $current_context;
+	    printf "   %-18s => {\n", $k;
+	    printf "      %-15s => %-15s\n", $xk, $xv;
+	    printf "   }\n"; 
+	    printf "}\n\n"; 
+	}
     }
 }
 
@@ -147,6 +155,62 @@ sub set
     my ($self, $category, $key, $value) = @_;
 
     $_fml_PCB{ $current_context }->{ $category }->{ $key } = $value;
+}
+
+
+=head1 CONTEXT SWITCH
+
+=head2 set_current_context($context)
+
+switch the current context.
+
+=head2 get_current_context()
+
+get the current context name.
+
+=cut
+
+
+# Descriptions: switch the current context.
+#    Arguments: OBJ($self) STR($context)
+# Side Effects: overload $current_context. 
+# Return Value: none
+sub set_current_context
+{
+    my ($self, $context) = @_;
+
+    $current_context = $context;
+}
+
+
+# Descriptions: get the current context.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: none
+sub get_current_context
+{
+    my ($self) = @_;
+
+    return $current_context;
+}
+
+
+#
+# debug
+#
+if ($0 eq __FILE__) {
+    my $category = "category";
+    my $ml       = 'elena@home.fml.org';
+    my $key      = "key";
+    my $value    = "value";
+
+    my $pcb = new FML::PCB;
+    $pcb->set($category, "ml_name", "test");
+    $pcb->dump_variables();
+
+    $pcb->set_current_context($ml);
+    $pcb->set($category, "ml_name", "elena");
+    $pcb->dump_variables();
 }
 
 
