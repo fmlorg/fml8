@@ -13,6 +13,249 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+
+2005/05/31
+
+   FML::Process::Kernel 
+	"my $path = $obj->cache_file_path();" is wrong. old implementation
+	saves the FML::Cache::Ring file path for later use. But it is
+	ambiguous. When many processes (> modules) runs simultaneously, $path
+	may be overwritten by the next content.  Instead, use $queue_file
+	since $queue_file (queue::incoming::ID) is unique.
+	
+   FML::Process::Kernel Utils 
+   FML::Restriction::Post Command 
+	fix naming convension (FNF).
+	set_incoming_message_cache_file_path -> 
+		incoming_message_set_cache_file_path
+	get_incoming_message_cache_file_path -> 
+		incoming_message_get_cache_file_path
+
+2005/05/30
+
+   Mail::Message::ToHTML 
+   FML::Filter::TextPlain 
+	use Mail::Message::Encode not MIME::Base64.
+	
+   Mail::Message::Encode 
+	switch to use MIME::Base64::Perl not MIME::Base64 module.
+	define raw_decode_{base64,qp}().
+
+2005/05/29
+
+	投稿制限: PGP/GPG の電子署名を元にしたアクセス制御を可能にする
+
+   variables
+	o define PGP related variables
+		pgp_config_dir gpg_config_dir path_gpgv path_gpgsplit
+	o define editors: vi, ng, mule, emacs, xemacs
+
+	+path_gpgv
+	+path_gpgsplit
+
+	remove $gpg_config_dir, $pgp_config_dir.
+	
+	define $article_post_{auth,encrypt}_{pgp,gpg}_config_dir and
+	${admin_,}command_mail_auth_{pgp,gpg}_config_dir.
+	
+	add $fmlpgp_*_hook
+
+   etc/command_line_options
+   etc/modules 
+   etc/install.cf
+	define fmlpgp fmlpgp5 fmlpgpe fmlpgpk fmlpgps fmlpgpv fmlgpg
+	fmlgpgv.
+
+   bin/ utilities added.
+	bin/*	
+	etc/command_line_options modules 
+	etc/install.cf.in 
+
+	add fmlgpg fmlgpgv fmlpgp fmlpgp5 fmlpgpe fmlpgpk fmlpgps
+	fmlpgpv.
+
+   FML::Process::PGP 
+	For convenience, create a conventional named dir (e.g. pgp-admin) and
+	symlink to the current style dir.
+	For example::pgp-admin@ -> pgp-admin-command-mail-auth
+	
+   FML::Restriction::Post 
+	define check_pgp_signature, which permits article post when the
+	article has proper PGP::GPG signature.
+
+	For example:
+
+	article_post_restrictions =	reject_system_special_accounts
+					check_pgp_signature
+					reject
+
+	setup and reset environment more strictly.
+	etc/{pgp,gpg}-$role style naming ("_" -> "-").
+
+   FML::Command::User::admin 
+   FML::Restriction::Command 
+	${admin,}command_mail_restrictions support "check_pgp_signature" rule.
+	Both restrictions uses same rule name but which needs different
+	keyring directories. So, we need to handle carefully the context of
+	two restrictions.
+	
+   FML::Process::State 
+	definie command_context_set_try_admin_auth_request(),
+	command_context_reset_try_admin_auth_request() and
+	command_context_get_try_admin_auth_request() to handle context of
+	$*command_restrictions.
+	
+2005/05/26-27
+
+	fml-devel を fml 7.98.1 とする。
+	スレッドシステムを書き直したら 7.99.x の予定。
+
+   variables
+	o define $use_article_spool (as ${ues_spool:-yes}).
+	o log: define syslog related variables
+	o command:
+		$use_command_mail_reply_preamble = yes
+		$use_command_mail_reply_trailor  = yes
+
+   ErrorStatus 
+	FML::Filter not use this module.
+	
+   FML::Article 
+	use_spool -> use_article_spool
+	
+   FML::Log 
+	preliminary syslog extension support.
+	
+   FML::Article::Summary 
+	FNF.
+	$fh -> $rh
+	
+   FML::Command::Auth 
+	log errors more.
+	
+   FML::Command::User::subscribe unsubscribe 
+	$curproc->allow_reply_message() -> $curproc->is_allow_reply_message().
+	
+   FML::Process::DocViewer 
+   IO::Adapter::AtomicFile 
+   Mail::Message::ToHTML 
+   FML::Command::DirUtils 
+   FML::Config::Convert 
+   FML::Filter::MimeComponent 
+   FML::Config::Tiny 
+   FML::Header::MessageID Subject 
+   FML::MTA::Control::Procmail 
+   FML::Process::DocViewer 
+   IO::Adapter::AtomicFile 
+   Mail::Message::ToHTML 
+	FNF: not use str.str
+
+   FML::Filter::External::clamscan 
+	fixed to work.
+	
+   FML::MTA::Control::Postfix 
+	not use str.str.
+	white space clean up of alias file path.
+	_remove_postfix_style_virtual() -> remove_postfix_style_virtual().
+	
+   FML::MTA::Control::Sendmail 
+	fix the comment of virtual file.
+	not use str.str.
+	_remove_postfix_style_virtual() -> remove_postfix_style_virtual().
+	
+   FML::Process::Configure 
+	fix comments (FNF).
+	$curproc->allow_reply_message() -> $curproc->is_allow_reply_message().
+	
+   FML::Process::Flow 
+	remove _xxx() methods among modules::rename _XXX() to sysflow_XXX().
+	
+   FML::Process::Utils 
+	fix comments (FNF).
+	remove is_safe_syntax(), which is not used.
+	rename allow_reply_message() to is_allow_reply_message().
+	
+   Mail::Delivery 
+	fix typo::EMTP -> ESMTP.
+	
+   Mail::Bounce::Exim Freeserve GOO Qmail Smtpfeed 
+	clean up.
+	FNF.
+	use self->address_clean_up($addr, $addr) to clean up address if could.
+
+   FML::Demo::Calendar 
+	fixed::_Calender -> _calender
+	
+   FML::IPC::Queue 
+	set umask(077) in creating a tmp file.
+	
+   FML::MTA::Control 
+	rename _remove_postfix_style_virtual() to
+	remove_postfix_style_virtual(), which is used among plural
+	modules. 
+	not use str.str form.
+	
+   FML::Process::Command 
+	$use_command_mail_reply_preamble toggles off::on to show the preamble
+	of command reply.  $use_command_mail_reply_trailor toggles command
+	processing summary.
+	
+   FML::Process::Distribute 
+	more strict error handling.
+	more comments.
+	
+   FML::Process::Fake 
+	fix comments.
+	fix error handling.
+	
+   FML::Process::CGI::Kernel 
+	remove the duplicated code.
+	use Mail::Message::Date instead of `date`.
+	fix comments.
+	
+   FML::Restriction::Command 
+	croak() -> logerror().
+	fix comments.
+	
+   Mail::Delivery::Queue 
+	add randam factor into exponential back off.
+	back off is upper limited by 4000 sec.
+	
+   Mail::Delivery::Net::INET4 
+	set timeout for socket(2).
+	
+   Mail::Message::Encode 
+	use Jcode always.
+	
+   Mail::Message::MH 
+	sort the output for a,b,c style input.
+
+   FML::Filter::External Header Size TextPlain 
+   FML::Filter::ErrorStatus 
+   FML::Filter 
+	use FML::Filter::ErrorStatus instead of ErrorStatus.
+
+   FML::Process::Kernel 
+	fml-devel YYYYMMDD -> fml $version (7.9x.y-YYYYMMDD)
+	
+	modified to use incoming_message_header(), temp_file_path() et.al, to
+	avoid raw descrptions.
+	
+	bug fix config.cf search algorithm.
+	
+	defne sysflow_XXX() methods used in FML::Process::Flow.
+	
+	not use str.str form.
+	
+	clean up.
+	
+   Tie::JournaledDir 
+	fix comments, error messages.
+	
+   Tie::JournaledFile 
+	fix comments, error messages.
+	more defined() checks.
+	
 2005/05/01
 
 	現在のソースコードを fml 7.98.1 (cvs tag fml-7-98-1)と定義する。
@@ -8087,4 +8330,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.237 2005/01/23 13:19:09 fukachan Exp $
+$FML: CHANGES.txt,v 1.238 2005/05/27 03:08:26 fukachan Exp $
