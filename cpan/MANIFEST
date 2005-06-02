@@ -24,7 +24,7 @@ Jcode				0.83		perl itself
 
 Log-ErrLogger			1.5		perl itself
 
-MIME-Base64			2.11		perl itself
+MIME-Base64-Perl		1.0		perl itself
 MIME-Lite			2.108		perl itself
 MIME-Lite-HTML			1.2		?
 MIME-Types			1.004		perl itself
@@ -43,4 +43,4 @@ Text-CSV			0.01		perl itself
 
 Unicode-Japanese		0.09		perl itself
 
-$FML: MANIFEST,v 1.10 2003/09/17 04:16:51 fukachan Exp $
+$FML: MANIFEST,v 1.11 2003/09/19 13:10:46 fukachan Exp $
