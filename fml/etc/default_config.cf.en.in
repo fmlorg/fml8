@@ -2632,6 +2632,109 @@ procmail_aliases_file	=	$domain_procmail_config_dir/procmailrc
 
 
 
+=head1 fetchfml: pop/imap based mta and ml emulation
+
+
+# Descriptions: use fetchfml function or not.
+#      History: none
+#        Value: YES_OR_NO
+#     Examples: yes / no
+use_fetchfml_function	=	no
+
+
+# Descriptions: queue_dir fetchfml uses as temporary incoming queue 
+#               which holds messages fetched via POP3/IMAP4.
+#      History: none
+#        Value: DIR
+#     Examples: /var/spool/ml/elena/var/mail/fetchfml
+fetchfml_queue_dir = $var_dir/mail/fetchfml
+
+
+# Descriptions: protocol to fetch messages.
+#      History: none
+#        Value: SELECT ( pop3 pop apop imap4 imap )
+#     Examples: pop3
+fetchfml_fetch_protocol			=	pop3
+
+
+# Descriptions: use fetchfml article_post function or not.
+#      History: none
+#        Value: YES_OR_NO
+#     Examples: yes / no
+use_fetchfml_article_post_function	=	yes
+
+
+# Descriptions: username to fetch article messages for $ml_name ML
+#      History: none
+#        Value: STR
+#     Examples: elena
+fetchfml_article_post_user		=	$ml_name
+
+
+# Descriptions: password to fetch article messages for $ml_name ML
+#      History: none
+#        Value: STR
+#     Examples: elena
+fetchfml_article_post_password		=	********
+
+
+# Descriptions: use fetchfml command_mail function or not.
+#      History: none
+#        Value: YES_OR_NO
+#     Examples: yes / no
+use_fetchfml_command_mail_function	=	yes
+
+
+# Descriptions: username to fetch command messages for $ml_name ML
+#      History: none
+#        Value: STR
+#     Examples: elena
+fetchfml_command_mail_user		=	$ml_name-ctl
+
+
+# Descriptions: password to fetch command messages for $ml_name ML
+#      History: none
+#        Value: STR
+#     Examples: elena
+fetchfml_command_mail_password		=	********
+
+
+# Descriptions: use fetchfml error_mail_analyzer function or not.
+#      History: none
+#        Value: YES_OR_NO
+#     Examples: yes / no
+use_fetchfml_error_mail_analyzer_function	=	yes
+
+
+# Descriptions: username to fetch error messages for $ml_name ML
+#      History: none
+#        Value: STR
+#     Examples: elena
+fetchfml_error_mail_analyzer_user	=	$ml_name-admin
+
+
+# Descriptions: password to fetch error messages for $ml_name ML
+#      History: none
+#        Value: STR
+#     Examples: elena
+fetchfml_error_mail_analyzer_password	=	********
+
+
+# Descriptions: pop server fetchfml process uses.
+#      History: none
+#        Value: STR
+#     Examples: pop.example.co.jp
+fetchfml_pop_server			=	localhost
+
+
+# Descriptions: imap server fetchfml process uses.
+#      History: none
+#        Value: STR
+#     Examples: imap.example.co.jp
+fetchfml_imap_server			=	localhost
+
+
+
 =head1 program paths
 
 # Descriptions:
@@ -3176,6 +3279,14 @@ sql_find	=	select fml_address from $sql_table
 # $faker_run_start_hook = q{ 1;};
 # $faker_verify_request_end_hook = q{ 1;};
 # $faker_verify_request_start_hook = q{ 1;};
+# $fetchfml_finish_end_hook = q{ 1;};
+# $fetchfml_finish_start_hook = q{ 1;};
+# $fetchfml_prepare_end_hook = q{ 1;};
+# $fetchfml_prepare_start_hook = q{ 1;};
+# $fetchfml_run_end_hook = q{ 1;};
+# $fetchfml_run_start_hook = q{ 1;};
+# $fetchfml_verify_request_end_hook = q{ 1;};
+# $fetchfml_verify_request_start_hook = q{ 1;};
 # $fmladdr_finish_end_hook = q{ 1;};
 # $fmladdr_finish_start_hook = q{ 1;};
 # $fmladdr_prepare_end_hook = q{ 1;};
