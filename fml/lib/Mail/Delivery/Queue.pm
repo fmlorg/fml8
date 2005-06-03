@@ -4,13 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.50 2004/12/15 13:16:42 fukachan Exp $
+# $FML: Queue.pm,v 1.51 2005/05/27 01:22:00 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
 use strict;
 use Carp;
-use vars qw($Counter @class_list $counter);
+use vars qw($Counter @class_list @local_class_list $counter);
 use File::Spec;
 use Mail::Delivery::ErrorStatus qw(error_set error error_clear);
 
@@ -91,8 +91,9 @@ sub new
 {
     my ($self, $args) = @_;
     my ($type)        = ref($self) || $self;
-    my $dir           = $args->{ directory } || croak("specify directory");
-    my $id            = $args->{ id } || _new_queue_id();
+    my $dir           = $args->{ directory }   || croak("specify directory");
+    my $id            = $args->{ id }          || _new_queue_id();
+    my $local_class   = $args->{ local_class } || [];
     my $me            = {
 	_directory    => $dir,
 	_id           => $id,
@@ -104,11 +105,14 @@ sub new
     # update queue directory mode
     $dir_mode = $args->{ directory_mode } || $dir_mode;
 
+    # update optional local class list.
+    for my $c (@$local_class) { push(@local_class_list, $c);}
+
     # initialize directories.
     -d $dir || $me->_mkdirhier($dir);
-    for my $class (@class_list) {
+    for my $class (@class_list, @local_class_list) {
 	my $fp   = sprintf("%s_dir_path", $class);
-	my $_dir = $me->can($fp) ? $me->$fp($id) : undef;
+	my $_dir = $me->can($fp) ? $me->$fp() : $me->local_dir_path($class);
 	-d $_dir || $me->_mkdirhier($_dir);
     }
 
@@ -145,8 +149,24 @@ sub _mkdirhier
 # Return Value: STR
 sub _new_queue_id
 {
+    my ($seconds, $microseconds) = (0, 0);
+
     $Counter++;
-    return time.".$$.$Counter";
+    my $id = sprintf("%d.%d.%d", time, $$, $Counter);
+
+    eval q{ 
+	use Time::HiRes qw(usleep gettimeofday);
+	($seconds, $microseconds) = gettimeofday;
+    };
+    if ($@) {
+	my ($second, $microseconds) = (time, 0);
+	$id = sprintf("%d.%06d.%d.%d", $seconds, $microseconds, $$, $Counter);
+    }
+    else {
+	$id = sprintf("%d.%06d.%d.%d", $seconds, $microseconds, $$, $Counter);
+    }
+
+    return $id;
 }
 
 
@@ -195,7 +215,7 @@ sub list
 {
     my ($self, $class, $policy) = @_;
     my $fp  = $class ? "${class}_dir_path" : "active_dir_path";
-    my $dir = $self->can($fp) ? $self->$fp() : undef;
+    my $dir = $self->can($fp) ? $self->$fp() : $self->local_dir_path($class);
 
     use DirHandle;
     my $dh = new DirHandle $dir;
@@ -614,9 +634,10 @@ sub last_modified_time
     $id ||= $self->id();
 
     use File::stat;
-    for my $class (@class_list) {
+    for my $class (@class_list, @local_class_list) {
         my $fp    = sprintf("%s_file_path", $class);
-        my $file  = $self->can($fp) ? $self->$fp($id) : undef;
+        my $file  = $self->can($fp) ? $self->$fp($id) : 
+	    $self->local_file_path($class, $id);
 
 	if (-f $file) {
 	    my $st    = stat($file);
@@ -957,9 +978,10 @@ sub remove
 
     my $count   = 0;
     my $removed = 0;
-    for my $class (@class_list) {
+    for my $class (@class_list, @local_class_list) {
         my $fp = sprintf("%s_file_path", $class);
-        my $f  = $self->can($fp) ? $self->$fp($id) : undef;
+        my $f  = $self->can($fp) ? $self->$fp($id) : 
+	    $self->local_file_path($class, $id);
 
 	if (-f $f) {
 	    $count++;
@@ -1052,16 +1074,102 @@ sub DESTROY
 
 =head1 UTILITIES
 
+=head2 content_dup2($class)
+
+duplicate content at a class $class other than incoming.
+
+=cut
+
+
+# Descriptions: duplicate content at a class $class other than incoming.
+#    Arguments: OBJ($self) STR($class)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub content_dup2
+{
+    my ($self, $class) = @_;
+    my $id         = $self->id();
+    my $new_id     = _new_queue_id();
+    my $queue_file = $self->incoming_file_path($id);
+    my $new_qf     = $self->local_file_path($class, $new_id);
+
+    return( link($queue_file, $new_qf) ? 1 : 0 );
+}
+
+
+=head1 IO Interface
+
+=head2 open($class, $args)
+
+open incoming queue of this queue id with mode $mode and return the
+file handle.
+
+=head2 close($class)
+
+close.
+
+=cut
+
+
+# Descriptions: open incoming queue of this object with mode $mode
+#               and return the file handle.
+#    Arguments: OBJ($self) STR($class) HASH_REF($op_args)
+# Side Effects: file handle opened.
+# Return Value: HANDLE
+sub open
+{
+    my ($self, $class, $op_args) = @_;
+    my $id = $self->id();
+    my $fp = sprintf("%s_file_path", $class);
+    my $qf = $self->can($fp) ? $self->$fp($id) :
+	$self->local_file_path($class, $id);
+
+    if (defined $op_args->{ in_channel }) {
+	my $channel = $op_args->{ in_channel };
+	open($channel, $qf);
+    }
+    else {
+	use FileHandle;
+	my $mode = $op_args->{ mode } || "r";
+	my $fh   = new FileHandle $qf, $mode;
+	if (defined $fh) {
+	    $self->{ "_${class}_channel" } = $fh;
+	    return $fh;
+	}
+	else {
+	    return undef;
+	}
+    }
+}
+
+
+# Descriptions: close the incoming channel of this object.
+#    Arguments: OBJ($self) STR($class)
+# Side Effects: file handle closed.
+# Return Value: none
+sub close
+{
+    my ($self, $class) = @_;
+    my $channel = $self->{ "_${class}_channel" } || undef;
+    
+    if (defined $channel) {
+	close($channel);
+    }
+}
+
+
+=head1 DIR/FILE UTILITIES
+
 =cut
 
 
 # Descriptions: return "lock" directory path.
-#    Arguments: OBJ($self) STR($id)
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
 sub lock_dir_path
 {
-    my ($self, $id) = @_;
+    my ($self) = @_;
     my $dir = $self->{ _directory } || croak("directory undefined");
 
     return File::Spec->catfile($dir, "lock");
@@ -1082,12 +1190,12 @@ sub lock_file_path
 
 
 # Descriptions: return "incoming" directory path.
-#    Arguments: OBJ($self) STR($id)
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
 sub incoming_dir_path
 {
-    my ($self, $id) = @_;
+    my ($self) = @_;
     my $dir = $self->{ _directory } || croak("directory undefined");
 
     return File::Spec->catfile($dir, "incoming");
@@ -1108,12 +1216,12 @@ sub incoming_file_path
 
 
 # Descriptions: return "new" directory path.
-#    Arguments: OBJ($self) STR($id)
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
 sub new_dir_path
 {
-    my ($self, $id) = @_;
+    my ($self) = @_;
     my $dir = $self->{ _directory } || croak("directory undefined");
 
     return File::Spec->catfile($dir, "new");
@@ -1134,12 +1242,12 @@ sub new_file_path
 
 
 # Descriptions: return "active" directory path.
-#    Arguments: OBJ($self) STR($id)
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
 sub active_dir_path
 {
-    my ($self, $id) = @_;
+    my ($self) = @_;
     my $dir = $self->{ _directory } || croak("directory undefined");
 
     return File::Spec->catfile($dir, "active");
@@ -1160,12 +1268,12 @@ sub active_file_path
 
 
 # Descriptions: return "deferred" directory path.
-#    Arguments: OBJ($self) STR($id)
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
 sub deferred_dir_path
 {
-    my ($self, $id) = @_;
+    my ($self) = @_;
     my $dir = $self->{ _directory } || croak("directory undefined");
 
     return File::Spec->catfile($dir, "deferred");
@@ -1186,12 +1294,12 @@ sub deferred_file_path
 
 
 # Descriptions: return "info" directory path.
-#    Arguments: OBJ($self) STR($id)
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
 sub info_dir_path
 {
-    my ($self, $id) = @_;
+    my ($self) = @_;
     my $dir = $self->{ _directory } || croak("directory undefined");
 
     return File::Spec->catfile($dir, "info");
@@ -1213,12 +1321,12 @@ sub info_file_path
 
 
 # Descriptions: return "sender" directory path.
-#    Arguments: OBJ($self) STR($id)
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
 sub sender_dir_path
 {
-    my ($self, $id) = @_;
+    my ($self) = @_;
     my $dir = $self->{ _directory } || croak("directory undefined");
 
     return File::Spec->catfile($dir, "info", "sender");
@@ -1239,12 +1347,12 @@ sub sender_file_path
 
 
 # Descriptions: return "recipients" directory path.
-#    Arguments: OBJ($self) STR($id)
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
 sub recipients_dir_path
 {
-    my ($self, $id) = @_;
+    my ($self) = @_;
     my $dir = $self->{ _directory } || croak("directory undefined");
 
     return File::Spec->catfile($dir, "info", "recipients");
@@ -1265,12 +1373,12 @@ sub recipients_file_path
 
 
 # Descriptions: return "transport" directory path.
-#    Arguments: OBJ($self) STR($id)
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
 sub transport_dir_path
 {
-    my ($self, $id) = @_;
+    my ($self) = @_;
     my $dir = $self->{ _directory } || croak("directory undefined");
 
     return File::Spec->catfile($dir, "info", "transport");
@@ -1291,12 +1399,12 @@ sub transport_file_path
 
 
 # Descriptions: return "strategy" directory path.
-#    Arguments: OBJ($self) STR($id)
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
 sub strategy_dir_path
 {
-    my ($self, $id) = @_;
+    my ($self) = @_;
     my $dir = $self->{ _directory } || croak("directory undefined");
 
     return File::Spec->catfile($dir, "info", "strategy");
@@ -1313,6 +1421,42 @@ sub strategy_file_path
     my $dir = $self->{ _directory } || croak("directory undefined");
 
     return File::Spec->catfile($dir, "info", "strategy", $id);
+}
+
+
+# Descriptions: return local class directory path.
+#    Arguments: OBJ($self) STR($class)
+# Side Effects: none
+# Return Value: STR
+sub local_dir_path
+{
+    my ($self, $class) = @_;
+    my $dir = $self->{ _directory } || croak("directory undefined");
+
+    if (defined $dir && defined $class) {
+	return File::Spec->catfile($dir, $class);
+    }
+    else {
+	return undef;
+    }
+}
+
+
+# Descriptions: return local class file path.
+#    Arguments: OBJ($self) STR($class) STR($id)
+# Side Effects: none
+# Return Value: STR
+sub local_file_path
+{
+    my ($self, $class, $id) = @_;
+    my $dir = $self->{ _directory } || croak("directory undefined");
+
+    if (defined $dir && defined $class && defined $id) {
+	return File::Spec->catfile($dir, $class, $id);
+    }
+    else {
+	return undef;
+    }
 }
 
 
