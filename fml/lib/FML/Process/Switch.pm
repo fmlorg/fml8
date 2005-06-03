@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.106 2004/05/19 09:03:07 fukachan Exp $
+# $FML: Switch.pm,v 1.107 2004/07/23 13:16:42 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -176,6 +176,9 @@ sub main::Bootstrap2
 
 	# curproc back pointer, used in emergency.
 	curproc          => {},
+
+	# special memory area.
+	'___shared_memory___' => {},
     };
 
     # get the object. The suitable module is speculcated by $0.
@@ -235,6 +238,47 @@ sub __log
 	    $wh->close;
 	}
     };
+}
+
+
+=head2 NewProcess($curproc, $args, $new_myname, $ml_name, $ml_domain)
+
+restart new another process (switch to it on running).
+
+=cut
+
+
+# Descriptions: restart new another process (switch to it on running).
+#    Arguments: OBJ($curproc) HASH_REF($args) 
+#               STR($new_myname) STR($ml_name) STR($ml_domain)
+# Side Effects: none
+# Return Value: none
+sub NewProcess
+{
+    my ($curproc, $args, $new_myname, $ml_name, $ml_domain) = @_;
+    my $ml_addr = sprintf("%s@%s", $ml_name, $ml_domain);
+
+    use File::Basename;
+    my $old_myname = basename($0);
+
+    # reset $args
+    $args->{ myname }           = $new_myname;
+    $args->{ program_name }     = $new_myname;
+    $args->{ program_fullname } =~ s/$old_myname/$new_myname/;
+    $args->{ argv }             = [ $ml_addr ];
+    $args->{ ARGV }             = [ $ml_addr ];
+
+    # start a new process.
+    eval q{
+	local(@ARGV) = ( $ml_addr );
+
+	use FML::Process::Switch;
+	my $obj = FML::Process::Switch::load_module($new_myname, $args);
+
+	use FML::Process::Flow;
+	&FML::Process::Flow::ProcessStart($obj, $args);
+    };
+    $curproc->logerror($@) if $@;
 }
 
 
