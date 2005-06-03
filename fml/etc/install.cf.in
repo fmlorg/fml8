@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: install.cf.in,v 1.18 2004/12/19 11:04:43 fukachan Exp $
+# $FML: install.cf.in,v 1.19 2005/05/29 08:19:53 fukachan Exp $
 #
 
 
@@ -125,3 +125,5 @@ libexec_programs 	=	fml.pl
 				mead
 				fmlserv
 				faker
+				fetchfml
+
