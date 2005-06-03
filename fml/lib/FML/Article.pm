@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.71 2004/12/05 16:19:04 fukachan Exp $
+# $FML: Article.pm,v 1.72 2005/05/26 09:35:40 fukachan Exp $
 #
 
 package FML::Article;
@@ -220,9 +220,7 @@ sub spool_in
 sub _try_failover
 {
     my ($self, $curproc, $id, $article_file) = @_;
-    my $queue      = $curproc->mail_queue_get_incoming_queue();
-    my $queue_id   = $queue->id();
-    my $queue_file = $queue->incoming_file_path($queue_id);
+    my $queue_file = $curproc->incoming_message_get_cache_file_path();
 
     # 0. nuke (must be) broken article file.
     if (-f $article_file) { unlink $article_file;}
