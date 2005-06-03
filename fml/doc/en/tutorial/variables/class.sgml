@@ -16,6 +16,10 @@ admin {
 
    admin_command { 
     ?     $admin_command_mail_allowed_commands
+          $admin_command_mail_auth_gpg_config_dir
+    ?     $admin_command_mail_auth_gpg_config_dir_alias
+          $admin_command_mail_auth_pgp_config_dir
+    ?     $admin_command_mail_auth_pgp_config_dir_alias
           $admin_command_mail_restrictions
    }
 
@@ -85,6 +89,10 @@ article {
    article_post { 
     ?     $article_post_address
     ?     $article_post_article_thread_lifetime
+          $article_post_auth_gpg_config_dir
+          $article_post_auth_pgp_config_dir
+          $article_post_encrypt_gpg_config_dir
+          $article_post_encrypt_pgp_config_dir
           $article_post_restrictions
           $article_post_restrictions_reject_notice_data_type
           $use_article_post_function
@@ -152,6 +160,8 @@ command {
 
    command_mail { 
     ?     $command_mail_address
+          $command_mail_auth_gpg_config_dir
+          $command_mail_auth_pgp_config_dir
           $command_mail_line_length_limit
     ?     $command_mail_reply_prompt
           $command_mail_restrictions
@@ -363,6 +373,35 @@ error {
     ?     $error_mail_analyzer_function_select_list
           $error_mail_analyzer_simple_count_limit
           $use_error_mail_analyzer_function
+   }
+}
+
+fetchfml {
+
+   fetchfml { 
+    ?     $fetchfml_fetch_protocol
+    ?     $fetchfml_imap_server
+    ?     $fetchfml_pop_server
+          $fetchfml_queue_dir
+          $use_fetchfml_function
+   }
+
+   fetchfml_article_post { 
+    ?     $fetchfml_article_post_password
+    ?     $fetchfml_article_post_user
+          $use_fetchfml_article_post_function
+   }
+
+   fetchfml_command_mail { 
+    ?     $fetchfml_command_mail_password
+    ?     $fetchfml_command_mail_user
+          $use_fetchfml_command_mail_function
+   }
+
+   fetchfml_error_mail_analyzer { 
+    ?     $fetchfml_error_mail_analyzer_password
+    ?     $fetchfml_error_mail_analyzer_user
+          $use_fetchfml_error_mail_analyzer_function
    }
 }
 
@@ -794,12 +833,10 @@ _dir$ {
           $db_dir
           $etc_dir
           $event_queue_dir
-          $gpg_config_dir
           $listinfo_base_dir
           $listinfo_dir
           $listinfo_template_dir
           $ml_admin_cgi_base_dir
-          $pgp_config_dir
           $shared_db_dir
           $tmp_dir
           $udb_base_dir

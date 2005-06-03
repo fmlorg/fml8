@@ -32,6 +32,42 @@ $cgi_base_dir/admin
 </row>
 <row>
 <entry>
+admin_command_mail_auth_gpg_config_dir</entry>
+<entry>
+ gpg configurations for admin commnad mail authentication.</entry>
+<entry>
+$etc_dir/gpg-admin-command-mail-auth
+   </entry>
+</row>
+<row>
+<entry>
+admin_command_mail_auth_gpg_config_dir_alias</entry>
+<entry>
+ conventional naming </entry>
+<entry>
+$etc_dir/gpg-admin
+   </entry>
+</row>
+<row>
+<entry>
+admin_command_mail_auth_pgp_config_dir</entry>
+<entry>
+ pgp configurations for admin commnad mail authentication.</entry>
+<entry>
+$etc_dir/pgp-admin-command-mail-auth
+   </entry>
+</row>
+<row>
+<entry>
+admin_command_mail_auth_pgp_config_dir_alias</entry>
+<entry>
+ conventional naming </entry>
+<entry>
+$etc_dir/pgp-admin
+   </entry>
+</row>
+<row>
+<entry>
 admin_command_mail_restrictions</entry>
 <entry>
  admin コマンドへの制限</entry>
@@ -163,6 +199,42 @@ article_post_article_thread_lifetime</entry>
  記事の投稿時に、スレッドの続きであるなら、短時間の間、 </entry>
 <entry>
 86400
+   </entry>
+</row>
+<row>
+<entry>
+article_post_auth_gpg_config_dir</entry>
+<entry>
+ gpg configurations for article authentication.</entry>
+<entry>
+$etc_dir/gpg-article-post-auth
+   </entry>
+</row>
+<row>
+<entry>
+article_post_auth_pgp_config_dir</entry>
+<entry>
+ pgp configurations for article authentication.</entry>
+<entry>
+$etc_dir/pgp-article-post-auth
+   </entry>
+</row>
+<row>
+<entry>
+article_post_encrypt_gpg_config_dir</entry>
+<entry>
+ gpg configurations for article encryption.</entry>
+<entry>
+$etc_dir/gpg-article-post-encrypt
+   </entry>
+</row>
+<row>
+<entry>
+article_post_encrypt_pgp_config_dir</entry>
+<entry>
+ pgp configurations for article encryption.</entry>
+<entry>
+$etc_dir/pgp-article-post-encrypt
    </entry>
 </row>
 <row>
@@ -429,6 +501,24 @@ chaddr_command_auth_type</entry>
  chaddr コマンドで confirmation 認証(コールバック認証)</entry>
 <entry>
 confirmation
+   </entry>
+</row>
+<row>
+<entry>
+command_mail_auth_gpg_config_dir</entry>
+<entry>
+ gpg configurations for (user) commnad mail authentication.</entry>
+<entry>
+$etc_dir/gpg-command-mail-auth
+   </entry>
+</row>
+<row>
+<entry>
+command_mail_auth_pgp_config_dir</entry>
+<entry>
+ pgp configurations for (user) commnad mail authentication.</entry>
+<entry>
+$etc_dir/pgp-command-mail-auth
    </entry>
 </row>
 <row>
@@ -767,6 +857,96 @@ $var_dir/event/queue
 </row>
 <row>
 <entry>
+fetchfml_article_post_password</entry>
+<entry>
+ password to fetch article messages for $ml_name ML</entry>
+<entry>
+********
+   </entry>
+</row>
+<row>
+<entry>
+fetchfml_article_post_user</entry>
+<entry>
+ username to fetch article messages for $ml_name ML</entry>
+<entry>
+$ml_name
+   </entry>
+</row>
+<row>
+<entry>
+fetchfml_command_mail_password</entry>
+<entry>
+ password to fetch command messages for $ml_name ML</entry>
+<entry>
+********
+   </entry>
+</row>
+<row>
+<entry>
+fetchfml_command_mail_user</entry>
+<entry>
+ username to fetch command messages for $ml_name ML</entry>
+<entry>
+$ml_name-ctl
+   </entry>
+</row>
+<row>
+<entry>
+fetchfml_error_mail_analyzer_password</entry>
+<entry>
+ password to fetch error messages for $ml_name ML</entry>
+<entry>
+********
+   </entry>
+</row>
+<row>
+<entry>
+fetchfml_error_mail_analyzer_user</entry>
+<entry>
+ username to fetch error messages for $ml_name ML</entry>
+<entry>
+$ml_name-admin
+   </entry>
+</row>
+<row>
+<entry>
+fetchfml_fetch_protocol</entry>
+<entry>
+ protocol to fetch messages.</entry>
+<entry>
+pop3
+   </entry>
+</row>
+<row>
+<entry>
+fetchfml_imap_server</entry>
+<entry>
+ imap server fetchfml process uses.</entry>
+<entry>
+localhost
+   </entry>
+</row>
+<row>
+<entry>
+fetchfml_pop_server</entry>
+<entry>
+ pop server fetchfml process uses.</entry>
+<entry>
+localhost
+   </entry>
+</row>
+<row>
+<entry>
+fetchfml_queue_dir</entry>
+<entry>
+ queue_dir fetchfml uses as temporary incoming queue </entry>
+<entry>
+$var_dir/mail/fetchfml
+   </entry>
+</row>
+<row>
+<entry>
 file_default_mode</entry>
 <entry>
  ファイルを作成する時のデフォルトモード</entry>
@@ -781,15 +961,6 @@ get_command_request_limit</entry>
  get コマンドで指定できる記事数の上限。</entry>
 <entry>
 100
-   </entry>
-</row>
-<row>
-<entry>
-gpg_config_dir</entry>
-<entry>
- GNU Pvivary Guard</entry>
-<entry>
-$etc_dir/gpg
    </entry>
 </row>
 <row>
@@ -1359,15 +1530,6 @@ outgoing_mail_header_x_ml_name</entry>
  X-ML-Name: および X-Sequence にあらわれる ML 名</entry>
 <entry>
 $ml_name
-   </entry>
-</row>
-<row>
-<entry>
-pgp_config_dir</entry>
-<entry>
- Pretty Good Privacy</entry>
-<entry>
-$etc_dir/pgp
    </entry>
 </row>
 <row>
@@ -1993,6 +2155,42 @@ use_error_mail_analyzer_function</entry>
  エラー解析プログラムを使うか？</entry>
 <entry>
 ${use_error_analyzer_program:-yes}
+   </entry>
+</row>
+<row>
+<entry>
+use_fetchfml_article_post_function</entry>
+<entry>
+ use fetchfml article_post function or not.</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_fetchfml_command_mail_function</entry>
+<entry>
+ use fetchfml command_mail function or not.</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_fetchfml_error_mail_analyzer_function</entry>
+<entry>
+ use fetchfml error_mail_analyzer function or not.</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_fetchfml_function</entry>
+<entry>
+ use fetchfml function or not.</entry>
+<entry>
+no
    </entry>
 </row>
 <row>
