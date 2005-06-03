@@ -1,8 +1,10 @@
 #!/bin/sh
 #
-# $FML$
+# .show_good_modules,v 1.2 2001/05/27 12:09:20 fukachan Exp
 #
 
-perl -nle 'print if /\s+[SRM].p.|^$|^[A-Za-z0-9:]+$/' \
-	00modlist.long.txt |\
+w3m -dump 00modlist.long.html |\
+perl -nle 'print if /\s+[SRM].p.|^$|^[A-Za-z0-9:]+$/' |\
 	uniq
+
+exit 0;
