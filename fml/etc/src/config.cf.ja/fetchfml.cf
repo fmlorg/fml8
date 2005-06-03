@@ -23,6 +23,13 @@ fetchfml_queue_dir = $var_dir/mail/fetchfml
 fetchfml_fetch_protocol			=	pop3
 
 
+# Descriptions: use fetchfml article_post function or not.
+#      History: none
+#        Value: YES_OR_NO
+#     Examples: yes / no
+use_fetchfml_article_post_function	=	yes
+
+
 # Descriptions: username to fetch article messages for $ml_name ML
 #      History: none
 #        Value: STR
@@ -37,6 +44,13 @@ fetchfml_article_post_user		=	$ml_name
 fetchfml_article_post_password		=	********
 
 
+# Descriptions: use fetchfml command_mail function or not.
+#      History: none
+#        Value: YES_OR_NO
+#     Examples: yes / no
+use_fetchfml_command_mail_function	=	yes
+
+
 # Descriptions: username to fetch command messages for $ml_name ML
 #      History: none
 #        Value: STR
@@ -49,6 +63,13 @@ fetchfml_command_mail_user		=	$ml_name-ctl
 #        Value: STR
 #     Examples: elena
 fetchfml_command_mail_password		=	********
+
+
+# Descriptions: use fetchfml error_mail_analyzer function or not.
+#      History: none
+#        Value: YES_OR_NO
+#     Examples: yes / no
+use_fetchfml_error_mail_analyzer_function	=	yes
 
 
 # Descriptions: username to fetch error messages for $ml_name ML
