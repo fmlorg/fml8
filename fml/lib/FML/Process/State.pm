@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: State.pm,v 1.18 2005/05/30 03:29:12 fukachan Exp $
+# $FML: State.pm,v 1.19 2005/05/30 06:52:24 fukachan Exp $
 #
 
 package FML::Process::State;
@@ -691,49 +691,6 @@ sub smtp_server_state_get_error
     my $pcb = $curproc->pcb();
 
     return( $pcb->get("smtp_transaction", $mta || "ALL") ? 1 :  0 );
-}
-
-
-=head1 QUEUE
-
-=head2 mail_queue_set_incoming_queue($queue)
-
-save object of incoming queue.
-
-=head2 mail_queue_get_incoming_queue()
-
-get object of incoming queue.
-
-=cut
-
-
-# Descriptions: save object of incoming queue.
-#    Arguments: OBJ($curproc) OBJ($queue)
-# Side Effects: update pcb.
-# Return Value: none
-sub mail_queue_set_incoming_queue
-{
-    my ($curproc, $queue) = @_;
-    my $pcb = $curproc->pcb();
-
-    if (defined $pcb) {
-	$pcb->set("incoming_smtp_transaction", "queue_object", $queue);
-    }
-}
-
-
-# Descriptions: get object of incoming queue.
-#    Arguments: OBJ($curproc)
-# Side Effects: update pcb.
-# Return Value: OBJ
-sub mail_queue_get_incoming_queue
-{
-    my ($curproc) = @_;
-    my $pcb = $curproc->pcb();
-
-    if (defined $pcb) {
-	$pcb->get("incoming_smtp_transaction", "queue_object") || undef;
-    }
 }
 
 
