@@ -27,6 +27,7 @@ threadtrack.cf
 dbms.cf
 cgi.cf
 mta.cf
+fetchfml.cf
 paths.cf
 system_dependence.cf
 compatibility.cf
