@@ -56,6 +56,14 @@
 # $faker_run_start_hook = q{ 1;};
 # $faker_verify_request_end_hook = q{ 1;};
 # $faker_verify_request_start_hook = q{ 1;};
+# $fetchfml_finish_end_hook = q{ 1;};
+# $fetchfml_finish_start_hook = q{ 1;};
+# $fetchfml_prepare_end_hook = q{ 1;};
+# $fetchfml_prepare_start_hook = q{ 1;};
+# $fetchfml_run_end_hook = q{ 1;};
+# $fetchfml_run_start_hook = q{ 1;};
+# $fetchfml_verify_request_end_hook = q{ 1;};
+# $fetchfml_verify_request_start_hook = q{ 1;};
 # $fmladdr_finish_end_hook = q{ 1;};
 # $fmladdr_finish_start_hook = q{ 1;};
 # $fmladdr_prepare_end_hook = q{ 1;};
