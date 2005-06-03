@@ -14,6 +14,72 @@
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
 
+2005/06/03
+
+   7.98.2 queuing system revised.
+
+	キューイングシステムの微修正
+
+	POP/IMAP による MTA+ML エミュレーションをサポート (fetchfml)。
+
+	この実装を試すことで、現在のキューイングおよびキャッシュシステ
+	ムが妥当かあるかどうかが分かります。基本構造は、そのままですの
+	で、本質的には変わっていませんが、２、３の拡張が必要でした。
+
+   FML::PCB 
+	fix dump_variables() for context based switching.
+	define {set,get}_current_context().
+
+   fetchfml
+	FML::Process::FetchFML added.
+	FML::MUA::POP3 added.
+	etc/command_line_options modules install.cf.in 
+		add fetchfml definitions.
+
+   variables
+	define fetchfml related variables.	
+	$fetchfml_*_hook added.
+
+   Mail::Delivery::Queue 
+	fix args and comments of *_dir_path().
+	implement local_{dir,file}_path(), content_dup2(), open() and close().
+	queue_id = second + microsecond + pid + counter.
+	now other module can extend class for local use.
+	
+   FML::Process::Switch 
+	alloc shared memory area in $args (shared_hash_get() uses).
+	implement NewProcess().
+	
+   FML::Process::Kernel 
+	incoming queue system revised.
+	o move some log to logdebug.
+	o not use queue file directly. instead use $queue->open() method.
+	o use incoming_message_set_current_queue() instead of
+	mail_queue_set_incoming_queue().
+	o clean up incoming queue removal code.
+	
+   FML::Process::Utils 
+	implement helper functions for incoming cache::queue system.
+	o incoming_message_set_current_queue()
+	o incoming_message_get_current_queue()
+	o incoming_message_stack_queue_for_removal()
+	o incoming_message_remove_queue()
+	
+	shared memory for IPC between parent and child $curproc processes.
+	o shared_hash_get()
+	
+   FML::Process::State 
+	remove mail_queue_set_incoming_queue($queue),
+	mail_queue_get_incoming_queue().
+	XXX alternative methods available in FML::Process::Utils.
+	
+   FML::Article 
+	switched to use $curproc->incoming_message_get_cache_file_path();
+
+2005/06/02
+
+   MIME-Base64 removed.
+
 2005/05/31
 
    FML::Process::Kernel 
@@ -8330,4 +8396,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.238 2005/05/27 03:08:26 fukachan Exp $
+$FML: CHANGES.txt,v 1.239 2005/06/02 05:29:59 fukachan Exp $
