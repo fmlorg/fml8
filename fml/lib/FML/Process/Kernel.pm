@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.255 2005/05/31 13:04:38 fukachan Exp $
+# $FML: Kernel.pm,v 1.256 2005/05/31 13:14:03 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -911,12 +911,15 @@ sub __debug_ml_xxx
     my $config = $curproc->config();
 
     if (defined $config->{ log_file } && (-w $config->{ log_file })) {
-	for my $buf (@delayed_buffer) { $curproc->log( $buf ); }
+	for my $buf (@delayed_buffer) { $curproc->logdebug( $buf ); }
 	@delayed_buffer = ();
 
 	for my $var (qw(ml_name ml_domain ml_home_prefix ml_home_dir)) {
-	    $curproc->log(sprintf("%-25s = %s", '(debug)'.$str. $var,
-			(defined $config->{ $var } ? $config->{ $var } : '')));
+	    $curproc->logdebug(sprintf("%-25s = %s", 
+				       "(debug)$str $var",
+				       (defined $config->{ $var } ? 
+					$config->{ $var } : 
+					'')));
 	}
     }
     else {
@@ -1110,7 +1113,7 @@ sub parse_incoming_message
     # open input stream.
     my $incoming_channel = undef;
     if ($use_mail_queue && (defined $queue)) {
-	$incoming_channel = new FileHandle $queue_file;
+	$incoming_channel = $queue->open("incoming", { mode => "r" });
     }
     else {
 	$incoming_channel = *STDIN{IO};
@@ -1194,12 +1197,11 @@ sub _store_message_into_incoming_queue
     my $queue_dir  = $config->{ mail_queue_dir };
     my $queue      = new Mail::Delivery::Queue { directory => $queue_dir };
     my $queue_id   = $queue->id();
-    my $queue_file = $queue->incoming_file_path($queue_id);
     my $total      = 0;
     my $fatal      = 0;
 
     # write to queue file.
-    my $wh = new FileHandle "> $queue_file";
+    my $wh = $queue->open("incoming", { mode => "w" });
     if (defined $wh) {
 	my $n = 0;
 	my $w = 0;
@@ -1216,13 +1218,13 @@ sub _store_message_into_incoming_queue
 	$wh->close();
     }
     else {
-	$curproc->logerror("cannot open queue_file $queue_file");
+	$curproc->logerror("cannot open queue_file qid=$queue_id");
 	$fatal = 1;
     }
 
     unless ($fatal) {
 	$curproc->logdebug("queued/incoming: qid=$queue_id read=$total");
-	$curproc->mail_queue_set_incoming_queue($queue);
+	$curproc->incoming_message_set_current_queue($queue);
     }
     else {
 	$curproc->logerror("failted to store incoming message");
@@ -2723,13 +2725,13 @@ sub clean_up_incoming_queue
     my $config    = $curproc->config();
     my $channel   = 'mail_incoming_queue_clean_up';
 
-    # Mail::Delivery::Queue object.
-    my $queue = $curproc->mail_queue_get_incoming_queue() || undef;
-    if (defined $queue) {
-	$queue->remove();
-    }
+    # 1. remove incoming queue files.
+    # 2. remove queues marked as removal in incoming/ queue. 
+    #    XXX cond. 1 must include cond. 2,
+    #    XXX but we try again to ensure garbage collection.
+    $curproc->incoming_message_remove_queue();
 
-    # remove too old incoming queue files.
+    # 3. remove too old incoming queue files.
     if ($curproc->is_event_timeout($channel)) {
 	my $fp = sub { $curproc->log(@_);};
 
@@ -3169,6 +3171,11 @@ sub exit_as_tempfail
 {
     my ($curproc) = @_;
 
+    # clean up temporary files
+    $curproc->clean_up_tmpfiles();
+    $curproc->clean_up_incoming_queue();
+
+    # main.
     $curproc->logerror("exit(EX_TEMPFAIL) to retry later.");
 
     $main::ERROR_EXIT_CODE = 75;
