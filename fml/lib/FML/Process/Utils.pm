@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.129 2005/05/26 13:01:58 fukachan Exp $
+# $FML: Utils.pm,v 1.130 2005/05/31 13:14:04 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -210,6 +210,97 @@ sub incoming_message_get_cache_file_path
     my $pcb  = $curproc->pcb();
     my $path = $pcb->get("incoming_message", "file_path");
     return( $path || '' );
+}
+
+
+=head2 incoming_message_set_current_queue($queue)
+
+save object of incoming queue.
+
+=head2 incoming_message_get_current_queue()
+
+get object of incoming queue.
+
+=cut
+
+
+# Descriptions: save object of incoming queue.
+#    Arguments: OBJ($curproc) OBJ($queue)
+# Side Effects: update pcb.
+# Return Value: none
+sub incoming_message_set_current_queue
+{
+    my ($curproc, $queue) = @_;
+    my $pcb = $curproc->pcb();
+
+    if (defined $pcb) {
+	$pcb->set("incoming_smtp_transaction", "queue_object", $queue);
+    }
+}
+
+
+# Descriptions: get object of incoming queue.
+#    Arguments: OBJ($curproc)
+# Side Effects: update pcb.
+# Return Value: OBJ
+sub incoming_message_get_current_queue
+{
+    my ($curproc) = @_;
+    my $pcb = $curproc->pcb();
+
+    if (defined $pcb) {
+	$pcb->get("incoming_smtp_transaction", "queue_object") || undef;
+    }
+}
+
+
+# Descriptions: stack queue object for later removal. removal is done
+#               when incoming_message_mark_cache_file_for_removal() runs.
+#    Arguments: OBJ($curproc) OBJ($queue)
+# Side Effects: none
+# Return Value: STR
+sub incoming_message_stack_queue_for_removal
+{
+    my ($curproc, $queue) = @_;
+    my $shm = $curproc->shared_hash_get("incoming_message", 
+					"queue_stack_for_removal");
+
+    if (defined $queue) {
+	my $qid = $queue->id();
+	$curproc->logdebug("push qid=$qid for removal");
+	my $a = $shm->{ stack } || [];
+	push(@$a, $queue);
+	$shm->{ stack } = $a;
+    }
+}
+
+
+# Descriptions: remove files marked as later removal.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub incoming_message_remove_queue
+{
+    my ($curproc) = @_;
+
+    # 1. remove current incoming queue.
+    my $queue = $curproc->incoming_message_get_current_queue() || undef;
+    if (defined $queue) {
+	$queue->remove();
+    }
+
+    # 2. additional todo (e.g. fetchfml requests).
+    my $shm = $curproc->shared_hash_get("incoming_message", 
+					"queue_stack_for_removal");
+
+    my $rmlist = $shm->{ stack } || [];
+    for my $q (@$rmlist) {
+	if (defined $q) {
+	    my $qid = $q->id();
+	    $curproc->logdebug("remove qid=$qid");
+	    $q->remove();
+	}
+    }
 }
 
 
@@ -1972,6 +2063,31 @@ sub hints
     my $main_cf = $curproc->{ __parent_args }->{ main_cf };
 
     return $main_cf->{ _hints };
+}
+
+
+=head2 shared_hash_get($category, $key)
+
+return HASH_REF allocated on global memory area.
+
+This memory area is shared by plural "fml processes" running on this
+one (operatiing system's) process. In other words plural $curproc are
+possible on one process. For example, both parent and child $curproc
+can access this memory area.
+
+=cut
+
+
+# Descriptions: return HASH_REF allocated on global memory area.
+#    Arguments: OBJ($curproc) STR($category) STR($key)
+# Side Effects: none
+# Return Value: HASH_REF
+sub shared_hash_get
+{
+    my ($curproc, $category, $key) = @_;
+    my $memory = $curproc->{ __parent_args }->{ ___shared_memory___ };
+    $memory->{ $category }->{ $key } ||= {};
+    return $memory->{ $category }->{ $key };
 }
 
 
