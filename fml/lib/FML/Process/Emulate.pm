@@ -3,7 +3,7 @@
 # Copyright (C) 2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Emulate.pm,v 1.5 2004/12/19 11:04:43 fukachan Exp $
+# $FML: Emulate.pm,v 1.6 2005/05/27 03:03:37 fukachan Exp $
 #
 
 package FML::Process::Emulate;
@@ -84,9 +84,9 @@ sub prepare
     $config->load_file($default_config_cf);
 
     # go !
-    $curproc->resolve_ml_specific_variables($resolver_args);
-    $curproc->load_config_files();
-    $curproc->fix_perl_include_path();
+    $curproc->ml_variables_resolve($resolver_args);
+    $curproc->config_files_load();
+    $curproc->env_fix_perl_include_path();
     $curproc->scheduler_init();
     $curproc->log_message_init();
     $curproc->_fml4_emulate();
@@ -139,7 +139,7 @@ sub _fml4_emulate_post_article_process
     }
 
     if ($config->yes('use_article_post_function')) {
-	$curproc->parse_incoming_message();
+	$curproc->incoming_message_parse();
     }
     else {
 	$curproc->logerror("use of distribute program prohibited");
@@ -169,7 +169,7 @@ sub _fml4_emulate_command_mail_process
     }
 
     if ($config->yes('use_command_mail_function')) {
-	$curproc->parse_incoming_message();
+	$curproc->incoming_message_parse();
     }
     else {
 	$curproc->logerror("use of command_mail program prohibited");
@@ -205,7 +205,7 @@ sub _fml4_emulate_error_process
     }
 
     if ($config->yes('use_error_mail_analyzer_function')) {
-	$curproc->parse_incoming_message();
+	$curproc->incoming_message_parse();
     }
     else {
 	$curproc->logerror("use of error_mail program prohibited");
