@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: POP3.pm,v 1.1 2005/06/03 09:39:50 fukachan Exp $
 #
 
 package FML::MUA::POP3;
@@ -204,7 +204,7 @@ sub pick_up_queue
 
     my $list     = $queue->list($class, "oldest");
     my $queue_id = $list->[ 0 ] || '';
-    if (defined $queue_id) {
+    if (defined $queue_id && $queue_id) {
 	my $queue       = new Mail::Delivery::Queue {
 	    id          => $queue_id,
 	    directory   => $queue_dir,
