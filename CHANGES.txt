@@ -3,6 +3,8 @@
 
   [最近のまとめ]
 
+  FML_CURRENT_VERSION=7.98.2
+
   8.0 PRE_ALPHA
 	7.98.2	queuing system revised. fetchfml added.
 		bug fix method naming convension (FNF).
@@ -8470,4 +8472,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.240 2005/06/03 14:48:26 fukachan Exp $
+$FML: CHANGES.txt,v 1.241 2005/06/04 09:06:42 fukachan Exp $
