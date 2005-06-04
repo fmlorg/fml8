@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.13 2004/04/18 05:59:44 fukachan Exp $
+# $FML: Utils.pm,v 1.14 2004/07/23 13:16:43 fukachan Exp $
 #
 
 package FML::Process::CGI::Utils;
@@ -82,7 +82,7 @@ sub cgi_var_ml_name_list
     my $ml_domain = $curproc->cgi_var_ml_domain();
 
     if ($cgi_mode eq 'admin') {
-	return $curproc->get_ml_list($ml_domain);
+	return $curproc->_get_ml_list($ml_domain);
     }
     else {
 	my $ml_name = $curproc->cgi_var_ml_name();
@@ -230,6 +230,60 @@ sub cgi_var_fml_project_url
     my ($curproc) = @_;
 
     return '<A HREF="http://www.fml.org/software/fml-devel/">fml</A>';
+}
+
+
+# Descriptions: list up ML's within the specified $ml_domain.
+#    Arguments: OBJ($curproc) STR($ml_domain)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub _get_ml_list
+{
+    my ($curproc, $ml_domain) = @_;
+    my $ml_home_prefix = $curproc->ml_home_prefix();
+
+    if (defined $ml_domain) {
+	$ml_home_prefix = $curproc->ml_home_prefix($ml_domain);
+    }
+    else {
+	my $xx_domain   = $curproc->ml_domain();
+	$ml_home_prefix = $curproc->ml_home_prefix($xx_domain);
+    }
+
+    # cheap sanity:
+    unless ($ml_home_prefix) {
+	croak("_get_ml_list: ml_home_prefix undefined");
+    }
+
+    use File::Spec;
+    use DirHandle;
+    my $dh      = new DirHandle $ml_home_prefix;
+    my $prefix  = $ml_home_prefix;
+    my $cf      = '';
+    my @dirlist = ();
+
+    if (defined $dh) {
+	use FML::Restriction::Base;
+	my $safe    = new FML::Restriction::Base;
+	my $ml_name = '';
+
+      ENTRY:
+	while ($ml_name = $dh->read()) {
+	    next ENTRY if $ml_name =~ /^\./o;
+	    next ENTRY if $ml_name =~ /^\@/o;
+
+	    # XXX permit $ml_name matched by FML::Restriction::Base.
+	    if ($safe->regexp_match('ml_name', $ml_name)) {
+		# pick up fml8 style ml, so ignore fml4 one.
+		$cf = File::Spec->catfile($prefix, $ml_name, "config.cf");
+		push(@dirlist, $ml_name) if -f $cf;
+	    }
+	}
+	$dh->close;
+    }
+
+    @dirlist = sort @dirlist;
+    return \@dirlist;
 }
 
 
