@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.34 2005/01/23 00:54:39 fukachan Exp $
+# $FML: QueueManager.pm,v 1.35 2005/05/27 03:03:37 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -158,7 +158,7 @@ sub send
 	    $curproc->logdebug("qmgr: re-schedule");
 	    $queue->reschedule();
 	}
-	$curproc->set_event_timeout($channel, time + 300);
+	$curproc->event_set_timeout($channel, time + 300);
     }
 }
 

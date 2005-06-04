@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.49 2005/01/23 00:54:38 fukachan Exp $
+# $FML: Error.pm,v 1.50 2005/05/27 03:03:37 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -225,7 +225,7 @@ sub _clean_up_bouncers
 	$curproc->logerror($@) if $@;
 
 	# XXX-TODO: 3600 customizable.
-	$curproc->set_event_timeout($channel, time + 3600);
+	$curproc->event_set_timeout($channel, time + 3600);
     }
     else {
 	$curproc->logdebug("event not timeout");

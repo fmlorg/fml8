@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.256 2005/05/31 13:14:03 fukachan Exp $
+# $FML: Kernel.pm,v 1.257 2005/06/03 12:51:39 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -459,9 +459,9 @@ sub _lock_init
 
 =head2 is_event_timeout( $channel )
 
-=head2 get_event_timeout( $channel )
+=head2 event_get_timeout( $channel )
 
-=head2 set_event_timeout( $channel, $time )
+=head2 event_set_timeout( $channel, $time )
 
 =cut
 
@@ -473,7 +473,7 @@ sub _lock_init
 sub is_event_timeout
 {
     my ($curproc, $channel) = @_;
-    my $t = $curproc->get_event_timeout($channel);
+    my $t = $curproc->event_get_timeout($channel);
 
     if ($t) {
 	return (time > $t) ? 1 : 0;
@@ -489,7 +489,7 @@ sub is_event_timeout
 #    Arguments: OBJ($curproc) STR($channel)
 # Side Effects: none
 # Return Value: NUM
-sub get_event_timeout
+sub event_get_timeout
 {
     my ($curproc, $channel) = @_;
     my $qf = $curproc->_init_event_timeout($channel);
@@ -512,7 +512,7 @@ sub get_event_timeout
 #    Arguments: OBJ($curproc) STR($channel) NUM($time)
 # Side Effects: none
 # Return Value: NUM
-sub set_event_timeout
+sub event_set_timeout
 {
     my ($curproc, $channel, $time) = @_;
     my $qf = $curproc->_init_event_timeout($channel);
@@ -2710,7 +2710,7 @@ sub clean_up_tmpfiles
 	my $config  = $curproc->config();
 	my $tmp_dir = $config->{ tmp_dir };
 	$curproc->remove_too_old_files_in_dir($tmp_dir);
-	$curproc->set_event_timeout($channel, time + 24*3600);
+	$curproc->event_set_timeout($channel, time + 24*3600);
     }
 }
 
@@ -2740,7 +2740,7 @@ sub clean_up_incoming_queue
 	my $queue     = new Mail::Delivery::Queue { directory => $queue_dir };
 	$queue->set_log_function($fp);
 	$queue->clean_up();
-	$curproc->set_event_timeout($channel, time + 24*3600);
+	$curproc->event_set_timeout($channel, time + 24*3600);
     }
 }
 
@@ -2850,7 +2850,7 @@ sub queue_flush
 
 	if ($curproc->is_event_timeout($channel)) {
 	    $q->cleanup();
-	    $curproc->set_event_timeout($channel, time + 3600);
+	    $curproc->event_set_timeout($channel, time + 3600);
 	}
     };
     croak($@) if $@;
