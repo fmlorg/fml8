@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: User.pm,v 1.10 2004/07/23 13:16:33 fukachan Exp $
+# $FML: User.pm,v 1.11 2004/07/23 15:59:02 fukachan Exp $
 #
 
 package FML::CGI::User;
@@ -60,16 +60,16 @@ sub cgi_menu
 	$comname eq 'userdel'     ||
 	$comname eq 'deluser'     ||
 	$comname eq 'digeston') {
-	$address_list = $curproc->get_address_list( 'recipient_maps' );
+	$address_list = $curproc->_get_address_list( 'recipient_maps' );
 	$selected_key = 'recipients';
     }
     elsif (0) {
-	$address_list = $curproc->get_address_list( 'member_maps' );
+	$address_list = $curproc->_get_address_list( 'member_maps' );
 	$selected_key = 'members';
     }
     # XXX digest operatoins is asymmetric with *_maps.
     elsif ($comname eq 'digestoff') {
-	$address_list = $curproc->get_address_list( 'digest_recipient_maps' );
+	$address_list = $curproc->_get_address_list( 'digest_recipient_maps' );
 	$selected_key = 'digest_recipients';
     }
     elsif ($comname eq 'addadmin' ||
@@ -77,7 +77,7 @@ sub cgi_menu
 	   $comname eq 'admindel' ||
 	   $comname eq 'deladmin' ||
 	   $comname eq 'byeadmin'  ) {
-	$address_list = $curproc->get_address_list( 'admin_member_maps' );
+	$address_list = $curproc->_get_address_list( 'admin_member_maps' );
 	$selected_key = 'admin_members';
     }
     else {
@@ -137,6 +137,26 @@ sub cgi_menu
     print submit(-name => $name_submit);
     print reset(-name  => $name_reset);
     print end_form;
+}
+
+
+# Descriptions: get address list for the specified map.
+#    Arguments: OBJ($curproc) STR($map)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub _get_address_list
+{
+    my ($curproc, $map) = @_;
+    my $config = $curproc->config();
+    my $list   = $config->get_as_array_ref( $map );
+
+    eval q{ use FML::User::Control;};
+    unless ($@) {
+	my $obj = new FML::User::Control;
+	return $obj->get_user_list($curproc, $list);
+    }
+
+    return [];
 }
 
 
