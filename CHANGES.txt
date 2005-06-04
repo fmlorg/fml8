@@ -1,6 +1,13 @@
 		CHANGES
 		Last Modified: $Date$
 
+  [最近のまとめ]
+
+  8.0 PRE_ALPHA
+	7.98.2	queuing system revised. fetchfml added.
+		bug fix method naming convension (FNF).
+	7.98.1	overhaul.
+
   [注意]
 	コマンドメールのコードを全面的に書き直しました。
 
@@ -13,6 +20,73 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2005/06/04
+
+   7.98.2 bug fix method naming convension (FNF).
+
+   FML::MUA::POP3 
+	bug fix::check queue_id value itself, too
+	
+   FML::Process::Kernel 
+	define _get_debug_level(), moved from FML::Process::Utils and
+	made private.
+	
+   FML::Process::Fake 
+	switched to use FML::Process::Switch::NewProcess().
+	bug fix pcb handling.
+
+   FML::Process::Kernel QueueManager Error 
+	$curproc->OBJ_METHOD() form (FNF):
+	[sg]et_event_timeout() -> event_[gs]et_timeout().
+	
+   FML::CGI::User 
+	moved get_address_list(), called only at this module, from
+	FML::Process::Utils to here. Also, it is changed to the private
+	method; get_address_list() -> _get_address_list().
+	
+   FML::Process::CGI::Utils 
+	move get_ml_list definition, used only here, to this module.
+	also it is changed to private.
+	
+   FML::Process::Utils 
+	remove get_ml_home_prefix_maps() definition, which is not used.
+	
+	move definitions to proper module::get_ml_list(), get_address_list()
+	and get_debug_level().
+	
+   FML::Mailer 
+   FML::Article::Sequence 
+   FML::Command::SendFile 
+   FML::Config::Menu 
+   FML::Process::Addr Alias Calendar Command ConfViewer 
+                 Configure Digest Distribute DocViewer Error FetchFML 
+                 Flow HTMLify PGP State Kernel Emulate Fake Utils
+   FML::Process::CGI::Kernel 
+	method naming fixed to $curproc->OBJ_METHOD() form (FNF).
+	get_article_id                 -> article_get_id
+	set_article_id                 -> article_set_id
+	config_files_append_to_list    -> config_files_append
+	append_to_config_files_list    -> config_files_append_to_list
+	get_config_files_list          -> config_files_get_list
+	load_config_files              -> config_files_load
+	set_config_files_list          -> config_files_set_list
+	verify_sender_credential       -> credential_verify_sender
+	get_current_process_ml_name    -> current_process_get_ml_name
+	set_current_process_ml_name    -> current_process_set_ml_name
+	fix_perl_include_path          -> env_fix_perl_include_path
+	parse_exception                -> exception_parse
+	parse_incoming_message         -> incoming_message_parse
+	clean_up_incoming_queue        -> incoming_message_queue_clean_up
+	get_cui_menu                   -> menu_get_cui_config_file_path
+	get_gui_menu                   -> menu_get_gui_config_file_path
+	resolve_ml_specific_variables  -> ml_variables_resolve
+	outgoing_message_open_channel  -> outgoing_message_cache_open
+	open_outgoing_message_channel  -> outgoing_message_open_channel
+	inform_reply_messages          -> reply_message_inform
+	prepare_file_to_return         -> reply_message_prepare_template
+	clean_up_tmpfiles              -> tmp_files_clean_up
+	reset_umask                    -> umask_reset
+	set_umask_as_public            -> umask_set_as_public
 
 2005/06/03
 
@@ -8396,4 +8470,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.239 2005/06/02 05:29:59 fukachan Exp $
+$FML: CHANGES.txt,v 1.240 2005/06/03 14:48:26 fukachan Exp $
