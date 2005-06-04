@@ -3,7 +3,7 @@
 # Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Fake.pm,v 1.11 2005/05/27 01:02:56 fukachan Exp $
+# $FML: Fake.pm,v 1.12 2005/05/30 07:20:23 fukachan Exp $
 #
 
 package FML::Process::Fake;
@@ -221,8 +221,8 @@ sub _faker_init
     $config->set('ml_home_dir',    $ml_home_dir);
 
     # init
-    $curproc->load_config_files();
-    $curproc->fix_perl_include_path();
+    $curproc->config_files_load();
+    $curproc->env_fix_perl_include_path();
     $curproc->scheduler_init();
     $curproc->log_message_init();
 
@@ -249,7 +249,7 @@ sub _faker_prepare
     my ($curproc) = @_;
 
     # 1. parse message
-    $curproc->parse_incoming_message();
+    $curproc->incoming_message_parse();
 }
 
 
@@ -387,40 +387,26 @@ sub _faker_process_switch
     my ($curproc, $args, $ml_name, $ml_domain) = @_;
     my $ml_addr = sprintf("%s@%s", $ml_name, $ml_domain);
 
-    print STDERR "Start ml emulation: $ml_name\@$ml_domain\n";
-
-    # debug
-    $ml_addr = 'elena@home.fml.org';
-    print STDERR "Start ml emulation: $ml_addr\n";
-
-    # modify $args
-    my $myname = "distribute";
-    $args->{ myname }           = $myname;
-    $args->{ program_name }     = $myname;
-    $args->{ program_fullname } =~ s/faker/$myname/;
-    $args->{ argv }             = [ $ml_addr ];
-    $args->{ ARGV }             = [ $ml_addr ];
+    $curproc->logdebug("start ml emulation: $ml_name\@$ml_domain");
 
     # start the process.
-    eval q{
-	local(@ARGV) = ( $ml_addr );
-
-	my $path = $curproc->get_incoming_message_cache_file_path();
-	if ($path) {
-	    open(STDIN, $path);
+    my $path = $curproc->incoming_message_get_cache_file_path();
+    if ($path) {
+	unless (open(STDIN, $path)) {
+	    $curproc->logerror("cannot open $path");
 	}
-	else {
-	    $curproc->log("path = <$path>");
-	    croak("fail to open STDIN");
-	}
+    }
+    else {
+	$curproc->logerror("cache file not found");
+    }
 
-	use FML::Process::Switch;
-	my $obj = FML::Process::Switch::load_module($myname, $args);
-
-	use FML::Process::Flow;
-	&FML::Process::Flow::ProcessStart($obj, $args);
-    };
-    $curproc->logerror($@) if $@;
+    my $myname = "distribute";
+    use FML::Process::Switch;
+    &FML::Process::Switch::NewProcess($curproc,
+				      $args,
+				      $myname,
+				      $ml_name,
+				      $ml_domain);
 }
 
 
@@ -523,7 +509,7 @@ sub set_emul_ml_list
 {
     my ($curproc, $list) = @_;
     my $pcb = $curproc->pcb();
-    $pcb->get("faker", "ml_user_part_list", $list);
+    $pcb->set("faker", "ml_user_part_list", $list);
 }
 
 
@@ -558,7 +544,7 @@ sub set_emul_user_list
 {
     my ($curproc, $list) = @_;
     my $pcb = $curproc->pcb();
-    $pcb->get("faker", "user_list", $list);
+    $pcb->set("faker", "user_list", $list);
 }
 
 
