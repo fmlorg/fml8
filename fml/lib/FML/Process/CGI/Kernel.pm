@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.84 2004/12/05 16:19:12 fukachan Exp $
+# $FML: Kernel.pm,v 1.85 2005/05/27 01:19:32 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -90,9 +90,9 @@ sub prepare
 {
     my ($curproc, $args) = @_;
 
-    $curproc->_cgi_resolve_ml_specific_variables();
-    $curproc->load_config_files();
-    $curproc->fix_perl_include_path();
+    $curproc->_cgi_ml_variables_resolve();
+    $curproc->config_files_load();
+    $curproc->env_fix_perl_include_path();
 
     # modified for admin/*.cgi
     unless ($curproc->cgi_var_ml_name()) {
@@ -169,7 +169,7 @@ sub _http_accept_language
 #    Arguments: OBJ($curproc)
 # Side Effects: update $config{ ml_* }, $args->{ cf_list }
 # Return Value: none
-sub _cgi_resolve_ml_specific_variables
+sub _cgi_ml_variables_resolve
 {
     my ($curproc)      = @_;
     my $config         = $curproc->config();
@@ -207,7 +207,7 @@ sub _cgi_resolve_ml_specific_variables
 
 	# XXX-TODO: method name .. hmm. $curproc->$obj_$function().
 	# add this ml's config.cf to the .cf list.
-	$curproc->append_to_config_files_list($config_cf);
+	$curproc->config_files_append($config_cf);
     }
     else {
 	$curproc->logdebug("no ml_name");
@@ -305,7 +305,7 @@ sub run
 sub _error_string
 {
     my ($curproc, $r) = @_;
-    my ($key, $msg)   = $curproc->parse_exception($r);
+    my ($key, $msg)   = $curproc->exception_parse($r);
     my $nlmsg         = $curproc->message_nl($key);
 
     if ($r =~ /__ERROR_cgi\.insecure__/) {
@@ -462,7 +462,7 @@ sub cgi_execute_command
 	    print "Error! $comname fails.\n<BR>\n";
 	    if ($@ =~ /^(.*)\s+at\s+/) {
 		my $reason    = $1;
-		my ($key, $r) = $curproc->parse_exception($reason);
+		my ($key, $r) = $curproc->exception_parse($reason);
 		my $buf       = $curproc->message_nl($key);
 
 		# XXX-TODO: validate output.

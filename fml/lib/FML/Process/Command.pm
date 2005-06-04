@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.111 2004/12/05 16:19:08 fukachan Exp $
+# $FML: Command.pm,v 1.112 2005/05/27 00:57:18 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -83,14 +83,14 @@ sub prepare
     my $eval = $config->get_hook( 'command_mail_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
-    $curproc->resolve_ml_specific_variables();
-    $curproc->load_config_files();
-    $curproc->fix_perl_include_path();
+    $curproc->ml_variables_resolve();
+    $curproc->config_files_load();
+    $curproc->env_fix_perl_include_path();
     $curproc->scheduler_init();
     $curproc->log_message_init();
 
     if ($config->yes('use_command_mail_function')) {
-	$curproc->parse_incoming_message();
+	$curproc->incoming_message_parse();
     }
     else {
 	$curproc->logerror("use of command_mail_program prohibited");
@@ -121,7 +121,7 @@ sub verify_request
     my $eval = $config->get_hook( 'command_mail_verify_request_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
-    $curproc->verify_sender_credential();
+    $curproc->credential_verify_sender();
 
     unless ($curproc->is_refused()) {
 	$curproc->_check_filter();
@@ -259,7 +259,7 @@ sub finish
     my $eval = $config->get_hook( 'command_mail_finish_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
-    $curproc->inform_reply_messages();
+    $curproc->reply_message_inform();
     $curproc->queue_flush();
 
     $eval = $config->get_hook( 'command_mail_finish_end_hook' );

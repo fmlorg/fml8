@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.50 2005/05/27 03:03:37 fukachan Exp $
+# $FML: Error.pm,v 1.51 2005/06/04 01:35:26 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -76,14 +76,14 @@ sub prepare
     my $eval = $config->get_hook( 'error_mail_analyzer_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
-    $curproc->resolve_ml_specific_variables();
-    $curproc->load_config_files();
-    $curproc->fix_perl_include_path();
+    $curproc->ml_variables_resolve();
+    $curproc->config_files_load();
+    $curproc->env_fix_perl_include_path();
     $curproc->scheduler_init();
     $curproc->log_message_init();
 
     if ($config->yes('use_error_mail_analyzer_function')) {
-	$curproc->parse_incoming_message();
+	$curproc->incoming_message_parse();
     }
     else {
 	exit(0);
@@ -259,7 +259,7 @@ _EOF_
 
 =head2 finish($args)
 
-    $curproc->inform_reply_messages();
+    $curproc->reply_message_inform();
 
 =cut
 
@@ -286,7 +286,7 @@ sub finish
 	$curproc->logwarn("error message not found");
     }
 
-    $curproc->inform_reply_messages();
+    $curproc->reply_message_inform();
     $curproc->queue_flush();
 
     $eval = $config->get_hook( 'error_mail_analyzer_finish_end_hook' );

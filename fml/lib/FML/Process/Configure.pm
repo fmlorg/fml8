@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.67 2004/12/05 16:19:09 fukachan Exp $
+# $FML: Configure.pm,v 1.68 2005/05/26 12:39:11 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -76,9 +76,9 @@ sub prepare
     my $eval = $config->get_hook( 'makefml_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
-    $curproc->resolve_ml_specific_variables();
-    $curproc->load_config_files();
-    $curproc->fix_perl_include_path();
+    $curproc->ml_variables_resolve();
+    $curproc->config_files_load();
+    $curproc->env_fix_perl_include_path();
     $curproc->log_message_init();
 
     $eval = $config->get_hook( 'makefml_prepare_end_hook' );
@@ -156,7 +156,7 @@ sub finish
 
     # --allow-send-message or --allow-reply-message option specified.
     if ($curproc->is_allow_reply_message()) {
-	$curproc->inform_reply_messages();
+	$curproc->reply_message_inform();
 	$curproc->queue_flush();
     }
 

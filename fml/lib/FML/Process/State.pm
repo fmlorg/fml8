@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: State.pm,v 1.19 2005/05/30 06:52:24 fukachan Exp $
+# $FML: State.pm,v 1.20 2005/06/03 09:34:29 fukachan Exp $
 #
 
 package FML::Process::State;
@@ -45,7 +45,7 @@ sub current_process_ml_name_init
 #    Arguments: OBJ($curproc) STR($ml_name)
 # Side Effects: update pcb.
 # Return Value: none
-sub set_current_process_ml_name
+sub current_process_set_ml_name
 {
     my ($curproc, $ml_name) = @_;
     my $pcb = $curproc->pcb();
@@ -58,7 +58,7 @@ sub set_current_process_ml_name
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: STR
-sub get_current_process_ml_name
+sub current_process_get_ml_name
 {
     my ($curproc) = @_;
     my $pcb = $curproc->pcb();
@@ -175,7 +175,7 @@ sub restriction_state_reply_reason
 #    Arguments: OBJ($curproc) NUM($id)
 # Side Effects: update pcb.
 # Return Value: NUM
-sub set_article_id
+sub article_set_id
 {
     my ($curproc, $id) = @_;
     my $pcb = $curproc->pcb();
@@ -188,7 +188,7 @@ sub set_article_id
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: NUM
-sub get_article_id
+sub article_get_id
 {
     my ($curproc) = @_;
     my $pcb = $curproc->pcb();

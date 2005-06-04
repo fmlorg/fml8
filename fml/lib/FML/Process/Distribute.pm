@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.158 2004/12/05 16:19:09 fukachan Exp $
+# $FML: Distribute.pm,v 1.159 2005/05/27 00:59:13 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -80,14 +80,14 @@ sub prepare
     $eval   .= $config->get_hook( 'article_post_prepare_start_hook' ) || '';
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
-    $curproc->resolve_ml_specific_variables();
-    $curproc->load_config_files();
-    $curproc->fix_perl_include_path();
+    $curproc->ml_variables_resolve();
+    $curproc->config_files_load();
+    $curproc->env_fix_perl_include_path();
     $curproc->scheduler_init();
     $curproc->log_message_init();
 
     if ($config->yes('use_article_post_function')) {
-	$curproc->parse_incoming_message();
+	$curproc->incoming_message_parse();
     }
     else {
 	$curproc->logerror("use of distribute_program prohibited");
@@ -123,7 +123,7 @@ sub verify_request
     $eval   .= $config->get_hook( 'article_post_verify_request_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
-    $curproc->verify_sender_credential();
+    $curproc->credential_verify_sender();
 
     unless ($curproc->is_refused()) {
 	$curproc->simple_loop_check();
@@ -199,7 +199,7 @@ Firstly it locks (giant lock) the current process.
 If the mail sender is one of our mailing list member,
 we can distribute the mail as an article.
 If not, we inform "you are not a member" which is sent by
-C<inform_reply_messages()> in C<FML::Process::Kernel>.
+C<reply_message_inform()> in C<FML::Process::Kernel>.
 
 Lastly we unlock the current process.
 
@@ -233,7 +233,7 @@ sub run
 
     # $curproc->lock();
     unless ($curproc->is_refused()) {
-	if ($curproc->permit_post()) {
+	if ($curproc->is_permit_post()) {
 	    $curproc->_deliver_article_prep($args);
 	}
 	else {
@@ -337,7 +337,7 @@ sub finish
 	$curproc->_deliver_article();
     }
 
-    $curproc->inform_reply_messages();
+    $curproc->reply_message_inform();
     unless ($curproc->smtp_server_state_get_error()) {
 	$curproc->queue_flush();
     }
@@ -380,7 +380,7 @@ sub _deliver_article_prep
     # get sequence number
     my $id = $article->increment_id;
     if ($id > 0) {
-	$curproc->set_article_id($id);
+	$curproc->article_set_id($id);
     }
     else {
 	$curproc->logerror("returned article id=$id");
@@ -585,7 +585,7 @@ sub _deliver_article
     my $handle = undef;
 
     # overload $sfp log function pointer.
-    my $wh = $curproc->open_outgoing_message_channel();
+    my $wh = $curproc->outgoing_message_cache_open();
     if (defined $wh) {
 	$sfp    = sub { print $wh @_;};
 	$handle = undef; # $wh;
@@ -727,7 +727,7 @@ sub _htmlify
     my $index_order  = $config->{ html_archive_index_order_type };
     my $_tdb_args    = $curproc->thread_db_args();
 
-    $curproc->set_umask_as_public();
+    $curproc->umask_set_as_public();
 
     eval q{
 	use Mail::Message::ToHTML;
@@ -748,7 +748,7 @@ sub _htmlify
 	$curproc->logerror($@) if $@;
     }
 
-    $curproc->reset_umask();
+    $curproc->umask_reset();
 }
 
 

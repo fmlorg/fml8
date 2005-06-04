@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.14 2004/07/23 04:10:54 fukachan Exp $
+# $FML: Sequence.pm,v 1.15 2004/12/05 16:19:05 fukachan Exp $
 #
 
 package FML::Article::Sequence;
@@ -61,7 +61,7 @@ sub increment_id
     $curproc->unlock($lock_channel);
 
     unless ($error) {
-	# XXX-TODO: use $curproc->set_article_id().
+	# XXX-TODO: use $curproc->article_set_id().
 	# save $id in pcb (process control block) and return $id
 	$pcb->set('article', 'id', $id);
 
@@ -90,7 +90,7 @@ sub id
     my $config  = $curproc->config();
     my $pcb     = $curproc->pcb();
 
-    # XXX-TODO: use $curproc->get_article_id().
+    # XXX-TODO: use $curproc->article_get_id().
     my $n = $pcb->get('article', 'id');
 
     # within Process::Distribute

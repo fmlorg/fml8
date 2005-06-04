@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Mailer.pm,v 1.29 2004/07/11 15:43:37 fukachan Exp $
+# $FML: Mailer.pm,v 1.30 2004/12/05 16:19:04 fukachan Exp $
 #
 
 package FML::Mailer;
@@ -113,7 +113,7 @@ sub send
 
 	# overwrite smtp log channel
 	$handle = \*STDOUT;
-	my $wh  = $curproc->open_outgoing_message_channel();
+	my $wh  = $curproc->outgoing_message_cache_open();
 	if (defined $wh) {
 	    $sfp    = sub { print $wh @_;};
 	    $handle = undef ; # $wh; # to avoid log duplication.

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.2 2004/11/21 07:01:32 fukachan Exp $
+# $FML: Menu.pm,v 1.3 2004/11/23 16:02:20 fukachan Exp $
 #
 
 package FML::Config::Menu;
@@ -62,7 +62,7 @@ sub _init
 {
     my ($self, $menu) = @_;
     my $curproc   = $self->{ _curproc };
-    my $menu_path = $curproc->get_cui_menu();
+    my $menu_path = $curproc->menu_get_cui_config_file_path();
     my ($i, $buf, $class);
 
     use FileHandle;

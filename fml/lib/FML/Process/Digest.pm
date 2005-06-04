@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Digest.pm,v 1.20 2004/05/22 11:42:54 fukachan Exp $
+# $FML: Digest.pm,v 1.21 2004/07/23 13:16:42 fukachan Exp $
 #
 
 package FML::Process::Digest;
@@ -80,9 +80,9 @@ sub prepare
     my $eval = $config->get_hook( 'article_digest_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
-    $curproc->resolve_ml_specific_variables();
-    $curproc->load_config_files();
-    $curproc->fix_perl_include_path();
+    $curproc->ml_variables_resolve();
+    $curproc->config_files_load();
+    $curproc->env_fix_perl_include_path();
     $curproc->scheduler_init();
 
     unless ($config->yes('use_article_digest_function')) {
@@ -130,7 +130,7 @@ Firstly it locks (giant lock) the current process.
 If the mail sender is one of our mailing list member,
 we can digest the mail as an article.
 If not, we inform "you are not a member" which is sent by
-C<inform_reply_messages()> in C<FML::Process::Kernel>.
+C<reply_message_inform()> in C<FML::Process::Kernel>.
 
 Lastly we unlock the current process.
 
@@ -211,7 +211,7 @@ sub finish
     my $eval = $config->get_hook( 'article_digest_finish_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
-    $curproc->inform_reply_messages();
+    $curproc->reply_message_inform();
     $curproc->queue_flush();
 
     $eval = $config->get_hook( 'article_digest_finish_end_hook' );
@@ -230,7 +230,7 @@ sub _digest
 
     use FML::Digest;
     my $digest = new FML::Digest $curproc;
-    my $aid    = $digest->get_article_id();
+    my $aid    = $digest->article_get_id();
     my $did    = $digest->get_digest_id();
 
     # run digest proceess if article(s) not to send found.
