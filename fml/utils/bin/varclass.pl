@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: varclass.pl,v 1.4 2003/10/17 06:18:09 fukachan Exp $
+# $FML: varclass.pl,v 1.5 2003/11/15 02:52:04 fukachan Exp $
 # based on 'FML: check_varname.pl,v 1.3 2003/05/30 13:59:17 fukachan Exp'
 #
 
@@ -111,6 +111,10 @@ sub find_base
 	}
 	elsif ($varname =~ 
 	       /^(incoming_command_mail|outgoing_command_mail)_\S+/) {
+	    _regist($1);
+	}
+	elsif ($varname =~ 
+	       /^(fetchfml_article_post|fetchfml_command_mail|fetchfml_error_mail_analyzer)_\S+/) {
 	    _regist($1);
 	}
 	elsif ($varname =~ /^(incoming_article|outgoing_article)_\S+/) {
