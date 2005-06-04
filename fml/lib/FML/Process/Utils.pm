@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.130 2005/05/31 13:14:04 fukachan Exp $
+# $FML: Utils.pm,v 1.131 2005/06/03 09:38:13 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -962,15 +962,15 @@ sub command_line_options
 }
 
 
-=head2 set_config_files_list($cf_file_path_array)
+=head2 config_files_set_list($cf_file_path_array)
 
 set configuration file (.cf) to internal list.
 
-=head2 append_to_config_files_list($cf_file_path)
+=head2 config_files_append($cf_file_path)
 
 append configuration file (.cf) to internal list.
 
-=head2 get_config_files_list()
+=head2 config_files_get_list()
 
 get configuration files (*.cf) list as ARRAY_REF.
 
@@ -981,7 +981,7 @@ get configuration files (*.cf) list as ARRAY_REF.
 #    Arguments: OBJ($curproc) ARRAY_REF($path)
 # Side Effects: none
 # Return Value: ARRAY_REF
-sub set_config_files_list
+sub config_files_set_list
 {
     my ($curproc, $path) = @_;
     my $args = $curproc->{ __parent_args };
@@ -990,7 +990,7 @@ sub set_config_files_list
 	$args->{ cf_list } = $path || [];
     }
     else {
-	$curproc->logerror("set_config_files_list: invalid input");
+	$curproc->logerror("config_files_set_list: invalid input");
     }
 }
 
@@ -998,7 +998,7 @@ sub set_config_files_list
 #    Arguments: OBJ($curproc) STR($path)
 # Side Effects: none
 # Return Value: ARRAY_REF
-sub append_to_config_files_list
+sub config_files_append
 {
     my ($curproc, $path) = @_;
     my $args = $curproc->{ __parent_args };
@@ -1012,7 +1012,7 @@ sub append_to_config_files_list
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: ARRAY_REF
-sub get_config_files_list
+sub config_files_get_list
 {
     my ($curproc) = @_;
     my $args = $curproc->{ __parent_args };
@@ -1364,11 +1364,11 @@ sub default_config_cf_filepath
 }
 
 
-=head2 get_cui_menu()
+=head2 menu_get_cui_config_file_path()
 
 return menu configuration path for CUI.
 
-=head2 get_gui_menu()
+=head2 menu_get_gui_config_file_path()
 
 return menu configuration path for GUI.
 
@@ -1379,7 +1379,7 @@ return menu configuration path for GUI.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: STR
-sub get_cui_menu
+sub menu_get_cui_config_file_path
 {
     my ($curproc) = @_;
     my $main_cf   = $curproc->{ __parent_args }->{ main_cf };
@@ -1391,31 +1391,11 @@ sub get_cui_menu
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: STR
-sub get_gui_menu
+sub menu_get_gui_config_file_path
 {
     my ($curproc) = @_;
     my $main_cf   = $curproc->{ __parent_args }->{ main_cf };
     return $main_cf->{ default_gui_menu };
-}
-
-
-=head2 get_ml_home_prefix_maps()
-
-return ml_home_prefix maps.
-By default, ml_home_prefix and virtual under $fml_config_dir.
-
-=cut
-
-
-# Descriptions: return ml_home_prefix maps as array reference.
-#    Arguments: OBJ($curproc)
-# Side Effects: none
-# Return Value: ARRAY_REF
-sub get_ml_home_prefix_maps
-{
-    my ($curproc) = @_;
-    my $main_cf = $curproc->{ __parent_args }->{ main_cf };
-    __get_ml_home_prefix_maps($main_cf);
 }
 
 
@@ -1552,94 +1532,6 @@ sub is_allow_reply_message
     }
 
     return 0;
-}
-
-
-=head2 get_ml_list($ml_domain)
-
-get ARRAY_REF of valid mailing lists.
-
-=cut
-
-
-# Descriptions: list up ML's within the specified $ml_domain.
-#    Arguments: OBJ($curproc) STR($ml_domain)
-# Side Effects: none
-# Return Value: ARRAY_REF
-sub get_ml_list
-{
-    my ($curproc, $ml_domain) = @_;
-    my $ml_home_prefix = $curproc->ml_home_prefix();
-
-    if (defined $ml_domain) {
-	$ml_home_prefix = $curproc->ml_home_prefix($ml_domain);
-    }
-    else {
-	my $xx_domain   = $curproc->ml_domain();
-	$ml_home_prefix = $curproc->ml_home_prefix($xx_domain);
-    }
-
-    # cheap sanity:
-    unless ($ml_home_prefix) {
-	croak("get_ml_list: ml_home_prefix undefined");
-    }
-
-    use File::Spec;
-    use DirHandle;
-    my $dh      = new DirHandle $ml_home_prefix;
-    my $prefix  = $ml_home_prefix;
-    my $cf      = '';
-    my @dirlist = ();
-
-    if (defined $dh) {
-	use FML::Restriction::Base;
-	my $safe    = new FML::Restriction::Base;
-	my $ml_name = '';
-
-      ENTRY:
-	while ($ml_name = $dh->read()) {
-	    next ENTRY if $ml_name =~ /^\./o;
-	    next ENTRY if $ml_name =~ /^\@/o;
-
-	    # XXX permit $ml_name matched by FML::Restriction::Base.
-	    if ($safe->regexp_match('ml_name', $ml_name)) {
-		# pick up fml8 style ml, so ignore fml4 one.
-		$cf = File::Spec->catfile($prefix, $ml_name, "config.cf");
-		push(@dirlist, $ml_name) if -f $cf;
-	    }
-	}
-	$dh->close;
-    }
-
-    @dirlist = sort @dirlist;
-    return \@dirlist;
-}
-
-
-=head2 get_address_list( $map )
-
-get ARRAY_REF of address list for the specified map.
-
-=cut
-
-
-# Descriptions: get address list for the specified map.
-#    Arguments: OBJ($curproc) STR($map)
-# Side Effects: none
-# Return Value: ARRAY_REF
-sub get_address_list
-{
-    my ($curproc, $map) = @_;
-    my $config = $curproc->config();
-    my $list   = $config->get_as_array_ref( $map );
-
-    eval q{ use FML::User::Control;};
-    unless ($@) {
-	my $obj = new FML::User::Control;
-	return $obj->get_user_list($curproc, $list);
-    }
-
-    return [];
 }
 
 
@@ -2088,33 +1980,6 @@ sub shared_hash_get
     my $memory = $curproc->{ __parent_args }->{ ___shared_memory___ };
     $memory->{ $category }->{ $key } ||= {};
     return $memory->{ $category }->{ $key };
-}
-
-
-=head2 set_debug_level($level)
-
-set debug level (NOT IMPLEMENTED).
-
-=head2 get_debug_level()
-
-return debug level.
-
-=cut
-
-
-# XXX-TODO: set_debug_level() is not implemented.
-
-
-# Descriptions: return debug level.
-#    Arguments: OBJ($curproc)
-# Side Effects: none
-# Return Value: NUM
-sub get_debug_level
-{
-    my ($curproc) = @_;
-    my $args = $curproc->{ __parent_args };
-
-    return( $args->{ main_cf }->{ debug } || 0 );
 }
 
 
