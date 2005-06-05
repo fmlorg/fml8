@@ -7,7 +7,9 @@
 
   8.0 PRE_ALPHA
 	7.98.2	queuing system revised. fetchfml added.
+		PGP/GPG authentication.
 		bug fix method naming convension (FNF).
+		MIME-Base64 removed from cvs tree.
 	7.98.1	overhaul.
 
   [注意]
@@ -8472,4 +8474,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.241 2005/06/04 09:06:42 fukachan Exp $
+$FML: CHANGES.txt,v 1.242 2005/06/04 09:47:39 fukachan Exp $
