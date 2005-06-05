@@ -1,0 +1,97 @@
+<!--
+   $FML: post_check_article_thread.sgml,v 1.2 2004/11/14 12:04:58 fukachan Exp $
+-->
+
+
+<sect1 id="config.post.check.pgp">
+	<title>
+	ケーススタディ: PGP/GPG の電子署名で投稿制限をするＭＬ
+	</title>
+
+<caution>
+<para>
+この機能を使うには Crypt::OpenPGP モジュールが必要です。
+OS 附属のパッケージシステムなどでインストールして下さい。
+このモジュールが使うモジュールがたくさんあるので、
+OS 附属のパッケージシステムを使えないとしんどいです。
+</para>
+</caution>
+
+<sect2>
+	<title>
+	設定例
+	</title>
+
+<para>
+設定例は次のようになります。
+check_article_thread が、このオプションです
+(なお check_article_thread より良い名称も募集中)。
+<screen>
+article_post_restrictions       =       reject_system_special_accounts
+                                        check_pgp_signature
+                                        permit_member_maps
+                                        reject
+</screen>
+もちろんデフォルトでは使いません。
+利用したい場合は、明示的に article_post_restrictions を変更して下さい。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	キーの操作
+	</title>
+
+<para>
+pgp2 pgp5 gpg コマンドで操作してください。
+ただ、
+デフォルトのディレクトリではないこと、
+モードごとに異なるディレクトリを使う
+ことから、
+fmlpgp などの wrapper を利用して下さい。
+<screen>
+例: elena ML で記事投稿で使うキーの生成
+
+fmlpgp elena --article-post-auth -kg
+</screen>
+コマンドラインオプションで
+<screen>
+--article-post-auth       (記事投稿時に電子署名で認証)
+--command-mail-auth       (コマンドメールを電子署名で認証)
+--admin-command-mail-auth (リモート管理のコマンドメールを電子署名で認証)
+--article-post-encrypt    (記事を暗号化(未実装)) 
+</screen>
+などと使用する条件を指定してください。
+それぞれの条件に対して異なるキーリングのディレクトリが用意されています。
+</para>
+
+<para>
+用意されているコマンド(wrapper)は次の通りです。
+</para>
+
+<para>
+pgp2: 
+fmlpgp
+</para>
+
+<para>
+pgp5:
+fmlpgp5
+fmlpgpe
+fmlpgpk
+fmlpgps
+fmlpgpv
+</para>
+
+<para>
+gpg: 
+fmlgpg
+fmlgpgv
+</para>
+
+</sect2>
+
+
+</sect1>
