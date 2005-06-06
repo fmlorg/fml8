@@ -1,0 +1,112 @@
+#!@PYTHON@
+#
+#  gensgmlenv.in
+#
+#  $Id: gensgmlenv.in,v 1.4 2001/05/05 23:07:06 dnedrow Exp $
+#
+#  Generate @etcsgml@/sgml.env, containing definition for SGML_CATALOG_FILES
+#
+#  SGMLtools - an SGML toolkit.
+#  Copyright (C) 1999 Cees A. de Groot
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+#
+
+"""
+head1 NAME
+
+    gensgmlenv - Generate @etcsgml@/sgml.env
+
+SYNOPSIS
+
+   gensgmlenv
+
+DESCRIPTION
+
+    The subroutine gensgmlenv generates a file @etcsgml@/sgml.env that contains
+    the bourne shell command that sets SGML_CATALOG_FILES. It is meant to be
+    included in SGML-processing scripts and/or in /etc/profile.
+
+EXCEPTIONS
+
+    There are some exceptions which can be thrown by this module. They
+    are:
+
+    Error: Base error. If that module throws an exception, and you don't
+    want to catch every specific one, catching of Error would be enough.
+
+    NoCatalogError: There was no catalog files found.
+
+    ReadLinkError: There was an error occured during trial of getting
+    the real name of the file pointed by a symbolic link.
+
+    WriteScriptError: Could not write the configuration script. The type
+    of the shell will be thrown within the detail attribute.
+
+"""
+
+import glob, os, re, string
+from stat import *
+
+
+class Error(Exception):
+    pass
+
+class NoCatalogError(Error):
+    pass
+
+class ReadLinkError(Error):
+    pass
+
+class WriteScriptError(Error):
+    pass
+
+_subdot = re.compile("\.\.\/\.\.\/\.\.").sub
+_subslash = re.compile("\/\/").sub
+
+
+def gensgmlenv():
+    catfiles = []
+    for link in glob.glob("@etcsgml@/*.cat"):
+        st = os.lstat( link )
+        if S_ISLNK(st[ST_MODE]):
+            file = os.readlink(link)
+        else:
+            file = link
+        file = _subdot("", file, 1)
+        file = _subslash("/", file)
+	catfiles.append(file)
+    if not catfiles:
+        raise NoCatalogError
+    files = string.join(catfiles, ":")
+    try:
+        sgmlenv = open("@etcsgml@/sgml.env", "w")
+        sgmlenv.write("SGML_CATALOG_FILES=%s\n"
+	              "export SGML_CATALOG_FILES\n" % files)
+        sgmlenv.close()
+    except IOError:
+        raise WriteScriptError, "writing sh version"
+    try:
+        sgmlenv = open("@etcsgml@/sgml.cenv", "w")
+        sgmlenv.write("setenv SGML_CATALOG_FILES %s\n" % files)
+        sgmlenv.close()
+    except IOError:
+        raise WriteScriptError, "writing csh version"
+    
+
+if __name__ == "__main__":
+    # testcode 
+    gensgmlenv()

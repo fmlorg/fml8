@@ -1,0 +1,87 @@
+#!@PYTHON@
+#
+#  buildcat - build a shared catalog file.
+#
+#  $Id: buildcat.in,v 1.2 2001/05/04 04:27:17 dnedrow Exp $
+#  
+#  SGMLtools - an SGML toolkit.
+#  Copyright (C) 1998 Cees A. de Groot
+#  
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#  
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#  
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#  
+
+"""
+NAME
+
+    buildcat - build a shared catalog file.
+
+SYNOPSIS
+
+    # buildcat >/etc/sgml/catalog
+
+DESCRIPTION
+
+    The program **buildcat** builds a shared catalog file from
+    the symlinks encountered in /etc/sgml. In order to
+    keep the meaning of the individual catalogs the same, relative
+    system identifiers in the catalogs are expanded to their absolute
+    equivalents.
+"""
+
+import sys
+if sys.version < "1.5":
+    # re module appeared first in v1.5
+    print "%s: need python 1.5 or better" % sys.argv[0]
+    raise SystemExit,1
+
+import string, re, os, glob, types
+
+#
+#  Find etcdir. The requirement is that sgmlwhich should be in PATH. If
+#  it ain't there, we use the built-in default.
+#
+ETCSGMLCATDIR = "@etcsgml@"
+
+import os, string
+from stat import *
+
+try:
+    cmd = "/bin/sh -c sgmlwhich"
+    retval = string.strip(os.popen(cmd).readline())
+    if os.path.isdir(retval):
+        ETCSGMLCATDIR = retval
+    else:
+        entries = {}
+        for line in open(retval, 'r').readlines():
+            line = string.strip(line)
+            list = string.split(line, "=")
+            if len(list) == 2:
+                entries[list[0]] = list[1]
+        ETCSGMLCATDIR = entries['SGML_CATALOGS_DIR']
+
+except:
+    pass
+
+assert os.path.isdir(ETCSGMLCATDIR)
+
+if __name__ == "__main__":
+    print '-- AUTOMATICALLY GENERATED, DO NOT EDIT --'
+    for filename in glob.glob(ETCSGMLCATDIR + "/*.cat"):
+        if S_ISLNK(os.stat(filename)[ST_MODE]):
+            catlnkpath = os.readlink(filename)
+        else:
+            catlnkpath = filename
+        print 'CATALOG "%s"' % catlnkpath
+

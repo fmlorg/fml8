@@ -1,0 +1,51 @@
+2001-05-04  David Nedrow <dnedrow@usa.net>
+
+        * Several updates to begin moving sgmltools-lite into the LSB world.
+
+2001-04-21  David Nedrow <dnedrow@usa.net>
+
+        * Updated primary spec file for RedHat 7.1
+
+        * Renamed sgmltools.1 manpage to sgmltools-lite.1 to avoid conflicts
+          with sgmltools version 1 manpage.
+
+2000-10-26  David Nedrow <dnedrow@usa.net>
+
+	* Added new w3m backend  
+	  (http://ei5nazha.yz.yamagata-u.ac.jp/~aito/w3m/eng/)
+
+	* Slight change to txt backend. If w3m is installed it is used rather
+	  than Lynx.
+
+	* Added support to Makefile.in for building RPMs (see README.rpm).
+
+	* Structural change to allow building RPM's directly from the source
+	  file (rpm -ta sgmltools-lite-<ver>.tar.gz).
+
+2000-06-30  Marc André Selig  <mas@seligma.com>
+
+	* Oh, and I bumped up the version number for the whole project
+	to 3.0.2
+
+	* VERSION is now created by the Makefile instead of being distributed
+
+	* make install now installs the distributed catalogues as well
+
+	* Updated dist: target
+
+	* "Imported" .spec file (for building RPM packages)
+	(SourceForge does not allow real import, just added the latest
+	version)
+	Updated the .spec file to match the current version of the CVS tree.
+
+	* Added catalogue files for SuSE (containing cdegroot's setup)
+	and Red Hat.
+
+	* Modified POSTINSTALL to include instructions and package names
+	for Red Hat as well.
+
+2000-06-26  Marc André Selig  <mas@seligma.com>
+
+	* Added a target "dist" to Makefile.in that will create a
+	distributable tarball.
+

@@ -1,0 +1,113 @@
+Summary: Transforms SGML DocBook files to various formats.
+Name: sgmltools-lite
+Version: 3.0.2
+Release: 3
+Copyright: GPL
+Group: Applications/Text
+Requires: sgml-common stylesheets docbook jade
+Packager: David Nedrow <dnedrow@usa.net>
+Source: cvs://:pserver:anonymous@cvs.sgmltools-lite.sourceforge.net:/cvsroot/sgmltools-lite/src/sgmltools-lite-%{version}.tar.gz
+BuildRoot: /var/tmp/sgmltools-lite-%{PACKAGE_VERSION}-%{PACKAGE_RELEASE}
+%define sysconfdir /etc/sgml
+%define INSTALL install -m755 -s
+%define INSTALL_SCRIPT install -m755
+%define INSTALL_DIR install -d -m755
+%define INSTALL_DATA install -m644
+
+%description
+This package contains some scripts to transform SGML DocBook source code
+to various formats, including PDF, PostScript, DVI, HTML, ASCII, iSilo,
+and RTF.
+
+Install sgmltools-lite if you'd like to work with the DocBook DTD.
+
+%prep
+%setup -q
+
+%build
+CFLAGS=$RPM_OPT_FLAGS \
+./configure --prefix=%{_prefix} --with-etcsgml=%{sysconfdir} --datadir=%{_libdir} --mandir=%{_mandir} --with-dbimages=%{_libdir}/sgml/stylesheets/nwalsh-modular/images/
+make
+
+%install
+
+if [ ! "x" = "x$RPM_BUILD_ROOT" ] ; then
+  rm -fr $RPM_BUILD_ROOT
+  %{INSTALL_DIR} $RPM_BUILD_ROOT
+fi
+#make install prefix=$RPM_BUILD_ROOT/usr
+# make install.man
+mkdir -p $RPM_BUILD_ROOT%{_bindir}
+%{INSTALL_SCRIPT} bin/sgmltools $RPM_BUILD_ROOT%{_bindir}
+%{INSTALL_SCRIPT} bin/sgmlwhich $RPM_BUILD_ROOT%{_bindir}
+
+%define sgmldir                    %{_libdir}/sgml
+%define sgmltoolsdir               %{sgmldir}/stylesheets/sgmltools
+%define sgmltoolsdtddir            %{sgmldir}/dtd/sgmltools
+%define sgmltoolspythondir         %{sgmldir}/misc/sgmltools/python
+%define sgmltoolspythonbackendsdir %{sgmltoolspythondir}/backends
+
+mkdir -p $RPM_BUILD_ROOT%{sgmltoolsdir}
+for i in dsssl/*.dsl dsssl/*.cat; do \
+  %{INSTALL_DATA} $i $RPM_BUILD_ROOT%{sgmltoolsdir}; \
+done
+
+mkdir -p $RPM_BUILD_ROOT%{sgmltoolsdtddir}
+for i in dtd/[a-z]*; do \
+  %{INSTALL_DATA} $i $RPM_BUILD_ROOT%{sgmltoolsdtddir}; \
+done
+
+mkdir -p $RPM_BUILD_ROOT%{_mandir}/man1
+%{INSTALL_DATA} man/sgmltools.1 $RPM_BUILD_ROOT%{_mandir}/man1
+
+mkdir -p $RPM_BUILD_ROOT%{sgmltoolspythonbackendsdir}
+for i in python/*.py; do \
+  %{INSTALL_DATA} $i $RPM_BUILD_ROOT%{sgmltoolspythondir}; \
+done
+for i in python/backends/*.py; do \
+  %{INSTALL_DATA} $i $RPM_BUILD_ROOT%{sgmltoolspythonbackendsdir}; \
+done
+%{INSTALL_DATA} VERSION $RPM_BUILD_ROOT%{sgmldir}/misc/sgmltools
+
+mkdir -p $RPM_BUILD_ROOT%{sysconfdir}
+%{INSTALL_DATA} aliases $RPM_BUILD_ROOT%{sysconfdir}/aliases
+install -m 644 catalog.rh62 $RPM_BUILD_ROOT%{sysconfdir}/catalog
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root)
+%doc README POSTINSTALL index.html COPYING README.rpm
+%config %{sysconfdir}/aliases
+%config %{sysconfdir}/catalog
+%{_bindir}/*
+%{_mandir}/*/*
+%{sgmldir}/*
+
+%changelog
+* Thu Nov 02 2000 David Nedrow <dnedrow@usa.net>
+- Structural changes to spec file per suggestion of Karl Eichwalder. This
+  should make the spec file work properly under RedHat 6.2 and 7.0 as far
+  as file layour is concerned.
+
+* Wed Oct 25 2000 David Nedrow <dnedrow@usa.net>
+- Minor update to handle gzip'd man pages if built under RedHat 7.0
+
+* Fri Jun 30 2000 Marc André Selig <mas@seligma.com>
+- prepared for 3.0.2
+- removed patch for catalogue file, which now comes with the source
+
+* Sun Jun 25 2000 Marc André Selig <mas@seligma.com>
+- update to 3.0.1 from cvs copy downloaded 20000625
+- include a patch to add a catalog file
+- change installation path of shared files to /usr/lib/sgml
+  (to conform with the RH file system standard)
+- several minor fixes to the .spec file
+- include old sgmltools dtd
+
+* Thu Jun 15 2000 Marc André Selig <mas@seligma.com>
+- fix stupid bug (must not build for prefix /var/tmp/xxx/usr, but for /usr)
+- built package
+
+

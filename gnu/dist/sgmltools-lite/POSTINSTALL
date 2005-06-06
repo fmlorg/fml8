@@ -1,0 +1,97 @@
+$Id: POSTINSTALL,v 1.3 2001/04/21 23:59:08 dnedrow Exp $
+
+SGMLtools-Lite post installation instructions
+---------------------------------------------
+
+SGMLtools-Lite needs a bunch of SGML-related data files in order to function
+correctly. These data files may already be on your system, or be part
+of your Linux distribution, because lots of Linux distributors now bundle
+them. The package names for SuSE and RedHat are included in this document;
+if you have a set of package names for your distribution, I'll be happy to
+add them.
+
+Here are the packages you need to have installed:
+
+* SGML ISO 8879:1986 entity declarations
+
+  This is a set of declarations for standard character entities.
+
+  RedHat: sgml-common (RH 6.2 uses sgml-common-0.1-8.noarch.rpm)
+  SuSE:   sgm1/iso_ent.rpm
+
+* DocBook 3.1 Document Type Definition
+
+  This is the actual DocBook DTD.
+
+  RedHat 6.2: docbook
+  RedHat 7.1: docbook-dtd31-sgml
+  SuSE:   sgm1/docbk31.rpm
+
+* DocBook DSSSL Stylesheets
+
+  This are the stylesheets that Jade uses to transform SGML into 
+  whatever backend format you like.
+
+  RedHat 6.2: stylesheets
+  RedHat 7.1: docbook-style-dsssl
+  SuSE:   sgm1/docbkdsl.rpm
+
+Each of these packages, and Jade and SGMLtools-Lite as well, have a 
+catalog that points to other files in the packages. If you don't 
+know about SGML catalog files, don't worry: you won't need to know. 
+
+What you should make sure is that you have the names of the following 
+catalog files strung together in the environment variable SGML_CATALOG_FILES
+(don't forget to export it!):
+
+- DocBook DTD catalog: "docbook.cat" in the DocBook DTD directory
+- DocBook DSSL catalog: "catalog" in the DocBook DSSSL stylesheets directory
+- ISO Entities catalog: "iso-entities.cat" in the ISO 8870:1986 directory
+- Jade catalog: "dsssl.cat" in the Jade data directory
+- SGMLtools DTD catalog: "catalog" in the SGMLtools DTD directory
+- SGMLtools DSSSL catalog: "sgmltools.cat" in the SGMLtools DSSSL directory
+
+Here is cdegroot's version for SuSE Linux:
+% echo $SGML_CATALOG_FILES
+/usr/local/share/sgml/stylesheets/docbook/catalog:/usr/local/share/sgml/entities/iso-entities-8879.1986/iso-entities.cat:/usr/local/share/sgml/dtd/jade/dsssl.cat:/usr/local/share/sgml/stylesheets/sgmltools/sgmltools.cat:/usr/local/share/sgml/dtd/sgmltools/catalog:/usr/local/share/sgml/dtd/docbook/3.1/docbook.cat
+
+If yours looks similar, you have a working catalog setup.
+
+    Tip: there's a little program called 'gensgmlenv' that is installed
+    with the SGMLtools distribution. If you collect a bunch of symlinks
+    in to all these catalog files mentioned above in /etc/sgml/catalog.d,
+    running this script will generate a Bourne-shell and a C-shell file
+    in /etc/sgml that defines the SGML_CATALOG_FILES variable.
+
+    Tip: The current developer version of sgmltools-lite contains
+    master catalogue files for RedHat and SuSE.  You can just place
+    these files somewhere convenient and then point SGML_CATALOG_FILES
+    to this master catalog.
+
+The second thing you need to have working is JadeTeX. JadeTeX itself is not
+hard to install:
+
+    RedHat: jadetex (RH 6.2 uses jadetex-2.7-2.i386.rpm)
+    SuSE:   sgm1/jadetex.rpm
+
+JadeTeX eats enourmous amounts of TeX memory and needs special TeX
+configuration.  The SuSE RPMs take care of that, but if your distribution
+does not, or if you need to install JadeTeX manually, tune texmf.cnf
+and set the following parameters:
+
+    hash_extra.jadetex = 15000
+    pool_size.jadetex = 200000
+    max_strings.jadetex = 50000
+    save_size.jadetex = 15000
+
+If you're unsure, don't touch the file and start working with SGMLtools-Lite.
+When you get a TeX error message complaining about capacities, you'll know
+what to do...
+
+That's all, folks!
+
+Cees de Groot
+mailto:cg@cdegroot.com
+
+Marc André Selig
+mailto:mas@seligma.com

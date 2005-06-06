@@ -1,0 +1,20 @@
+-- ==================================================== --
+-- $Id: catalog,v 1.1 2000/03/24 09:16:45 cdegroot Exp $ --
+
+--  This is the catalog for the old linuxdoc DTD, which --
+--  is included for conversion purposes only.           --
+
+
+-- Linuxdoc96.dtd, frozen orignal Linuxdoc DTD --
+DOCTYPE "LINUXDOC"    "linuxdoc96.dtd"
+PUBLIC "-//LinuxDoc//DTD LinuxDoc 96//EN" linuxdoc96.dtd
+
+-- Linuxdoc97 Strict DTD --
+PUBLIC "-//LinuxDoc//DTD LinuxDoc 97//EN" linuxdoc97.dtd
+
+-- outdated and shared entities --
+ENTITY %common            "common"
+ENTITY %isoent            "isoent"
+
+ENTITY %deprec96          "deprec96"
+

@@ -1,0 +1,30 @@
+#
+#  $Id: aliases,v 1.4 2000/10/25 06:00:05 cdegroot Exp $
+#
+#  SGMLtools alias file. This initial set, installed in /etc/sgml,
+#  provides the aliases used internally by SGMLtools to find 
+#  default stylesheets for the various backends. Modify as you
+#  like.
+#
+
+#
+#  These are the default stylesheet specifications for the various 
+#  backends.
+#
+sgmltools-dvi  "-//SGMLtools//DOCUMENT Docbook Style Sheet for Print//EN"#print
+sgmltools-db   "-//SGMLtools//DOCUMENT Linuxdoc Style Sheet for Docbook//EN"#db
+sgmltools-onehtml "-//SGMLtools//DOCUMENT Docbook Style Sheet for HTML//EN"#onehtml
+sgmltools-html "-//SGMLtools//DOCUMENT Docbook Style Sheet for HTML//EN"#html
+sgmltools-ps   "-//SGMLtools//DOCUMENT Docbook Style Sheet for Print//EN"#print.ps
+sgmltools-pdf  "-//SGMLtools//DOCUMENT Docbook Style Sheet for Print//EN"#print.pdf
+sgmltools-rtf  "-//SGMLtools//DOCUMENT Docbook Style Sheet for Print//EN"#print
+sgmltools-pdb "-//SGMLtools//DOCUMENT Docbook Style Sheet for HTML//EN"#onehtml
+sgmltools-lynx "-//SGMLtools//DOCUMENT Docbook Style Sheet for Lynx Text//EN"#html
+sgmltools-w3m "-//SGMLtools//DOCUMENT Docbook Style Sheet for w3m Text//EN"#html
+sgmltools-tex  "-//SGMLtools//DOCUMENT Docbook Style Sheet for Print//EN"#print
+
+#
+#  HOWTO stylesheets. 'sgmltools -b dvi -s howtop', for example.
+#
+howtop      "-//SGMLtools//DOCUMENT Docbook Style Sheet for Print//EN"#howto
+howtoh      "-//SGMLtools//DOCUMENT Docbook Style Sheet for HTML//EN"#howto

@@ -1,0 +1,55 @@
+$Id: README,v 1.1 2000/03/24 09:14:37 cdegroot Exp $
+
+sgmltools package README.
+
+For now, a collection of notes pertaining to the sgmltools package's 
+functionality. For notes on the sgmltools build environment, see the
+sgmltools-base distribution's top-level directory.
+
+
+* SGML Open catalogs
+
+SGMLtools interprets most identifiers as public identifiers until proven
+otherwise, and therefore uses SGML_CATALOG_FILES in order to resolve these
+names. If SGML_CATALOG_FILES isn't set in the environment, a default
+value of "/etc/sgml/catalog" is used.
+
+* --dsssl_spec option
+
+When specifying a DSSSL-File with the --dssl_spec, you can specify either
+one of a) a file, b) a public identifier, c) an alias (see below). The
+specification will be checked for a file, then subjected to alias expansion,
+then re-checked for a file, and finally looked up in the catalogs.
+
+* DSSSL Aliases
+
+Files can be a long run of characters away - whether specified by
+public identifier or by system identifier. Therefore SGMLtools uses
+alias files to save on typing on the command-line. As command-line 
+specified files will be almost always DSSSL files, it is reasonable
+to see this functionality as providing DSSSL aliases.
+
+The alias files read, in order and when available, are:
+
+/etc/sgml/aliases
+~/.sgmlaliases
+
+These files are simply
+
+alias identifier
+
+sequences, where identifier may be quoted and the separation may be any
+run of whitespace characters. Empty lines and '#'-lead comments are
+allowed. So, instead of typing:
+
+sgmltools ... -d /usr/local/share/sgml/dsssl/mystuff/html.dsl ...
+
+or 
+
+sgmltools ... -d "-//Local//MyStuff HTML stylesheet//EN" ...
+
+you can just make an alias and get away with typing
+
+sgmltools ... -d myhtmlstuff ...
+
+

@@ -1,0 +1,138 @@
+.\"
+.\"  sgmltools.1
+.\"
+.\"  $Id
+.\"
+.\"  Manpage for sgmltools.
+.\"
+.\"  SGMLtools - an SGML toolkit.
+.\"  Copyright (C) 1998 Cees A. de Groot
+.\"
+.\"  This program is free software; you can redistribute it and/or modify
+.\"  it under the terms of the GNU General Public License as published by
+.\"  the Free Software Foundation; either version 2 of the License, or
+.\"  (at your option) any later version.
+.\"
+.\"  This program is distributed in the hope that it will be useful,
+.\"  but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\"  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\"  GNU General Public License for more details.
+.\"
+.\"  You should have received a copy of the GNU General Public License
+.\"  along with this program; if not, write to the Free Software
+.\"  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+.\"
+.TH SGMLTOOLS 1 "SGMLtools" " " \" -*- nroff -*-
+.SH NAME
+sgmltools \- process sgml files.
+.SH SYNOPSIS
+.B sgmltools
+[\-b backend] [\-d] [\-v] [\-V] [\-h] [\-l] [\-s dsssl_spec] [\-j jadeopt]
+[\-\-backend={html,ps,dvi,rtf,txt,ld2db,jadetex,pdb,lynx,w3m}] [\-\-debug] 
+[\-\-verbose] 
+[\-\-dsssl\-spec=dsssl_spec] [\-\-jade\-opt=jadeopt]
+[\-\-version] [\-\-help] [\-\-license]
+.SH DESCRIPTION
+.B sgmltools
+is the central driver of SGMLtools. You can use it to convert SGML input
+files to various formats, as indicated by the 
+.I \-\-backend
+switch.
+.SS OPTIONS
+.TP
+.I "\-b, \-\-backend"
+Select the backend to use. Currently, there are five different backends to
+choose from. 
+.B ps
+expects a DocBook SGML file and will convert it into PostScript.
+.B dvi
+expects a DocBook SGML file and will convert it into DVI.
+.B rtf
+expects a DocBook SGML file and will convert it into RTF.
+.B html
+expects a DocBook SGML file and will convert it into HTML; the resulting
+files will be put in a subdirectory (default).
+.B txt
+expects a DocBook SGML file and will convert it into ASCII. Note that this
+backend actually uses the w3m (preferred) or lynx (if w3m not found) backends.
+.B ld2db
+expects a LinuxDoc-SGML file and will convert it into DocBook SGML.
+.B jadetex
+expects a DocBook SGML file and will convert it into JadeTeX input. Only
+use this if you know what you're doing.
+.B pdb
+expects a DocBook SGML file and will convert it into the iSilo format used
+on Palm devices.
+.B w3m
+expects a DocBook SGML file and will convert it into ASCII. w3m does a better
+job of exporting HTML as ASCII text than Lynx, since w3m understands tables.
+One should normally use the txt backend and let sgmltools decide which ASCII 
+exporter is available.
+.B lynx
+expects a DocBook SGML file and will convert it into ASCII. One should normally
+use the txt backend and let sgmltools decide which ASCII exporter is available.
+.TP
+.I "\-d, \-\-debug"
+Enable debugging. All temporary files will be left as is and possibly extra
+information on the processing steps is printed to stderr.
+.TP
+.I "\-v, \-\-verbose"
+Be verbose. Information on commands executed, etcetera, will be printed to
+stdout.
+.TP
+.I "\-s, \-\-dsssl-spec"
+Specify the DSSSL stylesheet to apply (see STYLESHEETS, below).
+.TP
+.I "\-j, \-\-jade-opt"
+Pass additional options directly to Jade.
+.TP
+.I "\-h, \-\-help"
+Print a usage message on standard output and exit successfully (tbd).
+.TP
+.I "\-V, \-\-version"
+Print version information on standard output then exit successfully (tbd).
+.TP
+.I "\-l, \-\-license"
+Print license information
+.SH STYLESHEETS
+The DSSSL specification may be either a filename, a public identifier or
+a DSSSL alias (resolved via one of the alias files
+.B /etc/sgml/aliases
+and
+.B ~/.sgmlaliases
+to either a filename or a public identifier).
+.SH ENVIRONMENT VARIABLES
+.TP
+.B TMPDIR
+Temporary directory. If it is on a local filesystem, a lot of copying will
+be avoided. Furthermore, setting this will prevent SGMLtools from using
+/tmp and thus will prevent people trying to make use of race conditions.
+.TP
+.B SGML_CATALOG_FILES
+The SGML Open catalog files to use for resolving public identifiers into
+system identifiers.
+.SH BUGS
+This is an early developer release, so don't expect it to behave in any
+useful way. It won't make coffee or tea.
+.SH SOURCES
+.SS
+sgmltools-lite
+http://sgmltools-lite.sourceforge.net
+.SS
+w3m
+http://ei5nazha.yz.yamagata-u.ac.jp/~aito/w3m/eng
+.SS
+iSilo Tools
+iSilo Palm readers and Linux encoders are available from:
+.PP
+http://www.isilo.com
+.SS
+DocBook Documentation
+The online version of 'DocBook: The Definitive Guide' can be found at:
+.PP
+http://www.docbook.org
+.SS
+OpenJade
+http://openjade.sourceforge.net
+.SH AUTHOR
+Copyright (c)2000, Cees A. de Groot <cg@sgmltools.org>.

@@ -1,0 +1,37 @@
+$Id: README.rpm,v 1.3 2001/05/04 04:27:17 dnedrow Exp $
+
+There are two way to build RPMs for sgmltools-lite. Both require that you be
+logged in (or su'd) as root.
+
+1) Using rpm directly
+
+To build the rpm directly from the source, simply run the following command:
+
+rpm -ta sgmltool-lite-<ver>.tar.gz
+
+where <ver> should be substituted with the appropriate string from the actual
+source file.
+
+This command instructs RPM to use the source file directly when creating RPMs.
+It uses the spec file (previously under ${top}/rpm, now directly in ${top} of
+the source tree) stored in the source file.
+
+Two RPMs will be built, a binary package and a source package. These will be
+stored under /usr/src/redhat.
+
+Note that the default specfile is now for RedHat 7.1. If you wish to build
+for another platform, use the appropriate spec file from the rpm directory.
+
+2) Using the Makefile
+
+To use make to create the RPMs, simply copy the tarred and GZIP'd source file
+into the top of the source tree (where you found this README.rpm) and issue the
+following command:
+
+make rpm
+
+That's all. Unlike method 1 above, the make version copies the completed RPMs
+into the top of the sgmltools-lite source tree.
+
+-David Nedrow
+

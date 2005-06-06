@@ -1,0 +1,7 @@
+ -- SGML Catalogue for RedHat 6.2 --
+CATALOG "/usr/lib/sgml/docbook.cat"
+CATALOG "/usr/lib/sgml/dsssl.cat"
+CATALOG "/usr/lib/sgml/sgml-common.cat"
+CATALOG "/usr/lib/sgml/stylesheets/nwalsh-modular/catalog"
+CATALOG "/usr/lib/sgml/stylesheets/sgmltools/sgmltools.cat"
+CATALOG "/usr/lib/sgml/dtd/sgmltools/catalog"

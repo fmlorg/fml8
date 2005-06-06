@@ -1,0 +1,7 @@
+ -- SGML Catalogue for SuSE --
+CATALOG "/usr/local/share/sgml/stylesheets/docbook/catalog"
+CATALOG "/usr/local/share/sgml/entities/iso-entities-8879.1986/iso-entities.cat"
+CATALOG "/usr/local/share/sgml/dtd/jade/dsssl.cat"
+CATALOG "/usr/local/share/sgml/stylesheets/sgmltools/sgmltools.cat"
+CATALOG "/usr/local/share/sgml/dtd/sgmltools/catalog"
+CATALOG "/usr/local/share/sgml/dtd/docbook/3.1/docbook.cat"

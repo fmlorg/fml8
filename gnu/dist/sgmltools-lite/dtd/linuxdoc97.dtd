@@ -1,0 +1,360 @@
+<!-- This is a DTD, but will be read as -*- sgml -*-   -->
+<!-- ================================================= -->
+<!-- $Id: linuxdoc97.dtd,v 1.1 2000/03/24 09:16:45 cdegroot Exp $ 
+
+     This is LINUXDOC97 STRICT DTD for SGML-Tools.
+
+     It is based on the original LINUXDOC DTD, which
+     was in turn derived from QWERTZ DTD.
+     Look at those DTD's for the respective authors
+     and revision history.
+
+     Initial revision May 1st, 1997, by B. Kreimeier
+
+     $Log: linuxdoc97.dtd,v $
+     Revision 1.1  2000/03/24 09:16:45  cdegroot
+     * Import from SGML-tools 2.0.2.
+
+     Revision 1.1  1998/06/26 21:12:12  cg
+     * Add linuxdoc->docbook conversion DSL by Charlie Bozeman. (CdG)
+
+     Revision 1.5  1998/06/26 19:41:11  cg
+     * Add (La)TeX logos. (NJ)
+
+     Revision 1.4  1998/03/22 10:39:09  cg
+     * Corrected "isoent" entity reference in DTD. (CdG)
+
+     Revision 1.3  1997/11/27 21:07:41  cg
+     * Fix comment buglet. (CdG)
+
+     Revision 1.2  1997/11/23 21:04:38  cg
+     * Added <file> tag to all DTDs and documented it (ESR)
+
+     * Added <idx> and <cdx> to linuxdoc97 and sgmltool DTDs (ESR)
+
+     * Arrange for <htmlurl> to call \url in the LaTeX back end (ESR)
+
+     Revision 1.1  1997/07/09 13:27:21  cg
+     * Completely new DTD setup by Bernd (BK).
+
+
+                                                       -->
+<!-- ================================================= -->
+<!-- Revision Comments                                 -->
+
+<!-- ESR/97/11/17: Added file, idx, cdx tags.          -->
+<!-- BK/97/05/01: I removed all elements not used in
+     guide.sgml and example.sgml. I removed newline,
+     was used once in guide, but not documented.
+     Removed sl,sf,it, these  were mentioned in example,
+     but use was discouraged in guide. Removed everal
+     occurences of qtag and qendtag that have been
+     commented out earlier on.                         -->
+<!-- BK/97/05/16: removed font highlighting,
+     these are now in the system entity "deprecated96" -->
+<!-- BK/97/05/18: moved quote and code back from
+     "common", as I want to modify them (caption)      -->
+<!-- BK/97/06/06: finally applied changes proposed by
+     Ken MacLeod to dtd/catalog (PUBLIC). Changed
+     the linuxdoc97 element name to linuxdoc.          -->
+<!-- BK/97/06/22: installed 0.99.12, applied changes
+     made for new entity mapping.                      -->
+<!-- ================================================= -->
+
+
+
+<!-- ================================================= -->
+<!-- Contents:
+      - general purpose character definitions
+      - usemap shortrefs
+      - parameter/group entities
+      - top-down list of elements                      -->
+<!-- ================================================= -->
+
+
+<!-- ================================================= -->
+<!-- GENERAL PURPOSE CHARACTER definitions             -->
+<!-- BK: general was included for refnam/urlnam.
+     Is this really the right way to do it?            -->
+<!-- KWM: `general' entity replaced with ISO entities  -->
+<!-- ================================================= -->
+
+
+<!-- `general' entity replaced with ISO entities - kwm -->
+<!entity % isoent system "isoent">
+%isoent;
+
+<!entity urlnam sdata "urlnam" >
+<!entity refnam sdata "refnam" >
+
+<!entity tex	sdata "[tex   ]" >
+<!entity latex	sdata "[latex ]" >
+<!entity latexe	sdata "[latexe]" >
+<!entity tm     sdata "[trade ]" >
+<!entity dquot  sdata "[quot  ]" >
+<!entity ero    sdata "[amp   ]" >
+<!entity etago '</' >
+
+<!entity   Ae  '&Auml;' >
+<!entity   ae  '&auml;' >
+<!entity   Oe  '&Ouml;' >
+<!entity   oe  '&ouml;' >
+<!entity   Ue  '&Uuml;' >
+<!entity   ue  '&uuml;' >
+<!entity   sz  '&szlig;' >
+
+
+<!entity space " ">
+<!entity null "">
+<!-- entity ptag '<p>' -->
+<!-- entity psplit '</p><p>' -->
+
+
+<!-- ================================================= -->
+<!-- SHORTREF maps                                     -->
+<!-- Referenced in "usemap" statements                 -->
+<!-- BK: are some of these redundant?                  -->
+<!-- ================================================= -->
+
+
+<!shortref global
+      "&#RS;B" null  -- delete leading blanks -->
+
+
+<!shortref oneline
+     "B&#RE;" space
+     "&#RS;&#RE;" null 
+     "&#RS;B&#RE;" null >
+
+
+<!shortref ttmap     -- also on one-line --
+        "B&#RE;" space
+        "&#RS;&#RE;" null 
+        "&#RS;B&#RE;" null
+      	"&#RS;B" null >
+
+
+<!-- MDW: What a mess.
+     The following desmap is here to clean up problems
+      with paragraph breaks in a descrip.
+     I can think of cases where this might break,
+      but it seems to work.                          -->
+
+<!shortref desmap
+        "&#RS;B" null
+        -- "&#RS;B&#RE;" ptag
+        "&#RS;&#RE;" ptag -- >
+
+
+<!shortref pmap
+	"&#RS;B" null 
+	-- "&#RS;B&#RE;" psplit
+	"&#RS;&#RE;" psplit -->
+
+
+
+
+
+<!-- ================================================= -->
+<!-- PARAMETER or group ENTITIES                       -->
+<!-- SGML requires us to set up the parameter entities
+      referenced in elements first.                    -->
+<!-- ================================================= -->
+
+
+
+<!-- ================================================= -->
+<!-- HIGHLIGHTING                                      -->
+<!-- Group of all highlighting elements.               -->
+<!-- The actual elements have to be defined below,
+      as the inline entity is referenced there.        -->
+<!-- BK: deprecated,
+      but unfortunately part of Linuxdoc               -->
+<!-- ================================================= -->
+
+<!entity % emph 
+	" em | bf | tt " >
+
+<!-- ================================================= -->
+<!-- INDEXING                                          -->
+<!-- All elements having to do with generating indices -->
+<!-- ================================================= -->
+
+<!entity % index "idx|cdx" >
+
+<!element idx - - (#pcdata)>
+<!element cdx - - (#pcdata)>
+
+<!-- ================================================= -->
+<!-- XREF                                              -->
+<!-- Group of references of all kind                   -->
+<!-- HG: url added                                     -->
+<!-- ESR: htmlurl added                                -->
+<!-- BK: the Label/Ref pair is conceptually different,
+      perhaps it should be treated differently?        -->
+<!-- ================================================= -->
+
+<!entity % xref
+	" label|ref|url|htmlurl " >
+
+<!-- ================================================= -->
+<!-- LISTS - itemize, enum, descrip                    -->
+<!-- Group of all list elements                        -->
+<!-- BK: the descrip glossary is conceptually
+      different, perhaps it should be treated
+      differently?                                     -->
+<!-- ================================================= -->
+
+<!entity % list 
+        " itemize | enum | descrip " >
+
+<!-- ================================================= -->
+<!-- PARagraph                                         -->
+<!-- Group of all elements that are text blocks        -->
+<!-- Includes literal programming and figures.         -->
+<!-- ================================================= -->
+
+<!entity % par 	
+	"  %list; | quote | tscreen " >
+
+<!entity % litprog 
+  " code | verb " >
+
+<!entity % sectpar 
+  " %par; | figure | %litprog; ">
+
+<!-- ================================================= -->
+<!-- INLINE - all simple text                          -->
+<!-- ================================================= -->
+
+<!entity % inline 
+	" (#pcdata | %emph; | %xref | %index | file )* " >
+
+
+<!-- ================================================= -->
+<!-- TOP-DOWN (more or less) ELEMENTS                  -->
+<!-- This section gives the actual structure
+      of the document.                                 -->
+<!-- ================================================= -->
+
+
+
+<!-- ================================================= -->
+<!-- LINUXDOC - top level definition                   -->
+<!-- ================================================= -->
+
+<!-- BK: forced article. sect does not work, removed.  -->
+<!element linuxdoc o o ( article ) >
+<!usemap global linuxdoc>
+
+
+
+<!-- ================================================= -->
+<!-- ARTICLE                                           -->
+<!-- MDW: hacked, abstract now part of titlepag        -->
+<!-- ================================================= -->
+
+<!element article - -
+      (titlepag, header?, toc?, p*, sect* ) >
+
+<!attlist article
+        opts cdata "null">
+
+<!-- ================================================= -->
+<!-- COMMON definitions.                               -->
+<!-- These are used by multiple DTD's.                 -->
+<!-- ================================================= -->
+
+<!entity % common system 
+                   -- definitions common to SGML Tools -->
+%common;
+
+
+<!-- ================================================= -->
+<!-- LIST - descrip and tag element                    -->
+<!-- BK: it seems that using the item element here
+      would be straightforward (empty entries,
+      paragraph handling), at the prize of loosing
+      the shorthand omission                           -->
+<!-- ================================================= -->
+
+<!element descrip - - (tag?, p+)+ >
+<!element tag - o (%inline)>
+
+<!usemap desmap descrip>
+<!usemap oneline tag>
+
+
+<!-- ================================================= -->
+<!-- CODE, QUOTE: paragraph elements                   -->
+<!-- ================================================= -->
+
+<!element quote  - - ( quotep ) >
+
+<!-- quote paragraph only used internally -->
+<!element quotep o o ((%inline; | %sectpar;)*, p*)+ >
+
+<!element code - - rcdata>
+
+<!-- ================================================= -->
+<!-- REFERENCES - cross references                     -->
+<!-- HG: ref modified to have an optional name field   -->
+<!-- ================================================= -->
+
+<!-- REF needed to state destination                   -->
+<!element ref - o empty>
+<!attlist ref   
+        id cdata #required
+        name cdata "&refnam">
+
+<!-- LABEL needed to mark destination                  -->
+<!element label - o empty>
+<!attlist label id cdata #required>
+
+
+<!-- ================================================= -->
+<!-- REFERENCES - URL links                            -->
+<!-- HG: url entity added 
+      to have direct url references                    -->
+<!-- ESR: htmlurl entity added
+      to have quieter url references                   -->
+<!-- BK: the htmlurl/url elements seem to confuse
+      annotated bookmark vs. direct hidden link?       -->
+<!-- ================================================= -->
+
+<!element url - o empty>
+<!attlist url   
+        url cdata #required
+        name cdata "&urlnam" >
+
+<!element htmlurl - o empty>
+<!attlist htmlurl   
+        url cdata #required
+        name cdata "&urlnam" >
+
+
+
+<!-- ================================================= -->
+<!-- JUSTIFICATION CONTROL                             -->
+<!-- ================================================= -->
+
+<!element file - - (#pcdata)>
+
+<!-- ================================================= -->
+<!-- DEPRECATED definitions.                           -->
+<!-- These are deprecated Linuxdoc96 DTD elements,
+      provided only for backward compatibility.        -->
+<!-- ================================================= -->
+
+<!entity % deprec96 system 
+                              -- deprecated Linuxdoc96 -->
+%deprec96;
+
+
+<!-- ================================================= -->
+<!-- end of LINUXDOC STRICT DTD                        -->
+<!--
+     Local Variables:
+     mode: sgml
+     End:                                              -->
+<!-- ================================================= -->

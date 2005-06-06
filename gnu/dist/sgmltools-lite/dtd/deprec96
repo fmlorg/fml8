@@ -1,0 +1,22 @@
+
+<!-- ================================================= -->
+<!-- Former verbose environments: tscreen, verb.       -->
+<!-- BK: a redundant, confusing mess?                  -->
+<!-- ================================================= -->
+
+<!element verb - - rcdata>
+<!element tscreen - - ((%inline; | %sectpar;)*, p*)+ >
+
+
+<!-- ================================================= -->
+<!-- FONT ELEMENTS for highlighting                    -->
+<!-- BK: deprecated,
+      but unfortunately part of Linuxdoc               -->
+<!-- ================================================= -->
+
+<!element em - - (%inline)>
+<!element bf - - (%inline)>
+
+<!element tt - - (%inline)>
+
+<!usemap ttmap  tt>

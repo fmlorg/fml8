@@ -1,0 +1,143 @@
+#
+#  Makefile.in for sgmltools package
+#
+#  $Id: Makefile.in,v 1.13 2001/04/24 18:37:22 dnedrow Exp $
+#
+#  SGMLtools - an SGML toolkit.
+#  Copyright (C) 1998 Cees A. de Groot
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+bindir=@bindir@
+datadir=@datadir@
+SHAREDIR=$(datadir)/sgml
+stylesheets=$(SHAREDIR)/stylesheets/sgmltools
+dtds=$(SHAREDIR)/dtd/sgmltools
+DOCDIR=@prefix@/doc
+mandir=@mandir@
+sysconfdir=@sysconfdir@
+etcdir=@etcsgml@
+PERL=@PERL@      
+INSTALL=@INSTALL@
+INSTALL_PROGRAM=@INSTALL_PROGRAM@
+INSTALL_DATA=@INSTALL_DATA@
+MKDIRHIER=mkdir -p
+PACKAGE=sgmltools-lite
+TAR=tar
+GZIP_ENV=--best
+
+VERSION=3.0.3
+
+all: VERSION
+
+.PHONY: install
+install: all
+	-$(MKDIRHIER) $(bindir)
+	-$(MKDIRHIER) $(etcdir)/catalog.d
+	$(INSTALL_PROGRAM) bin/sgmltools $(bindir)/sgmltools
+	$(INSTALL_PROGRAM) bin/buildcat $(bindir)/buildcat
+	$(INSTALL_PROGRAM) bin/gensgmlenv $(bindir)/gensgmlenv
+	$(INSTALL_PROGRAM) bin/sgmlwhich $(bindir)/sgmlwhich
+	-umask 022;$(MKDIRHIER) $(stylesheets)
+	  set -e; for i in dsssl/*.dsl dsssl/*.cat; do \
+	    $(INSTALL_DATA) $$i $(stylesheets); \
+	  done;
+	-umask 022;$(MKDIRHIER) $(dtds)
+	  set -e; for i in dtd/[a-z]*; do \
+	    $(INSTALL_DATA) $$i $(dtds); \
+	  done;
+	-umask 022;$(MKDIRHIER) $(mandir)/man1
+	$(INSTALL_DATA) man/sgmltools-lite.1 $(mandir)/man1
+	-umask 022;$(MKDIRHIER) $(SHAREDIR)/misc/sgmltools/site-backends
+	-umask 022;$(MKDIRHIER) $(SHAREDIR)/misc/sgmltools/python/backends
+	  set -e; for i in python/*.py; do \
+	    $(INSTALL_DATA) $$i $(SHAREDIR)/misc/sgmltools/python; \
+	  done
+	  set -e; for i in python/backends/*.py; do \
+	    $(INSTALL_DATA) $$i $(SHAREDIR)/misc/sgmltools/python/backends; \
+	  done; 
+	-umask 022;$(MKDIRHIER) $(etcdir)
+	set -e; for i in catalog.rh62 catalog.suse aliases; do \
+	    if test -f $(etcdir)/$$i; then \
+		$(INSTALL_DATA) $$i $(etcdir)/$$i.new; \
+		echo "** Installed distributed $$i as $(etcdir)/$$i.new"; \
+	    else \
+		$(INSTALL_DATA) $$i $(etcdir); \
+	    fi; \
+	done
+	$(INSTALL_DATA) VERSION $(SHAREDIR)/misc/sgmltools
+	#$(INSTALL_DATA) ../../../COPYING $(SHAREDIR)/misc/sgmltools
+	@echo ""
+	@echo ""
+	@echo ""
+	@echo "    Installation done. Please read POSTINSTALL for "
+	@echo "    post-installation instructions; the steps in that "
+	@echo "    document are necessary to make SGMLtools-Lite work."
+	@echo ""
+	@echo ""
+	@echo ""
+
+VERSION:
+	echo $(VERSION) >VERSION
+
+distdir = $(PACKAGE)-$(VERSION)
+
+clean:
+	rm -f config.cache config.log config.status
+	rm -f bin/buildcat bin/gensgmlenv bin/sgmltools bin/sgmlwhich
+	rm -f dsssl/print.dsl
+	rm -f Makefile VERSION
+	rm -f $(distdir).tar.gz
+
+dist: distdir
+	-chmod -R a+rX $(distdir)
+	GZIP=$(GZIP_ENV) $(TAR) chozf $(distdir).tar.gz $(distdir)
+	-rm -rf $(distdir)
+
+rpm::
+	@                                                          \
+	VERS=`sed -n 's/\([0-9]\.[0-9]\.[0-9][0-9]*\).*/\1/p' VERSION` ; \
+	DIR=/usr/src/redhat ;                                            \
+	cp -p sgmltools-lite-$$VERS.tar.gz $$DIR/SOURCES/ ;              \
+	rpm -ba rpm/sgmltools-lite.spec ;                                \
+	rm -f $$DIR/sgmltools-lite-$$VERS.tar.gz ;                       \
+	rm -rf $$DIR/BUILD/sgmltools-lite-$$VERS ;                       \
+	mv $$DIR/SRPMS/sgmltools-lite-$$VERS-*.rpm . ;                  \
+	mv $$DIR/RPMS/i386/sgmltools-lite-$$VERS-*.rpm . ;              \
+	echo '' ;                                                        \
+	ls -lFG sgmltools-lite*-$$VERS-*.rpm
+
+# The target distdir creates a directory that can then be zipped up
+# for distribution.  We `make clean' before.  All CVS files as well
+# as those needed for packaging only (rpm/) are excluded.
+distdir: clean
+	-rm -rf $(distdir)
+	umask 022
+	-mkdir $(distdir)
+	for i in `find . ! -name . -a ! -regex '\./rpm.*' -a \
+		! -name .cvsignore -a ! -regex '.*/CVS.*' -a \
+		! -name '*~'` ; do \
+	  if test $$i = ./$(distdir); then \
+	    echo "Leaving out $$i"; \
+	  elif test -d $$i; then \
+	    mkdir $(distdir)/$$i; \
+	  elif test -f $$i; then \
+	    cp -p $$i $(distdir)/$$i; \
+	  else \
+	    echo "Cannot handle $$i currently, fix me."; \
+	  fi; \
+	done

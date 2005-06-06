@@ -1,0 +1,393 @@
+#
+#  utils.py - Assorted utilities
+#
+#  $Id: utils.py,v 1.6 2001/02/05 01:18:37 dnedrow Exp $
+#
+#  SGMLtools - an SGML toolkit.
+#  Copyright (C)1998 Cees A. de Groot
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+"""
+    This module defines assorted utility functions.
+"""
+
+import sys, tempfile, os, string, re
+
+#
+#  Global options and associated help text.
+#
+globalOptions = [
+    ('v',  'verbose', 'Print verbose output'),
+    ('d',  'debug', 'Do not remove temporary files'),
+    ('b:', 'backend=', 'Backend to use (default: onehtml)'),
+    ('j:', 'jade-opt=', 'Options passed on to jade'),
+    ('s:', 'dsssl-spec=', 'DSSSL spec to use'),
+    ('V',  'version', 'Print version number and exit'),
+    ('h',  'help', 'Print usage and exit'),
+    ('l',  'license', 'Print license information')
+]
+
+usagePre = """  sgmltools [OPTION...] [INPUT-FILE...]
+
+Convert SGML files into various output formats.
+
+Options:"""
+
+usagePost = """
+For help on a specific backend, use "--backend xyz --help".
+"""
+
+
+def makeOpts(backendOpts):
+    """Merge the global options with the backend options.
+    
+	This function merges the global options with the backend
+	options and returns a tuple usable for getopt.
+    """
+
+    retshort = ''
+    retlong = []
+    optlist = globalOptions + backendOpts.getMoreOptions()
+    for opt in optlist:
+	retshort = retshort + opt[0]
+	retlong.append(opt[1])
+
+    return retshort, retlong
+
+
+def normalizeOpts(backendGlobs, optList):
+    """Normalize the option list returned by getopt by converting short->long
+    
+	getopts() returns a mix of short and long options, which is a 
+	bit unpractical. This function takes the result of getopts() and
+	normalizes it by replacing the option elements with the long
+	option without any add-on's like dashes and equals signs.
+    """
+
+    options = globalOptions + backendGlobs.getMoreOptions()
+
+    #
+    #  Build translation table from short->long.
+    #
+    shortToLong = {}
+    for opt in options:
+	if opt[0][-1] == ':':
+	    short = opt[0][:-1]
+	else:
+	    short = opt[0]
+	if opt[1][-1] == '=':
+	    long = opt[1][:-1]
+	else:
+	    long = opt[1]
+	
+	shortToLong[short] = long
+
+    #
+    #  Normalist list.
+    #
+    retval = []
+    for opt in optList:
+	if opt[0][:2] == '--':
+	    newval = (opt[0][2:], opt[1])
+	else:
+	    newval = (shortToLong[opt[0][1:]], opt[1])
+	retval.append(newval)
+
+    return retval
+
+
+def findOption(optlist, optname):
+    """Look for an option in an option list and return optval.
+    
+	This method checks whether an option appears in an option
+	list and returns optval (or '1' if no optval was set) if
+	the option was found. Otherwise, it returns None.
+    """
+
+    for curopt in optlist:
+	if curopt[0] == optname:
+	    if curopt[1] != '':
+		return curopt[1]
+	    else:
+		return 1
+    return None
+
+
+def usage(backendGlobs, message):
+    """Print a usage string, the message, and exit.
+    
+	This method prints out all possible options and their help
+	texts (including those from the backend, if available), then
+	prints the message, and finally exits.
+    """
+
+    print "Usage:\n"
+    print usagePre
+    if backendGlobs != None:
+	optlist = globalOptions + backendGlobs.getMoreOptions()
+    else:
+	optlist = globalOptions
+    for opt in optlist:
+	print '  -%s, --%-15s %s' % (opt[0][0], opt[1], opt[2])
+
+    if backendGlobs != None:
+	backendGlobs.printHelp(sys.stderr)
+
+    print usagePost
+    print
+    if message != None:
+	print message
+	print
+	sys.exit(1)
+    else:
+	sys.exit(0)
+
+
+def version(sharedir):
+    """This procedure prints a version identifier to stdout"""
+
+    fh = open(os.path.join(sharedir, 'VERSION'))
+    print 'SGMLtools-Lite version ' + string.rstrip(fh.readline())
+    fh.close()
+
+
+tempfiles = []
+def makeTemp():
+    """Make a temporary file which is cleaned up at exit
+    
+	This method calls mktemp() to create a temporary filename and
+	stashes the returned file in an array that will be checked at
+	exit time by exitHandler().
+    """
+
+    newname = tempfile.mktemp()
+    global tempfiles
+    tempfiles.append(newname)
+    return newname
+    
+def registerTemp(file):
+    """Register a temporary file for cleaning up at exit
+
+        This method registers a temporary file for cleanup at
+        exit. This can be used in order to deal with temporary
+        files whose names are not generated by us (but by, say,
+        TeX).
+    """
+    tempfiles.append(file)
+
+def exitHandler():
+    """Cleaning lady for makeTemp()
+    
+	This method walks over the tempfiles list and attempts to remove
+	each element in it.
+    """
+
+    for file in tempfiles:
+	try:
+	    os.remove(file)
+	except:
+	    pass
+
+#
+#  Register us as an exit function
+#
+sys.exitfunc = exitHandler
+
+
+def readAliases(autoconf):
+    """Read %(etcdir)/aliases and ~/.sgmlaliases
+    
+	This function reads the SGML alias files and returns a hash
+	containing the merged contents of these files.
+    """
+
+    retval = {}
+    for file in [ os.path.join(autoconf['etcdir'], 'aliases'),
+		  os.path.expanduser('~/.sgmlaliases') ]:
+	if not os.path.isfile(file):
+	    continue
+
+	fh = open(file, 'r')
+	for line in fh.readlines():
+	    line = string.strip(line)
+	    if len(line) == 0:
+		continue
+	    if line[0] == '#':
+		continue
+
+	    key, rest = string.split(line, ' ', 1)
+	    retval[key] = string.lstrip(rest)
+	fh.close()
+
+    return retval
+
+#
+#  Search our path, SGML_CATALOG_FILES, by reading all them files
+#  and looking for our pubid. We really need a catalog file parser...
+#
+def _searchInCat(curcat, id, section):
+    fh = open(curcat, 'r')
+    for line in fh.readlines():
+	#
+	#  Check for nested catalogs, recurse if yes.
+	#
+	mo = re.compile(r'CATALOG\s*"([^"]+)"').match(line)
+	if mo != None:
+	    retval = _searchInCat(mo.group(1), id, section)
+	    if retval != None:
+		return retval;
+
+	if not re.compile(r'^\s*PUBLIC').match(line):
+	    continue
+	if string.find(line, id) == -1:
+	    continue
+
+	fh.close()
+
+	#
+	#  Looks like a good one - extract the relevant parts. If the
+	#  sysid is not absolute, prepend the current catalog's
+	#  location to it.
+	#
+	retval = re.compile(r'^.*\s\"?([^"\s]+)\"?$').match(line).group(1)
+	if not os.path.isabs(retval):
+	    catdir, junk = os.path.split(curcat)
+	    retval = os.path.join(catdir, retval)
+	if not os.path.exists(retval):
+	    raise IOError, \
+		"Found catalog file %s but it doesn't exist" % retval
+	
+	if len(section) > 0:
+	    retval = retval + '#' + section
+	return retval
+
+    fh.close()
+    return None
+
+
+def findStylesheet(name, aliases):
+    """Searches for the stylesheet indicated by name
+    
+	This function translates a public stylesheet identifier into a
+	system identifier. It uses the alias list to expand aliases.
+    """
+
+    #
+    #  Test whether it is already a system identifier
+    #
+    try:
+	(id, section) = string.split(name, '#', 1)
+    except:
+	id = name
+	section = ''
+    if os.path.isfile(id):	
+	return name
+
+    #
+    #  Expand alias, and retest.
+    #
+    if aliases.has_key(id):
+	name = aliases[id]
+	if len(section) > 0:
+	    name = name + '#' + section
+	return findStylesheet(name, aliases)
+
+    for curcat in string.split(os.environ['SGML_CATALOG_FILES'], ':'):
+	if not os.path.isfile(curcat):
+	    continue
+	
+	retval = _searchInCat(curcat, id, section);
+	if retval != None:
+	    return retval;
+    
+    raise IOError, "Couldn't resolve pubid [%s]" % id
+
+def shellProtect(file):
+   """Protects a filename against shell interpretation.
+   This is done by putting the name in single quotes, and by
+   escaping single quotes in the filename. If the last character
+   is an asterisk, the asterisk is NOT quoted and is appended
+   after the final single quote.
+   """
+   if file[-1] != '*':
+      return "'%s'" % string.replace(file, "'", "'\\''")
+   else:
+      return "'%s'*" % string.replace(file[:-1], "'", "'\\''")
+
+class Tracer:
+    """Simple tracer class."""
+
+    def __init__(self, doTrace):
+	self._isTracing = doTrace
+
+    def trace(self, message):
+	if self._isTracing:
+	    print ('+' + message)
+
+    def system(self, cmd):
+	"""Shorthand for the pattern trace(x);os.system(x)"""
+	self.trace(cmd)
+	os.system(cmd)
+
+    def mkdir(self, dir, mode=0755):
+	"""Shorthand for the pattern trace('mkdir ' + x);os.mkdir(x)"""
+	self.trace('mkdir ' + dir)
+	os.mkdir(dir, mode)
+
+    def chdir(self, dir):
+	"""Shorthand for the pattern trace('chdir ' + x);os.chdir(x)"""
+	self.trace('chdir ' + dir)
+	os.chdir(dir)
+
+    def rmdir(self, dir):
+	"""Shorthand for the pattern trace('rmdir ' + x);os.rmdir(x)"""
+	self.trace('rmdir ' + dir)
+	os.rmdir(dir)
+
+    def symlink(self, src, dest):
+	"""Shorthand for the pattern trace('symlink... );os.symlink(...)"""
+	self.trace('ln -s ' + src + ' ' + dest)
+	os.symlink(src, dest)
+
+    def mv(self, src, dest):
+        """Shorthand for the pattern trace('mv...);os.system("mv...)."""
+        self.system("mv %s %s" % (shellProtect(src), shellProtect(dest)))
+
+#
+#  License information printer
+#
+def license():
+    print """
+  SGMLtools - an SGML toolkit.
+  Copyright (C)1998 Cees A. de Groot
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+"""
+    sys.exit(0)

@@ -1,0 +1,93 @@
+dnl
+dnl  configure.in
+dnl
+dnl  $Id: configure.in,v 1.7 2000/10/25 06:00:05 cdegroot Exp $
+dnl
+dnl  Process this file with autoconf to produce a configure script.
+dnl
+dnl  SGMLtools - an SGML toolkit.
+dnl  Copyright (C) 1998 Cees A. de Groot
+dnl
+dnl  This program is free software; you can redistribute it and/or modify
+dnl  it under the terms of the GNU General Public License as published by
+dnl  the Free Software Foundation; either version 2 of the License, or
+dnl  (at your option) any later version.
+dnl
+dnl  This program is distributed in the hope that it will be useful,
+dnl  but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+dnl  GNU General Public License for more details.
+dnl
+dnl  You should have received a copy of the GNU General Public License
+dnl  along with this program; if not, write to the Free Software
+dnl  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+AC_INIT(dsssl)
+
+AC_PROG_INSTALL
+
+AC_SUBST(JADE)
+AC_PATH_PROG(oldjade, jade, N/A)
+AC_PATH_PROG(openjade, openjade, N/A)
+if test "$openjade" != "N/A"; then
+   JADE=$openjade
+elif test "$oldjade" != "N/A"; then
+   JADE=$oldjade
+else
+   AC_MSG_ERROR(You don't have Jade or OpenJade installed)
+   exit 1
+fi
+AC_MSG_RESULT(Using $JADE as DSSSL engine)
+
+AC_PATH_PROG(LYNX, lynx, N/A)
+AC_PATH_PROG(W3M, w3m, N/A)
+dnl Fixme - this is Linux-dependent
+AC_PATH_PROG(ISILO, iSilo386, N/A)
+
+AC_PATH_PROG(PYTHON, python)
+AC_SUBST(PYTHON)
+if echo 'import sys
+if sys.version < "1.5": raise SystemExit, 1' | $PYTHON
+then
+  : # Solaris and OSF/1 /bin/sh don't know about negation operators...
+else
+  AC_MSG_ERROR(You don't have Python 1.5 or better...)
+  exit 1
+fi
+
+dnl Because AC_CHECK_FILE checks for CC...
+AC_PROG_CC
+
+etcsgml=/etc/sgml
+AC_ARG_WITH(etcsgml, 
+[  --with-etcsgml=DIR      use DIR instead of /etc/sgml], 
+    etcsgml=$withval)
+AC_SUBST(etcsgml)
+
+dnl AC_MSG_CHECKING(DocBook Images)
+AC_CHECK_FILE(/usr/share/sgml/docbkdsl/images,
+  dnl SuSE Linux
+  dbimages=/usr/share/sgml/docbkdsl/images/,
+  [test "$datadir" = '${prefix}/share' && dbimages=$ac_default_prefix/share/sgml/stylesheets/docbook/images/])
+AC_ARG_WITH(dbimages,
+[  --with-dbimages=DIR     use DIR instead of DATADIR/sgml/stylesheets/docbook/images/],
+    dbimages=$withval)
+AC_MSG_RESULT("   trying $dbimages")
+AC_SUBST(dbimages)
+
+#
+#  Expand a couple of things that would make invalid Python code. Tedious...
+#  
+pyprefix=$prefix;pyexec_prefix=$exec_prefix
+pybindir=$bindir;pydatadir=$datadir
+test "$prefix" = "NONE" && pyprefix=$ac_default_prefix
+test "$exec_prefix" = "NONE" && pyexec_prefix=$pyprefix
+test "$bindir"  = '${exec_prefix}/bin' && pybindir=$pyexec_prefix/bin
+test "$datadir" = '${prefix}/share' && pydatadir=$pyprefix/share
+AC_SUBST(pyprefix)
+AC_SUBST(pyexec_prefix)
+AC_SUBST(pybindir)
+AC_SUBST(pydatadir)
+
+AC_OUTPUT(bin/sgmltools bin/buildcat bin/sgmlwhich Makefile dsssl/print.dsl bin/gensgmlenv)
+
