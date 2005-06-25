@@ -1,5 +1,5 @@
 <!--
-   $FML: merge.sgml,v 1.1 2004/03/23 05:16:52 fukachan Exp $
+   $FML: merge.sgml,v 1.2 2004/10/06 09:07:40 fukachan Exp $
 -->
 
 
@@ -24,9 +24,9 @@
 </para>
 
 <para>
-1) fml-devel をインストールする。この際、postfix の alias_maps に 
-/var/spool/ml/etc/mail/aliases (まだ、この段階では中身のないファイル)
-を追加する。
+1) fml8 をインストールする。この際、postfix の alias_maps に 
+/var/spool/ml/etc/mail/aliases (まだ、この段階では中身のないファイルで
+よい)を追加する。
 </para>
 
 <para>

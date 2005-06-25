@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.sgml,v 1.4 2004/04/07 11:07:14 fukachan Exp $
+   $FML: chapter.sgml,v 1.5 2004/10/06 09:07:45 fukachan Exp $
 -->
 
 
@@ -9,16 +9,22 @@
 	</title>
 
 <caution>
+
 <para>
 2003/11: バーチャルドメインの取り扱い方を拡張しました。
 </para>
 
 <para>
-virtual_maps は obsolete となりました。が、互換性のため利用可能となっ
-ています。今後は virtual_maps の代わりに ml_home_prefix_maps を使うこ
-とになります。また、ml_home_prefix_maps を操作する newdomain と 
-rmdomain コマンドが創設されました。
+/usr/local/fml/etc/main.cf における virtual_maps は obsolete となりま
+した。今後は virtual_maps の代わりに ml_home_prefix_maps を使うことに
+なります。が、互換性のため virtual_maps も引続き有効です。
 </para>
+
+<para>
+また、ml_home_prefix_maps を操作する newdomain と rmdomain コマンドが
+創設されました。
+</para>
+
 </caution>
 
 
@@ -28,9 +34,11 @@ rmdomain コマンドが創設されました。
 	</title>
 
 <para>
+「
 &fml8; 全体で統一的に扱えるようにしたい。
 また、できるだけ &fml4; の素直な拡張であってほしい。
 さらに、引越しなどが出来るだけ楽であると嬉しい。
+」これがモティーフです。
 </para>
 
 <para>
@@ -64,7 +72,7 @@ ml_home_prefix_maps
 <para>
 この後は &fml4; と同様に makefml (or fml) コマンドを使ってください。た
 だし、makefml (or fml)コマンドを使う際には、ＭＬ名を「ユーザ＠ドメイン」
-形式で指定することだけが違います。
+形式で指定することだけが異なります。
 </para>
 
 <para>
@@ -96,8 +104,8 @@ http://lists/~fml/cgi-bin/fml/$domain/admin/config.cgi
 <warning>
 <para>
 なお、CGI の URL にドメイン名が入っているのは、操作する人にとって分か
-りやすいようにという配慮であって、URL を元にドメイン名を決めているわけ
-ではありません(それは危険です)。
+りやすいようにという配慮であって、CGI が URL を元に自分の操作対象ドメ
+イン名を決めているわけではありません(それは危険です)。
 </para>
 
 <para>

@@ -1,5 +1,5 @@
 <!--
-   $FML: create_program.sgml,v 1.8 2004/04/07 11:07:04 fukachan Exp $
+   $FML: create_program.sgml,v 1.9 2004/10/06 09:07:35 fukachan Exp $
 -->
 
 
@@ -62,7 +62,8 @@ etc/modules
 にプログラムとクラスの関係を定義して下さい。
 また、
 etc/command_line_options
-にオプションとＭＬ名の有無などを定義してください。
+にオプションとＭＬ名の有無などを定義してください
+(書き方は、これらのファイルの中身を見て推測して下さい)。
 </para>
 
 <para>
@@ -169,7 +170,14 @@ run_cgi_command_help()
 run_cgi_options()
 </screen>
 になるという点です。
-これらの組で一つの画面が構成されています。
+これらの組で一つの画面
+<footnote>
+<para>
+正確には画面は３×３の合計９個のブロックからなりますが、
+そのうちの６つしか使っていません。
+</para>
+</footnote>
+が構成されています。
 </para>
 
 <para>

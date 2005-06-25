@@ -1,5 +1,5 @@
 <!--
-	$FML: command.sgml,v 1.8 2004/04/07 11:07:13 fukachan Exp $
+	$FML: command.sgml,v 1.9 2004/10/06 09:07:43 fukachan Exp $
 -->
 
 
@@ -29,8 +29,8 @@ makefml を使えるということは、ＭＬサーバのホストのシェルが取れている、
 一方、コマンドメールなどで一般ユーザに提供する機能には、いろいろな制限
 をかけるべきです。実際、ユーザに提供されているコマンド操作は makefml 
 で可能な操作のごく一部です。つまり、コマンドメールとは makefml のコマ
-ンドの一部を使えなくし、適宜 confirmation を付け加えたコマンド体系といっ
-てよいでしょう。
+ンドの一部を使えなくし、適宜 confirmation を付け加えたコマンド体系と考
+えられます。
 </para>
 </important>
 
@@ -53,9 +53,7 @@ command はメールを標準入力から受けとり、
 <warning>
 <para>
 &fml4; と違い、&fml8; ではコマンドの結果を
-<link linkend="message.reply">
 一通のメール ( MIME/Multipart )にまとめて返送
-</link>
 しています。
 </para>
 </warning>

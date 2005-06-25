@@ -1,5 +1,5 @@
 <!--
-   $FML: language.sgml,v 1.5 2003/04/15 14:51:42 fukachan Exp $
+   $FML: language.sgml,v 1.6 2004/04/07 11:07:09 fukachan Exp $
 -->
 
 
@@ -36,10 +36,9 @@ $curproc->reply_message_nl('error.already_member',
 <screen>
 $_arg_address
 </screen>
-はハッシュリファレンスとして与えられた引数の値へ展開されます。
-上の例でいえば、
-メッセージテンプレート中の $_arg_address が引数中の 
-_arg_address の値で展開されます。
+は reply_message_nl の引数のハッシュリファレンスとして与えられた値へ展
+開されます。上の例でいえば、メッセージテンプレート中の $_arg_address 
+が引数中の _arg_address の値で展開されます。
 </para>
 
 <para>

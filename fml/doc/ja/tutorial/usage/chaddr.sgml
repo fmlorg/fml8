@@ -1,5 +1,5 @@
 <!--
-   $FML: chaddr.sgml,v 1.2 2003/04/15 14:51:45 fukachan Exp $
+   $FML: chaddr.sgml,v 1.3 2004/10/06 09:07:43 fukachan Exp $
 -->
 
 
@@ -18,8 +18,8 @@ chaddr 旧アドレス 新アドレス
 elena-ctl@fml.org  に送って下さい。
 旧アドレス、新アドレス
 どちらのアドレスから送っても構いません。
-confirmatin が返送されます。
-その confirmation に返答すると変更されます。
+confirmation が返送されます。
+その confirmation に返答すると実際にアドレスが変更されます。
 </para>
 
 </sect1>

@@ -1,5 +1,5 @@
 <!--
-   $FML: db_modules.sgml,v 1.1 2003/05/31 08:51:09 fukachan Exp $
+   $FML: db_modules.sgml,v 1.2 2004/10/06 09:07:38 fukachan Exp $
 -->
 
 <!--
@@ -45,8 +45,14 @@ message-id のデータを持っていますし、記事の分については重複しています。
 Mail::Message::DB
 </link>
 のようなものとし、各種アダプタ層が頑張って欲しい。
-また、キャッシュの方だが、現在では Tie::JournaledDir もしくは 
-File::CacheDir かのいづれかが使われることとなる。
+また、キャッシュの方ですが、現在では Tie::JournaledDir もしくは 
+FML::Cache::Ring のいづれかが使われることとなっています。
+</para>
+
+<para>
+なお、メンバーリストなどの永続性の必要なデータに対するデータベースはき
+ちんと DBMS (データベース管理システム)を使うべきです。ここで述べている
+データベースは fml8 が動作する上で内部的に使っているデータベースです。
 </para>
 
 </sect1>
@@ -75,41 +81,15 @@ DBMS
 を使うべきでしょう。
 </para>
 
-
 <para>
-そういったわけで &fml8; では、expire の仕方に応じて２つのデータ保持ク
-ラスを用意しています。それは「サイズを気にせず、時間を区切って expire 
-するのか？」もしくは「使用する領域のサイズをある程度気にするか？」の２
-種類です。
-</para>
-
-<warning>
-<para>
-現在では
-Tie::JournaledFile クラス
-を利用した
-Tie::JournaledDir クラス
-もあるので、
-将来
-Tie::JournaledDir もしくは File::CacheDir かのいづれかは
-不必要になるかも知れません。
-また、インターフェイスの違いから適宜使い分けるのかもしれません。
+ここでは fml8 内部で使っているモジュールの話をします。
 </para>
 
 <para>
-2002/08:
-File::CacheDir は改名し、なくす方向で考えています。
-そもそも File::CacheDir は
-FML/Process/Kernel.pm
-と
-FML/Filter/TrafficMonitor.pm 
-でしか使ってません。
-しかも、
-TrafficMonitor.pm は事実上未完成なので、まだ変更が可能です。
-実際 FML::Process::Kernel の var/mail/ でしか使っていないので、
-File::CacheDir を使わないようにすることが可能でしょう。
+&fml8; では、データの expire の仕方に応じて２つのデータ保持クラスを用
+意しています。それは「サイズを気にせず、時間を区切って expire するのか？」
+もしくは「使用する領域のサイズをある程度気にするか？」の２種類です。
 </para>
-</warning>
 
 </sect1>
 
@@ -174,26 +154,25 @@ get_all_values_as_hash_ref()
 
 <warning>
 <para>
-なお検索時の挙動の
-first match と last match は切替えることができます。
-どちらの戦略で探すのか、
-クラスオブジェクトを生成する際に明示的に指定することが推奨されます。
-デフォルトは first match です。
+なお検索時の挙動のfirst match と last match は切替えることができます。
+どちらの戦略で探すのか、クラスオブジェクトを生成する際に明示的に指定す
+ることが推奨されます。デフォルトは last match です(最後に書き込んだデー
+タが返される振舞いが自然です)。
 </para>
 </warning>
 
 </sect1>
 
 
-<sect1 id="db.module.File.CacheDir">
+<sect1 id="db.module.FML.Cache.Ring">
 	<title>
-	File::CacheDir クラス
+	FML::Cache::Ring クラス
 	</title>
 
 <para>
 この
 	<ulink url="../../en/modules/File/CacheDir.txt">
-	File::CacheDir
+	FML::Cache::Ring
 	</ulink>
 クラスは、主にサイズに上限を設けたいタイプのデータを蓄える場合に用
 います。expire の時間については気にしません。
@@ -202,7 +181,7 @@ first match と last match は切替えることができます。
 
 
 <para>
-デバッグ等に用いるデータはこれで十分と考えています。
+デバッグ等に用いるデータはこれで十分と考えます。
 普段は使わないデバッグのために、サイズを食われるのも嫌ですから。
 </para>
 
@@ -218,31 +197,12 @@ first match と last match は切替えることができます。
 
 <warning>
 <para>
-旧 RingBuffer は File::CacheDir に統合されました。
+旧 RingBuffer は FML::Cache::Ring に統合されました。
+また、FML::Cache::Ring は File::CacheDir から作られました。
 </para>
 </warning>
 
 </sect1>
 
-
-
-<sect1 id="db.module.usage">
-	<title>
-	モジュールの使い分け
-	</title>
-
-<para>
-う〜ん、困りましたね…
-</para>
-
-<para>
-元々はサイズの上限を重視する場合が
-リングバッファ、つまり File::CacheDir でした。
-逆に、
-時間方向の expire を重視する場合は Tie::Journaled* を使うつもりでした。
-でも時間方向の File::CacheDir はそれと一緒じゃん;)
-</para>
-
-</sect1>
 
 </chapter>

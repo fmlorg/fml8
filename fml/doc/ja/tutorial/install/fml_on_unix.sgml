@@ -1,5 +1,5 @@
 <!--
-   $FML: fml_on_unix.sgml,v 1.8 2004/10/06 09:07:37 fukachan Exp $
+   $FML: fml_on_unix.sgml,v 1.9 2004/10/09 12:09:28 fukachan Exp $
 -->
 
 
@@ -19,6 +19,8 @@
 configure を実行する(後述)前に、
 適宜、ユーザ fml とグループ fml を作ってください。
 <screen>
+例
+
 % su root
 # groupadd fml
 # useradd -g fml -m fml
@@ -244,7 +246,8 @@ Now you must run "make install".
           <entry> /usr/local/etc/fml	</entry>
           <entry>
 	基本設定ファイルを置く場所。
-	&fml4; の /usr/local/fml/.fml や default_config.ph 相当を置く場所。
+	&fml4; の /usr/local/fml/.fml や default_config.ph を置く場所に
+	相当する。
 	/usr/local/etc/fml/main.cf では、
 	バージョンやライブラリの場所(ディレクトリ)などを指定する。
           </entry>
@@ -258,7 +261,7 @@ Now you must run "make install".
         </row>
 
         <row>
-          <entry>
+            <entry>
 		/usr/local/lib/fml
 	  </entry>
           <entry>
@@ -291,6 +294,13 @@ Now you must run "make install".
 		なお、ドメインごとに別の prefix を用意して下さい。
 		たとえば fml.org 用は /var/spool/ml で、
 		nuinui.net 用には /var/spool/nuinui.net などのように。
+		このドメインとディレクトリの対応関係は
+		ml_home_prefix_maps (
+			<link linkend="virtualdomain.fml8.overview">
+			バーチャルドメインの節
+			</link>
+			を参照
+		)に記述して下さい。
 
 		また、バーチャルドメインについて、くわしくは
 		<link linkend="virtualdomain">
@@ -325,7 +335,7 @@ configure を実行後、ユーザ root になり、make install を実行して下さい。
 <para>
 configure はユーザ root で実行する必要はありませんが、
 make install はユーザ root で実行して下さい。
-間違えないように、configure も root で実行するほうがいいかもね。
+間違えないように、configure も root で実行するほうがいいのかもしれません。
 <screen>
 % su root
 # ./configure
@@ -346,7 +356,8 @@ make install はユーザ root で実行して下さい。
 必要なら /usr/local/etc/fml/main.cf を編集して下さい。
 
 configure が、あなたの環境に合わせて main.cf を書換えしているはずなの
-で configure のオプション指定が正しければ、編集の必要は、まずないです。
+で configure のオプション指定が正しければ、編集の必要は、まずないはず
+です。
 </para>
 
 <para>
@@ -387,7 +398,7 @@ mani.cf は大枠の最も基本的な設定です。より細かな設定、たとえばサイト共
 デフォルトでは &fml4; と合わせるために、および見本として:)
 subject のタグをつけない設定とフィルタ関連の設定だけが入っています。
 <screen>
-# $FML: fml_on_unix.sgml,v 1.8 2004/10/06 09:07:37 fukachan Exp $
+# $FML: fml_on_unix.sgml,v 1.9 2004/10/09 12:09:28 fukachan Exp $
 #
 #               site default_config.cf EXAMPLE
 #
@@ -493,6 +504,7 @@ newdomain コマンドについては
 
 <warning>
 <para>
+ml_home_prefix_maps のパスを変更したいなら別ですが、
 /usr/local/etc/fml/main.cf の編集は必要ありません。
 </para>
 

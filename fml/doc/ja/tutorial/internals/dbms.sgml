@@ -1,5 +1,5 @@
 <!--
-   $FML: dbms.sgml,v 1.5 2003/05/31 08:51:09 fukachan Exp $
+   $FML: dbms.sgml,v 1.6 2004/10/06 09:07:38 fukachan Exp $
 -->
 
 
@@ -7,6 +7,17 @@
 	<title>
 	データベース管理システム
 	</title>
+
+<para>
+メンバーリストなどの永続性の必要なデータに対しデータベースを用いたいな
+ら、きちんと DBMS (データベース管理システム)を使うべきです。ここで述べ
+ているデータベースとは、そういった意味合いのデータを相手にしています。
+一方 fml8 が動作する上で内部的に使うデータベースモジュールについては
+<link linkend="db.module">
+<xref linkend="db.module">
+</link>
+を参照して下さい。
+</para>
 
 
 <sect1 id="dbms.overview">
@@ -26,23 +37,6 @@ IO::Adapter
 データの挿入や削除といった基本的な機能はこのクラスが提供します。
 それらの原始的な機能を組み合わせた複雑な操作は
 IO::Adapter の前段階のプログラムが頑張る必要があります。
-</para>
-
-</sect1>
-
-
-<sect1 id="dbms.todo">
-	<title>
-	TODO
-	</title>
-
-<para>
-メソッドが必要最少限になっているかは考えた方がいい。
-けれど、
-<link linkend="module.io.adapter">
-IO::Adapter 
-</link>
-のメソッド準拠ではあるので、とりあえずいいのかな。
 </para>
 
 </sect1>

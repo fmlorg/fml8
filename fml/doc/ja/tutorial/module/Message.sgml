@@ -1,5 +1,5 @@
 <!--
-   $FML: Message.sgml,v 1.1 2003/02/18 02:29:14 fukachan Exp $
+   $FML: Message.sgml,v 1.2 2003/04/15 14:51:42 fukachan Exp $
 -->
 
 <chapter id="module.mail.message">
@@ -69,7 +69,7 @@ parse() メソッドは引数で与えられたファイル(名)かファイルディスクリプタ
 
 <para>
 data_type_list() は鎖の列の情報を返します。情報は ARRAY REFERENCE の形
-で返されます。例えば MIME/Multipart は次の表現されています。
+で返されます。例えば MIME/Multipart は次のように表現されています。
 <screen>
   type[ 1]: text/rfc822-headers       | multipart/mixed
   type[ 2]: multipart/mixed           | multipart/mixed
@@ -81,7 +81,7 @@ data_type_list() は鎖の列の情報を返します。情報は ARRAY REFERENCE の形
   type[ 8]: multipart.close-delimiter | multipart/mixed
   type[ 9]: text/plain                | multipart/mixed
 </screen>
-真中の列がオブジェクトの鎖を表しています。
+真中の列が各オブジェクトの種別を表しています。
 右端は全体の mime type です。
 </para>
 
@@ -148,8 +148,9 @@ whole_message_header()
 <para>
 __head_message() は鎖の先頭のオブジェクトを返します。
 __last_message() は鎖の最後のオブジェクトを返します。
-そのため、通常、図の header オブジェクトを返すことになりますので、
-多くの場合 whole_message_header() と等価です。
+プライベートなので、これらのメソッドはは使わないで下さい。
+__head_message() は、通常、図の header オブジェクトを返すことになりま
+すので、多くの場合 whole_message_header() と等価です。
 </para>
 
 <para>
@@ -168,7 +169,7 @@ header_data_type()
 	</title>
 
 <para>
-以下では、このような鎖を例にとるとします。
+以下では、このような鎖を例にとることにします。
 <screen>
 (multipart でない場合)
 

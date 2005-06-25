@@ -1,5 +1,5 @@
 <!--
-   $FML: extension.sgml,v 1.11 2004/04/07 11:07:00 fukachan Exp $
+   $FML: extension.sgml,v 1.12 2004/10/06 09:07:33 fukachan Exp $
 -->
 
 
@@ -48,11 +48,11 @@
 
 <para>
 ユーザ向けのコマンド uja を作りたい場合、
-FML::Command 以下から適当に cut and paste して
+FML::Command::User 以下のモジュールから適当に cut and paste して
 <screen>
 /usr/local/lib/fml/site_local/FML/Command/User/uja.pm
 </screen>
-というファイルを置き、設定ファイルで
+というファイルを作り、設定ファイルで
 uja を許可するコマンドリストに追加して下さい。
 
 全ての ML で有効にする場合は、site_default_config.cf で、
@@ -79,11 +79,11 @@ user_command_mail_allowed_commands += uja
 
 <para>
 admin 向けのコマンド uja を作りたい場合、
-FML::Command 以下から適当に cut and paste して
+FML::Command::Admin 以下から適当に cut and paste して
 <screen>
 /usr/local/lib/fml/site_local/FML/Command/Admin/uja.pm
 </screen>
-というファイルを置いてください。
+というファイルをつくってください。
 
 
 全ての ML で有効にする場合は、site_default_config.cf で、
@@ -135,12 +135,12 @@ admin_command_mail_allowed_commands += uja
 
 <para>
 makefml でコマンド uja を作いたい場合、
-FML::Command 以下から適当に cut and paste して
+FML::Command::Admin 以下から適当に cut and paste して
 <screen>
 /usr/local/lib/fml/site_local/FML/Command/Admin/uja.pm
 </screen>
-というファイルを置けば有効になります
-モジュールを置くだけで有効になります。
+というファイルをつくるだけで有効になります
+つまりモジュールを置くだけで有効になります。
 *_allowed_commands 系の変数の設定変更は不要です。
 </para>
 
@@ -156,6 +156,12 @@ FML::Command 以下から適当に cut and paste して
 
 
 <warning>
+
+<para>
+以下の記述で利用可能な機能を追加することが出来ますが、
+別途、画面の作り込みが必要です。
+</para>
+
 <para>
 このホスト全ての ML で有効にする場合、
 拡張するモジュールを
@@ -183,7 +189,9 @@ FML::Command 以下から適当に cut and paste して
 /usr/local/lib/fml/site_local/FML/Command/Admin/uja.pm
 </screen>
 というファイルを置いてください。
+</para>
 
+<para>
 全ての ML で有効にする場合は、site_default_config.cf で、
 許可するコマンドリストに追加してください。
 <screen>
@@ -198,6 +206,5 @@ elena ML だけで有効にする場合は、elena ML の config.cf で、
 admin_cgi_allowed_commands += uja
 </screen>
 </para>
-
 
 </sect1>

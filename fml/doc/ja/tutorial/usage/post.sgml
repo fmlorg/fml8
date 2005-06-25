@@ -1,5 +1,5 @@
 <!--
-   $FML: post.sgml,v 1.8 2004/04/07 11:07:13 fukachan Exp $
+   $FML: post.sgml,v 1.9 2004/10/06 09:07:44 fukachan Exp $
 -->
 
 
@@ -22,7 +22,7 @@ MTA へ配送処理を委ねます。
 
 <sect2>
 	<title>
-	fml.pl が ＭＬとして処理するべきこと
+	distribute が ＭＬとして処理するべきこと
 	</title>
 
 

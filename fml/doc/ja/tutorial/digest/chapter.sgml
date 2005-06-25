@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.sgml,v 1.3 2003/04/15 14:51:39 fukachan Exp $
+   $FML: chapter.sgml,v 1.4 2004/10/06 09:07:36 fukachan Exp $
 -->
 
 
@@ -120,7 +120,7 @@ admin digest $address off
 	</title>
 
 <para>
-(未実装)
+(実装済)
 <screen>
 digest on
 digest off
@@ -129,9 +129,9 @@ digest off
 </para>
 
 <para>
-confirm は必要ですかねぇ？これは決めごとなんで、デザインポリシーとして、
-アドレス操作関係のコマンドのデフォルトは厳しくしましょう。要望がでてき
-たら、順次緩めていくということにします。
+confirm は未実装です。デザインポリシーとして、アドレス操作関係のコマン
+ドのデフォルトは厳しくしましょう。要望がでてきたら、順次緩めていくとい
+うことにします。
 </para>
 
 </sect2>
@@ -143,6 +143,7 @@ confirm は必要ですかねぇ？これは決めごとなんで、デザインポリシーとして、
 	</title>
 
 <para>
+(実装済)
 <screen>
 digeston
 digestoff

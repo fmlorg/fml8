@@ -1,5 +1,5 @@
 <!--
-   $FML: qmail.sgml,v 1.2 2002/07/06 14:55:20 fukachan Exp $
+   $FML: qmail.sgml,v 1.3 2004/10/06 09:07:42 fukachan Exp $
 -->
 
 
@@ -30,5 +30,23 @@ fml.org:fml-fml.org
 この設定は、ＭＬ用に一つのドメインをまるまる使うことを前提としています。
 </para>
 </warning>
+
+<sect2>
+	<title>
+	バーチャルドメインの場合
+	</title>
+
+<para>
+makefml newml を実行するだけで自動的にＭＬが有効になるようにするには
+/var/qmail/control/virtualdomains
+に設定が必要です。しかしながら、このファイルは通常ユーザ fml さんには
+編集する権限がないので、ＭＬ管理者が設定を追加して下さい。
+<screen>
+ドメイン:fml-ドメイン
+</screen>
+この追加は全てのドメイン分必要なことに注意して下さい。
+</para>
+
+</sect2>
 
 </sect1>

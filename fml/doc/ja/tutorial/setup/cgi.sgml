@@ -1,5 +1,5 @@
 <!--
-   $FML: cgi.sgml,v 1.7 2004/10/06 09:07:42 fukachan Exp $
+   $FML: cgi.sgml,v 1.8 2004/10/27 10:21:58 fukachan Exp $
 -->
 
 
@@ -27,10 +27,10 @@ apache で suexec を使う
 </para>
 
 <para>
-2004 年、秋現在、ＭＬごとの CGI およびドメイン全体を管理する CGI が用
-意されています。このインターフェイスで、ユーザの追加、削除、メンバーリ
-ストやログの閲覧などが可能ですが、CGI からの設定変更インターフェイス(
-config.cf の編集機能)が未実装です。
+現在、ＭＬごとの CGI およびドメイン全体を管理する CGI が用意されていま
+す。このインターフェイスで、ユーザの追加、削除、メンバーリストやログの
+閲覧などが可能ですが、CGI からの設定変更インターフェイス( config.cf の
+編集機能)が中途半端です。
 </para>
 
 <para>
@@ -50,8 +50,7 @@ qmail を使っているなら、CGI 用の特別な「メールサーバの設定変更」は不要
 <para>
 makefml newml を実行するとデフォルトで config.cgi などの CGI スクリプ
 トが ~fml/public_html/ 以下に用意されています。この CGI は二種類あり、
-ドメイン全体を管理する CGI と、それぞれのＭＬを管理する CGI と両方あり
-ます。
+ドメイン全体を管理する CGI と、それぞれのＭＬを管理する CGI があります。
 <screen>
 そのドメインのＭＬ全部の管理者用
 ~fml/public_html/fml/ドメイン/admin/config.cgi
@@ -109,7 +108,8 @@ http://lists.fml.org/~fml/cgi-bin/fml/fml.org/.htaccess
 <footnote>
 <para>
 さらに、デフォルトの apache では ~fml/ へのアクセスは出来ないはずなの
-で、apache の設定も別途必要です。一応、この二段構えになっています。
+で、apache の設定も別途必要です。一応、デフォルトでは、この二段構えの
+拒否体制になっています。
 </para>
 </footnote>
 <screen>
@@ -117,7 +117,8 @@ AuthName ByPassword
 AuthType Basic
 require valid-user
 </screen>
-この .htaccess を適切なものに書き換えて下さい。
+この .htaccess を適切なものに書き換え、
+apache の設定で suexec を有効にして下さい。
 <screen>
 例
 
@@ -130,7 +131,7 @@ require valid-user
 
 <warning>
 <para>
-(当たり前だけど)このファイルを消すと、誰でもアクセスできるようになりま
+(当たり前ですが)このファイルを消すと、誰でもアクセスできるようになりま
 す。デバッグする場合はともかく、そういう裏技は使わないようにしましょう;-)
 また、そういうデバッグなんて時に限って、そのまま再設定し忘れたりするも
 のなので、しない方が良いです。きちんと .htaccess を設定しましょう。

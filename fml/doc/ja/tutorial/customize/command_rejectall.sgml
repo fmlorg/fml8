@@ -1,5 +1,5 @@
 <!--
-   $FML: command_rejectall.sgml,v 1.4 2004/04/07 11:07:02 fukachan Exp $
+   $FML: command_rejectall.sgml,v 1.5 2004/10/06 09:07:34 fukachan Exp $
 -->
 
 
@@ -30,6 +30,10 @@ command_mail_restrictions = reject
 </screen>
 こう設定すると(メンバー以外の人に送り返すはずの) guide すら返送されず、
 何をしても「あなたはメンバーでない」という一点張りの答を返すだけです。
+</para>
+
+<para>
+この設定の問題点は「各行を評価してしまう」つまり無駄ということです。
 </para>
 
 </sect1>

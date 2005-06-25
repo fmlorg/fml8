@@ -1,5 +1,5 @@
 <!--
-   $FML: postfix.sgml,v 1.3 2003/04/15 14:51:44 fukachan Exp $
+   $FML: postfix.sgml,v 1.4 2004/04/07 11:07:12 fukachan Exp $
 -->
 
 <sect1 id="setup.postfix.aliases">
@@ -26,7 +26,7 @@ postfix の設定については
 
 <para>
 makefml はシステムの aliases (例: /etc/mail/aliases)を変更することはあ
-りません。各ドメインごとにある alias ファイル 
+りません。各ドメインごとに用意されている alias ファイル 
 $ml_home_prefix/etc/mail/aliases へ必要な設定を追加することと、そのファ
 イルから aliases.db を再生成する作業を行ないます。
 </para>

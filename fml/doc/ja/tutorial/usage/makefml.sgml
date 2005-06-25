@@ -1,5 +1,5 @@
 <!--
-   $FML: makefml.sgml,v 1.9 2004/10/06 09:07:44 fukachan Exp $
+   $FML: makefml.sgml,v 1.10 2004/12/23 15:01:14 fukachan Exp $
 -->
 
 
@@ -15,8 +15,9 @@
 </screen>
 ＭＬ名は＠抜きの場合、デフォルトのドメインとなり、アドレスを完全に指定
 すればバーチャルドメインまで含めて makefml がよろしくがんばることになっ
-ています。もちろんデフォルトかバーチャルかにかかわらず、常に＠ドメイン
-つきで指定して構いません。例えば
+ています。もちろんデフォルトかバーチャルかいなかにかかわらず、常に＠ド
+メインつきで指定して構いません。
+例えばデフォルトドメイン(fml.org)であれば、次の二つは同じ意味です。
 <screen>
 % makefml newml elena
 % makefml newml elena@fml.org
@@ -47,7 +48,7 @@
 ＭＬ名は @ 抜きの場合デフォルトのドメイン、
 アドレスを完全に指定すればバーチャルドメインまで含めて
 makefml がよろしくがんばります。
-例えば
+例えばデフォルトドメイン(fml.org)であれば、次の二つは同じ意味です。
 <screen>
 % makefml rmml elena
 % makefml rmml elena@fml.org
@@ -58,7 +59,7 @@ makefml がよろしくがんばります。
 できるだけ newml の反対の動作をします。
 ホームディレクトリを消すとか
 MTA の alias の該当エントリを消すといったことなども
-できそうなことは全て頑張ります。
+可能な操作は全て頑張ります。
 </para>
 
 </sect1>
@@ -79,8 +80,9 @@ MTA の alias の該当エントリを消すといったことなども
 ＭＬ名は @ 抜きの場合デフォルトのドメイン、
 アドレスを完全に指定すればバーチャルドメインまで含めて
 makefml がよろしくがんばります。
-例えば
 <screen>
+例
+
 % su fml
 % makefml useradd elena rudo@nuinui.net
 % makefml userdel elena rudo@nuinui.net
@@ -130,8 +132,9 @@ unsubscribe
 ＭＬ名は @ 抜きの場合デフォルトのドメイン、
 アドレスを完全に指定すればバーチャルドメインまで含めて
 makefml がよろしくがんばります。
-例えば
 <screen>
+例
+
 % su fml
 % makefml chaddr elena rudo@nuinui.net teddy@nuinui.net
 % makefml chaddr elena@fml.org rudo@nuinui.net teddy@nuinui.net
@@ -149,6 +152,8 @@ makefml がよろしくがんばります。
 
 <para>
 <screen>
+例
+
 % makefml off elena メールアドレス
 </screen>
 </para>
@@ -164,6 +169,8 @@ makefml がよろしくがんばります。
 <para>
 off の反対
 <screen>
+例
+
 % makefml on elena メールアドレス
 </screen>
 </para>
@@ -178,6 +185,8 @@ off の反対
 
 <para>
 <screen>
+例
+
 % makefml log elena
 % makefml log elena@fml.org
 </screen>
@@ -193,13 +202,17 @@ off の反対
 
 <para>
 <screen>
+例
+
 % makefml list elena
 </screen>
-これはメンバーのリスト(投稿可能者のリスト)を表示します。
+これは受信者のリストを表示します。
 <screen>
-% makefml list elena recipient
+例
+
+% makefml list elena member
 </screen>
-は受信者のリストを表示します。
+メンバーのリスト(投稿可能者のリスト)
 </para>
 
 <para>
@@ -225,9 +238,9 @@ xxx_maps は
 	</title>
 
 <para>
-2004/11 現在、テスト版が動いています。日本語メニューでもないし、まだま
-だ作り込みが必要という状態ですが、一応フレームワークは作成済みというス
-テータスです。
+2004/11 現在、設定支援メニューインターフェイスのテスト版が動いています。
+日本語メニューでもないし、まだまだ作り込みが必要という状態ですが、一応
+フレームワークは作成済みというステータスです。
 </para>
 
 <para>
@@ -246,7 +259,7 @@ xxx_maps は
 <para>
 makefml を使える管理者が一番偉い人です。当然:-)、
 makefml を使える管理者は、
-(より権限の弱い)リモート管理のための諸設定をすることができます。
+(より権限の弱い)リモート管理のための諸設定を行なうことができます。
 </para>
 </warning>
 

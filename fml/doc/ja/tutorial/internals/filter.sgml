@@ -1,5 +1,5 @@
 <!--
-   $FML: filter.sgml,v 1.7 2004/04/20 03:36:34 fukachan Exp $
+   $FML: filter.sgml,v 1.8 2004/10/06 09:07:39 fukachan Exp $
 -->
 
 
@@ -161,9 +161,9 @@ text/html	reject
 </para>
 
 <para>
-MIME が前提なので、!MIME なんてのはないですが、text/plain と 
-multipart/mixed 中の text/plain を区別するために、こういう書き方である
-必要があるとおもうわけです。
+MIME が前提なので、!MIME (MIME 以外を対象とする)という命令はありません
+が、text/plain と multipart/mixed 中の text/plain を区別するために、こ
+ういう書き方である必要があるとおもうわけです。
 <screen>
 全体			部分		アクション
 ----------------------------------------------
@@ -204,19 +204,19 @@ text/plain 		:size>500k	cutoff
 	</title>
 
 <para>
-では、permit はどうでしょう？実のところ文脈依存と考えらますが、何が正
-しいのかよくわかりません。たとえば、multipart のメールの中身が
+では、permit はどうでしょう？実のところ文脈依存と考えられますが、何が
+正しいのかよくわかりません。たとえば、multipart のメールの中身が
 <screen>
 text/plain + image/jpeg + text/html
 </screen>
 のように３つの異なるタイプのパートからなる場合、どういうルールなら曖昧
-さがないのだろうか？
+さがないでしょうか？
 </para>
 
 <para>
 結論をいえば、cutoff や reject を指定するタイプのルールしかうまく機能
 しない、つまり「特定の○○を削除ないしは拒否する」ことならうまくできる
-といえそうです。ゆえにデフォルトは permit にするしかない。
+といえそうです。ゆえにデフォルトは permit にするしかありません。
 </para>
 
 <para>
@@ -244,7 +244,7 @@ text/plain	*	permit
 </screen>
 と一緒になってしまうわけです。だから permit は"メール全体を OK として
 ルールとの照らし合わせ処理をそこで終りにする"という意味にしないといけ
-ない。よって、次のようなルールはありえない。
+ません。よって、次のようなルールはありえないことになります。
 <screen>
 text/plain 		*		permit
 multipart/mixed		text/plain	permit

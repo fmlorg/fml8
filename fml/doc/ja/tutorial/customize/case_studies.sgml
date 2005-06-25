@@ -1,5 +1,5 @@
 <!--
-   $FML: case_studies.sgml,v 1.6 2004/04/07 11:07:01 fukachan Exp $
+   $FML: case_studies.sgml,v 1.7 2004/10/06 09:07:34 fukachan Exp $
 -->
 
 
@@ -14,34 +14,39 @@
 </para>
 
 <para>
-ヘッダ関連では、まず Subject: にタグをつけないことにしました。
+ヘッダ関連では、まず Subject: にタグをつけない
 <footnote>
 <para>
 なお、この設定はデフォルトの site_default_config.cf に仕込まれています。
 つまり &fml8; のデフォルトです。
 </para>
 </footnote>
-ことにした。
+ことにしました。
 <screen>
 article_header_rewrite_rules	-=	rewrite_article_subject_tag
 </screen>
+この例は「ヘッダ書換えのルール」から「タグをつける」命令を抜く設定です。
 </para>
 
 <para>
 そして、X-ML-Name: 部分の mlname にオフィス名をつける(prepend する)、
-つまり mlname から office#mlname へ変更します。
+つまり mlname から office#mlname へ変更するようにします。
 <screen>
-# office#$mlname
 outgoing_mail_header_x_ml_name          =       office#$ml_name
 </screen>
 </para>
 
 <para>
 記事は誰でも投稿可能としましょう。
-ここでは root さんからのシステムメールなども許しています。
 <screen>
 article_post_restrictions		=	permit_anyone
 </screen>
+この例では root さんからのシステムメールなども許していることに注意して
+ください( root などは弾きたい場合 reject_system_accounts permit_anyone 
+です)。
+</para>
+
+<para>
 そして、社内用途のＭＬなので、フィルタの多くは使いません。
 つぅか、使うと問題だらけのようです;)
 <screen>
@@ -70,8 +75,8 @@ use_command_mail_function	=	no
 コマンドメールそのものを禁止するには、aliases から該当するエントリを省
 くことが確実ですが、ＭＬを作成するたびに、aliases から削除することはミ
 ス操作を誘い易いでしょう。また、CGI 操作の場合、CGI 操作者が aliases 
-の操作をするのはおかしいです。そこで、コマンドメール用のプログラムが一
-度は起動しても、すぐ終るという設定にしているわけです。
+の細かな操作をするのは難しいです。そこで、コマンドメール用のプログラム
+が一度は起動しても、すぐ終るという設定にしているわけです。
 </para>
 
 </sect1>
@@ -97,7 +102,7 @@ support@example.co.jp ＭＬでは
 <screen>
 Subject: (SUPPORT 10000)
 </screen>
-などとなるわけです。
+などとするわけです。
 </para>
 
 <para>

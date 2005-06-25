@@ -1,5 +1,5 @@
 <!--
-   $FML: autoreply.sgml,v 1.3 2004/04/07 11:07:01 fukachan Exp $
+   $FML: autoreply.sgml,v 1.4 2004/10/06 09:07:34 fukachan Exp $
 -->
 
 
@@ -40,7 +40,8 @@ $distribute_run_start_hook = q{
 $curproc->stop_this_process();
 </screen>
 が &fml4; の $DO_NOTHING 変数にあたりますが、&fml8; ではメソッドです。
-これで、このHOOK以降、正常の処理が無視されるようになります。 
+これで、この HOOK 以降、正常の処理が無視されるようになります。
+つまり、なにも実行されなくなるというわけです。
 </para>
 
 </sect1>

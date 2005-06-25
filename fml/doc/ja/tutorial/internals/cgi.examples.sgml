@@ -1,5 +1,5 @@
 <!--
-   $FML: cgi.examples.sgml,v 1.1 2004/03/31 06:03:00 fukachan Exp $
+   $FML: cgi.examples.sgml,v 1.2 2004/10/06 09:07:37 fukachan Exp $
 
    注意: cgi.sgml の中にはめ込むので <chapter> は不必要だ。
 -->
@@ -22,13 +22,13 @@ FML::CGI::Thread FML::Process::CGI::Kernel FML::Process::CGI::Param
 </para>
 
 <para>
-各 .cgi 固有のコードは FML::CGI:: の階層に置くようにします。
+各 .cgi 固有のコードは FML::CGI:: の階層に置くようにしています。
 </para>
 
 <para>
 FML::Process::CGI::Kernel には、
 プロセス全体の制御部分と、
-デフォルトの CGI 固有関数 run_cgi_なんとか() を置きます。
+デフォルトの CGI 固有の関数「run_cgi_なんとか()」を置きます。
 必要に応じて FML::CGI:: の階層でオーバーロードしてください。
 なお、FML::Process::CGI::Kernel の以下のメソッドは使われていません。
 <screen>
@@ -75,13 +75,13 @@ FML::Process::CGI::Kernel では
     $curproc->_drive_cgi_by_table(); (FML::Process::CGI::Kernel)
     $curproc->html_end();            (FML::CGI::Menu)
 </screen>
-を実行します。画面を作るのは _drive_cgi_by_table() です。
+を実行します。画面を作るのは _drive_cgi_by_table() の部分です。
 この関数から呼ばれる関数が CGI のメイン部分です。
 </para>
 
 <para>
 $curproc->_drive_cgi_by_table()
-は、以下の各「run_いろいろ()」メソッドを呼び出します。
+は、以下の各「run_いろいろ()」メソッド群を呼び出します。
 <screen>
 run_cgi_main              (FML::CGI::Menu)
 </screen>

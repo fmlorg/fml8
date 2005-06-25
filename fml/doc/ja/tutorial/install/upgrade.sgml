@@ -1,5 +1,5 @@
 <!--
-   $FML: upgrade.sgml,v 1.6 2004/04/07 11:07:06 fukachan Exp $
+   $FML: upgrade.sgml,v 1.7 2004/10/06 09:07:37 fukachan Exp $
 -->
 
 
@@ -32,7 +32,8 @@ fml4 から fml8 へのアップグレードは、
 	</title>
 
 <para>
-単に、もう一度
+インストールするだけでは何も変化は起こりません。
+まずは、単に、もう一度 fml8 を
 <link linkend="install.fml.unix">
 インストール
 </link>
@@ -42,12 +43,12 @@ fml4 から fml8 へのアップグレードは、
 <para>
 そして、インストール後、/usr/local/etc/fml/main.cf の fml_version 行を
 今インストールしたバージョンに変更して下さい。
-ファイルをセーブした瞬間から新しい fml に切り替わります
+ファイルをセーブした瞬間から新しい fml8 に切り替わります
 (注: エディタで編集中は古い内容)。
 </para>
 
 <para>
-逆に言えば、fml_version 行を編集するまで有効にはなりません。
+逆に言えば、fml_version 行を編集するまでアップグレードは有効にはなりません。
 </para>
 
 </sect1>

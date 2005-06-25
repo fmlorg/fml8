@@ -1,5 +1,5 @@
 <!--
-   $FML: post_check_article_thread.sgml,v 1.2 2004/11/14 12:04:58 fukachan Exp $
+   $FML: post_check_pgp_signature.sgml,v 1.1 2005/06/05 09:20:22 fukachan Exp $
 -->
 
 
@@ -12,7 +12,7 @@
 <para>
 この機能を使うには Crypt::OpenPGP モジュールが必要です。
 OS 附属のパッケージシステムなどでインストールして下さい。
-このモジュールが使うモジュールがたくさんあるので、
+このモジュールが依存しているモジュールがたくさんあるので、
 OS 附属のパッケージシステムを使えないとしんどいです。
 </para>
 </caution>
@@ -24,12 +24,11 @@ OS 附属のパッケージシステムを使えないとしんどいです。
 
 <para>
 設定例は次のようになります。
-check_article_thread が、このオプションです
-(なお check_article_thread より良い名称も募集中)。
+check_pgp_signature が、このオプションです。
+電子署名が正当なユーザだけが投稿を許されます。
 <screen>
 article_post_restrictions       =       reject_system_special_accounts
                                         check_pgp_signature
-                                        permit_member_maps
                                         reject
 </screen>
 もちろんデフォルトでは使いません。
@@ -45,12 +44,16 @@ article_post_restrictions       =       reject_system_special_accounts
 	</title>
 
 <para>
-pgp2 pgp5 gpg コマンドで操作してください。
-ただ、
-デフォルトのディレクトリではないこと、
-モードごとに異なるディレクトリを使う
-ことから、
-fmlpgp などの wrapper を利用して下さい。
+PGP のキーリングは、動作条件ごとに別々に用意されます。たとえば記事投稿
+用のキーは $ml_home_dir/etc/pgp-article-post-auth/ ディレクトリ以下に、
+リモート管理用のキーは $ml_home_dir/etc/pgp-admin-command-mail-auth/ 
+ディレクトリ以下に置くといった具合です。
+</para>
+
+<para>
+これらのキーは pgp2 pgp5 gpg コマンドで操作してください。ただ、デフォ
+ルトのディレクトリではないこと、モードごとに異なるディレクトリを使うた
+め、fmlpgp などの wrapper を利用すると便利です。
 <screen>
 例: elena ML で記事投稿で使うキーの生成
 

@@ -1,5 +1,5 @@
 <!--
-   $FML: IO.sgml,v 1.3 2003/04/13 04:36:12 fukachan Exp $
+   $FML: IO.sgml,v 1.4 2003/04/15 14:51:42 fukachan Exp $
 -->
 
 <chapter id="module.io.adapter">
@@ -16,7 +16,7 @@
 <para>
 &fmldevel; でのメンバーリストの読み書き、例えばアドレスの登録/削除は
 IO::Adapter という抽象クラスを通じて行ないます。ようは Unix で 
-vfs/vnode インターフェイスの導入した時のような感じですね。
+vfs/vnode インターフェイスを導入した時のような感じですね。
 使い方は次のようになります。
 <screen>
 use IO::Adapter;
@@ -28,8 +28,9 @@ $obj->close;
 </para>
 
 <para>
-$map は「map:識別子」となります。file: は省略可能です。
+$map は「map:識別子」となります。
 現在のところ $map は次のようなものが使えます。
+file: は省略可能です。
 <screen>
 file:/var/spool/ml/elena/recipients
 unix.group:root
@@ -45,7 +46,7 @@ file: は通常のファイルです。
 unix.group:root は /etc/group の root のエントリにあるユーザのリストを、
 nis.group:root は NIS の root のエントリにあるユーザのリストです。
 mysql:id は MySQL へのアクセスです。
-mysql:id で指定されたパラメータを用います。
+config.cf の mysql:id で指定されたパラメータを用います。
 このパラメータは new IO::Adapter を実行する際に、
 指定する必要があります。
 </para>
@@ -142,7 +143,7 @@ rudo@nuinui.net => [
 </para>
 
 <para>
-まとめると引数は「ない」か」STR」なので STR とひとまとめにしても良いで
+まとめると引数は「ない」か「STR」なので STR とひとまとめにしても良いで
 しょう。一方、返り値は STR か ARRAY_REF になります。
 <screen>
 引数    返り値
@@ -262,7 +263,7 @@ new IO::Adapter "mysql:members", $config;
 </screen>
 のように呼び出します。
 この $config は次のようなハッシュ・リファレンスになっていることが
-期待されています。
+期待されています。通常 $config は FML::Config オブジェクトそのものです。
 <screen>
 $config => {
 	[mysql:members] => {
@@ -286,21 +287,20 @@ FML::Config のオブジェクトを引数で渡せば OK です。
 
 <para>
 関数が呼ばれた時に始めて決まる変数もあるので
-cf で全部定義することはできない。
-そこで、lexical scope で取り扱われる変数の表現があれば解決だろうか？
-現在では &amp;varname 記法(下記)を使っている。
+cf で全部定義することはできません。
+そこで、lexical scope で取り扱われる変数の表現があれば解決でしょうか？
+現在では &amp;varname 記法(下記)を使っています。
 </para>
 
 <para>
 例: 
-以下は、受信者リストとメンバーリストが食い違う例なので、
-アドレスの登録をする際に、fml_recepient という値が異なる。
+以下は、受信者リストとメンバーリストが食い違う例で、
+アドレスの登録をする際に、fml_recepient という値が異なります。
 その場合、member と recipient は少し異なる SQL 命令になるので
-別々に定義する。
+別々に定義します。
 off/on 命令を無視するとか、
-fml は sql からデータを読むだけで、
-書き込むことはしないなら、
-話は簡単になる。
+fml は sql からデータを読むだけで書き込むことはしないなら、
+話は簡単になるわけです。
 <screen>
 member_maps 	= 	mysql:members
 

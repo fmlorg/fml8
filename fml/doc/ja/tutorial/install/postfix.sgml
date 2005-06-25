@@ -1,5 +1,5 @@
 <!--
-   $FML: postfix.sgml,v 1.4 2004/04/07 11:07:05 fukachan Exp $
+   $FML: postfix.sgml,v 1.5 2004/10/06 09:07:37 fukachan Exp $
 -->
 
 
@@ -46,7 +46,8 @@ alias_maps	=	hash:/etc/mail/aliases
 	</title>
 
 <para>
-main.cf と virtual_map と両方の設定が必要です。
+/etc/postfix/main.cf で
+alias_maps と virtual_maps の両方に設定の追加が必要です。
 <screen>
 allow_mail_to_commands = alias,forward,include
 
@@ -57,8 +58,16 @@ alias_maps	=	hash:/etc/mail/aliases
 virtual_maps	=	hash:/var/spool/nuinui.net/etc/postfix/virtual
 
 </screen>
-/var/spool/nuinui.net/etc/postfix/virtual は makefml によって自動的に
-更新されます。
+makefml newml を実行すると
+/var/spool/nuinui.net/etc/mail/aliases
+および
+/var/spool/nuinui.net/etc/postfix/virtual 
+は makefml によって自動的に更新されます。
+なお、この場合、ml_home_prefix_maps で
+<screen>
+nuinui.net /var/spool/nuinui.net
+</screen>
+という「ドメイン←→ディレクトリ」の定義がなされています。
 </para>
 
 <warning>
@@ -71,8 +80,8 @@ virtual_maps です。最近の Postfix には sendmail スタイルというのもあり
 </para>
 
 <para>
-mydestination にデフォルトのドメイン(おそらく $mydomain )がちゃんと追
-加されていることを確認して下さい。しかし、バーチャルドメイン(ここでは 
+mydestination にデフォルトのドメイン(おそらく $mydomain)がちゃんと追加
+されていることを確認して下さい。しかし、バーチャルドメイン(ここでは 
 nuinui.net)は mydestination に追加する必要はありません。注意して下さい。
 </para>
 

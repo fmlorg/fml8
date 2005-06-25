@@ -2,7 +2,7 @@
 This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
 to generate various output formats.
 
-$FML: book.sgml,v 1.66 2004/04/07 11:01:28 fukachan Exp $
+$FML: book.sgml,v 1.67 2004/10/02 14:29:45 fukachan Exp $
 -->
 
 <!doctype book public "-//FML//DTD DocBook V3.1-Based Extension//EN" [
@@ -18,7 +18,10 @@ $FML: book.sgml,v 1.66 2004/04/07 11:01:28 fukachan Exp $
   <toc></toc>
 
   <part>
-	<title> fml の基本的な使い方 </title>
+	<title>
+	fml の基本的な使い方
+	</title>
+
 	<partintro>
 	<para>
 	本パートは初心者向けの設定ガイドを目指しています。
@@ -41,10 +44,15 @@ $FML: book.sgml,v 1.66 2004/04/07 11:01:28 fukachan Exp $
 
 
   <part>
-	<title> fml のセットアップ〜ＭＬの作成 </title>
+	<title>
+	fml のセットアップ〜ＭＬの作成
+	</title>
+
 	<partintro>
 	<para>
 	トピックスごとに、まとめます。
+	セットアップの際に行なうであろう
+	標準的な順番に沿って解説しているつもりです。
 	</para>
 	</partintro>
 
@@ -74,7 +82,10 @@ $FML: book.sgml,v 1.66 2004/04/07 11:01:28 fukachan Exp $
 
 
   <part>
-	<title> fml のカスタマイズ </title>
+	<title>
+	fml のカスタマイズ
+	</title>
+
 	<partintro>
 	<para>
 	トピックスごとに、まとめます。
@@ -109,13 +120,15 @@ $FML: book.sgml,v 1.66 2004/04/07 11:01:28 fukachan Exp $
 
 
   <part>
-	<title> トラブルシューティング </title>
+	<title>
+	トラブルシューティング
+	</title>
+
 	<partintro>
 	<para>
 	本パートではトラブルシューティングの話をします。
 	</para>
 	</partintro>
-
 
 	&chapter.troubleshoot;
 
@@ -123,7 +136,10 @@ $FML: book.sgml,v 1.66 2004/04/07 11:01:28 fukachan Exp $
 
 
   <part>
-	<title> デザイン </title>
+	<title>
+	デザイン
+	</title>
+
 	<partintro>
 	<para>
 	本パートではデザインの話をします。
@@ -136,7 +152,10 @@ $FML: book.sgml,v 1.66 2004/04/07 11:01:28 fukachan Exp $
 
 
   <part>
-	<title> 内部構造 </title>
+	<title>
+	内部構造
+	</title>
+
 	<partintro>
 	<para>
 	本パートでは開発者向けの内容についてまとめます。
@@ -196,7 +215,10 @@ $FML: book.sgml,v 1.66 2004/04/07 11:01:28 fukachan Exp $
 
 
   <part>
-	<title> モジュール </title>
+	<title>
+	モジュール
+	</title>
+
 	<partintro>
 	<para>
 	本パートでは重要なモジュールの使い方を説明します。
@@ -215,7 +237,9 @@ $FML: book.sgml,v 1.66 2004/04/07 11:01:28 fukachan Exp $
 	*************** ここから後は付録 **************
   -->
   <part>
-	<title> 付録 </title>
+	<title>
+	付録
+	</title>
 
 	&chapter.glossary;
 	&chapter.cvstree;

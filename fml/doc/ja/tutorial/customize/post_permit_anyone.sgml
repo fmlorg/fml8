@@ -1,5 +1,5 @@
 <!--
-   $FML: post_permit_anyone.sgml,v 1.5 2004/04/07 11:07:02 fukachan Exp $
+   $FML: post_permit_anyone.sgml,v 1.6 2004/10/06 09:07:34 fukachan Exp $
 -->
 
 
@@ -39,6 +39,17 @@ article_post_restrictions =	reject_system_special_accounts
 				permit_member_maps
 				reject
 </screen>
+この意味は
+「root  などシステムの特別なアカウントは弾き」
+「member_maps にあるユーザであれば投稿を許す」
+いづれにもマッチしないなら「投稿を拒否する」
+となります。
+</para>
+
+<para>
+なお「rejectなになに」および「 permitなになに」という命令はマッチした
+ところで処理が終りに、マッチしない場合は次の条件を試すことになっていま
+す。
 </para>
 
 </sect1>

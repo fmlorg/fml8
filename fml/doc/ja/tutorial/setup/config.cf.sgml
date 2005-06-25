@@ -1,5 +1,5 @@
 <!--
-   $FML: config.cf.sgml,v 1.4 2004/04/07 11:07:11 fukachan Exp $
+   $FML: config.cf.sgml,v 1.5 2004/10/06 09:07:42 fukachan Exp $
 -->
 
 
@@ -12,7 +12,7 @@
 makefml は、
 makefml newml を実行した際に、
 そのＭＬの config.cf などの設定ファイル群を一式を作り、
-さらに、MTA が fml を起動する際に使う include 類( postfix 用)および
+さらに MTA が fml を起動する際に使う include 類( postfix 用)および
 ~fml/.qmail-* ( qmail 用 )
 などの必要な設定ファイル一式を用意します。
 <screen>
@@ -28,7 +28,7 @@ config.cf include include-ctl include-error
 <warning>
 
 <para>
-現状、設定支援ツールがまだないので、ＭＬのカスタマイズは config.cf を
+現状、設定支援ツールが未完成なので、ＭＬのカスタマイズは config.cf を
 エディタで編集して下さい。
 </para>
 
@@ -36,8 +36,8 @@ config.cf include include-ctl include-error
 
 <para>
 makefml newml が作る config.cf には、ほとんど何も定義されていません。
-config.cf の先頭の ml_domain と ml_name もコメントになっていますが、そ
-れらはコマンドの引数から自動的に決定されます。
+config.cf の先頭の ml_domain と ml_name もコメントになっていますが、
+それらはコマンドの引数から自動的に決定されるのでコメントでよいのです。
 </para>
 
 <para>

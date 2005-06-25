@@ -1,5 +1,5 @@
 <!--
-   $FML: create.sgml,v 1.1 2003/02/18 02:24:47 fukachan Exp $
+   $FML: create.sgml,v 1.2 2003/04/15 14:51:42 fukachan Exp $
 -->
 
 <chapter id="module.create">
@@ -27,9 +27,16 @@
 	</title>
 
 <para>
+fml/bin/fmlsch.in シェルスクリプトを用意し、
 fml/etc/install.cf.in の bin_programs 変数に fmlsch を追加します。
-fml/etc/install.cf を再生成するために
-configure を再実行してください。 
+bin_programs にあるスクリプトはインストーラがインストールしてくれます。
+</para>
+
+<para>
+fml/bin/fmlsch および fml/etc/install.cf の生成は
+configure が行ないます。
+configure.in に、この２つのファイルの変数展開をするように登録し、
+autoconf を実行して configure を生成して下さい。
 </para>
 
 </sect2>
@@ -43,7 +50,7 @@ configure を再実行してください。
 
 <para>
 fmlsch の実体のモジュールとして、
-fml/lib/Calender/Lite.pm を書きます。
+fml/lib/FML/Demo/Calendar.pm を書きます。
 </para>
 
 <para>
@@ -66,8 +73,8 @@ Date-Calc も必要なので適宜インストールしてください。
 	</title>
 
 <para>
-仕事のほとんどの部分は Calender::Lite が実行しますが、
-&fmldevel; のブートローダから Calender::Lite を呼び出すために
+仕事のほとんどの部分は FML::Demo::Calendar が実行しますが、
+&fmldevel; のブートローダから FML::Demo::Calendar を呼び出すために
 FML::Process:: クラスを修正する必要があります。
 </para>
 

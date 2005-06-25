@@ -1,5 +1,5 @@
 <!--
-   $FML: procmail.sgml,v 1.4 2004/04/07 11:07:12 fukachan Exp $
+   $FML: procmail.sgml,v 1.5 2004/10/06 09:07:42 fukachan Exp $
 -->
 
 
@@ -60,6 +60,25 @@ VERBOSE=on
 :0
 inbox/.
 </screen>
+</para>
+
+</sect2>
+
+<sect2>
+	<title>
+	バーチャルドメインの場合
+	</title>
+
+<para>
+上の例で分かるようにドメイン名つきのルールが記述されているので、
+procmail の設定でバーチャルドメインか否かは関係ありません。
+よって、特別な設定はありません。
+</para>
+
+<para>
+もっとも、別途、バーチャルドメイン宛のメールをユーザ fml さんに転送す
+る設定が MTA に必要なのですが、それは ISP なりメールサーバの管理者が行
+なってくれる必要があります。
 </para>
 
 </sect2>

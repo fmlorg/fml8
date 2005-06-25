@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.command.sgml,v 1.2 2004/04/07 11:07:02 fukachan Exp $
+   $FML: chapter.command.sgml,v 1.3 2004/10/06 09:07:34 fukachan Exp $
 -->
 
 
@@ -19,9 +19,9 @@ elena ＭＬに独自の help コマンドを作ることを考えます。
 </para>
 
 <para>
-独自のモジュール help.pm を用意して、ＭＬローカルのライブラリパスへお
-くだけです。オリジナルの help.pm を参考にして、独自の help.pm を作り、
-以下のパスにおいてください。
+独自の help コマンドは、独自のモジュール help.pm を用意して、ＭＬロー
+カルのライブラリパスへおくだけでOKです。オリジナルの help.pm を参考に
+して、独自の help.pm を作り、以下のパスにおいてください。
 <screen>
 /var/spool/ml/elena/local/lib/FML/Command/User/help.pm
 </screen>
@@ -33,7 +33,7 @@ help コマンドの応答には、このモジュール help.pm が使われます。
 <caution>
 <para>
 他のファイルからカット＆ペーストする時は、
-package の名前空間に気をつけてね
+package の名前空間に気をつけてください。
 </para>
 </caution>
 

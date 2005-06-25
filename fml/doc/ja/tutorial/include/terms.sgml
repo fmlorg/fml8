@@ -1,5 +1,5 @@
 <!--
-	$FML: terms.sgml,v 1.3 2002/07/02 10:39:34 fukachan Exp $
+	$FML: terms.sgml,v 1.4 2004/04/07 11:07:04 fukachan Exp $
 -->
 
 <sect1 id="terms">
@@ -44,7 +44,7 @@
 	<term> CUI </term>
 	<listitem>
 	<para>
-	コマンドラインで使うツールの、つまり makefml と fml のこと
+	コマンドラインで使う設定ツール、たとえば makefml と fml の類。
 	</para>
 	</listitem>
    </varlistentry>

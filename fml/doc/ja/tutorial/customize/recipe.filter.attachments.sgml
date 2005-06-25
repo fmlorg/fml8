@@ -1,5 +1,5 @@
 <!--
-   $FML: recipe.filter.attachments.sgml,v 1.2 2004/12/08 11:27:45 fukachan Exp $
+   $FML: recipe.filter.attachments.sgml,v 1.3 2004/12/09 03:55:18 fukachan Exp $
 -->
 
 
@@ -68,7 +68,7 @@ $distribute_verify_request_start_hook = q{
 <screen>
 Content-Disposition: attachment;
 </screen>
-という表示なることを前提に、これを引っかけるという案もある。
+という表示になることを前提に、これを引っかけるという案もあります。
 <screen>
 $distribute_verify_request_start_hook = q{
     my $msg = $curproc->incoming_message() || undef;

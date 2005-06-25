@@ -1,11 +1,11 @@
 <!--
-   $FML: bookinfo.sgml,v 1.13 2004/03/18 08:58:49 fukachan Exp $
+   $FML: bookinfo.sgml,v 1.14 2004/04/02 04:53:40 fukachan Exp $
 -->
 
 <bookinfo>
   <bookbiblio>
      <title>
-	fml8 チュートリアル (fml version 8 tutorial)
+	fml8 チュートリアル
      </title>
 
      <author>
@@ -25,7 +25,7 @@
      </author>
 
      <copyright>
-   	<year> 2001,2002,2003,2004 </year>
+   	<year> 2001,2002,2003,2004,2005 </year>
    	<holder> Ken'ichi Fukamachi </holder>
      </copyright>
 
@@ -39,7 +39,13 @@
 
 
 	<para>
-	現在の fml-devel で動く機能そして TODO リストは
+	fml 8 の現在のステータスは PRE ALPHA です。
+	そのためバージョン番号として 7.98.x という番号をつけています。
+	fml 8 ALPHA 〜 fml 8 BETA および fml 8 RC の間は 7.99.x の予定です。
+	</para>
+
+	<para>
+	現在の fml8 で動く機能そして TODO リストは
 	<ulink url="../../../fml/doc/ja/todo/STATUS.html">
 	http://www.fml.org/software/fml-devel/fml/doc/ja/todo/STATUS.html
 	</ulink>
@@ -59,6 +65,8 @@
 	</ulink>
 	ドキュメントを参照して下さい)。
 <screen>
+	perl 5.8.5   on NetBSD 2.0 
+	perl 5.8.5   on NetBSD 1.6
 	perl 5.6.1   on NetBSD 1.5.x (1.5 stable)		
 	perl 5.6.1   on NetBSD 1.6				
 	perl 5.6.1   on FreeBSD 5.2.1

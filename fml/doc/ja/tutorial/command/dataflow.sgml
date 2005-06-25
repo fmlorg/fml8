@@ -1,5 +1,5 @@
 <!--
-   $FML: dataflow.sgml,v 1.3 2004/04/07 11:07:00 fukachan Exp $
+   $FML: dataflow.sgml,v 1.4 2004/10/06 09:07:33 fukachan Exp $
 -->
 
 
@@ -43,12 +43,16 @@
 <para>
 1) guideやsubscribeのようにメンバー以外にも許されるコマンドであれば、
    直接コマンド呼び出しルーチンへ処理が移ります。
+   ここで許されるコマンドは anonymous_command_mail_allowed_commands
+   で定義されているコマンドです。
 </para>
 
 <para>
 2) メンバーだけに許されるコマンドの場合、
    command_mail_restrictionsのルールに従って他の条件を確認し、
    許されたなら、呼び出しルーチンへ処理が移ります。
+   ここで許されるコマンドは user_command_mail_allowed_commands
+   で定義されているコマンドです。
 </para>
 
 <para>
@@ -61,11 +65,17 @@ FML::Command クラス経由でコマンドが実行されます。
 
 <para>
 admin コマンドの実行は、ここでは行なわれません。「admin ...」コマンド
-は、まず一般ユーザ権限の admin コマンドとして処理が薦められ、最終的に 
-「FML::Command::User::admin」クラスが呼び出されます。このクラスの中で、
-$admin_command_mail_restrictions に基づいてリモート権限があるか？が確
-認され、もう一度「FML::Command」クラス経由で管理者権限の
-「FML::Command::Admin::コマンド」クラスが呼び出されます。
+は、まず一般ユーザ権限の admin コマンド
+<footnote>
+<para>
+注: admin コマンドは user_command_mail_allowed_commands で許されています
+</para>
+</footnote>
+として処理が薦められ、最終的に 「FML::Command::User::admin」クラスが呼
+び出されます。このクラスの中で、$admin_command_mail_restrictions に基
+づいてリモート権限があるか？が確認され、もう一度「FML::Command」クラス
+経由で管理者権限の「FML::Command::Admin::コマンド」クラスが呼び出され
+ます。
 </para>
 
 </sect2>
@@ -77,9 +87,10 @@ $admin_command_mail_restrictions に基づいてリモート権限があるか？が確
 	</title>
 
 <para>
-このプログラムを使える時点で管理者権限があるはずです。よって、
-FML::Command経由で「FML::Command::Admin::コマンド」クラスを直接呼び出
-しています。
+このプログラムを使える時点で管理者権限(ＭＬのサーバにリモートで入り、
+ユーザ fml に su できる権限)があるはずです。よって、特別な制限はありま
+せん。FML::Command経由で「FML::Command::Admin::コマンド」クラスを直接
+呼び出しています。
 </para>
 
 </sect2>

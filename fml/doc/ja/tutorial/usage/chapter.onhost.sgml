@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.onhost.sgml,v 1.10 2004/04/07 11:07:12 fukachan Exp $
+   $FML: chapter.onhost.sgml,v 1.11 2004/10/06 09:07:43 fukachan Exp $
 -->
 
 
@@ -50,8 +50,8 @@ makefml を使う操作は confirmation が不要です。makefml を実行できる時点
 <para>
 そのためファイルの直接編集などはせずに、通常は「makefml (
 /usr/local/bin/makefml )コマンドを使うことで fml の設定を変更して下さ
-い」というポリシーが推奨されています。もちろんファイルを編集しても構い
-ませんが、内部構造などをよく理解してからにしてください。
+い」という運用ポリシーが推奨されています。もちろんファイルを編集しても
+かまいませんが、その場合、内部構造などをよく理解してからにしてください。
 </para>
 
 <para>
@@ -131,6 +131,24 @@ fmlalias [-n]
 fmldoc   モジュール名
 fmlconf  [-n] $ml
 </screen>
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	ＭＬごとの操作だが、単なるコマンドの wrapper
+	</title>
+
+<para>
+PGP / GPG コマンドの操作コマンド(例: fmlpgp)が、これにあたります。
+でも、いいのか、この基準は…
+</para>
+
+<para>
+コマンドラインオプションなどを一切考えない特殊なモードを作り込めば
+makefml に移すことが出来ないわけではないはずですが、こまりました。
 </para>
 
 </sect2>

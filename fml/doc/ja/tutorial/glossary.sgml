@@ -1,5 +1,5 @@
 <!--
-	$FML: glossary.sgml,v 1.5 2003/04/15 14:51:34 fukachan Exp $
+	$FML: glossary.sgml,v 1.6 2004/10/06 09:07:32 fukachan Exp $
 -->
 
 <glossary id="glossary">
@@ -15,7 +15,16 @@
 	&fml4; シリーズのこと
 	</para>
 	</glossdef>
+   </glossentry>
 
+
+   <glossentry>
+	<glossterm>	fml 8	</glossterm>
+	<glossdef>
+	<para>
+	&fml8; シリーズのこと
+	</para>
+	</glossdef>
    </glossentry>
 
 
@@ -26,8 +35,6 @@
 	&fml8 の開発時の名称。
 	</para>
 	</glossdef>
-
-
    </glossentry>
 
 
@@ -42,7 +49,6 @@
 	UNIX カーネルで伝統的に使われている省略名の典型例
 	</para>
 	</glossdef>
-
    </glossentry>
 
 
@@ -50,17 +56,17 @@
 	<glossterm>	PCB	</glossterm>
 	<glossdef>
 	<para>
-	Process Control Block の略。
-	そのプロセス固有の情報を含む。
-	現状 fml 内部でのコンテキスト切替などはないので、
-	UNIX カーネルの PCB とは少し趣が異なります。
+	Process Control Block の略で、そのプロセス固有の情報を含む。
+	ＭＬごとに内容は異なる。
+	fml 内部でのコンテキスト切替は、
+	listserve スタイルのＭＬなどエミュレータプログラムの中で
+	起こり得ます。
 	</para>
 
 	<para>
 	UNIX カーネルで伝統的に使われている省略名の典型例
 	</para>
 	</glossdef>
-
    </glossentry>
 
 
@@ -91,8 +97,6 @@
 	アーギュメント( argument )の略
 	</para>
 	</glossdef>
-
-
    </glossentry>
 
 
@@ -103,8 +107,6 @@
 	ファイルハンドル( file handle )
 	</para>
 	</glossdef>
-
-
    </glossentry>
 
 
@@ -115,8 +117,6 @@
 	ディレクトリハンドル( directory handle )
 	</para>
 	</glossdef>
-
-
    </glossentry>
 
 
@@ -176,7 +176,6 @@
 	文字列 ( string ) の略
 	</para>
 	</glossdef>
-
    </glossentry>
 
 

@@ -1,5 +1,5 @@
 <!--
-   $FML: bootloader.sgml,v 1.11 2004/04/07 11:07:06 fukachan Exp $
+   $FML: bootloader.sgml,v 1.12 2004/10/06 09:07:37 fukachan Exp $
 -->
 
 
@@ -45,19 +45,19 @@ loader から次々と呼ばれていく様子は、例えば配送処理の場合、次のよう
 </para>
 
 <para>
-libexec/loader は /usr/local/etc/fml/main.cf を読みこみ、
-fml_version 変数から使うべきライブラリのバージョンを決めます。
-例えば fml_vesrion が current-20010501 となっていたら
-/usr/local/lib/fml/current-20010501/ 以下にあるライブラリを使うといった
-具合です。
+/usr/local/libexec/fml/distributre (の実体は 
+/usr/local/libexec/fml/loader) は /usr/local/etc/fml/main.cf を読みこ
+み、fml_version 変数から使うべきライブラリのバージョンを決めます。例え
+ば fml_vesrion が current-20010501 となっていたら
+/usr/local/lib/fml/current-20010501/ 以下にあるライブラリを使うといっ
+た具合です。
 </para>
 
 <para>
-@INC を設定した後、
+@INC を再設定した後、
 loader は FML::Process::Switch をロードし、
 $0 を調べます。
-その名前から自分の仕事は配送処理だと知ります。
-配送処理なので
+その名前から自分の仕事は配送処理配送処理なので
 FML::Process::Distribute クラスをロードし、配送処理に移ります。
 </para>
 
@@ -68,11 +68,10 @@ etc/fml/defaults/バージョン/modules
 </para>
 
 <para>
-こういった処理は見かけ上
-FML::Process::Flow::ProcessStart() という関数が制御しています。
-ProcessStart() が引数として
-FML::Process::Distribute を渡され、
-FML::Process::Distribute を実行していくという流れになります。
+こういった処理は見かけ上 FML::Process::Flow::ProcessStart() という関数
+が制御しています。ProcessStart() が引数として FML::Process::Distribute 
+オブジェクトを渡され、FML::Process::Distribute オブジェクトを実行して
+いくという流れになります。
 </para>
 
 </sect1>
@@ -110,7 +109,7 @@ FML::Process::Mead       >-|    |
 	libexec/loader (wrapper)
 	Bootstrap() を実行する。
 	libexec/distribute などは、皆この loader へのシンボリックリンクです。
-	/usr/local/libexec/fml/ を参照して下さい。
+	/usr/local/libexec/fml/ 以下を参照して下さい。
 	</para>
    </listitem>
 
@@ -121,8 +120,9 @@ FML::Process::Mead       >-|    |
 	/usr/local/etc/fml/main.cf を読み込む。
 	読み込むと fml のバージョンが分かる。
 	main.cf の値から @INC を再設定しバージョン依存性を解決します。
-	default_config.cf はバージョン依存であるので、
-	ここでまずバージョンを評価しなければいけないことに注意してください。
+	default_config.cf はバージョン依存ですので、
+	設定ファイルを読み込む前に、
+	この段階でバージョンを評価しなければいけないことに注意してください。
 	</para>
 	</listitem>
 
@@ -146,7 +146,7 @@ FML::Process::Mead       >-|    |
 		<para>
 		Bootstrap2() および ProcessSwitch() を実行し、
 		配送用、コマンドメール用の各プロセスへ
-		制御を移します(分岐する)。
+		制御を移します。
 		この時は $0 から自分の名前を知り、
 		どのプロセスへ分岐すればいいのかを判断しています。
 		</para>
@@ -160,7 +160,7 @@ FML::Process::Mead       >-|    |
 		そして、プロセスをスタートさせます。
 
 		FML::Process::Flow の中に、
-		どのように fml プロセスを実行するかが
+		どのように fml8 プロセスを実行するかが
 		定義されています。大雑把には
 <screen>
 $process = new FML::Process::なにか;
@@ -216,7 +216,7 @@ ProcessSwitch()
 	hints を渡す？使う？ (CGI のみ？)	
 
 
-ProcessStart($obj,$args)
+ProcessStart($obj, $args)
 
    処理本体のスタート
 

@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.sgml,v 1.12 2003/04/15 14:51:37 fukachan Exp $
+   $FML: chapter.sgml,v 1.13 2004/10/06 09:07:35 fukachan Exp $
 -->
 
 
@@ -74,7 +74,7 @@ Mail::Message
 header -> body
 header -> preamble -> part1 -> part2 -> trailor (multipart)
 </screen>
-のようにオブジェクトが数珠つなぎのようなデータ構造を作ります。
+のようにオブジェクトが数珠つなぎになったデータ構造を作ります。
 </para>
 
 <para>
@@ -102,7 +102,7 @@ Mail::Message
 
 <para>
 2004 夏以降、&fml8; の配送システムはキュー管理システムのもとで動いてい
-ます。これにより再送処理が可能となりました。
+ます。これにより fml8 自力での再送処理が可能となりました。
 </para>
 
 </sect1>

@@ -1,5 +1,5 @@
 <!--
-   $FML: lock.sgml,v 1.3 2003/04/15 14:51:41 fukachan Exp $
+   $FML: lock.sgml,v 1.4 2004/10/06 09:07:39 fukachan Exp $
 -->
 
 
@@ -7,6 +7,11 @@
 	<title>
 	ロック
 	</title>
+
+<para>
+プロセス間の同期化はロックを用いて行ないます。fml8 でサポートされてい
+るロックメカニズムは flock(2) or lockf(2) を元にしたロック機構のみです。
+</para>
 
 
 <sect1 id="lock.overview">
@@ -65,7 +70,7 @@ FML/Credential.pm
 	</title>
 
 <para>
-*_maps をよぶまえには MUTEX ロックをする。いや、やりすぎかもしれません。
+*_maps をよぶまえには MUTEX でロックをする。いや、やりすぎかもしれません。
 </para>
 
 <para>

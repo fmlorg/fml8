@@ -1,5 +1,5 @@
 <!--
-   $FML: discussion.sgml,v 1.4 2003/04/15 14:51:42 fukachan Exp $
+   $FML: discussion.sgml,v 1.5 2004/10/06 09:07:40 fukachan Exp $
 -->
 
 
@@ -22,11 +22,11 @@
 	</title>
 
 <para>
-&fml4; では
+&fml4; には
 <screen>
    Mesg(*e, キーワード, デフォルトのメッセージ, 変換に使う引数);
 </screen>
-の形で呼び出します。
+の形で呼び出す関数がありました。
 </para>
 
 <para>
@@ -49,7 +49,7 @@ Mesg() は /usr/local/fml/messages/Japanese/ 以下にあるファイル群に対し
 <!-- ===================================================== -->
 <sect2>
 	<title>
-	&fmldevel; はどうするべきか？
+	&fmldevel; では、どうするべきか？
 	</title>
 
 <para>
