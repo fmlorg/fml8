@@ -2,6 +2,7 @@
 <screen>
 __parent_args        => HASH {
                         ARGV                 => ARRAY
+                        ___shared_memory___  => HASH
                         argv                 => ARRAY
                         cf_list              => ARRAY
                         curproc              => FML::Process::Distribute
@@ -16,6 +17,8 @@ __parent_args        => HASH {
                      }
 
 __print_style        => SCALAR
+
+__start_time         => SCALAR
 
 article              => HASH {
                         body                 => Mail::Message
@@ -33,7 +36,7 @@ incoming_message     => HASH {
                         message              => Mail::Message
                      }
 
-log_message_queue    => FML::IPC::Queue
+log_message_queue    => FML::Log::Print::Simple
 
 main_cf              => HASH {
                         _hints               => HASH
@@ -42,22 +45,29 @@ main_cf              => HASH {
                         default_command_line_option_config
                         default_config_cf
                         default_config_dir
+                        default_cui_menu
                         default_domain
+                        default_gui_menu
                         default_ml_home_prefix
                         default_module_config
                         default_paths_cf
                         domain_default_config
+                        domain_default_config_cf
                         exec_prefix
                         executable_prefix
                         fml_group
                         fml_owner
                         fml_version
+                        group_writable_config_dir
                         lib_dir
                         libexec_dir
                         local_lib_dir
+                        ml_home_prefix_maps
                         prefix
                         prefix_dir
+                        primary_ml_home_prefix_map
                         share_dir
+                        site_default_config_cf
                         virtual_maps
                      }
 
