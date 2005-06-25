@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML$
+# $FML: conv2sgml.pl,v 1.1.1.1 2004/04/02 04:39:48 fukachan Exp $
 #
 
 use strict;
@@ -30,6 +30,7 @@ while (<>) {
     }
 }
 
+print "\n<!-- 注意!!! 自動生成されたファイル、手動編集禁止 !!! -->\n\n";
 
 for my $i (sort {$a <=> $b} keys %$table) {
     print "<!-- $i -->\n";
