@@ -1,5 +1,5 @@
 <!--
-   $FML: errormail.sgml,v 1.5 2004/05/22 06:19:49 fukachan Exp $
+   $FML: errormail.sgml,v 1.6 2004/10/06 09:07:39 fukachan Exp $
 -->
 
 
@@ -64,9 +64,9 @@ Mail::Bounce は、エラーメールについて「どの MTA が生成したものか？」
 	</title>
 
 <para>
-$error_mail_analyzer_function_list にある関数名が利用し得るアルゴリズムです。
-現在は simple_count histgram という２つのアルゴリズムがあり、histgram 
-がデフォルトです。
+$error_mail_analyzer_function_select_list にある関数名が利用し得るアル
+ゴリズムです。現在は simple_count histgram という２つのアルゴリズムが
+あり、histgram がデフォルトです。
 </para>
 
 
