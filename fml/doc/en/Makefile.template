@@ -1,5 +1,5 @@
 #
-# $FML: Makefile.template,v 1.1 2003/07/24 15:37:33 fukachan Exp $
+# $FML: Makefile.template,v 1.2 2003/07/24 16:23:16 fukachan Exp $
 #
 
 TMP_DIR     = /tmp/sgmltools
@@ -12,6 +12,7 @@ TARGET_HTML_DIR  = ../../../../Documentation/en/$(BOOK)
 TARGET_TEXT_DIR  = ../../../../Documentation/en/text
 
 # programs (except for /bin/*)
+SGML_CC     = ../../../../fml/utils/bin/sgml_compile.sh
 UNIQ        = uniq
 PERL        = perl
 FIND        = find
@@ -36,7 +37,12 @@ ENV_VARS    = TMPDIR=$(TMP_DIR) SGML_CATALOG_FILES=$(SGML_CATALOG_FILES) COLS=72
 
 all: export
 
-html:
+html: _init
+	$(SGML_CC) $(SOURCE).sgml 2>&1 | $(UNIQ)
+	@ $(PERL) -i.bak $(FIX_CHARSET) $(SOURCE)/$(BOOK_ID).html
+	@ rm -f $(SOURCE)/@*/*.html.bak
+
+html.old: _init
 	$(ENV) $(ENV_VARS) $(HTMLify) -b html $(SOURCE).sgml 2>&1 | $(UNIQ)
 	@ $(PERL) -i.bak $(FIX_CHARSET) $(SOURCE)/$(BOOK_ID).html
 	@ rm -f $(SOURCE)/@*/*.html.bak
@@ -44,7 +50,13 @@ html:
 txt:
 	$(ENV) $(ENV_VARS) $(TEXTify) -b txt $(SOURCE).sgml 2>&1 | $(UNIQ)
 
-lynx:
+w3m: _init
+	$(SGML_CC) -m w3m $(SOURCE).sgml 2>&1 | $(UNIQ)
+
+lynx: _init
+	$(SGML_CC) -m lynx $(SOURCE).sgml 2>&1 | $(UNIQ)
+
+lynx.old: _init
 	$(ENV) $(ENV_VARS) $(TEXTify) -b lynx $(SOURCE).sgml 2>&1 | $(UNIQ)
 
 ps:
@@ -52,7 +64,7 @@ ps:
 
 clean:
 	$(FIND) . -type f -print |$(GREP) '~' |$(PERL) -nple unlink
-	rm -f book.txt
+	rm -f book.txt book.html
 	rm -fr $(SOURCE)
 
 export: _init html lynx
