@@ -54,7 +54,7 @@ Q: ML の削除
 
 Q: エラーメール自動解析ツールを設定する
 4: makefml mead ML を実行し、エイリアスも適宜、設定変更する。
-8: 不要、デフォルトで設定されている
+8: デフォルトで動作している。設定は不要。
 
 Q: fml 自体のテストをしてみる
 4: makefml test ML
@@ -218,7 +218,7 @@ Q: fml4 固有の設定ファイル変換( cf から config.ph を再生成する)
 4: makefml update-config ML
 	これは update、config-update、update-config.ph コマンドでも同じ。
 	処理の様子が表示される。	
-8: 設定ファイルは config.cf しかないため該当する操作は不要。
+8: 該当する操作は不要。設定ファイルは config.cf しかないため。
 
 
 #
@@ -292,35 +292,35 @@ Q: ml-admin.cgi の .htpasswd を設定する
 #
 Q: pgp コマンド WRAPPER
 4: makefml pgp ML
-8: 未実装
+8: fmlpgp
 
 Q: pgp2 コマンド WRAPPER
 4: makefml pgp2 ML
-8: 未実装
+8: fmppgp2
 
 Q: pgpe コマンド WRAPPER
 4: makefml pgpe ML
-8: 未実装
+8: fmlpgpe
 
 Q: pgpk コマンド WRAPPER
 4: makefml pgpk ML
-8: 未実装
+8: fmlpgk
 
 Q: pgps コマンド WRAPPER
 4: makefml pgps ML
-8: 未実装
+8: fmlpgps
 
 Q: pgpv コマンド WRAPPER
 4: makefml pgpv ML
-8: 未実装
+8: fmlpgpv
 
 Q: gpg コマンド WRAPPER
 4: makefml gpg ML
-8: 未実装
+8: fmlgpg
 
 Q: admin-auth (PGP, GPG KEY RING の操作)
 4: makefml admin-auth ML
-8: 未実装
+8: fmlpgp* コマンド --admin-command-mail-auth
 
 Q: admin-encrypt (PGP, GPG KEY RING の操作)
 4: makefml admin-encrypt ML
@@ -328,11 +328,11 @@ Q: admin-encrypt (PGP, GPG KEY RING の操作)
 
 Q: dist-auth (PGP, GPG KEY RING の操作)
 4: makefml dist-auth ML
-8: 未実装
+8: fmlpgp* コマンド --article-post-auth
 
 Q: dist-encrypt (PGP, GPG KEY RING の操作)
 4: makefml dist-encrypt ML
-8: 未実装
+8: fmlpgp* コマンド --article-post-encrypt
 
 
 #
@@ -340,11 +340,11 @@ Q: dist-encrypt (PGP, GPG KEY RING の操作)
 #
 Q: popfml (POP でMTAとMLをエミュレーションする fml) のセットアップをする
 4: makefml popfml
-8: そもそも popfml 自体が未実装
+8: fetchfml
 
 Q: POP のパスワードを設定する
 4: makefml pop_passwd
-8: そもそも popfml 自体が未実装
+8: いまは config.cf に記述している。
 
 
 #
@@ -370,7 +370,7 @@ Q: 配送モードの設定
 
 Q: makefml 中の変数を変更する
 4: makefml setq ML
-8: 対応するものがない
+8: -o オプション。
 
 Q: fml が動いている環境についてサマリを表示する
 4: makefml showconfig ML
