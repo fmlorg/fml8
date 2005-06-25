@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.11 2001/05/01 09:15:21 fukachan Exp $
+# $FML: Makefile,v 1.12 2004/04/07 11:01:01 fukachan Exp $
 #
 
 # targets
@@ -31,7 +31,7 @@ html:
 	@ $(_MAKE) html
 
 text:
-	@ $(_MAKE) lynx
+	@ $(_MAKE) w3m
 
 clean:
 	@ $(_MAKE) clean
