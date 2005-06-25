@@ -1,5 +1,5 @@
 <!--
-   $FML: mailmagazine.sgml,v 1.5 2004/06/23 15:07:16 fukachan Exp $
+   $FML: mailmagazine.sgml,v 1.6 2004/10/06 09:07:34 fukachan Exp $
 -->
 
 
@@ -12,13 +12,24 @@
 <warning>
 <para>
 ここではメールヘッダによる認証しか取り上げていませんが、
-安全のため、もっともっと厳しい設定をするべきです。
+安全のため、もっと厳しい設定をしてください。
 </para>
 
 <para>
 たとえば、そもそもインターネット側に SMTP インターフェイスがないような
 サーバの設定、およびサーバの設置場所の選定などを行なうべきです。
 </para>
+
+<para>
+fml8 単体で処理できる
+<link linkend="config.post.check.pgp">
+PGP 認証
+</link>
+のほうがよい気がしますが、
+メールマガジンの担当者が PGP/GPG を使える必要があります。 
+ここが PGP 話のネックです。
+</para>
+
 </warning>
 
 
@@ -35,6 +46,9 @@ member_maps を追加します。
 <screen>
 member_maps	=	$ml_home_dir/members-mailmag
 </screen>
+</para>
+
+<para>
 なお subscribe コマンドの利用方法はデフォルトのままで構いません。
 <footnote>
 <para>
@@ -44,13 +58,16 @@ fml 4.0 のように subscribe コマンドの仕方を変更するといったやり方
 それを使う方が、subscribe コマンドを変更するより簡単ですしね。
 </para>
 </footnote>
+というのは subscribe や unsubscribe は primary_member_map や
+primary_recipient_map に対する変更を加えるものだからです。一方、メンバー
+認証時の探索にはmember_maps や recipient_maps を使うのです。よって、こ
+れらの値をうまく設定すれば、こういった動作が可能というわけです。
 </para>
 
 <para>
-なお、この場合 subscribe したアドレスが
-members というファイルに追加されていきますが、
-このファイルは使わないという設定なので大丈夫です。
-気にはなるかも知れませんが…
+この場合 subscribe したアドレスが members というファイル
+(primary_member_map)に追加されていきますが、このファイルは認証時の探索
+に使われない設定なので良いわけです。気にはなるかも知れませんが…
 </para>
 
 <para>
@@ -60,7 +77,7 @@ primary_member_map	=	$tmp_dir/members-dummy
 </screen>
 などとメンバーリストの新規分追加先を変更して闇に葬り、
 membersには投稿可能なアドレスだけを書くというやり方もあります。
-このほうが &fml4; 風で分かりやすいでしょう。
+このほうが &fml4; 風で分かりやすいでしょうか。
 </para>
 
 </sect1>
@@ -78,7 +95,13 @@ membersには投稿可能なアドレスだけを書くというやり方もあります。
 </para>
 
 <para>
-設定は次のようになります。
+これにより、まず一度送信し、キューに入れ、キューの中身を確認したのちに
+配送をはじめることが出来ます。つまり間違った内容のメールを出す可能性が
+低くなりえます。
+</para>
+
+<para>
+設定は次のようにしてください。
 </para>
 
 <para>
@@ -92,7 +115,7 @@ smtp_servers = 127.0.0.1:2025
 </screen>
 こうしておくと、
 記事を投稿したさいには配送エラーになり、
-メールキューに落ちます。
+fml8 のメールキューに落ちます。
 </para>
 
 <para>
