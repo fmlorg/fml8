@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.ml_style.sgml,v 1.5 2004/10/06 09:07:34 fukachan Exp $
+   $FML: chapter.ml_style.sgml,v 1.6 2004/10/28 13:18:25 fukachan Exp $
 -->
 
 
@@ -15,6 +15,7 @@
 &sect.config.mailmagazine;
 &sect.config.post.permit.anyone;
 &sect.config.post.check.article.thread;
+&sect.config.post.check.pgp;
 &sect.config.ml.hier;
 
 <!-- procmail -->
