@@ -1,5 +1,5 @@
 <!--
-   $FML: post_check_article_thread.sgml,v 1.1 2004/10/28 13:18:25 fukachan Exp $
+   $FML: post_check_article_thread.sgml,v 1.2 2004/11/14 12:04:58 fukachan Exp $
 -->
 
 
@@ -21,8 +21,8 @@
 
 <para>
 そこで、2004/10/28 以降の article-post_restrictions には、特定の条件を
-満たせば短時間だけFrom:に関わらず投稿可能なオプション機能が追加されて
-います。
+満たせば短時間だけ From: のアドレス(認証に使うメールアドレス)に関わら
+ず投稿可能なオプション機能が追加されています。
 </para>
 
 <para>
@@ -41,8 +41,7 @@
 
 <para>
 設定例は次のようになります。
-check_article_thread が、このオプションです
-(なお check_article_thread より良い名称も募集中)。
+check_article_thread が、このオプションです。
 <screen>
 article_post_restrictions       =       reject_system_special_accounts
                                         check_article_thread
@@ -116,14 +115,23 @@ $article_post_article_thread_lifetime という変数で制御できるようにして
 
 <para>
 <screen>
-primary_member_map		=       $tmp_dir/members-dummy
+member_maps			=       $tmp_dir/members-thread-init
 
 article_post_restrictions       =       reject_system_special_accounts
                                         check_article_thread
+                                        permit_member_maps
                                         reject
+
 </screen>
 などと設定すると、疑似的に「スレッドをたてる小数の人(管理者) + スレッ
 ドへのリプライをする管理者以外の人たち」という運用になりますね。
+</para>
+
+<para>
+まず members-thread-init に登録されている人だけは
+いつでも投稿ができます。これ以外のメンバーは、通常は投稿を拒否されます。
+しかし、これらの投稿されたにリプライをすると check_article_thread により
+投稿が許されるというわけです。
 </para>
 
 <para>
@@ -133,7 +141,20 @@ article_post_restrictions       =       reject_system_special_accounts
 </para>
 
 <para>
-いや、このほうがモデレータより簡単で良い？
+いや、このほうがモデレータより簡単で良い感じですかね？
+</para>
+
+<para>
+また、ネタふりをするひとの認証も PGP のほうがより良いでしょう。
+<screen>
+member_maps			=       $tmp_dir/members-thread-init
+
+article_post_restrictions       =       reject_system_special_accounts
+                                        check_article_thread
+                                        check_pgp_signature
+                                        reject
+
+</screen>
 </para>
 
 </sect2>
