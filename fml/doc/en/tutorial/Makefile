@@ -1,5 +1,5 @@
 #
-# $FML$
+# $FML: Makefile,v 1.1 2003/07/24 15:37:34 fukachan Exp $
 # $jaFML: Makefile,v 1.11 2001/05/01 09:15:21 fukachan Exp $
 #
 
@@ -30,6 +30,9 @@ all: export
 
 html:
 	@ $(_MAKE) html
+
+text:
+	@ $(_MAKE) w3m
 
 clean:
 	@ $(_MAKE) clean
