@@ -1,5 +1,5 @@
 #
-# $FML: Makefile.template,v 1.2 2003/07/24 16:23:16 fukachan Exp $
+# $FML: Makefile.template,v 1.3 2005/06/25 10:03:37 fukachan Exp $
 #
 
 TMP_DIR     = /tmp/sgmltools
@@ -67,7 +67,7 @@ clean:
 	rm -f book.txt book.html
 	rm -fr $(SOURCE)
 
-export: _init html lynx
+export: _init html w3m
 	$(EXPORTER) $(SOURCE)/ $(TARGET_HTML_DIR)/
 	@ rsync -a ../../en/figures/*.gif $(TARGET_HTML_DIR)/
 	@ cp book.txt $(TARGET_TEXT_DIR)/$(BOOK).txt
