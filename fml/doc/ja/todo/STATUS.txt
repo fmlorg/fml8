@@ -5,13 +5,15 @@
 	  だできないかをリストアップしたものです。
 
 ○ 動作実績
-	perl 5.6.1   on NetBSD 1.5.x (1.5 stable)		*
+	perl 5.8.5   on NetBSD 2.0				*
+	perl 5.6.1   on NetBSD 2.0				*
 	perl 5.6.1   on NetBSD 1.6				*
-	perl 5.00503 on FreeBSD 4.3 STABLE
-	perl ?       on FreeBSD 4.6 RELEASE
-	perl 5.00503 on FreeBSD 4.7 RELEASE-p3
-	perl 5.00503 on FreeBSD 4.6.2 RELEASE			*
+	perl 5.6.1   on NetBSD 1.5.x (1.5 stable)		*
 	perl 5.6.1   on FreeBSD 5.2.1
+	perl 5.00503 on FreeBSD 4.6.2 RELEASE			*
+	perl 5.00503 on FreeBSD 4.7 RELEASE-p3
+	perl ?       on FreeBSD 4.6 RELEASE
+	perl 5.00503 on FreeBSD 4.3 STABLE
 	perl 5.6.1   on Turbolinux Server 8 (qmail)		*
 	perl 5.6.1   on Redhat Linux 7.2 (postfix)		*
 	perl 5.00503 on Redhat Linux 6.2 (sendmail8.11.6)	*
@@ -32,7 +34,7 @@ II部　fmlのセットアップ〜MLの作成
 
 4章　Unix上でのfmlのインストール
 
-	ユーザ root になり、configure そして make です。
+	ユーザ root になり、configure そして make install です。
 	つまり典型的なインストール手順を行なって下さい。
 		# ./configure
 		# make install
@@ -40,10 +42,10 @@ II部　fmlのセットアップ〜MLの作成
 	fml プロセスのユーザや使用するディレクトリは
 	configure のオプションで変更可能です。
 
-	* メールサーバの設定は 4.0 の場合と同様です。
+	メールサーバの設定は 4.0 の場合と同様です。
 
-	注意: ユーザ fml を作るだけでなく、きちんとユーザ fml さんの
-	      ホームディレクトリも作って下さい。
+	ユーザ fml を作るだけでなく、きちんとユーザ fml さんのホームディ
+	レクトリも作って下さい。
 
 	パッケージ作成者のかたへ: 
 		fml8 一式を / 以外の場所へインストールする際は、
@@ -51,69 +53,80 @@ II部　fmlのセットアップ〜MLの作成
 		# make install install_root=/tmp/dir
 	
 	[TODO] sendmail + smtpfeed
+
 	[TODO] MacOS X Server
 
 
 5章　Unix上でMLを作る
 
-	"makefml newml elena" を使って下さい。
+	makefmlコマンドを使って"makefml newml elena" などと実行します。
 	つまり fml 4 と使い方は一緒です。
-	ただし fml-devel では newml 時に設定用 CGI や、HTML 化された記事
-	をおくディレクトリ ~fml/public_html/ .. を用意する点が異なります。
+
+	ＭＬ作成時には postfix と qmail、sendmail、procmail の設定見本
+	を作ります。
 
 	[TODO] sendmail + smtpfeed
 	[TODO] MacOS X Server
 
-	* postfix と qmail、および sendmail procmail の見本を作っています。
+	なお fml8 では newml 時に設定用 CGI や、HTML 化された記事をお
+	くディレクトリ ~fml/public_html/ .. なども作成します。
 
-	* バーチャルドメインの扱い
-		まず nuinui.net 用のディレクトリの指定が必要です。
+	バーチャルドメインの扱いは fml4 と異なりバーチャルドメインを含
+	めて統一化した使い勝手となっています。
+
+	たとえば nuinui.net を例にとります。まず最初に nuinui.net 用の
+	トップディレクトリを指定します。
 
 		% makefml newdomain nuinui.net ディレクトリ
 
-	newml のさいには
+	newml の際には
 
 		% makefml newml elena@nuinui.net
 
 	のようにドメインつきの名前を指定して下さい。
 
-	注意:	main.cf の virtual_maps は obsolete で、
-		ml_home_prefix_maps になりました。
-		ml_home_prefix_maps が virtual_maps を含んでいるので
-		virtual_maps も一応つかえます。
+	注意: main.cf の古い変数名 virtual_maps は obsolete です。これ
+	は ml_home_prefix_maps になりました。ml_home_prefix_maps が
+	virtual_maps を含んでいるので virtual_maps も一応つかえます。
 
 
 6章　Windows 2000/NT4上でのfmlのインストール
 
 	[TODO]	Microsoft ものは全然手をつけていません。
 	[TODO]	Microsoft ものは IMail から手をつけるのがいいんじゃないかな
+	[TODO]	sendmail (NT版)を使ったＭＬ
 
-	[TODO]	pop based ML
-	[TODO]	imap based ML
-	[TODO]	sendmail (NT版)
+	fetchfml (POP/IMAP サーバからメールを取り出す MTA + MLエミュレー
+	ション)により、メールサーバを立ち上げなくとも自宅でＭＬを実行
+	すると行ったことが可能です。
+
+	POP によるＭＬの実行は実装済みですが、IMAP 版は未実装です。
 
 
-7章　アップグレード
+7章　fml8 のアップグレード
 
-	もう一度インストールをし、/etc/fml/main.cf の fml_version を編
-	集するだけです。main.cf の編集をするだけでアップグレードもダウ
-	ングレードも思いのままです。
+	もう一度 fml8 をインストールをし、/etc/fml/main.cf の 
+	fml_version を編集してください。これだけで任意のバージョンへの
+	アップグレードとダウングレードが可能です。つまり main.cf の編
+	集をするだけでアップグレードもダウングレードも思いのままです。
 
-	★ レシピ のアップグレードの節を見てね
+	main.cf の編集だけですので、fml8 のアップグレード/ダウングレー
+	ドの際にメールサーバの停止は不要です。
 
-	[TODO] メールサーバの停止？
-	[TODO] elena ＭＬのアップグレード？
-		ＭＬ固有のアップグレード tips なんてあるかな
+	ＭＬ固有のアップグレードに関する注意はないとおもいます。
+	さすがに特定のＭＬだけアップグレード/ダウングレードという方法
+	はありません。
 
 
 8章　Unix上でのCGIのセットアップ
 
-	デフォルトで CGI スクリプトが用意されます。
+	ＭＬ作成時にデフォルトで CGI スクリプトが用意されます。
+	無効の .htaccess で動作しないようになっています。
+
+	別途 WWW サーバの設定(CGI および認証の設定)が必要です。
 
 	[TODO] .htaccess の設定支援ツールがまだありません。
 		エディタでファイルを消すなり、編集するなりして下さい。
-
-	CGI からのエラーは __ERROR_.(キーワード)__ で croak() してる
 
 	[TODO] config 
 
@@ -123,16 +136,20 @@ II部　fmlのセットアップ〜MLの作成
 		文字を小さくした方がいいとか…の類。
 		＃だれか、やってぇ〜 ;)
 
+	[TODO] エラーフレームワーク
+		CGI からのエラーは __ERROR_.(キーワード)__ で croak() 
+		していますが、もう少し良いフレームワークがあるとよいです。
+
 
 9章　fmlの動作確認
 
-	これは fml 4.0 とほぼ同様の感じ。
+	これは fml 4.0 と同様とおもいます。
 
 
 III部　fmlのカスタマイズ
 10章　MLのメンバーができること
 
-	コマンドメールで利用可能なコマンドは
+	(一般ユーザが)コマンドメールで利用可能なコマンドは
 		$user_command_mail_allowed_commands
 		$anonymous_command_mail_allowed_commands 
 	という２つの変数で定義されています。後者は guide や subscribe
@@ -146,7 +163,18 @@ III部　fmlのカスタマイズ
 	誰でも使えるコマンドの例 ($anonymous_command_mail_allowed_commands)
 		guide info add subscribe chaddr confirm
 
-	＊これらは FML::Command::User:: クラスで定義されています。
+	これらは FML::Command::User:: クラスで定義されています。
+
+	リモート管理のためのコマンドは別のクラスになっています。
+	利用可能なコマンドリストは $admin_command_mail_allowed_commands で、
+	モジュールの実体は FML::Command::Admin 以下にあります。
+
+	なお、簡単なまとめおくりも可能です。
+
+		use_article_digest_function = yes / no
+
+	により使う/使わないが指定できます(デフォルトは yes)。
+
 
 	[TODO] get: ファイル数が多い場合、分割して送返(fml-devel 485)
 		reply_message() によろしくねーとしかしてないので、
@@ -155,7 +183,16 @@ III部　fmlのカスタマイズ
 11章　fml管理者ができること
 
 	makefml で操作可能な項目は FML::Command::Admin:: クラスの
-	コマンドすべてです。
+	コマンドすべてです。$admin_command_mail_allowed_commands は
+	コマンドメールによるリモート管理に制限を加えますが、CUI
+	(makefml/fml)の動作には制限を加えていません。
+
+	つまり CUI によるＭＬサーバ上での操作ではリモートコマンドより、
+	いろいろな操作が可能です。操作できる自由度は 
+
+		CUI (makefml/fml コマンド) > コマンドメール > GUI
+
+	の順に大きなものとなっています。
 
 		ＭＬの作成			OK
 		ＭＬの削除			OK
@@ -163,34 +200,40 @@ III部　fmlのカスタマイズ
 		登録しているアドレスの変更	OK
 		off/on				OK
 
-	簡単なまとめおくりはできます。
+	コマンド一覧: add add2active add2actives add2member
+	add2members add2recipient add2recipients addactive addactives
+	addadmin addmember addmembers addmoderator addpriv
+	addrecipient addrecipients adduser adminadd admindel bye
+	byeadmin byepriv chaddr changepassword check chpass config
+	deladmin delmoderator deluser digest digestoff digeston dir
+	edit error file flush flushq get htmlify initpass list log ls
+	mailq mergeml mget moderatoradd moderatordel newdomain newml
+	off on pass passwd password remove resign rmdomain rmml
+	signoff spool subscribe summary thread unsubscribe useradd userdel
 
-		use_article_digest_function = yes / no
+	ＭＬのカスタマイズはファイルの編集かメニュー操作(CUI/GUI)です。
+	メニューは実装途中です。
 
-		により使う/使わないが指定できます(yes by default)。
+	リモート管理は現在パスワード認証とPGP認証が利用可能です。
 
 	[TODO]	まとめおくり (fml 4 のような複雑なバージョン)
 
-	[TODO]	リモート管理
-			現在パスワード認証だけできます。
-			その他の認証方式は未実装
+		まとめおくりは、簡易バージョンが動いています。
 
-	[TODO]	ＭＬのカスタマイズはファイルの編集あるのみ
+		受信者ごとに時刻や圧縮形式を変えるといったことは出来ま
+		せん。ただ fml 1 の設計された時代と環境が大きく異なる
+		現代では、こんな仕様はオーバースペックで不要なのではな
+		いかとも思います。そういうわけで後回しです。
 
-		注意: 当然リモートコマンドより、いろいろなことができます。
+	[TODO]	rmml したＭＬをふっかつさせることは？
 
+		renew コマンドでしょうか？
 
-	[TODO]	rmml したＭＬをふっかつさせることは？ → renew コマンドだ
+		動作は「一番日付が最近の @xxx.yyyymmdd を探して戻す」
+		となります。しかしながら aliases を復活させる問題があ
+		るので、もう一度 newml もする必要があるだろう…
 
-		一番日付が最近の @xxx.yyyymmdd を探して、そこから戻す。
-
-		だが、
-
-		aliases を復活させる問題があるので、もう一度 newml
-		もする必要があるだろう… うむ、renew をつくろう
-
-
-	[TODO]	期限つき subscribe
+	[TODO]	期限つきのＭＬ入会 subscribe
 
 		subscribe -> 一カ月すると削除される？
 
@@ -199,7 +242,10 @@ III部　fmlのカスタマイズ
 		o.k. so, how to kick off removal process ?
 
 
-	[TODO]	期限つき newml
+	[TODO]	期限つきのＭＬ作成
+
+
+	[TODO]	期限つきの自動ＭＬ作成 (途中まで実装済み)
 
 		libexec/faker
 			時刻を FML::User::DB でどっかに記録
@@ -216,51 +262,78 @@ III部　fmlのカスタマイズ
 
 12章　fmlの設定ファイルを変更する
 
-	すべてのＭＬに同じ設定を強制する (fml4 の site_force.ph)
-		/etc/fml/site_default_config.cf
+	各ＭＬの設定変更方法は、各ＭＬのホームディレクトリにある 
+	config.cf を編集してください。フォーマットは Postfix 風です。
 
-	各ＭＬの設定変更方法
-		各ＭＬのホームディレクトリにある config.cf を編集して
-		ください。
+		key = value
 
-	[TODO] メニューでの操作  (未実装)
-		設定支援ツールはまだありません。
+	etc/fml/site_default_config.cf は、そのサーバの上で動いている
+	すべてのＭＬに同じ設定を強制します。これは fml4 の 
+	site_force.ph 相当です。
 
-	[TODO]	fml4 の site_init.ph にあたるものは？
+	メニューによる設定支援ツール(CUI/GUI)は実装途中です。まだ実験
+	的なものしか動きません。
+
+	[TODO]	fml4 の site_init.ph にあたるものはありません。が必要？
 
 		って必要なのかなぁ…？？？
 
 
 13章　MLのスタイルのカスタマイズ (ケーススタディ)
 
-	投稿の制御: $article_post_restrictions で制御
-		
-	コマンドメールの制御: $command_mail_restrictions で制御
+	投稿の制御は $article_post_restrictions で制御します。
+	restrictions という名前から分かる通り Postfix 的な考え方の制御
+	方法を採用しています。
 
-	コマンドメールの禁止:
-		$use_command_mail_function を no にすると
-		コマンドメールの機能自体を停止できる。
+	例: デフォルト (メンバーであれば投稿可能）
+		article_post_restrictions =
+				reject_system_special_accounts
+				permit_member_maps
+				reject
 
-		$command_mail_restrictions で reject とだけ指定するも可。
+	例: PGP 電子署名で認証
 
-	誰でも投稿可能:
-		$article_post_restrictions で permit_anyone
+		article_post_restrictions =
+				reject_system_special_accounts
+				check_pgp_signature
+				reject
 
-	メールマガジン型:
-		$member_maps から $primary_member_map をはずす
+	例: 誰でも投稿可能
+		article_post_restrictions = permit_anyone
+
+
+	(一般ユーザからの)コマンドメールにたいする制限は
+	$command_mail_restrictions で制御します。
+
+	コマンドメールを禁止するには $use_command_mail_function を no 
+	にすればよいです。これはコマンドメールの機能自体を停止します。
+	コマンドメールを受けると受信はしますが、そのまま無視します。
+
+	$command_mail_restrictions で reject とだけ指定してもコマンド
+	メールの禁止になりますが、この場合コマンドメールが行なわれてし
+	まいます。
+
+
+	restrictionsと同様にメンバーリストも member_maps のように
+	複数かけることが前提です。*_restrictions と *_maps の細かな定
+	義を使うと特別なハックなしでもいろいろなことができます。
+
+	例: メールマガジン型
+		$member_maps から $primary_member_map をはずす。
 		$member_maps に投稿可能なメンバーのリストを追加
-		さらに MTA の設定で IP アドレス制限などかけてね
+		さらに MTA の設定で IP アドレス制限などかけてね。
 
-	階層化されたＭＬ:
-		 $member_maps $recipient_maps をよろしく書く
+		投稿者を PGP 認証で制限するのもよいことです。
 
-	procmail:
-		4.0 と同様だ。
-		makefml newml が見本を作るので参考にしてね。
+	例: 階層化されたＭＬ:
+		 $member_maps $recipient_maps をよろしく書くだけです。
 
-	[TODO] デフォルトのポリシーの説明 (D)C
+	例: procmail によるＭＬ
+		makefml newml が見本を作るので、それを使うだけです。
 
-	[TODO] 自動とか手動登録とかをどこで指定するの？
+
+
+	[TODO] 自動登録/手動登録をどこで指定するの？デフォルトは自動
 
 		うーん、コマンドごとに指定できるようにしないとか？
 
@@ -268,12 +341,12 @@ III部　fmlのカスタマイズ
 		$chaddr_command_mode	=	auto / manual
 		$unsubscribe_command_mode =	auto / manual
 
-	[TODO] 自動登録の confirmation 以外のモード 
+	[TODO] 自動登録の confirmation 以外のモードは必要か？ 
 
-		今はデフォルトで自動登録ですわ :-)
-		まだ confirmation タイプしかありません。
+		今はデフォルトで confirm つきの自動登録です。
+		いまは confirmation タイプしかありません。
 
-	[TODO] コマンドメール（の手動登録モード）
+	[TODO] コマンドメールによる手動登録
 
 		confirmation は fml8 で、登録作業は makefml コマンドで
 
@@ -308,7 +381,7 @@ III部　fmlのカスタマイズ
 
 	Accept-Language: X-Accept-Language: Content-Type: 
 	などを見て、返すメッセージの言語を決めています。
-	曖昧な時は複数言語で返します(mime/multipartになります)。
+	曖昧な場合、複数の言語で返します(mime/multipartになります)。
 
 	[TODO] site local のディレクトリを決める
 		/etc/fml/ 以下?
@@ -389,14 +462,14 @@ III部　fmlのカスタマイズ
 
 	[DONE] 共通鍵暗号認証
 
-	[TODO] 公開鍵暗号認証
+	[DONE] 公開鍵暗号認証 (電子署名が正しいなら認証OK)
 
 	[TODO] "approve パスワード コマンド"型構文サポート
 
 
 19章　MLの暗号化 (配送時の暗号化)
 
-	[TODO] 配送時の暗号化 共通鍵暗号認証 ???
+	[TODO] 配送時の暗号化 共通鍵暗号認証
 
 	[TODO] 配送時の暗号化 公開鍵暗号認証
 
@@ -607,4 +680,4 @@ VIII部　付録
 
 
 ---
-$FML: STATUS.txt,v 1.35 2004/05/02 00:14:17 fukachan Exp $
+$FML: STATUS.txt,v 1.36 2004/06/25 04:11:36 fukachan Exp $
