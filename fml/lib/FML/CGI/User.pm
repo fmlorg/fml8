@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: User.pm,v 1.12 2005/06/04 08:12:15 fukachan Exp $
+# $FML: User.pm,v 1.13 2005/06/04 08:51:28 fukachan Exp $
 #
 
 package FML::CGI::User;
@@ -150,7 +150,7 @@ sub _get_address_list
     my $config = $curproc->config();
     my $list   = $config->get_as_array_ref( $map );
 
-    eval q{ use FML::User::Control;};
+    use FML::User::Control;
     unless ($@) {
 	my $obj = new FML::User::Control;
 	return $obj->get_user_list($curproc, $list);
