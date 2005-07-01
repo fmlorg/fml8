@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.258 2005/06/04 01:35:24 fukachan Exp $
+# $FML: Kernel.pm,v 1.259 2005/06/04 08:53:48 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -2704,13 +2704,16 @@ sub tmp_files_clean_up
 	}
     }
 
+    # XXX ONLY WHEN VALID $ml_home_dir EXISTS.
     # clean up tmp_dir.
-    my $channel = "clean_up_tmp_dir";
-    if ($curproc->is_event_timeout($channel)) {
-	my $config  = $curproc->config();
-	my $tmp_dir = $config->{ tmp_dir };
-	$curproc->remove_too_old_files_in_dir($tmp_dir);
-	$curproc->event_set_timeout($channel, time + 24*3600);
+    if ($curproc->_is_valid_ml_home_dir()) {
+	my $channel = "clean_up_tmp_dir";
+	if ($curproc->is_event_timeout($channel)) {
+	    my $config   = $curproc->config();
+	    my $tmp_dir  = $config->{ tmp_dir };
+	    $curproc->remove_too_old_files_in_dir($tmp_dir);
+	    $curproc->event_set_timeout($channel, time + 24*3600);
+	}
     }
 }
 
@@ -2725,22 +2728,47 @@ sub incoming_message_queue_clean_up
     my $config    = $curproc->config();
     my $channel   = 'mail_incoming_queue_clean_up';
 
-    # 1. remove incoming queue files.
-    # 2. remove queues marked as removal in incoming/ queue. 
-    #    XXX cond. 1 must include cond. 2,
-    #    XXX but we try again to ensure garbage collection.
-    $curproc->incoming_message_remove_queue();
+    # XXX ONLY WHEN VALID $ml_home_dir EXISTS.
+    if ($curproc->_is_valid_ml_home_dir()) {
+	# 1. remove incoming queue files.
+	# 2. remove queues marked as removal in incoming/ queue. 
+	#    XXX cond. 1 must include cond. 2,
+	#    XXX but we try again to ensure garbage collection.
+	$curproc->incoming_message_remove_queue();
 
-    # 3. remove too old incoming queue files.
-    if ($curproc->is_event_timeout($channel)) {
-	my $fp = sub { $curproc->log(@_);};
+	# 3. remove too old incoming queue files.
+	if ($curproc->is_event_timeout($channel)) {
+	    my $fp = sub { $curproc->log(@_);};
 
-	use Mail::Delivery::Queue;
-	my $queue_dir = $config->{ mail_queue_dir };
-	my $queue     = new Mail::Delivery::Queue { directory => $queue_dir };
-	$queue->set_log_function($fp);
-	$queue->clean_up();
-	$curproc->event_set_timeout($channel, time + 24*3600);
+	    use Mail::Delivery::Queue;
+	    my $queue_dir = $config->{ mail_queue_dir };
+	    my $queue     = new Mail::Delivery::Queue { 
+		directory => $queue_dir,
+	    };
+	    $queue->set_log_function($fp);
+	    $queue->clean_up();
+	    $curproc->event_set_timeout($channel, time + 24*3600);
+	}
+    }
+}
+
+
+# Descriptions: check if the valid ml_home_dir exists?
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: NUM
+sub _is_valid_ml_home_dir
+{
+    my ($curproc)   = @_;
+    my $config      = $curproc->config();
+    my $ml_home_dir = $config->{ ml_home_dir };
+    my $cf          = File::Spec->catfile($ml_home_dir, "config.cf");
+
+    if (-d $ml_home_dir && -w $ml_home_dir && -f $cf && -w $cf) {
+	return 1;
+    }
+    else {
+	return 0;
     }
 }
 
