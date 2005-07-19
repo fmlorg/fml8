@@ -1,5 +1,5 @@
 <!--
-   $FML: preface.sgml,v 1.22 2004/12/23 15:01:14 fukachan Exp $
+   $FML: preface.sgml,v 1.23 2005/06/25 15:11:27 fukachan Exp $
 -->
 
 
@@ -122,14 +122,14 @@ bug tracking system を提供して欲しいし、bug tracking system もサーチエ
 </para>
 
 <para>
-<ulink url="http://www.fml.org/software/fml-devel/">
-http://www.fml.org/software/fml-devel/
+<ulink url="http://www.fml.org/software/fml8/">
+http://www.fml.org/software/fml8/
 </ulink>
 </para>
 
 <para>
-<ulink url="ftp://ftp.fml.org/pub/fml-devel/">
-ftp://ftp.fml.org/pub/fml-devel/
+<ulink url="ftp://ftp.fml.org/pub/fml8/">
+ftp://ftp.fml.org/pub/fml8/
 </ulink>
 </para>
 
