@@ -1,5 +1,5 @@
 <!--
-   $FML: fml.sgml,v 1.7 2004/12/23 15:00:32 fukachan Exp $
+   $FML: fml.sgml,v 1.8 2005/06/25 15:11:36 fukachan Exp $
 -->
 
 
@@ -97,10 +97,9 @@
 	<link linkend="usage.user">
 	コマンドメール(一般ユーザ)
 	</link>
-	:
-		メンバーの登録/削除/変更(chaddr)、
-		リモート管理者の登録/削除、
-		ログを見る、
+	メンバーの登録/削除/変更(chaddr)、
+	サマリを見る、
+	過去の記事を取り寄せる。
 	</para>
     </listitem>
 
