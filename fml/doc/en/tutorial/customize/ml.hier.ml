@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: ml.hier.ml,v 1.1 2003/08/02 01:19:10 fukachan Exp $
    $jaFML: ml.hier.ml,v 1.1 2002/07/29 12:16:19 fukachan Exp $
 
 -->
@@ -44,6 +44,15 @@ anybody. If so set
 <screen>
 post_restrictions	=	permit_anyone
 </screen>
+</para>
+
+<para>
+This example is simplest. It is easy to use this style.
+</para>
+
+<para>
+If you need to use SQL e.g. MySQL, it is modern. 
+It needs a lot of preparions and operation know-how.
 </para>
 
 </sect1>

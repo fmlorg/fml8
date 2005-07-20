@@ -1,5 +1,5 @@
 <!--
-   $FML: create.sgml,v 1.1 2003/07/28 15:20:18 fukachan Exp $
+   $FML: create.sgml,v 1.2 2003/08/03 01:47:17 fukachan Exp $
    $jaFML: create.sgml,v 1.2 2003/04/15 14:51:42 fukachan Exp $
 -->
 
@@ -28,7 +28,8 @@ framework. Here the program name is "fmlsch" and the cgi is
 	</title>
 
 <para>
-Add fmlsch into $bin_programs in fml/etc/install.cf.in.
+Prepare fml/bin/fmlsch.in, 
+add fmlsch into $bin_programs in fml/etc/install.cf.in.
 Run configreu to re-create fml/etc/install.cf.
 </para>
 
@@ -42,7 +43,7 @@ Run configreu to re-create fml/etc/install.cf.
 
 
 <para>
-Write fml/lib/Calender/Lite.pm as the main library of fmlsch.
+Write fml/lib/FML/Demo/Calendar.pm as the main library of fmlsch.
 </para>
 
 <para>
@@ -65,9 +66,9 @@ Also, install Date-Calc if your system has not it.
 	</title>
 
 <para>
-Calender::Lite works mainly but we build the machanism how &fml8;
+FML::Demo::Calendar works mainly but we build the machanism how &fml8;
 loads and runs it. We modify FML::Process class for &fml8; bootloader
-to call Calender::Lite.
+to call FML::Demo::Calendar.
 </para>
 
 <para>

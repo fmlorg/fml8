@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: autoreply.sgml,v 1.1 2003/07/26 07:31:27 fukachan Exp $
    $jaFML: autoreply.sgml,v 1.2 2003/01/05 08:00:59 fukachan Exp $
 -->
 
@@ -10,14 +10,14 @@
 
 <para>
 Modify delivery process ( libexec/distribute ) to send back
-/etc/fml/help file.  For example, when a user can send anything to
+/some/where/help file.  For example, when a user can send anything to
 help@fml.org, fml sends back help file to the sender.
 </para>
 
 <para>
 In this case, set at config.cf
 <screen>
-post_restrictions = permit_anyone
+article_post_restrictions = permit_anyone
 </screen>
 and define the following hook after =cut line.
 <screen>
@@ -25,15 +25,25 @@ $distribute_run_start_hook = q{
 
         $curproc->reply_message( {
                 type        => "text/plain; charset=iso-2022-jp",
-                path        => "/etc/fml/help",
+                path        => "/some/where/help",
                 filename    => "help",
                 disposition => "help example",
         });
 
-        $curproc->refuse_further_processing();
+	$curproc->stop_this_process();
 
 };
 </screen>
+The last
+<screen>
+$curproc->stop_this_process();
+</screen>
+method of &fml8; corresponds to the statement
+<screen>
+$DO_NOTHING = 1;
+</screen>
+of &fml4;.
+After this statement, the normal processing stops.
 </para>
 
 </sect1>

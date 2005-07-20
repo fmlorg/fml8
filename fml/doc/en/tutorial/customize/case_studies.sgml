@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: case_studies.sgml,v 1.1 2003/07/26 07:31:27 fukachan Exp $
    $jaFML: case_studies.sgml,v 1.4 2003/04/15 14:51:36 fukachan Exp $
 -->
 
@@ -10,15 +10,22 @@
 	</title>
 
 <para>
+Edit /usr/local/etc/fml/site_default_config.cf to apply the effect to
+all ML's.
+</para>
+
+<para>
 no tag of subject. 
 <footnote>
 <para>
-This is default in &fml8;.
+This is default in &fml8; (default site_default_config.cf includes
+this configuration).
 </para>
 </footnote>
 <screen>
 article_header_rewrite_rules	-=	rewrite_article_subject_tag
 </screen>
+This means header rewrite rules minus "adding subject tag" operation.
 </para>
 
 <para>
@@ -26,18 +33,23 @@ Prepend office# at X-ML-Name:. That is,
 mlname is changed to office#mlname.
 <screen>
 # office#$mlname
-x_ml_name                       =       office#$ml_name
+outgoing_mail_header_x_ml_name          =       office#$ml_name
 </screen>
 </para>
 
 <para>
-Anybody can post to this ML since customers send mail to here.
+Anybody can post to this ML since customers send mails to this address.
 <screen>
 post_restrictions		=	permit_anyone
 </screen>
-Disale almost all filters.
+In this case, anybody including system special accounts e.g. root,
+postmaster can post.
+</para>
+
+<para>
+Disale almost all filters since a lot of customer messsages looks
+something wrong.
 <screen>
-use_body_filter				=	no
 use_article_body_filter			=	no
 use_article_non_mime_filter		=	no
 use_article_mime_component_filter	=	no
@@ -56,10 +68,11 @@ spool_type			=	subdir
 <para>
 disable command mail.
 <screen>
-use_command_mail_program	=	no
+use_command_mail_function	=	no
 </screen>
-To enable the use of command mail by CGI, we use this variable.
-It is recommended to remove proper alias entries if could.
+If somenoby want to use command mail (e.g. by CGI), we use this
+variable. It is recommended to remove proper alias entries if could to
+ensure the command mail is prohibited.
 </para>
 
 </sect1>
@@ -71,7 +84,8 @@ It is recommended to remove proper alias entries if could.
 	</title>
 
 <para>
-Edit /etc/fml/site_default_config.cf and reflects all ML's.
+Edit /usr/local/etc/fml/site_default_config.cf to apply the effect to
+all ML's.
 </para>
 
 <para>

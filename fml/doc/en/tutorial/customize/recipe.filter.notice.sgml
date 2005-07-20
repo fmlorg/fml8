@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: recipe.filter.notice.sgml,v 1.1 2003/07/26 07:31:28 fukachan Exp $
    $jaFML: recipe.filter.notice.sgml,v 1.2 2003/04/15 14:51:37 fukachan Exp $
 -->
 
@@ -21,7 +21,7 @@ use_article_filter_reject_notice	=	yes
 article_filter_reject_notice_recipient	=	maintainer sender
 </screen>
 When the filter system rejects the request,
-fml sends back it to the ML maintainer not the sender.
+fml sends back it to both the ML maintainer and the sender.
 </para>
 
 

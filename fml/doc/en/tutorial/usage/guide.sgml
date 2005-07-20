@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: guide.sgml,v 1.1 2003/07/26 04:29:13 fukachan Exp $
    $jaFML: guide.sgml,v 1.1 2002/07/28 12:20:20 fukachan Exp $
 -->
 
@@ -15,6 +15,11 @@ guide
 </screen>
 to elena-ctl@fml.org address.
 fml sends back the guide file to the sender.
+</para>
+
+<para>
+If a file named "guide" is found at $ml_home_dir, it is used as a
+template.
 </para>
 
 </sect1>

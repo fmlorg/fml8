@@ -1,9 +1,39 @@
 <!--
-    $FML$
+    $FML: queue.sgml,v 1.1 2003/08/02 01:19:11 fukachan Exp $
     $jaFML: queue.sgml,v 1.3 2003/04/15 14:51:37 fukachan Exp $
 -->
 
-<sect1 id="message.reply">
+<sect1 id="message.queue.incoming">
+	<TITLE>
+	incoming queuing
+	</TITLE>
+
+<para>
+MTA kicks off a fml process. It reads a message from STDIN.
+</para>
+
+<para>
+The fml process reads a message once and write it onto the hard disk
+(write it into the incoming queue). After the queuing succeeded, the
+process starts to analyze a message. For this logic, the original mail
+is saved after that.
+</para>
+
+<para>
+If the queuing fails, call exit(EX_TEMPFAIL). In almost cases,
+exit(75).  If MTA receives this exit code, MTA tries to deliver again
+later.
+</para>
+
+<para>
+Mail::Delivery::Queue class processes the incoming queue.
+The queus is removed when the process ends.
+</para>
+
+</sect1>
+
+
+<sect1 id="message.queue.outgoing">
 	<TITLE>
 	fml sends back a mail message
 	</TITLE>
@@ -14,14 +44,20 @@ mail queue. Later FML::Process::QueueManager handles the real delivery
 process.
 </para>
 
+<para>
+article delivery processing is a little diffferent but based on
+queueing by Mail::Delivery::Queue. If someting error occurs in
+delivery, another fml process tries to deliver it later.
+</para>
+
 
 <sect2>
 	<title>
-	How to write
+	Coding in &fml8; sources.
 	</title>
 
 <para>
-use like this:
+Code like this to send back a message:
 <screen>
 $curproc->reply_message( "you are not a ML member." );
 </screen>
@@ -60,9 +96,9 @@ $curproc->reply_message( {
 	</TITLE>
 
 <para>
-FML::Process::QueueManager pick up one queue from the queue directory.
+FML::Process::QueueManager picks up one queue from the queue directory.
 Mail::Message parses it.
-Mail::Delivery process the real delivery via FML::Mailer.
+Mail::Delivery processes the real delivery via FML::Mailer.
 <screen>
 Mail::Delivery::Queue
    |
@@ -79,6 +115,10 @@ Mail::Delivery
 </screen>
 </para>
 
+<para>
+In manipulating queue, we should lock the target queue by flock(2).
+</para>
+
 </sect1>
 
 
@@ -92,15 +132,18 @@ The queue directory consists of the following plural directories:
 <screen>
 new/
 active/
+incoming/
 deferred/
 info/sender/
 info/recipients/
+info/transport/
 </screen>
-info/ stores envelope information
+info/ stores envelope information.
+incoming/ holds incoming queue, others hold outgoing information.
 </para>
 
 <para>
-In creating a new queue file, 
+In creating a new outgoing queue file, 
 make a temporary file in new/ once.
 When the delivery preparation is ended, 
 move the queue from new/ to active/.
@@ -115,7 +158,7 @@ Hence files under active/ is delivery ready.
 <para>
 When we need to handle the specific queue file,
 use lock()/unlock() method for each $queue_id object.
-lock algorithm is based on flock(2) for the file.
+The lock algorithm is based on flock(2) for the file.
 </para>
 </sect2>
 

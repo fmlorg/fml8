@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: chapter.onhost.sgml,v 1.1 2003/07/26 04:29:12 fukachan Exp $
    $jaFML: chapter.onhost.sgml,v 1.8 2003/04/15 14:51:46 fukachan Exp $
 -->
 
@@ -10,13 +10,26 @@
 
 
 <para>
-On the host which serves ML driver, 
-you can use CUI and edit all configuration files as you like.
-It implies you are the greatest administrator :)
+On the host which serves ML driver, you can use CUI (makefml and fml)
+and edit all configuration files as you like.  It implies you are the
+greatest administrator :)
+</para>
+
+<para>
+makefml of fml8 is same as fml4 as could as possible to preserve
+compatibility.
+</para>
+
+<para>
+See
+<link linkend="changes.cui">
+<xref linkend="changes.cui">
+</link>
+on the detail of the difference.
 </para>
 
 
-<sect1>
+<sect1 id="usage.onhost.priviledge">
 	<title>
 	On the host
 	</title>
@@ -26,14 +39,17 @@ You need no confirmation in using makefml.
 </para>
 
 <para>
-Person who can login the host of mailing list server has all
-priviledge for all ML's on the host.
-So, He/She can edit all configuration files.
+Person who can login the host of mailing list server has priviledge
+for all ML's on the host.  So, He/She can edit all configuration
+files.
+</para>
+
+<para>
 But He/She may do wrong operations.
 </para>
 
 <para>
-To avoid careless miss operations, in usual cases you should use CUI
+To avoid careless wrong operations, in usual cases you should use CUI
 (makefml or fml) to configure fml.  Of course you can edit files
 directly if you can understand fml structures. By default we recommend
 you should use CUI even on the host.
@@ -57,9 +73,10 @@ Please either as you like.
 	</title>
 
 <para>
-&fmldevel; provides command for each function.  Except for some
-special cases, we should unify all functions into makefml/fml command
-since such commands can be shared among CUI, GUI and commmnd mail.
+&fmldevel; provides a different command for each function. Its policy
+makes the number of commands infinite. So, except for some special
+cases, we should unify all functions into makefml/fml command since
+such commands can be shared among CUI, GUI and commmnd mail.
 </para>
 
 
@@ -69,7 +86,7 @@ since such commands can be shared among CUI, GUI and commmnd mail.
 	</title>
 
 <para>
-We should implement sub-command of makefml when some operation may
+We should implement sub-command of makefml/fml when some operation may
 modify the specific ML.
 </para>
 
@@ -82,7 +99,7 @@ modify the specific ML.
 	</title>
 
 <para>
-you should implement it as a makefml command since it is related to
+We should implement it as a makefml/fml command since it is related to
 the specific ML.
 </para>
 
@@ -98,7 +115,7 @@ the specific ML.
 If the data is not related to the specific ML, for example,
 see the module manual, aliases on the host, 
 we implement specific commands other than makefml/fml.
-This command begins with ^fml.
+This command name begins with "fml" prefix.
 <screen>
 fmladdr	 [-n]
 fmlalias [-n]
@@ -112,12 +129,25 @@ fmlconf  [-n] ML
 
 <sect2>
 	<title>
+	ML specific but a command wrapper
+	</title>
+
+<para>
+PGP / GPG related command (e.g. fmlpgp) is very command speicific.
+So, it is difficult to incorporate them into makefml/fml.
+We implement it as another command such as fmlpgp, fmlgpg, ...
+</para>
+
+</sect2>
+
+<sect2>
+	<title>
 	misc
 	</title>
 
 <para>
-we implement specific commands other than makefml/fml.
-This command begins with ^fml.
+We implement specific commands other than makefml/fml.
+This command name begins with fml prefix.
 </para>
 
 <para>
@@ -130,6 +160,31 @@ fmlhtmlify [-I DIR] $src_dir $dst_dir
 
 </sect2>
 
+
+</sect1>
+
+
+<sect1 id="usage.command.line.options">
+	<title>
+	Common Command Line Options
+	</title>
+
+<para>
+Programs under libexec/ and bin/ supports 
+the following common command line options.
+<screen>
+--debug
+--help
+-c file
+-o key=value
+</screen>
+Use -c to specify non default main.cf path.
+-o overwrites configuration variables.
+Plural -o are acceptable.
+<screen>
+-o key1=value1 -o key2=value2
+</screen>
+</para>
 
 </sect1>
 

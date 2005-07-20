@@ -1,0 +1,96 @@
+<qandaentry>
+
+<question>
+<para>
+HOOK to reject a message with danger attachment
+</para>
+</question>
+
+<answer>
+
+<para>
+&fml8; analyzed the incoming message firstly and creates a chain of
+Mail::Message objects on the memory. It is easy for &fml8; to analyze
+the chain to check the message content.
+</para>
+
+<para>
+The following examples uses hooks.  In all cases, if matched, call
+stop_this_process() to stop further processing. Pay attension that
+these examples do not try to return error messsages.
+</para>
+
+<para>
+If you need to return error messages, use reply_message(). It is
+better not to return it since this message must be a virus or a spam.
+</para>
+
+<para>
+Here is an example to check attachment keywords e.g. .exe in mesages.
+Before &fml8; 2004/12/08 current, it follows:
+<screen>
+$distribute_verify_request_start_hook = q{
+    my $msg = $curproc->incoming_message() || undef;
+    for (my $m = $msg; $m ; $m = $m->{ next } ) {
+	my $hs = $m->message_fields() || '';
+	if ($hs =~ /filename=.*\.(com|vbs|vbe|wsh|wse|js|exe|doc|rtf)/o) {
+	    $curproc->log("attachment \.$1 found");
+	    $curproc->stop_this_process();
+	}
+    }
+};
+</screen>
+After &fml8; 2004/12/08 current, it follows:
+<screen>
+$distribute_verify_request_start_hook = q{
+    my $msg  = $curproc->incoming_message() || undef;
+    my $list = $msg->message_chain_as_array_ref();
+    for my $m (@$list) {
+	my $hs = $m->message_fields() || '';
+	if ($hs =~ /filename=.*\.(com|vbs|vbe|wsh|wse|js|exe|doc|rtf)/o) {
+	    $curproc->log("[new] attachment \.$1 found");
+	    $curproc->stop_this_process();
+	}
+    }
+};
+</screen>
+</para>
+
+<para>
+Another solution is to trap
+<screen>
+Content-Disposition: attachment;
+</screen>
+to detect the existence of attachments. 
+Before &fml8; 2004/12/08 current, it follows:
+<screen>
+$distribute_verify_request_start_hook = q{
+    my $msg = $curproc->incoming_message() || undef;
+    for (my $m = $msg; $m ; $m = $m->{ next } ) {
+	my $hs = $m->message_fields() || '';
+	if ($hs =~ /Content-Disposition:.*attachment;/o) {
+	    $curproc->log("attachment \.$1 found");
+	    $curproc->stop_this_process();
+	}
+    }
+};
+</screen>
+After &fml8; 2004/12/08 current, it follows:
+<screen>
+$distribute_verify_request_start_hook = q{
+    my $msg  = $curproc->incoming_message() || undef;
+    my $list = $msg->message_chain_as_array_ref();
+    for my $m (@$list) {
+	my $hs = $m->message_fields() || '';
+	if ($hs =~ /Content-Disposition:.*attachment;/o) {
+	    $curproc->log("[new] attachment \.$1 found");
+	    $curproc->stop_this_process();
+	}
+    }
+};
+</screen>
+</para>
+
+</answer>
+
+</qandaentry>

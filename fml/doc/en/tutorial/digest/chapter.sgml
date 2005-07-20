@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.sgml,v 1.1 2003/07/28 15:20:17 fukachan Exp $
+   $FML: chapter.sgml,v 1.2 2003/08/02 14:53:25 fukachan Exp $
    $jaFML: chapter.sgml,v 1.3 2003/04/15 14:51:39 fukachan Exp $
 -->
 
@@ -120,7 +120,6 @@ admin digest $address off
 	</title>
 
 <para>
-(not yet implemented).
 <screen>
 digest on
 digest off
@@ -142,7 +141,6 @@ as could as possible.
 	</title>
 
 <para>
-(not yet implemented).
 <screen>
 digeston
 digestoff

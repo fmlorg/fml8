@@ -1,5 +1,5 @@
 <!--
-   $FML: extension.sgml,v 1.1 2003/07/24 15:37:35 fukachan Exp $
+   $FML: extension.sgml,v 1.2 2003/08/02 03:05:53 fukachan Exp $
    $jaFML: extension.sgml,v 1.10 2003/04/15 14:51:36 fukachan Exp $
 -->
 
@@ -18,7 +18,7 @@ you need to put the module you wrote at
 /usr/local/lib/fml/site_local/
 </screen>
 .
-If you permit the command is used only for the specifiec ML
+If the command is allowed only for the specifiec ML
 (e.g. elena ML), put it at the ML local library path
 <screen>
 /var/spool/ml/elena/local/lib/
@@ -26,10 +26,6 @@ If you permit the command is used only for the specifiec ML
 where $ml_home_dir = /var/spool/ml/elena.
 </para>
 
-<para>
-In this section, we consider the former case. In both cases, the way
-of writing the module codes are same. Only path differs.
-</para>
 </warning>
 
 
@@ -40,18 +36,22 @@ of writing the module codes are same. Only path differs.
 
 <para>
 Consider to make a new user command "uja".
-Pick up a command at FML::Command, cut and paste it.
+Pick up a command at FML::Command::User, cut and paste it.
 Please put it at
 <screen>
 /usr/local/lib/fml/site_local/FML/Command/User/uja.pm
 </screen>
-Edit site_default_config.cf to add it into $commands_for_user
+To permit the use of it for all ML's, 
+edit site_default_config.cf to add it into $commands_for_user
 to permit the user of "uja" command.
 <screen>
-commands_for_user += uja
+user_command_mail_allowed_commands += uja
 </screen>
 It you allow the command only for the specific elena ML, 
 edit /var/spool/ml/elena/config.cf in the same way.
+<screen>
+user_command_mail_allowed_commands += uja
+</screen>
 </para>
 
 </sect2>
@@ -59,7 +59,7 @@ edit /var/spool/ml/elena/config.cf in the same way.
 
 <sect2>
 	<title> 
-	Create a new admin command "admin uja"
+	Create a new admin command such as "admin uja"
 	</title>
 
 <para>
@@ -69,10 +69,11 @@ Put it at the FML::Command::Admin:: class. For example
 <screen>
 /usr/local/lib/fml/site_local/FML/Command/Admin/uja.pm
 </screen>
-Edit site_default_config.cf to add it into $commands_for_privileged_user
-to permit the use of "admin uja" command.
+Edit site_default_config.cf to add it into
+$user_command_mail_allowed_commands to permit the use of "admin uja"
+command.
 <screen>
-commands_for_privileged_user += uja
+admin_command_mail_allowed_commands += uja
 </screen>
 </para>
 
@@ -129,6 +130,10 @@ of CUI implies administrator use.
 
 <warning>
 <para>
+You need another work to create a menu screen.
+</para>
+
+<para>
 To make a new command usable for all ML's on this host, 
 put the module you wrote at
 <screen>
@@ -155,10 +160,10 @@ Craete a module "uja" and put it at
 <screen>
 /usr/local/lib/fml/site_local/FML/Command/Admin/uja.pm
 </screen>
-Edit site_default_config.cf to add it into $commands_for_admin_cgi
+Edit site_default_config.cf to add it into $admin_cgi_allowed_commands
 to permit the use of "uja" command.
 <screen>
-commands_for_admin_cgi += uja
+admin_cgi_allowed_commands += uja
 </screen>
 </para>
 

@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: chaddr.sgml,v 1.1 2003/07/26 04:29:12 fukachan Exp $
    $jaFML: chaddr.sgml,v 1.2 2003/04/15 14:51:45 fukachan Exp $
 -->
 
@@ -24,9 +24,10 @@ You can send this mail from both OLD-ADDRESS and NEW-ADDRESS.
 
 <para>
 &fml8; sends back confirmation to both addresses.
-Please send back the confirmation to elena-ctl again.
+Please reply the confirmation and send back it to elena-ctl again.
 When you request is confirmed to be valid, 
-&fml8; remove OLD-ADDRESS and add NEW-ADDRESS to member lists.
+&fml8; remove OLD-ADDRESS and add NEW-ADDRESS to the recipient and
+member list.
 </para>
 
 </sect1>

@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: chapter.config.sgml,v 1.1 2003/07/26 07:31:27 fukachan Exp $
    $jaFML: chapter.config.sgml,v 1.3 2003/04/15 14:51:36 fukachan Exp $
 -->
 
@@ -20,7 +20,7 @@ The format is same as config.cf.
 </para>
 
 <para>
-This file corresponds to site_init.ph of &fml4;.
+This file corresponds to site_force.ph of &fml4;.
 </para>
 
 </sect1>

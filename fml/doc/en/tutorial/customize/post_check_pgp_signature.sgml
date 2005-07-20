@@ -1,0 +1,95 @@
+<!--
+   $FML: post_check_pgp_signature.sgml,v 1.2 2005/06/25 15:11:29 fukachan Exp $
+-->
+
+
+<sect1 id="config.post.check.pgp">
+	<title>
+	CASE STUDY: PGP/PGP based authentication in posting
+	</title>
+
+<caution>
+<para>
+Please install Crypt::OpenPGP perl module. It is better to use OS
+dependent pacakge system since it depends a lot of other packages.
+</para>
+</caution>
+
+<sect2>
+	<title>
+	Configuration Example
+	</title>
+
+<para>
+check_pgp_signature options supports PGP/GPG based auth.
+If the degital signature is confirmed, the user can post articles.
+<screen>
+article_post_restrictions       =       reject_system_special_accounts
+                                        check_pgp_signature
+                                        reject
+</screen>
+disabled by default.
+change article_post_restrictions if use.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	Key operations
+	</title>
+
+<para>
+PGP KEY RING directories are separeted. For example, the keyring dir
+for article pgp auth is $ml_home_dir/etc/pgp-article-post-auth/
+directory, the keyring dir for remote administration by command mail
+is $ml_home_dir/etc/pgp-admin-command-mail-auth/ directory.
+</para>
+
+<para>
+Use pgp2, pgp5 and gpg commands to edit keys under them
+It is useful to use the following fmlpgp wrapper command.
+The wrapper sets up proper environment variables. 
+<screen>
+Example: elena ML
+
+fmlpgp elena --article-post-auth -kg
+</screen>
+the command line options available:
+<screen>
+--article-post-auth       (auth for post article)
+--command-mail-auth       (auth for command mail)
+--admin-command-mail-auth (auth for admin command mail)
+--article-post-encrypt    (article encryption)
+</screen>
+</para>
+
+<para>
+Available wrappers follow:
+</para>
+
+<para>
+pgp2: 
+fmlpgp
+</para>
+
+<para>
+pgp5:
+fmlpgp5
+fmlpgpe
+fmlpgpk
+fmlpgps
+fmlpgpv
+</para>
+
+<para>
+gpg: 
+fmlgpg
+fmlgpgv
+</para>
+
+</sect2>
+
+
+</sect1>

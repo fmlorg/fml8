@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: makefml.sgml,v 1.1 2003/07/26 04:29:13 fukachan Exp $
    $jaFML: makefml.sgml,v 1.7 2003/04/15 14:51:46 fukachan Exp $
 -->
 
@@ -187,11 +187,24 @@ For example,
 <screen>
 % makefml list elena
 </screen>
-It shows addresses who can post this ML. Instead
+It shows recipients of this ML. Also,
 <screen>
 % makefml list elena recipient
 </screen>
-lists up recipients of this ML.
+lists up recipients of this ML. Instead
+<screen>
+% makefml list elena member
+</screen>
+shows the list who can post this ML.
+</para>
+
+<para>
+You can specify arbitrary MAP as an argument to show it. 
+<screen>
+% makefml list elena MAP
+</screen>
+MAP can be an abbrebiation. For example, 
+you can use "xxx" as MAP to imply "primary_xxx_map" or "xxx_maps".
 </para>
 
 </sect1>
@@ -204,7 +217,10 @@ lists up recipients of this ML.
 
 <para>
 Edit config.cf directly now.
-Tools are not yet implemented.
+</para>
+
+<para>
+Tools are incompletely implemented.
 </para>
 
 </sect1>

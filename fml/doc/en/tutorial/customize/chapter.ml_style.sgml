@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: chapter.ml_style.sgml,v 1.1 2003/07/26 07:31:28 fukachan Exp $
    $jaFML: chapter.ml_style.sgml,v 1.4 2003/02/16 13:07:15 fukachan Exp $
 -->
 <chapter id="cuctomize">
@@ -13,6 +13,8 @@
 &sect.config.command.rejectall;
 &sect.config.mailmagazine;
 &sect.config.post.permit.anyone;
+&sect.config.post.check.article.thread;
+&sect.config.post.check.pgp;
 &sect.config.ml.hier;
 
 <!-- procmail -->

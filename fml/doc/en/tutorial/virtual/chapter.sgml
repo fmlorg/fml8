@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.sgml,v 1.1 2003/07/27 15:04:27 fukachan Exp $
+   $FML: chapter.sgml,v 1.2 2003/08/02 14:53:25 fukachan Exp $
    $jaFML: chapter.sgml,v 1.2 2003/04/15 14:51:47 fukachan Exp $
 -->
 
@@ -9,15 +9,18 @@
 	</title>
 
 <para>
+2003/10: We enhanced fml8 to handle virtual domains handling.
+</para>
+
+<para>
 It is difficult to handle virtual domains and the default domain in
 the same way.
 </para>
 
 <para>
-You can use "user@domain" as an argument if needed, for example,
-ambiguous. So, use "user@domain" form for the ML name if it is an ML
-of a virtual domain. For example, for a virtual domain, use makefml
-like this
+One proper enhancement is using "user@domain" form for the ML name as
+an argument of commands. For example, for a virtual domain, use
+makefml like this
 <screen>
 % makefml newml mlname@virtualdomain
 </screen>
@@ -28,8 +31,19 @@ but both syntaxes are acceptable for the default domain.
 </screen>
 Fml treats these properly as could as possible. But fml needs some
 hints such as ml home directory information. You need to prepare
-/usr/local/etc/fml/virtual file for a hint on mappping between domain
-and directory. This file name is defined as $virtual_maps in main.cf.
+/usr/local/etc/fml/ml_home_prefix file for a hint on mappping between
+domain and directory.
+</para>
+
+<para>
+This file name is defined as $ml_home_prefix_maps (formerly
+$virtual_maps) in main.cf.  $virtual_maps is obsolete but effective
+now for compatibility.
+</para>
+
+<para>
+To handle $ml_home_prefix_maps, you can use "makefml newdomain" and
+"makefml rmdomain".
 </para>
 
 
@@ -39,12 +53,16 @@ and directory. This file name is defined as $virtual_maps in main.cf.
 	</title>
 
 <para>
-It is easy in use.
-Edit
+It is easy in use. 
+For the first time, use "newdomain" command to add {domain =>
+directory} relation to
 <link linkend="install.virtual">
-/usr/local/etc/fml/virtual
+ml_home_prefix_maps
 </link>
-file and define it as $virtual_maps in main.cf. 
+(precisely primary_ml_home_prefix_map).
+</para>
+
+<para>
 After that, you can use "user@domain" form in makefml arguments 
 in handling virtual domains.
 <screen>
@@ -68,7 +86,7 @@ http://lists/~fml/cgi-bin/fml/$domain/admin/config.cgi
 <para>
 The domain name is hard-coded within config.cgi since makefml injects
 the domain name in creating config.cgi when "makefml newml" runs.
-"config.cgi" does not resolve its domain by URL.
+"config.cgi" does not resolve its domain by the URL.
 </para>
 </warning>
 

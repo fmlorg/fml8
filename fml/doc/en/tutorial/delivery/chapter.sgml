@@ -1,20 +1,20 @@
 <!--
-   $FML$
+   $FML: chapter.sgml,v 1.1 2003/08/02 01:19:11 fukachan Exp $
    $jaFML: chapter.sgml,v 1.12 2003/04/15 14:51:37 fukachan Exp $
 -->
 
 <chapter id="delivery">
 	<TITLE>
-	&fmldevel; mail delivery system
+	&fml8; mail delivery system
 	</TITLE>
 
-<sect1 id="fmldevel-delivery">
+<sect1 id="fml8-delivery">
 	<title>
-	The difference between &fml4; and &fmldevel;
+	The difference between &fml4; and &fml8;
 	</title>
 
 <para>
-One of puposes of &fmldevel; is unification and abstraction of member
+One of puposes of &fml8; is unification and abstraction of member
 list operations. Mail distribution is based on the following module
 Mail::Delivery.
 </para>
@@ -82,6 +82,19 @@ class provides such data structure described above.
 
 <!-- mail queue -->
 &sect.mailqueue;
+
+
+<sect1 id="delivery.qmgr">
+	<title>
+	Queue Management System
+	</title>
+
+<para>
+Since 2004 summer, delivery system of &fml8; is under queue management
+system like MTA. Now fml8 can deliver again messages by itself.
+</para>
+
+</sect1>
 
 
 <sect1>

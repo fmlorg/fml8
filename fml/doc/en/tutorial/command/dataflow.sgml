@@ -1,5 +1,5 @@
 <!--
-   $FML: dataflow.sgml,v 1.2 2003/07/26 09:10:40 fukachan Exp $
+   $FML: dataflow.sgml,v 1.3 2003/08/02 03:05:53 fukachan Exp $
    $jaFML: dataflow.sgml,v 1.1 2002/12/25 11:50:42 fukachan Exp $
 -->
 
@@ -10,6 +10,93 @@
 	</title>
 
 
-<graphic entityref="image.command.dataflow"></graphic>
+<!--
+  <graphic entityref="image.command.dataflow"></graphic>
+-->
+
+<para>
+All command processing calls FML::Command::MODE::COMMAND class via
+FML::Command class. GUI, CUI and command mail has different pre
+processing stage.
+</para>
+
+
+<sect2>
+	<title>
+	command mail procssing
+	</title>
+
+<caution>
+<para>
+We adopt new frame work after 2004/03/05.
+</para>
+</caution>
+
+<para>
+Firstly, parse and analyze each line.
+</para>
+
+<para>
+An empty line is ignored.
+The buffer is clean up.
+After them, check if the command line is allowed in our context.
+</para>
+
+<para>
+For example, 
+</para>
+
+<para>
+1) if anonymous command such as "guide" or "subscribe", call command
+processor.  Allowd list of commands are defined in
+$anonymous_command_mail_allowed_commands.
+</para>
+
+<para>
+2) if a normal command which are allowd for a member, check other
+conditions based on rules of $command_mail_restrictions.  Allowd list
+of commands are defined in $user_command_mail_allowed_commands.
+</para>
+
+<para>
+Command dispatcher checks the return path dependent on the command and
+the syntax, finally execute the command via FML::Command class.
+This process runs as normal user priviledge.
+</para>
+
+<para>
+"admin" command needs administrator priviledge. So an exception.  If
+"admin" command is given, process user priviledged "admin" command and
+execute FML::Command::User::admin class.
+<footnote>
+<para>
+admin command is defined in $user_command_mail_allowed_commands 
+as a normal user command.
+</para>
+</footnote>
+In this user command class, checks the context by
+$admin_command_mail_restrictions to see that the current context has
+remote administrator priveledge. If enough priviledge is satisfied,
+execute FML::Command::Admin::COMMAND class via FML::Command again.
+FML::Command::Admin::COMMAND needs admin priviledge.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	CUI (makefml/fml)
+	</title>
+
+<para>
+If you use this program, you can have priveledge to login the mailing
+list server host and switch user to the user "fml". So please use CUI
+as you like.
+In this case, CUI calls FML::Command::Admin::COMMAND directly.
+</para>
+
+</sect2>
+
 
 </sect1>

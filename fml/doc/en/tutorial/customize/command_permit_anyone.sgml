@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: command_permit_anyone.sgml,v 1.1 2003/07/26 07:31:28 fukachan Exp $
    $jaFML: command_permit_anyone.sgml,v 1.2 2003/01/05 08:00:59 fukachan Exp $
 -->
 
@@ -9,11 +9,11 @@
 	</title>
 
 <para>
-$command_restrictions defines who can use command mail.
+$command_mail_restrictions defines who can use command mail.
 By default user registerd as a poster can use command mail.
 To set anyone can use command mail, set
 <screen>
-command_restrictions = permit_anyone
+command_mail_restrictions = permit_anyone
 </screen>
 </para>
 

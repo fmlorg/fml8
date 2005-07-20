@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: help.sgml,v 1.1 2003/07/26 04:29:13 fukachan Exp $
    $jaFML: help.sgml,v 1.1 2002/07/28 12:20:20 fukachan Exp $
 -->
 
@@ -15,6 +15,11 @@ help
 </screen>
 to elena-ctl@fml.org address.
 sends back the help file to the sender.
+</para>
+
+<para>
+If a file named "help" is found at $ml_home_dir, it is used as a
+template.
 </para>
 
 </sect1>

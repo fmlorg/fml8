@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: chapter.command.sgml,v 1.1 2003/07/26 07:31:27 fukachan Exp $
    $jaFML: chapter.command.sgml,v 1.1 2002/09/15 01:46:30 fukachan Exp $
 -->
 
@@ -15,8 +15,7 @@
 	</title>
 
 <para>
-To extend help command of elena ML.
-Create help.pm perl module at
+To extend help command of elena ML, create help.pm perl module at
 <screen>
 /var/spool/ml/elena/local/lib/FML/Command/User/help.pm
 </screen>

@@ -1,5 +1,5 @@
 <!--
-   $FML: module.sgml,v 1.1 2003/07/24 15:37:35 fukachan Exp $
+   $FML: module.sgml,v 1.2 2003/08/02 03:05:53 fukachan Exp $
    $jaFML: module.sgml,v 1.4 2003/04/15 14:51:36 fukachan Exp $
 -->
 
@@ -18,7 +18,7 @@ administrative ones by the priviledge.
 <para>
 FML::Command class consists of the following classes:
 <screen>
-FML::Command		entrance into FML::Command
+FML::Command		entrance into FML::Command. command dispatcher.
 FML::Command::User	command for general ML users.
 FML::Command::Admin	command for remote administrators.
 </screen>

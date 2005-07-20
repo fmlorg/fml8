@@ -1,0 +1,133 @@
+<!--
+   $FML$
+   $jaFML: post_check_article_thread.sgml,v 1.3 2005/06/25 14:12:52 fukachan Exp $
+-->
+
+
+<sect1 id="config.post.check.article.thread">
+	<title>
+	CASE STUDY: article posting allowd if it is a reply to the former one.
+	</title>
+
+<para>
+From time to time we can find that a posted article is denied due to
+posting from not a member.
+</para>
+
+<para>
+One reason is that the member who replied some article forgot to
+notify changes of his/her mail address to the mailing list
+administrator. Another reason that his/her mail address is changed
+from @DOMAIN to @SUB.DOMAIN vice versa.  Yet another reason is that
+he/she replied it from other location which recieved the article via
+mail forwarding at some other host.
+</para>
+
+<para>
+After 2004/10/28 &fml8; current, &fml8; supports "allow article post
+irrespective of the From: address if some condition satisfied" at
+article_post_restrictions.
+</para>
+
+<para>
+The current implementation suppors the condition that "if the reply
+refers a known message-id within some time limit".  Precisely
+speaking, "knonw mesage-is" implies the id is found at the database
+which holds In-Reply-To: and References: of old articles within some
+time limit (e.g. one week).
+</para>
+
+
+<sect2>
+	<title>
+	Examles
+	</title>
+
+<para>
+"check_article_thread" is the keyword to support this check.
+<screen>
+article_post_restrictions       =       reject_system_special_accounts
+                                        check_article_thread
+                                        permit_member_maps
+                                        reject
+</screen>
+not used by default.
+To use it, specify it at article_post_restrictions.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	Discussion
+	</title>
+
+<para>
+Hmm, this is similar to a cookie. 
+There are some problems.
+</para>
+
+<para>
+1) what is proper time scale ?
+$article_post_article_thread_lifetime controlls it. one day by default.
+<screen>
+article_post_article_thread_lifetime = 86400
+</screen>
+</para>
+
+<para>
+Also, boundary of the time scale ?  When starts the allowd window ? It
+starts from the first article of the specific thread ? Or from the
+last article ?
+</para>
+
+<para>
+2) more restricted condition support required ?
+If so, we should check the corelation between subject: and the thread?
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	Applied example: small persons can starts article thread.
+	</title>
+
+<para>
+<screen>
+member_maps			=       $tmp_dir/members-thread-init
+
+article_post_restrictions       =       reject_system_special_accounts
+                                        check_article_thread
+                                        permit_member_maps
+                                        reject
+
+
+</screen>
+Persons registered at members-thread-init can post article always.
+Other persons can post the article if the article is a reply to some
+other article.
+</para>
+
+<para>
+Hmm, it looks a variation of moderator system ?
+</para>
+
+<para>
+Better if they use PGP auth.
+<screen>
+member_maps			=       $tmp_dir/members-thread-init
+
+article_post_restrictions       =       reject_system_special_accounts
+                                        check_article_thread
+                                        check_pgp_signature
+                                        reject
+
+</screen>
+</para>
+
+</sect2>
+
+</sect1>

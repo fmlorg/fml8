@@ -1,33 +1,57 @@
 <!--
-   $FML: mailmagazine.sgml,v 1.1 2003/07/26 07:31:28 fukachan Exp $
+   $FML: mailmagazine.sgml,v 1.2 2003/07/27 17:47:06 fukachan Exp $
    $jaFML: mailmagazine.sgml,v 1.3 2003/07/27 17:45:30 fukachan Exp $
 -->
 
-<sect1 id="config.mailmagazine">
+
+<sect1 id="config.mailmagazine.1">
 	<title>
-	case study: mail magazine
+	case study: mail magazine (1)
 	</title>
 
-
+<warning>
 <para>
-Consider asymmetric case of member list (list of persons who can post)
-and recipient list.
+Please use 
+<link linkend="config.post.check.pgp">
+PGP auth 
+</link>
+if could, though we describe header based auth here.
+Also please set up MTA properly e.g. to disable smtp interfaces as
+could as possible.
 </para>
 
 <para>
-Firstly, remove primary_member_maps from $member_maps.  Instead, add
+It is a problem that PGP auth requires user's skill at some level.  
+</para>
+
+</warning>
+
+
+<para>
+In the case of header based auth, you can create a mail magazine by
+using the asymmetirc member list. Consider asymmetric case of member
+list (list of persons who can post) and recipient list below.
+</para>
+
+<para>
+Firstly, remove $primary_member_map from $member_maps. Instead, define
 $ml_home_dir/members-mailmag who can post to $member_maps.
 <screen>
 member_maps	=	$ml_home_dir/members-mailmag
 </screen>
+The use of "subscribe" command is same as default one since
+"subscribe" command changes $primary_member_map not $member_maps. It
+is a little tricky but crafty use of $primary_XXX_map and $XX_maps
+enhances &fml8; configuration.
 </para>
 
 <para>
 In this case, when a new user is subscribed, the user address is added
-to both $ml_home_dir/members and $ml_home_dir/recipinets.
-But $member_maps is defined as $ml_home_dir/members-mailmag.
-$ml_home_dir/members is not used.
-Hence, recipients is updated but the list of posters is unchanged.
+to both $ml_home_dir/members ($primary_member_map) and
+$ml_home_dir/recipinets ($primary_recipient_map). But $member_maps is
+defined as $ml_home_dir/members-mailmag. $ml_home_dir/members is not
+used. Hence, only the list of recipients is updated but the list of
+posters is NOT changed.
 </para>
 
 <warning>
@@ -36,9 +60,68 @@ Strictly speaking, this configuration is not enough safe.  If somebody
 fakes From: address, he/she can post since fml checks only From:
 address.
 </para>
+
+<para>
+So, pgp auth is recommended.
+</para>
+
 </warning>
 
 <para>
+Another solution.
+<screen>
+primary_member_map	=	$tmp_dir/members-dummy
+</screen>
+and use $member_maps (member_maps = $ml_home_dir/members) for normal
+use. It has only poster's addresses. 
+</para>
 
+</sect1>
+
+
+<sect1 id="config.mailmagazine.2">
+	<title>
+	CASE STUDY: mail magazine (2)
+	</title>
+
+<para>
+After 2004/06, &fml8; supports the queuing system.  So the outgoing
+mail fails once, after the confirmation of content, you flush again to
+deliver if the content is ok.
+</para>
+
+<para>
+The queuing system support enables "queue once, dequeue after content
+confirmation". It avoids delivery of wrong content.
+</para>
+
+<para>
+The configuration is as follows.
+</para>
+
+<para>
+Specify irrelevant port at config.cf.
+<screen>
+smtp_servers = IRRELEVANT_PORT
+
+[Example]
+
+smtp_servers = 127.0.0.1:2025
+</screen>
+This makes the delivery fail. The message is queued.
+</para>
+
+<para>
+Check the content. If the content is correct and delivery is ready,
+runs the following command by specifying the correct transport.
+<screen>
+% fml -o smtp_servers=TRANSPORT ML_NAME flushq
+
+[Example]
+
+% fml -o smtp_servers=127.0.0.1:25 ML_NAME flushq
+</screen>
+"flush" and "flushq" command are same.
+</para>
 
 </sect1>

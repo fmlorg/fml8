@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: command_rejectall.sgml,v 1.1 2003/07/26 07:31:28 fukachan Exp $
    $jaFML: command_rejectall.sgml,v 1.3 2003/04/15 14:51:36 fukachan Exp $
 -->
 
@@ -13,20 +13,28 @@ It is most safe to remove entries from aliases.
 </para>
 
 <para>
+Another 2nd best solution follows:
 <screen>
-use_command_mail_program	=	no
+use_command_mail_function	=	no
 </screen>
-In this case, /usr/local/libexec/fml/command is kicked off once but
-does not work and exit as soon as possible.
+In this case, /usr/local/libexec/fml/command runs once but does not
+work and ends as soon as possible.
 </para>
 
 <para>
-In another level of rejection, this configuration is possible:
+This solution may be possible.
 <screen>
-command_restrictions = reject
+use_command_mail_function = yes
+
+command_mail_restrictions = reject
 </screen>
-When fml receives the command mail, 
+When fml receives the incoming command mail, 
 it inform the rejection to the sender.
+</para>
+
+<para>
+This configuration works but it evalutates each line.
+It is useless. 
 </para>
 
 </sect1>

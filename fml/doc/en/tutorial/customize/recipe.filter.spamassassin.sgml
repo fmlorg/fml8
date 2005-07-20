@@ -1,0 +1,85 @@
+<qandaentry>
+
+<question>
+<para>
+reject SPAM messages using spamassassin by a &fml8; hook.
+</para>
+</question>
+
+<answer>
+
+<para>
+<caution>
+<para>
+In this case, &fml8; use not spamassassin internal filter but use a
+hook.
+</para>
+</caution>
+</para>
+
+<para>
+<screen>
+$distribute_verify_request_end_hook = q{
+        my $spamassassin = '/usr/pkg/bin/spamc -c';
+
+        use FileHandle;
+        my $wh  = new FileHandle "| $spamassassin";
+
+        if (defined $wh) {
+                $wh->autoflush(1);
+                my $msg = $curproc->incoming_message();
+                $msg->print($wh);
+                $wh->close();
+                if ($?) {
+                        $curproc->log("spam: (code = $?)");
+                        $curproc->stop_this_process();  
+                }
+        }
+};
+</screen>
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+<question>
+<para>
+Add X-Spam-Status: Yes header field 
+if spamassassin determines the message as a spam.
+</para>
+</question>
+
+<answer>
+<para>
+<screen>
+$distribute_verify_request_end_hook = q{
+	my $spamassassin = '/usr/pkg/bin/spamc -c';
+
+	use FileHandle;
+	my $wh  = new FileHandle "| $spamassassin";
+
+	if (defined $wh) {
+		$wh->autoflush(1);
+		my $msg = $curproc->incoming_message();
+		$msg->print($wh);
+		$wh->close();
+		if ($?) {
+			$curproc->log("spam: (code = $?)");
+			my $hdr = $curproc->incoming_message_header();
+			$hdr->add('X-Spam-Status', 'Yes');
+		}
+	}
+};
+</screen>
+</para>
+
+<para>
+This is a little tricky but it works well.
+</para>
+
+</answer>
+
+</qandaentry>

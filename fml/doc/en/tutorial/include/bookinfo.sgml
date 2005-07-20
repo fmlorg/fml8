@@ -1,5 +1,5 @@
 <!--
-   $FML: bookinfo.sgml,v 1.1 2003/07/24 15:37:36 fukachan Exp $
+   $FML: bookinfo.sgml,v 1.2 2003/07/25 14:06:49 fukachan Exp $
    $jaFML: bookinfo.sgml,v 1.11 2003/02/11 13:54:11 fukachan Exp $
 -->
 
@@ -7,7 +7,6 @@
   <bookbiblio>
      <title>
 	fml 8 tutorial
-	( under being translated ... )
      </title>
 
      <author>
@@ -27,7 +26,7 @@
      </author>
 
      <copyright>
-   	<year> 2001,2002,2003 </year>
+   	<year> 2001,2002,2003,2004,2005 </year>
    	<holder> Ken'ichi Fukamachi </holder>
      </copyright>
 
@@ -41,22 +40,38 @@
 
 
 	<para>
+	The current status of fml8 is PRE ALPHA.
+	The version is 7.98.x.
+	We plan to assign version 7.99.x to fml 8 ALPHA through fml 8
+	RC (release candidate).
+	</para>
+
+	<para>
 	The current TODO is seen at
 	<ulink url="../../../fml/doc/ja/todo/STATUS.html">
 	http://www.fml.org/software/fml-devel/fml/doc/ja/todo/STATUS.html
 	</ulink>
 	(Japanese only now, sorry).
+	See 
+	<link linkend="changes">
+	<xref linkend="changes">
+	</link>
+	on the changes between fml 4 and fml8.
 	</para>
 
 	<para>
 	It is verified that &fml8; works on the following environemnt now.
 <screen>
+	perl 5.8.5   on NetBSD 2.0 
+	perl 5.8.5   on NetBSD 1.6
 	perl 5.6.1   on NetBSD 1.5.x (1.5 stable)		
 	perl 5.6.1   on NetBSD 1.6				
+	perl 5.6.1   on FreeBSD 5.2.1
 	perl 5.00503 on FreeBSD 4.3 STABLE
 	perl ?       on FreeBSD 4.6 RELEASE
 	perl 5.00503 on FreeBSD 4.7 RELEASE-p3
 	perl 5.00503 on FreeBSD 4.6.2 RELEASE			
+        perl 5.6.1   on Turbolinux Server 8 (qmail)
 	perl 5.6.1   on Redhat Linux 7.2 (postfix)		
 	perl 5.00503 on Redhat Linux 6.2 (sendmail8.11.6)	
 	postfix       + perl 5.6.1 on Solaris 7			

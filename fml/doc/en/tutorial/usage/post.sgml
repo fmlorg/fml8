@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: post.sgml,v 1.1 2003/07/26 04:29:13 fukachan Exp $
    $jaFML: post.sgml,v 1.7 2003/04/15 14:51:46 fukachan Exp $
 -->
 
@@ -16,9 +16,8 @@ finally kicks off
 </para>
 
 <para>
-distribute recieves the message from STDIN,
-rewrites the header, save it in spool and
-pass it back to MTA.
+distribute recieves the message from STDIN, rewrites the header, save
+it in the spool directory and pass it back to MTA for delivery.
 </para>
 
 
@@ -28,7 +27,7 @@ pass it back to MTA.
 	</title>
 
 <para>
-add a tag to sufbject, update the article number.
+add a tag to subject, update the article sequence number.
 <screen>
 Example:
 
@@ -68,7 +67,7 @@ not yet written.
 
 <sect2>
 	<title>
-	boot sequence
+	Boot Sequence
 	</title>
 
 <para>
@@ -78,20 +77,24 @@ fml boot loader
 boots off in this way.
 </para>
 
+<para>
+/usr/local/libexec/fml/distribute is symlink-ed to
+/usr/local/libexec/fml/loader. These files are same.
+</para>
 
 <para>
-libexec/loader reads etc/fml/main.cf firstly.
-Suppose $fml_vesrion is defined as current-20010501 in main.cf.
-&fml8; resolves $fml_version from it and determines the library path
-as /usr/local/lib/fml/current-20010501/.
-&fml8; loads perl modules under it.
+/usr/local/libexec/fml/loader reads /usr/local/etc/fml/main.cf
+firstly. $fml_vesrion such as "current-20010501" is defined
+ in the main.cf. &fml8; resolves $fml_version from it and determines the
+library path as /usr/local/lib/fml/current-20010501/.  &fml8; loads
+perl modules under it.
 </para>
 
 <para>
 &fml8; sets up @INC properly, fml loader loads FML::Process::Switch
-module and check $0.  fml knowns the role from $0.  In this case of
-distribute, fml loads FML::Process::Distribute module and processes
-distribution.
+module and check $0 (process name).  fml knows the process role from
+$0.  In this case of distribute, fml loads FML::Process::Distribute
+module, switch itself to it and processes distribution.
 </para>
 
 </sect2>

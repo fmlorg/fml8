@@ -1,5 +1,5 @@
 <!--
-   $FML: chapters.ent,v 1.1 2003/07/24 15:37:36 fukachan Exp $
+   $FML: chapters.ent,v 1.2 2003/07/26 04:35:41 fukachan Exp $
    $jaFML: chapters.ent,v 1.75 2003/06/20 22:03:12 fukachan Exp $
 -->
 
@@ -45,8 +45,11 @@
 <!entity sect.setup.postfix       SYSTEM "setup/postfix.sgml">
 <!entity sect.setup.qmail         SYSTEM "setup/qmail.sgml">
 <!entity sect.setup.config.cf     SYSTEM "setup/config.cf.sgml">
+<!entity sect.setup.newml.recipes SYSTEM "setup/newml.recipes.sgml">
+<!entity chapter.setup.apache     SYSTEM "setup/apache.sgml">
 <!entity chapter.setup.cgi        SYSTEM "setup/cgi.sgml">
 <!entity chapter.setup.test       SYSTEM "setup/test.sgml">
+<!entity chapter.merge.fml4to8    SYSTEM "setup/merge.fml4to8.sgml">
 
 
 <!-- part III: customize -->
@@ -63,6 +66,9 @@
 <!entity sect.config.command.rejectall      SYSTEM "customize/command_rejectall.sgml">
 <!entity sect.config.mailmagazine           SYSTEM "customize/mailmagazine.sgml">
 <!entity sect.config.post.permit.anyone     SYSTEM "customize/post_permit_anyone.sgml">
+<!entity sect.config.post.check.article.thread SYSTEM "customize/post_check_article_thread.sgml">
+<!entity sect.config.post.check.pgp SYSTEM "customize/post_check_pgp_signature.sgml">
+
 
 <!entity sect.config.ml.hier		SYSTEM "customize/ml.hier.ml">
 
@@ -76,6 +82,8 @@
 <!-- filter -->
 <!entity chapter.customize.filter    SYSTEM "customize/filter.sgml">
 <!entity recipe.filter.notice        SYSTEM "customize/recipe.filter.notice.sgml">
+<!entity recipe.filter.spamassassin  SYSTEM "customize/recipe.filter.spamassassin.sgml">
+<!entity recipe.filter.attachments   SYSTEM "customize/recipe.filter.attachments.sgml">
 <!entity chapter.filter              SYSTEM "internals/filter.sgml">
 <!entity var.filter.rules            SYSTEM "variables/filter.rules.sgml">
 <!entity var.filter.size             SYSTEM "variables/filter.size.sgml">
@@ -120,6 +128,7 @@
 
 <!entity chapter.userctl             SYSTEM "internals/userctl.sgml">
 
+<!entity chapter.merge.internal      SYSTEM "internals/merge.sgml">
 
 
 <!-- delivery -->
@@ -137,6 +146,7 @@
 <!entity chapter.bootloader          SYSTEM "internals/bootloader.sgml">
 <!entity sect.main.cf                SYSTEM "internals/main.cf.sgml">
 <!entity chapter.internal.cgi	     SYSTEM "internals/cgi.sgml">
+<!entity sect.internal.cgi.examples  SYSTEM "internals/cgi.examples.sgml">
 <!entity chapter.programingstyle     SYSTEM "internals/style.sgml">
 <!entity chapter.design              SYSTEM "internals/design.sgml">
 <!entity chapter.config.cf           SYSTEM "internals/config.cf.sgml">
@@ -144,6 +154,8 @@
 <!entity chapter.credential          SYSTEM "internals/credential.sgml">
 <!entity chapter.lock                SYSTEM "internals/lock.sgml">
 <!entity chapter.io.abstraction      SYSTEM "internals/io_abstraction.sgml">
+<!entity chapter.errormail           SYSTEM "internals/errormail.sgml">
+<!entity chapter.language            SYSTEM "internals/language.sgml">
 
 <!entity chapter.virtual             SYSTEM "virtual/chapter.sgml">
 
@@ -154,7 +166,7 @@
 <!-- -->
 <!entity chapter.struct              SYSTEM "internals/struct.sgml">
 <!entity struct.curproc              SYSTEM "internals/CURPROC.sgml">
-
+<!entity list.pcb                    SYSTEM "internals/PCB.sgml">
 
 
 <!-- message -->
@@ -169,6 +181,11 @@
 <!entity chapter.docbook             SYSTEM "devel/docbook.sgml">
 <!entity chapter.inet6               SYSTEM "devel/inet6.sgml">
 <!entity chapter.program.create      SYSTEM "devel/create_program.sgml">
+
+
+<!-- operations -->
+<!entity chapter.op.log              SYSTEM "operations/log.sgml">
+<!entity chapter.op.backup           SYSTEM "operations/backup.sgml">
 
 
 <!-- misc -->
@@ -193,8 +210,15 @@
 
 
 <!-- trouble shoot -->
-<!entity chapter.troubleshoot        SYSTEM "troubleshoot/chapter.sgml">
+<!entity chapter.troubleshoot         SYSTEM "troubleshoot/chapter.sgml">
+<!entity recipe.version               SYSTEM "troubleshoot/recipe.version.sgml">
+<!entity recipe.listup.addresses      SYSTEM "troubleshoot/recipe.listup.addresses.sgml">
+<!entity recipe.listup.aliases        SYSTEM "troubleshoot/recipe.listup.aliases.sgml">
+<!entity sect.troubleshoot.filesystem SYSTEM "troubleshoot/filesystem.sgml">
+ 
 
-<!entity recipe.version              SYSTEM "troubleshoot/recipe.version.sgml">
-<!entity recipe.listup.addresses     SYSTEM "troubleshoot/recipe.listup.addresses.sgml">
-<!entity recipe.listup.aliases       SYSTEM "troubleshoot/recipe.listup.aliases.sgml">
+<!-- changes -->
+<!entity chapter.changes         SYSTEM "changes/chapter.sgml">
+<!entity table.changes.cui       SYSTEM "changes/table.cui.sgml">
+
+

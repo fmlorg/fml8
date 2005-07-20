@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: recipe.header.tag.lowercase.sgml,v 1.1 2003/07/26 07:31:28 fukachan Exp $
    $jaFML: recipe.header.tag.lowercase.sgml,v 1.1 2002/10/29 03:32:21 fukachan Exp $
 -->
 
@@ -17,6 +17,7 @@ lower the tag in article Subject:
 <screen>
 article_subject_tag = [\L$ml_name\E:%05d]
 </screen>
+(available after 2002/10/29 snapshot)
 </para>
 </answer>
 
