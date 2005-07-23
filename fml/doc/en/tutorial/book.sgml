@@ -2,7 +2,7 @@
 This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
 to generate various output formats.
 
-   $FML: book.sgml,v 1.1 2003/07/24 15:37:34 fukachan Exp $
+   $FML: book.sgml,v 1.2 2003/07/26 09:10:39 fukachan Exp $
    $jaFML: book.sgml,v 1.58 2003/05/31 08:51:07 fukachan Exp $
 -->
 
@@ -19,14 +19,17 @@ to generate various output formats.
   <toc></toc>
 
   <part>
-	<title> fml fundamental usage </title>
+	<title>
+	fml fundamental usage
+	</title>
+
 	<partintro>
 	<para>
-	This part describes brief guide for beginners.
+	This part describes a brief guide for beginners.
 	</para>
 	<para>
 	See &www.fml.org; and other sites for more details on 
-	the mailing list.
+	mechanism of the mailing list.
 	</para>
 	</partintro>
 
@@ -53,11 +56,16 @@ to generate various output formats.
 	<!-- 2000/nt -->
 	&chapter.install.fml.nt;
 
+	<!-- fml4 to fml8, how-to and changes -->
+	&chapter.merge.fml4to8;
+	&chapter.changes;
+
 	<!-- misc around installation/setup -->
 	&chapter.upgrade;
 
 	<!-- CGI -->
 	&chapter.setup.cgi;
+	&chapter.setup.apache;
 
 	<!-- test -->
 	&chapter.setup.test;
@@ -65,7 +73,10 @@ to generate various output formats.
 
 
   <part>
-	<title> fml: how to customise </title>
+	<title>
+	fml: how to customise
+	</title>
+
 	<partintro>
 	<para>
 	topics driven in this part.
@@ -89,7 +100,26 @@ to generate various output formats.
 
 
   <part>
-	<title> troubleshooting </title>
+	<title>
+	Operations
+	</title>
+
+	<partintro>
+	<para>
+	This part describes operations.
+	</para>
+	</partintro>
+
+	&chapter.op.log;
+	&chapter.op.backup;
+  </part>
+
+
+  <part>
+	<title>
+	Troubleshoot
+	</title>
+
 	<partintro>
 	<para>
 	This part describes how to shoot troubles.
@@ -103,7 +133,10 @@ to generate various output formats.
 
 
   <part>
-	<title> fml design </title>
+	<title>
+	fml8 Design
+	</title>
+
 	<partintro>
 	<para>
 	THis part describes the design policy of fml.
@@ -116,7 +149,10 @@ to generate various output formats.
 
 
   <part>
-	<title> fml internals </title>
+	<title>
+	fml8 Internals
+	</title>
+
 	<partintro>
 	<para>
 	This part describles the fml internals for developers.
@@ -133,6 +169,7 @@ to generate various output formats.
 	<!-- delivery and command processing -->
         &chapter.delivery;
         &chapter.digest;
+	&chapter.language;
         &chapter.message;
 	&chapter.filter;
         <!-- &chapter.replybyfml; -->
@@ -159,16 +196,25 @@ to generate various output formats.
 	<!-- virtual domains -->
 	&chapter.virtual;
 
+	<!-- error mails -->
+	&chapter.errormail;
+
 	<!-- misc -->
 	&chapter.io.abstraction;
 	&chapter.lock;
 	&chapter.db.modules;
 	&chapter.dbms;
+
+	<!-- merge -->
+	&chapter.merge.internal;
   </part>
 
 
   <part>
-	<title> modules </title>
+	<title>
+	Modules
+	</title>
+
 	<partintro>
 	<para>
 	This part descripbes how to use most important modules.
@@ -187,7 +233,9 @@ to generate various output formats.
 	*************** appendixes hereafter **************
   -->
   <part>
-	<title> Apendixes </title>
+	<title>
+	Apendixes
+	</title>
 
 	&chapter.glossary;
 
@@ -197,7 +245,6 @@ to generate various output formats.
 	&chapter.docbook;
 	&chapter.inet6;
 
-	<!-- thread track -->
 	&chapter.threadtrack.tools;
 
 -->

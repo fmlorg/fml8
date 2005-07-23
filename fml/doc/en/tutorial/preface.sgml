@@ -1,5 +1,5 @@
 <!--
-   $FML: preface.sgml,v 1.3 2003/07/26 04:52:00 fukachan Exp $
+   $FML: preface.sgml,v 1.4 2003/07/27 15:31:52 fukachan Exp $
    $jaFML: preface.sgml,v 1.18 2003/04/15 14:51:35 fukachan Exp $
 -->
 
@@ -18,20 +18,15 @@
 
 <warning>
 <para>
-&fmldevel; already implemented fundamental functions except for
-editing configuration files. Several people uses &fmldevel; as hobby
-and office mailing list system for a test.
+&fml8; already implemented fundamental functions. Several people uses
+&fml8; as hobby and office mailing list system under normal
+operations.
 </para>
 
 <para>
-&fml8; is intended to re-implement almost all &fml4; functions but not
-yet enough.
-So, if you are interested in the use of special features, 
-please use
-<ulink url="http://www.fml.org/software/fml/menu.html">
-&fml4; stable
-</ulink>
-series.
+When you configure &fml8;, you need to edit configuration files since
+configuration helper tool has basic functions now. Except it, you can
+use &fml8; as same as &fml4;.
 </para>
 
 <para>
@@ -39,8 +34,17 @@ See
 <ulink url="../../../fml/doc/ja/todo/STATUS.html">
 http://www.fml.org/software/fml-devel/fml/doc/ja/todo/STATUS.html
 </ulink>
-for the current status of &fmldevel;.
+for the current status of &fml8;.
 </para>
+
+<para>
+See
+<link linkend="changes">
+<xref linkend="changes">
+</link>
+on the difference between &fml4; and &fml8;. 
+</para>
+
 </warning>
 
 </sect1>
@@ -54,34 +58,35 @@ for the current status of &fmldevel;.
 	</title>
 
 <para>
-&fmldevel; is fully rewritten mailing list driver from scratch to
+&fml8; is fully rewritten mailing list driver from scratch to
 re-implement &fml4;. The main purpose of this project is
-re-implementation of fml mailing list driver system with reflecting my
+re-implementation of fml mailing list driver system with reflecting our
 10 years experience on mailing list driver developement.
 </para>
 
 <para>
-Roughly speaking, the relation between &fml4; and &fmldevel; is
+Roughly speaking, the relation between &fml4; and &fml8; is
 similar to one between sendmail and postfix.
 </para>
 
 <para>
-&fmldevel; re-implements features of &fml4; functions. We redesign fml
-and clean up the function and variable naming convenstion. Also, We
-reinforce guide line to the coding style for clean source codes.
+&fml8; re-implements almost all features of &fml4; functions. We
+re-design fml and clean up the function and variable naming
+convenstion. Also, We reinforce guide line to the coding style for
+clean source codes.
 </para>
 
 <para>
 For example, when you use &fml4;, you'll find that fml assumes the
-list of members is found in the text file on the host.  &fml4;
-inherits the assumption from version 1.0 through 4.0. It affetcts the
-core part of designs. Hence, it is difficult to extend fml IO for the
-use of RDBMS, redundency et.al. In fact, &fml4; supports RDBMS but the
-code is ugly. We should need to fully rewrite fml core parts.
+list of members is found as text files on the host. &fml4; inherits
+the assumption from version 1.0 through 4.0. It affetcts the core part
+of the design. Hence, it is difficult to extend fml IO for the use of
+RDBMS, redundency et.al. In fact, &fml4; supports RDBMS but the code
+is ugly. We should need to fully rewrite fml core parts.
 </para>
 
 <para>
-Also, I want a lot of new features. &fmldevel; should provide tiny bug
+Also, I want a lot of new features. &fml8; should provide tiny bug
 tracking system maintatined automatically. It is better to co-relate
 fml with cvs log. These features help the support by mail and
 developer mailing list. I need it, of course.
@@ -95,7 +100,7 @@ and features, and discard what in &fml4;.
 
     <listitem>
 	<para>
-	What we should inherit into &fmldevel; from &fml4; ?
+	What we should inherit into &fml8; from &fml4; ?
 	</para>
     </listitem>
 
@@ -109,7 +114,7 @@ and features, and discard what in &fml4;.
 
     <listitem>
 	<para>
-	remove obsolete features.
+	what obsolete features we should remove ?
 	</para>
     </listitem>
 
@@ -120,14 +125,14 @@ You can find it at the following URL.
 </para>
 
 <para>
-<ulink url="http://www.fml.org/software/fml-devel/">
-http://www.fml.org/software/fml-devel/
+<ulink url="http://www.fml.org/software/fml8/">
+http://www.fml.org/software/fml8/
 </ulink>
 </para>
 
 <para>
-<ulink url="ftp://ftp.fml.org/pub/fml-devel/">
-ftp://ftp.fml.org/pub/fml-devel/
+<ulink url="ftp://ftp.fml.org/pub/fml8/">
+ftp://ftp.fml.org/pub/fml8/
 </ulink>
 </para>
 
@@ -137,7 +142,7 @@ ftp://ftp.fml.org/pub/fml-devel/
 <!-- ======================================================== -->
 <sect1 id="fml.and.fmlng">
 	<title>
-	relation between &fml4; and &fmldevel; development branch.
+	relation between &fml4; and &fml8; development branch.
 	</title>
 
 <para>
@@ -202,7 +207,7 @@ subscribe Kinomoto Sakura
 	</title>
 
 <para>
-Please send me the idea on &fmldevel; to the mail address:
+Please send me the idea on &fml8; to the mail address:
 <ulink url="mailto:fml-request@fml.org">
 fml-request@fml.org
 </ulink>

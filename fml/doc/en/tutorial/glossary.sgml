@@ -1,5 +1,5 @@
 <!--
-   $FML: glossary.sgml,v 1.2 2003/07/26 09:10:39 fukachan Exp $
+   $FML: glossary.sgml,v 1.3 2003/07/27 15:31:52 fukachan Exp $
    $jaFML: glossary.sgml,v 1.5 2003/04/15 14:51:34 fukachan Exp $
 -->
 
@@ -139,7 +139,7 @@
 	<glossterm>	fp	</glossterm>
 	<glossdef>
 	<para>
-	function pointer == code reference for perl 5. 
+	function pointer == code reference of perl 5. 
 	</para>
 	</glossdef>
    </glossentry>
@@ -149,7 +149,7 @@
 	<glossterm>	_foobar	</glossterm>
 	<glossdef>
 	<para>
-	keyword begininng with _ is used for internal function or variable.
+	keyword begining with _ is used for internal function or variable.
 	</para>
 
 	<para>
@@ -237,3 +237,4 @@ $euc_string = STR2EUC($string);
 
 
 </glossary>
+
