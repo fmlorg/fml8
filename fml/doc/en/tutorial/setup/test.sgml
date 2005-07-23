@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: test.sgml,v 1.1 2003/07/25 17:05:47 fukachan Exp $
    $jaFML: test.sgml,v 1.4 2003/04/15 14:51:44 fukachan Exp $
 -->
 
@@ -31,34 +31,35 @@ the mail server.
 
 <sect1>
 	<title>
-	test of only MTA
+	test of MTA
 	</title>
 
 <para>
-check MTA without fml on ahodori.fml.org.
+Firstly, check MTA without fml on ahodori.fml.org.
 </para>
 
 <para>
-FIrstly, 
-prepare one personal user address such as rudo@fml.org.
+Prepare one personal user address such as rudo@fml.org.
 Usually, just create a user named as "rudo".
 <screen>
 # useradd rudo
 </screen>
+Check you can send a mail to rudo@fml.org on ahodori.fml.org and rudo
+receives the mail.
+<screen>
+% echo test |Mail rudo@fml.org
+</screen>
+If it not works, check MTA configuration.
 </para>
 
 <para>
-You should verify SMTP over network.
+Secondary, verify mail delivery over network.
 Send a mail to rudo@fml.org from other host (not ahodori.fml.org).
 If rudo receives the mail, o.k.
 </para>
 
 <para>
-Secondly check the local delivery.
-send a mail to rudo@fml.org on ahodori.fml.org.
-<screen>
-% echo test |Mail rudo@fml.org
-</screen>
+If both work well, MTA configuration must be ok.
 </para>
 
 </sect1>
@@ -79,21 +80,23 @@ Create elena ML (elena@fml.org) and subscribe rudo@fml.org to elena ML.
 </para>
 
 <para>
-Send a test mail to elena@fml.org from other host (not ahodori.fml.org).
-Verify the header of this test mail should be "From: rudo@fml.org".
+Send a test mail to elena@fml.org from on the host and from other host
+(not ahodori.fml.org).  Verify the header of this test mail should be
+"From: rudo@fml.org" since &fml8; checks the From:.
 </para>
+
 
 <sect2>
 	<title>
-	checks
+	checkpoints
 	</title>
 
 <para>
-If not works well, check the following: 
+If someting not work well, check the following points: 
 <screen>
 check the mail server log (e.g. /var/log/maillog)
 check the fml log (e.g. /var/spool/m/elena/log)
-fml pass the message to MTA ?
+fml can pass the message to MTA ?
 MTA succeeds to deliver it?
 </screen>
 </para>
@@ -127,11 +130,11 @@ It is easy to re-create this mailing list (e.g. test ML).
 % makefml rmml test
 % makefml newml test
 </screen>
-The removed ML home is left as /var/spool/ml/@test.
+The removed ML home is left as /var/spool/ml/@test.$DATE.
 Please remove it since this is a test to avoid the duplication in the
 future.
 <screen>
-% rm -fr /var/spool/ml/@test
+% rm -fr /var/spool/ml/@test.$DATE
 </screen>
 </para>
 

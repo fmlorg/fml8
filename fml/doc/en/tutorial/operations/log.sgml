@@ -1,0 +1,87 @@
+<!--
+   $FML$
+   $jaFML: log.sgml,v 1.2 2004/10/06 09:07:41 fukachan Exp $
+-->
+
+
+<chapter id="operations.log">
+	<title>
+	Logging
+	</title>
+
+
+<sect1 id="operations.log.see">
+	<title>
+	See log
+	</title>
+
+<para>
+<screen>
+% makefml log ML_NAME
+% fml     ML_NAME log
+</screen>
+shows the latest 30 lines of log.
+</para>
+
+<para>
+GUI uses log command.
+</para>
+
+</sect1>
+
+
+<sect1 id="operations.log.computeroutput">
+	<title>
+	Show computer oriented log
+	</title>
+
+<para>
+When another command or CGI calls &fml8; CUI and wants to analyze the
+output, please use the following option.
+</para>
+
+<para>
+<screen>
+% makefml --log-computer-output COMMAND ML_NAME
+% fml --log-computer-output     ML_NAME COMMAND
+</screen>
+It shows the computer oriented log into STDERR channel.
+</para>
+
+<para>
+For example
+<screen>
+% fml --log-computer-output elena@fml.org list
+rudo@nuinui.net
+1070109341  info lock channel=recipient_map_modify
+1070109342  info unlock channel=recipient_map_modify
+</screen>
+This example shows "TIME LOG_LEVEL MESSAGE" style log.
+It is suitable for computer proceessing.
+</para>
+
+<para>
+The command line option --log-computer-output is same effect as
+<screen>
+use_log_computer_output = yes
+</screen>
+in config.cf
+</para>
+
+<para>
+When "use_log_computer_output = yes" specified in config.cf, all
+programs are affected. So all programs shows the computer oriented log
+to STDERR. So use of command line option is recommended.
+</para>
+
+<para>
+We should use perl module which holds a set of functions.  In this
+case, the print out engine is the class called as
+FML::Log::Print::Simple. The output style is contolled by
+$log_computer_output_engine in config.cf
+</para>
+
+</sect1>
+
+
+</chapter>

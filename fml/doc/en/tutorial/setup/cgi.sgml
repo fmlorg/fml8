@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: cgi.sgml,v 1.1 2003/07/25 17:05:47 fukachan Exp $
    $jaFML: cgi.sgml,v 1.4 2003/04/15 14:51:43 fukachan Exp $
 -->
 
@@ -13,24 +13,29 @@
 
 <para>
 See the section
-<link linkend="internalcgi.method">
-<xref linkend="internalcgi.method">
+<link linkend="cgi.internal.method">
+<xref linkend="cgi.internal.method">
 </link>
 for CGI Internal details.
 </para>
 
 <para>
-We assumes you use suexec under apache.
+We assumes 
+<link linkend="setup.apache.suexec">
+you use suexec under apache.
+</link>
 </para>
 
 <para>
-Now &fml8; provides the master cgi to control all ML's in one domain,
-but not support a ecgi for each ml. It is not yet implemented.
+Now &fml8; provides both the master cgi to control all ML's in one
+domain and a cgi for each ml. 
+You can add and remove a user, or view member list et.al by this interface.
+Editing of configuration on this cgi is incomplete.
 </para>
 
 <para>
 If you use postfix and qmail, you do not need to modify MTA
-configuration.
+configuration for cgi specific reason.
 </para>
 
 </warning>
@@ -38,7 +43,7 @@ configuration.
 
 <sect1 id="setupcgi.install">
 	<title>
-	"makefml newml" creates CGI script.
+	"makefml newml" creates CGI script always.
 	</title>
 
 <para>
@@ -64,7 +69,6 @@ http://lists.fml.org/~fml/cgi-bin/fml/$domain/ml-admin/${ml_name}/config.cgi
 Example:
 http://lists.fml.org/~fml/cgi-bin/fml/fml.org/ml-admin/elena/config.cgi
 </screen>
-which is not yet created (not implemented _o_).
 </para>
 
 <para>
@@ -90,13 +94,18 @@ http://lists.fml.org/~fml/cgi-bin/fml/fml.org/.htaccess
 </para>
 
 <para>
-The default .htaccess is dummy like this:
+The default .htaccess is a dummy like this:
 <screen>
 AuthName ByPassword
 AuthType Basic
 require valid-user
 </screen>
 Please edit .htaccess properly.
+</para>
+
+<para>
+Apache dos not support ~user style access by default.
+Please set up apache to enable it.
 </para>
 
 </sect1>
@@ -183,6 +192,26 @@ Specify the address to subscribe and push "submit" at the center.
 
 <para>
 <graphic entityref="image.cgi.useradd"></graphic>
+</para>
+
+</sect1>
+
+
+<sect1 id="setupcgi.admin.cgi.skin">
+	<title>
+	CGI skin selection
+	</title>	
+
+<para>
+config.cgi is TABLE and SELECT based.
+If you use old style menu, use menu.cgi.
+<screen>
+for a whole domain
+~fml/public_html/fml/DOMAIN/admin/menu.cgi
+
+for a ml
+~fml/public_html/fml/DOMAIN/ml-admin/menu.cgi
+</screen>
 </para>
 
 </sect1>

@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: qmail.sgml,v 1.1 2003/07/24 15:37:37 fukachan Exp $
    $jaFML: qmail.sgml,v 1.3 2003/04/15 14:51:39 fukachan Exp $
 -->
 
@@ -28,13 +28,14 @@ The template of /var/qmail/control/virtualdomains is created at
 	</title>
 
 <para>
+It is good to prepare "ml.fml.org" domain for ml specific.
 At 
 <screen>
 /var/qmail/control/virtualdomains
 </screen>
 specify the following rule
 <screen>
-fml.org:fml-fml.org
+ml.fml.org:fml-fml.org
 </screen>
 .
 "makefml newml" can set up ~/.qmail-* automatically.

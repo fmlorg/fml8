@@ -1,16 +1,31 @@
 <!--
-   $FML: upgrade.sgml,v 1.1 2003/07/24 15:37:37 fukachan Exp $
+   $FML: upgrade.sgml,v 1.2 2003/07/26 09:06:36 fukachan Exp $
    $jaFML: upgrade.sgml,v 1.3 2003/04/15 14:51:39 fukachan Exp $
 -->
 
 <chapter id="xxxgrade">
 	<title>
-	upgrade/downgrade
+	Upgrade and Downgrade of &fml8;
 	</title>
+
+<warning>
+<para>
+This chapter describes upgrade and downgrade of &fml8;.
+</para>
+
+<para>
+See
+<link linkend="mergeml.fml4to8">
+<xref linkend="mergeml.fml4to8">
+</link>
+on the upgrade from &fml4; to &fml8;. 
+</para>
+</warning>
+
 
 <sect1 id="upgrade">
 	<title>
-	upgrade
+	Upgrade
 	</title>
 
 <para>
@@ -21,9 +36,9 @@ again.
 </para>
 
 <para>
-After &fml8; installation,
-rewrite fml_version line in /etc/fml/main.cf to the version installed now.
-Just when the file is saved, fml is changed to the new version.
+After &fml8; installation, rewrite fml_version line in
+/usr/local/etc/fml/main.cf to the version installed now.  Just when
+the file is saved, fml is changed to the new version.
 </para>
 </sect1>
 
@@ -34,8 +49,8 @@ Just when the file is saved, fml is changed to the new version.
 	</title>
 
 <para>
-No need to install. Edit /etc/fml/main.cf to back the fml_version to
-the previous one.
+No need to install. Edit /usr/local/etc/fml/main.cf to back the
+fml_version to the previous one.
 </para>
 
 <para>

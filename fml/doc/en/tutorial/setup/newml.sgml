@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: newml.sgml,v 1.1 2003/07/25 17:05:47 fukachan Exp $
    $jaFML: newml.sgml,v 1.3 2003/04/15 14:51:44 fukachan Exp $
 -->
 
@@ -12,17 +12,41 @@
 
 <sect1>
 	<title>
-	run "makefml newml" to create an ML
+	run "makefml newml" to create an ML (in the case of default domain)
 	</title>
 
+<caution>
 <para>
-To create an ML, use "makefml" command (CUI).
+The usage of &fml8; makefml is same as &fml4; in the case of default
+domain.  But not in the virtual domain case. See
+<link linkend="setup.newml.nondefault">
+<xref linkend="setup.newml.nondefault">
+</link>
+for the virtual domain case.
+</para>
+</caution>
+
+<para>
+To create an ML, use "makefml" command (CUI) in the same way as &fml4;.
 <screen>
 % su fml
 % makefml newml elena
+   ... snip ...
 </screen>
 </para>
 
+<para>
+In the case of non default domain (virtual domain), 
+run "makefml newdomain" command before run "makefml newml".
+<screen>
+% su root
+# makefml newdomain fml.org /var/spool/virtual/fml.org
+# exit
+% su fml
+% makefml newml elena
+   ... snip ...
+</screen>
+</para>
 
 <para>
 "makefml newml" processes the following steps.
@@ -37,8 +61,8 @@ To create an ML, use "makefml" command (CUI).
 	include
 	include-ctl
 	</screen>
-	at /var/spool/ml/elena.
-	The domai name et.al.  in these files is replaced to proper value.
+	at /var/spool/ml/elena. The domain name et.al. in these files
+	is replaced to proper value.
         </para>
    </listitem>
 
@@ -58,12 +82,6 @@ To create an ML, use "makefml" command (CUI).
    <listitem>
         <para>
 	update procmailrc as a sample.
-        </para>
-   </listitem>
-
-   <listitem>
-        <para>
-	create samples for each MTA.
         </para>
    </listitem>
 
@@ -103,6 +121,81 @@ To create an ML, use "makefml" command (CUI).
 </sect1>
 
 
+<sect1 id="setup.newml.nondefault">
+	<title>
+	run "makefml newml" to create an ML (in the case of non default domain)
+	</title>
+
+<caution>
+<para>
+The usage of makefml differs from &fml4;.
+In the case of &fml8; firstly use "makefml newdomain" command, 
+in the next run "makefml newml" command.
+Also ml_name differs. For virtual domain, use ml_name@ml_domain form.
+</para>
+</caution>
+
+<para>
+In using "makefml newml", the usage is same as &fml4; except for 
+the ml_name. ml_name part is ml_name@ml_domain in the case of &fml8;
+</para>
+
+<para>
+At the first time to use a virtual domain, 
+run "makefml newdomain" before "makefml newml".
+<screen>
+% su root
+# makefml newdomain nuinui.net /var/spool/virtual/nuinui.net
+# exit
+% su fml
+% makefml newml elena@nuinui.net
+</screen>
+After the second time, just use "makefml newml". 
+<screen>
+% su fml
+% makefml newml elena@nuinui.net
+</screen>
+</para>
+
+<para>
+In running "makefml newdomain", 
+specify a pair of domain and directory in ml_home_prefix_maps.
+This command edits /usr/local/etc/fml/ml_home_prefix file to add the
+following line.
+<screen>
+nuinui.net /var/spool/virtual/nuinui.net
+</screen>
+To remove this line, use "makefml rmdomain".
+</para>
+
+<para>
+The usage of "makefml newml" command is same as in the case of default
+domain.
+</para>
+
+<para>
+"makefml newml" creates an example of virtual domain configurations
+for several MTA's such as
+<screen>
+/var/spool/ml/etc/sendmail/virtusertable
+/var/spool/ml/etc/postfix/virtual
+</screen>
+.
+No example for qmail.
+No example for procmail since .procmailrc contains domain.
+</para>
+
+<para>
+See the chapter of
+<link linkend="virtualdomain">
+virtual domain
+</link>
+for more details.
+</para>
+
+</sect1>
+
+
 <!-- MTA config -->
 &sect.setup.postfix;
 &sect.setup.qmail;
@@ -111,5 +204,8 @@ To create an ML, use "makefml" command (CUI).
 <!-- each ML config -->
 &sect.setup.config.cf;
 
+
+<!-- recipies -->
+&sect.setup.newml.recipes;
 
 </chapter>

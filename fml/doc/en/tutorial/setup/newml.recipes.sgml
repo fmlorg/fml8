@@ -1,0 +1,85 @@
+<!--
+   $FML$
+   $jaFML: newml.recipes.sgml,v 1.3 2004/10/06 09:07:42 fukachan Exp $
+-->
+
+
+<sect1 id="setup.newml.recipies">
+        <title>
+	Recipes
+        </title>
+
+<qandaset>
+
+
+<!-- Q -->
+<qandaentry>
+
+<question>
+<para>
+specify administrator's mail address in alias file
+when "newml" command runs.
+</para>
+</question>
+
+<answer>
+<para>
+CUI (makefml/fml) creats an alias in "newml".
+<screen>
+${ml_name}-admin: ADDRESS
+</screen>
+where ADDRESS is defined by $newml_command_ml_admin_default_address.
+
+By default, $newml_command_ml_admin_default_address == $fml_owner
+defined in /usr/local/etc/fml/main.cf file.
+
+Specify
+$newml_command_ml_admin_default_address 
+in site_default_config.cf.
+<screen>
+$newml_command_ml_admin_default_address = YOUR_ADDRESS
+</screen>
+
+You can use $ml_name here.
+<screen>
+$newml_command_ml_admin_default_address = $ml_name-owner@$ml_domain
+</screen>
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<!-- Q -->
+<qandaentry>
+
+<question>
+<para>
+Not create a configuration file for a specific MTA not used.
+</para>
+</question>
+
+<answer>
+<para>
+$newml_command_mta_config_list defines 
+examples of MTA list "newml" command creates.
+Remove the specific MTA from the list.
+</para>
+
+<para>
+For example, you do not need "qmail" configuration example
+<screen>
+newml_command_mta_config_list -= qmail
+</screen>
+&fml8; does not generate ~/.qmail-* files.
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+</qandaset>
+
+</sect1>

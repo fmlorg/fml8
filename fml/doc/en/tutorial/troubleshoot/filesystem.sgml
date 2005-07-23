@@ -1,0 +1,132 @@
+<!--
+   $FML: filesystem.sgml,v 1.5 2005/06/25 15:11:38 fukachan Exp $
+-->
+
+
+<sect1 id="troubleshoot.filesystem">
+	<title>
+	When the file system error occurs ?
+	</title>
+
+<para>
+Fundamentally, &fml8; exit abnormally to make MTA re-deliver it or
+&fml8; re-delivers it by itself. &fml8; do not lost received messages
+whereas log or summary file lacks something.
+</para>
+
+<para>
+Describe below what happans when the file system error occurs in the
+delivery process.
+</para>
+
+
+<sect2>
+	<title>
+	When passed from MTA to &fml8;
+	</title>
+
+<para>
+&fml8; read a message and writes it into the disk once. If succeeded,
+it processes more. If failed, &fml8; exits abnormally as
+exit(EX_TEMPFAIL) for MTA to re-deliver it.  See
+<link linkend="message.queue.incoming">
+<xref linkend="message.queue.incoming">
+</link>
+for more details.
+</para>
+
+<para>
+In this case, incoming queue may have a incomplete message.
+&fml8; tries to remove it in abnormal exit.
+Even if failed, the queue management system removes it later.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	If the article sequence number update failed
+	</title>
+
+<para>
+In normal case, &fml8; updates the article sequence number and
+re-reads it and compare it again.
+If the check fails, &fml8; exit(EX_TEMPFAIL) for MTA to re-deliver it.
+</para>
+
+<caution>
+<para>
+The article sequence number updated. After that, 
+&fml8; should not do exit(EX_TEMPFAIL).
+</para>
+</caution>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	When saving the article failed
+	</title>
+
+<caution>
+<para>
+In this stage, the article sequence has been updated.
+</para>
+</caution>
+
+<para>
+In this case, &fml8; do not create a new article file but the original
+message is already on the disk. The header of the article differs from
+the original one but the body content is same. So &fml8; tries to
+link(2) the original mail in the incoming queue to the article file to
+save the content.
+<footnote>
+<para>
+If it could be, it is useful to implement another command which fixes
+the article header later. It is not implemented.
+</para>
+</footnote>
+</para>
+
+<para>
+&fml8; tries to deliver the message on the memory.
+</para>
+
+<para>
+If the delivery process exits abnormally, 
+the delivery process ends incompletely
+since &fml8; can not use outgoing queue. 
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	Delivery Process
+	</title>
+
+<para>
+&fml8; saves the message into the outgoing queue, after succeeded, the
+delivery process runs.
+</para>
+
+<para>
+When &fml8; fails to write the outgoing queue, 
+&fml8; exits incompletely. 
+</para>
+
+<para>
+See
+<link linkend="message.queue.outgoing">
+<xref linkend="message.queue.outgoing">
+</link>
+for more details.
+</para>
+
+</sect2>
+
+
+</sect1>

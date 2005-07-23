@@ -1,11 +1,11 @@
 <!--
-   $FML: download.sgml,v 1.1 2003/07/24 15:37:36 fukachan Exp $
+   $FML: download.sgml,v 1.2 2003/07/26 09:10:40 fukachan Exp $
    $jaFML: download.sgml,v 1.2 2002/07/06 14:55:17 fukachan Exp $
 -->
 
 <chapter id="download">
 	<title>
-	Download &fmldevel; source code.
+	Download &fml8; source code.
 	</title>
 
 
@@ -17,8 +17,8 @@
 
 <para>
 You can find &fml8; source at
-	<ulink url="ftp://ftp.fml.org/pub/fml-devel/">
-	ftp://ftp.fml.org/pub/fml-devel/
+	<ulink url="ftp://ftp.fml.org/pub/fml8/">
+	ftp://ftp.fml.org/pub/fml8/
 	</ulink>.
 You can get it by ftp.
 </para>
@@ -31,8 +31,8 @@ Please get the latest one.
 
 <para>
 Also, you can find a daily snapshot at
-<ulink url="ftp://ftp.fml.org/pub/fml/daily-snapshots/fml-devel/source/">
-ftp://ftp.fml.org/pub/fml/daily-snapshots/fml-devel/source/
+<ulink url="ftp://ftp.fml.org/pub/fml/daily-snapshots/fml8/source/">
+ftp://ftp.fml.org/pub/fml/daily-snapshots/fml8/source/
 </ulink>.
 This snapshot is auto-build. 
 So it may not work well.
@@ -48,7 +48,7 @@ So it may not work well.
 	</title>
 
 <para>
-You can find &fmldevel; under /fmlsrc in anoncvs.fml.org.
+You can find &fml8; under /fmlsrc in anoncvs.fml.org.
 </para>
 
 <para>

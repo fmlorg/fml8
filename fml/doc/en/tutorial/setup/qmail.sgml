@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: qmail.sgml,v 1.1 2003/07/25 17:05:47 fukachan Exp $
    $jaFML: qmail.sgml,v 1.2 2002/07/06 14:55:20 fukachan Exp $
 -->
 
@@ -14,11 +14,8 @@
 ~fml/.qmail-fml:org-elena
 ~fml/.qmail-fml:org-elena-ctl
 </screen>
-Hence, 
-<screen>
-/var/qmail/control/virtualdomains
-</screen>
-is prepared like this, 
+Hence, if /var/qmail/control/virtualdomains contains the following
+definition
 <screen>
 fml.org:fml-fml.org
 </screen>
@@ -32,5 +29,17 @@ This configuration assumuss
 ML's uses the whole one domain only for mailing list.
 </para>
 </warning>
+
+<sect2>
+	<title>
+	virtual domain case
+	</title>
+
+<para>
+The logic is same as above. So you need to edit
+/var/qmail/control/virtualdomains to make an ML effective
+automatically when you runs "makefml newml".  This edit needs root
+priviledge. Please contact the administrator on it.
+</para>
 
 </sect1>

@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: fml_on_unix.sgml,v 1.1 2003/07/25 14:49:21 fukachan Exp $
    $jaFML: fml_on_unix.sgml,v 1.5 2003/04/15 14:51:39 fukachan Exp $
 -->
 
@@ -16,8 +16,7 @@
 
 
 <para>
-Create the user "fml" and the group "fml" before running 
-configure.
+Create the user "fml" and the group "fml" before running configure.
 <screen>
 % su root
 # groupadd fml
@@ -212,7 +211,7 @@ Now you must run "make install".
 	</title>
 
 <para>
-&fml8; installs under /usr/local by default.
+&fml8; installs files under /usr/local by default.
 </para>
 
 <para>
@@ -237,7 +236,8 @@ Now you must run "make install".
 	configuration files.
 	It corresponds with 
 	&fml4;'s /usr/local/fml/.fml and default_config.ph.
-	Files here specify version and library paths etlb.al.
+	/usr/local/etc/fmo/main.cf
+	here specify version and library paths et.al.
           </entry>
         </row>
 
@@ -264,7 +264,7 @@ Now you must run "make install".
           <entry>
 	message templates 
 	( &fml4;'s /usr/local/fml/messages/)
-	language depends.
+	language dependendent.
 	  </entry>
         </row>
 
@@ -276,13 +276,23 @@ Now you must run "make install".
 		The top directory for mailing lists of the default domain.
 		same as &fml4;.
 
-		caution:: the owner of /var/spool/ml 
+		caution: the owner of /var/spool/ml 
 		can be specified by configure arguments.
 
 		Prepare different directory for each domain.
-		For example, var/spool/ml for fml.org (default domain),
+		For example, /var/spool/ml for fml.org (default domain),
 		whereas /var/spool/nuinui.net for nuinui.net domain
 		(virtual domain).
+
+		See <link linkend="virtualdomain.fml8.overview">
+		ml_home_prefix_maps
+		</link> for the relation between domain and directory.
+
+		Also see 
+		<link linkend="virtualdomain">
+		<xref linkend="virtualdomain">
+		</link>
+		for the virtual domain detail.
 	  </entry>
         </row>
       </tbody>
@@ -311,7 +321,7 @@ change user to "root" and run "make install"  after configure runs.
 <para>
 You need not to run configure by the user root.
 But, you need to run "make install" by root.
-So, it is good to run both by root.
+So, it may be better to run both by root.
 <screen>
 % su root
 # ./configure
@@ -361,7 +371,7 @@ file locations et.al.
 common over all mailing list on this host(site).
 <footnote>
 <para>
-This file corresponds to &fml4;'s site_init.ph.
+This file corresponds to &fml4;'s site_force.ph.
 </para>
 </footnote>
 </para>
@@ -425,11 +435,12 @@ All filter are enabled by default.
 <para>
 "mime component filter" is important.
 By default mime component filter is enabled,
-text/plain article can be passeed through &fml8;.
+Only text/plain article can be passed through &fml8;.
 </para>
 
 <para>
-To disable mime component filter, set
+To disable mime component filter on all ML's, 
+set
 <screen>
 use_mime_component_filter	=	no
 </screen>
@@ -454,8 +465,15 @@ at site_default_config.cf, and edit rules in
 	</title>
 
 <para>
-You do not need edit /usr/local/etc/fml/main.cf but you need to edit
-/usr/local/etc/fml/virtual.
+You do not need edit /usr/local/etc/fml/main.cf 
+but 
+you need to edit ml_home_prefix_maps.
+You can use "makefml newdomain" command to control ml_home_prefix_maps.
+See
+<link linkend="setup.newml">
+"ML creation"
+</link>
+for newdomain command.
 </para>
 
 <para>
@@ -467,7 +485,7 @@ you need to specify other directory.
 
 <para>
 Specify the relation between domain and directory, 
-edit /usr/local/etc/fml/virtual and set the following:
+edit /usr/local/etc/fml/ml_home_prefix and set the following:
 <screen>
 nuinui.net	/var/spool/nuinui.net
 </screen>

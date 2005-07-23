@@ -1,0 +1,68 @@
+<!--
+   $FML: apache.sgml,v 1.4 2005/06/25 15:11:36 fukachan Exp $
+-->
+
+
+<chapter id="setup.apache">
+	<title>
+	Apache configuration
+	</title>
+
+
+<warning>
+
+<para>
+See 
+<link linkend="cgi.internal.method">
+<xref linkend="cgi.internal.method">
+</link>
+for the &fml8; CGI internals.
+</para>
+
+</warning>
+
+
+<sect1 id="setup.apache.suexec">
+	<title>
+	Use suexec of apache
+	</title>
+
+<para>
+Build apache enabled with suexec. 
+Run configure  by
+<screen>
+(apache 1.x)
+configure --enable-suexec --suexec-caller=www
+</screen>
+The user "www" can call suexec.
+Please prepare a user specific for suexec-ed environment.
+</para>
+
+<para>
+After apache installation, change httpd.conf to allow ~user/cgi-bin/ form.
+<screen>
+Example:
+
+&lt;Directory /home/*/*/public_html&gt;
+    AllowOverride FileInfo AuthConfig Limit
+    Options MultiViews Indexes SymLinksIfOwnerMatch IncludesNoExec ExecCGI
+    &lt;Limit GET POST OPTIONS PROPFIND&gt;
+        Order allow,deny
+        Allow from SPECIFIC_HOST
+    &lt;/Limit&gt;
+&lt;/Directory&gt;
+
+&lt;IfModule mod_mime.c&gt;
+	... snip ...
+
+   AddHandler cgi-script .cgi
+
+	... snip ...
+&lt;/IfModule&gt;
+</screen>
+</para>
+
+</sect1>
+
+
+</chapter>

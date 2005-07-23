@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: config.cf.sgml,v 1.1 2003/07/25 17:05:47 fukachan Exp $
    $jaFML: config.cf.sgml,v 1.3 2003/04/15 14:51:44 fukachan Exp $
 -->
 
@@ -11,7 +11,7 @@
 <para>
 In running "makefml newml", makefml sets up
 configuration files such as config.cf,
-include files for sendmail and postfix, 
+include files for sendmail and postfix and
 ~fml/.qmail-* files. 
 <screen>
 % su fml
@@ -30,7 +30,7 @@ edit config.cf.
 
 <warning>
 <para>
-no menu tool to edit config.cf yet implemented.
+menu tool to edit config.cf is incomplete.
 </para>
 </warning>
 
@@ -42,8 +42,20 @@ For example,
 <screen>
 "| /usr/local/libexec/fml/distribute elena@fml.org"
 </screen>
-elena@fml.org in this argument determins 
+/var/spool/ml/elena/include-ctl file follows:
+<screen>
+"| /usr/local/libexec/fml/commande elena@fml.org"
+</screen>
+/usr/local/libexec/fml/PROGMAR resolves ml_name and ml_domain from 
+the arguments such as elena@fml.org.
+That is, elena@fml.org in this argument determines 
 values of $ml_domain and $ml_name.
+It is enough that ml_name and ml_domain in config.cf is a comment.
+</para>
+
+<para>
+The content of include, include-ctl and aliases are same as &fml4;
+except for the path.
 </para>
 
 </sect1>

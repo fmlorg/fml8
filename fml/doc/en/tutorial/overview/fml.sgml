@@ -1,5 +1,5 @@
 <!--
-   $FML: fml.sgml,v 1.1 2003/07/25 14:30:51 fukachan Exp $
+   $FML: fml.sgml,v 1.2 2003/07/27 18:11:40 fukachan Exp $
    $jaFML: fml.sgml,v 1.4 2003/04/15 14:51:43 fukachan Exp $
 -->
 
@@ -7,6 +7,14 @@
 	<title>
 	&fmldevel; overview
 	</title>
+
+<para>
+See
+<link linkend="changes">
+<xref linkend="changes">
+</link>
+on the detail of difference between &fml4; and &fml8;.
+</para>
 
 
 <!-- ======================================================== -->
@@ -21,29 +29,54 @@
 
     <listitem>
 	<para>
+	&fml8; configuration file format is changed to
+	<link linkend="internal.config.cf">
 	new postfix style format configuration files (.cf files).
+	</link>
 	</para>
     </listitem>
 
 
     <listitem>
 	<para>
-	usage of CUI is almost same as one of &fml4; 
+	usage of CUI is almost same as &fml4; 
 	(it is same as could as possible).
-	You can use CUI (makefml and fml command)
-		to create/remove an ML,
-		to add/remove/change an addresse of ML members,
-		to add/remove/change an address of remote administrators,
-		to see log and member list,
-		et.al.
+	You can use CUI 
+	<link linkend="usage.onhost">
+	(makefml and fml command)
+	</link>
+	<screen>
+	to create/remove an ML,
+	to add/remove/change an addresse of ML members,
+	to add/remove/change an address of remote administrators,
+	to see log and member list,
+	et.al.
+	</screen>
 	Makefml and fml are same programs except for argument order.
 	</para>
+
+	<para>
+	See
+        <link linkend="changes.cui">
+        <xref linkend="changes.cui">
+        </link>
+	on the CUI usage difference between &fml4; and &fml8;.
+	</para>
+
     </listitem>
 
     <listitem>
 	<para>
-	CGI interface.
+	GUI (CGI) interface.
 	The functions are a subset of CUI ones.
+	<screen>
+	to create/remove an ML,
+	to add/remove/change an address of ML members,
+	to add/remove/change an address of remote administrators,
+	to see log and member list,
+	et.al.
+	</screen>
+	The configuration file editing is incomplete yet.
 	</para>
     </listitem>
 
@@ -53,19 +86,33 @@
 	article delivery,
 	header rewriting
 	and
-	several filters.
+	several filters (
+	corresponding with &fml4;'s envelope filter and content filter
+	).
 	</para>
     </listitem>
 
     <listitem>
 	<para>
 	command mail for users.
+	<screen>
+	to add/remove/change the address,
+	get article summary, 
+	get old articles,
+	et.al.
+	</screen>
 	</para>
     </listitem>
 
     <listitem>
 	<para>
-	command mail (admin command) for remote administratoin by mail.
+	command mail (admin command mail) for remote administratoin by mail.
+	<screen>
+	to add/remove/change an addresse of ML members,
+	to add/remove/change an address of remote administrators,
+	to see log and member list,
+	et.al.
+	</screen>
 	</para>
     </listitem>
 
@@ -95,13 +142,18 @@
 	built-in module for HTML converter of articles.
 	support automatic conversion by default.
 	</para>
+
+	<para>
+	fmlhtmlify and makefml supports html conversion functions.
+	</para>
+
     </listitem>
 
 
     <listitem>
 	<para>
 	main programs (fml/libexec):
-	fml.pl distribute command error
+	distribute command error
 	</para>
     </listitem>
 
@@ -113,8 +165,6 @@
 	fmlailas
 	fmlconf
 	fmldoc
-	fmlhtmlify
-	fmlsch
 	makefml
 	fml
 	</para>
@@ -123,8 +173,27 @@
 
     <listitem>
 	<para>
+	fml4 emulation:
+	if you replace fml.pl of fml4 and fml.pl of fml8,
+	fml8 runs as fml4.
+	</para>
+    </listitem>
+
+
+    <listitem>
+	<para>
+	After 2004 summer, 
+	the queueing system is implemanted.
+	Currently the delivery system is queuing based.
+	So, &fml8; is a MTA in fact.
+	</para>
+    </listitem>
+
+
+    <listitem>
+	<para>
 	<link linkend="module.io.adapter">
-	Abstracted IO
+	Abstracted IO layer
 	</link>
 	to get member list in unified way from 
 		a file,
@@ -149,7 +218,7 @@
 <important>
 
 <para>
-You run GNU autoconf firstly, and "make install". It is standard in
+Run GNU autoconf firstly, and "make install". It is defact standard in
 the world of open sources. This procedure is different from &fml4;
 installation steps. It may confuse you if you are customered with
 &fml4; But &fml8; is more friendly for package systems of free unix
@@ -158,13 +227,10 @@ like systems.
 
 <para>
 The main differece between &fml4; and &fml8; in installation is
-"work by root",
+"run programs as root",
 "use of configure",
 and 
-editing of configuration files:
-/usr/local/etc/fml/main.cf 
-and
-/usr/local/etc/fml/site_default_config.cf.
+editing of configuration files.
 </para>
 
 </important>
@@ -180,7 +246,7 @@ The brief flow of installation is as follows:
    <listitem>
 	<para>
 	<link linkend="download">
-	Download &fml8; source and expand it on the disk.
+	Download &fml8; source and extract it on the disk.
 	</link>
 	</para>
    </listitem>
@@ -189,6 +255,7 @@ The brief flow of installation is as follows:
 	<para>
 	<link linkend="install.fml.unix">
 	Install it by user root.
+	</link>
 	Firstly, change user to "root" and create the user "fml" and
 	the group "fml".
 	Secondly, run
@@ -196,7 +263,6 @@ The brief flow of installation is as follows:
 	configure
 	</link>
 	and "make install".
-	</link>
 <screen>
 % su root
 # groupadd fml
@@ -207,19 +273,19 @@ The brief flow of installation is as follows:
 	</para>
 
 	<para>
-	By default, 
-	main programs such as distribute, command, et.al. are installed into
-	/usr/local/libexec/fml/.
-	Also, installer installs utility programs to 
-	/usr/local/bin.
-		<footnote>
-		<para>
-		You can control paths by
-		<link linkend="install.fml.unix.configure">
-		configure options.
-		</link>
-		</para>
-		</footnote>
+	By default, 4.4 BSD style sub-directories are created. 
+	The path is configurable at
+	<link linkend="install.fml.unix.configure">
+	configure options.
+	</link>
+	</para>
+
+	<para>
+	For example,
+	main programs called from MTA 
+	such as distribute, command, et.al. are installed into
+	under /usr/local/libexec/fml/.
+	Instead, utility programs are installed to /usr/local/bin.
 	These are wrappers to call real programs at /usr/local/libexec/fml/.
 	</para>
 
@@ -236,7 +302,7 @@ The brief flow of installation is as follows:
    <listitem>
 	<para>
 	<link linkend="guide.newml">
-	Change user to "fml", create elena ML for test.
+	Change user to "fml" and create elena ML for test.
 	</link>
 <screen>
 % su fml
@@ -254,14 +320,16 @@ Both are same except for the syntax.
 
    <listitem>
 	<para>
-	Set up MTA.
+	Set up MTA which runs &fml8; programs.
 	</para>
    </listitem>
 
 
    <listitem>
 	<para>
+	<link linkend="test">
 	Test.
+	</link>
 	</para>
    </listitem>
 
@@ -311,10 +379,28 @@ for more details.
 In the virtual domain case, specify the whole address as an argument. 
 For example, to create an ML elena@nuinui.net, run the following command:
 <screen>
+(At the first time)
+% su root
+% makefml newdomain nuinui.net /some/where/nuinui.net
+% su fml
+% makefml newml elena@nuinui.net
+
+(After the 2nd time)
 % su fml
 % makefml newml elena@nuinui.net
 </screen>
 </para>
+
+
+<warning>
+<para>
+See
+<link linkend="virtualdomain">
+<xref linkend="virtualdomain">
+</link>
+for the virtual domain case detail.
+</para>
+</warning>
 
 </sect1>
 
@@ -332,7 +418,7 @@ In the case of the default domain (fml.org)
 % makefml subscribe elena rudo@nuinui.net
 </screen>
 in the case of virtual domain (nuinui.net), 
-specify the whole adress of ML.
+specify the whole adress of ML name.
 <screen>
 % su fml
 % makefml subscribe elena@nuinui.net fukachan@sapporo.iij.ad.jp
@@ -355,7 +441,7 @@ In the case of the default domain (fml.org),
 % makefml unsubscribe elena rudo@nuinui.net
 </screen>
 in the case of virtual domain (nuinui.net), 
-specify the whole adress of ML.
+specify the whole adress of ML name.
 <screen>
 % su fml
 % makefml unsubscribe elena@nuinui.net fukachan@sapporo.iij.ad.jp
@@ -374,11 +460,11 @@ specify the whole adress of ML.
 <warning>
 <para>
 "makefml config" is a CUI to customize ML by menu form.
-BUT NOT yet implemented.
+BUT YET INCOMPLETE.
 </para>
 
 <para>
-Edit configuration files anyway.
+Edit configuration files anyway now.
 </para>
 
 </warning>
@@ -395,7 +481,7 @@ affects all ML on this host
 irrespective of the default domain or virtual domains.
 <footnote>
 <para>
-This corresponds to site_init.ph of &fml4;.
+This corresponds to site_force.ph of &fml4;.
 </para>
 </footnote>
 </para>
@@ -403,6 +489,14 @@ This corresponds to site_init.ph of &fml4;.
 <para>
 The format of site_default_config.cf is same as config.cf described
 below.
+</para>
+
+<para>
+See
+<link linkend="list.variables.by.alphabeticalorder">
+list of all variables
+</link>
+for the configurable variation.
 </para>
 
 </sect2>
@@ -415,8 +509,12 @@ below.
 
 <para>
 To customize elena ML, edit /var/spool/ml/elena/config.cf file. The
-format is a little modified postfix style. It is different from both
-&fml4;'s config.ph and cf.
+format is
+<link linkend="internal.config.cf">
+ a little modified postfix style. 
+</link>
+It is different from both &fml4;'s config.ph and cf.
+Add hooks after =cut line.
 </para>
 
 <para>
