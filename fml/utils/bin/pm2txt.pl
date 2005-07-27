@@ -1,11 +1,11 @@
-#!/usr/local/bin/perl
+#!/usr/bin/env perl
 #-*- perl -*-
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: pm2txt.pl,v 1.2 2001/04/28 10:55:06 fukachan Exp $
+# $FML: pm2txt.pl,v 1.3 2002/04/01 23:41:23 fukachan Exp $
 #
 
 use strict;

@@ -1,6 +1,6 @@
-#!/usr/local/bin/perl
+#!/usr/bin/env perl
 #
-# $FML: message_id.pl,v 1.2 2001/04/15 13:28:46 fukachan Exp $
+# $FML: message_id.pl,v 1.3 2001/08/05 13:09:00 fukachan Exp $
 #
 
 use strict;

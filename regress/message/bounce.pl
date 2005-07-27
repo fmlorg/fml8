@@ -1,11 +1,11 @@
-#!/usr/local/bin/perl
+#!/usr/bin/env perl
 #-*- perl -*-
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: bounce.pl,v 1.7 2001/05/05 06:21:12 fukachan Exp $
+# $FML: bounce.pl,v 1.8 2001/07/30 23:00:06 fukachan Exp $
 #
 
 use strict;

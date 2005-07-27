@@ -1,10 +1,10 @@
-#!/usr/local/bin/perl
+#!/usr/bin/env perl
 #-*- perl -*-
 #
 # Copyright (C) 2000 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML$
+# $FML: .fmldoc.pl,v 1.2 2001/04/03 09:51:13 fukachan Exp $
 #
 
 =head1 NAME

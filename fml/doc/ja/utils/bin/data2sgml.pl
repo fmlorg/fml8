@@ -1,6 +1,6 @@
-#!/usr/local/bin/perl
+#!/usr/bin/env perl
 #
-# $FML: data2sgml.pl,v 1.1 2001/04/28 14:37:05 fukachan Exp $
+# $FML: data2sgml.pl,v 1.2 2002/04/01 23:41:08 fukachan Exp $
 #
 
 use strict;

@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+#!/usr/bin/env perl
 
 
 use Dialect::ISO2022JP qw(is_iso2022jp_string);

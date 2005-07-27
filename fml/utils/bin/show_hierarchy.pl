@@ -1,6 +1,6 @@
-#!/usr/local/bin/perl
+#!/usr/bin/env perl
 #
-# $FML: show_hierarchy.pl,v 1.2 2001/08/19 16:11:28 fukachan Exp $
+# $FML: show_hierarchy.pl,v 1.3 2002/04/01 23:41:24 fukachan Exp $
 #
 
 use lib qw(./lib/3RDPARTY ./lib/fml5 ./lib/CPAN ./lib);

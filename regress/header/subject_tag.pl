@@ -1,6 +1,6 @@
-#!/usr/local/bin/perl -w
+#!/usr/bin/env perl -w
 #
-# $FML: subject_tag.pl,v 1.2 2001/01/23 09:03:31 fukachan Exp $
+# $FML: subject_tag.pl,v 1.3 2001/06/17 09:00:31 fukachan Exp $
 #
 
 use lib qw(../../fml/lib);

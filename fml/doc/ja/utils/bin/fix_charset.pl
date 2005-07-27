@@ -1,6 +1,6 @@
-#!/usr/local/bin/perl
+#!/usr/bin/env perl
 #
-# $FML: .fix_charset.pl,v 1.1 2001/04/23 17:15:52 fukachan Exp $
+# $FML: fix_charset.pl,v 1.1.1.1 2001/04/28 09:31:43 fukachan Exp $
 #
 
 use strict;
