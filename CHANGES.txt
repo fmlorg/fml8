@@ -3,9 +3,10 @@
 
   [最近のまとめ]
 
-  FML_CURRENT_VERSION=7.98.2
+  FML_CURRENT_VERSION=7.98.3
 
   8.0 PRE_ALPHA
+	7.98.3	Japanese document overhaul/revised.
 	7.98.2	queuing system revised. fetchfml added.
 		PGP/GPG authentication.
 		bug fix method naming convension (FNF).
@@ -23,6 +24,16 @@
 
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
+
+2005/07/01
+
+   FML::Process::Kernel 
+	garbage collection runs only when valid ml_home_dir found.
+	
+2005/06/27
+   7.98.3 Japanese document revised.
+
+	日本語のドキュメントをオーバーホールしました。	
 
 2005/06/04
 
@@ -8474,4 +8485,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.242 2005/06/04 09:47:39 fukachan Exp $
+$FML: CHANGES.txt,v 1.243 2005/06/05 07:18:56 fukachan Exp $
