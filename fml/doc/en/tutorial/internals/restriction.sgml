@@ -1,0 +1,202 @@
+<!--
+   $FML: restriction.sgml,v 1.9 2005/06/25 15:11:35 fukachan Exp $
+-->
+
+
+<chapter id="restriction">
+	<title>
+	Restrict input data
+	</title>
+
+<para>
+&fml8; checks the input by regular expression FML::Restriction class
+provides.
+</para>
+
+
+<sect1 id="restriction.overview">
+	<title>
+	Overview: checks of input data
+	</title>
+
+<sect2>
+	<title>
+	Restriction for article posting
+	</title>
+
+<para>
+Restrictions for article are ambiguous or too restrictive.  In fact
+FML::Restriction class does not provide restriction rules for article
+posting.
+</para>
+
+<para>
+Instead FML::Filter filter system checks each line of content.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	Restrictions for command mail
+	</title>
+
+<para>
+FML::Process::Command class parses each line of the command mail and
+checks the input by regular expressions FML::Restriction::Command
+provides.  If the check is passed, &fml8; calls
+FML::Command::{User,Admin}::COMMAND at the next step.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	CGI
+	</title>
+
+<para>
+CGI programs can receive the input from HTTP via only safe_param_XXX()
+method.
+</para>
+
+<para>
+It is expected that
+safe_param_*()
+and
+try_cgi_*() 
+returns the safe value.
+</para>
+
+<para>
+These safe_param_XXX() functions checks the input by regular
+expressions FML::Restriction::CGI provides (FML::Restriction::CGI
+inherits FML::Restriction::Base).
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	makefml / fml
+	</title>
+
+<para>
+CUI runs on the shell. 
+It means he/she who runs CUI has priviledge to log in the mailing list
+server.
+So it does not check the input.
+</para>
+
+<para>
+Each module checks the input independetly in that case
+though no checks by FML::Restriction at the entrance.
+For example, "adduser" module checks whether the input address
+is valid or not even in the case of CUI.
+These restrictions are dependent command specific modules.
+</para>
+
+</sect2>
+
+</sect1>
+
+
+<sect1 id="restriction.class">
+	<title>
+	FML::Restriction class
+	</title>
+
+<para>
+ACLs for the input data and commands are found at FML::Restriction
+class.
+</para>
+
+<para>
+For example, CGI modules use FML::Restriction::CGI class to check 
+if the input data matches the proper regular expression.
+</para>
+
+<para>
+Though FML::Restriction inherits FML::Restriction::Base class,
+fundamentally each module should use FML::Restriction as object
+composition. For example, use in the following way:
+<screen>
+use FML::Restriction::CGI;
+$safe = new FML::Restriction::CGI;
+my $allowed_regexp = $safe->param_regexp();
+
+if ($value =~ /^$allowed_regexp{$key}$) { ... ok, do something ... ;}
+</screen>
+</para>
+
+</sect1>
+
+
+<sect1 id="restrictioncgi.input.data">
+	<title>
+	How CGI restricts the input
+	</title>
+
+<para>
+CGI checks the input data by using FML::Restriction::CGI class.
+</para>
+
+<para>
+The input should be restricted by FML::Restriction class.
+We should not use param() method provided by perl's CGI class.
+Instead use safe_param_xxx() method always to get value.
+</para>
+
+<para>
+The following use may be allowed
+<screen>
+for my $dirty_buf (param()) {
+   ... check ...
+}
+</screen>
+but we should not use raw param() call.
+<screen>
+param($dirtty_buf)
+</screen>
+Instead, use safe_param_key().
+<screen>
+for my $key (param()) {
+   ... check ...
+
+   if (key eq $key) {
+       value = safe_param_key()
+   }
+}
+</screen>
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	Discussion: FML::Restriction is too restrictive ?
+	</title>
+
+<para>
+FML::Restriction class allows a subset of RFC defined expression.
+</para>
+
+<para>
+RRC definition is too large. 
+It is too difficult to implement it ;-)
+We restrict the expression a little.
+</para>
+
+<para>
+FML::Restriction::Command may be more granular but more granular
+version is not implemented.
+</para>
+
+</sect1>
+
+
+</chapter>

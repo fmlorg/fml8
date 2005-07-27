@@ -1,5 +1,5 @@
 <!--
-   $FML: dbms.sgml,v 1.1 2003/07/29 12:13:54 fukachan Exp $
+   $FML: dbms.sgml,v 1.2 2003/08/03 05:28:49 fukachan Exp $
    $jaFML: dbms.sgml,v 1.5 2003/05/31 08:51:09 fukachan Exp $
 -->
 
@@ -8,6 +8,16 @@
 	Database management system
 	</title>
 
+
+<para>
+This chapter describes how to handle persistent data.
+You should use DBMS (DataBase Management System) for that data.
+See
+<link linkend="db.module">
+<xref linkend="db.module">
+</link>
+on the internal use database.
+</para>
 
 <sect1 id="dbms.overview">
 	<title>
@@ -27,22 +37,6 @@ class.
 This class provides fundamental functions such as insersion and
 deletion of data. If more complex operation is needed, the
 preprocessing module calling IO::Adapter should handle it.
-</para>
-
-</sect1>
-
-
-<sect1 id="dbms.todo">
-	<title>
-	TODO
-	</title>
-
-<para>
-Consider if methods are least set or not. 
-<link linkend="module.io.adapter">
-IO::Adapter 
-</link>
-is enough minimum ?
 </para>
 
 </sect1>

@@ -1,0 +1,49 @@
+<!--
+   $FML: directory.sgml,v 1.6 2005/06/25 15:11:34 fukachan Exp $
+-->
+
+
+<chapter id="directory">
+	<title>
+	Directory
+	</title>
+
+
+<sect1 id="directory.subdir.hier.level">
+	<title>
+	Q: how recursively sub directory can be created ?
+	</title>
+
+<para>
+The structore holding the html-ized article is as follows:
+<screen>
+200201/msg\d+.html
+</screen>
+</para>
+
+<para>
+one sub-directory by default.
+</para>
+
+<para>
+Consider directory listing.
+"ls" returns 1000 files soon, but 10000 files a little slowly.
+</para>
+
+<para>
+To accelerate listing, we should use sub-directory structure.
+For example, each sub-directory holds 1000 files.
+HTML 化されたファイルをおくサブディレクトリを 1000 ごとに用意すると、
+The structure such as "spool/sub/file" holds 10^6 ( million ) files 
+and
+listing of it is fast.
+</para>
+
+<para>
+It must be enough to assume that 1 million articles for one ML.
+</para>
+
+</sect1>
+
+
+</chapter>

@@ -1,0 +1,64 @@
+<para>
+<screen>
+module     function                                     category
+                                                    <-- (get value)
+                                                    --> (set value)
+--------------------------------------------------------------------------------
+Error      run                                      --> error
+Error      finish                                   <-- error
+Fake       set_emul_domain                          --> faker
+Fake       get_emul_domain                          <-- faker
+Fake       set_emul_ml_list                         --> faker
+Fake       get_emul_ml_list                         <-- faker
+Fake       set_emul_user_list                       --> faker
+Fake       get_emul_user_list                       <-- faker
+Kernel     sysflow_reopen_stderr_channel            --> stderr
+Kernel     sysflow_reopen_stderr_channel            --> stderr
+Kernel     sysflow_finalize_stderr_channel          <-- stderr
+Kernel     sysflow_finalize_stderr_channel          <-- stderr
+Kernel     sysflow_finalize_stderr_channel          --> stderr
+State      current_process_set_ml_name              <-- current_process
+State      current_process_get_ml_name              <-- current_process
+State      restriction_state_set_deny_reason        --> check_restrictions
+State      restriction_state_get_deny_reason        <-- check_restrictions
+State      article_set_id                           --> article_message
+State      article_get_id                           <-- article_message
+State      command_context_set_ml_name              --> process_command
+State      command_context_get_ml_name              <-- process_command
+State      command_context_set_stop_process         --> process_command
+State      command_context_get_stop_process         <-- process_command
+State      command_context_set_normal_stop          --> process_command
+State      command_context_get_normal_stop          <-- process_command
+State      command_context_set_need_confirm         --> process_command
+State      command_context_get_need_confirm         <-- process_command
+State      command_context_set_admin_auth           --> process_command
+State      command_context_get_admin_auth           <-- process_command
+State      command_context_set_admin_password       --> process_command
+State      command_context_get_admin_password       <-- process_command
+State      command_context_set_try_admin_auth_request --> process_command
+State      command_context_reset_try_admin_auth_request --> process_command
+State      command_context_get_try_admin_auth_request <-- process_command
+State      filter_state_set_error                   --> filter_state
+State      filter_state_get_error                   <-- filter_state
+State      filter_state_spam_checker_set_error      --> filter_state
+State      filter_state_spam_checker_get_error      <-- filter_state
+State      filter_state_virus_checker_set_error     --> filter_state
+State      filter_state_virus_checker_get_error     <-- filter_state
+State      filter_state_set_tempfail_request        --> filter_state
+State      filter_state_get_tempfail_request        <-- filter_state
+State      smtp_server_state_set_error              --> smtp_transaction
+State      smtp_server_state_get_error              <-- smtp_transaction
+State      error_message_set_count                  <-- reply_message_count
+State      error_message_set_count                  --> reply_message_count
+State      error_message_get_count                  <-- reply_message_count
+Utils      incoming_message_set_cache_file_path     --> incoming_message
+Utils      incoming_message_get_cache_file_path     <-- incoming_message
+Utils      incoming_message_set_current_queue       --> incoming_smtp_transaction
+Utils      incoming_message_get_current_queue       <-- incoming_smtp_transaction
+Utils      set_language_hint                        --> language_hint
+Utils      get_language_hint                        <-- language_hint
+Utils      set_charset                              --> charset
+Utils      get_charset                              <-- charset
+Utils      get_charset                              <-- charset
+</screen>
+</para>

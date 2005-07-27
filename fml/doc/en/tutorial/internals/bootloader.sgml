@@ -1,0 +1,221 @@
+<!--
+   $FML: bootloader.sgml,v 1.13 2005/06/25 15:11:33 fukachan Exp $
+-->
+
+
+<chapter id="bootloader">
+	<title>
+	&fml8; boot loader to resolv version dependence dynamically
+	</title>
+
+<para>
+&fml8; provides a boot loader to resolv version dependence dynamically.
+For example, the loader boot straps &fml8; as follows:
+<screen>
+fml (libexec/distribute) boots like this ...
+
+       functions                class
+       ----------------------------------------
+
+       main::Bootstrap()        libexec/loader
+            |
+            V
+       main::Bootstrap2()       FML::Process::Switch
+            |
+            V
+       ProcessSwitch()          FML::Process::Switch
+            |
+            |
+            | switch to ($obj = FML::Process:Distribute)
+            |
+            V                   
+       ProcessStart($obj,$args) FML::Process::Flow
+</screen>
+</para>
+
+
+<sect1 id="bootloader.example.distribute">
+	<title>
+	Case: distribution
+	</title>
+
+<para>
+&fml8; loader boot straps like this in the case of distribution.
+</para>
+
+<para>
+/usr/local/libexec/fml/distributre (== /usr/local/libexec/fml/loader
+in fact) reads /usr/local/etc/fml/main.cf and resolvers the version it
+should use from $fml_version variable.  Let $fml_version
+current-20010501.  The loader uses library perl modules under
+/usr/local/lib/fml/current-20010501/.
+</para>
+
+<para>
+The loader resets @INC (perl include path).
+It loads FML::Process::Switch and checks $0 (program name in process table).
+The loader resolves from the name that the role is distribution.
+It loads FML::Process::Distribute and switches to the class.
+</para>
+
+<para>
+The relation between program name and class (perl module) is defined
+at /usr/local/etc/fml/defaults/$fml_version/modules file.
+</para>
+
+<para>
+FML::Process::Flow::ProcessStart() function drives these sequential
+steps. ProcessStart() takes FML::Process::Distribute object as an
+argument and drives the object.
+</para>
+
+</sect1>
+
+
+<sect1 id="bootloader.classes">
+	<title>
+	FML::Process:: class structure
+	</title>
+
+<para>
+<screen>
+FML::Process::Distribute >-|
+FML::Process::Command    >-|-- FML::Process::Kernel
+FML::Process::Mead       >-|    |
+                                |-use-a FML::Parse
+                                |-use-a FML::Config
+                                |-use-a FML::Log
+                                |-use-a  ... SOMETHING ...
+</screen>
+
+</para>
+</sect1>
+
+
+<sect1 id="bootloader.classes2">
+	<title>
+	Modules in process execution
+	</title>
+
+<itemizedlist>
+
+   <listitem>
+	<para>
+	libexec/loader (wrapper):
+	executes Bootstrap() runction.
+	libexec/distribute et.al. is a symlink(2) to this loader.
+	See under /usr/local/libexec/fml/ path.
+	</para>
+   </listitem>
+
+   <listitem>
+   <itemizedlist>
+	<listitem>
+	<para>
+	reads /usr/local/etc/fml/main.cf and resolves $fml_version.
+	reset @INC by main.cf value.
+	Since default_config.cf is version dependent,
+	the loader should evaluate the file before it reads 
+	ML specific configuration files.
+	</para>
+	</listitem>
+
+	<listitem>
+	<para>
+	Evaluate @ARGV and resolves which ML specific configuration
+	files we need to load.
+	</para>
+	</listitem>
+
+	<listitem>
+	<para>
+	load FML::Process::Switch class which is also version dependent.
+	</para>
+
+	   <itemizedlist>
+		<listitem>
+		<para>
+		The loader executes Bootstrap2() and ProcessSwitch() 
+		to switch the context to each one such as
+		distribution, command mail et.al.
+		In this time, the loader knows the role
+		from $0 process name.
+		</para>
+		</listitem>
+
+		<listitem>
+		<para>
+		Exapmle of Polymorphyism:
+		dynamic binding of module and creation of process
+		object in starting the process.
+
+		FML::Process::Flow describes the flow of process
+		like this:
+<screen>
+$process = new FML::Process::SOMETHING;
+$process->prepare($args);
+$process->verify_request($args);
+$process->run($args);
+$process->finish($args);
+</screen>
+		Each process should probide proper methods under
+		FML::Process:: class.
+		</para>
+		</listitem>
+	   </itemizedlist>
+	</listitem>
+   </itemizedlist>
+   </listitem>
+</itemizedlist>
+</sect1>
+
+
+<sect1 id="bootloader.resolv.mlxxx">
+	<title>
+	Discussion: where function should resolve $ml_name and $ml_domain.
+	</title>
+
+<para>
+Currently &fml8; resolves them in prepare() under FML::Process:: classes.
+</para>
+
+<para>
+Here is a part of background idea.
+<screen>
+main::Bootstrap()
+
+	resoles $fml_version based on main.cf information.
+
+	pass hints to some processes e.g. CGI.
+		CGI only
+		it should ignore invalid input.
+		$ml_name $and ml_domain is hard-coded in cgi scripts.
+
+
+main::Bootstrap2()
+ProcessSwitch()
+
+	resolves the module, configuration files, library path and @INC.
+
+	pass hints to some processes e.g. CGI.
+		CGI only 
+
+ProcessStart($obj, $args)
+
+   main process starts
+
+	new
+
+	prepare
+		resoles $ml_name and $ml_domain.
+		parse input from CGI using hints.
+		determine ml specific configuration files.
+		parse incoming message.
+		parse command line arguments.			
+</screen>
+</para>
+
+</sect1>
+
+
+</chapter>

@@ -1,5 +1,5 @@
 <!--
-   $FML: struct.sgml,v 1.1 2003/07/28 10:41:30 fukachan Exp $
+   $FML: struct.sgml,v 1.2 2003/08/03 05:28:49 fukachan Exp $
    $jaFML: struct.sgml,v 1.2 2003/04/15 14:51:41 fukachan Exp $
 -->
 
@@ -9,7 +9,32 @@
 	</title>
 
 
-&struct.curproc;
+<sect1 id="structure.curproc">
+	<title>
+	curproc object
+	</title>
+
+<para>
+Example of FML::Process::Distribute object.
+</para>
+
+ &struct.curproc;
+ 
+</sect1>
+
+
+<sect1 id="structure.pcb">
+	<title>
+	PCB category list
+	</title>
+
+<para>
+PCB category list, which contains module and function relation.
+</para>
+
+&list.pcb;
+
+</sect1>
 
 
 </appendix>

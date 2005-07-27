@@ -1,0 +1,122 @@
+<!--
+   $FML: merge.sgml,v 1.3 2005/06/25 15:11:34 fukachan Exp $
+-->
+
+
+<chapter id="merge.internal.to.fml8">
+	<title>
+	Convert another ML system to &fml8;
+	</title>
+
+
+<sect1 id="merge.internal.fml4to8">
+	<title>
+	Implementation: &fml4; to &fml8;
+	</title>
+
+<sect2>
+	<title>
+	Case 1: /var/spool/ml/elena/ from &fml4; to &fml8;
+	</title>
+
+<para>
+This conversion does the following steps in fact.
+</para>
+
+<para>
+1) install &fml8; firstly. In this case, add
+/var/spool/ml/etc/mail/aliases into $alias_maps of postfix main.cf.
+/var/spool/ml/etc/mail/aliases may be empty.
+</para>
+
+<para>
+2) run "makefml --force newml elena" to create several files &fml8;
+needs.
+</para>
+
+<para>
+3) convert address lists in /var/spool/ml/elena to &fml8; style.
+</para>
+
+<para>
+3-1)
+IO::Adapter ignores a line beginning with '^#' as a comment.
+We should handle carefully it since
+"actives" file contains ^# lines as "off" address.
+</para>
+
+<para>
+3-2)
+s=skip (off) options is ignored. 
+It handles as "on".
+</para>
+
+<para>
+3-3)
+m=... (digest) options is ignored.
+
+Also, "# address" is "off" in the case of &fml4; but ignored in the
+case of &fml8;. We should warn it ?
+</para>
+
+<para>
+4) remove the corresponding entry of alias file
+(/var/spool/ml/etc/fml/aliases) of &fml4; and rebuild .db. 
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	Case 2: convert the whole /var/spool/ml/ from &fml4; to &fml8;
+	</title>
+
+<para>
+Apply case 1 for all ML's.
+</para>
+
+<para>
+If we can stop all ML's, it is easy to remove
+/var/spool/ml/etc/fml/aliases of &fml4; firstly and apply case 1 steps.
+stop MTA in migration.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	Discussion: use half and half of &fml4; and &fml8; softwares.
+	</title>
+
+<para>
+(X-Sequence: fml-devel 389)
+</para>
+
+<para>
+How in half and half case.
+</para>
+
+<para>
+For example, site_init.ph or config.ph of &fml4; follows
+<screen>
+[fml4]
+
+push(@ACTIVE_LIST,"$DIR/recipients") if( -f "$DIR/recipients" ) ;
+</screen>
+instead in the case of &fml8;
+site_default_config.cf or config.cf follows: 
+<screen>
+[fml8]
+
+html_archive_dir = $ml_home_dir/htdocs
+</screen>
+</para>
+
+</sect2>
+
+</sect1>
+
+
+</chapter>

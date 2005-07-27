@@ -1,0 +1,83 @@
+<!--
+   $FML: lock.sgml,v 1.5 2005/06/25 15:11:34 fukachan Exp $
+-->
+
+
+<chapter id="lock">
+	<title>
+	Lock
+	</title>
+
+<para>
+Synchronization among processes uses lock.
+&fml8; provides flock(2) or lockf(2) based lock mechanism.
+</para>
+
+
+<sect1 id="lock.overview">
+	<title>
+	Overview: lock
+	</title>
+
+<para>
+After 2003/03, &fml8; provides more granular not giant lock. 
+</para>
+
+<para>
+Each resource defines each lock channel name.
+</para>
+
+<para>
+For example,
+Mail::Delivery related class accesses the member list.
+It needs several locks. 
+</para>
+
+<para>
+Mail::Delivery::SMTP needs lock of member list.
+FML::Send and FML::Process::Delivery locks member list access 
+in callling Mail::Delivery::SMTP.
+</para>
+
+<para>
+Instead 
+Mail::Delivery::Queue just sees the mail queue.
+The function can access the queue concurrently, also.
+So this module does not need lock.
+</para>
+
+<para>
+Generally speaking, modules using maps require lock.
+For example, 
+FML/Command/UserControl.pm  and
+FML/Command/Auth.pm
+needs write lock, but
+FML/Credential.pm
+needs only read lock.
+</para>
+
+<para>
+It is useful if &fml8; provides reader writer lock. But it is not implemented.
+Currently we attension we use short critical region. 
+</para>
+
+</sect1>
+
+
+<sect1 id="lock.todo">
+	<title>
+	TODO
+	</title>
+
+<para>
+mutex lock in calling *_maps.
+</para>
+
+<para>
+READER WRITER LOCK in calling IO::Adapter.
+</para>
+
+</sect1>
+
+
+</chapter>

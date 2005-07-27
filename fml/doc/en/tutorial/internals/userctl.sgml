@@ -1,0 +1,57 @@
+<!--
+   $FML: userctl.sgml,v 1.3 2004/10/06 09:07:40 fukachan Exp $
+-->
+
+
+<chapter id="userctl">
+	<title>
+	subscribe / unsubscribe
+	</title>
+
+
+<sect1 id="userctl.deladd">
+	<title>
+	which map subscribe/unsubscribe is operated to ?
+	</title>
+
+<para>
+Subscribe/unsubscribe is operated to $primary_*map.
+</para>
+
+<para>
+For example, 
+subscription of remote administrators is operated into
+both $primary_admin_member_map and $primary_admin_recipient_map.
+unsubscription of remote administrators is operated into
+both $primary_admin_member_map and $primary_admin_recipient_map.
+</para>
+
+<para>
+Why use primary_*_map ?
+If we use admin_member_maps and admin_recipient_maps, it causes a problem.
+</para>
+
+<para>
+Subscription should be operated into one map. So we should operate it
+into primary_*_map.
+</para>
+
+<para>
+Unsubscription must be same since xxx_maps is composed of different
+privileged maps.
+</para>
+
+<para>
+For example, $member_maps is as follows.
+It contais a list of member and a list of remote administrators.
+<screen>
+member_maps		=	$primary_member_map
+				$admin_member_maps
+</screen>
+So unsubscription operated for $member_maps may cause 
+unsubscription of remote administrators. It is wrong logic.
+</para>
+
+</sect1>
+
+</chapter>

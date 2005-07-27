@@ -1,0 +1,224 @@
+<!--
+   $FML: language.sgml,v 1.3 2004/10/06 09:07:39 fukachan Exp $
+-->
+
+
+<chapter id="language.preference">
+	<title>
+	Language preference in processing
+	</title>
+
+
+<sect1 id="language.preference.overview">
+	<title>
+	Problems of language preference
+	</title>
+
+<para>
+The simplest model is that we suppose we should return the japanese
+message when the ML is configures as for Japanese.
+This model needs the language of a ML is fixed.
+This ML always returns the error message in Japanese.
+</para>
+
+<para>
+However, it is not proper to ignore Accept-Language: header field
+since some Japanese people cannot read Japanese on the screen.
+There may be invalid Accept-Language: field.
+There are several problems.
+</para>
+
+<para>
+For example, if "Accept-Language: ja" is given, we can recognize the
+language is "ja".  However, how about the case Japanese send a mail
+with the body content "help" (English) ? In that case we cannot
+determine we should return the reply in us-ascii or iso-2022-jp.
+For example, how about the following example ?
+<screen>
+Example:
+
+From: rudo@example.co.jp
+Subject: help
+mime-version: 1.0
+content-type: text/plain; charset=us-ascii 
+
+help
+</screen>
+</para>
+
+<para>
+We should return the English reply message based on charset
+information since this message contains English only, so charset is
+us-ascii. But this case we should return Japanese message since the
+sender is a Japanese.  So we should return the help message in both
+English and Japanese if the ML is configures as Japanese
+preferrable. If English is preferrable, the reply is English only.
+</para>
+
+<para>
+If Accept-Lanaguage: is specified, we prefer it. Even if the ML is
+English preferrable (config: language_preference_order = en) and the
+message with "Accept-Lanaguage: ja" is given, the ML returns the
+Japanese help message.
+&fml8; behaves like it.
+</para>
+
+</sect1>
+
+
+<sect1 id="language.preference.ml.ja">
+	<title>
+	Japanese preferred ML
+	</title>
+
+<para>
+language_preference_order variable controls the behaviour.
+By default, an ML for Japanese is configures as 
+<screen>
+language_preference_order	=	ja en
+</screen>
+&fml8; uses this hint.
+</para>
+
+
+<sect2>
+	<title>
+	Accept-Language: ja, en
+	</title>
+
+<para>
+&fml8; returns the message only in Japanese.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	Accept-Language: en
+	</title>
+
+<para>
+&fml8; returns the message only in English.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	no Accept-Language:,  Content-Type: charset=iso-2022-jp
+	</title>
+
+<para>
+&fml8; returns the message only in Japanese.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	no Accept-Language:, Content-Type: charset=us-ascii
+	</title>
+
+<para>
+We cannot determine the language.
+We should return the message in both English and Japanese.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	no Accept-Language:,  no Content-Type:
+	</title>
+
+<para>
+We cannot determine the language.
+We should return the message in both English and Japanese.
+</para>
+
+</sect2>
+
+</sect1>
+
+
+<sect1 id="language.preference.ml.en">
+	<title>
+	English preferred ML
+	</title>
+
+<para>
+By default, a  ML for English people is configured as
+<screen>
+language_preference_order	=	en
+</screen>
+&fml8; uses this hints.
+</para>
+
+
+<sect2>
+	<title>
+	Accept-Language: ja, en
+	</title>
+
+<para>
+&fml8; returns the message only in Japanese.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	Accept-Language: en
+	</title>
+
+<para>
+&fml8; returns the message only in English.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	no Accept-Language:, Content-Type: charset=iso-2022-jp
+	</title>
+
+<para>
+&fml8; returns the message only in Japanese.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	no Accept-Language:, Content-Type: charset=us-ascii
+	</title>
+
+<para>
+&fml8; returns the message only in English.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	no Accept-Language:, no Content-Type:
+	</title>
+
+<para>
+&fml8; returns the message only in English.
+</para>
+
+</sect2>
+
+</sect1>
+
+
+</chapter>

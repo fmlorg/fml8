@@ -1,9 +1,9 @@
 <!--
-   $FML: config.cf.sgml,v 1.1 2003/07/27 01:29:28 fukachan Exp $
+   $FML: config.cf.sgml,v 1.2 2003/08/03 05:28:48 fukachan Exp $
    $jaFML: config.cf.sgml,v 1.11 2003/06/20 22:23:14 fukachan Exp $
 -->
 
-<chapter>
+<chapter id="internal.config.cf">
 	<title>
 	Configuration file: config.cf
 	</title>
@@ -21,18 +21,22 @@ You can customize each ML differently.
 </para>
 
 <para>
-In the case of &fml4;, there are $DIR and config.ph in ML home
-directory. This "config.ph" file is a perl script.
+In the case of &fml4;, there is a config.ph in ML home directory,
+$DIR (e.g. /var/spool/ml). This "config.ph" file is a perl script.
 </para>
 
 <para>
 There is a config.cf file in &fmldevel;, too.
-But the format is diffrent. The format is like this:
+But the format is different. The format is like this:
 <screen>
 variable = value
 </screen>
 .
 It is similar to postfix or .ini files.
+</para>
+
+<para>
+It is similar to a perl module. You can write perl codes after =cut line.
 </para>
 
 
@@ -128,7 +132,7 @@ since the last $a overwrites the previous one.
 
 
 <!-- ======================================= -->
-<sect1>
+<sect1 id="config.cf.format.extension">
 	<title>
 	Extension to postfix style
 	</title>
