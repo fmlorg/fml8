@@ -1,0 +1,187 @@
+<!--
+   $FML: cgi.sgml,v 1.14 2005/06/25 15:11:33 fukachan Exp $
+-->
+
+
+<chapter id="cgi.internal">
+	<title>
+	Internal of CGI process
+	</title>
+
+
+<sect1 id="cgi.internal.method">
+	<title>
+	Method
+	</title>
+
+<para>
+FML::CGI class should implement the following methods:
+<screen>
+html_start()
+run_cgi_main()
+run_cgi_title()
+run_cgi_navigator()
+run_cgi_menu()
+run_cgi_command_help()
+run_cgi_options()
+html_end()
+</screen>
+where
+html_start() prints out the header of HTML such as DOCTYPE ... BODY,
+html_end() prints /BODY and /HTML.
+run_XXX methons prints the main content.
+</para>
+
+<para>
+run() of $curproc method drives
+<screen>
+html_start()
+run_cgi_XXX()
+html_end()
+</screen>
+sequentially.
+That is, the flow of CGI process is as follows:
+<screen>
+new()
+prepare()
+verify_request()
+run()
+   html_start()
+   run_cgi_XXX()
+   html_end()
+finish()
+</screen>
+</para>
+
+</sect1>
+
+
+<sect1 id="cgi.internal.frames">
+	<title>
+	Screen of CGI and the method
+	</title>
+
+<para>
+&fml8; CGI script creates the screen:
+<screen>
+          header
+space     menu        space
+bar 1     main        bar 2
+space     menu        space
+          footer
+</screen>
+The bar 1 and 2 are called as navigation bar.
+</para>
+
+<para>
+html_start() generates header part(DOCTYPE ... BODY of HTML, NOT HTTP
+HEADER).  html_end() generates footer part.
+</para>
+
+<para>
+Instead, BODY content generates 3 x 3 tables by using methods drived
+by run_cgi().
+</para>
+
+<para>
+9 sub methods called by run_cgi() generetes the following 9 pieces on
+the screen.
+<screen>
+nw   north  ne
+west center east
+sw   south  se
+</screen>
+</para>
+
+
+<sect2>
+	<title>
+	Screen of the current CGI
+	</title>
+
+<para>
+CGI screen generates 3 x 3 table structure.
+The following methods generates the corresponding part of the screen.
+<screen>
+run_cgi_main
+			run_cgi_title
+run_cgi_navigator	run_cgi_menu	run_cgi_command_help
+run_cgi_options
+</screen>
+These methods use TABLE to create 3 x 3 matrix.
+These methods are defined in hash table.
+run_cgi() executes them sequentially.
+</para>
+
+<para>
+run_cgi_main() print nothing if nothing to do.
+In almost cases, print just "OK ..." message.
+If needed, it shows error messages.
+run_cgi_main() runs before all other methonds to 
+print out the latest information.
+</para>
+
+<para>
+run_cgi_main() is adapter layer defined at FML::CGI::Menu::Admin.
+Each command is executed via this layer.
+</para>
+
+<para>
+In a few cases such as showing log, listing up addresses, 
+run_cgi_menu() print out the data.
+</para>
+
+</sect2>
+
+</sect1>
+
+
+<sect1 id="cgi.internal.trampoline">
+	<title>
+	Screen and trampolin mechanism
+	</title>
+
+<para>
+CGI print engine is moved to 
+FML::Command:: class.
+However FML::Command:: does not contains all content of pritn engine.
+By object composition,
+some modules us methods FML::CGI:: provides.
+For example, subscribe command internal is as follows.
+<screen>
+FML::CGI::Admin::Main ->
+FML::Command::Admin::subscribe ->
+FML::CGI::Admin::User ->
+SCREEN
+</screen>
+The flow goes and back again like trampolin mechanism.
+</para>
+
+</sect1>
+
+
+<sect1 id="cgi.internal.problems">
+	<title>
+	MISC: hard coding is mandatory ?
+	</title>
+
+<para>
+FML::CGI::Admin::User contains the relation between $comname and maps.
+It is hard-coded. But it cannnot be avoided.
+</para>
+
+<para>
+If we move the relation to configuration space, 
+we need a lot of variables in it.
+It is better to use configuration variables for cusotomization,
+but ...
+</para>
+
+</sect1>
+
+
+<!-- .cgi implementation -->
+&sect.internal.cgi.examples;
+
+
+</chapter>

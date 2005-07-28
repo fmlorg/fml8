@@ -1,0 +1,125 @@
+<!--
+   $FML: hook.sgml,v 1.6 2004/10/06 09:07:39 fukachan Exp $
+-->
+
+
+<chapter id="hook">
+	<title>
+	HOOK
+	</title>
+
+
+<sect1 id="hook.problems">
+	<title>
+	Overview
+	</title>
+
+<para>
+Hooks are requierd to resolve complicated problems or for compilcated
+customization. But there are several problems in implemantation.
+</para>
+
+<para>
+One problem is naming convension.
+$START_HOOK of &fml4; is ambiguous.
+It means the location in process but not clarify where in which process.
+So, &fml8; hook naming convension has role and function in it.
+<screen>
+$ROLE_FUNCTION_start_hook
+$ROLE_FUNCTION_end_hook
+</screen>
+</para>
+
+<para>
+There is no common hook amongh processes.  Each process has each hook.
+In other words, there is no common hook. You need to define plural
+hooks for different processes even if the hook is same content.
+<screen>
+$distribute_XXX_start_hook = q{ ... };
+$YYY_XXX_start_hook = $distribute_XXX_start_hook;
+</screen>
+</para>
+
+<para>
+Coding style of hooks are expected not too restrictive
+since perl beginners may code it.
+&fml8; modules have
+<screen>
+use strict;
+</screen>
+definition but not effective in evalauating hooks.
+In evaluating a hook, apply
+<screen>
+no strict;
+HOOK CONTENT
+</screen>
+, that is disable the strict check, and evaluates the hook.
+</para>
+
+<para>
+Function scope differs among &fml4; and &fml8;.
+In &fml4; all functions are global.
+Instead in &fml8; functions are methods, which is not called anytime anywhere.
+We should provide hooks when we can see $curproc.
+</para>
+
+</sect1>
+
+
+<sect1 id="hook.naming.convention">
+	<title>
+	Hook naming convension
+	</title>
+
+<para>
+hook standard form is
+<screen>
+ROLE_METHOD_start_hook
+ROLE_METHOD_end_hook
+</screen>
+The role is "ROLE" part of $use_ROLE_function
+(e.g. $use_article_post_function) in configuration variables.
+This hook directory corresponds to some variables in configuration.
+More granular hooks do not match this rule.
+</para>
+
+<para>
+For example, the main part of fmlconf command, run() method, provide
+the following hooks:
+<screen>
+fmlconf_run_start_hook
+fmlconf_run_end_hook
+</screen>
+The actual code calling hooks follows:
+<screen>
+sub run
+{
+    my ($curproc, $args) = @_;
+    my $config  = $curproc-&gt;{ config };
+
+    my $eval = $config-&gt;get_hook( 'fmlconf_run_start_hook' );
+    if ($eval) {
+	eval qq{ $eval; };
+	print STDERR $@ if $@;
+    }
+
+    $curproc-&gt;_fmlconf($args);
+
+    $eval = $config-&gt;get_hook( 'fmlconf_run_end_hook' );
+    if ($eval) {
+	eval qq{ $eval; };
+	print STDERR $@ if $@;
+    }
+}
+</screen>
+</para>
+
+<para>
+This case is fundamental. More granular hooks must be needed.
+The naming convension may differ from this convension.
+</para>
+
+</sect1>
+
+
+</chapter>

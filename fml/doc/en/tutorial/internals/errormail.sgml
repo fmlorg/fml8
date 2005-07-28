@@ -1,0 +1,177 @@
+<!--
+   $FML: errormail.sgml,v 1.7 2005/06/25 14:43:08 fukachan Exp $
+-->
+
+
+<chapter id="error.internal">
+	<title>
+	Errormail Analyzer (libexec/error)
+	</title>
+
+<para>
+&fml8; error (/usr/local/libexec/fml/error) program corresponds to
+mead (/usr/local/fml/libexec/mead) of &fml4;
+</para>
+
+<para>
+set "$use_error_mail_analyzer_function = yes" to enable error mail
+analyzer function. By default, $use_error_mail_analyzer_function is
+yes. That is, &fml8; error analyzer is enabled by default but &fml4;
+not. This default behaviour differs from &fml4;.
+</para>
+
+<para>
+In fact, typical functions of &fml8; are enabled by default.
+</para>
+
+
+<sect1 id="error.internal.overview">
+	<title>
+	Overview
+	</title>
+
+<para>
+&fml8; sets up that $ml-admin address (address error messages returned
+to) calls /usr/local/libexec/fml/error in creating a ML.
+</para>
+
+<para>
+/usr/local/libexec/fml/error reads a message, analyzes it and creates
+a chain of Mail::Message objects on memory. Mail::Bounce class
+analyzes the detail of error based on the object.
+</para>
+
+<para>
+Mail::Bounce analylzes which MTA generates the error, which address
+generates the error, and the error reason.
+</para>
+
+<para>
+The result is cached at $error_mail_analyzer_cache_dir directory.
+</para>
+
+<para>
+After some time interval, $error_mail_analyzer_function analyzes the
+cache data to determine if an address is effective or not. If some
+address is determined to be removed, &fml8; removes it from
+member/recipient list.
+</para>
+
+</sect1>
+
+
+<sect1 id="error.internal.algorithm">
+	<title>
+	Algorithm of error detection
+	</title>
+
+<para>
+Functions of $error_mail_analyzer_function_select_list are available
+to determine error or not. Currently "simple_count histgram" and
+"histgram" algorithm are supported. "histgram" is used by default.
+</para>
+
+
+<sect2>
+	<title>
+	Algorithm: simple_count
+	</title>
+
+<para>
+Count up the number of error messages from an address and
+determine whether the address is effective or not.
+</para>
+
+<para>
+This logic depends on just the total number of errors.  If the traffic
+of ML is high, little configuration error of recipients caueses
+removal of the address soon.
+This is the main problem of this logic.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	Algorithm: histgram
+	</title>
+
+<para>
+Count up the number of continuous days that error messages returned.
+If the number oversomes the threshold, &fml8; removes the
+corresponding address. The threshold is 14 days by default.
+</para>
+
+<para>
+This logic assumes that the traffic of a ML is at least one message
+per day. In other words, this logic requires the continuous error. So,
+little configuration error in the side of recipient has no effect.
+</para>
+
+<para>
+&fml8; uses this algorithm by default.
+</para>
+
+<para>
+Caution: If the traffic of the ML is too little under at least one
+message per day, this algorithm does not work.
+</para>
+
+</sect2>
+
+</sect1>
+
+
+<sect1 id="error.internal.cache">
+	<title>
+	Cache of error messages data
+	</title>
+
+<para>
+Error messages data is cached at $error_mail_analyzer_cache_dir
+directory.
+</para>
+
+<para>
+IO to cache uses Tie::JournaledDir class via FML::Error::Cache. 
+</para>
+
+<para>
+FML::Error::Cache is a front end (adapter layer) for Tie::JournaledDir
+class. All IO should be done via methods provided by FML::Error::Cache.
+</para>
+
+</sect1>
+
+
+<sect1 id="error.internal.message.forward">
+	<title>
+	Forward error messages
+	</title>
+
+<para>
+You can specify the location the error message is forwarded to as
+$maintainer_recipient_maps
+variable.
+Undefiend by default.
+Error messages are logged at a log file but not forwarded.
+</para>
+
+<para>
+If enabled, this function forwards the error messages. Just forward it
+as mime/multipart which contains one messages/rfc822 part.
+</para>
+
+<para>
+FUTURE PLAN: we forward error messages with the analyzed data.
+</para>
+
+<para>
+REFERENCE: fml-devel ML 451 around
+</para>
+
+</sect1>
+
+
+</chapter>

@@ -1,0 +1,348 @@
+<!--
+   $FML: design.sgml,v 1.11 2004/10/06 09:07:38 fukachan Exp $
+-->
+
+
+<chapter id="design">
+	<title>
+	[LOG] Original Idea of &fml8; project
+	</title>
+
+
+<!-- ========================================================
+		section 1
+     ========================================================
+-->
+
+<sect1 id="design.overview">
+	<title>
+	the original idea of &fml8; (fml-devel) project
+	</title>
+
+<para>
+&fml8; project called as
+<ulink url="http://www.fml.org/software/fml8/">
+fml-devel
+</ulink>
+also is refactoring of &fml4; mailing list driver.
+</PARA>
+
+<para>
+See
+<ulink url="http://www.fml.org/software/fml8/">
+http://www.fml.org/software/fml8/
+</ulink>
+for more details on the furure plan, design and implementation 
+of fml-current.
+</PARA>
+
+
+<!--
+	OLD DESCRIPTIONS ARE CUT OFF.
+-->
+
+</sect1>
+
+
+<!-- ======================================================== -->
+
+<sect1 id="design.idea.detail">
+	<title>
+	Details of idea
+	</title>
+
+<itemizedlist>
+
+   <listitem>
+	<para>
+	simple implementation of configuration files and menu.
+	</para>
+   </listitem>
+
+   <listitem>
+	<para>
+	perl module (> perl 5.00504 )
+	</para>
+   </listitem>
+
+   <listitem>
+	<para>
+	support more integrated CUI (makefml) and GUI.
+	</para>
+   </listitem>
+
+   <listitem>
+	<para>
+	Separation
+	</para>
+
+	<itemizedlist>
+
+	   <listitem>
+		<para>
+		easy <link linkend="upgrade"> upgrade </link>
+		</para>
+	   </listitem>
+
+	   <listitem>
+		<para>
+		use CPAN modules as could as possible.
+		</para>
+	   </listitem>
+
+	   <listitem>
+		<para>
+		3rd party directory
+		</para>
+	   </listitem>
+
+	</itemizedlist>
+   </listitem>
+
+   <listitem>
+	<para>
+	abstracted IO layer
+	</para>
+
+		<itemizedlist>
+
+		   <listitem>
+			<para>
+			file (implemented)
+			</para>
+		   </listitem>
+
+		   <listitem>
+			<para>
+			/etc/group (implemented)
+			</para>
+		   </listitem>
+
+		   <listitem>
+			<para>
+			NIS (implemented)
+			</para>
+		   </listitem>
+
+		   <listitem>
+			<para>
+			SQL (MySQL implemetned)
+			</para>
+		   </listitem>
+
+		   <listitem>
+			<para>
+			LDAP
+			</para>
+		   </listitem>
+
+	</itemizedlist>
+
+   </listitem>
+
+   <listitem>
+	<para>
+	IPv4/IPv6 ready (implemented)
+	</para>
+   </listitem>
+
+</itemizedlist>
+</sect1>
+
+
+<!-- ======================================================== -->
+<sect1 id="design.refactoring">
+	<title>
+	refactoring
+	</title>
+
+<table>
+ <title> refactoring TODO </title>
+ <tgroup cols=3>
+
+  <thead>
+	<row>
+	<entry> status	</entry>
+	<entry> entry	</entry>
+	<entry> detail	</entry>
+	</row>
+   </thead>
+
+  <tbody>
+	<row>
+	<entry>	done. 			</entry>
+	<entry> license			</entry>
+	<entry>	perl conformance	</entry>
+	</row>
+
+	<row>
+	<entry>				</entry>
+	<entry> image 			</entry>
+	<entry>
+		&fml4; to &fml8; is similar to
+		sendmail to postfix.
+		support configuration converter.
+	</entry>
+	</row>
+
+	<row>
+	<entry>	done. 		</entry>
+	<entry>
+		wrapper (separation layer).
+	</entry>
+	<entry>
+		separation layer for upgrade/downgrade, debug.
+	</entry>
+	</row>
+
+	<row>
+	<entry>	</entry>
+	<entry> adapter </entry>
+	<entry>
+		use CPAN modules as could as possible.
+		prepare adapter layer in using CPAM module.
+	</entry>
+	</row>
+
+
+	<row>
+	<entry>	</entry>
+	<entry>
+	new single configuration file format.
+	</entry>
+	<entry>
+	</entry>
+	</row>
+
+
+	<row>
+	<entry>	</entry>
+	<entry> rule of variable naming convension
+	</entry>
+	<entry>
+		use_XXX, XXX_TYPet ...
+		prohibit NOT_USE style.
+	</entry>
+	</row>
+
+
+	<row>
+	<entry> </entry>
+	<entry>		function name convension
+
+	use X11 style for main:: space.
+	use method style for method.
+	not use Lisp like style (-p).
+	</entry>
+
+	<entry>
+		use Perl Cookbook style ?
+		e.g. "MemberP() -> IsMember()"
+	</entry>
+	</row>
+
+	<row>
+	<entry> done. </entry>
+	<entry> queue manager </entry>
+	<entry>
+		re-delivery by itself
+	</entry>
+	</row>
+
+
+	<row>
+	<entry>  </entry>
+	<entry> tools </entry>
+	<entry>
+		not use BSD make.
+	</entry>
+	</row>
+   </tbody>
+ </tgroup>
+</table>
+
+</sect1>
+
+
+
+
+
+
+
+<!-- ======================================================== -->
+<sect1 id="design.architecture.image">
+	<title>
+	Architecture image
+	</title>
+
+<graphic entityref="image.architecture"></graphic>
+
+</sect1>
+
+
+
+<!-- ======================================================== -->
+
+<sect1 id="design.releng">
+	<TITLE>
+	release engineering
+	</TITLE>
+
+<para>
+Not be an architect nor developer.
+Not too abstractive and not too object oriented.
+Be between them.
+Feedback in one month to manage project and code review.
+</para>
+
+
+<para>
+<table>
+ <title> release interval </title>
+ <tgroup cols=2>
+   <thead>
+	<row>
+	<entry> days in one month </entry>
+	<entry> content </entry>
+	</row>
+   </thead>
+
+   <tbody>
+
+	<row>
+	<entry> the first 4 - 5 days </entry>
+	<entry> 
+		manage project.
+		apply at least 20 % of the project to this stage.
+	</entry>
+	</row>
+
+	<row>
+	<entry> 2 - 3 weeks </entry>
+	<entry> coding. </entry>
+	</row>
+
+	<row>
+	<entry> the last week </entry>
+	<entry> code review, document review </entry>
+	</row>
+
+	<row>
+	<entry> at the last of the month </entry>
+	<entry> release a snapshot.
+		alpha-0,
+		alpha-1,
+		alpha-2, ...
+	</entry>
+	</row>
+
+   </tbody>
+ </tgroup>
+</table>
+</para>
+
+
+</sect1>
+
+
+</chapter>

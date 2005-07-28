@@ -1,0 +1,309 @@
+<!--
+   $FML: io_abstraction.sgml,v 1.5 2005/06/25 15:11:34 fukachan Exp $
+-->
+
+
+<chapter id="io.abstraction">
+	<title>
+	IO Interface and operations
+	</title>
+
+<para>
+We need IO abstraction layer for porting and extension.
+See Vnode/VFS interface (vnode(9)) on IO abstraction. 
+<screen>
+struct vnode {
+		...
+        voff_t          v_size;                 /* size of file */
+        int             v_numoutput;            /* num pending writes */
+        long            v_writecount;           /* ref count of writers */
+		...
+        int             (**v_op)(void *);       /* vnode ops vector */
+		...
+        void            *v_data;                /* private data for fs */
+};
+</screen>
+vop_open(),
+vop_read(),
+vop_getattr(), ...
+are defined over v_op.
+</para>
+
+<para>
+**v_op (vnode operation vector) corresponds to a method of object
+oriented programming. &fml8; provides IO::Adapter class as IO
+abstraction layer.
+</para>
+
+
+<sect1 id="io.abstraction.overview">
+	<title>
+	Fundamentals of IO::Adapter
+	</title>
+
+<para>
+<link linkend="module.io.adapter">
+IO::Adapter
+</link>
+is most fundamental in &fml8; architecture.
+It is well considered and implemented.
+It provides enough primitive methods.
+</para>
+
+<para>
+<link linkend="module.io.adapter">
+IO::Adapter
+</link>
+class abstracts
+<screen>
+KEY => VALUE
+</screen>
+or
+<screen>
+KEY => [ VALUE, VALUE2, VALUE3 ]
+</screen>
+type data structure.
+It is similar to RDBMS theory like this.
+</para>
+<screen>
+KEY1 VALUE1-1 ""     ""
+KEY2 VALUE2-1 VALUE2-2 VALUE2-3
+KEY3 VALUE3-1 VALUE3-2 VALUE3-3
+KEY4 VALUE4-1 VALUE4-2 VALUE4-3
+</screen>
+
+<para>
+To maintain address list, least fundamental methods of IO::Adapter are
+<screen>
+open()
+close()
+</screen>
+and IO operations to the object
+<screen>
+add(KEY, ARGV) (ARGV is class dependent)
+delete(KEY)
+find(KEY or REGEXP)
+get_next_key()
+</screen>
+methods.
+At least, enough to write user management codes.
+</para>
+
+</sect1>
+
+
+<sect1 id="io.abstraction.ops">
+	<title>
+	Methods / operation vector
+	</title>
+
+<para>
+Mentioned above, the fundamental methods of IO::Adapter are as
+follows:
+<screen>
+open()
+close()
+add(KEY, ARGV) (ARGV = class dependent)
+delete(KEY)
+find(KEY or REGEXP)
+get_next_key()
+</screen>
+</para>
+
+<para>
+Other than these methods, new() as a constructor and destructor() are
+needed.
+</para>
+
+<para>
+The constructor is new() methond.
+For example, use like this;
+<screen>
+$obj = new IO::Adapter MAP;
+</screen>
+The argument is a map which calls map dependent constructor.
+</para>
+
+
+<sect2>
+	<title>
+	open()
+	</title>
+
+<para>
+For a file, call open(2), for RDBMS, connect to the specified sql
+server.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	close()
+	</title>
+
+<para>
+reverse of open().
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	add(KEY, ARGV)
+	</title>
+
+<para>
+add KEY (primary key) or KEY and the associated VALUE into the object.
+ARGV is class dependent.
+</para>
+
+<para>
+We assume an object is composed of a form.
+It is similar to RDBMS.
+</para>
+
+<para>
+The primary key is a mail address. This assumption is correct in the
+case of mailing list deriver. This is basic data structure.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	delete(KEY)
+	</title>
+
+<para>
+delete KEY and the associated VALUE.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	find(KEY) / find(REGEXP)
+	</title>
+
+<para>
+search data corresponding with the primary key within an object.
+</para>
+
+<para>
+The target is specified as regular expression.
+Regular expression search is useful.
+</para>
+
+<para>
+The returl value is STR of ARRAY_REF (KEY => [ VALUE, VALUE2, VALUE3 ]).
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	get_next_key()
+	</title>
+
+<para>
+return the list of primary keys like this:
+<screen>
+while ($obj->get_next_key()) { ... }
+</screen>
+</para>
+
+<para>
+This operation corresponds to FIRST_KEY() and NEXT_KEY() of perl hash.
+</para>
+
+</sect2>
+
+</sect1>
+
+
+<sect1 id="io.abstraction.discussion">
+	<title>
+	Discussion
+	</title>
+
+
+<sect2>
+	<title>
+	What ARRAY_REF return ?
+	</title>
+
+<para>
+What expected in using ARRAY_REF as the return value ? 
+a list of PRIMARY KEY ?
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	How to get all primary keys ?
+	</title>
+
+<para>
+We need to call get_next_keys() again and again.  It may be useful to
+implement special method to return a list of keys but it is not
+implemented.
+</para>
+
+<para>
+get_primary_keys() ?
+find('*', { all => 1 }) is used for this purpose.
+It is of no use to implement specific method for this.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	HASH_REF as return value ?
+	</title>
+
+<para>
+What expected ?
+<screen>
+RETURN VALUE = {
+	KEY_1 => VALUE_1,
+	KEY_2 => VALUE_2,	
+}
+</screen>
+</para>
+
+<para>
+If a mail address has several attributes, this method is useful.
+For example, consider digest delivery:
+<screen>
+ADDRESS => {
+	internal	=> 	3 hours,
+	compression	=>	no,
+	format		=>	mime/multipart,
+};
+</screen>
+</para>
+
+<para>
+Abstracted Cache IO layer is this type such as:
+<screen>
+FML::Error -> FML::Error::Cache -> Tie::JournaledDir
+</screen>
+But ... dependent on Tie::* hmm ..
+</para>
+
+</sect2>
+
+</sect1>
+
+
+</Chapter>
