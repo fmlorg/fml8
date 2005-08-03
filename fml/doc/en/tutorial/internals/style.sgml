@@ -1,0 +1,328 @@
+<!--
+   $FML: style.sgml,v 1.14 2005/06/25 15:11:35 fukachan Exp $
+-->
+
+
+<chapter id="programingstyle">
+	<TITLE>
+	Programming style
+	</TITLE>
+
+<para>
+This chapter describes a few topics on programming technique.
+</para>
+
+<para>
+See
+<ulink url="http://www.fml.org/software/FNF/">
+FNF
+</ulink>
+on FML.ORG programming style.
+</para>
+
+
+<!-- ==================================================== -->
+<sect1 id="variable-naming-convention">
+	<title>
+	Variable naming convension
+	</title>
+
+<para>
+It is ambiguous where "default" word in the variable name is proper.
+The left side of the naming string is expected to show large scale
+such as CLASS.
+</para>
+
+<para>
+Let us consider article related variables.
+We expect $article_* variables for them.
+</para>
+
+<para>
+Iit seems better to use CLASS_default_XXX syntax not
+default_XXX.
+</para>
+
+
+<sect2>
+	<title>
+	Structure of variable naming
+	</title>
+
+<para>
+It seems proper to use systematic naming convension.
+For it, we define base class or inheritence of naming syntax.
+</para>
+
+<para>
+Consider class names. For example, "mail" implies messsage/rfc822
+format text.  The input into fml system is a mail, outgoing one is a
+mail.  The variable are sub class of "mail" object, so the name is
+unified as PREFIX_mail_ATTRIBUTE style.
+</para>
+
+<para>
+<screen>
+mail_XXX
+mail_default_XXX
+
+use_incoming_mail_XXX
+incoming_mail_XXX
+
+use_outgoing_mail_XXX
+outgoing_mail_XXX
+
+use_report_mail_XXX
+report_mail_XXX
+</screen>
+</para>
+
+<para>
+Other example (header);
+<screen>
+header_XXX
+header_default_XXX
+
+article_header_XXX
+use_article_header_XXX
+
+command_mail_header_XXX
+use_command_mail_header_XXX
+</screen>
+</para>
+
+<para>
+We can describe 
+<link linkend="list.variables.by.class">
+structure of class
+</link>
+as follows:
+<screen>
+command {
+	SOMETHING_command
+	admin_command
+}
+	
+directory {
+	XXX_directory
+}
+	
+file {
+	template_file
+}
+	
+mail {
+	incoming_mail
+	outgoing_mail
+	report_mail
+}
+	
+message {
+	reply_message
+}
+	
+article {
+	article_digest (not use digest to show digest of article)
+	article_spool  (not use spool to show  spool of article)
+}
+</screen>
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	Example: Standard pattern (e.g. log.cf lock.cf)
+	</title>
+
+<screen>
+use_VARIABLE		=	yes or no
+
+# append _dir for directory.
+VARIABLE_dir		=	STRING
+
+# append _file for file.
+VARIABLE_file		=	STRING
+
+VARIABLE_type		=	STRING
+
+VARIABLE_format		=	STRING
+
+VARIABLE_format_type	=	STRING
+
+VARIABLE_limit		=	STRING (NUMBER but STRING)
+
+VARIABLE_upper_limit	=	STRING (NUMBER but STRING)
+
+VARIABLE_lower_limit	=	STRING (NUMBER but STRING)
+</screen>
+
+</sect2>
+
+<sect2>
+	<title>
+	Example 2: (e.g. acl.cf)
+	</title>
+
+<screen>
+VARIABLE_restrictions	=	reject_ATTRIBUTE1
+				check_ATTRIBUTE2
+				permit_XXX
+
+ATTRIBUTE1 			=	PATTERN1
+					PATTERN2
+					...
+
+ATTRIBUTE2			=	var1
+					var2
+
+</screen>
+</sect2>
+
+
+<sect2>
+	<title>
+	Example 3: (program name prefix)
+	</title>
+
+<screen>
+PROGRAM_VARIABLE_ATTRIBUTE
+</screen>
+	 </sect2>
+
+
+</sect1>
+
+
+<!-- ==================================================== -->
+<sect1 id="design.policy">
+	<title>
+	A few topics on design and coding style
+	</title>
+
+<warning>
+<para>
+See also
+<ulink url="http://www.fml.org/software/FNF/">FNF</ulink>
+on style.
+</para>
+</warning>
+
+
+<sect2>
+	<title>
+	A few cautions
+	</title>
+
+
+<para>
+apply quotemeta() for search key.
+</para>
+
+
+<para>
+use access method for object not handle directly within objects.
+Example: To access to main.cf object, not use
+<screen>
+$curproc->{ ... }->{ main_cf }
+</screen>
+instead use
+<screen>
+$curproc->main_cf();
+</screen>
+style.
+</para>
+
+
+<para>
+better not to use @EXPORT and @EXPORT_OK.
+</para>
+
+
+<para>
+How depth of classes is allowed ? 
+two such as Srting::is_japanese_string() ?
+At least 3, I think. 
+</para>
+
+</sect2>
+
+</sect1>
+
+
+<!-- ==================================================== -->
+<sect1>
+	<title>
+	Programming style original idea
+	</title>
+
+<warning>
+<para>
+Here is the original idea log.
+</para>
+</warning>
+
+
+<para>
+<itemizedlist>
+	<listitem>
+	<para>
+	We can use polymorphism in perl.
+	use it and object composition instaed of multiple inheritence.
+	</para>
+
+	</listitem>
+
+	<listitem>
+	<para>
+	Perl 5's OOP is not OOP. Do not depent on it.
+	It just provides simple use of variable
+	since variable itself knows the home (object / package). 
+	</para>
+
+
+	</listitem>
+
+	<listitem>
+	<para>
+	Interface for re-use and abstraction should be OOP style.
+	</para>
+
+
+	</listitem>
+
+	<listitem>
+	<para>
+	We want to use OOP style in using Perl 5 but
+	take care for OOP-ism.
+	Balance is important.
+	</para>
+
+
+	</listitem>
+
+	<listitem>
+	<para>
+	not use deep inheritence.
+	</para>
+	</listitem>
+
+</itemizedlist>
+</para>
+
+
+<para>
+	Programs in libexec/ describes the basic flow of processes.
+	They may be allowd to be structured not object oriented programming
+</para>
+
+
+<para>
+	polymorphism and re-use is important
+	especially in sub-classes.
+</para>
+
+</sect1>
+
+</chapter>

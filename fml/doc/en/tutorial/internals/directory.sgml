@@ -1,5 +1,5 @@
 <!--
-   $FML: directory.sgml,v 1.6 2005/06/25 15:11:34 fukachan Exp $
+   $FML: directory.sgml,v 1.1 2005/07/27 12:21:36 fukachan Exp $
 -->
 
 
@@ -33,7 +33,6 @@ Consider directory listing.
 <para>
 To accelerate listing, we should use sub-directory structure.
 For example, each sub-directory holds 1000 files.
-HTML 化されたファイルをおくサブディレクトリを 1000 ごとに用意すると、
 The structure such as "spool/sub/file" holds 10^6 ( million ) files 
 and
 listing of it is fast.

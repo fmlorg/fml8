@@ -1,0 +1,212 @@
+<!--
+   $FML: chapter.sgml,v 1.4 2005/06/25 15:11:28 fukachan Exp $
+-->
+
+
+<chapter id="changes">
+	<title>
+	Difference between &fml4; and &fml8;
+	</title>
+
+
+<para>
+In this chapter, we describe the difference beetween &fml4; and &fml8;
+</para>
+
+<para>
+Intuitively fml4 vs fml8 is equal to sendmail vs postfix.
+It is good image.
+</para>
+
+
+<sect1 id="changes.license">
+	<title>
+	Difference between &fml4; and &fml8;: License.
+	</title>
+
+<para>
+Roughly speaking, fml8 license is composed of Artistic, BSD or GPL.
+A part of &fml8; is either of them.
+</para>
+
+<para>
+In the case of &fml4;, almost all codes are written by fml project. 
+The license of such codes is GPL.
+jcode.pl and some perl modules are exceptions.
+</para>
+
+<para>
+In the case of &fml8;, the source tree has sub tree which is divided
+according to the license. For example, the license of fml/ sub tree is
+Artictic, cpan/ is Artistic or GPL, gnu/ is GPL and img/ is BSD.
+See the license files under them on the detail.
+</para>
+
+<para>
+It is easy to remove some licensed files since the sub-tree is license
+based.
+</para>
+
+<para>
+&fml8; installs all modules of the tree into the proper path, so
+installed modules are hybrid of licenses.  
+You need to clarify the license before installation.
+</para>
+
+</sect1>
+
+
+<sect1 id="changes.command.mail">
+	<title>
+	Difference between &fml4; and &fml8;: Command mail and error messages.
+	</title>
+
+<para>
+&fml8; selects language of the return mail for command mail and error
+messages by Accept-Language of the incoming message and other information.
+See
+<link linkend="language.preference">
+<xref linkend="language.preference">
+</link>
+for more details.
+</para>
+
+<para>
+In sending back files or messages, &fml8; uses MIME/Multipart.
+tar.gz and zip formats are not supported..
+</para>
+
+</sect1>
+
+
+<sect1 id="changes.cui">
+	<title>
+	Difference between &fml4; and &fml8;: CUI
+	</title>
+
+<para>
+There are two CUI: makefml and fml. 
+The syntax of the two is different.
+<screen>
+makefml COMMAND ML OPTIONS
+fml     ML COMMAND OPTIONS
+</screen>
+The only difference is the order of command argument.
+</para>
+
+<para>
+&fml4; command shows processing information as could as possible.
+Instead &fml8; command runs as could as silently since
+it is proper for automatic process.
+<footnote>
+<para>
+This silent behaviour is proper for automatic work. 
+If needed, makefml/fml shows log output for computer processing.
+</para>
+</footnote>
+This behaviour is UNIX style.
+</para>
+
+<para>
+  <table>
+    <title>
+	Difference between &fml4; and &fml8;: CUI
+    </title>
+
+    <tgroup cols=3>
+
+      <thead>
+        <row>
+          <entry> Content	</entry>
+          <entry> &fml4;	</entry>
+          <entry> &fml8;	</entry>
+        </row>
+      </thead>
+
+      <tbody>
+	<!-- TABLE START -->
+	&table.changes.cui;
+	<!-- TABLE END   -->
+      </tbody>
+
+    </tgroup>
+  </table>
+</para>
+
+</sect1>
+
+
+<sect1 id="changes.gui">
+	<title>
+	Difference between &fml4; and &fml8;: GUI (CGI)
+	</title>
+
+<para>
+In the case of &fml4;, you need to set up .cgi scripts and apache
+configurations after installation.
+</para>
+
+<para>
+In the case of &fml8;, "makefml newml" generates GUI scripts except
+for the apache configurations.
+</para>
+
+<para>
+Interface differs a lot.
+The interface of &fml4 GUI is classical.
+That of &fml8; is table based by default.
+</para>
+
+<para>
+It is a TODO to select GUI skin dynamically.
+</para>
+
+</sect1>
+
+
+<sect1 id="changes.filename">
+	<title>
+	File Naming Convention
+	</title>
+
+<para>
+See
+<link linkend="filename">
+<xref linkend="filename">
+</link>
+for the file naming convention.
+You need not ot know the detail,
+since the conversion tools convert files from &fml4; style to &fml8; one.
+But it is useful to know it to see files.
+</para>
+
+<para>
+The policy to handle member list and recipient list separately is
+same. But the file name differs.
+</para>
+
+<para>
+The file name is "filename-role" style.
+The role is abbreviated if the role is default. 
+</para>
+
+<para>
+"actives" is renamed to "recipients". The meaning is clear.
+Instead "members" is "members".
+</para>
+
+<para>
+"members-admin" is same.
+"recipients-admin" exists virtually but is is not used.
+</para>
+
+<para>
+"etc/passwd" is renamed to "etc/passwd-admin".
+The format differs a little.
+</para>
+
+</sect1>
+
+
+</chapter>
+

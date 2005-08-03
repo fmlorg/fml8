@@ -1,0 +1,184 @@
+<!--
+   $FML: db_modules.sgml,v 1.3 2005/06/25 15:11:33 fukachan Exp $
+-->
+
+<!--
+    XXX-TODO: database
+-->
+
+
+<chapter id="db.module">
+	<title>
+	Database related module
+	</title>
+
+
+<sect1 id="db.module.ovewview">
+	<title>
+	Overview
+	</title>
+
+<para>
+ML driver needs to hold some data on mail.
+some data persistently but some data with expiration (data is
+discarded after the interval).
+</para>
+
+<para>
+An example of permisistent data is thread database.
+The latter case, an exapmle of non persistent data is message-id cache.
+The thread database also has message-id cache in it.
+But we handle these two data separately.
+</para>
+
+<para>
+We should handle these data in integrated way.
+<screen>
+module A ---| A  |--- persistent database
+module B ---| da |
+module C ---| pt |
+modlue D ---| er |--- cache with expiration
+</screen>
+An example of this persistent DB, thread DB, is 
+<link linkend="threadtrack.db">
+Mail::Message::DB
+</link>
+class.  Examples of cache database are Tie::JournaledDir and
+FML::Cache::Ring classes.
+</para>
+
+<para>
+It is better to use RDBMS for important persistent data such as
+address list.  This chapter describes persistent data handling for
+&fml8; internal use.
+</para>
+
+</sect1>
+
+
+<sect1 id="db.module.persistent">
+	<title>
+	Persistent data use
+	</title>
+
+<para>
+Handling of persistent data is important.
+We should consider use of 
+<link linkend="dbms">
+DBMS
+</link>
+	<footnote>
+	<para>
+	DBMS = DataBase Management System
+	</para>
+	</footnote>
+for important data.
+</para>
+
+<para>
+This chapter describes &fml8; internal use.
+</para>
+
+<para>
+&fml8; provides two type of cache databases.
+The type is time saving or space saving.
+</para>
+
+</sect1>
+
+
+<sect1 id="db.module.Tie.JournaledFile">
+	<title>
+	Tie::JournaledFile class
+	</title>
+
+<para>
+This class appends data into a file.
+	<ulink url="../../en/modules/Tie/JournaledFile.txt">
+	Tie::JournaledFile
+	</ulink>
+class provides this function.
+</para>
+
+<para>
+This class is append only. It is similar to LFS (Log Structured File
+System).
+</para>
+
+<para>
+Operation to extract a value is to get the latest (last appended) value.
+That is, the last match.
+</para>
+
+<para>
+In other words, data cache logs all data to enable back track.
+</para>
+
+<para>
+We cannot restrict the maximum size of this cache.
+This class holds data within some period without size limitation.
+We control cache expiration by time.
+</para>
+
+
+<para>
+To get the following structure as a result, 
+you can use get_all_values_as_hash_ref() method.
+<screen>
+key => [
+	log1	(line A of file 1),
+	log2	(line B of file 2),
+	log2	(line C of file 3),
+]
+</screen>
+</para>
+
+
+<warning>
+<para>
+search algorithm select either of first match or last match.  last
+match by default since the last appended data is latest.
+</para>
+</warning>
+
+</sect1>
+
+
+<sect1 id="db.module.FML.Cache.Ring">
+	<title>
+	FML::Cache::Ring class
+	</title>
+
+<para>
+	<ulink url="../../en/modules/File/CacheDir.txt">
+	FML::Cache::Ring
+	</ulink>
+holds data with size limit but without time limitation.
+</para>
+
+
+<para>
+It is suitable for debug since the debug data is expected not to eat
+disk.
+</para>
+
+
+<para>
+This class holds data in files in a directory such as
+$ml_home_dir/var/db/.
+For example, files named as db/1 .. db/100 are created.
+These files are used repeatedly.
+</para>
+
+
+<warning>
+<para>
+RingBuffer class is integrated into FML::Cache::Ring class.
+FML::Cache::Ring is derived from File::CacheDir class.
+</para>
+</warning>
+
+</sect1>
+
+
+</chapter>

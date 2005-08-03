@@ -1,0 +1,210 @@
+<!--
+   $FML: filter.sgml,v 1.9 2005/06/25 15:11:34 fukachan Exp $
+-->
+
+
+<!--
+   XXX-TODO: rewrite filter ;-)
+-->
+
+
+<chapter id="internals.filter">
+	<title>
+	Filter
+	</title>
+
+<caution>
+
+<para>
+Filter described here is filter system for articles posted to ML.
+This filter is implemented as FML::Filter class.
+</para>
+
+<para>
+Other than article filter, there may be command mail filter.
+FML::Filter does not provide such function. Instead, 
+FML::Command::Filter class provides command mail specific filter
+e.g. line length limit of one line.
+</para>
+
+</caution>
+
+
+<sect1  id="internals.filter.overview">
+	<title>
+	Overview of filter system
+	</title>
+
+<para>
+There are three types of filter system for content check such as for
+header, body and mime structure based.  Other than the tree cases, we
+should consider text/plain and non mime text (text/?) filter. So there
+may be four types of filter.
+<screen>
+
+  header
+
+  body
+	non-mime
+		permit / reject (!MIME of 4.0's content filter)
+
+	mime component filter
+		4.0's content filter
+
+	text/plain filter
+			ja, en, ... (language dependent)
+			language independent (e.g. M$ GUID scanner)
+		check of the first text/plain part
+		syntax check
+
+	external filter (call external virus/spam checker)
+		clamav
+		spamassassin
+		bogofilter
+</screen>
+Other than these filters, content_filter using SMTP/LMTP can be needed
+but not implemented. If you need content_filter, please use the
+function of postfix.
+</para>
+
+<!-- XXX-TODO traffic filter -->
+<para>
+Traffic based filter is also needed but not implemented yet.
+</para>
+
+</sect1>
+
+
+<sect1 id="internals.filter.config">
+	<title>
+	Configuration variables
+	</title>
+
+<para>
+Each sub filter system is enabled/disabled independently.
+</para>
+
+<para>
+<screen>
+use_SERVICE_filter       = yes
+SERVICE_filter_functions = function_A function_B
+
+use_function_A           = yes
+function_A_rules         = rule_01 urle_02
+</screen>
+</para>
+
+&var.filter.rules;
+
+</sect1>
+
+
+<sect1 id="internals.filter.size">
+	<title>
+	Size limit
+	</title>
+
+<para>
+&fml8; provides size limit for header and body.
+Also you can use different size limit of article or command mail.
+</para>
+
+<para>
+Implementation of this filter is easy since
+the input message is analyzed already.
+</para>
+
+&var.filter.size;
+
+</sect1>
+
+
+<sect1 id="internals.filter.command">
+	<title>
+	limit for command mail
+	</title>
+
+<para>
+&fml8; provides restrictions such as 
+"the number of commands in one command mail message",
+"the number of articles in one command mail message", et.al.
+</para>
+
+<!-- &table.list.filter.commandmail; -->
+
+</sect1>
+
+
+<sect1 id="internals.filter.mimecomponent">
+	<title>
+	mime component filter rules
+	</title>
+
+<para>
+The format of &fml8; mime component filter is space separeted.
+It is not &fml4;'s content filter rules. 
+<screen>
+text/plain 	permit
+text/html	reject
+*		permit
+</screen>
+</para>
+
+<para>
+This filter supporse MIME, not including non mime operations.  To
+identify the whole type (e.g. text/plain) and the part type
+(e.g. text/plain in multipart/mixed), we use the following format.
+<screen>
+Whole message type      part type      action
+----------------------------------------------
+text/plain 		*		permit
+multipart/mixed		text/plain	permit
+multipart/mixed		text/html	reject
+multipart/mixed		image/*		cutoff
+*			*		permit
+</screen>
+the following operations are not implemented but needed ?
+<screen>
+text/plain 		:uuencoded:	cutoff
+text/plain 		:size>500k	cutoff
+</screen>
+</para>
+
+<para>
+But there are several problems of rule construction.
+</para>
+
+<sect2>
+	<title>
+	first match vs last match ?
+	</title>
+
+<para>
+This is a filter but not a router filter.  Router filter is first
+match almost cases.  But both first match and last match are not
+suitable for mime component filter when we consider the meaning of
+"cutoff" operation.
+</para>
+
+</sect2>
+
+<para>
+( NOT TRANSLATED AFTER THIS )
+</para>
+
+</sect1>
+
+
+<sect1 id="internals.filter.mimecomponent.functions">
+	<title>
+	Discussion: mime component filter needs what functions ?
+	</title>
+
+<para>
+( NOT TRANSLATED AFTER THIS )
+</para>
+
+</sect1>
+
+
+</chapter>

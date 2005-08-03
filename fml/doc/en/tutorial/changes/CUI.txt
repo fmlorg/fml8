@@ -1,0 +1,391 @@
+#
+# help
+#
+Q: show help
+4: "makefml help ML".
+	"makefml info ML" is same as "makefml help ML".
+	If the environment variable PAGER, use it as pager.
+8: not implemented.
+
+
+
+#
+# installation
+#
+
+Q: installation of fml
+4: run "make install" at the source top directory.
+	In fact "make install" executes "makefml install".
+8: run "configure" and "make install" at the source top directory.
+	In fact "make install" executes install.pl script.
+
+Q: Behaviour of install script
+4: interactive by default.
+	You can use interactive menu for most important options.
+8: not interactive.
+	You can use configure for most important options.
+
+
+#
+# create/remove ML
+#
+
+Q: create ML
+4: "makefml newml ML" or "makefml new ML"
+8: makefml newml ML
+
+Q: templates of alias files "makefml newml" generates.
+4: only for sendmail (also used as postfix for compatibility).
+8: all for postfix, sendmail, qmail, procmail MTA's.
+
+Q: alias file path "makefml newml" generates.
+4: /var/spool/ml/etc/aliases
+8: /var/spool/ml/etc/mail/aliases
+
+Q: how to generate qmail configuration files.
+4: makefml qmail-setup ML
+8: "makefml newml" generates it.
+
+Q: re-generate aliaes.
+4: makefml recollect-aliases ML
+8: not implemented.
+
+Q: remove ML
+4: makefml destructml ML
+8: makefml rmml ML
+
+Q: how to set up error analyzer.
+4: run "makefml mead ML" and set up aliases properly.
+8: enabled by default.
+
+Q: test of fml
+4: makefml test ML
+8: not implemented
+
+Q: set up LISTSERV style server.
+4: makefml fmlserv ML
+	listserv majordomo is same as.
+8: not implemented
+
+
+#
+# subscribe / unsubscribe / change ML delivery mode 
+#
+
+Q: subscribe (add addess to member and recipient list)
+4: "makefml add ML ADDRESS".
+	"makefml adduser ML ADDRESS" is same.
+	the changes is shown after the operation.
+	This operation is applied to both actives and members files.
+8: "makefml subscribe ML ADDRESS".
+	Other 4 commands (add subscribe adduser useradd) are same as
+	subscribe.
+	No message is shown unless error occurs.
+	This operation is applied to
+	$primary_recipient_map and $primary_member_map 
+	(recipients and members files actually).
+
+Q: remove address from recipient and member list.
+4: "makefml bye ML ADDRESS".
+	byeuser is same.
+	the changes is shown after the operation.
+	This operation is applied to both actives and members files.
+8: "makefml unsubscribe ML ADDRESS".
+	Other 7 commands (
+		bye unsubscribe deluser remove resign signoff userdel
+	) are same as unsubscribe.
+	No message is shown unless error occurs.
+	This operation is applied to
+	$primary_recipient_map and $primary_member_map 
+	(recipients and members files actually).
+	
+Q: change address (in recipient and member list)
+4: "makefml chaddr ML OLD_ADDRESS NEW_ADDRESS".
+        the changes is shown after the operation.
+        This operation is applied to both actives and members files.
+8: "makefml chaddr ML OLD_ADDRESS NEW_ADDRESS".
+	No message is shown unless error occurs.
+	This operation is applied to
+	$primary_recipient_map and $primary_member_map 
+	(recipients and members files actually).
+
+Q: add address to only recipient list
+4: "makefml addactives ML ADDRESS".
+	Commands (addactive add2active add2actives) are same.
+        the changes is shown after the operation.
+        This operation is applied to actives file.
+8: "makefml addactives ML ADDRESS ".
+	No message is shown unless error occurs.
+	This operation is applied to
+	$primary_recipient_map (recipients file actually).
+
+Q: add address to only member list.
+4: "makefml addmembers ML ADDRESS".
+	Commands (addmember add2member add2members) are same.
+        the changes is shown after the operation.
+        This operation is applied to members file.
+8: "makefml addmembers ML ADDRESS".
+	No message is shown unless error occurs.
+	This operation is applied to
+	$primary_member_map (members file actually).
+
+Q: disable real time delivery
+4: "makefml off ML ADDRESS".
+	skip is same as off.
+        the changes is shown after the operation.
+        This operation is applied to actives file.
+8: "makefml off ML ADDRESS".
+	No message is shown unless error occurs.
+	This operation is applied to
+	$primary_recipient_map (recipients file actually).
+
+Q: enable real time delivery.
+4: "makefml on ML ADDRESS".
+        the changes is shown after the operation.
+        This operation is applied to actives file.
+8: "makefml digestoff ML ADDRESS" or "makefml digest ML ADDRESS off".
+	No message is shown unless error occurs.
+	This operation is applied to
+	$primary_recipient_map (recipients file actually).
+
+Q: change real time to digest delivery.
+4: "makefml matome ML ADDRESS".
+	digest is same.
+        the changes is shown after the operation.
+        This operation is applied to actives file.
+8: "makefml digeston ML ADDRESS" or "makefml digest ML ADDRESS on".
+	No message is shown unless error occurs.
+	This operation is applied to
+	$primary_recipient_map (recipients file actually).
+
+
+
+#
+# remote administration
+#
+
+Q: add a remote administrator address.
+4: "makefml addadmin ML ADDRESS".
+        the changes is shown after the operation.
+        This operation is applied to members-admin file.
+8: "makefml addadmin ML ADDRESS".
+	No message is shown unless error occurs.
+	This operation is applied to
+	recipients-admin and members-admin.
+
+Q: remove a remote administrator address.
+4: "makefml byeadmin ML ADDRESS".
+        the changes is shown after the operation.
+        This operation is applied to members-admin file.
+8: "makefml byeadmin ML ADDRESS".
+	No message is shown unless error occurs.
+	This operation is applied to
+	recipients-admin and members-admin.
+
+Q: set up password of remote administrator (1).
+4: "makefml passwd ML".
+	interactive.
+8: "makefml passwd ML" (incomplete ?)
+
+Q: set up password of remote administrator (2).
+4: "makefml passwd ML ADDRESS"
+	interactive.
+8: "makefml passwd ML ADDRESS".
+	interactive.
+
+Q: set up password of remote administrator (3).
+4: "makefml passwd ML ADDRESS PASSWORD".
+        the changes is shown after the operation.
+        This operation is applied to etc/passwd file.
+8: "makefml passwd ML ADDRESS PASSWORD".
+	No message is shown unless error occurs.
+	This operation is applied to
+	etc/passwd-admin file.
+
+
+#
+# change configuration
+#
+Q: menu style configuration tool.
+4: makefml config ML
+8: incomplete.
+
+Q: edit configuration file.
+4: "makefml edit ML".
+	Ask the editor to use before running.
+	"vi" by default.
+8: "makefml edit ML".
+	Not ask the editor to use before running.
+	use environment variable EDITOR if specified.
+	"vi" by default.
+
+Q: fml4 specific configuration file conversion (generate cf to config.ph)
+4: "makefml update-config ML".
+	Commands (update config-update update-config.ph) are same.
+	the operations is shown.
+8: no corresponding idea (one configuration file).
+
+
+#
+# handle message templates
+#
+Q: edit cf template by menu.
+4: makefml config-template ML
+8: not implemented
+
+Q: edit template files "makefml newml" uses
+4: makefml edit-template FILE
+	list up available file list unless FILE specified.
+8: not implemented
+
+Q: re-generate files e.g. help at the ml home directory.
+4: makefml create-doc-template ML
+8: no corresponding idea.
+
+Q: convert SRC file to DST file with variable conversion.
+4: makefml conv ML SRC DST
+8: not implemented
+
+
+#
+# see log messages
+#
+Q: see log (the last 100 lines shown).
+4: "makefml log ML [OPTION]".
+	"makefml tail ML" is same.
+8: "makefml log ML".
+	options are not implemented.
+
+
+#
+# generate CGI 
+#
+Q: set up admin.cgi (scripts and apache configuration helper).
+4: "makefml admin.cgi ML".
+	interactive.
+8: incomplete.
+
+Q: set up ml-admin.cgi (scripts and apache configuration helper). 
+4: "makefml ml-admin.cgi ML".
+	"makefml mladmin.cgi ML" is same.
+	interactive.
+8: incomplete.
+
+Q: set up .htpasswd for admin.cgi.
+4: makefml html_cgiadmin_passwd ML
+8: not implemented
+
+Q: html_config (makefml internal use command)
+4: makefml html_config ML
+	html_config_set is same.
+8: not implemented
+
+Q: set up .htpasswd for ml-admin.cgi and the password of admin command mail.
+4: makefml html_passwd ML
+8: not implemented
+
+Q: set up .htpasswd for ml-admin.cgi.
+4: makefml htpasswd ML
+8: not implemented
+
+#
+# PGP, GPP related things
+#
+Q: pgp command wrapper
+4: makefml pgp ML
+8: fmlpgp
+
+Q: pgp2 command wrapper
+4: makefml pgp2 ML
+8: fmppgp2
+
+Q: pgpe command wrapper
+4: makefml pgpe ML
+8: fmlpgpe
+
+Q: pgpk command wrapper
+4: makefml pgpk ML
+8: fmlpgk
+
+Q: pgps command wrapper
+4: makefml pgps ML
+8: fmlpgps
+
+Q: pgpv command wrapper
+4: makefml pgpv ML
+8: fmlpgpv
+
+Q: gpg command wrapper
+4: makefml gpg ML
+8: fmlgpg
+
+Q: admin-auth (PGP, GPG KEY RING operation)
+4: makefml admin-auth ML
+8: fmlpgp* command --admin-command-mail-auth
+
+Q: admin-encrypt (PGP, GPG KEY RING operation)
+4: makefml admin-encrypt ML
+8: not implemented
+
+Q: dist-auth (PGP, GPG KEY RING operation)
+4: makefml dist-auth ML
+8: fmlpgp* command --article-post-auth
+
+Q: dist-encrypt (PGP, GPG KEY RING operation)
+4: makefml dist-encrypt ML
+8: fmlpgp* command --article-post-encrypt
+
+
+#
+# POP based ML emulation
+#
+Q: set up popfml (emulate MTA and ML via POP).
+4: makefml popfml
+8: fetchfml
+
+Q: set up password for POP.
+4: makefml pop_passwd
+8: write password in configuration file config.cf.
+
+
+#
+# misc
+#
+
+Q: lock ML.
+4: makefml lock ML
+8: not implemented (no corresponding idea, no giant lock).
+
+Q: create a template of bug report.
+4: makefml bug-report-template ML
+	send-pr is same.
+8: not implemented
+
+Q: execute command.
+4: makefml command ML
+8: not implemented
+
+Q: set up delivery mode.
+4: makefml delivery_mode ML
+8: not implemented
+
+Q: change configuration variable in running makefml.
+4: makefml setq ML
+8: -o options.
+
+Q: show environment summary where fml runs.
+4: makefml showconfig ML
+	showconf is same.
+8: not implemented / no plan
+
+Q: show OS information by "show COMMAND" style command.
+4: "makefml show".
+8: not implemented / no plan
+
+Q: send a file.
+4: makefml resend ML
+8: not implemented / no plan
+
+Q: upgrade command: convert fml 2.0 to fml 3.0.
+4: makefml upgrade ML
+8: not needed
