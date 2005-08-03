@@ -1,5 +1,5 @@
 <!--
-   $FML: test.sgml,v 1.6 2004/10/06 09:07:42 fukachan Exp $
+   $FML: test.sgml,v 1.7 2005/06/25 15:11:37 fukachan Exp $
 -->
 
 
@@ -68,7 +68,7 @@ qmail をメールサーバに使っている人は特にやることはないとおもいます。
 </para>
 
 <para>
-まず、そのホスト上で rudo くんにメールが届くかも試して下さい。
+そのホスト上で rudo くんにメールが届くかも試して下さい。
 つまり ahodori の上で rudo@fml.org へメールを出してください。
 <screen>
 % echo test |Mail rudo@fml.org
