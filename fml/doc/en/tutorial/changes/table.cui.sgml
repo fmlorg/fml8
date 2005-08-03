@@ -1,0 +1,1135 @@
+
+<!-- 注意!!! 自動生成されたファイル、手動編集禁止 !!! -->
+
+<!-- 1 -->
+<row>
+
+<entry>
+show help
+</entry>
+
+<entry>
+"makefml help ML".
+"makefml info ML" is same as "makefml help ML".
+If the environment variable PAGER, use it as pager.
+</entry>
+
+<entry>
+not implemented.
+</entry>
+
+</row>
+
+<!-- 2 -->
+<row>
+
+<entry>
+installation of fml
+</entry>
+
+<entry>
+run "make install" at the source top directory.
+In fact "make install" executes "makefml install".
+</entry>
+
+<entry>
+run "configure" and "make install" at the source top directory.
+In fact "make install" executes install.pl script.
+</entry>
+
+</row>
+
+<!-- 3 -->
+<row>
+
+<entry>
+Behaviour of install script
+</entry>
+
+<entry>
+interactive by default.
+You can use interactive menu for most important options.
+</entry>
+
+<entry>
+not interactive.
+You can use configure for most important options.
+</entry>
+
+</row>
+
+<!-- 4 -->
+<row>
+
+<entry>
+create ML
+</entry>
+
+<entry>
+"makefml newml ML" or "makefml new ML"
+</entry>
+
+<entry>
+makefml newml ML
+</entry>
+
+</row>
+
+<!-- 5 -->
+<row>
+
+<entry>
+templates of alias files "makefml newml" generates.
+</entry>
+
+<entry>
+only for sendmail (also used as postfix for compatibility).
+</entry>
+
+<entry>
+all for postfix, sendmail, qmail, procmail MTA's.
+</entry>
+
+</row>
+
+<!-- 6 -->
+<row>
+
+<entry>
+alias file path "makefml newml" generates.
+</entry>
+
+<entry>
+/var/spool/ml/etc/aliases
+</entry>
+
+<entry>
+/var/spool/ml/etc/mail/aliases
+</entry>
+
+</row>
+
+<!-- 7 -->
+<row>
+
+<entry>
+how to generate qmail configuration files.
+</entry>
+
+<entry>
+makefml qmail-setup ML
+</entry>
+
+<entry>
+"makefml newml" generates it.
+</entry>
+
+</row>
+
+<!-- 8 -->
+<row>
+
+<entry>
+re-generate aliaes.
+</entry>
+
+<entry>
+makefml recollect-aliases ML
+</entry>
+
+<entry>
+not implemented.
+</entry>
+
+</row>
+
+<!-- 9 -->
+<row>
+
+<entry>
+remove ML
+</entry>
+
+<entry>
+makefml destructml ML
+</entry>
+
+<entry>
+makefml rmml ML
+</entry>
+
+</row>
+
+<!-- 10 -->
+<row>
+
+<entry>
+how to set up error analyzer.
+</entry>
+
+<entry>
+run "makefml mead ML" and set up aliases properly.
+</entry>
+
+<entry>
+enabled by default.
+</entry>
+
+</row>
+
+<!-- 11 -->
+<row>
+
+<entry>
+test of fml
+</entry>
+
+<entry>
+makefml test ML
+</entry>
+
+<entry>
+not implemented
+</entry>
+
+</row>
+
+<!-- 12 -->
+<row>
+
+<entry>
+set up LISTSERV style server.
+</entry>
+
+<entry>
+makefml fmlserv ML
+listserv majordomo is same as.
+</entry>
+
+<entry>
+not implemented
+</entry>
+
+</row>
+
+<!-- 13 -->
+<row>
+
+<entry>
+subscribe (add addess to member and recipient list)
+</entry>
+
+<entry>
+"makefml add ML ADDRESS".
+"makefml adduser ML ADDRESS" is same.
+the changes is shown after the operation.
+This operation is applied to both actives and members files.
+</entry>
+
+<entry>
+"makefml subscribe ML ADDRESS".
+Other 4 commands (add subscribe adduser useradd) are same as
+subscribe.
+No message is shown unless error occurs.
+This operation is applied to
+$primary_recipient_map and $primary_member_map 
+(recipients and members files actually).
+</entry>
+
+</row>
+
+<!-- 14 -->
+<row>
+
+<entry>
+remove address from recipient and member list.
+</entry>
+
+<entry>
+"makefml bye ML ADDRESS".
+byeuser is same.
+the changes is shown after the operation.
+This operation is applied to both actives and members files.
+</entry>
+
+<entry>
+"makefml unsubscribe ML ADDRESS".
+Other 7 commands (
+bye unsubscribe deluser remove resign signoff userdel
+) are same as unsubscribe.
+No message is shown unless error occurs.
+This operation is applied to
+$primary_recipient_map and $primary_member_map 
+(recipients and members files actually).
+</entry>
+
+</row>
+
+<!-- 15 -->
+<row>
+
+<entry>
+change address (in recipient and member list)
+</entry>
+
+<entry>
+"makefml chaddr ML OLD_ADDRESS NEW_ADDRESS".
+the changes is shown after the operation.
+This operation is applied to both actives and members files.
+</entry>
+
+<entry>
+"makefml chaddr ML OLD_ADDRESS NEW_ADDRESS".
+No message is shown unless error occurs.
+This operation is applied to
+$primary_recipient_map and $primary_member_map 
+(recipients and members files actually).
+</entry>
+
+</row>
+
+<!-- 16 -->
+<row>
+
+<entry>
+add address to only recipient list
+</entry>
+
+<entry>
+"makefml addactives ML ADDRESS".
+Commands (addactive add2active add2actives) are same.
+the changes is shown after the operation.
+This operation is applied to actives file.
+</entry>
+
+<entry>
+"makefml addactives ML ADDRESS ".
+No message is shown unless error occurs.
+This operation is applied to
+$primary_recipient_map (recipients file actually).
+</entry>
+
+</row>
+
+<!-- 17 -->
+<row>
+
+<entry>
+add address to only member list.
+</entry>
+
+<entry>
+"makefml addmembers ML ADDRESS".
+Commands (addmember add2member add2members) are same.
+the changes is shown after the operation.
+This operation is applied to members file.
+</entry>
+
+<entry>
+"makefml addmembers ML ADDRESS".
+No message is shown unless error occurs.
+This operation is applied to
+$primary_member_map (members file actually).
+</entry>
+
+</row>
+
+<!-- 18 -->
+<row>
+
+<entry>
+disable real time delivery
+</entry>
+
+<entry>
+"makefml off ML ADDRESS".
+skip is same as off.
+the changes is shown after the operation.
+This operation is applied to actives file.
+</entry>
+
+<entry>
+"makefml off ML ADDRESS".
+No message is shown unless error occurs.
+This operation is applied to
+$primary_recipient_map (recipients file actually).
+</entry>
+
+</row>
+
+<!-- 19 -->
+<row>
+
+<entry>
+enable real time delivery.
+</entry>
+
+<entry>
+"makefml on ML ADDRESS".
+the changes is shown after the operation.
+This operation is applied to actives file.
+</entry>
+
+<entry>
+"makefml digestoff ML ADDRESS" or "makefml digest ML ADDRESS off".
+No message is shown unless error occurs.
+This operation is applied to
+$primary_recipient_map (recipients file actually).
+</entry>
+
+</row>
+
+<!-- 20 -->
+<row>
+
+<entry>
+change real time to digest delivery.
+</entry>
+
+<entry>
+"makefml matome ML ADDRESS".
+digest is same.
+the changes is shown after the operation.
+This operation is applied to actives file.
+</entry>
+
+<entry>
+"makefml digeston ML ADDRESS" or "makefml digest ML ADDRESS on".
+No message is shown unless error occurs.
+This operation is applied to
+$primary_recipient_map (recipients file actually).
+</entry>
+
+</row>
+
+<!-- 21 -->
+<row>
+
+<entry>
+add a remote administrator address.
+</entry>
+
+<entry>
+"makefml addadmin ML ADDRESS".
+the changes is shown after the operation.
+This operation is applied to members-admin file.
+</entry>
+
+<entry>
+"makefml addadmin ML ADDRESS".
+No message is shown unless error occurs.
+This operation is applied to
+recipients-admin and members-admin.
+</entry>
+
+</row>
+
+<!-- 22 -->
+<row>
+
+<entry>
+remove a remote administrator address.
+</entry>
+
+<entry>
+"makefml byeadmin ML ADDRESS".
+the changes is shown after the operation.
+This operation is applied to members-admin file.
+</entry>
+
+<entry>
+"makefml byeadmin ML ADDRESS".
+No message is shown unless error occurs.
+This operation is applied to
+recipients-admin and members-admin.
+</entry>
+
+</row>
+
+<!-- 23 -->
+<row>
+
+<entry>
+set up password of remote administrator (1).
+</entry>
+
+<entry>
+"makefml passwd ML".
+interactive.
+</entry>
+
+<entry>
+"makefml passwd ML" (incomplete ?)
+</entry>
+
+</row>
+
+<!-- 24 -->
+<row>
+
+<entry>
+set up password of remote administrator (2).
+</entry>
+
+<entry>
+"makefml passwd ML ADDRESS"
+interactive.
+</entry>
+
+<entry>
+"makefml passwd ML ADDRESS".
+interactive.
+</entry>
+
+</row>
+
+<!-- 25 -->
+<row>
+
+<entry>
+set up password of remote administrator (3).
+</entry>
+
+<entry>
+"makefml passwd ML ADDRESS PASSWORD".
+the changes is shown after the operation.
+This operation is applied to etc/passwd file.
+</entry>
+
+<entry>
+"makefml passwd ML ADDRESS PASSWORD".
+No message is shown unless error occurs.
+This operation is applied to
+etc/passwd-admin file.
+</entry>
+
+</row>
+
+<!-- 26 -->
+<row>
+
+<entry>
+menu style configuration tool.
+</entry>
+
+<entry>
+makefml config ML
+</entry>
+
+<entry>
+incomplete.
+</entry>
+
+</row>
+
+<!-- 27 -->
+<row>
+
+<entry>
+edit configuration file.
+</entry>
+
+<entry>
+"makefml edit ML".
+Ask the editor to use before running.
+"vi" by default.
+</entry>
+
+<entry>
+"makefml edit ML".
+Not ask the editor to use before running.
+use environment variable EDITOR if specified.
+"vi" by default.
+</entry>
+
+</row>
+
+<!-- 28 -->
+<row>
+
+<entry>
+fml4 specific configuration file conversion (generate cf to config.ph)
+</entry>
+
+<entry>
+"makefml update-config ML".
+Commands (update config-update update-config.ph) are same.
+the operations is shown.
+</entry>
+
+<entry>
+no corresponding idea (one configuration file).
+</entry>
+
+</row>
+
+<!-- 29 -->
+<row>
+
+<entry>
+edit cf template by menu.
+</entry>
+
+<entry>
+makefml config-template ML
+</entry>
+
+<entry>
+not implemented
+</entry>
+
+</row>
+
+<!-- 30 -->
+<row>
+
+<entry>
+edit template files "makefml newml" uses
+</entry>
+
+<entry>
+makefml edit-template FILE
+list up available file list unless FILE specified.
+</entry>
+
+<entry>
+not implemented
+</entry>
+
+</row>
+
+<!-- 31 -->
+<row>
+
+<entry>
+re-generate files e.g. help at the ml home directory.
+</entry>
+
+<entry>
+makefml create-doc-template ML
+</entry>
+
+<entry>
+no corresponding idea.
+</entry>
+
+</row>
+
+<!-- 32 -->
+<row>
+
+<entry>
+convert SRC file to DST file with variable conversion.
+</entry>
+
+<entry>
+makefml conv ML SRC DST
+</entry>
+
+<entry>
+not implemented
+</entry>
+
+</row>
+
+<!-- 33 -->
+<row>
+
+<entry>
+see log (the last 100 lines shown).
+</entry>
+
+<entry>
+"makefml log ML [OPTION]".
+"makefml tail ML" is same.
+</entry>
+
+<entry>
+"makefml log ML".
+options are not implemented.
+</entry>
+
+</row>
+
+<!-- 34 -->
+<row>
+
+<entry>
+set up admin.cgi (scripts and apache configuration helper).
+</entry>
+
+<entry>
+"makefml admin.cgi ML".
+interactive.
+</entry>
+
+<entry>
+incomplete.
+</entry>
+
+</row>
+
+<!-- 35 -->
+<row>
+
+<entry>
+set up ml-admin.cgi (scripts and apache configuration helper). 
+</entry>
+
+<entry>
+"makefml ml-admin.cgi ML".
+"makefml mladmin.cgi ML" is same.
+interactive.
+</entry>
+
+<entry>
+incomplete.
+</entry>
+
+</row>
+
+<!-- 36 -->
+<row>
+
+<entry>
+set up .htpasswd for admin.cgi.
+</entry>
+
+<entry>
+makefml html_cgiadmin_passwd ML
+</entry>
+
+<entry>
+not implemented
+</entry>
+
+</row>
+
+<!-- 37 -->
+<row>
+
+<entry>
+html_config (makefml internal use command)
+</entry>
+
+<entry>
+makefml html_config ML
+html_config_set is same.
+</entry>
+
+<entry>
+not implemented
+</entry>
+
+</row>
+
+<!-- 38 -->
+<row>
+
+<entry>
+set up .htpasswd for ml-admin.cgi and the password of admin command mail.
+</entry>
+
+<entry>
+makefml html_passwd ML
+</entry>
+
+<entry>
+not implemented
+</entry>
+
+</row>
+
+<!-- 39 -->
+<row>
+
+<entry>
+set up .htpasswd for ml-admin.cgi.
+</entry>
+
+<entry>
+makefml htpasswd ML
+</entry>
+
+<entry>
+not implemented
+</entry>
+
+</row>
+
+<!-- 40 -->
+<row>
+
+<entry>
+pgp command wrapper
+</entry>
+
+<entry>
+makefml pgp ML
+</entry>
+
+<entry>
+fmlpgp
+</entry>
+
+</row>
+
+<!-- 41 -->
+<row>
+
+<entry>
+pgp2 command wrapper
+</entry>
+
+<entry>
+makefml pgp2 ML
+</entry>
+
+<entry>
+fmppgp2
+</entry>
+
+</row>
+
+<!-- 42 -->
+<row>
+
+<entry>
+pgpe command wrapper
+</entry>
+
+<entry>
+makefml pgpe ML
+</entry>
+
+<entry>
+fmlpgpe
+</entry>
+
+</row>
+
+<!-- 43 -->
+<row>
+
+<entry>
+pgpk command wrapper
+</entry>
+
+<entry>
+makefml pgpk ML
+</entry>
+
+<entry>
+fmlpgk
+</entry>
+
+</row>
+
+<!-- 44 -->
+<row>
+
+<entry>
+pgps command wrapper
+</entry>
+
+<entry>
+makefml pgps ML
+</entry>
+
+<entry>
+fmlpgps
+</entry>
+
+</row>
+
+<!-- 45 -->
+<row>
+
+<entry>
+pgpv command wrapper
+</entry>
+
+<entry>
+makefml pgpv ML
+</entry>
+
+<entry>
+fmlpgpv
+</entry>
+
+</row>
+
+<!-- 46 -->
+<row>
+
+<entry>
+gpg command wrapper
+</entry>
+
+<entry>
+makefml gpg ML
+</entry>
+
+<entry>
+fmlgpg
+</entry>
+
+</row>
+
+<!-- 47 -->
+<row>
+
+<entry>
+admin-auth (PGP, GPG KEY RING operation)
+</entry>
+
+<entry>
+makefml admin-auth ML
+</entry>
+
+<entry>
+fmlpgp* command --admin-command-mail-auth
+</entry>
+
+</row>
+
+<!-- 48 -->
+<row>
+
+<entry>
+admin-encrypt (PGP, GPG KEY RING operation)
+</entry>
+
+<entry>
+makefml admin-encrypt ML
+</entry>
+
+<entry>
+not implemented
+</entry>
+
+</row>
+
+<!-- 49 -->
+<row>
+
+<entry>
+dist-auth (PGP, GPG KEY RING operation)
+</entry>
+
+<entry>
+makefml dist-auth ML
+</entry>
+
+<entry>
+fmlpgp* command --article-post-auth
+</entry>
+
+</row>
+
+<!-- 50 -->
+<row>
+
+<entry>
+dist-encrypt (PGP, GPG KEY RING operation)
+</entry>
+
+<entry>
+makefml dist-encrypt ML
+</entry>
+
+<entry>
+fmlpgp* command --article-post-encrypt
+</entry>
+
+</row>
+
+<!-- 51 -->
+<row>
+
+<entry>
+set up popfml (emulate MTA and ML via POP).
+</entry>
+
+<entry>
+makefml popfml
+</entry>
+
+<entry>
+fetchfml
+</entry>
+
+</row>
+
+<!-- 52 -->
+<row>
+
+<entry>
+set up password for POP.
+</entry>
+
+<entry>
+makefml pop_passwd
+</entry>
+
+<entry>
+write password in configuration file config.cf.
+</entry>
+
+</row>
+
+<!-- 53 -->
+<row>
+
+<entry>
+lock ML.
+</entry>
+
+<entry>
+makefml lock ML
+</entry>
+
+<entry>
+not implemented (no corresponding idea, no giant lock).
+</entry>
+
+</row>
+
+<!-- 54 -->
+<row>
+
+<entry>
+create a template of bug report.
+</entry>
+
+<entry>
+makefml bug-report-template ML
+send-pr is same.
+</entry>
+
+<entry>
+not implemented
+</entry>
+
+</row>
+
+<!-- 55 -->
+<row>
+
+<entry>
+execute command.
+</entry>
+
+<entry>
+makefml command ML
+</entry>
+
+<entry>
+not implemented
+</entry>
+
+</row>
+
+<!-- 56 -->
+<row>
+
+<entry>
+set up delivery mode.
+</entry>
+
+<entry>
+makefml delivery_mode ML
+</entry>
+
+<entry>
+not implemented
+</entry>
+
+</row>
+
+<!-- 57 -->
+<row>
+
+<entry>
+change configuration variable in running makefml.
+</entry>
+
+<entry>
+makefml setq ML
+</entry>
+
+<entry>
+-o options.
+</entry>
+
+</row>
+
+<!-- 58 -->
+<row>
+
+<entry>
+show environment summary where fml runs.
+</entry>
+
+<entry>
+makefml showconfig ML
+showconf is same.
+</entry>
+
+<entry>
+not implemented / no plan
+</entry>
+
+</row>
+
+<!-- 59 -->
+<row>
+
+<entry>
+show OS information by "show COMMAND" style command.
+</entry>
+
+<entry>
+"makefml show".
+</entry>
+
+<entry>
+not implemented / no plan
+</entry>
+
+</row>
+
+<!-- 60 -->
+<row>
+
+<entry>
+send a file.
+</entry>
+
+<entry>
+makefml resend ML
+</entry>
+
+<entry>
+not implemented / no plan
+</entry>
+
+</row>
+
+<!-- 61 -->
+<row>
+
+<entry>
+upgrade command: convert fml 2.0 to fml 3.0.
+</entry>
+
+<entry>
+makefml upgrade ML
+</entry>
+
+<entry>
+not needed
+</entry>
+
+</row>
+
