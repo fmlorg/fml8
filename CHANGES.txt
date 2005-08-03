@@ -25,6 +25,9 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2005/08/03
+   7.98.3 English document revised.
+
 2005/07/01
 
    FML::Process::Kernel 
@@ -8485,4 +8488,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.243 2005/06/05 07:18:56 fukachan Exp $
+$FML: CHANGES.txt,v 1.244 2005/07/27 12:43:44 fukachan Exp $
