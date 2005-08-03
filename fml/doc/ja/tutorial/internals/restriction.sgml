@@ -1,5 +1,5 @@
 <!--
-   $FML: restriction.sgml,v 1.8 2004/10/06 09:07:40 fukachan Exp $
+   $FML: restriction.sgml,v 1.9 2005/06/25 15:11:35 fukachan Exp $
 -->
 
 
@@ -9,7 +9,7 @@
 	</title>
 
 <para>
-入力データ(特にコマンドなど)は FML::Restriction::CGI クラスが提供する
+入力データ(特にコマンドなど)は FML::Restriction クラスが提供する
 正規表現で検査します。
 </para>
 

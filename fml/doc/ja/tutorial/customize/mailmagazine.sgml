@@ -1,5 +1,5 @@
 <!--
-   $FML: mailmagazine.sgml,v 1.6 2004/10/06 09:07:34 fukachan Exp $
+   $FML: mailmagazine.sgml,v 1.7 2005/06/25 13:54:39 fukachan Exp $
 -->
 
 
@@ -39,7 +39,7 @@ PGP 認証
 </para>
 
 <para>
-member_maps から $primary_member_maps を抜き、
+member_maps から $primary_member_map を抜き、
 代わりに投稿可能なメンバーのリスト(ここでは 
 $ml_home_dir/members-mailmag としましょう)を
 member_maps を追加します。

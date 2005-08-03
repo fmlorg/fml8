@@ -1,5 +1,5 @@
 <!--
-   $FML: fml.sgml,v 1.8 2005/06/25 15:11:36 fukachan Exp $
+   $FML: fml.sgml,v 1.9 2005/07/19 23:46:14 fukachan Exp $
 -->
 
 
@@ -227,6 +227,8 @@ OS 附属のパッケージシステムなどにはやさしくなっているといえるでしょう。
 「configure の使用」、
 /usr/local/etc/fml/
 のファイル編集です。
+<footnote>
+<para>
 &fml8; の
 /usr/local/etc/fml/
 以下のファイル群は
@@ -235,6 +237,8 @@ OS 附属のパッケージシステムなどにはやさしくなっているといえるでしょう。
 および
 /usr/local/etc/fml/site_default_config.ph
 などに相当していますが、必ずしも一対一対応するわけではありません。
+</para>
+</footnote>
 </para>
 
 </important>
@@ -277,20 +281,21 @@ OS 附属のパッケージシステムなどにはやさしくなっているといえるでしょう。
 	</para>
 
 	<para>
-	(デフォルトでは)インストーラは /usr/local/bin
-		<footnote>
-		<para>
-		デフォルトでは /usr/local ディレクトリ以下に
-		4.4 BSD 風のサブディレクトリが作られます。
-		ディレクトリパスは
-		<link linkend="install.fml.unix.configure">
-		configure のオプション
-		</link>
-		で変更が可能です。
-		</para>
-		</footnote>
-	に makefml や fmldoc など fml で始まるユーティリティプログラム
-	群をインストールします。実は、これらは
+	デフォルトでは /usr/local ディレクトリ以下に
+	4.4 BSD 風のサブディレクトリが作られます。
+	ディレクトリパスは
+	<link linkend="install.fml.unix.configure">
+	configure のオプション
+	</link>
+	で変更が可能です。
+	</para>
+
+	<para>
+	デフォルトでは、インストーラはメインのMTAから呼ばれるプログラムを
+	/usr/local/libexec/fml/ 以下へ、
+	makefml や fmldoc など fml で始まるユーティリティプログラムを
+	/usr/local/bin
+	にインストールします。実は、これらは
 	/usr/local/libexec/fml の下の実体を呼び出す単なる wrapper です。
 	</para>
    </listitem>
@@ -325,7 +330,9 @@ OS 附属のパッケージシステムなどにはやさしくなっているといえるでしょう。
 
    <listitem>
 	<para>
+	<link linkend="test">
 	ＭＬ の動作テストをしてください。
+	</link>
 	</para>
    </listitem>
 
@@ -462,8 +469,7 @@ elena@fml.org ＭＬを作るには
 
 <warning>
 <para>
-makefml config は実装途中です。
-まだイマイチです。ごめんなさい。
+makefml config は実装途中で、まだイマイチです。ごめんなさい。
 いまは、まだ config.cf ファイルを手で編集して下さい。
 </para>
 </warning>
@@ -490,7 +496,7 @@ site_default_config.cf のフォーマットは、config.cf (後述)と同様で、
 <link linkend="list.variables.by.alphabeticalorder">
 全変数のリスト
 </link>
-は default_config.ph (後述)を見て下さい。
+も参照して下さい。
 </para>
 
 </sect2>
@@ -510,7 +516,7 @@ elena ＭＬの設定のカスタマイズは
 </link>
 とかなり似ています(&fml4; の config.ph よりは cf にやや近いですが、フォー
 マットが違うことに変わりはない)。
-HOOK (perl script)を各場合は、
+HOOK (perl script)を書く場合は、
 (perl script ファイルのように) =cut より後に書いて下さい。
 </para>
 

@@ -81,7 +81,7 @@ Q: アドレスを(受信者、送信者リスト両方に)追加する
 	コマンドは全て同じ意味である。
 	エラーにならない限り、画面表示はなく、静かに終る。
 	デフォルトの操作対象は
-	$primary_recipient_maps と $primary_member_maps で、
+	$primary_recipient_map と $primary_member_map で、
 	具体的には recipients と members ファイル。
 
 Q: アドレスを(受信者、送信者リスト両方から)削除する
@@ -95,7 +95,7 @@ Q: アドレスを(受信者、送信者リスト両方から)削除する
 	コマンドは全て同じ意味である。
 	エラーにならない限り、画面表示はなく、静かに終る。
 	デフォルトの操作対象は
-	$primary_recipient_maps と $primary_member_maps で、
+	$primary_recipient_map と $primary_member_map で、
 	具体的には recipients と members ファイル。
 	
 Q: アドレスを変更する(受信者リスト、メンバーリストともに変更する)
@@ -105,7 +105,7 @@ Q: アドレスを変更する(受信者リスト、メンバーリストともに変更する)
 8: makefml chaddr ML OLD_ADDRESS NEW_ADDRESS
 	エラーにならない限り、画面表示はなく、静かに終る。
 	デフォルトの操作対象は
-	$primary_recipient_maps と $primary_member_maps で、
+	$primary_recipient_map と $primary_member_map で、
 	具体的には recipients と members ファイル。
 
 Q: 受信者リストにのみアドレスを追加する。
@@ -116,7 +116,7 @@ Q: 受信者リストにのみアドレスを追加する。
 8: makefml addactives ML ADDRESS 
 	エラーにならない限り、画面表示はなく、静かに終る。
 	デフォルトの操作対象は
-	$primary_recipient_maps で、
+	$primary_recipient_map で、
 	具体的には recipients ファイル。
 
 Q: メンバーリストにのみアドレスを追加する。
@@ -127,8 +127,8 @@ Q: メンバーリストにのみアドレスを追加する。
 8: makefml addmembers ML ADDRESS
 	エラーにならない限り、画面表示はなく、静かに終る。
 	デフォルトの操作対象は
-	$primary_recipient_maps と $primary_member_maps で、
-	具体的には recipients と members ファイル。
+	$primary_member_map で、
+	具体的には members ファイル。
 
 Q: リアルタイム配送を止める
 4: makefml off ML ADDRESS
