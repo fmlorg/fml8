@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.19 2004/03/28 13:01:28 fukachan Exp $
+# $FML: DB.pm,v 1.20 2004/06/11 10:37:41 tmu Exp $
 #
 
 package Mail::Message::DB;
@@ -21,7 +21,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
 use Carp;
 use File::Spec;
 
-my $version = q$FML: DB.pm,v 1.19 2004/03/28 13:01:28 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.20 2004/06/11 10:37:41 tmu Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 # special value
@@ -183,7 +183,7 @@ sub new
     my $me     = {};
 
     # initialize DB module backend
-    set_db_module_name($me, $args->{ db_module } || 'AnyDBM_File');
+    set_db_module_class($me, $args->{ db_module } || 'AnyDBM_File');
 
     # db_base_dir = /var/spool/ml/@udb@/elena
     my $_db_base_dir = $args->{ db_base_dir } || croak("specify db_base_dir");
@@ -246,8 +246,8 @@ sub analyze
     my ($self, $msg) = @_;
     my $hdr    = $msg->whole_message_header;
     my $id     = $self->get_key();
-    my $month  = $self->get_time_from_header($hdr, 'yyyy/mm');
-    my $subdir = $self->get_time_from_header($hdr, 'yyyymm');
+    my $month  = $self->_get_time_from_header($hdr, 'yyyy/mm');
+    my $subdir = $self->_get_time_from_header($hdr, 'yyyymm');
 
     #
     # XXX-TODO: analyze() must not be here ?
@@ -305,7 +305,7 @@ sub _update_max_id
 }
 
 
-# Descriptions: extract and format if needed header infomation
+# Descriptions: extract and format if needed header information
 #               and save them into db.
 #    Arguments: OBJ($self) HASH_REF($db) NUM($id) OBJ($hdr)
 # Side Effects: update hint in $db
@@ -385,6 +385,7 @@ sub _analyze_thread
     # ref_key_list = ( id(myself), id(in-reply-to), id's(references) );
     $self->_db_array_add($db, 'ref_key_list', $id, $id);
 
+    # I. update ref_key_list database.
     # search order is artibrary (see comments above).
   MSGID:
     for my $mid (@$ra_inreplyto, @$ra_ref) {
@@ -410,24 +411,31 @@ sub _analyze_thread
 	_PRINT_DEBUG("THREAD SEARCH: NOT TRY");
     }
 
+    # I. (2)
+    # XXX-TODO: update ref_key_list based on subject.
+
     # II. ok. go to speculate prev/next links
-    #   1. If In-Reply-To: is found, use it as "pointer to previous id"
+    #   1. if In-Reply-To: is found, use it as "pointer to previous id".
     my $idp = 0;
     if (defined $in_reply_to && $in_reply_to ne '') {
+	# XXX this "idp" is previous message candidate.
 	# XXX idp (id pointer) = id1 by _head_of_list_str( (id1 id2 id3 ...)
 	$idp = $self->_db_get($db, 'inv_message_id', $in_reply_to);
     }
-    # 2. if not found, try to use References: "in reverse order"
+    # 2. if not found, try to use References: "in reverse order". So
+    #    the last referenced message_id is the previous message candidate.
     elsif (@$ra_ref) {
 	my (@rra) = reverse(@$ra_ref);
 	$idp = $rra[0] || 0;
     }
-    # 3. no link to previous one found
+    # 3. no link to the previous message is found.
     else {
 	$idp = 0;
     }
 
-    # 4. if $idp (link to previous message) found,
+    # III. if $idp (link to the previous message) found,
+    #      update prev_key (itself to preious) and 
+    #      next_key (previous to itself) database.
     if (defined($idp) && $idp && $idp =~ /^\d+$/o) {
 	if ($idp != $current_key) {
 	    $self->_db_set($db, 'prev_key', $current_key, $idp);
@@ -711,7 +719,12 @@ sub __search_default_next_id_in_thread
 
 =head2 get_thread_data($thread_args)
 
-return thread data around the specified key.
+return thread data around the specified key.  The data is a hash of
+array recursively explorered in the thread link relation.
+
+    hash = {
+	id => [ id1 id2 id2a id2b id3 ... ],
+    };
 
 =cut
 
@@ -733,7 +746,6 @@ sub get_thread_data
     my $range   = $thread_args->{ range } || 'last:10';
     my $head_id = $thread_args->{ last_id };
     my $id_list = $mh->expand($range, 1, $head_id);
-    my $tail_id = $id_list->[ 0 ] || 1;
 
   KEY:
     for my $id (@$id_list) {
@@ -756,7 +768,7 @@ my $recursive = 0;
 # Return Value: ARRAY(NUM, NUM, ARRAY_REF)
 sub _get_keys_in_this_thread
 {
-    my ($self, $head_id, $list ,$uniq) = @_;
+    my ($self, $head_id, $list, $uniq) = @_;
 
     $recursive++;
 
@@ -895,33 +907,6 @@ sub _decode_mime_string
 }
 
 
-# Descriptions: return formated time of message Date:
-#    Arguments: OBJ($self) OBJ($hdr) STR($type)
-# Side Effects: none
-# Return Value: STR
-sub get_time_from_header
-{
-    my ($self, $hdr, $type) = @_;
-
-    if (defined($hdr) && $hdr->get('date')) {
-	use Time::ParseDate;
-	my $unixtime = parsedate( $hdr->get('date') );
-	my ($sec,$min,$hour,$mday,$mon,$year,$wday) = localtime( $unixtime );
-
-	if ($type eq 'yyyymm') {
-	    return sprintf("%04d%02d", 1900 + $year, $mon + 1);
-	}
-	elsif ($type eq 'yyyy/mm') {
-	    return sprintf("%04d/%02d", 1900 + $year, $mon + 1);
-	}
-    }
-    else {
-	warn("cannot pick up Date: field");
-	return '';
-    }
-}
-
-
 # Descriptions: clean up email address by Mail::Address.
 #               return clean-up'ed address list.
 #    Arguments: OBJ($self) STR($addr)
@@ -960,6 +945,19 @@ sub _who_of_address
 }
 
 
+# Descriptions: return formated time of message Date:
+#    Arguments: OBJ($self) OBJ($hdr) STR($type)
+# Side Effects: none
+# Return Value: STR
+sub _get_time_from_header
+{
+    my ($self, $hdr, $type) = @_;
+
+    use Mail::Message::Utils;
+    return Mail::Message::Utils::get_time_from_header($hdr, $type);
+}
+
+
 =head1 DATABASE PARAMETERS MANIPULATION
 
 =cut
@@ -989,14 +987,14 @@ sub db_open
 	return $self->{ _db } if defined $self->{ _db };
 
 	# @table = (@orig_header_fields,
-	# @header_fields,
-	# @article_header_fields,
-	# @table_list);
+	#           @header_fields,
+	#           @article_header_fields,
+	#           @table_list);
 	@table = (@table_list);
     }
     _PRINT_DEBUG("db_open(on demand): @table");
 
-    my $db_type   = $self->get_db_module_name();
+    my $db_type   = $self->get_db_module_class();
     my $db_dir    = $self->get_db_base_dir();
     my $file_mode = $self->{ _file_mode } || 0644;
 
@@ -1039,8 +1037,6 @@ sub db_close
 	@table = ($args->{ table });
     }
     else {
-	return $self->{ _db } if defined $self->{ _db };
-
 	@table = (@orig_header_fields, @header_fields, @article_header_fields,
 		  @table_list);
     }
@@ -1179,11 +1175,11 @@ sub _db_get
 }
 
 
-# Descriptions: set module name.
+# Descriptions: set module class.
 #    Arguments: OBJ($self) STR($module)
 # Side Effects: none
 # Return Value: none
-sub set_db_module_name
+sub set_db_module_class
 {
     my ($self, $module) = @_;
 
@@ -1195,7 +1191,7 @@ sub set_db_module_name
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
-sub get_db_module_name
+sub get_db_module_class
 {
     my ($self) = @_;
 
@@ -1306,7 +1302,7 @@ sub _old_db_copyin
 {
     my ($self, $db, $table, $key) = @_;
     my (%old_db);
-    my $db_type    = $self->get_db_module_name();
+    my $db_type    = $self->get_db_module_class();
     my $db_dir     = $self->get_db_base_dir();
     my $file_mode  = $self->{ _file_mode } || 0644;
     my $old_db_dir = $self->{ _old_db_base_dir };
