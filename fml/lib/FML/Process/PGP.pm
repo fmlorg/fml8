@@ -3,7 +3,7 @@
 # Copyright (C) 2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: PGP.pm,v 1.2 2005/05/30 03:18:45 fukachan Exp $
+# $FML: PGP.pm,v 1.3 2005/06/04 08:49:11 fukachan Exp $
 #
 
 package FML::Process::PGP;
@@ -309,7 +309,7 @@ sub _symlink_admin_dir
     my $cur_dir = `pwd`;
     chomp $cur_dir;
 
-    if (-d $dir && ! -h $alias) {
+    if (-d $dir && ! -l $alias) {
 	use File::Basename;
 	if (dirname($dir) eq dirname($alias)) {
 	    chdir dirname($dir);
