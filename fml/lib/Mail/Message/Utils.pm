@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.10 2004/01/24 09:04:00 fukachan Exp $
+# $FML: Utils.pm,v 1.11 2004/07/23 13:16:45 fukachan Exp $
 #
 
 package Mail::Message::Utils;
@@ -86,6 +86,41 @@ sub from_to_name
     }
 
     return( $user ? "$user\@xxx.xxx.xxx.xxx" : $address );
+}
+
+
+
+=head2 get_time_from_header
+
+return formated time of message Date:.
+
+=cut
+
+
+# Descriptions: return formated time of message Date:
+#    Arguments: OBJ($hdr) STR($type)
+# Side Effects: none
+# Return Value: STR
+sub get_time_from_header
+{
+    my ($hdr, $type) = @_;
+
+    if (defined($hdr) && $hdr->get('date')) {
+	use Time::ParseDate;
+	my $unixtime = parsedate( $hdr->get('date') );
+	my ($sec,$min,$hour,$mday,$mon,$year,$wday) = localtime( $unixtime );
+
+	if ($type eq 'yyyymm') {
+	    return sprintf("%04d%02d", 1900 + $year, $mon + 1);
+	}
+	elsif ($type eq 'yyyy/mm') {
+	    return sprintf("%04d/%02d", 1900 + $year, $mon + 1);
+	}
+    }
+    else {
+	warn("cannot pick up Date: field");
+	return '';
+    }
 }
 
 
