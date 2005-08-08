@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.259 2005/06/04 08:53:48 fukachan Exp $
+# $FML: Kernel.pm,v 1.260 2005/07/01 10:05:35 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1201,7 +1201,10 @@ sub _store_message_into_incoming_queue
     my $fatal      = 0;
 
     # write to queue file.
-    my $wh = $queue->open("incoming", { mode => "w" });
+    my $wh = undef;
+    if (defined $queue) {
+	$wh = $queue->open("incoming", { mode => "w" });
+    }
     if (defined $wh) {
 	my $n = 0;
 	my $w = 0;
