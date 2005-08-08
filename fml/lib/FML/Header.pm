@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.82 2005/01/23 00:54:36 fukachan Exp $
+# $FML: Header.pm,v 1.83 2005/05/27 03:03:32 fukachan Exp $
 #
 
 package FML::Header;
@@ -727,7 +727,7 @@ sub _check_xxx_message_id
 	my $db    = FML::Header::MessageID->new->db_open($xargs);
 
 	if (defined $db) {
-	    # we can tind the $mid in the past message-id cache ?
+	    # we can find the $mid in the past message-id cache ?
 	    $dup = $db->{ $mid };
 	    if ($dup && $mode eq 'message_id_cache_dir') {
 		Log( "message-id duplicated" );
@@ -807,14 +807,14 @@ C<article_post_address> address.
 sub check_x_ml_info
 {
     my ($header, $config, $rw_args) = @_;
-    my $buf  = $header->get('x-ml-info')  || undef;
-    my $addr = $config->{ addr_for_post } || undef;
+    my $buf  = $header->get('x-ml-info') || undef;
+    my $addr = $config->{ article_post_address } || undef;
 
     if ($addr && $buf) {
 	return ($buf =~ /$addr/) ? 1 : 0;
     }
     else {
-	0;
+	return 0;
     }
 }
 
@@ -826,17 +826,17 @@ sub check_x_ml_info
 sub check_list_post
 {
     my ($header, $config, $rw_args) = @_;
-    my $buf  = $header->get('list-post')  || undef;
-    my $addr = $config->{ addr_for_post } || undef;
+    my $buf  = $header->get('list-post') || undef;
+    my $addr = $config->{ article_post_address } || undef;
 
     if ($addr && $buf) {
 	return ($buf =~ /$addr/) ? 1 : 0;
     }
     else {
-	0;
+	return 0;
     }
 
-    0;
+    return 0;
 }
 
 
