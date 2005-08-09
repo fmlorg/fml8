@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent.pm,v 1.12 2004/07/23 12:41:12 fukachan Exp $
+# $FML: MimeComponent.pm,v 1.13 2005/05/26 10:20:03 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -463,7 +463,7 @@ sub _temp_file_path
 #    Arguments: OBJ($self) STR($file)
 # Side Effects: update filter rules.
 # Return Value: none
-sub read_filter_rule_from_file
+sub read_filter_rule_file
 {
     my ($self, $file) = @_;
     my ($whole_type, $type, $action);
@@ -597,7 +597,7 @@ if ($0 eq __FILE__) {
 	my $obj = new FML::Filter::MimeComponent;
 	if (defined $opt->{ 'c' }) {
 	    my $file = $opt->{ 'c' };
-	    $obj->read_filter_rule_from_file($file);
+	    $obj->read_filter_rule_file($file);
 	}
 	$obj->dump_filter_rules();
 	print STDERR "\n";
