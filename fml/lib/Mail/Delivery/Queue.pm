@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.51 2005/05/27 01:22:00 fukachan Exp $
+# $FML: Queue.pm,v 1.52 2005/06/03 12:52:02 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -1074,7 +1074,7 @@ sub DESTROY
 
 =head1 UTILITIES
 
-=head2 content_dup2($class)
+=head2 dup_content($class)
 
 duplicate content at a class $class other than incoming.
 
@@ -1085,7 +1085,7 @@ duplicate content at a class $class other than incoming.
 #    Arguments: OBJ($self) STR($class)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
-sub content_dup2
+sub dup_content
 {
     my ($self, $class) = @_;
     my $id         = $self->id();

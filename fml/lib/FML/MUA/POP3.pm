@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: POP3.pm,v 1.1 2005/06/03 09:39:50 fukachan Exp $
+# $FML: POP3.pm,v 1.2 2005/06/04 07:19:50 fukachan Exp $
 #
 
 package FML::MUA::POP3;
@@ -120,7 +120,7 @@ sub retrieve
 		    }
 		    else {
 			my $id = $q->id();
-			$q->content_dup2($class);
+			$q->dup_content($class);
 			$q->remove();
 			$curproc->log("fetched: qid=$id");
 		    }
