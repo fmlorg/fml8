@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.74 2005/05/30 00:02:30 fukachan Exp $
+# $FML: ToHTML.pm,v 1.75 2005/08/06 07:14:47 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.74 2005/05/30 00:02:30 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.75 2005/08/06 07:14:47 fukachan Exp $;
 my $versionid = 0;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $versionid = "$1";
@@ -38,7 +38,7 @@ Mail::Message::ToHTML - convert text format mail to HTML format
       directory => "/var/www/htdocs/ml/elena",
   };
 
-  $obj->htmlfy_rfc822_message({
+  $obj->htmlify_rfc822_message({
       id  => 1,
       src => "/var/spool/ml/elena/spool/1",
   });
@@ -57,7 +57,7 @@ something() below is method name.
 
                                for example
     -------------------------------------------------------------------
-    html_begin()               <HTML><HEAD> ... </HEAD><BODY>
+    html_start()               <HTML><HEAD> ... </HEAD><BODY>
     mhl_preamble()             <!-- comment used by this module -->
     mhl_separator()            <HR>
 
@@ -135,7 +135,7 @@ sub DESTROY
 }
 
 
-=head2 htmlfy_rfc822_message($args)
+=head2 htmlify_rfc822_message($args)
 
 convert mail to html.
 
@@ -156,7 +156,7 @@ where C<$path> is file path.
 #                  $path  file path  (e.g. "/some/where/1");
 # Side Effects: none
 # Return Value: none
-sub htmlfy_rfc822_message
+sub htmlify_rfc822_message
 {
     my ($self, $args) = @_;
 
@@ -175,7 +175,7 @@ sub htmlfy_rfc822_message
     #    $id  = article id
     #   $src  = source file
     #   $dst  = destination file (target html)
-    my ($id, $src, $dst) = $self->_init_htmlfy_rfc822_message($args);
+    my ($id, $src, $dst) = $self->_init_htmlify_rfc822_message($args);
     $self->{ _debug_id } = $id;
 
     # target html exists already.
@@ -198,7 +198,7 @@ sub htmlfy_rfc822_message
     }
 
     # before main message
-    $self->html_begin($wh, { message => $msg });
+    $self->html_start($wh, { message => $msg });
     $self->mhl_preamble($wh);
 
     # analyze $msg, chain of Mail::Message objects.
@@ -237,7 +237,7 @@ sub htmlfy_rfc822_message
 		my $args = $self->{ _args };
 		$args->{ attachment } = 1; # clarify not top level content.
 		my $text = new Mail::Message::ToHTML $args;
-		$text->htmlfy_rfc822_message({
+		$text->htmlify_rfc822_message({
 		    parent_id => $id,
 		    src => $tmpf,
 		    dst => $outf,
@@ -449,7 +449,7 @@ sub html_filepath
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: ARRAY(NUM, STR, STR)
-sub _init_htmlfy_rfc822_message
+sub _init_htmlify_rfc822_message
 {
     my ($self, $args) = @_;
     my ($id, $src, $dst);
@@ -458,7 +458,7 @@ sub _init_htmlfy_rfc822_message
 	$src = $args->{ src };
     }
     else {
-	croak("htmlfy_rfc822_message: \$src is mandatory\n");
+	croak("htmlify_rfc822_message: \$src is mandatory\n");
     }
 
     if (defined $args->{ id }) {
@@ -479,7 +479,7 @@ sub _init_htmlfy_rfc822_message
     }
     # oops ;) wrong call of this function
     else {
-	croak("htmlfy_rfc822_message: specify \$id or \$dst\n");
+	croak("htmlify_rfc822_message: specify \$id or \$dst\n");
     }
 
     return ($id, $src, $dst);
@@ -490,7 +490,7 @@ sub _init_htmlfy_rfc822_message
 #    Arguments: OBJ($self) HANDLE($wh) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
-sub html_begin
+sub html_start
 {
     my ($self, $wh, $args) = @_;
     my ($msg, $hdr, $title);
@@ -1374,7 +1374,7 @@ sub _print_index_begin
     my $wh = new FileHandle "> $new";
     $args->{ wh } = $wh;
 
-    $self->html_begin($wh, { title => $title });
+    $self->html_start($wh, { title => $title });
 
     _print_raw_str($wh, _format_index_navigator(), $code);
     $self->mhl_separator($wh);
@@ -2345,12 +2345,12 @@ sub htmlify_file
 	printf STDERR "htmlify_file( id=%-6s src=%s )\n", $id, $file;
     }
 
-    _PRINT_DEBUG("htmlfy_rfc822_message begin");
-    $html->htmlfy_rfc822_message({
+    _PRINT_DEBUG("htmlify_rfc822_message begin");
+    $html->htmlify_rfc822_message({
 	id  => $id,
 	src => $file,
     });
-    _PRINT_DEBUG("htmlfy_rfc822_message end");
+    _PRINT_DEBUG("htmlify_rfc822_message end");
 
     if ($debug) {
 	printf STDERR "htmlify_file( id=%-6s ) update relation\n", $id;
