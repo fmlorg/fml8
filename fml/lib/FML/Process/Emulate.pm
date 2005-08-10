@@ -3,7 +3,7 @@
 # Copyright (C) 2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Emulate.pm,v 1.6 2005/05/27 03:03:37 fukachan Exp $
+# $FML: Emulate.pm,v 1.7 2005/06/04 08:54:53 fukachan Exp $
 #
 
 package FML::Process::Emulate;
@@ -76,7 +76,7 @@ sub prepare
     my ($curproc, $args) = @_;
     my $config           = $curproc->config();
     my $resolver_args    = {
-	fallback => "generate_config_cf_from_config_ph",
+	fallback => "config_cf_generate_from_config_ph",
     };
 
     # load only default configuration.
@@ -250,7 +250,7 @@ sub _fml4_emulate_digest_process
 
 =head1 FALLBACK FOR ERROR RECOVORY
 
-=head2 generate_config_cf_from_config_ph($fallback_args)
+=head2 config_cf_generate_from_config_ph($fallback_args)
 
 When fml.pl runs, it generates config.cf if config.cf does not exist.
 This code is a subset of "fml $ml mergeml" command.
@@ -262,7 +262,7 @@ This code is a subset of "fml $ml mergeml" command.
 #    Arguments: OBJ($curproc) HASH_REF($fallback_args)
 # Side Effects: none
 # Return Value: none
-sub generate_config_cf_from_config_ph
+sub config_cf_generate_from_config_ph
 {
     my ($curproc, $fallback_args) = @_;
     my $ml_home_dir    = '';
