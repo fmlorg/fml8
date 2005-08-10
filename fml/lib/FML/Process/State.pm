@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: State.pm,v 1.20 2005/06/03 09:34:29 fukachan Exp $
+# $FML: State.pm,v 1.21 2005/06/04 08:49:11 fukachan Exp $
 #
 
 package FML::Process::State;
@@ -34,7 +34,7 @@ FML::Process::State - interface to handle states within current process.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
-sub current_process_ml_name_init
+sub current_process_init
 {
     my ($curproc) = @_;
 
