@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DBI.pm,v 1.30 2004/01/24 09:03:55 fukachan Exp $
+# $FML: DBI.pm,v 1.31 2004/07/11 15:25:53 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -272,7 +272,8 @@ sub _fetch_all
 {
     my ($self, $args) = @_;
     my $config = $self->{ _config };
-    my $query  = $config->{ sql_get_next_key };
+    my $query  = 
+	$config->{ sql_query_get_next_key } || $config->{ sql_get_next_key };
 
     $self->execute({ query => $query });
 }
@@ -294,7 +295,7 @@ sub add
 {
     my ($self, $addr) = @_;
     my $config = $self->{ _config };
-    my $query  = $config->{ sql_add };
+    my $query  = $config->{ sql_query_add } || $config->{ sql_add };
 
     $self->open();
 
@@ -315,7 +316,7 @@ sub delete
 {
     my ($self, $addr) = @_;
     my $config = $self->{ _config };
-    my $query  = $config->{ sql_delete };
+    my $query  = $config->{ sql_query_delete } || $config->{ sql_delete };
 
     $self->open();
 
@@ -343,7 +344,7 @@ sub md_find
 {
     my ($self, $regexp, $args) = @_;
     my $config         = $self->{ _config };
-    my $query          = $config->{ sql_find };
+    my $query          = $config->{ sql_query_find } || $config->{ sql_find };
     my $case_sensitive = $args->{ case_sensitive } ? 1 : 0;
     my $want           = $args->{ want } || 'key,value';
     my $show_all       = $args->{ all } ? 1 : 0;
