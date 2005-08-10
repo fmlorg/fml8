@@ -3,7 +3,7 @@
 # Copyright (C) 2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Emulate.pm,v 1.7 2005/06/04 08:54:53 fukachan Exp $
+# $FML: Emulate.pm,v 1.8 2005/08/10 11:28:44 fukachan Exp $
 #
 
 package FML::Process::Emulate;
@@ -85,7 +85,7 @@ sub prepare
 
     # go !
     $curproc->ml_variables_resolve($resolver_args);
-    $curproc->config_files_load();
+    $curproc->config_cf_files_load();
     $curproc->env_fix_perl_include_path();
     $curproc->scheduler_init();
     $curproc->log_message_init();

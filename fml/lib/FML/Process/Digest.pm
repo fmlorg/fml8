@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Digest.pm,v 1.22 2005/06/04 08:49:09 fukachan Exp $
+# $FML: Digest.pm,v 1.23 2005/06/04 08:51:30 fukachan Exp $
 #
 
 package FML::Process::Digest;
@@ -81,7 +81,7 @@ sub prepare
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->ml_variables_resolve();
-    $curproc->config_files_load();
+    $curproc->config_cf_files_load();
     $curproc->env_fix_perl_include_path();
     $curproc->scheduler_init();
 

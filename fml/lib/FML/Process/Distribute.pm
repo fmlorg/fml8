@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.159 2005/05/27 00:59:13 fukachan Exp $
+# $FML: Distribute.pm,v 1.160 2005/06/04 08:49:10 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -81,7 +81,7 @@ sub prepare
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->ml_variables_resolve();
-    $curproc->config_files_load();
+    $curproc->config_cf_files_load();
     $curproc->env_fix_perl_include_path();
     $curproc->scheduler_init();
     $curproc->log_message_init();

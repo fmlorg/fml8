@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Addr.pm,v 1.20 2005/05/27 03:03:36 fukachan Exp $
+# $FML: Addr.pm,v 1.21 2005/06/04 08:49:08 fukachan Exp $
 #
 
 package FML::Process::Addr;
@@ -80,7 +80,7 @@ sub prepare
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     # $curproc->ml_variables_resolve();
-    $curproc->config_files_load();
+    $curproc->config_cf_files_load();
     $curproc->env_fix_perl_include_path();
 
     $eval = $config->get_hook( 'fmladdr_prepare_end_hook' );

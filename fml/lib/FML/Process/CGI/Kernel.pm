@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.85 2005/05/27 01:19:32 fukachan Exp $
+# $FML: Kernel.pm,v 1.86 2005/06/04 08:49:12 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -91,7 +91,7 @@ sub prepare
     my ($curproc, $args) = @_;
 
     $curproc->_cgi_ml_variables_resolve();
-    $curproc->config_files_load();
+    $curproc->config_cf_files_load();
     $curproc->env_fix_perl_include_path();
 
     # modified for admin/*.cgi
@@ -207,7 +207,7 @@ sub _cgi_ml_variables_resolve
 
 	# XXX-TODO: method name .. hmm. $curproc->$obj_$function().
 	# add this ml's config.cf to the .cf list.
-	$curproc->config_files_append($config_cf);
+	$curproc->config_cf_files_append($config_cf);
     }
     else {
 	$curproc->logdebug("no ml_name");

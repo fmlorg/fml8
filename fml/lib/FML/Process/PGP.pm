@@ -3,7 +3,7 @@
 # Copyright (C) 2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: PGP.pm,v 1.3 2005/06/04 08:49:11 fukachan Exp $
+# $FML: PGP.pm,v 1.4 2005/08/06 07:48:04 fukachan Exp $
 #
 
 package FML::Process::PGP;
@@ -77,7 +77,7 @@ sub prepare
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->ml_variables_resolve();
-    $curproc->config_files_load();
+    $curproc->config_cf_files_load();
     $curproc->env_fix_perl_include_path();
 
     $eval = $config->get_hook( 'fmlpgp_prepare_end_hook' );

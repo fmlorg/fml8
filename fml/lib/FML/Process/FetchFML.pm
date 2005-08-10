@@ -3,7 +3,7 @@
 # Copyright (C) 2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: FetchFML.pm,v 1.1 2005/06/03 11:00:55 fukachan Exp $
+# $FML: FetchFML.pm,v 1.2 2005/06/04 08:49:10 fukachan Exp $
 #
 
 package FML::Process::FetchFML;
@@ -78,7 +78,7 @@ sub prepare
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->ml_variables_resolve();
-    $curproc->config_files_load();
+    $curproc->config_cf_files_load();
     $curproc->env_fix_perl_include_path();
     $curproc->scheduler_init();
     $curproc->log_message_init();

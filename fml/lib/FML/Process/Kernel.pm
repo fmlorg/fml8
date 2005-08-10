@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.262 2005/08/10 12:55:33 fukachan Exp $
+# $FML: Kernel.pm,v 1.263 2005/08/10 13:09:46 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -890,7 +890,7 @@ sub ml_variables_resolve
 	$curproc->__debug_ml_xxx('resolv:');
 
 	# add this ml's config.cf to the .cf list.
-	$curproc->config_files_append($config_cf_path);
+	$curproc->config_cf_files_append($config_cf_path);
     }
     else {
 	$curproc->logerror("cannot determine which ml_name");
@@ -992,7 +992,7 @@ sub _find_ml_home_dir_in_argv
 }
 
 
-=head2 config_files_load($files)
+=head2 config_cf_files_load($files)
 
 read several configuration C<@$files>.
 The variable evaluation (expansion) is done on demand when
@@ -1004,11 +1004,11 @@ $config->get() of FETCH() method is called.
 #    Arguments: OBJ($curproc) ARRAY_REF($files)
 # Side Effects: none
 # Return Value: none
-sub config_files_load
+sub config_cf_files_load
 {
     my ($curproc, $files) = @_;
     my $config = $curproc->config();
-    my $_files = $files || $curproc->config_files_get_list();
+    my $_files = $files || $curproc->config_cf_files_get_list();
 
     # load configuration variables from given files e.g. /some/where.cf
     # XXX overload variables from each $cf
