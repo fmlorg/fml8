@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Flow.pm,v 1.29 2005/06/04 08:49:10 fukachan Exp $
+# $FML: Flow.pm,v 1.30 2005/08/10 12:55:33 fukachan Exp $
 #
 
 package FML::Process::Flow;
@@ -106,7 +106,7 @@ sub ProcessStart
 
     # clean up temporary files
     $process->tmp_file_cleanup();
-    $process->incoming_message_queue_clean_up();
+    $process->incoming_message_cleanup_queue();
 
     # debug
     $process->finalize();

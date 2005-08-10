@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.261 2005/08/08 03:52:30 fukachan Exp $
+# $FML: Kernel.pm,v 1.262 2005/08/10 12:55:33 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -2725,7 +2725,7 @@ sub tmp_file_cleanup
 #    Arguments: OBJ($curproc)
 # Side Effects: remove incoming queue.
 # Return Value: none
-sub incoming_message_queue_clean_up
+sub incoming_message_cleanup_queue
 {
     my ($curproc) = @_;
     my $config    = $curproc->config();
@@ -3217,7 +3217,7 @@ sub exit_as_tempfail
 
     # clean up temporary files
     $curproc->tmp_file_cleanup();
-    $curproc->incoming_message_queue_clean_up();
+    $curproc->incoming_message_cleanup_queue();
 
     # main.
     $curproc->logerror("exit(EX_TEMPFAIL) to retry later.");
