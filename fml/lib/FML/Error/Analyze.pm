@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.29 2004/07/23 13:16:37 fukachan Exp $
+# $FML: Analyze.pm,v 1.30 2004/12/05 16:19:07 fukachan Exp $
 #
 
 package FML::Error::Analyze;
@@ -61,7 +61,7 @@ sub new
 
 =head1 METHODS
 
-=head2 summary()
+=head2 get_summary()
 
 return summary of address and points as HASH_REF.
 
@@ -70,7 +70,7 @@ return summary of address and points as HASH_REF.
 	address2 => point,
     };
 
-=head2 removal_address()
+=head2 get_address_to_be_removed()
 
 return addresses to be removed.
 
@@ -81,13 +81,13 @@ return addresses to be removed.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: HASH_REF
-sub summary
+sub get_summary
 {
     my ($self)   = @_;
     my $analyzer = $self->{ _analyzer };
 
     if (defined $analyzer) {
-	return $analyzer->summary();
+	return $analyzer->get_summary();
     }
     else {
 	return {};
@@ -99,13 +99,13 @@ sub summary
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: ARRAY_REF
-sub removal_address
+sub get_address_to_be_removed
 {
     my ($self)   = @_;
     my $analyzer = $self->{ _analyzer };
 
     if (defined $analyzer) {
-	return $analyzer->removal_address();
+	return $analyzer->get_address_to_be_removed();
     }
     else {
 	return [];
@@ -186,7 +186,7 @@ C<FML::Error::Analyze::${fp}> (as $anal_data in AUTOLOAD()).
 
 where the error_info_* has error reasons (STR). $fp parses it, count
 up. FML::Error or FML::Error::Analyze can retrieve the result via
-summary() method.
+get_summary() method.
 
 =head1 CODING STYLE
 

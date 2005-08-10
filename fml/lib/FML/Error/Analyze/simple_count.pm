@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: simple_count.pm,v 1.9 2004/05/22 06:19:52 fukachan Exp $
+# $FML: simple_count.pm,v 1.10 2004/07/23 13:16:37 fukachan Exp $
 #
 
 package FML::Error::Analyze::simple_count;
@@ -123,7 +123,7 @@ sub _simple_count
     $self->{ _summary } = $summary;
 
     # save address for removal candidates
-    $self->{ _removal_address } = \@removelist;
+    $self->{ _address_to_be_removed } = \@removelist;
 }
 
 
@@ -131,7 +131,7 @@ sub _simple_count
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: HASH_REF
-sub summary
+sub get_summary
 {
     my ($self) = @_;
 
@@ -143,11 +143,11 @@ sub summary
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: ARRAY_REF
-sub removal_address
+sub get_address_to_be_removed
 {
     my ($self) = @_;
 
-    return( $self->{ _removal_address } || [] );
+    return( $self->{ _address_to_be_removed } || [] );
 }
 
 
@@ -159,7 +159,7 @@ sub print
 {
     my ($self, $addr) = @_;
     my $wh      = \*STDOUT;
-    my $summary = $self->summary();
+    my $summary = $self->get_summary();
 
     printf $wh "%25s => %s\n", $addr, $summary->{ $addr };
 }

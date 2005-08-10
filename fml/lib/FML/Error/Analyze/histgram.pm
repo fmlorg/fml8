@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: histgram.pm,v 1.11 2004/07/23 13:16:37 fukachan Exp $
+# $FML: histgram.pm,v 1.12 2004/12/05 16:19:08 fukachan Exp $
 #
 
 package FML::Error::Analyze::histgram;
@@ -167,7 +167,7 @@ sub _histgram
     $self->{ _summary } = $summary;
 
     # save address for removal candidates
-    $self->{ _removal_address } = \@removelist;
+    $self->{ _address_to_be_removed } = \@removelist;
 }
 
 
@@ -193,7 +193,7 @@ sub _ra_to_str
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: HASH_REF
-sub summary
+sub get_summary
 {
     my ($self) = @_;
 
@@ -205,11 +205,11 @@ sub summary
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: ARRAY_REF
-sub removal_address
+sub get_address_to_be_removed
 {
     my ($self) = @_;
 
-    return( $self->{ _removal_address } || [] );
+    return( $self->{ _address_to_be_removed } || [] );
 }
 
 
@@ -221,7 +221,7 @@ sub print
 {
     my ($self, $addr) = @_;
     my $wh       = \*STDOUT;
-    my $summary  = $self->summary();
+    my $summary  = $self->get_summary();
     my $bufarray = $summary->{ $addr } || [];
     my $result   = _ra_to_str($bufarray);
 

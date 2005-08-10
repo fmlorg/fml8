@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.32 2004/07/23 04:03:38 fukachan Exp $
+# $FML: Error.pm,v 1.33 2004/12/05 16:19:04 fukachan Exp $
 #
 
 package FML::Error;
@@ -207,7 +207,7 @@ if $config->{ error_mail_analyzer_function } is unspecified.
 # Descriptions: open error message cache and analyze the data by
 #               the specified analyzer function.
 #    Arguments: OBJ($self)
-# Side Effects: set up $self->{ _removal_addr_list } used internally.
+# Side Effects: set up $self->{ _list_to_be_removed }.
 # Return Value: none
 sub analyze
 {
@@ -226,8 +226,8 @@ sub analyze
     $self->unlock();
 
     # saved for further reference.
-    $self->{ _analyzer }          = $analyzer;
-    $self->{ _removal_addr_list } = $analyzer->removal_address();
+    $self->{ _analyzer } = $analyzer;
+    $self->{ _list_to_be_removed } = $analyzer->get_address_to_be_removed();
 
     # clean up.
     $self->db_close();
@@ -334,7 +334,7 @@ sub remove_bouncers
     my ($self)  = @_;
     my $curproc = $self->{ _curproc };
     my $cred    = $curproc->{ credential };
-    my $list    = $self->{ _removal_addr_list };
+    my $list    = $self->{ _list_to_be_removed };
 
     use FML::Restriction::Base;
     my $safe = new FML::Restriction::Base;
@@ -461,7 +461,7 @@ sub print
     my $analyzer = $self->{ _analyzer };
 
     if (defined $analyzer) {
-	my $info = $analyzer->summary();
+	my $info = $analyzer->get_summary();
 	for my $k (keys %$info) {
 	    $analyzer->print($k);
 	}
