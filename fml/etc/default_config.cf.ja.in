@@ -3254,38 +3254,38 @@ sql_table	=	ml
 
 # Descriptions:
 #      History:
-#        Value: SQL_STATEMENT
+#        Value: SQL_QUERY_STATEMENT
 #     Examples:
-sql_get_next_key =	select fml_address from $sql_table
-			where fml_ml = '$ml_name'
+sql_query_get_next_key =	select fml_address from $sql_table
+				where fml_ml = '$ml_name'
 					and
 				fml_domain = '$ml_domain'
 
 
 # Descriptions:
 #      History:
-#        Value: SQL_STATEMENT
+#        Value: SQL_QUERY_STATEMENT
 #     Examples:
-sql_getline	=	select fml_address from $sql_table
-			where fml_ml = '$ml_name'
+sql_query_getline	=	select fml_address from $sql_table
+				where fml_ml = '$ml_name'
 					and
 				fml_domain = '$ml_domain'
 
 
 # Descriptions:
 #      History:
-#        Value: SQL_STATEMENT
+#        Value: SQL_QUERY_STATEMENT
 #     Examples:
-sql_add		=	insert into $sql_table
+sql_query_add	=	insert into $sql_table
 			values ('$ml_name', '$ml_domain', '&address', 1, 1)
 
 
 # Descriptions:
 #      History:
-#        Value: SQL_STATEMENT
+#        Value: SQL_QUERY_STATEMENT
 #     Examples:
-sql_delete	=	delete from $sql_table
-			where	fml_ml = '$ml_name'
+sql_query_delete	=	delete from $sql_table
+				where	fml_ml = '$ml_name'
 					and
 				fml_domain = '$ml_domain'
 					and
@@ -3294,10 +3294,10 @@ sql_delete	=	delete from $sql_table
 
 # Descriptions:
 #      History:
-#        Value: SQL_STATEMENT
+#        Value: SQL_QUERY_STATEMENT
 #     Examples:
-sql_find	=	select fml_address from $sql_table
-			where	fml_ml = '$ml_name'
+sql_query_find		=	select fml_address from $sql_table
+				where	fml_ml = '$ml_name'
 					and
 				fml_domain = '$ml_domain'
 					and
