@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.4 2005/06/04 08:49:07 fukachan Exp $
+# $FML: Menu.pm,v 1.5 2005/06/04 08:51:29 fukachan Exp $
 #
 
 package FML::Config::Menu;
@@ -242,7 +242,7 @@ sub rewrite_config_cf
 
     # 1. save output into $tmp_file.
     my $output   = $self->{ _output } || '';
-    my $tmp_file = $curproc->temp_file_path();
+    my $tmp_file = $curproc->tmp_file_path();
     my $wh = new FileHandle ">> $tmp_file";
     if (defined $wh) {
 	print $wh "\n";

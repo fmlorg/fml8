@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent.pm,v 1.13 2005/05/26 10:20:03 fukachan Exp $
+# $FML: MimeComponent.pm,v 1.14 2005/08/09 03:22:23 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -410,7 +410,7 @@ sub _rfc822_mime_component_check
 	croak("too deep recursive call");
     }
     else {
-	my $tmpf = $self->_temp_file_path();
+	my $tmpf = $self->_tmp_file_path();
 
 	use FileHandle;
 	my $wh = new FileHandle "> $tmpf";
@@ -435,13 +435,13 @@ sub _rfc822_mime_component_check
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: none
-sub _temp_file_path
+sub _tmp_file_path
 {
     my ($self) = @_;
     my $curproc = $self->{ _curproc };
 
     if (defined $curproc) {
-	return $curproc->temp_file_path();
+	return $curproc->tmp_file_path();
     }
     elsif ($debug) {
 	return "./fileter.debug.$$";

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: clamscan.pm,v 1.4 2004/07/23 15:59:06 fukachan Exp $
+# $FML: clamscan.pm,v 1.5 2005/05/26 12:17:34 fukachan Exp $
 #
 
 package FML::Filter::External::clamscan;
@@ -80,7 +80,7 @@ sub _check
     my ($self, $curproc, $program) = @_;
 
     use FileHandle;
-    my $tmp_file = $curproc->temp_file_path();
+    my $tmp_file = $curproc->tmp_file_path();
     my $wh       = new FileHandle "> $tmp_file";
     if (defined $wh) {
 	$wh->autoflush(1);

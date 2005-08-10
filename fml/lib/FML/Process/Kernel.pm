@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.260 2005/07/01 10:05:35 fukachan Exp $
+# $FML: Kernel.pm,v 1.261 2005/08/08 03:52:30 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -2643,7 +2643,7 @@ sub queue_in
 sub _append_rfc822_message
 {
     my ($curproc, $msg_in, $msg_out) = @_;
-    my $tmpfile = $curproc->temp_file_path();
+    my $tmpfile = $curproc->tmp_file_path();
 
     my $wh = new FileHandle "> $tmpfile";
     if (defined $wh) {
@@ -2675,30 +2675,30 @@ sub _append_rfc822_message
 
 # Descriptions: insert $file into garbage collection queue (clean_up_queue).
 #    Arguments: OBJ($curproc) STR($file)
-# Side Effects: update $curproc->{ __tmp_files_clean_up };
+# Side Effects: update $curproc->{ __tmp_file_cleanup };
 # Return Value: none
 sub _add_into_clean_up_queue
 {
     my ($curproc, $file) = @_;
-    my $queue = $curproc->{ __tmp_files_clean_up };
+    my $queue = $curproc->{ __tmp_file_cleanup };
 
     if (defined $queue) {
 	push(@$queue, $file);
     }
     else {
-	$curproc->{ __tmp_files_clean_up } = [ $file ];
+	$curproc->{ __tmp_file_cleanup } = [ $file ];
     }
 }
 
 
 # Descriptions: remove garbage collection queue (clean_up_queue).
 #    Arguments: OBJ($curproc)
-# Side Effects: remove files in $curproc->{ __tmp_files_clean_up }
+# Side Effects: remove files in $curproc->{ __tmp_file_cleanup }
 # Return Value: none
-sub tmp_files_clean_up
+sub tmp_file_cleanup
 {
     my ($curproc) = @_;
-    my $queue = $curproc->{ __tmp_files_clean_up };
+    my $queue = $curproc->{ __tmp_file_cleanup };
 
     if (defined $queue) {
 	for my $q (@$queue) {
@@ -2780,7 +2780,7 @@ sub _is_valid_ml_home_dir
 #    Arguments: OBJ($curproc)
 # Side Effects: update the counter to ensure file name uniqueness
 # Return Value: STR
-sub temp_file_path
+sub tmp_file_path
 {
     my ($curproc) = @_;
     my $config  = $curproc->config();
@@ -2921,7 +2921,7 @@ sub reply_message_prepare_template
     my ($curproc, $pf_args) = @_;
     my $config      = $curproc->config();
     my $tmp_dir     = $config->{ tmp_dir };
-    my $tmpf        = $curproc->temp_file_path();
+    my $tmpf        = $curproc->tmp_file_path();
     my $src_file    = $pf_args->{ src };
     my $charset_out = $pf_args->{ charset };
 
@@ -3030,7 +3030,7 @@ sub sysflow_reopen_stderr_channel
 	$config->yes('use_log_dup') || $option->{ 'log-dup' } ||
 	$config->yes('use_log_computer_output') || 
 	$option->{'log-computer-output'}) {
-	my $tmpfile = $curproc->temp_file_path();
+	my $tmpfile = $curproc->tmp_file_path();
 	my $pcb     = $curproc->pcb();
 	$pcb->set("stderr", "logfile", $tmpfile);
 	$pcb->set("stderr", "use_log_dup", 1);
@@ -3216,7 +3216,7 @@ sub exit_as_tempfail
     my ($curproc) = @_;
 
     # clean up temporary files
-    $curproc->tmp_files_clean_up();
+    $curproc->tmp_file_cleanup();
     $curproc->incoming_message_queue_clean_up();
 
     # main.
