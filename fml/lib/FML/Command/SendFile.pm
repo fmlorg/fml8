@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.43 2005/06/04 08:49:07 fukachan Exp $
+# $FML: SendFile.pm,v 1.44 2005/06/04 08:51:29 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -152,7 +152,7 @@ sub _get_valid_article_list
 
     use Mail::Message::MH;
     my $mh      = new Mail::Message::MH;
-    my $last_id = $curproc->article_max_id();
+    my $last_id = $curproc->article_get_max_id();
 
     # XXX expand() validates $fn. o.k.
     # XXX we assume min_id = 1, but not correct always.

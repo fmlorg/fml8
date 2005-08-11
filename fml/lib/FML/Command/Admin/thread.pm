@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: thread.pm,v 1.7 2004/03/31 12:53:51 fukachan Exp $
+# $FML: thread.pm,v 1.8 2004/04/23 04:10:29 fukachan Exp $
 #
 
 package FML::Command::Admin::thread;
@@ -89,7 +89,7 @@ sub _new_switch
     my $command       = $options->[ 0 ] || 'one_line_summary';
     my $range         = $options->[ 1 ] || '';
     my $default_range = 'last:10';
-    my $max_id        = $curproc->article_max_id();
+    my $max_id        = $curproc->article_get_max_id();
     my $th_args       = {
 	last_id => $max_id,
     };

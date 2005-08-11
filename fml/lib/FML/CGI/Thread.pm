@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Thread.pm,v 1.3 2004/03/31 12:38:08 fukachan Exp $
+# $FML: Thread.pm,v 1.4 2004/07/23 15:59:02 fukachan Exp $
 #
 
 package FML::CGI::Thread;
@@ -92,7 +92,7 @@ sub html_end
 sub run_cgi_main
 {
     my ($curproc) = @_;
-    my $max_id    = $curproc->article_max_id();
+    my $max_id    = $curproc->article_get_max_id();
     my $cur_id    = $curproc->safe_param_article_id() || 0;
     my $range     = $cur_id;
     my $th_args   = {
@@ -125,7 +125,7 @@ sub run_cgi_menu
     my ($curproc)     = @_;
     my $myname        = $curproc->myname();
     my $ml_name       = $curproc->cgi_var_ml_name() || '';
-    my $max_id        = $curproc->article_max_id();
+    my $max_id        = $curproc->article_get_max_id();
     my $cur_id        = $curproc->safe_param_article_id();
     my $range         = $cur_id;
     my $default_range = 'last:10';

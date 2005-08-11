@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.133 2005/08/10 15:03:27 fukachan Exp $
+# $FML: Utils.pm,v 1.134 2005/08/11 04:07:33 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1636,7 +1636,7 @@ sub convert_to_mail_address
 }
 
 
-=head2 article_max_id()
+=head2 article_get_max_id()
 
 return the current article number (sequence number).
 
@@ -1647,7 +1647,7 @@ return the current article number (sequence number).
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: NUM
-sub article_max_id
+sub article_get_max_id
 {
     my ($curproc) = @_;
 

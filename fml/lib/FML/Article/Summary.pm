@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Summary.pm,v 1.22 2004/07/11 15:43:37 fukachan Exp $
+# $FML: Summary.pm,v 1.23 2005/05/26 09:42:24 fukachan Exp $
 #
 
 package FML::Article::Summary;
@@ -247,7 +247,7 @@ sub rebuild
 
 	# speculate boundary if not specified.
 	$min ||= 1;
-	$max ||= $curproc->article_max_id();
+	$max ||= $curproc->article_get_max_id();
 
 	for my $id ($min .. $max) {
 	    $self->print($wh, $id);
