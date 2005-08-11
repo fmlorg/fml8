@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.108 2005/06/03 09:35:25 fukachan Exp $
+# $FML: Switch.pm,v 1.109 2005/06/03 09:55:17 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -33,11 +33,11 @@ C<libexec/loader> (C<libexec/fml/loader>), the wrapper, loads this
 program and calls C<Bootstrap2()>.
 C<Bootstrap2()> loads main.cf,
 analyzes the command arguments
-and call C<load_module()> finally.
+and call C<_load_module()> finally.
 
-C<load_module()> emulates "use $package" to load
+C<_load_module()> emulates "use $package" to load
 module suitable with the arguments.
-The fml flow bifurcates here through C<load_module()>.
+The fml flow bifurcates here through C<_load_module()>.
 
 The flow details of program exists in FML::Process:: class.
 For example, libexec/distribute (fml.pl) runs in this way.
@@ -51,7 +51,7 @@ For example, libexec/distribute (fml.pl) runs in this way.
        main::Bootstrap2()       Process::Switch
             |
             V
-       load_module()            Process::Switch
+       _load_module()            Process::Switch
             |
             |  <---  $obj = FML::Process:Distribute
             |
@@ -67,7 +67,7 @@ kick off the second phase of bootstrap.
 
 It reads *.cf files, parses them and set the result to C<@cf>
 array variable.
-We pass it to C<load_module()> later.
+We pass it to C<_load_module()> later.
 
     @cf = (
 	   /etc/fml/defaults/$VERSION/default_config.cf
@@ -182,7 +182,7 @@ sub main::Bootstrap2
     };
 
     # get the object. The suitable module is speculcated by $0.
-    my $obj = load_module($myname, $args);
+    my $obj = _load_module($myname, $args);
 
     # start the process.
     eval q{
@@ -272,8 +272,7 @@ sub NewProcess
     eval q{
 	local(@ARGV) = ( $ml_addr );
 
-	use FML::Process::Switch;
-	my $obj = FML::Process::Switch::load_module($new_myname, $args);
+	my $obj = _load_module($new_myname, $args);
 
 	use FML::Process::Flow;
 	&FML::Process::Flow::ProcessStart($obj, $args);
@@ -282,10 +281,10 @@ sub NewProcess
 }
 
 
-=head2 load_module($args)
+=head2 _load_module($args)
 
 load the library and prepare environment to use it.
-C<load_module($args)> return process object C<$obj>.
+C<_load_module($args)> return process object C<$obj>.
 
 To start the process, we pass C<$obj> with C<$args> to
 C<FML::Process::Flow::ProcessStart($obj, $args)>.
@@ -312,7 +311,7 @@ C<$args> is like this:
     };
 
     # get the object. The suitable module is speculcated by $0.
-    my $obj = load_module($args);
+    my $obj = _load_module($args);
 
     # start the process.
     FML::Process::Flow::ProcessStart($obj, $args);
@@ -327,7 +326,7 @@ C<$args> is like this:
 # Side Effects: process switching :-)
 #               ProcessSwtich() is exported to main:: Name Space.
 # Return Value: STR(package name)
-sub load_module
+sub _load_module
 {
     my ($myname, $args) = @_;
 
