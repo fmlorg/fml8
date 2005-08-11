@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.263 2005/08/10 13:09:46 fukachan Exp $
+# $FML: Kernel.pm,v 1.264 2005/08/10 15:03:26 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1661,7 +1661,7 @@ If given, makefml/fml ignores message output.
 sub reply_message
 {
     my ($curproc, $msg, $rm_args) = @_;
-    my $lang_list = $curproc->get_preferred_languages();
+    my $lang_list = $curproc->_get_preferred_languages();
 
     for my $lang (@$lang_list) {
 	my $rm_charset = $curproc->lang_to_charset("report_mail",   $lang);
@@ -2000,7 +2000,7 @@ This $args is passed through to reply_message().
 sub reply_message_nl
 {
     my ($curproc, $class, $default_msg, $rm_args) = @_;
-    my $lang_list = $curproc->get_preferred_languages();
+    my $lang_list = $curproc->_get_preferred_languages();
 
     for my $lang (@$lang_list) {
 	my $rm_charset = $curproc->lang_to_charset("report_mail",   $lang);
@@ -2178,18 +2178,11 @@ sub caller_info
 }
 
 
-=head2 get_preferred_languages()
-
-return preferred languages e.g. [ ja ], [ ja en ]... in this system.
-
-=cut
-
-
 # Descriptions: return preferred languages e.g. [ ja ], [ ja en ]...
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: ARRAY_REF
-sub get_preferred_languages
+sub _get_preferred_languages
 {
     my ($curproc)  = @_;
     my $config     = $curproc->config();
@@ -2216,10 +2209,10 @@ sub get_preferred_languages
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: ARRAY_REF
-sub get_preferred_charsets
+sub _get_preferred_charsets
 {
     my ($curproc)  = @_;
-    my $lang_order = $curproc->get_preferred_languages();
+    my $lang_order = $curproc->_get_preferred_languages();
     my $list       = [];
 
     use Mail::Message::Charset;
@@ -2508,7 +2501,7 @@ sub queue_in
 	# XXX-TODO: accept-language: information.
 	if ($s) {
 	    # use [ iso-2022-jp us-ascii ] not [ ja en ] list.
-	    my $list = $curproc->get_preferred_charsets();
+	    my $list = $curproc->_get_preferred_charsets();
 	    for my $charset (@$list) {
 		if ($s{$charset}) {
 		    $msg->attach(Type => "text/plain; charset=$charset",
