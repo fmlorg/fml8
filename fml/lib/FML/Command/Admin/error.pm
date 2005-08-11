@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: error.pm,v 1.14 2004/06/26 11:47:56 fukachan Exp $
+# $FML: error.pm,v 1.15 2004/07/23 15:59:04 fukachan Exp $
 #
 
 package FML::Command::Admin::error;
@@ -89,7 +89,7 @@ sub _fmlerror
     my $error = new FML::Error $curproc;
 
     # XXX fml $ml error -O algorithm=ALGORITHM
-    my $option = $curproc->cui_command_specific_options() || {};
+    my $option = $curproc->command_line_cui_specific_options() || {};
     if (defined $option->{ algorithm } && $option->{ algorithm }) {
 	my $fp = $option->{ algorithm };
 	if ($config->has_attribute('error_mail_analyzer_function_select_list',

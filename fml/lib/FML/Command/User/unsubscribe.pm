@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: unsubscribe.pm,v 1.32 2004/07/23 15:59:05 fukachan Exp $
+# $FML: unsubscribe.pm,v 1.33 2005/05/26 09:57:54 fukachan Exp $
 #
 
 package FML::Command::User::unsubscribe;
@@ -84,7 +84,7 @@ sub process
     my $keyword       = $config->{ confirm_command_prefix };
     my $command       = $command_args->{ command };
     my $options       = $command_args->{ options };
-    my $cui_options   = $curproc->cui_command_specific_options() || {};
+    my $cui_options   = $curproc->command_line_cui_specific_options() || {};
     my $address       = $cui_options->{ 'send-to' } || $cred->sender();
 
     # cheap sanity checks

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.132 2005/06/04 08:28:46 fukachan Exp $
+# $FML: Utils.pm,v 1.133 2005/08/10 15:03:27 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1992,7 +1992,7 @@ sub shared_hash_get
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: HASH_REF
-sub cui_command_specific_options
+sub command_line_cui_specific_options
 {
     my ($curproc) = @_;
     my $args = $curproc->{ __parent_args };
@@ -2005,7 +2005,7 @@ sub cui_command_specific_options
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: STR
-sub command_specific_recipient
+sub command_line_cui_specific_recipient
 {
     my ($curproc) = @_;
     my $args      = $curproc->{ __parent_args };

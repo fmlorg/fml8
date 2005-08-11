@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.25 2004/04/23 04:10:29 fukachan Exp $
+# $FML: get.pm,v 1.26 2004/06/26 11:41:20 fukachan Exp $
 #
 
 package FML::Command::Admin::get;
@@ -68,7 +68,7 @@ sub process
     my $recipient   = '';
 
     if ($curproc->is_cui_process()) {
-	$recipient = $curproc->command_specific_recipient() || '';
+	$recipient = $curproc->command_line_cui_specific_recipient() || '';
 	$command_args->{ _recipient } = $recipient;
     }
 

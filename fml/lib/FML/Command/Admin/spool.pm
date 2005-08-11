@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: spool.pm,v 1.6 2004/03/24 00:14:09 fukachan Exp $
+# $FML: spool.pm,v 1.7 2004/06/30 03:05:13 fukachan Exp $
 #
 
 package FML::Command::Admin::spool;
@@ -67,7 +67,7 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
     my $config  = $curproc->config();
-    my $c_opts  = $curproc->cui_command_specific_options() || {};
+    my $c_opts  = $curproc->command_line_cui_specific_options() || {};
     my $options = $command_args->{ options };
     my $fp      = $options->[ 0 ] || 'status';
 
