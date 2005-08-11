@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.75 2005/08/06 07:14:47 fukachan Exp $
+# $FML: ToHTML.pm,v 1.76 2005/08/09 12:20:27 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.75 2005/08/06 07:14:47 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.76 2005/08/09 12:20:27 fukachan Exp $;
 my $versionid = 0;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $versionid = "$1";
@@ -1852,7 +1852,7 @@ sub _update_montly_thread_index_master
     my $old = File::Spec->catfile($html_base_dir, "monthly_thread.html");
     my $new = File::Spec->catfile($html_base_dir, "monthly_thread.html.new.$$");
     my $htmlinfo = {
-	title => defined($args->{ title }) ? $args->{ title } : "ID Index",
+	title => defined($args->{ title }) ? $args->{ title } : "Thread Index",
 	old   => $old,
 	new   => $new,
 	code  => $code,
