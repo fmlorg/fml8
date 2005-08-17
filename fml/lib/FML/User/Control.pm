@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.14 2004/07/23 13:09:38 fukachan Exp $
+# $FML: Control.pm,v 1.15 2004/12/05 16:19:13 fukachan Exp $
 #
 
 package FML::User::Control;
@@ -59,7 +59,7 @@ sub new
 #               OBJ($curproc) HASH_REF($command_args) HASH_REF($uc_args)
 # Side Effects: update maps, croak() if crical error.
 # Return Value: none
-sub useradd
+sub user_add
 {
     my ($self, $curproc, $command_args, $uc_args) = @_;
     my $config   = $curproc->config();
@@ -145,14 +145,12 @@ sub useradd
 
     # update user database.
     if ($curproc->is_under_mta_process()) {
-	my $info_args = {
-	    address => $address,
-	};
-
 	eval q{
 	    use FML::User::Info;
 	    my $user_info = new FML::User::Info $curproc;
-	    $user_info->import_from_mail_header($curproc, $info_args);
+	    $user_info->add({
+		address => $address,
+	    });
 	};
 	$curproc->logerror($@) if $@;
     }
@@ -164,7 +162,7 @@ sub useradd
 #               OBJ($curproc) HASH_REF($command_args) HASH_REF($uc_args)
 # Side Effects: update maps
 # Return Value: none
-sub userdel
+sub user_del
 {
     my ($self, $curproc, $command_args, $uc_args) = @_;
     my $config   = $curproc->config();
