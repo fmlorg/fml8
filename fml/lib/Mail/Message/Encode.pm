@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Encode.pm,v 1.20 2005/05/27 01:22:51 fukachan Exp $
+# $FML: Encode.pm,v 1.21 2005/05/30 00:05:00 fukachan Exp $
 #
 
 package Mail::Message::Encode;
@@ -624,7 +624,9 @@ sub raw_decode_qp
 
 =head1 DEBUG
 
-=head2 str_dump($str)
+=head2 dump_string($str)
+
+dump $str as the style by "od -a".
 
 =cut
 
@@ -633,7 +635,7 @@ sub raw_decode_qp
 #    Arguments: OBJ($self) STR($str)
 # Side Effects: none
 # Return Value: none
-sub str_dump
+sub dump_string
 {
     my ($self, $str) = @_;
 
