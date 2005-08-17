@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.264 2005/08/10 15:03:26 fukachan Exp $
+# $FML: Kernel.pm,v 1.265 2005/08/11 04:33:40 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1139,18 +1139,18 @@ sub incoming_message_parse
 	my $dir     = $config->{ incoming_mail_cache_dir };
 	my $modulus = $config->{ incoming_mail_cache_size };
 	use FML::Cache::Ring;
-        my $obj     = new FML::Cache::Ring {
+        my $cache     = new FML::Cache::Ring {
             directory => $dir,
 	    modulus   => $modulus,
         };
 
-	if (defined $obj) {
+	if (defined $cache) {
 	    my $r = 0; # result code.
 
 	    # 1. try link(2)
 	    if ($use_mail_queue) {
-		$obj->open();
-		$r = $obj->import_data_from({
+		$cache->open();
+		$r = $cache->add({
 		    file     => $queue_file,
 		    try_link => 'yes',
 		});
@@ -1159,11 +1159,11 @@ sub incoming_message_parse
 	    # 2. copy if link(2) failed.
 	    unless ($r) {
 		$curproc->logwarn("link(2) error");
-		my $wh = $obj->open();
+		my $wh = $cache->open();
 		if (defined $wh) {
 		    $msg->print($wh);
 		    $wh->close();
-		    $obj->close();
+		    $cache->close();
 		}
 	    }
 
@@ -1251,7 +1251,7 @@ sub _inject_charset_hints
 
     # 1. prefer Accept-Language: alyways, ignore Content-Type: in this case.
     #    set $list even if $list == [] to avoid further warning.
-    $curproc->set_accept_language_list($list);
+    $curproc->langinfo_set_accept_language_list($list);
 
     # 2. save charset of Content-Type: as a hint.
     if ($charset) {
@@ -1264,12 +1264,12 @@ sub _inject_charset_hints
 	my $lang = $char->message_charset_to_language($charset);
 
 	$curproc->logdebug("hints: \"$charset\" => lang=\"$lang\" as a hint.");
-	$curproc->set_language_hint('reply_message', $lang);
-	$curproc->set_language_hint('template_file', $lang);
+	$curproc->langinfo_set_language_hint('reply_message', $lang);
+	$curproc->langinfo_set_language_hint('template_file', $lang);
     }
     else {
-	$curproc->set_language_hint('reply_message', '');
-	$curproc->set_language_hint('template_file', '');
+	$curproc->langinfo_set_language_hint('reply_message', '');
+	$curproc->langinfo_set_language_hint('template_file', '');
     }
 }
 
@@ -1664,8 +1664,8 @@ sub reply_message
     my $lang_list = $curproc->_get_preferred_languages();
 
     for my $lang (@$lang_list) {
-	my $rm_charset = $curproc->lang_to_charset("report_mail",   $lang);
-	my $tf_charset = $curproc->lang_to_charset("template_file", $lang);
+	my $rm_charset = $curproc->_lang_to_charset("report_mail",   $lang);
+	my $tf_charset = $curproc->_lang_to_charset("template_file", $lang);
 	my $charsets = {
 	    reply_message_charset => $rm_charset,
 	    template_file_charset => $tf_charset,
@@ -2003,8 +2003,8 @@ sub reply_message_nl
     my $lang_list = $curproc->_get_preferred_languages();
 
     for my $lang (@$lang_list) {
-	my $rm_charset = $curproc->lang_to_charset("report_mail",   $lang);
-	my $tf_charset = $curproc->lang_to_charset("template_file", $lang);
+	my $rm_charset = $curproc->_lang_to_charset("report_mail",   $lang);
+	my $tf_charset = $curproc->_lang_to_charset("template_file", $lang);
 	my $charsets = {
 	    reply_message_charset => $rm_charset,
 	    template_file_charset => $tf_charset,
@@ -2078,7 +2078,7 @@ sub reply_message_add_header_info
 sub message_nl
 {
     my ($curproc, $class, $default_msg, $m_args) = @_;
-    my $charset  = $curproc->get_charset("template_file");
+    my $charset  = $curproc->langinfo_get_charset("template_file");
     my $charsets = {
 	template_file_charset => $charset,
     };
@@ -2192,8 +2192,8 @@ sub _get_preferred_languages
     #   $pref_order     = [ ja en ]
     #   $acpt_lang_list = [ ja en ]
     #   $mime_lang      = ja        ('en' if no mime charset).
-    my $acpt_lang_list = $curproc->get_accept_language_list() || [];
-    my $mime_lang      = $curproc->get_language_hint('reply_message') || 'en';
+    my $acpt_lang_list = $curproc->langinfo_get_accept_language_list() || [];
+    my $mime_lang      = $curproc->langinfo_get_language_hint('reply_message') || 'en';
 
     # return = [ ja ] or [ ja en ] ...
     my $p = $curproc->__find_preferred_languages($pref_order,
@@ -2280,6 +2280,28 @@ sub __find_preferred_languages
 }
 
 
+# Descriptions: convert lang (e.g. ja) to charset (e.g. iso-2022-jp).
+#    Arguments: OBJ($curproc) STR($category) STR($lang)
+# Side Effects: none
+# Return Value: none
+sub _lang_to_charset
+{
+    my ($curproc, $category, $lang) = @_;
+    my $config  = $curproc->config();
+    my $key     = sprintf("%s_charset_%s", $category, $lang);
+    my $charset = $config->{ $key } || '';
+
+    if ($charset) {
+	return $charset;
+    }
+    else {
+	my $s = "category=$category lang=$lang charset=none";
+	$curproc->logerror("_lang_to_charset: $s");
+	return 'us-ascii';
+    }
+}
+
+
 =head2 reply_message_inform($args)
 
 inform the error messages to the sender or maintainer.
@@ -2356,7 +2378,7 @@ sub queue_in
     my $pcb          = $curproc->pcb();
     my $config       = $curproc->config();
     my $sender       = $config->{ maintainer };
-    my $charset      = $curproc->get_charset($category);
+    my $charset      = $curproc->langinfo_get_charset($category);
     my $myname       = $curproc->myname();
     my $_defsubj     = "message from fml8 $myname system";
     my $subject      = $config->{ "${category}_subject" } || $_defsubj;
@@ -2707,7 +2729,7 @@ sub tmp_file_cleanup
 	if ($curproc->is_event_timeout($channel)) {
 	    my $config   = $curproc->config();
 	    my $tmp_dir  = $config->{ tmp_dir };
-	    $curproc->remove_too_old_files_in_dir($tmp_dir);
+	    $curproc->_remove_too_old_files_in_dir($tmp_dir);
 	    $curproc->event_set_timeout($channel, time + 24*3600);
 	}
     }
@@ -2818,6 +2840,38 @@ sub global_tmp_dir_path
     }
 
     return $global_tmp_dir;
+}
+
+
+# Descriptions: remove too old incoming queue files.
+#    Arguments: OBJ($curproc) STR($dir) NUM($_limit)
+# Side Effects: remove too old incoming queue files.
+# Return Value: none
+sub _remove_too_old_files_in_dir
+{
+    my ($curproc, $dir, $_limit) = @_;
+    my $limit = $_limit || 14*24*3600; # 2 weeks by default.
+
+    use DirHandle;
+    use File::stat;
+    my $dh = new DirHandle $dir;
+    if (defined $dh) {
+	my ($file, $entry, $stat);
+	my $day_limit = time - $limit;
+
+      ENTRY:
+	while ($entry = $dh->read()) {
+	    next ENTRY if $entry =~ /^\./o;
+
+	    $file = File::Spec->catfile($dir, $entry);
+	    $stat = stat($file);
+	    if ($stat->mtime < $day_limit) {
+		$curproc->log("remove too old file: $entry");
+		unlink $file;
+	    }
+	}
+	$dh->close();
+    }
 }
 
 
@@ -2972,13 +3026,13 @@ sub outgoing_message_cache_open
 	my $dir     = $config->{ outgoing_mail_cache_dir };
 	my $modulus = $config->{ outgoing_mail_cache_size };
 	use FML::Cache::Ring;
-        my $obj     = new FML::Cache::Ring {
-            directory  => $dir,
-	    modulus    => $modulus,
+        my $cache     = new FML::Cache::Ring {
+            directory => $dir,
+	    modulus   => $modulus,
         };
 
-	if (defined $obj) {
-	    return $obj->open();
+	if (defined $cache) {
+	    return $cache->open();
 	}
 	else {
 	    return undef;
