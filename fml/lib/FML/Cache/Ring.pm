@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Ring.pm,v 1.4 2004/07/23 15:59:02 fukachan Exp $
+# $FML: Ring.pm,v 1.5 2005/05/27 03:03:33 fukachan Exp $
 #
 
 package FML::Cache::Ring;
@@ -252,9 +252,9 @@ sub close
 }
 
 
-=head2 import_data_from($args)
+=head2 add($args)
 
-import data from file.
+import data into cache from file.
 Actually, link(2) $src to cache file.
 
     KEY        VALUE
@@ -269,10 +269,10 @@ Actually, link(2) $src to cache file.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: create $dst file (linked).
 # Return Value: NUM(1(success) or 0(fail))
-sub import_data_from
+sub add
 {
     my ($self, $args) = @_;
-    my $link = $args->{ try_link }      || 1;
+    my $link = $args->{ try_link }      || "yes";
     my $src  = $args->{ file }          || '';
     my $dst  = $self->cache_file_path() || '';
 
