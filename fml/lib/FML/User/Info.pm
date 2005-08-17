@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Info.pm,v 1.3 2004/07/23 13:09:49 fukachan Exp $
+# $FML: Info.pm,v 1.4 2005/05/27 03:03:40 fukachan Exp $
 #
 
 package FML::User::Info;
@@ -52,7 +52,7 @@ sub new
 }
 
 
-=head2 import_from_mail_header($curproc, $info)
+=head2 add($info)
 
 top level entrance to update user database based on header
 information.
@@ -61,12 +61,13 @@ information.
 
 
 # Descriptions: update user database based on header information.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($info)
+#    Arguments: OBJ($self) HASH_REF($info)
 # Side Effects: update db.
 # Return Value: none
-sub import_from_mail_header
+sub add
 {
-    my ($self, $curproc, $info) = @_;
+    my ($self, $info) = @_;
+    my $curproc = $self->{ _curproc };
     my $address = $info->{ address };
     my $header  = $curproc->incoming_message_header();
     my $from    = $header->get('from');
