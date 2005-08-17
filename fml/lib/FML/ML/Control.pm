@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.6 2004/07/23 13:16:39 fukachan Exp $
+# $FML: Control.pm,v 1.7 2004/11/25 12:06:45 fukachan Exp $
 #
 
 package FML::ML::Control;
@@ -138,7 +138,7 @@ sub install_template_files
 {
     my ($self, $curproc, $command_args, $params) = @_;
     my $config       = $curproc->config();
-    my $template_dir = $curproc->template_files_dir_for_newml();
+    my $template_dir = $curproc->newml_command_template_files_dir();
     my $ml_home_dir  = $params->{ ml_home_dir };
     my $templ_files  =
 	$config->get_as_array_ref('newml_command_template_files');
@@ -177,7 +177,7 @@ sub install_config_cf
 {
     my ($self, $curproc, $command_args, $params) = @_;
     my $config       = $curproc->config();
-    my $template_dir = $curproc->template_files_dir_for_newml();
+    my $template_dir = $curproc->newml_command_template_files_dir();
     my $ml_home_dir  = $params->{ ml_home_dir };
 
     use File::Spec;
@@ -326,7 +326,7 @@ sub setup_mail_archive_dir
 sub setup_cgi_interface
 {
     my ($self, $curproc, $command_args, $params) = @_;
-    my $template_dir = $curproc->template_files_dir_for_newml();
+    my $template_dir = $curproc->newml_command_template_files_dir();
     my $config       = $curproc->config();
 
     #
@@ -500,7 +500,7 @@ sub remove_ml_home_dir
 
     # /var/spool/ml/elena -> /var/spool/ml/@elena
     my $removed_dir =
-	$curproc->removed_ml_home_dir_path($ml_home_prefix, $ml_name);
+	$curproc->ml_home_dir_removed_path($ml_home_prefix, $ml_name);
     rename($ml_home_dir, $removed_dir);
 
     if (-d $removed_dir && (! -d $ml_home_dir)) {
