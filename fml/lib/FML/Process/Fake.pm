@@ -3,7 +3,7 @@
 # Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Fake.pm,v 1.13 2005/06/04 08:55:57 fukachan Exp $
+# $FML: Fake.pm,v 1.14 2005/08/10 15:03:27 fukachan Exp $
 #
 
 package FML::Process::Fake;
@@ -235,7 +235,7 @@ sub _faker_init
     #         faker=domain: "|/usr/local/libexec/fml/faker @domain"
     # 
     if ($curproc->is_valid_domain_syntax($faker_domain)) {
-	$curproc->set_emul_domain($faker_domain);
+	$curproc->_set_emul_domain($faker_domain);
     }
 }
 
@@ -312,8 +312,8 @@ sub _faker_main
 
     # 3. validate and create a new $ml_name\@$faker_domain if needed.
     # 4. start emulation.
-    my $ml_list   = $curproc->get_emul_ml_list();
-    my $ml_domain = $curproc->get_emul_domain();
+    my $ml_list   = $curproc->_get_emul_ml_list();
+    my $ml_domain = $curproc->_get_emul_domain();
     for my $ml_name (@$ml_list) {
 	if ($curproc->is_valid_ml($ml_name, $ml_domain)) {
 	    $curproc->log("ml found: $ml_name");
@@ -352,7 +352,7 @@ sub _faker_main
 sub _faker_analyze_address
 {
     my ($curproc, $addrlist) = @_;
-    my $faker_domain = $curproc->get_emul_domain();
+    my $faker_domain = $curproc->_get_emul_domain();
     my $pcb          = $curproc->pcb();
     my $found        = 0;
     my (@user)       = ();
@@ -371,8 +371,8 @@ sub _faker_analyze_address
 	}
     }
 
-    $curproc->set_emul_ml_list(\@ml);
-    $curproc->set_emul_user_list(\@user);
+    $curproc->_set_emul_ml_list(\@ml);
+    $curproc->_set_emul_user_list(\@user);
 
     return $found;
 }
@@ -455,11 +455,11 @@ sub is_valid_ml
 }
 
 
-=head2 set_emul_domain($ml_domain)
+=head2 _set_emul_domain($ml_domain)
 
 save domain libexec/faker handles.
 
-=head2 get_emul_domain()
+=head2 _get_emul_domain()
 
 get domain libexec/faker handles.
 
@@ -470,7 +470,7 @@ get domain libexec/faker handles.
 #    Arguments: OBJ($curproc) STR($ml_domain)
 # Side Effects: update PCB.
 # Return Value: none
-sub set_emul_domain
+sub _set_emul_domain
 {
     my ($curproc, $ml_domain) = @_;
     my $pcb = $curproc->pcb();
@@ -482,7 +482,7 @@ sub set_emul_domain
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: STR
-sub get_emul_domain
+sub _get_emul_domain
 {
     my ($curproc) = @_;
     my $pcb = $curproc->pcb();
@@ -490,11 +490,11 @@ sub get_emul_domain
 }
 
 
-=head2 set_emul_ml_list($list)
+=head2 _set_emul_ml_list($list)
 
 save ml_name list in pcb.
 
-=head2 get_emul_ml_list()
+=head2 _get_emul_ml_list()
 
 get ml_name list in pcb.
 
@@ -505,7 +505,7 @@ get ml_name list in pcb.
 #    Arguments: OBJ($curproc) ARRAY_REF($list)
 # Side Effects: update pcb.
 # Return Value: none
-sub set_emul_ml_list
+sub _set_emul_ml_list
 {
     my ($curproc, $list) = @_;
     my $pcb = $curproc->pcb();
@@ -517,7 +517,7 @@ sub set_emul_ml_list
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: ARRAY_REF
-sub get_emul_ml_list
+sub _get_emul_ml_list
 {
     my ($curproc) = @_;
     my $pcb = $curproc->pcb();
@@ -525,11 +525,11 @@ sub get_emul_ml_list
 }
 
 
-=head2 set_emul_user_list($list)
+=head2 _set_emul_user_list($list)
 
 save user list in pcb.
 
-=head2 get_emul_user_list()
+=head2 _get_emul_user_list()
 
 get user list in pcb.
 
@@ -540,7 +540,7 @@ get user list in pcb.
 #    Arguments: OBJ($curproc) ARRAY_REF($list)
 # Side Effects: update pcb.
 # Return Value: none
-sub set_emul_user_list
+sub _set_emul_user_list
 {
     my ($curproc, $list) = @_;
     my $pcb = $curproc->pcb();
@@ -552,7 +552,7 @@ sub set_emul_user_list
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: ARRAY_REF
-sub get_emul_user_list
+sub _get_emul_user_list
 {
     my ($curproc) = @_;
     my $pcb = $curproc->pcb();
