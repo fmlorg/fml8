@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Calendar.pm,v 1.10 2004/12/23 12:32:03 fukachan Exp $
+# $FML: Calendar.pm,v 1.11 2005/08/17 10:33:16 fukachan Exp $
 #
 
 package FML::CGI::Calendar;
@@ -184,7 +184,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

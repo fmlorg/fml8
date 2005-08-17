@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: histgram.pm,v 1.12 2004/12/05 16:19:08 fukachan Exp $
+# $FML: histgram.pm,v 1.13 2005/08/10 12:12:34 fukachan Exp $
 #
 
 package FML::Error::Analyze::histgram;
@@ -239,7 +239,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
