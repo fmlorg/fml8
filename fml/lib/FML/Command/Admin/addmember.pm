@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: addmember.pm,v 1.2 2004/06/26 11:47:55 fukachan Exp $
+# $FML: addmember.pm,v 1.3 2004/07/23 15:59:03 fukachan Exp $
 #
 
 package FML::Command::Admin::addmember;
@@ -123,7 +123,7 @@ sub process
     eval q{
 	use FML::User::Control;
 	my $obj = new FML::User::Control;
-	$obj->useradd($curproc, $command_args, $uc_args);
+	$obj->user_add($curproc, $command_args, $uc_args);
     };
     if ($r = $@) {
 	croak($r);

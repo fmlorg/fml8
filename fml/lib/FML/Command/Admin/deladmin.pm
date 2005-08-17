@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: deladmin.pm,v 1.18 2004/04/28 04:10:36 fukachan Exp $
+# $FML: deladmin.pm,v 1.19 2004/06/26 11:47:56 fukachan Exp $
 #
 
 package FML::Command::Admin::deladmin;
@@ -113,7 +113,7 @@ sub process
     eval q{
 	use FML::User::Control;
 	my $obj = new FML::User::Control;
-	$obj->userdel($curproc, $command_args, $uc_args);
+	$obj->user_del($curproc, $command_args, $uc_args);
     };
     if ($r = $@) {
 	croak($r);

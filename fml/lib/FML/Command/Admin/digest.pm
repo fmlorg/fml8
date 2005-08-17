@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digest.pm,v 1.21 2004/06/30 03:05:13 fukachan Exp $
+# $FML: digest.pm,v 1.22 2004/07/23 15:59:03 fukachan Exp $
 #
 
 package FML::Command::Admin::digest;
@@ -181,7 +181,7 @@ sub _digest_on
     # 1. remove address from $recipient_map (normal delivery recipients).
     #    we should remove address if $recipient_map conatins it.
     if ($cred->has_address_in_map($recipient_map, $config, $address)) {
-	$self->_userdel($curproc, $command_args, $uc_normal_args);
+	$self->_user_del($curproc, $command_args, $uc_normal_args);
     }
     else {
 	my $r = "no such recipient";
@@ -200,7 +200,7 @@ sub _digest_on
 	croak($r);
     }
     else {
-	$self->_useradd($curproc, $command_args, $uc_digest_args);
+	$self->_user_add($curproc, $command_args, $uc_digest_args);
     }
 
     # XXX-TODO: need transaction ?
@@ -239,7 +239,7 @@ sub _digest_off
     # 1. remove address from digest_recipient_map.
     #    we should remove address if $digest_recipient_map contains it.
     if ($cred->has_address_in_map($digest_recipient_map, $config, $address)) {
-	$self->_userdel($curproc, $command_args, $uc_digest_args);
+	$self->_user_del($curproc, $command_args, $uc_digest_args);
     }
     else {
 	my $r = "no such digest recipient";
@@ -260,7 +260,7 @@ sub _digest_off
 	croak($r);
     }
     else {
-	$self->_useradd($curproc, $command_args, $uc_normal_args);
+	$self->_user_add($curproc, $command_args, $uc_normal_args);
     }
 
     # XXX-TODO: need transaction ?
@@ -272,7 +272,7 @@ sub _digest_off
 #               OBJ($curproc) HASH_REF($command_args) HASH_REF($uc_args)
 # Side Effects: update address list(s).
 # Return Value: none
-sub _useradd
+sub _user_add
 {
     my ($self, $curproc, $command_args, $uc_args) = @_;
     my $r = '';
@@ -280,7 +280,7 @@ sub _useradd
     eval q{
 	use FML::User::Control;
 	my $obj = new FML::User::Control;
-	$obj->useradd($curproc, $command_args, $uc_args);
+	$obj->user_add($curproc, $command_args, $uc_args);
     };
 
     if ($r = $@) {
@@ -294,7 +294,7 @@ sub _useradd
 #               OBJ($curproc) HASH_REF($command_args) HASH_REF($uc_args)
 # Side Effects: update address list(s).
 # Return Value: none
-sub _userdel
+sub _user_del
 {
     my ($self, $curproc, $command_args, $uc_args) = @_;
     my $r = '';
@@ -302,7 +302,7 @@ sub _userdel
     eval q{
 	use FML::User::Control;
 	my $obj = new FML::User::Control;
-	$obj->userdel($curproc, $command_args, $uc_args);
+	$obj->user_del($curproc, $command_args, $uc_args);
     };
 
     if ($r = $@) {
