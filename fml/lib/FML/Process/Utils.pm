@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.134 2005/08/11 04:07:33 fukachan Exp $
+# $FML: Utils.pm,v 1.135 2005/08/11 04:11:27 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -665,7 +665,7 @@ sub unique
 
 =head1 ml_home_dir handling
 
-=head2 removed_ml_home_dir_path($ml_home_prefix, $ml_name)
+=head2 ml_home_dir_removed_path($ml_home_prefix, $ml_name)
 
 return ml_home_dir to be removed.
 
@@ -681,11 +681,11 @@ return ml_home_dir to be removed.
 #    Arguments: OBJ($curproc) STR($ml_home_prefix) STR($ml_name)
 # Side Effects: none
 # Return Value: STR
-sub removed_ml_home_dir_path
+sub ml_home_dir_removed_path
 {
     my ($curproc, $ml_home_prefix, $ml_name) = @_;
 
-    # XXX-TODO: name removed_ml_home_dir_path() is good ?
+    # XXX-TODO: name ml_home_dir_removed_path() is good ?
 
     use Mail::Message::Date;
     my $dobj = new Mail::Message::Date time;
@@ -701,7 +701,7 @@ sub removed_ml_home_dir_path
 #    Arguments: OBJ($curproc) STR($ml_home_prefix) STR($ml_name)
 # Side Effects: none
 # Return Value: STR
-sub find_latest_removed_ml_home_dir
+sub ml_home_dir_find_latest_removed_path
 {
     my ($curproc, $ml_home_prefix, $ml_name) = @_;
     my ($entry) = [];
@@ -1132,7 +1132,7 @@ sub executable_prefix
 }
 
 
-=head2 template_files_dir_for_newml()
+=head2 newml_command_template_files_dir()
 
 return the path where template files used in "newml" method exist.
 
@@ -1144,7 +1144,7 @@ return the path where template files used in "newml" method exist.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: STR
-sub template_files_dir_for_newml
+sub newml_command_template_files_dir
 {
     my ($curproc) = @_;
     my $main_cf = $curproc->{ __parent_args }->{ main_cf };
@@ -1688,18 +1688,11 @@ sub get_print_style
 }
 
 
-=head2 language_of_html_file()
-
-return default language used in html files.
-
-=cut
-
-
 # Descriptions: language used in html files.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: STR
-sub language_of_html_file
+sub _language_of_html_file
 {
     my ($curproc) = @_;
     my $config    = $curproc->config();
@@ -1713,7 +1706,7 @@ sub language_of_html_file
 #    Arguments: OBJ($curproc) STR($category) STR($charset)
 # Side Effects: none
 # Return Value: none
-sub set_language_hint
+sub langinfo_set_language_hint
 {
     my ($curproc, $category, $charset) = @_;
     my $pcb = $curproc->pcb();
@@ -1726,7 +1719,7 @@ sub set_language_hint
 #    Arguments: OBJ($curproc) STR($category)
 # Side Effects: none
 # Return Value: none
-sub get_language_hint
+sub langinfo_get_language_hint
 {
     my ($curproc, $category) = @_;
     my $pcb = $curproc->pcb();
@@ -1739,7 +1732,7 @@ sub get_language_hint
 #    Arguments: OBJ($curproc) STR($category) STR($charset)
 # Side Effects: none
 # Return Value: none
-sub set_charset
+sub langinfo_set_charset
 {
     my ($curproc, $category, $charset) = @_;
     my $pcb = $curproc->pcb();
@@ -1755,7 +1748,7 @@ sub set_charset
 #    Arguments: OBJ($curproc) STR($category)
 # Side Effects: none
 # Return Value: STR
-sub get_charset
+sub langinfo_get_charset
 {
     my ($curproc, $category) = @_;
     my $config  = $curproc->config();
@@ -1773,7 +1766,7 @@ sub get_charset
 	# XXX Accept-Language: affets $reply_message_charset and $cgi_charset.
 	# XXX $reply_mesage_charset indirectly affets $template_file_charset.
 	# XXX So, we need to check Accept-Language: information.
-	my $acpt_lang_list = $curproc->get_accept_language_list() || [];
+	my $acpt_lang_list = $curproc->langinfo_get_accept_language_list() || [];
 
 	if (@$acpt_lang_list) {
 	  ACCEPT_LANGUAGE:
@@ -1799,34 +1792,12 @@ sub get_charset
 }
 
 
-# Descriptions: convert lang (e.g. ja) to charset (e.g. iso-2022-jp).
-#    Arguments: OBJ($curproc) STR($category) STR($lang)
-# Side Effects: none
-# Return Value: none
-sub lang_to_charset
-{
-    my ($curproc, $category, $lang) = @_;
-    my $config  = $curproc->config();
-    my $key     = sprintf("%s_charset_%s", $category, $lang);
-    my $charset = $config->{ $key } || '';
-
-    if ($charset) {
-	return $charset;
-    }
-    else {
-	my $s = "category=$category lang=$lang charset=none";
-	$curproc->logerror("lang_to_charset: $s");
-	return 'us-ascii';
-    }
-}
-
-
-=head2 get_accept_language_list($list)
+=head2 langinfo_get_accept_language_list($list)
 
 set preferred language candidates requested by sender.
 $list is ARRAY_REF.
 
-=head2 get_accept_language_list()
+=head2 langinfo_get_accept_language_list()
 
 return preferred language candidates requested by sender.
 The type of return value is ARRAY_REF.
@@ -1838,7 +1809,7 @@ The type of return value is ARRAY_REF.
 #    Arguments: OBJ($curproc) ARRAY_REF($list)
 # Side Effects: none
 # Return Value: ARRAY_REF
-sub set_accept_language_list
+sub langinfo_set_accept_language_list
 {
     my ($curproc, $list) = @_;
     my $pcb = $curproc->pcb();
@@ -1848,7 +1819,7 @@ sub set_accept_language_list
 	    $pcb->set('incoming_message', 'accept-language', $list);
 	}
 	else {
-	    $curproc->logerror("set_accept_language_list: invalid data");
+	    $curproc->logerror("langinfo_set_accept_language_list: invalid data");
 	}
     }
 }
@@ -1858,7 +1829,7 @@ sub set_accept_language_list
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: ARRAY_REF
-sub get_accept_language_list
+sub langinfo_get_accept_language_list
 {
     my ($curproc) = @_;
     my $pcb = $curproc->pcb();
@@ -1872,7 +1843,7 @@ sub get_accept_language_list
 }
 
 
-=head2 thread_db_args()
+=head2 article_thread_init()
 
 prepare and return information (HASH_REF) needed to manipulate thread
 database.
@@ -1884,7 +1855,7 @@ database.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: HASH_REF
-sub thread_db_args
+sub article_thread_init
 {
     my ($curproc)    = @_;
     my $config       = $curproc->config();
@@ -1893,7 +1864,7 @@ sub thread_db_args
     my $udb_dir      = $config->{ udb_base_dir };
     my $index_order  = $config->{ html_archive_index_order_type };
     my $subject_tag  = $config->{ article_subject_tag };
-    my $cur_lang     = $curproc->language_of_html_file();
+    my $cur_lang     = $curproc->_language_of_html_file();
 
     # whether we should mask address?
     my $use_address_mask  = 'no';
@@ -2059,38 +2030,6 @@ sub log_rorate
 	    $curproc->logerror("cannot attach log rotate object");
 	    $curproc->logerror($r);
 	}
-    }
-}
-
-
-# Descriptions: remove too old incoming queue files.
-#    Arguments: OBJ($curproc) STR($dir) NUM($_limit)
-# Side Effects: remove too old incoming queue files.
-# Return Value: none
-sub remove_too_old_files_in_dir
-{
-    my ($curproc, $dir, $_limit) = @_;
-    my $limit = $_limit || 14*24*3600; # 2 weeks by default.
-
-    use DirHandle;
-    use File::stat;
-    my $dh = new DirHandle $dir;
-    if (defined $dh) {
-	my ($file, $entry, $stat);
-	my $day_limit = time - $limit;
-
-      ENTRY:
-	while ($entry = $dh->read()) {
-	    next ENTRY if $entry =~ /^\./o;
-
-	    $file = File::Spec->catfile($dir, $entry);
-	    $stat = stat($file);
-	    if ($stat->mtime < $day_limit) {
-		$curproc->log("remove too old file: $entry");
-		unlink $file;
-	    }
-	}
-	$dh->close();
     }
 }
 
