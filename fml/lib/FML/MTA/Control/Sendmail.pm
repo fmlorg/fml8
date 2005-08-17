@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sendmail.pm,v 1.5 2004/07/23 13:16:40 fukachan Exp $
+# $FML: Sendmail.pm,v 1.6 2005/05/26 12:23:34 fukachan Exp $
 #
 
 package FML::MTA::Control::Sendmail;
@@ -151,7 +151,7 @@ sub _sendmail_rewrite_virtual_params
 sub sendmail_install_virtual_map
 {
     my ($self, $curproc, $params, $optargs) = @_;
-    my $template_dir = $curproc->template_files_dir_for_newml();
+    my $template_dir = $curproc->newml_command_template_files_dir();
     my $config       = $curproc->config();
     my $ml_name      = $config->{ ml_name };
     my $ml_domain    = $config->{ ml_domain };

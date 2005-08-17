@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.6 2004/07/23 15:59:07 fukachan Exp $
+# $FML: Postfix.pm,v 1.7 2005/05/26 12:22:33 fukachan Exp $
 #
 
 package FML::MTA::Control::Postfix;
@@ -39,7 +39,7 @@ sub postfix_install_alias
 {
     my ($self, $curproc, $params, $optargs) = @_;
     my $config       = $curproc->config();
-    my $template_dir = $curproc->template_files_dir_for_newml();
+    my $template_dir = $curproc->newml_command_template_files_dir();
 
     use File::Spec;
     my $alias = $config->{ mail_aliases_file };
@@ -328,7 +328,7 @@ sub postfix_setup
 {
     my ($self, $curproc, $params, $optargs) = @_;
     my $config       = $curproc->config();
-    my $template_dir = $curproc->template_files_dir_for_newml();
+    my $template_dir = $curproc->newml_command_template_files_dir();
     my $ml_home_dir  = $params->{ ml_home_dir };
 
     use File::Spec;
@@ -371,7 +371,7 @@ sub _postfix_rewrite_virtual_params
 sub postfix_install_virtual_map
 {
     my ($self, $curproc, $params, $optargs) = @_;
-    my $template_dir = $curproc->template_files_dir_for_newml();
+    my $template_dir = $curproc->newml_command_template_files_dir();
     my $config       = $curproc->config();
     my $ml_name      = $config->{ ml_name };
     my $ml_domain    = $config->{ ml_domain };

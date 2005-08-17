@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Procmail.pm,v 1.5 2004/07/23 13:16:40 fukachan Exp $
+# $FML: Procmail.pm,v 1.6 2005/05/26 10:20:06 fukachan Exp $
 #
 
 package FML::MTA::Control::Procmail;
@@ -39,7 +39,7 @@ sub procmail_install_alias
 {
     my ($self, $curproc, $params, $optargs) = @_;
     my $config       = $curproc->config();
-    my $template_dir = $curproc->template_files_dir_for_newml();
+    my $template_dir = $curproc->newml_command_template_files_dir();
 
     use File::Spec;
     my $alias = $config->{ procmail_aliases_file };

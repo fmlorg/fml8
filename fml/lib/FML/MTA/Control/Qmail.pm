@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Qmail.pm,v 1.3 2004/01/22 15:01:02 fukachan Exp $
+# $FML: Qmail.pm,v 1.4 2004/07/23 13:16:40 fukachan Exp $
 #
 
 package FML::MTA::Control::Qmail;
@@ -50,7 +50,7 @@ sub qmail_remove_alias
 {
     my ($self, $curproc, $params, $optargs) = @_;
     my $config       = $curproc->config();
-    my $template_dir = $curproc->template_files_dir_for_newml();
+    my $template_dir = $curproc->newml_command_template_files_dir();
     my $ml_home_dir  = $params->{ ml_home_dir };
 
     use File::Spec;
@@ -140,7 +140,7 @@ sub qmail_setup
 {
     my ($self, $curproc, $params, $optargs) = @_;
     my $config       = $curproc->config();
-    my $template_dir = $curproc->template_files_dir_for_newml();
+    my $template_dir = $curproc->newml_command_template_files_dir();
     my $ml_home_dir  = $params->{ ml_home_dir };
 
     use File::Spec;
