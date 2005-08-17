@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Thread.pm,v 1.4 2004/07/23 15:59:02 fukachan Exp $
+# $FML: Thread.pm,v 1.5 2005/08/11 04:11:26 fukachan Exp $
 #
 
 package FML::CGI::Thread;
@@ -60,7 +60,7 @@ sub html_start
     my $name_ui   = $curproc->message_nl('term.thread_interface');
     my $title     = "${ml_name}\@${ml_domain} $name_ui";
     my $color     = $config->{ thread_cgi_bgcolor } || '#E6E6FA';
-    my $charset   = $curproc->get_charset("cgi");
+    my $charset   = $curproc->langinfo_get_charset("cgi");
 
     # o.k start html
     print start_html(-title   => $title,
