@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.160 2005/06/04 08:49:10 fukachan Exp $
+# $FML: Distribute.pm,v 1.161 2005/08/10 15:03:25 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -670,7 +670,7 @@ sub _new_thread_check
     # XXX we need to specify article_id here since
     # XXX analyzer routine has no clue for the current primary key.
     my $article_id    = $pcb->get('article', 'id');
-    my $tdb_args      = $curproc->thread_db_args();
+    my $tdb_args      = $curproc->article_thread_init();
     $tdb_args->{ id } = $article_id;
 
     use FML::Article::Thread;
@@ -694,7 +694,7 @@ sub _new_thread_check_post
     # XXX we need to specify article_id here since
     # XXX analyzer routine has no clue for the current primary key.
     my $article_id    = $pcb->get('article', 'id');
-    my $tdb_args      = $curproc->thread_db_args();
+    my $tdb_args      = $curproc->article_thread_init();
     $tdb_args->{ id } = $article_id;
 
     # overwrite header info base on the article.
@@ -725,7 +725,7 @@ sub _htmlify
     my $article_id   = $pcb->get('article', 'id');
     my $article_file = $article->filepath($article_id);
     my $index_order  = $config->{ html_archive_index_order_type };
-    my $_tdb_args    = $curproc->thread_db_args();
+    my $_tdb_args    = $curproc->article_thread_init();
 
     $curproc->umask_set_as_public();
 

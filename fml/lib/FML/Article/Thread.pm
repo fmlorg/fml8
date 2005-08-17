@@ -3,7 +3,7 @@
 # Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Thread.pm,v 1.12 2004/10/31 08:33:59 fukachan Exp $
+# $FML: Thread.pm,v 1.13 2005/08/11 04:11:25 fukachan Exp $
 #
 
 package FML::Article::Thread;
@@ -97,7 +97,7 @@ sub new
     }
     else {
 	my $max_id = $curproc->article_get_max_id();
-	$tdb_args  = $curproc->thread_db_args();
+	$tdb_args  = $curproc->article_thread_init();
 	$tdb_args->{ id } = $max_id;
     }
 

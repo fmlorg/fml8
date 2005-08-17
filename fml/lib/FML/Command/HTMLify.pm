@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HTMLify.pm,v 1.25 2004/07/26 03:24:47 fukachan Exp $
+# $FML: HTMLify.pm,v 1.26 2004/12/05 16:19:06 fukachan Exp $
 #
 
 
@@ -51,7 +51,7 @@ sub convert
     print STDERR "  convert\n\t$src_dir =>\n\t$dst_dir\n" if $debug;
 
     # fix parameters: output_dir = ~fml/public_html/mlarchive/$domain/$ml/
-    my $htmlifier_args = $curproc->thread_db_args();
+    my $htmlifier_args = $curproc->article_thread_init();
     $htmlifier_args->{ output_dir } = $dst_dir;
 
     my ($is_subdir_exists, $subdirs) = _check_subdir_exists($src_dir);

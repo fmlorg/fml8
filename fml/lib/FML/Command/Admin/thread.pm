@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: thread.pm,v 1.8 2004/04/23 04:10:29 fukachan Exp $
+# $FML: thread.pm,v 1.9 2005/08/11 04:11:26 fukachan Exp $
 #
 
 package FML::Command::Admin::thread;
@@ -69,7 +69,7 @@ sub process
 
     # attach thread library.
     use Mail::Message::Thread;
-    my $thargs = $curproc->thread_db_args();
+    my $thargs = $curproc->article_thread_init();
     my $thread = new Mail::Message::Thread $thargs;
 
     $self->_new_switch($curproc, $command_args, $thread);
