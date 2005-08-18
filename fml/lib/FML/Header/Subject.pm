@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.47 2004/07/23 15:59:06 fukachan Exp $
+# $FML: Subject.pm,v 1.48 2005/05/26 10:20:05 fukachan Exp $
 #
 
 package FML::Header::Subject;
@@ -127,10 +127,10 @@ sub decode
 	}
     }
 
-    # XXX-TODO: care for not Japanese !
-    if ($subject =~ /=\?iso-2022-jp\?/i) {
-	$in_code  = 'jis-jp';
-	$out_code = 'euc-jp';
+    if ($subject =~ /=\?([-\w\d]+)\?/i) {
+	my $lang  = $mc->message_charset_to_language($1);
+	$in_code  = $mc->language_to_message_charset($lang)  || '';
+	$out_code = $mc->language_to_internal_charset($lang) || '';
     }
     else {
 	$in_code = $out_code = '';
