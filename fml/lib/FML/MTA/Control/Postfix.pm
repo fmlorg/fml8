@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.7 2005/05/26 12:22:33 fukachan Exp $
+# $FML: Postfix.pm,v 1.8 2005/08/17 10:44:47 fukachan Exp $
 #
 
 package FML::MTA::Control::Postfix;
@@ -68,7 +68,7 @@ sub postfix_remove_alias
     my ($self, $curproc, $params, $optargs) = @_;
     my $config    = $curproc->config();
     my $alias     = $config->{ mail_aliases_file };
-    my $alias_new = sprint("%s.%s.%s", $alias, "new", $$);
+    my $alias_new = sprintf("%s.%s.%s", $alias, "new", $$);
     my $ml_name   = $params->{ ml_name  };
     my $ml_domain = $params->{ ml_domain };
     my $removed   = 0;
