@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.135 2005/08/11 04:11:27 fukachan Exp $
+# $FML: Utils.pm,v 1.136 2005/08/17 11:53:54 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -678,32 +678,47 @@ return ml_home_dir to be removed.
 
 
 # Descriptions: return ml_home_dir to be removed.
-#    Arguments: OBJ($curproc) STR($ml_home_prefix) STR($ml_name)
+#    Arguments: OBJ($curproc) STR($ml_name) STR($ml_domain)
 # Side Effects: none
 # Return Value: STR
 sub ml_home_dir_removed_path
 {
-    my ($curproc, $ml_home_prefix, $ml_name) = @_;
-
-    # XXX-TODO: name ml_home_dir_removed_path() is good ?
+    my ($curproc, $ml_name, $ml_domain) = @_;
+    my $ml_home_prefix = $curproc->ml_home_prefix($ml_domain);
+    my $count  = 0;
+    my $result = '';
 
     use Mail::Message::Date;
-    my $dobj = new Mail::Message::Date time;
-    my $date = $dobj->{ YYYYMMDD };
+    my $date  = new Mail::Message::Date time;
+    my $yymd  = $date->{ YYYYMMDD };
 
     use File::Spec;
-    my $x = sprintf("%s%s.%d", '@', $ml_name, $date);
-    return File::Spec->catfile($ml_home_prefix, $x);
+
+  TRY:
+    for (;;) {
+	my $x = sprintf("%s%s.%d.%d", '@', $ml_name, $yymd, $count);
+	my $y = File::Spec->catfile($ml_home_prefix, $x);
+	if (-d $y) {
+	    $count++;
+	}
+	else {
+	    $result = $y;
+	    last TRY;
+	}
+    }
+
+    return $result;
 }
 
 
 # Descriptions: find the latest removed $ml_home_dir.
-#    Arguments: OBJ($curproc) STR($ml_home_prefix) STR($ml_name)
+#    Arguments: OBJ($curproc) STR($ml_name) STR($ml_domain)
 # Side Effects: none
 # Return Value: STR
 sub ml_home_dir_find_latest_removed_path
 {
-    my ($curproc, $ml_home_prefix, $ml_name) = @_;
+    my ($curproc, $ml_name, $ml_domain) = @_;
+    my $ml_home_prefix = $curproc->ml_home_prefix($ml_domain);
     my ($entry) = [];
 
     use DirHandle;
@@ -715,7 +730,7 @@ sub ml_home_dir_find_latest_removed_path
 	while ($x = $dh->read()) {
 	    next ENTRY if $x =~ /^\./o;
 
-	    if ($x =~ /^\@$ml_name$/ || $x =~ /^\@$ml_name\.\d+$/) {
+	    if ($x =~ /^\@$ml_name$/ || $x =~ /^\@$ml_name[\..\d]+$/) {
 		push(@$entry, $x);
 	    }
 	}
@@ -742,25 +757,46 @@ sub _sort_ml_name
     my ($curproc, $ml_home_prefix, $ml_name, $entry) = @_;
     my $latest   = 0;
     my $is_found = 0;
+    my $max_id   = -1;
 
     for my $x (@$entry) {
-	if ($x =~ /^\@$ml_name\.(\d+)$/) {
+	# 1. current style: "@$ml_name.$date.$count" form.
+	if ($x =~ /^\@$ml_name\.(\d+)\.(\d+)$/) {
+	    $latest = $1 > $latest ? $1 : $latest;
+	    $max_id = $2 > $max_id ? $2 : $max_id;
+	}
+	# 2. old style (< 20050817)
+	elsif ($x =~ /^\@$ml_name\.(\d+)$/) {
 	    $latest = $1 > $latest ? $1 : $latest;
 	}
+	# 3. very old style.
 	elsif ($x =~ /^\@$ml_name$/) {
 	    $is_found = $x;
 	}
     }
 
-    my $latest_name = sprintf("%s%s.%d", '@', $ml_name, $latest);
+    print "($ml_name, $latest, $max_id);\n";
+
+    # adjusted for case 2. and 3. (not needed for case 1.)
+    my $latest_name = undef;
+    if ($max_id >= 0) {
+	$latest_name = sprintf("%s%s.%d.%d", '@', $ml_name, $latest, $max_id);
+    }
+    else {
+	$latest_name = sprintf("%s%s.%d", '@', $ml_name, $latest);
+    }
+
+    # when case 1 or 2 and 3 are matched.
     if ($latest && $is_found) {
 	my $mtime_latest = _mtime($ml_home_prefix, $latest_name);
 	my $mtime_exact  = _mtime($ml_home_prefix, $is_found);
 	return( ($mtime_latest > $mtime_exact) ? $latest_name : $is_found );
     }
+    # case 1 and 2.
     elsif ($latest) {
 	return $latest_name;
     }
+    # case 3.
     elsif ($is_found) {
 	return $is_found;
     }
