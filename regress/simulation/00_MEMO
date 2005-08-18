@@ -40,23 +40,6 @@
 
 
 
-[TODO]	メモリー使用量を、より少なく
-
-
-[TODO]	Mail::Message->print() ???
-
-	FML/Filter/External/spamc.pm:	$msg->print($wh);
-	FML/Filter/External/clamscan.pm:	$msg->print($wh);
-	FML/Filter/External/bogofilter.pm:	$msg->print($wh);
-	FML/Filter/MimeComponent.pm:	    $msg->print($wh);
-
-	FML/Process/Kernel.pm:		    $msg->print($wh);
-	FML/Process/Kernel.pm:	$msg_queue->print();
-	FML/Process/Kernel.pm:	$msg_in->print($wh);
-
-	Mail/Delivery/Queue.pm:	$msg->print($fh);
-
-
 [TODO]	変数名なんだが… *_mta_config_list は困ったな
 
 		newml_command_mta_config_list
@@ -65,7 +48,9 @@
 	こいつらは select_list とも、びみょうにちがうか…
 
 
-[TODO]	スレッド関連のモジュール全部見直せよ
+[TODO]	ドキュメント: 4 to 8 の解説ってあってる？
+
+[TODO]	スレッド関連のモジュールとドキュメントを全部見直せよ
 
 	スレッド DB 再生成の呪文がないよ;)
 
@@ -105,6 +90,9 @@
 	とりあえず、すれっど全部のファイルに修正を試みるべきだ。
 	ローカルな更新は、あまりよい結果にならないようだ。
 
+	udb_write_map ? udb_store_map ?
+		local いがいのばあい、はどうすればいいの？
+		MySQL につっこみたいとか〜
 
 
 ======================================================================
@@ -123,21 +111,12 @@
 
 
 ======================================================================
-○	ACL 拡張
-
-
-[TODO]	xxx_restrictions = pgp_signature_check ?
-
-
-
-======================================================================
 ○	内部構造
 
 
 [TODO]	charset と言語(japanese,english)との対応関係を一箇所にまとめて定義
 
 	[CHECK]
-		FML/Header/Subject.pm
 		Mail/Message/Encode.pm
 		Mail/Message/ToHTML.pm
 
@@ -151,8 +130,10 @@
 
 [TODO]	エラートラップ・フレームワーク
 
+	use shared memory ?
 
-[TODO]	FML::PCB、FML::Config は、コンテキスト切替時にどうする？
+
+[TODO]	FML::Config は、コンテキスト切替時にどうする？
 
 
 [TODO]	FML::Restriction
@@ -163,16 +144,9 @@
 		->regexp_match() スタイルにしてほしい
 
 
-[TODO]	IO::Adapter::LDAP
-
-
-[TODO]	IO::Adapter の PostgreSQL
-
-
-[TODO]	udb_write_map ? udb_store_map ?
-
-	local いがいのばあい、はどうすればいいの？
-	MySQL につっこみたいとか〜
+[TODO]	IO::Adapter
+		LDAP
+		PostgreSQL
 
 
 [TODO]	FML::Command::Admin::dir
@@ -187,6 +161,32 @@
 	Mail/Message.pm
 	Mail/Bounce/Postfix19991231.pm
 	Mail/Bounce/Qmail.pm
+
+
+[TODO]	string ? or str ?
+
+	Mail/Message/Encode.pm:sub decode_base64_string
+	FML/Header.pm:sub delete_subject_tag_like_string
+	Mail/Message/Utils.pm:sub remove_subject_tag_like_string
+	Mail/Message/Encode.pm:sub decode_mime_string
+	Mail/Message/Encode.pm:sub encode_mime_string
+	FML/Filter/TextPlain.pm:sub reject_not_iso2022jp_japanese_string
+	Mail/Message/Encode.pm:sub is_iso2022jp_string
+	Mail/Message/Encode.pm:sub decode_qp_string
+
+	Mail/Message/Encode.pm:sub convert_str_ref
+	Mail/Message/String.pm:sub as_str
+	Mail/Message/Address.pm:sub as_str
+	Mail/Message.pm:sub whole_message_as_str
+	Mail/Message.pm:sub whole_message_header_as_str
+	Mail/Message/Address.pm:sub substr
+
+	Mail/Message.pm:sub errstr
+	ErrorStatus.pm:sub errstr
+	FML/Filter/ErrorStatus.pm:sub errstr
+	IO/Adapter/ErrorStatus.pm:sub errstr
+	Mail/Delivery/ErrorStatus.pm:sub errstr
+
 
 
 ======================================================================
@@ -212,58 +212,6 @@
 	どうやってシンクロするの？
 
 
-[TODO]	ドキュメント( tutorial/internals )
-
-
-   $curproc
-
-	$curproc->$object_$action
-
-		$curproc->message_create();
-		$curproc->message_XXX();
-
-   object
-
-	$object->$action;
-
-		$object->create();
-		$object->create_XXX();
-
-[TODO]	FML::Process::* rules
-
-		FML::Process::* rules
-
-  1) reference to $main_cf
-
-  $main_cf should be referenced only from within
-	FML::Process::Kernel
-	FML::Process::Switch
-	FML::Process::Utils
-  classes.
-
-
-  2) reference to pcb (process control block) area.
-
-  $pcb should be referenced only from within
-
-	FML::Process::Kernel
-	FML::Process::Switch
-	FML::Process::Utils
-	FML::PCB
-
-  classes ? currently, no. referenced from the following other modules:
-
-	FML::Article::Sequence
-	FML::Parse
-	FML::CGI::Menu
-	FML::Command::User::get
-	FML::Process::CGI::Kernel
-	FML::Process::Command
-	FML::Process::Distribute
-	FML::Process::Error
-	FML::Process::Fake
-
-
 [TODO]	2005/05 のオーバホールの残り
 
    * 重たいので後回しにされてるもの
@@ -279,7 +227,6 @@
 	FML/Article/Thread.pm
 	FML/CGI/Thread.pm
 	Mail/Message/Thread.pm
-	Mail/Message/String.pm
 	Mail/Message/ToHTML.pm
 	FML/Process/HTMLify.pm
 	Mail/Message/DB.pm
@@ -311,4 +258,4 @@
 	FML::Sys::Alias
 
 ----------
-$FML: 00_MEMO,v 1.118 2004/12/23 22:15:45 fukachan Exp $
+$FML: 00_MEMO,v 1.119 2005/05/27 04:40:28 fukachan Exp $
