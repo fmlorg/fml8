@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.8 2005/08/17 10:52:24 fukachan Exp $
+# $FML: Control.pm,v 1.9 2005/08/17 12:08:46 fukachan Exp $
 #
 
 package FML::ML::Control;
@@ -61,6 +61,7 @@ sub adjust_params_for_virtual_domain
     my $ml_name   = $params->{ _ml_name };
     my $ml_domain = $params->{ ml_domain };
 
+    my $is_default_domain = 0;
     if ($curproc->is_default_domain($ml_domain)) {
 	$ml_name_admin   = sprintf("%s-%s",$ml_name,"admin",  $ml_domain);
 	$ml_name_ctl     = sprintf("%s-%s",$ml_name,"ctl",    $ml_domain);
@@ -69,6 +70,9 @@ sub adjust_params_for_virtual_domain
 
 	# post is exceptional.
 	$ml_name_post    = sprintf("%s",$ml_name, $ml_domain);
+
+	# 
+        $is_default_domain = 1;
     }
     else {
 	# virtual domain case
@@ -79,13 +83,17 @@ sub adjust_params_for_virtual_domain
 
 	# post is exceptional.
 	$ml_name_post    = sprintf("%s=%s",$ml_name, $ml_domain);
+
+	# 
+        $is_default_domain = 0;
     }
 
-    $params->{ _ml_name_admin }   = $ml_name_admin;
-    $params->{ _ml_name_ctl }     = $ml_name_ctl;
-    $params->{ _ml_name_error }   = $ml_name_error;
-    $params->{ _ml_name_post }    = $ml_name_post;
-    $params->{ _ml_name_request } = $ml_name_request;
+    $params->{ _ml_name_admin }     = $ml_name_admin;
+    $params->{ _ml_name_ctl }       = $ml_name_ctl;
+    $params->{ _ml_name_error }     = $ml_name_error;
+    $params->{ _ml_name_post }      = $ml_name_post;
+    $params->{ _ml_name_request }   = $ml_name_request;
+    $params->{ _is_default_domain } = $is_default_domain;
 }
 
 
@@ -259,16 +267,22 @@ sub is_mta_alias_maps_has_ml_entry
     my $config = $curproc->config();
     my $list   = $config->get_as_array_ref('newml_command_mta_config_list');
     my $found  = 0;
+    my $is_default_domain = $params->{ _is_default_domain };
 
     eval q{
 	use FML::MTA::Control;
 
-	my $obj = new FML::MTA::Control;
-	if ($obj->is_user_entry_exist_in_passwd($ml_name)) {
-	    my $s = "ml_name=$ml_name is found in passwd";
-	    $curproc->ui_message("error: $s");
-	    $curproc->logerror($s);
-	    $found = 1;
+	if ($is_default_domain) {
+	    my $obj = new FML::MTA::Control;
+	    if ($obj->is_user_entry_exist_in_passwd($ml_name)) {
+		my $s = "ml_name=$ml_name is found in passwd";
+		$curproc->ui_message("error: $s");
+		$curproc->logerror($s);
+		$found = 1;
+	    }
+	}
+	else {
+	    $curproc->logdebug("not check $ml_name in passwd");
 	}
 
 	unless ($found) {
@@ -499,8 +513,7 @@ sub remove_ml_home_dir
     $curproc->ui_message("removing ml_home_dir for $ml_name");
 
     # /var/spool/ml/elena -> /var/spool/ml/@elena
-    my $removed_dir =
-	$curproc->ml_home_dir_removed_path($ml_home_prefix, $ml_name);
+    my $removed_dir = $curproc->ml_home_dir_removed_path($ml_name, $ml_domain);
     rename($ml_home_dir, $removed_dir);
 
     if (-d $removed_dir && (! -d $ml_home_dir)) {
