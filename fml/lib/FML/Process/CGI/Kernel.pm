@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.87 2005/08/10 15:03:23 fukachan Exp $
+# $FML: Kernel.pm,v 1.88 2005/08/17 10:33:18 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -64,7 +64,7 @@ sub new
     my $curproc = new FML::Process::Kernel $args;
 
     # print as html if possible.
-    $curproc->set_print_style( 'html' );
+    $curproc->output_set_print_style( 'html' );
 
     return bless $curproc, $type;
 }

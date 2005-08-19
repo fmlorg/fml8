@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.265 2005/08/11 04:33:40 fukachan Exp $
+# $FML: Kernel.pm,v 1.266 2005/08/17 11:53:34 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -251,7 +251,7 @@ sub _signal_init
 sub _print_init
 {
     my ($curproc) = @_;
-    $curproc->set_print_style( 'text' );
+    $curproc->output_set_print_style( 'text' );
 }
 
 
