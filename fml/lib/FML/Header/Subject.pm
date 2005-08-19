@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.48 2005/05/26 10:20:05 fukachan Exp $
+# $FML: Subject.pm,v 1.49 2005/08/18 10:30:09 fukachan Exp $
 #
 
 package FML::Header::Subject;
@@ -128,6 +128,8 @@ sub decode
     }
 
     if ($subject =~ /=\?([-\w\d]+)\?/i) {
+	use Mail::Message::Charset;
+	my $mc    = new Mail::Message::Charset;
 	my $lang  = $mc->message_charset_to_language($1);
 	$in_code  = $mc->language_to_message_charset($lang)  || '';
 	$out_code = $mc->language_to_internal_charset($lang) || '';
