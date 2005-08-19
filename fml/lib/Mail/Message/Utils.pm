@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.12 2005/08/06 07:14:01 fukachan Exp $
+# $FML: Utils.pm,v 1.13 2005/08/06 10:06:00 fukachan Exp $
 #
 
 package Mail::Message::Utils;
@@ -51,7 +51,7 @@ sub remove_subject_tag_like_string
 }
 
 
-=head2 from_to_name($address)
+=head2 from_address_to_name($address)
 
 extract gecos field in $address with shielding the real address.
 
@@ -62,7 +62,7 @@ extract gecos field in $address with shielding the real address.
 #    Arguments: STR($address)
 # Side Effects: none
 # Return Value: STR
-sub from_to_name
+sub from_address_to_name
 {
     my ($address) = @_;
     my ($user);

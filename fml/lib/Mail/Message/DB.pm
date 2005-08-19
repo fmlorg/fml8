@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.21 2005/08/06 07:18:27 fukachan Exp $
+# $FML: DB.pm,v 1.22 2005/08/06 10:06:00 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -21,7 +21,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
 use Carp;
 use File::Spec;
 
-my $version = q$FML: DB.pm,v 1.21 2005/08/06 07:18:27 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.22 2005/08/06 10:06:00 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 # special value
@@ -941,7 +941,7 @@ sub _who_of_address
     my ($self, $address) = @_;
 
     use Mail::Message::Utils;
-    return Mail::Message::Utils::from_to_name($address);
+    return Mail::Message::Utils::from_address_to_name($address);
 }
 
 

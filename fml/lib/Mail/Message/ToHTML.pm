@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.76 2005/08/09 12:20:27 fukachan Exp $
+# $FML: ToHTML.pm,v 1.77 2005/08/11 09:51:48 tmu Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.76 2005/08/09 12:20:27 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.77 2005/08/11 09:51:48 tmu Exp $;
 my $versionid = 0;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $versionid = "$1";
@@ -2221,7 +2221,7 @@ sub _address_to_gecos
     my ($self, $address) = @_;
 
     use Mail::Message::Utils;
-    return Mail::Message::Utils::from_to_name($address);
+    return Mail::Message::Utils::from_address_to_name($address);
 }
 
 
