@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.49 2005/08/18 10:30:09 fukachan Exp $
+# $FML: Subject.pm,v 1.50 2005/08/19 11:21:14 fukachan Exp $
 #
 
 package FML::Header::Subject;
@@ -101,7 +101,7 @@ sub rewrite_article_subject_tag
 #    Arguments: OBJ($self) STR($subject) STR($tag)
 # Side Effects: none
 # Return Value: STR
-sub clean_up
+sub cleanup
 {
     my ($self, $subject, $tag)   = @_;
     my ($s, $in_code, $out_code) = $self->decode($subject, $tag);

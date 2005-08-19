@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.266 2005/08/17 11:53:34 fukachan Exp $
+# $FML: Kernel.pm,v 1.267 2005/08/19 11:23:02 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -2653,7 +2653,7 @@ sub queue_in
 # Descriptions: append message in $msg_in into $msg_out.
 #    Arguments: OBJ($curproc) OBJ($msg_in) OBJ($msg_out)
 # Side Effects: create a new $tmpfile
-#               update garbage collection queue (clean_up_queue)
+#               update garbage collection queue (cleanup_queue)
 # Return Value: none
 sub _append_rfc822_message
 {
@@ -2688,11 +2688,11 @@ sub _append_rfc822_message
 }
 
 
-# Descriptions: insert $file into garbage collection queue (clean_up_queue).
+# Descriptions: insert $file into garbage collection queue (cleanup_queue).
 #    Arguments: OBJ($curproc) STR($file)
 # Side Effects: update $curproc->{ __tmp_file_cleanup };
 # Return Value: none
-sub _add_into_clean_up_queue
+sub _add_into_cleanup_queue
 {
     my ($curproc, $file) = @_;
     my $queue = $curproc->{ __tmp_file_cleanup };
@@ -2706,7 +2706,7 @@ sub _add_into_clean_up_queue
 }
 
 
-# Descriptions: remove garbage collection queue (clean_up_queue).
+# Descriptions: remove garbage collection queue (cleanup_queue).
 #    Arguments: OBJ($curproc)
 # Side Effects: remove files in $curproc->{ __tmp_file_cleanup }
 # Return Value: none
@@ -2725,7 +2725,7 @@ sub tmp_file_cleanup
     # XXX ONLY WHEN VALID $ml_home_dir EXISTS.
     # clean up tmp_dir.
     if ($curproc->_is_valid_ml_home_dir()) {
-	my $channel = "clean_up_tmp_dir";
+	my $channel = "cleanup_tmp_dir";
 	if ($curproc->is_event_timeout($channel)) {
 	    my $config   = $curproc->config();
 	    my $tmp_dir  = $config->{ tmp_dir };
@@ -2744,7 +2744,7 @@ sub incoming_message_cleanup_queue
 {
     my ($curproc) = @_;
     my $config    = $curproc->config();
-    my $channel   = 'mail_incoming_queue_clean_up';
+    my $channel   = 'mail_incoming_queue_cleanup';
 
     # XXX ONLY WHEN VALID $ml_home_dir EXISTS.
     if ($curproc->_is_valid_ml_home_dir()) {
@@ -2764,7 +2764,7 @@ sub incoming_message_cleanup_queue
 		directory => $queue_dir,
 	    };
 	    $queue->set_log_function($fp);
-	    $queue->clean_up();
+	    $queue->cleanup();
 	    $curproc->event_set_timeout($channel, time + 24*3600);
 	}
     }
@@ -2807,14 +2807,14 @@ sub tmp_file_path
     if (-d $tmp_dir && -w $tmp_dir) {
 	use File::Spec;
 	my $_file = File::Spec->catfile($tmp_dir, $f);
-	$curproc->_add_into_clean_up_queue($_file);
+	$curproc->_add_into_cleanup_queue($_file);
 	return $_file;
     }
     else {
 	my $tmp_dir = $curproc->global_tmp_dir_path();
 	use File::Spec;
 	my $_file = File::Spec->catfile($tmp_dir, $f);
-	$curproc->_add_into_clean_up_queue($_file);
+	$curproc->_add_into_cleanup_queue($_file);
 	return $_file;
     }
 }
@@ -2918,7 +2918,7 @@ sub queue_flush
     my $config    = $curproc->config();
     my $queue_dir = $config->{ mail_queue_dir };
     my $qmgr_args = { directory => $queue_dir };
-    my $channel   = 'mail_queue_clean_up';
+    my $channel   = 'mail_queue_cleanup';
 
     # XXX-TODO: timeout should be customizable.
     eval q{

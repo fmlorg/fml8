@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SimpleMatch.pm,v 1.41 2004/06/02 12:00:00 tmu Exp $
+# $FML: SimpleMatch.pm,v 1.42 2004/06/30 03:05:16 fukachan Exp $
 #
 
 
@@ -306,7 +306,7 @@ sub _address_match
 
 	    if ($buf =~ /(\S+\@\S+\w+)/) {
 		if ($debug) { print STDERR "trap address ($1)\n";}
-		my $addr = $self->address_clean_up($mta_type, $1);
+		my $addr = $self->address_cleanup($mta_type, $1);
 		if ($addr) {
 		    $result->{ $addr }->{ 'Final-Recipient' } = $addr;
 		    $result->{ $addr }->{ 'Status'}           = '5.x.y';
@@ -315,7 +315,7 @@ sub _address_match
 	    }
 
 	    if ($addr_regexp && $buf =~ /$addr_regexp/) {
-		my $addr = $self->address_clean_up($mta_type, $1);
+		my $addr = $self->address_cleanup($mta_type, $1);
 		if ($addr) {
 		    $result->{ $addr }->{ 'Final-Recipient' } = $addr;
 		    $result->{ $addr }->{ 'Status'}           = '5.x.y';

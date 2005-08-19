@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.52 2005/06/03 12:52:02 fukachan Exp $
+# $FML: Queue.pm,v 1.53 2005/08/09 03:23:31 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -120,7 +120,7 @@ sub new
     my $qf_new = $me->new_file_path($id);
     my $files  = [];
     push(@$files, $qf_new);
-    $me->{ _clean_up_files } = $files;
+    $me->{ _cleanup_files } = $files;
     
 
     return bless $me, $type;
@@ -1064,7 +1064,7 @@ sub is_valid_queue
 sub DESTROY
 {
     my ($self) = @_;
-    my $files  = $self->{ _clean_up_files } || [];
+    my $files  = $self->{ _cleanup_files } || [];
 
     for my $file (@$files) {
 	unlink $file if -f $file;
@@ -1516,7 +1516,7 @@ sub set_log_function
 
 =head1 CLEAN UP GARBAGES
 
-=head2 clean_up()
+=head2 cleanup()
 
 remove too old incoming queue files.
 
@@ -1527,7 +1527,7 @@ remove too old incoming queue files.
 #    Arguments: OBJ($self)
 # Side Effects: remove too old incoming queue files.
 # Return Value: none
-sub clean_up
+sub cleanup
 {
     my ($self) = @_;
     my $dir    = $self->{ _directory } || croak("directory undefined");

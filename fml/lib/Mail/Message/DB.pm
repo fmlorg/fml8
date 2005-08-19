@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.22 2005/08/06 10:06:00 fukachan Exp $
+# $FML: DB.pm,v 1.23 2005/08/19 11:15:23 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -21,7 +21,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
 use Carp;
 use File::Spec;
 
-my $version = q$FML: DB.pm,v 1.22 2005/08/06 10:06:00 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.23 2005/08/19 11:15:23 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 # special value
@@ -331,7 +331,7 @@ sub _save_header_info
 
 	# ADDR type: save the first element of address list.
 	if ($header_field_type{ $key } =~ /ADDR/o) { # ADDR or ADDR_LIST
-	    my $ra_val = $self->_address_clean_up( $val );
+	    my $ra_val = $self->_address_cleanup( $val );
 	    $val = $ra_val->[0] || '';
 	    $self->_db_set($db, $key, $id, $val);
 	}
@@ -376,8 +376,8 @@ sub _analyze_thread
 {
     my ($self, $db, $id, $msg, $hdr) = @_;
     my $current_key  = $self->get_key();
-    my $ra_ref       = $self->_address_clean_up($hdr->get('references'));
-    my $ra_inreplyto = $self->_address_clean_up($hdr->get('in-reply-to'));
+    my $ra_ref       = $self->_address_cleanup($hdr->get('references'));
+    my $ra_inreplyto = $self->_address_cleanup($hdr->get('in-reply-to'));
     my $in_reply_to  = $ra_inreplyto->[0] || '';
     my %uniq         = ();
     my $count        = 0;
@@ -912,7 +912,7 @@ sub _decode_mime_string
 #    Arguments: OBJ($self) STR($addr)
 # Side Effects: none
 # Return Value: ARRAY_REF
-sub _address_clean_up
+sub _address_cleanup
 {
     my ($self, $addr) = @_;
     my (@r);

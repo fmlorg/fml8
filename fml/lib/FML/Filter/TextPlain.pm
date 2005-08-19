@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: TextPlain.pm,v 1.12 2005/05/27 01:47:05 fukachan Exp $
+# $FML: TextPlain.pm,v 1.13 2005/05/30 00:02:31 fukachan Exp $
 #
 
 package FML::Filter::TextPlain;
@@ -141,7 +141,7 @@ sub body_check
     # my $need_one_line_check = $self->need_one_line_check($m);
 
     ## 5. preparation for main rules.
-    ## $self->_clean_up_buffer($m);
+    ## $self->_cleanup_buffer($m);
 
     ## 6. main fules
     my $rules = $self->{ _rules };
@@ -478,7 +478,7 @@ sub is_signature
 }
 
 
-=head2 clean_up_buffer($args)
+=head2 cleanup_buffer($args)
 
 remove some special syntax pattern for further check.
 For example, the pattern is a mail address.
@@ -491,7 +491,7 @@ We remove it and check the remained buffer whether it is safe or not.
 #    Arguments: OBJ($self) STR($xbuf)
 # Side Effects: none
 # Return Value: STR
-sub clean_up_buffer
+sub cleanup_buffer
 {
     my ($self, $xbuf) = @_;
 

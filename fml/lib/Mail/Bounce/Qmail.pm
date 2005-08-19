@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Qmail.pm,v 1.11 2004/06/30 03:05:16 fukachan Exp $
+# $FML: Qmail.pm,v 1.12 2005/05/26 13:12:42 fukachan Exp $
 #
 
 
@@ -61,7 +61,7 @@ sub analyze
 		    $data =~ s/\n/ /go;
 		    if ($data =~ /\<(\S+\@\S+)\>:\s*(.*)/) {
 			($addr, $reason) = ($1, $2);
-			$addr = $self->address_clean_up($addr, $addr);
+			$addr = $self->address_cleanup($addr, $addr);
 
 			my $status = '5.x.y';
 			if ($data =~ /\#(\d+\.\d+\.\d+)/) {

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Address.pm,v 1.5 2004/07/06 23:55:58 fukachan Exp $
+# $FML: Address.pm,v 1.6 2004/07/23 13:16:44 fukachan Exp $
 #
 
 package Mail::Message::Address;
@@ -75,7 +75,7 @@ sub as_str
 
 =head1 CLEAN UP
 
-=head2 clean_up()
+=head2 cleanup()
 
 clean up address. no return value.
 
@@ -86,7 +86,7 @@ clean up address. no return value.
 #    Arguments: OBJ($self)
 # Side Effects: update $self->{ _string }.
 # Return Value: none
-sub clean_up
+sub cleanup
 {
     my ($self) = @_;
     my $addr   = $self->{ _string } || '';

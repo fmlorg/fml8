@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Summary.pm,v 1.23 2005/05/26 09:42:24 fukachan Exp $
+# $FML: Summary.pm,v 1.24 2005/08/11 04:11:25 fukachan Exp $
 #
 
 package FML::Article::Summary;
@@ -108,7 +108,7 @@ sub _prepare_info
 	if ($address) {
 	    use Mail::Message::Address;
 	    my $addr = new Mail::Message::Address $address;
-	    $addr->clean_up();
+	    $addr->cleanup();
 	    $address = $addr->substr(0, $addrlen) || '';
 	}
 

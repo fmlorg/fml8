@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.52 2005/06/04 08:49:10 fukachan Exp $
+# $FML: Error.pm,v 1.53 2005/08/10 15:03:25 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -194,7 +194,7 @@ sub run
 
 	if ($found) {
 	    $pcb->set("error", "found", 1);
-	    $curproc->_clean_up_bouncers();
+	    $curproc->_cleanup_bouncers();
 	}
     }
 
@@ -208,7 +208,7 @@ sub run
 #    Arguments: OBJ($curproc)
 # Side Effects: remove addresses which causes bounces
 # Return Value: none
-sub _clean_up_bouncers
+sub _cleanup_bouncers
 {
     my ($curproc) = @_;
     my $channel   = 'error_mail_analyzer';

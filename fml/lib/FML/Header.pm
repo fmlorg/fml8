@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.83 2005/05/27 03:03:32 fukachan Exp $
+# $FML: Header.pm,v 1.84 2005/08/08 03:53:23 fukachan Exp $
 #
 
 package FML::Header;
@@ -119,7 +119,7 @@ sub set
 }
 
 
-=head2 address_clean_up(address)
+=head2 address_cleanup(address)
 
 clean up given C<address>. This method parses the given address by
 C<Mail::Address::parse()>, remove < and > and return the result.
@@ -128,7 +128,7 @@ C<Mail::Address::parse()>, remove < and > and return the result.
 
 
 #
-# XXX-TODO: address_clean_up() in this class is apporopriate ?
+# XXX-TODO: address_cleanup() in this class is apporopriate ?
 # XXX-TODO: is it in some other class such as FML::Address ?
 #
 
@@ -136,7 +136,7 @@ C<Mail::Address::parse()>, remove < and > and return the result.
 #    Arguments: OBJ($self) STR($addr)
 # Side Effects: none
 # Return Value: STR
-sub address_clean_up
+sub address_cleanup
 {
     my ($self, $addr) = @_;
 
@@ -720,7 +720,7 @@ sub _check_xxx_message_id
     my $dir = $config->{ $mode };
     my $dup = 0;
 
-    $mid = $header->address_clean_up($mid);
+    $mid = $header->address_cleanup($mid);
     if ($mid) {
 	use FML::Header::MessageID;
 	my $xargs = { directory => $dir };
@@ -773,7 +773,7 @@ sub _update_xxx_message_id_cache
     my $dir = $config->{ $mode };
     my $mid = $header->get('message-id');
 
-    $mid = $header->address_clean_up($mid);
+    $mid = $header->address_cleanup($mid);
     if ($mid) {
 	use FML::Header::MessageID;
 	my $xargs = { directory => $dir };

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Smtpfeed.pm,v 1.10 2004/06/30 03:05:17 fukachan Exp $
+# $FML: Smtpfeed.pm,v 1.11 2005/05/26 13:12:42 fukachan Exp $
 #
 
 
@@ -58,7 +58,7 @@ sub analyze
 
 	# set up return buffer
 	if ($addr) {
-	    $addr = $self->address_clean_up($addr, $addr);
+	    $addr = $self->address_cleanup($addr, $addr);
 	    $result->{ $addr }->{ 'Final-Recipient' } = $addr;
 	    $result->{ $addr }->{ 'Status' }          = '5.x.y';
 	    $result->{ $addr }->{ 'hints' }           = 'smtpfeed';

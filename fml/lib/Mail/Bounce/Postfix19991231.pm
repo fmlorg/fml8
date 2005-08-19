@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix19991231.pm,v 1.23 2004/01/24 09:03:57 fukachan Exp $
+# $FML: Postfix19991231.pm,v 1.24 2004/06/30 03:05:16 fukachan Exp $
 #
 
 
@@ -153,7 +153,7 @@ sub _parse_address
 
     if ($data =~ /\<(\S+\@\S+\w+)\>:\s*(.*)/) {
 	my ($addr, $reason) = ($1, $2);
-	$addr = $self->address_clean_up($self, $addr);
+	$addr = $self->address_cleanup($self, $addr);
 	$result->{ $addr }->{ 'Diagnostic-Code' } = $reason;
 	$result->{ $addr }->{ 'Status' }          = '5.x.y';
 	$result->{ $addr }->{ 'hints' }           = 'postfix 19991231 style';

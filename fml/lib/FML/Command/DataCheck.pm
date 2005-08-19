@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DataCheck.pm,v 1.16 2004/06/26 11:47:55 fukachan Exp $
+# $FML: DataCheck.pm,v 1.17 2005/05/27 03:03:34 fukachan Exp $
 #
 
 package FML::Command::DataCheck;
@@ -55,7 +55,7 @@ sub parse_command_buffer
 {
     my ($self, $command) = @_;
 
-    $command = $self->clean_up($command);
+    $command = $self->cleanup($command);
     my ($comname, $comsubname) = split(/\s+/, $command);
     return ($comname, $comsubname);
 }
@@ -108,8 +108,8 @@ sub find_special_keyword
     my $admin_found    = '';
 
     # clean up
-    $confirm_prefix = $self->clean_up($confirm_prefix);
-    $admin_prefix   = $self->clean_up($admin_prefix);
+    $confirm_prefix = $self->cleanup($confirm_prefix);
+    $admin_prefix   = $self->cleanup($admin_prefix);
 
     # XXX $ra_data is not whole body but already parsed and prepared buffer.
     # XXX See below and FML::Process::Command module, for example.
@@ -181,7 +181,7 @@ sub find_anonymous_command_mail_allowed_commands
 #    Arguments: OBJ($self) STR($s)
 # Side Effects: none
 # Return Value: STR
-sub clean_up
+sub cleanup
 {
     my ($self, $s) = @_;
 

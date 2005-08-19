@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: State.pm,v 1.21 2005/06/04 08:49:11 fukachan Exp $
+# $FML: State.pm,v 1.22 2005/08/10 13:58:36 fukachan Exp $
 #
 
 package FML::Process::State;
@@ -221,7 +221,7 @@ sub command_context_init
     my ($curproc, $orig_command) = @_;
 
     # Example: if orig_command = "# help", comname = "help"
-    my $cleanstr = $curproc->_command_string_clean_up($orig_command);
+    my $cleanstr = $curproc->_command_string_cleanup($orig_command);
     my $context  = $curproc->_build_command_context_template($cleanstr);
 
     # save original string, set the command mode be "user" by default.
@@ -298,7 +298,7 @@ sub _build_command_context_template
 #    Arguments: OBJ($curproc) STR($buf)
 # Side Effects: none
 # Return Value: STR
-sub _command_string_clean_up
+sub _command_string_cleanup
 {
     my ($curproc, $buf) = @_;
     my $config          = $curproc->config();

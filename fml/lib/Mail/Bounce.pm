@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Bounce.pm,v 1.28 2004/06/30 03:05:15 fukachan Exp $
+# $FML: Bounce.pm,v 1.29 2005/05/26 13:13:25 fukachan Exp $
 #
 
 package Mail::Bounce;
@@ -282,7 +282,7 @@ sub look_like_japanese
 }
 
 
-=head2 address_clean_up(hint, addr)
+=head2 address_cleanup(hint, addr)
 
 clean up C<addr> and return it.
 
@@ -296,17 +296,17 @@ It is rarely used.
 #    Arguments: OBJ($self) STR($hint) STR($addr)
 # Side Effects: none
 # Return Value: STR
-sub address_clean_up
+sub address_cleanup
 {
     my ($self, $hint, $addr) = @_;
 
-    if ($debug) { print STDERR "address_clean_up($hint, $addr)\n";}
+    if ($debug) { print STDERR "address_cleanup($hint, $addr)\n";}
 
     # remove prepended and trailing strings around user@domain pattern.
     my $prev_addr = $addr;
     do {
 	$prev_addr = $addr;
-	print STDERR "    address_clean_up.in: $prev_addr\n" if $debug;
+	print STDERR "    address_cleanup.in: $prev_addr\n" if $debug;
 
 	$addr      =~ s/\.$//o;
 	$addr      =~ s/^\<//o;
@@ -314,7 +314,7 @@ sub address_clean_up
 	$addr      =~ s/^\"//o;
 	$addr      =~ s/\"$//o;
 
-	print STDERR "   address_clean_up.out: $addr\n" if $debug;
+	print STDERR "   address_cleanup.out: $addr\n" if $debug;
     } while ($addr ne $prev_addr);
 
     # Mail::Bounce::FixBrokenAddress class provides irrgular
