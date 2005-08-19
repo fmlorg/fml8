@@ -3,7 +3,7 @@
 # Copyright (C) 2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: FetchFML.pm,v 1.2 2005/06/04 08:49:10 fukachan Exp $
+# $FML: FetchFML.pm,v 1.3 2005/08/10 15:03:28 fukachan Exp $
 #
 
 package FML::Process::FetchFML;
@@ -305,7 +305,7 @@ sub _fetchfml_fake_stdio
     use FML::MUA::POP3;
     my $mua = new FML::MUA::POP3 $curproc;
     if (defined $mua) {
-	my $queue = $mua->pick_up_queue( { class => $class } );
+	my $queue = $mua->pickup_queue( { class => $class } );
 
 	# 1. queue to do found.
 	if (defined $queue) {
