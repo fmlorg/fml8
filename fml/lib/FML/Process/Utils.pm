@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.136 2005/08/17 11:53:54 fukachan Exp $
+# $FML: Utils.pm,v 1.137 2005/08/18 10:28:42 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1571,7 +1571,7 @@ sub is_allow_reply_message
 }
 
 
-=head2 which_map($map)
+=head2 map_to_term($map)
 
 which this $map belongs to ?
 
@@ -1582,7 +1582,7 @@ which this $map belongs to ?
 #    Arguments: OBJ($curproc) STR($map)
 # Side Effects: none
 # Return Value: STR
-sub which_map
+sub map_to_term
 {
     my ($curproc, $map) = @_;
     my $config = $curproc->config();
@@ -1611,7 +1611,7 @@ sub which_map
 }
 
 
-=head2 which_map_nl($map)
+=head2 map_to_term_nl($map)
 
 return which member of maps is this $map as natural language.
 
@@ -1622,20 +1622,20 @@ return which member of maps is this $map as natural language.
 #    Arguments: OBJ($curproc) STR($map)
 # Side Effects: none
 # Return Value: STR
-sub which_map_nl
+sub map_to_term_nl
 {
     my ($curproc, $map) = @_;
 
-    my $found = $curproc->which_map($map);
+    my $found = $curproc->map_to_term($map);
     my $term  = $curproc->message_nl("term.$found", $found) || $found;
     $term =~ s/[\s\n]*$//;
     return $term;
 }
 
 
-=head2 convert_to_mail_address($list)
+=head2 address_resolve($list)
 
-convert_to_mail_address() converts $list to mail addresses.
+address_resolve() converts $list to mail addresses.
 For example
 
     maitainer	=>	$maintainer
@@ -1648,7 +1648,7 @@ For example
 #    Arguments: OBJ($curproc) ARRAY_REF($list)
 # Side Effects: none
 # Return Value: ARRAY_REF
-sub convert_to_mail_address
+sub address_resolve
 {
     my ($curproc, $list) = @_;
     my $config = $curproc->config();
@@ -1693,9 +1693,9 @@ sub article_get_max_id
 }
 
 
-=head2 set_print_style(mode)
+=head2 output_set_print_style(mode)
 
-=head2 get_print_style()
+=head2 output_get_print_style()
 
 =cut
 
@@ -1704,7 +1704,7 @@ sub article_get_max_id
 #    Arguments: OBJ($curproc) STR($mode)
 # Side Effects: none
 # Return Value: STR
-sub set_print_style
+sub output_set_print_style
 {
     my ($curproc, $mode) = @_;
 
@@ -1716,7 +1716,7 @@ sub set_print_style
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: STR
-sub get_print_style
+sub output_get_print_style
 {
     my ($curproc) = @_;
 
