@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.16 2005/08/17 10:42:41 fukachan Exp $
+# $FML: Control.pm,v 1.17 2005/08/17 12:08:41 fukachan Exp $
 #
 
 package FML::User::Control;
@@ -97,9 +97,9 @@ sub user_add
 	$cred->set_compare_level( 100 );
 
 	unless ($cred->has_address_in_map($map, $config, $address)) {
-	    # $msg_args->{ _arg_map } = $curproc->which_map_nl($map);
+	    # $msg_args->{ _arg_map } = $curproc->map_to_term_nl($map);
 	    $msg_args->{ _arg_map }   = sprintf("TERM_NL(%s)",
-						$curproc->which_map($map));
+						$curproc->map_to_term($map));
 
 	    $trycount++;
 
@@ -202,9 +202,9 @@ sub user_del
 	    # we need to use $address_in_map which is the matched string.
 	    my $address_in_map = $cred->matched_address();
 
-	    # $msg_args->{ _arg_map } = $curproc->which_map_nl($map);
+	    # $msg_args->{ _arg_map } = $curproc->map_to_term_nl($map);
 	    $msg_args->{ _arg_map }   = sprintf("TERM_NL(%s)",
-						$curproc->which_map($map));
+						$curproc->map_to_term($map));
 
 	    $trycount++;
 
@@ -309,9 +309,9 @@ sub _try_chaddr_in_map
     else {
 	my $msg_args = {};
 	$msg_args->{ _arg_address } = $old_address;
-	# $msg_args->{ _arg_map }   = $curproc->which_map_nl($map);
+	# $msg_args->{ _arg_map }   = $curproc->map_to_term_nl($map);
 	$msg_args->{ _arg_map }     = sprintf("TERM_NL(%s)",
-					      $curproc->which_map($map));
+					      $curproc->map_to_term($map));
 
 	$curproc->logerror("$old_address not found in map=$map");
 	$curproc->reply_message_nl('error.no_such_address_in_map',
@@ -326,9 +326,9 @@ sub _try_chaddr_in_map
     else {
 	my $msg_args = {};
 	$msg_args->{ _arg_address } = $new_address;
-	# $msg_args->{ _arg_map }   = $curproc->which_map_nl($map);
+	# $msg_args->{ _arg_map }   = $curproc->map_to_term_nl($map);
 	$msg_args->{ _arg_map }     = sprintf("TERM_NL(%s)",
-					      $curproc->which_map($map));
+					      $curproc->map_to_term($map));
 
 	$curproc->logerror("$new_address is already member (map=$map)");
 	$curproc->reply_message_nl('error.already_subscribed_in_map',
@@ -400,7 +400,7 @@ sub print_userlist
     my $config   = $curproc->config();
     my $maplist  = $uc_args->{ maplist } || [];
     my $wh       = $uc_args->{ wh }      || undef;
-    my $style    = $curproc->get_print_style()      || '';
+    my $style    = $curproc->output_get_print_style()      || '';
     my $is_mta   = $curproc->is_under_mta_process() || 0;
     my $msg_args = $command_args->{ msg_args };
 
