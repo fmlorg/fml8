@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: config_ph.pm,v 1.14 2005/01/01 08:53:02 fukachan Exp $
+# $FML: config_ph.pm,v 1.15 2005/01/23 00:54:37 fukachan Exp $
 #
 
 package FML::Merge::FML4::config_ph;
@@ -141,7 +141,7 @@ sub _gen_eval_string
     $s .= sprintf("require \"%s\";\n", $f);
     $s .= sprintf("package main;\n");
     $s .= sprintf("*stab = *{\"config%03d::\"};\n", $count);
-    $s .= sprintf("&%s::var_dump('config%03d', \\%%stab);\n", $package, $count);
+    $s .= sprintf("&%s::dump_variable('config%03d', \\%%stab);\n", $package, $count);
     $s .= "use strict;\n";
 
     return $s;
@@ -153,7 +153,7 @@ sub _gen_eval_string
 #    Arguments: STR($package) HASH_REF($stab)
 # Side Effects: none
 # Return Value: none
-sub var_dump
+sub dump_variable
 {
     my ($package, $stab) = @_;
     my ($key, $val, $def, $x, $rbuf);
