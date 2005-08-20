@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.34 2005/08/10 12:12:33 fukachan Exp $
+# $FML: Error.pm,v 1.35 2005/08/17 12:08:40 fukachan Exp $
 #
 
 package FML::Error;
@@ -317,7 +317,7 @@ sub is_list_address
 =head2 remove_bouncers()
 
 delete mail addresses, which analyze() determined as bouncers, by
-deluser() method.
+remove_address() method.
 
 You need to call analyze() method before calling remove_bouncers() to
 list up addresses to remove.
@@ -348,7 +348,7 @@ sub remove_bouncers
 		if ($safe->regexp_match('address', $addr)) {
 		    if ($cred->is_member( $addr ) ||
 			$cred->is_recipient( $addr )) {
-			$self->deluser( $addr );
+			$self->remove_address( $addr );
 		    }
 		    else {
 			my $s = "remove_bouncers: <$addr> seems not a member";
@@ -372,7 +372,7 @@ sub remove_bouncers
 }
 
 
-=head2 deluser( $address )
+=head2 remove_address( $address )
 
 delete the specified address by C<FML::Command::Admin::unsubscribe>.
 
@@ -383,7 +383,7 @@ delete the specified address by C<FML::Command::Admin::unsubscribe>.
 #    Arguments: OBJ($self) STR($address)
 # Side Effects: none
 # Return Value: none
-sub deluser
+sub remove_address
 {
     my ($self, $address) = @_;
     my $curproc = $self->{ _curproc };
@@ -395,10 +395,11 @@ sub deluser
 
     # check if $address is a safe string.
     if ($safe->regexp_match('address', $address)) {
-	$curproc->log("deluser <$address>");
+	$curproc->log("remove_address <$address>");
     }
     else {
-	$curproc->logerror("deluser: invalid address syntax: <$address>");
+	my $s = "remove_address: invalid address syntax: <$address>";
+	$curproc->logerror($s);
 	return;
     }
 
