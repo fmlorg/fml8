@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.5 2005/06/04 08:51:29 fukachan Exp $
+# $FML: Menu.pm,v 1.6 2005/08/10 12:55:32 fukachan Exp $
 #
 
 package FML::Config::Menu;
@@ -262,7 +262,7 @@ sub rewrite_config_cf
     my $diff = $self->_get_diff_between_hash_ref($diff_org, $diff_new);
 
     # 4. rewrite
-    $config->merge_to_file($cf_file, $diff);
+    $config->merge_into_file($cf_file, $diff);
     for my $k (keys %$diff) {
 	print "# configured by CUI.\n";
 	print "$k = $diff->{ $k }\n";

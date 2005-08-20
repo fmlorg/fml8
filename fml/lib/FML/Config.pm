@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.98 2004/11/21 05:32:05 fukachan Exp $
+# $FML: Config.pm,v 1.99 2005/05/26 09:36:45 fukachan Exp $
 #
 
 package FML::Config;
@@ -553,7 +553,7 @@ sub read
 #    Arguments: OBJ($self) STR($file) HASH_REF($hash_ref) 
 # Side Effects: none
 # Return Value: none
-sub merge_to_file
+sub merge_into_file
 {
     my ($self, $file, $hash_ref) = @_;
     my $done = 0; # NOT USED ?
