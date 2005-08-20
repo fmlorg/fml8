@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent.pm,v 1.14 2005/08/09 03:22:23 fukachan Exp $
+# $FML: MimeComponent.pm,v 1.15 2005/08/10 12:55:33 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -61,8 +61,8 @@ my $filter_rules = [
 # XXX-TODO: $default_action customizable ?
 my $default_action = 'permit';
 
-# XXX-TODO: $opt_cut_off_empty_part customizable ?
-my $opt_cut_off_empty_part = 1;
+# XXX-TODO: $opt_cutoff_empty_part customizable ?
+my $opt_cutoff_empty_part = 1;
 
 # XXX-TODO: $recursive_max_level customizable ?
 my $recursive_max_level    = 10;
@@ -177,7 +177,7 @@ sub mime_component_check
 	}
 
 	# cut off this part if empty.
-	if ($opt_cut_off_empty_part) {
+	if ($opt_cutoff_empty_part) {
 	    if ($mp->is_empty()) {
 		__dprint("\n\t! action = cutoff due to empty.");
 		$is_cutoff = 1;
@@ -187,7 +187,7 @@ sub mime_component_check
     }
 
     # reject if all effective parts are cutoff.
-    if ($opt_cut_off_empty_part) {
+    if ($opt_cutoff_empty_part) {
 	if ($msg->is_multipart()) {
 	    # reject if no effective part.
 	    unless ($self->_has_effective_part($msg)) {

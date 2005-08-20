@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2004 Ken'ichi Fukamachi
 #
-# $FML: Subject.pm,v 1.5 2004/07/23 13:16:45 fukachan Exp $
+# $FML: Subject.pm,v 1.6 2004/07/23 15:59:16 fukachan Exp $
 #
 
 package Mail::Message::Subject;
@@ -70,7 +70,7 @@ sub delete_dup_reply_tag
     if (1) {
 	use Mail::Message::Language::Japanese::Subject;
 	my $sbj  = new Mail::Message::Language::Japanese::Subject;
-	$subject = $sbj->cut_off_reply_tag($subject);
+	$subject = $sbj->cutoff_reply_tag($subject);
 	$self->set($subject);
     }
 }

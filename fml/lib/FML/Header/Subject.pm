@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.50 2005/08/19 11:21:14 fukachan Exp $
+# $FML: Subject.pm,v 1.51 2005/08/19 12:17:08 fukachan Exp $
 #
 
 package FML::Header::Subject;
@@ -76,7 +76,7 @@ sub rewrite_article_subject_tag
 
     # cut off Re: Re: Re: ...
     # $subject IS DECODED ALREADY.
-    $self->_cut_off_reply(\$subject);
+    $self->_cutoff_reply(\$subject);
 
     # de-tag
     # $subject IS DECODED ALREADY.
@@ -84,7 +84,7 @@ sub rewrite_article_subject_tag
 
     # cut off Re: Re: Re: ...
     # $subject IS DECODED ALREADY.
-    $self->_cut_off_reply(\$subject);
+    $self->_cutoff_reply(\$subject);
 
     use Mail::Message::Encode;
     my $obj = new Mail::Message::Encode;
@@ -258,7 +258,7 @@ sub is_reply
 #               $r_subject is SCALAR REREFENCE to the subject string
 # Side Effects: $r_subject is rewritten
 # Return Value: none
-sub _cut_off_reply
+sub _cutoff_reply
 {
     my ($self, $r_subject) = @_;
 
@@ -269,7 +269,7 @@ sub _cut_off_reply
     # XXX-TODO: care for not Japanese string!
     use Mail::Message::Language::Japanese::Subject;
     my $obj = new Mail::Message::Language::Japanese::Subject;
-    $$r_subject = $obj->cut_off_reply_tag($$r_subject);
+    $$r_subject = $obj->cutoff_reply_tag($$r_subject);
 }
 
 

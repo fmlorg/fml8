@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.16 2003/08/23 04:35:48 fukachan Exp $
+# $FML: Subject.pm,v 1.17 2004/07/23 13:16:46 fukachan Exp $
 #
 
 
@@ -95,7 +95,7 @@ sub is_reply
 }
 
 
-=head2 cut_off_reply_tag($subject)
+=head2 cutoff_reply_tag($subject)
 
 cut off C<Re:> in the string C<$subject> like C<Re: ... >
 within C<Subject:>.
@@ -124,7 +124,7 @@ within C<Subject:>.
 #    Arguments: OBJ($self) STR($subject)
 # Side Effects: none
 # Return Value: STR
-sub cut_off_reply_tag
+sub cutoff_reply_tag
 {
     my ($self, $subject) = @_;
     my ($y, $limit);
