@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.35 2004/07/11 15:25:51 fukachan Exp $
+# $FML: Adapter.pm,v 1.36 2004/07/23 15:59:13 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -38,7 +38,7 @@ For example, C<$map_params> is:
 
     $map_params = {
 	'mysql:toymodel' => {
-	    sql_server     => 'mysql.fml.org',
+	    sql_servers    => 'mysql.fml.org mysql2.fml.org',
 	    database       => 'fml',
 	    table          => 'ml',
 	    user           => 'fml',
@@ -186,7 +186,12 @@ sub new
 	    $me->{_schema} = $2;
 	    $me->{_params} = $args;
 	    $me->{_type}   =~ tr/A-Z/a-z/; # lowercase the '_type' syntax
-	    $pkg           = 'IO::Adapter::MySQL';
+	    if ($map =~ /mysql:/i) {
+		$pkg = 'IO::Adapter::MySQL';
+	    }
+	    elsif ($map =~ /postgresql:/i) {
+		$pkg = 'IO::Adapter::PostgreSQL';
+	    }
 	    @pkg           = qw(IO::Adapter::DBI);
 	}
 	elsif ($map =~ /(ldap):(\S+)/i) {
