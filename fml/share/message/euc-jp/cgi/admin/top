@@ -43,4 +43,9 @@ $_arg_button_submit ボタンを押して下さい。
 	<td>	ＭＬの削除
 </tr>
 
+<tr>
+	<td>	reviveml
+	<td>	一度消したＭＬを復活させる
+</tr>
+
 </table>

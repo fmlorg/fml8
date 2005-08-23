@@ -259,6 +259,7 @@ admin_cgi_allowed_commands	=		adduser
 					log
 					newml
 					rmml
+					reviveml
 
 
 # Descriptions:

@@ -57,6 +57,7 @@ passwd
 password
 remove
 resign
+reviveml
 rmdomain
 rmml
 signoff

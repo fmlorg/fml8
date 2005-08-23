@@ -42,4 +42,9 @@ left naviation bar and click $_arg_button_submit button.
 	<td>	remove ML
 </tr>
 
+<tr>
+	<td>	reviveml
+	<td>	revive ML removed once
+</tr>
+
 </table>
