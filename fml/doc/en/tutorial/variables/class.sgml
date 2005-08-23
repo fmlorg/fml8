@@ -458,11 +458,19 @@ incoming {
 ldap {
 
    ldap_* {
-    ?     $ldap_query_filter
-    ?     $ldap_search_base
-    ?     $ldap_server_bind
-    ?     $ldap_server_password
+    ?     $ldap_base_dn
+    ?     $ldap_bind_dn
+    ?     $ldap_password
+    ?     $ldap_query_add_as_ldif
+    ?     $ldap_query_delete_as_ldif
+    ?     $ldap_query_find_result_attribute
+    ?     $ldap_query_find_search_filter
+    ?     $ldap_query_get_next_key_result_attribute
+    ?     $ldap_query_get_next_key_search_filter
+    ?     $ldap_query_getline_result_attribute
+    ?     $ldap_query_getline_search_filter
     ?     $ldap_servers
+    ?     $ldap_user
    }
 }
 
@@ -500,10 +508,10 @@ log {
     ?     $log_file_default_charset
           $log_format_type
     ?     $log_syslog_facility
-    ?     $log_syslog_host
     ?     $log_syslog_ident
     ?     $log_syslog_options
     ?     $log_syslog_priority
+    ?     $log_syslog_servers
           $log_type
           $use_log
    }
@@ -740,14 +748,14 @@ spool {
 sql {
 
    sql_* {
-    ?     $sql_add
     ?     $sql_database
-    ?     $sql_delete
-    ?     $sql_find
-    ?     $sql_get_next_key
-    ?     $sql_getline
     ?     $sql_password
-    ?     $sql_server
+    ?     $sql_query_add
+    ?     $sql_query_delete
+    ?     $sql_query_find
+    ?     $sql_query_get_next_key
+    ?     $sql_query_getline
+    ?     $sql_servers
     ?     $sql_table
     ?     $sql_user
    }

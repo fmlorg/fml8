@@ -1084,11 +1084,49 @@ ja en
 </row>
 <row>
 <entry>
-ldap_query_filter</entry>
+ldap_base_dn</entry>
 <entry>
- LDAP のフィルタ</entry>
+ base DN to contact in modify, search et.al.</entry>
 <entry>
-(objectclass=*)
+dc=$ml_name, dc=fml, dc=org
+   </entry>
+</row>
+<row>
+<entry>
+ldap_bind_dn</entry>
+<entry>
+ DN to bind.</entry>
+<entry>
+dc=fml, dc=org
+   </entry>
+</row>
+<row>
+<entry>
+ldap_query_add_as_ldif</entry>
+<entry>
+ attributes to add into $ldap_base_dn entry.</entry>
+<entry>
+fmlrecipient:&address
+   fmlmember:&address
+   </entry>
+</row>
+<row>
+<entry>
+ldap_query_delete_as_ldif</entry>
+<entry>
+ attributes to remove from $ldap_base_dn entry.</entry>
+<entry>
+fmlrecipient:&address
+   fmlmember:&address
+   </entry>
+</row>
+<row>
+<entry>
+ldap_user</entry>
+<entry>
+ dummy</entry>
+<entry>
+fml
    </entry>
 </row>
 <row>
@@ -1775,6 +1813,44 @@ spool_type</entry>
  スプールのタイプ</entry>
 <entry>
 plane
+   </entry>
+</row>
+<row>
+<entry>
+sql_query_find</entry>
+<entry>
+ 注意: 各行を取り出すのではなく</entry>
+<entry>
+select fml_address from $sql_table
+   where	fml_ml = '$ml_name'
+   and
+   fml_domain = '$ml_domain'
+   and
+   fml_address like '%&regexp%'
+   </entry>
+</row>
+<row>
+<entry>
+sql_query_get_next_key</entry>
+<entry>
+ 注意: 各行を取り出すのではなく</entry>
+<entry>
+select fml_address from $sql_table
+   where fml_ml = '$ml_name'
+   and
+   fml_domain = '$ml_domain'
+   </entry>
+</row>
+<row>
+<entry>
+sql_query_getline</entry>
+<entry>
+ 注意: 各行を取り出すのではなく</entry>
+<entry>
+select fml_address from $sql_table
+   where fml_ml = '$ml_name'
+   and
+   fml_domain = '$ml_domain'
    </entry>
 </row>
 <row>
