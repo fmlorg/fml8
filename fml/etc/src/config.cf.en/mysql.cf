@@ -16,7 +16,7 @@
 #      History:
 #        Value: HOSTNAME
 #     Examples:
-sql_server	=	localhost
+sql_servers	=	localhost
 
 
 # Descriptions:

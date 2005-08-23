@@ -20,7 +20,7 @@
 #      History:
 #        Value: HOSTNAME
 #     Examples:
-sql_server	=	localhost
+sql_servers	=	localhost
 
 
 # Descriptions:
@@ -51,7 +51,8 @@ sql_database	=	fml
 sql_table	=	ml
 
 
-# Descriptions:
+# Descriptions: 注意: 各行を取り出すのではなく
+#		とりあえず全て取りだしキャッシュするクエリ
 #      History:
 #        Value: SQL_QUERY_STATEMENT
 #     Examples:
@@ -61,7 +62,8 @@ sql_query_get_next_key =	select fml_address from $sql_table
 				fml_domain = '$ml_domain'
 
 
-# Descriptions:
+# Descriptions: 注意: 各行を取り出すのではなく
+#		とりあえず全て取りだしキャッシュするクエリ
 #      History:
 #        Value: SQL_QUERY_STATEMENT
 #     Examples:
@@ -91,7 +93,8 @@ sql_query_delete	=	delete from $sql_table
 				fml_address = '&address'
 
 
-# Descriptions:
+# Descriptions: 注意: 各行を取り出すのではなく
+#		とりあえず全て取りだしキャッシュするクエリ
 #      History:
 #        Value: SQL_QUERY_STATEMENT
 #     Examples:
@@ -101,3 +104,4 @@ sql_query_find		=	select fml_address from $sql_table
 				fml_domain = '$ml_domain'
 					and
 				fml_address like '%&regexp%'
+
