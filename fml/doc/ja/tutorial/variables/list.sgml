@@ -920,18 +920,18 @@ pop3
 </row>
 <row>
 <entry>
-fetchfml_imap_server</entry>
+fetchfml_imap_servers</entry>
 <entry>
- imap server fetchfml process uses.</entry>
+ imap servers fetchfml process uses.</entry>
 <entry>
 localhost
    </entry>
 </row>
 <row>
 <entry>
-fetchfml_pop_server</entry>
+fetchfml_pop_servers</entry>
 <entry>
- pop server fetchfml process uses.</entry>
+ pop servers fetchfml process uses.</entry>
 <entry>
 localhost
    </entry>

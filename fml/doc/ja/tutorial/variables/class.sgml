@@ -380,8 +380,8 @@ fetchfml {
 
    fetchfml { 
     ?     $fetchfml_fetch_protocol
-    ?     $fetchfml_imap_server
-    ?     $fetchfml_pop_server
+    ?     $fetchfml_imap_servers
+    ?     $fetchfml_pop_servers
           $fetchfml_queue_dir
           $use_fetchfml_function
    }
