@@ -3,9 +3,12 @@
 
   [最近のまとめ]
 
-  FML_CURRENT_VERSION=7.98.4
+  FML_CURRENT_VERSION=7.98.5
 
   8.0 PRE_ALPHA
+	7.98.5	add reviveml command (to revive a removed ML).
+		add PostgreSQL support.
+		add LDAP support.
 	7.98.4	minor fixes. clean up. 
 		clean up method naming convension.
 	7.98.3	Japanese/English document overhaul/revised.
@@ -26,6 +29,36 @@
 
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
+
+2005/08/23
+
+   IO::Adapter 
+	add PostgreSQL support.
+	add LDAP support.
+	
+   IO::Adapter::MySQL 
+	$sql_server -> $sql_servers.
+	enhanced to handle a list of dsn.
+	fix comments.
+	
+   IO::Adapter::DBI 
+	change dsn to form "DBI:$driver:dbname=$database;host=$host".
+	always $dbh->commit();
+	enhanced to handle a list of dsn and to retry sql servers if needed.
+	DBI->connect with { AutoCommit => 0 } option.
+
+   FML/Command/Admin::reviveml
+	revive a removed ML.
+
+   FML::CGI::ML 
+	add & enable reviveml in cgi
+
+   FML::Log 
+	$log_syslog_host -> $log_syslog_servers
+
+   variables
+	$log_syslog_host -> $log_syslog_servers
+	$sql_server -> $sql_servers
 
 2005/08/20
 
@@ -8742,4 +8775,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.245 2005/08/03 13:47:22 fukachan Exp $
+$FML: CHANGES.txt,v 1.246 2005/08/21 03:01:35 fukachan Exp $
