@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.36 2004/07/23 15:59:13 fukachan Exp $
+# $FML: Adapter.pm,v 1.37 2005/08/23 08:39:09 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -604,7 +604,7 @@ Ken'ichi Fukamchi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamchi
+Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamchi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
