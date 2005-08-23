@@ -3,7 +3,7 @@
 # Copyright (C) 2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: FetchFML.pm,v 1.3 2005/08/10 15:03:28 fukachan Exp $
+# $FML: FetchFML.pm,v 1.4 2005/08/19 12:08:17 fukachan Exp $
 #
 
 package FML::Process::FetchFML;
@@ -258,37 +258,45 @@ sub _fetchfml_retrieve
     my $class    = $ff_args->{ class } || "article_post";
     my $username = $config->{ "fetchfml_${class}_user" };
     my $password = $config->{ "fetchfml_${class}_password" };
-    my $server   = $config->{ fetchfml_pop_server };
+    my $servers  = $config->get_as_array_ref('fetchfml_pop_servers') || [];
 
     use FML::MUA::POP3;
     my $mua = new FML::MUA::POP3 $curproc;
-    if (defined $mua) {
-	$mua->login({
-	    server   => $server,
-	    username => $username,
-	    password => $password,
-	});
-
-	if ($mua->error()) {
-	    $curproc->logerror($mua->error());
-	    $curproc->stop_this_process();
-	    return;
+  MUA:
+    for my $server (@$servers) {
+	if (defined $mua) {
+	    $mua->login({
+		server   => $server,
+		username => $username,
+		password => $password,
+	    });
+	}
+	else {
+	    $curproc->logerror("object undefined.");
 	}
 
-	$mua->retrieve( { class => $class } );
-	if ($mua->error()) {
+	if ($mua->error()) { 
 	    $curproc->logerror($mua->error());
-	    $curproc->stop_this_process();
-	    return;
-	}
-
-	$mua->quit();
-	if ($mua->error()) {
-	    $curproc->logerror($mua->error());
+	    next MUA;
 	}
     }
-    else {
-	$curproc->logerror("object undefined.");
+
+    if ($mua->error()) {
+	$curproc->logerror($mua->error());
+	$curproc->stop_this_process();
+	return;
+    }
+
+    $mua->retrieve( { class => $class } );
+    if ($mua->error()) {
+	$curproc->logerror($mua->error());
+	$curproc->stop_this_process();
+	return;
+    }
+
+    $mua->quit();
+    if ($mua->error()) {
+	$curproc->logerror($mua->error());
     }
 }
 
