@@ -24,7 +24,6 @@ pgp.cf
 command.cf
 error.cf
 threadtrack.cf
-dbms.cf
 cgi.cf
 mta.cf
 fetchfml.cf
@@ -32,5 +31,7 @@ paths.cf
 system_dependence.cf
 compatibility.cf
 mysql.cf
+postgresql.cf
+ldap.cf
 __end__.cf
 ../hooks.cf
