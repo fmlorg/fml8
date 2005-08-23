@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #
-# $FML: Log.pm,v 1.30 2005/05/26 09:40:45 fukachan Exp $
+# $FML: Log.pm,v 1.31 2005/08/15 12:23:13 fukachan Exp $
 #
 
 package FML::Log;
@@ -96,13 +96,15 @@ sub Log
 	my $logopt   = $config->{ log_syslog_options }  || 'pid';
 	my $facility = $config->{ log_syslog_facility } || 'local0';
 	my $priority = $config->{ log_syslog_priority } || 'info';
-	my $host     = $config->{ log_syslog_host }     || '';
+	my $hosts    = $config->get_as_array_ref('log_syslog_servers') || [];
 
 	use Sys::Syslog;
-	if ($host) { $Sys::Syslog::host = $host;}
-	openlog($ident, $logopt, $facility);
-	syslog($priority, $mesg);
-	closelog();
+	for my $host (@$hosts) {
+	    if ($host) { $Sys::Syslog::host = $host;}
+	    openlog($ident, $logopt, $facility);
+	    syslog($priority, $mesg);
+	    closelog();
+	}
     }
     unless ($config->{ log_type } =~ /file/) {
 	# e.g. log_type = syslog (== syslog only)

@@ -139,7 +139,7 @@ log_computer_output_engine	=	FML::Log::Print::Simple
 #      History: none
 #        Value: STR
 #     Examples: log.example.co.jp
-log_syslog_host		=	
+log_syslog_servers	=	
 
 # Descriptions: string prepended to every message.
 #      History: none
