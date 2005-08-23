@@ -1,2 +1,1 @@
-INSERT INTO user
-VALUES ('%','fml',Password('uja'),'Y','Y','Y','Y','Y','N','N','N','N','N','N','N','N','N');
+INSERT INTO user VALUES ('localhost','fml',Password('uja'),'Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','','','','',0,0,0);

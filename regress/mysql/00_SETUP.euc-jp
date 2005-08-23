@@ -1,0 +1,96 @@
+
+			mysql 4.0.25 での実行例
+
+
+0)	mysql をスタートさせる。
+
+	/etc/rc.d/mysql start
+
+
+1)	localhost から root でのアクセスを確認
+
+	% su root
+	# mysqlaccess localhost root mysql
+
+
+1.1)	localhost からのユーザ fml、パスワード uja を有効にする。
+
+	データベース mysql の内容を見て、テーブル user のフォーマット
+	を確認する。
+
+	# mysqldump mysql 
+
+	ユーザ root あたりの定義をコピーして適切なデータを作り、
+	データベースにユーザ fml の設定を流し込む。 
+	ユーザ情報を変更したら reload するのを忘れずに。
+
+	# mysql mysql
+	INSERT INTO user VALUES ('localhost','fml',Password('uja'), ..略..);
+	# mysqladmin reload
+
+	[INFO] adduser.sql が、その見本。
+
+
+2)	データベース fml を作る。
+
+	# mysqladmin create fml
+
+
+2.1) 	データベース fml へのアクセスを確認
+
+	# mysqlaccess localhost fml fml -U root -P -H localhost
+
+
+
+3)	テーブル ml を作る。
+
+	# mysql fml
+	create table ml (
+		fml_ml        char(64),
+		fml_domain    char(64),
+		fml_address   char(64),
+		fml_member    int,
+		fml_recipient int
+	);
+
+	データを入れたり、データを引けるか試してみる。
+
+	# mysql fml
+	select * from ml;
+
+
+	[INFO] 以下の３つのサンプルがある。
+		create_table.sql	テーブルを作る。
+		test.sql		見る、入れて変化を見る。
+		droptable.sql		テーブルを消す。
+
+
+4)	test
+
+	./getline.pl
+
+
+
+付録a)	テストに使ったデータベースを消す。
+
+	# mysqladmin drop fml
+	Dropping the database is potentially a very bad thing to do.
+	Any data stored in the database will be destroyed.
+
+	Do you really want to drop the 'fml' database [y/N] y
+	Database "fml" dropped
+
+付録b)	root パスワードをつける
+
+	# mysqladmin -u root password "新しいパスワード"
+
+	これ以降はコマンドに -p オプションをつけパスワード入力を
+	する必要がある。
+
+	例:
+	# mysqladmin -p create fml
+	# mysql -p mysql < adduser.sql
+	# mysql -h ホスト -u ユーザ --password="パスワード" データベース
+
+------------------------------------------------------------
+$FML$

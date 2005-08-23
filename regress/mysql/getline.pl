@@ -1,74 +1,70 @@
 #!/usr/pkg/bin/perl
 #
-# $FML: getline.pl,v 1.9 2001/06/17 09:00:31 fukachan Exp $
+# $FML: getline.pl,v 1.10 2001/09/17 11:42:03 fukachan Exp $
 #
 
 use strict;
 use Carp;
+use lib qw(../../regress/mysql ../../fml/lib ../../cpan/lib ../../img/lib);
+use Test;
 use IO::Adapter;
+use FML::Config;
 
-my $map = 'mysql:toymodel';
+my $config = new FML::Config;
+$config->load_file("../../fml/etc/default_config.cf.ja");
+$config->set("ml_name",   "elena");
+$config->set("ml_domain", "home.fml.org");
 
+my $driver = $ARGV[0] || 'mysql';
+my $map    = "$driver:fml";
+print STDERR "TEST of \"IO::Adapter $map, \$config;\"\n\n";
+my $obj    = new IO::Adapter $map, $config;
+unless (defined $obj) { croak "cannot set up $map\n";}
 
-my $map_params = {
-    $map => {
-	sql_server    => 'mysql.home.fml.org',
-	user          => 'fukachan',
-	user_password => 'uja',
-	database      => 'ML',
-	table         => 'ml',
-	params        => {
-	    ml_name   => 'elena',
-	    file      => 'members',
-	},
-    },
-};
-
-
-my $obj = new IO::Adapter ($map, $map_params);
-
-unless (defined $obj) {
-   croak "cannot set up $map\n";
-}
-
+# TEST 1.
 print STDERR "* current table\n";
-_dump($obj); print "\n";
+Test::dump_content($obj); print "\n";
 
+# TEST 2.
 print STDERR "* add rudo\@nuinui.net into current table\n";
 $obj->open();
+if ($obj->error()) { print $obj->error(), "\n";}
 $obj->add( 'rudo@nuinui.net' );
+if ($obj->error()) { print $obj->error(), "\n";}
 $obj->close();
+if ($obj->error()) { print $obj->error(), "\n";}
+Test::dump_content($obj); print "\n";
 
-_dump($obj); print "\n";
+# TEST 3. find
+print STDERR "* find rudo\@nuinui.net from current table\n";
+$obj->open();
+if ($obj->error()) { print $obj->error(), "\n";}
+my $s = $obj->find( 'rudo@nuinui.net' );
+my $a = $obj->find( 'rudo@nuinui.net', { all => 1} );
+if ($obj->error()) { print $obj->error(), "\n";}
+print "FOUND: $s\n";
+print "FOUND: (@$a)\n\n";
 
+print STDERR "* find rudo\@example.com from current table\n";
+if ($obj->error()) { print $obj->error(), "\n";}
+my $s = $obj->find( 'rudo@example.com' );
+my $a = $obj->find( 'rudo@example.com', { all => 1} );
+if ($obj->error()) { print $obj->error(), "\n";}
+print "FOUND: $s\n";
+print "FOUND: (@$a)\n\n";
+
+$obj->close();
+if ($obj->error()) { print $obj->error(), "\n";}
+
+
+# TEST 4.
 print STDERR "* delete rudo\@nuinui.net from current table\n";
 $obj->open();
+if ($obj->error()) { print $obj->error(), "\n";}
 $obj->delete( 'rudo@nuinui.net' );
+if ($obj->error()) { print $obj->error(), "\n";}
 $obj->close();
-
-_dump($obj); print "\n";
+if ($obj->error()) { print $obj->error(), "\n";}
+Test::dump_content($obj); print "\n";
 
 exit 0;
-
-
-sub _dump
-{
-    my ($obj) = @_;
-
-    if (defined $obj) {
-	if (defined $obj->open()) {
-	    while ($_ = $obj->getline()) {
-		my $y = $obj->eof ? "y" : "n";
-		print "<", $obj->getpos, "(eof=$y)> ";
-		print $_, "\n";
-	    }
-	    $obj->close;
-	}
-	else {
-	    croak("cannot open()");
-	}
-    }
-    else {
-	croak("cannot make object");
-    }
-}
