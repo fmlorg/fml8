@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DBI.pm,v 1.32 2005/08/10 14:00:19 fukachan Exp $
+# $FML: DBI.pm,v 1.33 2005/08/17 12:08:47 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -52,7 +52,7 @@ sub make_dsn
     my $database = $args->{ database };
     my $host     = $args->{ host };
 
-    return "DBI:$driver:$database:$host";
+    return "DBI:$driver:dbname=$database;host=$host";
 }
 
 
@@ -89,6 +89,9 @@ sub execute
 	    # XXX-TODO: error of execute() is discarded?
 	    $res->execute;
 	    $self->{ _res } = $res;
+
+	    $dbh->commit();
+
 	    return $res;
 	}
 	else {
@@ -130,21 +133,37 @@ sub open
 
     # XXX-TODO: croak() if DSN is not specified ?
     # DSN parameters
-    my $dsn      = $self->{ _dsn }         || '';
-    my $user     = $self->{ _sql_user }    || 'fml';
-    my $password = $self->{ _sql_password} || '';
+    my $dsn_list   = $self->{ _dsn_list }    || [];
+    my $user       = $self->{ _sql_user }    || 'fml';
+    my $password   = $self->{ _sql_password} || '';
+    my $last_error = '';
+    my $dbh        = undef;
+ 
+  DSN:
+    for my $dsn (@$dsn_list) {
+	print STDERR "open $dsn\n" if $debug;
 
-    print STDERR "open $dsn\n" if $debug;
+	# try to connect
+	use DBI;
+	$dbh = DBI->connect($dsn, $user, $password, { 
+	    RaiseError => 1,
+	    AutoCommit => 0,
+	});
 
-    # try to connect
-    use DBI;
-    my $dbh = DBI->connect($dsn, $user, $password, { RaiseError => 1 } );
-    unless (defined $dbh) {
-	$self->error_set( $DBI::errstr );
-	return undef;
+	if ($DBI::errstr) {
+	    $last_error = $DBI::errstr;
+	    print STDERR "failed to connecte to $dsn\n" if $debug;
+	}
+	else {
+	    print STDERR "connected to $dsn\n" if $debug;
+	}
+
+	last DSN if defined $dbh;
     }
-    else {
-	print STDERR "connected to $dsn\n" if $debug;
+
+    if ($last_error) {
+	$self->error_set( $last_error);
+	return undef;
     }
 
     $self->{ _dbh } = $dbh;
