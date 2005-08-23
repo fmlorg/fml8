@@ -1,0 +1,104 @@
+=head1 LDAP の例
+
+#
+# 注意: 次の ^=head で名前空間はリセットされる
+
+
+[ldap:fml]
+
+
+# Descriptions:
+#      History:
+#        Value: HOSTNAME
+#     Examples:
+ldap_servers	=	localhost
+
+
+# Descriptions: dummy
+#      History:
+#        Value: USER
+#     Examples:
+ldap_user	=	fml
+
+
+# Descriptions:
+#      History:
+#        Value: PASSWORD
+#     Examples:
+ldap_password	=	uja
+
+
+# Descriptions: DN to bind.
+#      History:
+#        Value: STR
+#     Examples:
+ldap_bind_dn	=	dc=fml, dc=org
+
+
+# Descriptions: base DN to contact in modify, search et.al.
+#      History:
+#        Value: STR
+#     Examples:
+ldap_base_dn	=	dc=$ml_name, dc=fml, dc=org
+
+
+
+# Descriptions:
+#      History:
+#        Value: STR
+#     Examples:
+ldap_query_get_next_key_result_attribute	=	fmlrecipient
+
+
+# Descriptions:
+#      History:
+#        Value: LDAP_QUERY_FILTER
+#     Examples:
+ldap_query_get_next_key_search_filter	=	(&(objectclass=*)(ou=$ml_name@$ml_domain))
+
+
+# Descriptions:
+#      History:
+#        Value: STR
+#     Examples:
+ldap_query_getline_result_attribute	=	fmlrecipient
+
+
+# Descriptions:
+#      History:
+#        Value: LDAP_QUERY_FILTER
+#     Examples:
+ldap_query_getline_search_filter	=	(&(objectclass=*)(ou=$ml_name@$ml_domain))
+
+
+
+# Descriptions: attributes to add into $ldap_base_dn entry.
+#      History:
+#        Value: LDAP_LDIF_STATEMENT
+#     Examples:
+ldap_query_add_as_ldif		=	fmlrecipient:&address
+					fmlmember:&address
+
+
+# Descriptions: attributes to remove from $ldap_base_dn entry.
+#      History:
+#        Value: LDAP_LDIF_STATEMENT
+#     Examples:
+ldap_query_delete_as_ldif	=	fmlrecipient:&address
+					fmlmember:&address
+
+
+# Descriptions:
+#      History:
+#        Value: STR
+#     Examples:
+ldap_query_find_result_attribute	=	fmlrecipient
+
+
+# Descriptions:
+#      History:
+#        Value: LDAP_QUERY_FILTER
+#     Examples:
+ldap_query_find_search_filter		=	(&(objectclass=*)(ou=$ml_name@$ml_domain))
+
+
