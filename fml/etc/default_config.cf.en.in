@@ -2681,18 +2681,18 @@ fetchfml_error_mail_analyzer_user	=	$ml_name-admin
 fetchfml_error_mail_analyzer_password	=	********
 
 
-# Descriptions: pop server fetchfml process uses.
+# Descriptions: pop servers fetchfml process uses.
 #      History: none
 #        Value: STR
 #     Examples: pop.example.co.jp
-fetchfml_pop_server			=	localhost
+fetchfml_pop_servers			=	localhost
 
 
-# Descriptions: imap server fetchfml process uses.
+# Descriptions: imap servers fetchfml process uses.
 #      History: none
 #        Value: STR
 #     Examples: imap.example.co.jp
-fetchfml_imap_server			=	localhost
+fetchfml_imap_servers			=	localhost
 
 
 
