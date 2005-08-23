@@ -1,0 +1,83 @@
+
+		PostgreSQL 7.4.8 での実行例
+
+
+0) PostgreSQL をスタート( postmaster をスタート )させる。
+
+	/etc/rc.d/pgsql start
+
+
+1) ユーザ fml の作成
+
+	% su root
+	# su pgsql
+	> createuser --password fml
+
+
+2) データベース fml の作成
+
+	% su root
+	# su pgsql
+	> createdb fml
+
+
+3) テーブル ml を作る
+	
+	% su root
+	# su pgsql
+	> psql fml
+	Welcome to psql 7.4.8, the PostgreSQL interactive terminal.
+
+	Type:  \copyright for distribution terms
+	       \h for help with SQL commands
+	       \? for help on internal slash commands
+	       \g or terminate with semicolon to execute query
+	       \q to quit
+
+	fml=# 
+
+もしくは一般ユーザアカウントから直接アクセスする。
+
+	% psql -h localhost -U fml --password
+	Password: 
+	Welcome to psql 7.4.8, the PostgreSQL interactive terminal.
+
+	Type:  \copyright for distribution terms
+	       \h for help with SQL commands
+	       \? for help on internal slash commands
+	       \g or terminate with semicolon to execute query
+	       \q to quit
+
+	fml=# 
+
+
+	[INFO] mysql の見本と同じものが(当然)使えるので、それを使う。
+
+	% psql -h localhost -U fml --password < create_table.sql
+	% psql -h localhost -U fml --password < test.sql
+	% psql -h localhost -U fml --password < drop_table.sql
+
+
+4)	test
+
+	../mysql/getline.pl postgresql
+
+
+
+付録a)	データベース fml の削除。
+
+	% su root
+	# su pgsql
+	> dropdb fml
+
+付録b)	ユーザ＆パスワードでのアクセス
+
+	% psql -h localhost -U fml --password
+
+付録z)	documents
+
+	http://www.postgresql.jp/document/pg746doc/html/
+
+
+------------------------------------------------------------
+$FML$

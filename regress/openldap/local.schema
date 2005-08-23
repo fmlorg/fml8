@@ -1,0 +1,14 @@
+attributetype ( 1.1.2.1.5 NAME 'fmlrecipient'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+
+attributetype ( 1.1.2.1.6 NAME 'fmlmember'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+
+objectClass (1.1.2.2.1 NAME 'fml'
+	DESC 'nis extras for our postifx config'
+	SUP top AUXILIARY
+	MAY (fmlrecipient $ fmlmember))

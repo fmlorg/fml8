@@ -1,0 +1,30 @@
+		openldap 2.2.20 での実験例
+
+1) openldap の設定をする。
+
+1.1) local.schema
+
+1.2) slapd.conf
+
+1.3) ldap.conf
+
+
+2) デーモンさんをスタート
+
+	/etc/rc.d/slapd start
+
+
+3) データを入れてみる
+
+3.1) root.ldif と rudo.ldif を ldapadd で入れてみる
+
+3.2) ldapsearch してみる。
+
+
+4)	test
+
+	../mysql/getline.pl ldap
+
+
+------------------------------------------------------------
+$FML$

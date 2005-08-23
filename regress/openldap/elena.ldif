@@ -1,0 +1,7 @@
+dn: dc=elena, dc=fml, dc=org
+objectclass: top
+objectclass: dcObject
+objectclass: organizationalUnit
+objectclass: fml
+dc: elena
+ou: elena@fml.org
