@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: MySQL.pm,v 1.27 2004/01/24 09:03:56 fukachan Exp $
+# $FML: MySQL.pm,v 1.28 2004/07/11 15:25:54 fukachan Exp $
 #
 
 
@@ -30,7 +30,7 @@ IO::Adapter::MySQL - interface to talk with a MySQL server.
    my $map        = 'mysql:toymodel';
    my $map_params = {
        $map       => {
-   	sql_server    => 'localhost',
+   	sql_servers   => 'localhost',
    	user          => 'fukachan',
    	user_password => 'uja',
    	database      => 'fml',
@@ -83,6 +83,7 @@ sub configure
 
     # import variables
     for my $key (qw(sql_server
+		    sql_servers
 		    sql_database
 		    sql_table
 		    sql_user
@@ -90,15 +91,23 @@ sub configure
 	$me->{ "_$key" } = $config->{ $key } || '';
     }
 
-    use IO::Adapter::DBI;
-    my $dsn = IO::Adapter::DBI->make_dsn( {
-	driver   => 'mysql',
-	database => $config->{ sql_database },
-	host     => $config->{ sql_server },
-    });
+    my $host0   = $config->{ sql_server };
+    my $_list   = $config->{ sql_servers };
+    my (@array) = split(/\s+/, $_list);
+    my (@hosts) = @array ? (@array) : ( $host0 );
+    my $list    = [];
+    for my $host (@hosts) {
+	use IO::Adapter::DBI;
+	my $dsn = IO::Adapter::DBI->make_dsn( {
+	    driver   => 'mysql',
+	    database => $config->{ sql_database },
+	    host     => $host,
+	});
+	push(@$list, $dsn);
+    }
 
-    # save the current DSN
-    $me->{ _dsn }    = $dsn;
+    # save the current DSN list (ARRAY_REF).
+    $me->{ _dsn_list } = $list;
 
     # save map specific configuration
     $me->{ _config } = $config;
@@ -107,13 +116,15 @@ sub configure
 
 =head2 setpos($pos)
 
+set position in returned cache.
+
 MySQL does not support rollack, so we close and open this transcation.
 After re-opening, we moved to the specified $pos.
 
 =cut
 
 
-# Descriptions: set position in database handle.
+# Descriptions: set position in returned cache.
 #    Arguments: OBJ($self) NUM($pos)
 # Side Effects: none
 # Return Value: none
@@ -142,10 +153,12 @@ sub setpos
 
 =head2 getpos()
 
+get position in returned cache.
+
 =cut
 
 
-# Descriptions: get position in database handle.
+# Descriptions: get position in returned cache.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: NUM
@@ -158,6 +171,8 @@ sub getpos
 
 
 =head2 eof()
+
+check if EOF or not?
 
 =cut
 
