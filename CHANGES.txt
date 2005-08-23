@@ -53,6 +53,12 @@
    FML::CGI::ML 
 	add & enable reviveml in cgi
 
+   FML::Process::FetchFML 
+	handle $fetchfml_pop_servers
+	
+   FML::MUA::POP3 
+	remove message when the message retrival succeeded.
+
    FML::Log 
 	$log_syslog_host -> $log_syslog_servers
 
@@ -8775,4 +8781,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.246 2005/08/21 03:01:35 fukachan Exp $
+$FML: CHANGES.txt,v 1.247 2005/08/23 10:02:28 fukachan Exp $
