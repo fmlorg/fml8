@@ -1142,7 +1142,7 @@ log_computer_output_engine	=	FML::Log::Print::Simple
 #      History: none
 #        Value: STR
 #     Examples: log.example.co.jp
-log_syslog_host		=	
+log_syslog_servers	=	
 
 # Descriptions: string prepended to every message.
 #      History: none
@@ -2353,46 +2353,6 @@ thread_cgi_title	=	thread tracking system interface
 #     Examples:
 thread_cgi_bgcolor	=	#E6E6FA
 
-=head1	DBMS
-
-###
-### TODO
-###   DATABASE_CACHE_FILE_SUFFIX ?
-###
-
-
-=head2	LDAP
-
-# Descriptions: LDAP server
-#      History:
-#        Value: HOSTNAME_LIST
-#     Examples:
-ldap_servers		=
-
-# Descriptions: LDAP password
-#      History:
-#        Value: PASSWORD
-#     Examples:
-ldap_server_password	=
-
-# Descriptions: LDAP search base
-#      History:
-#        Value: LDAP_SEARCH_BASE
-#     Examples:
-ldap_search_base	=
-
-# Descriptions: LDAP search bind
-#      History:
-#        Value: LDAP_SERVER_BIND
-#     Examples:
-ldap_server_bind	=
-
-# Descriptions: LDAP filter
-#      History:
-#        Value: LDAP_QUERY_FILTER 
-#     Examples:
-ldap_query_filter	=	(objectclass=*)
-
 =head1	CGI
 
 
@@ -3131,7 +3091,7 @@ compat_old_fml_default_config_ph_file	=	$compat_old_fml_config_dir/default_confi
 #      History:
 #        Value: HOSTNAME
 #     Examples:
-sql_server	=	localhost
+sql_servers	=	localhost
 
 
 # Descriptions:
@@ -3212,6 +3172,211 @@ sql_query_find	=	select fml_address from $sql_table
 				fml_domain = '$ml_domain'
 					and
 				fml_address like '%&regexp%'
+
+=head1 PostgreSQL example
+
+#
+# [Example]
+# create table ml (
+# 	fml_ml        char(64),
+# 	fml_address   char(64),
+# 	fml_member    int,
+# 	fml_recipient int
+# );
+
+[postgresql:fml]
+
+
+# Descriptions:
+#      History:
+#        Value: HOSTNAME
+#     Examples:
+sql_servers	=	localhost
+
+
+# Descriptions:
+#      History:
+#        Value: USER
+#     Examples:
+sql_user	=	fml
+
+
+# Descriptions:
+#      History:
+#        Value: PASSWORD
+#     Examples:
+sql_password	=	uja
+
+
+# Descriptions:
+#      History:
+#        Value: SQL_DATABASE
+#     Examples:
+sql_database	=	fml
+
+
+# Descriptions:
+#      History:
+#        Value: SQL_TABLE
+#     Examples:
+sql_table	=	ml
+
+
+# Descriptions:
+#      History:
+#        Value: SQL_QUERY_STATEMENT
+#     Examples:
+sql_query_get_next_key =	select fml_address from $sql_table
+				where fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+
+
+# Descriptions:
+#      History:
+#        Value: SQL_QUERY_STATEMENT
+#     Examples:
+sql_query_getline	=	select fml_address from $sql_table
+				where fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+
+
+# Descriptions:
+#      History:
+#        Value: SQL_QUERY_STATEMENT
+#     Examples:
+sql_query_add	=	insert into $sql_table
+			values ('$ml_name', '$ml_domain', '&address', 1, 1)
+
+
+# Descriptions:
+#      History:
+#        Value: SQL_QUERY_STATEMENT
+#     Examples:
+sql_query_delete	=	delete from $sql_table
+				where	fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
+				fml_address = '&address'
+
+
+# Descriptions:
+#      History:
+#        Value: SQL_QUERY_STATEMENT
+#     Examples:
+sql_query_find	=	select fml_address from $sql_table
+				where	fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
+				fml_address like '%&regexp%'
+
+=head1 LDAP の例
+
+#
+# 注意: 次の ^=head で名前空間はリセットされる
+
+
+[ldap:fml]
+
+
+# Descriptions:
+#      History:
+#        Value: HOSTNAME
+#     Examples:
+ldap_servers	=	localhost
+
+
+# Descriptions: dummy
+#      History:
+#        Value: USER
+#     Examples:
+ldap_user	=	fml
+
+
+# Descriptions:
+#      History:
+#        Value: PASSWORD
+#     Examples:
+ldap_password	=	uja
+
+
+# Descriptions: DN to bind.
+#      History:
+#        Value: STR
+#     Examples:
+ldap_bind_dn	=	dc=fml, dc=org
+
+
+# Descriptions: base DN to contact in modify, search et.al.
+#      History:
+#        Value: STR
+#     Examples:
+ldap_base_dn	=	dc=$ml_name, dc=fml, dc=org
+
+
+
+# Descriptions:
+#      History:
+#        Value: STR
+#     Examples:
+ldap_query_get_next_key_result_attribute	=	fmlrecipient
+
+
+# Descriptions:
+#      History:
+#        Value: LDAP_QUERY_FILTER
+#     Examples:
+ldap_query_get_next_key_search_filter	=	(&(objectclass=*)(ou=$ml_name@$ml_domain))
+
+
+# Descriptions:
+#      History:
+#        Value: STR
+#     Examples:
+ldap_query_getline_result_attribute	=	fmlrecipient
+
+
+# Descriptions:
+#      History:
+#        Value: LDAP_QUERY_FILTER
+#     Examples:
+ldap_query_getline_search_filter	=	(&(objectclass=*)(ou=$ml_name@$ml_domain))
+
+
+
+# Descriptions: attributes to add into $ldap_base_dn entry.
+#      History:
+#        Value: LDAP_LDIF_STATEMENT
+#     Examples:
+ldap_query_add_as_ldif		=	fmlrecipient:&address
+					fmlmember:&address
+
+
+# Descriptions: attributes to remove from $ldap_base_dn entry.
+#      History:
+#        Value: LDAP_LDIF_STATEMENT
+#     Examples:
+ldap_query_delete_as_ldif	=	fmlrecipient:&address
+					fmlmember:&address
+
+
+# Descriptions:
+#      History:
+#        Value: STR
+#     Examples:
+ldap_query_find_result_attribute	=	fmlrecipient
+
+
+# Descriptions:
+#      History:
+#        Value: LDAP_QUERY_FILTER
+#     Examples:
+ldap_query_find_search_filter		=	(&(objectclass=*)(ou=$ml_name@$ml_domain))
+
+
 
 =head1 HOOK's
 
