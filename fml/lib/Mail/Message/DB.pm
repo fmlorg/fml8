@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.23 2005/08/19 11:15:23 fukachan Exp $
+# $FML: DB.pm,v 1.24 2005/08/19 12:17:13 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -21,7 +21,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
 use Carp;
 use File::Spec;
 
-my $version = q$FML: DB.pm,v 1.23 2005/08/19 11:15:23 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.24 2005/08/19 12:17:13 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 # special value
@@ -127,10 +127,24 @@ Mail::Message::DB - DB interface
 
   ... lock by something ...
 
+    my $_db_args = {
+        db_module       => $db_type, # AnyDBM_File
+        db_base_dir     => $db_dir,  # /var/spool/ml/@udb@/elena
+        db_name         => $db_name, # elena
+
+        # old db_dir in non UDB age: ~fml/public_html/.../elena/
+        old_db_base_dir => $args->{ output_dir },
+    };
+
+    # Firstly, prepare db object.
+    use Mail::Message::DB;
+    my $db = new Mail::Message::DB $_db_args;
+    $db->set_key($id) if $id;
+
   ... unlock by something ...
 
 This module itself provides no lock function.
-please use flock() built in perl or CPAN lock modules for it.
+Please lock before use of this module.
 
 =head1 DESCRIPTION
 
@@ -145,13 +159,14 @@ please use flock() built in perl or CPAN lock modules for it.
 	key          => 100,      # article sequence number
     };
 
-In fml 8 case, C<table> not needs the full mail address such as
-C<elena@fml.org> since fml uses different $db_base_dir for each
-domain.
+In fml 8 case, Mail::Message::DB object is initialized for each ML
+(so, each domain).  C<db_name> (mailing list identifier) does not nees
+the full mail address such as C<elena@fml.org> since fml8 uses
+different $db_base_dir for each domain.
 
 For example, this module creates/updates the following databases (e.g.
-/$db_base_dir/$db_name/$table.db where $table is 'article', '
-message_id', 'sender', et.al.).
+/$db_base_dir/$db_name/$table.db where $table is 'article', 
+'message_id', 'sender', et.al.).
 
    /var/spool/ml/@udb@/thread/elena/articles.db
    /var/spool/ml/@udb@/thread/elena/date.db
@@ -160,8 +175,8 @@ message_id', 'sender', et.al.).
    /var/spool/ml/@udb@/thread/elena/status.db
    /var/spool/ml/@udb@/thread/elena/thread_id.db
 
-Almost all tables use $key (article sequence number) as primary key
-since it is unique in the mailing list articles.
+Almost all tables use $key (article sequence number) as the primary
+key since it is unique in a mailing list articles.
 
     # key => filepath
     $article = {
@@ -182,14 +197,15 @@ sub new
     my ($type) = ref($self) || $self;
     my $me     = {};
 
-    # initialize DB module backend
+    # DB module backend
     set_db_module_class($me, $args->{ db_module } || 'AnyDBM_File');
 
-    # db_base_dir = /var/spool/ml/@udb@/elena
+    # e.g. db_base_dir = /var/spool/ml/@udb@/elena
     my $_db_base_dir = $args->{ db_base_dir } || croak("specify db_base_dir");
     set_db_base_dir($me, $_db_base_dir);
 
-    # XXX in old ToHTML module (before UDB), db_base_dir == html_base_dir.
+    # XXX in old ToHTML module (before UDB introduced),
+    # XXX db_base_dir == html_base_dir.
     if (defined $args->{ old_db_base_dir }) {
 	$me->{ _old_db_base_dir } = $args->{ old_db_base_dir };
     }
@@ -220,18 +236,17 @@ sub DESTROY
 
     _PRINT_DEBUG("DB::DESTROY");
     if (defined $self->{ _db }) {
-	$self->db_close();
+	$self->_db_close();
     }
 }
 
 
 =head1 PARSE and ANALYZE
 
-=head2 analyze()
+=head2 add($msg)
 
-update database on message header, thread relation information.
-
-XXX-TODO: This routine should be moved to Mail::Message::Thread ?
+analyze the given message $msg to insert information on message
+header, thread relation into databases.
 
 =cut
 
@@ -241,7 +256,7 @@ XXX-TODO: This routine should be moved to Mail::Message::Thread ?
 #    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: update database
 # Return Value: none
-sub analyze
+sub add
 {
     my ($self, $msg) = @_;
     my $hdr    = $msg->whole_message_header;
@@ -249,13 +264,9 @@ sub analyze
     my $month  = $self->_get_time_from_header($hdr, 'yyyy/mm');
     my $subdir = $self->_get_time_from_header($hdr, 'yyyymm');
 
-    #
-    # XXX-TODO: analyze() must not be here ?
-    #
+    _PRINT_DEBUG("add.analyze start");
 
-    _PRINT_DEBUG("analyze start");
-
-    my $db = $self->db_open();
+    my $db = $self->_db_open();
 
     $self->_update_max_id($db, $id);
     $self->_save_header_info($db, $id, $hdr);
@@ -270,10 +281,10 @@ sub analyze
     $self->_analyze_thread($db, $id, $msg, $hdr);
 
     unless ($is_keepalive) {
-	$self->db_close();
+	$self->_db_close();
     }
 
-    _PRINT_DEBUG("analyze end");
+    _PRINT_DEBUG("add.analyze end");
 }
 
 
@@ -492,7 +503,7 @@ sub get_thread_summary
     my ($fn_prev_id, $fn_next_id, $fn_prev_thread_id,
 	$fn_next_thread_id, $fp_prev_id, $fp_next_id,
 	$fp_prev_thread_id, $fp_next_thread_id);
-    my $db             = $self->db_open();
+    my $db             = $self->_db_open();
     my $prev_id        = $id > 1 ? $id - 1 : undef;
     my $next_id        = $id + 1;
     my $prev_thread_id = $self->_db_get($db, 'prev_key', $id) || $prev_id;
@@ -579,7 +590,7 @@ sub get_thread_summary
 sub get_tohtml_thread_summary
 {
     my ($self, $id)    = @_;
-    my $db             = $self->db_open();
+    my $db             = $self->_db_open();
     my $summary        = $self->get_thread_summary($id);
     my $prev_id        = $summary->{ prev_id };
     my $next_id        = $summary->{ next_id };
@@ -968,7 +979,7 @@ sub _get_time_from_header
 # Side Effects: tied with $self->{ _db }
 #         Todo: we should use IO::Adapter ?
 # Return Value: none
-sub db_open
+sub _db_open
 {
     my ($self, $args) = @_;
     my (@table)       = ();
@@ -992,13 +1003,13 @@ sub db_open
 	#           @table_list);
 	@table = (@table_list);
     }
-    _PRINT_DEBUG("db_open(on demand): @table");
+    _PRINT_DEBUG("_db_open(on demand): @table");
 
     my $db_type   = $self->get_db_module_class();
     my $db_dir    = $self->get_db_base_dir();
     my $file_mode = $self->{ _file_mode } || 0644;
 
-    _PRINT_DEBUG("db_open( type = $db_type )");
+    _PRINT_DEBUG("_db_open( type = $db_type )");
 
     eval qq{ use $db_type; use Fcntl;};
     unless ($@) {
@@ -1028,7 +1039,7 @@ sub db_open
 # Side Effects: untie $self->{ _db }
 #         Todo: we should use IO::Adapter ?
 # Return Value: none
-sub db_close
+sub _db_close
 {
     my ($self, $args) = @_;
     my (@table)       = ();
@@ -1040,12 +1051,12 @@ sub db_close
 	@table = (@orig_header_fields, @header_fields, @article_header_fields,
 		  @table_list);
     }
-    _PRINT_DEBUG("db_close(on demand): @table");
+    _PRINT_DEBUG("_db_close(on demand): @table");
 
     my $db_type = $args->{ db_type } || $self->{ _db_type } || 'AnyDBM_File';
     my $db_dir  = $self->{ _html_base_directory };
 
-    _PRINT_DEBUG("db_close()");
+    _PRINT_DEBUG("_db_close()");
 
     for my $db (@table) {
 	my $str = qq{
@@ -1068,7 +1079,7 @@ sub db_close
 sub set
 {
     my ($self, $table, $key, $value) = @_;
-    my $db = $self->db_open();
+    my $db = $self->_db_open();
 
     _PRINT_DEBUG("_db_set: table=$table { $key => $value }");
 
@@ -1083,7 +1094,7 @@ sub set
 sub get
 {
     my ($self, $table, $key) = @_;
-    my $db = $self->db_open();
+    my $db = $self->_db_open();
 
     return $self->_db_get($db, $table, $key);
 }
@@ -1099,7 +1110,7 @@ sub get_as_array_ref
 
     _PRINT_DEBUG("get_as_array_ref($table, $key)");
 
-    my $db  = $self->db_open();
+    my $db  = $self->_db_open();
     my $val = $self->_db_get($db, $table, $key);
     $val =~ s/^\s*//o;
     $val =~ s/\s*$//o;
@@ -1123,7 +1134,7 @@ sub _db_set
 
     if (defined $value && $value && defined $key && $key) {
 	unless ($self->{ _db_opened }->{ "_$table" }) {
-	    $self->db_open( { table => $table } );
+	    $self->_db_open( { table => $table } );
 	}
 
 	if ($table =~ /^($mime_decode_filter)$/) {
@@ -1153,7 +1164,7 @@ sub _db_get
 
     unless ($v) {
 	if ($self->{ _db_opened }->{ "_$table" }) {
-	    $self->db_open( { table => $table } );
+	    $self->_db_open( { table => $table } );
 	}
 
 	if ($is_demand_copying) {
@@ -1283,7 +1294,7 @@ sub get_key
 sub get_table_as_hash_ref
 {
     my ($self, $table) = @_;
-    my $db = $self->db_open();
+    my $db = $self->_db_open();
 
     return( $db->{ "_$table" } || {} );
 }
@@ -1407,7 +1418,7 @@ if ($0 eq __FILE__) {
 	key          => 100,      # article sequence number
     };
 
-    my $obj = new Mail::Message::DB $args;
+    my $udb = new Mail::Message::DB $args;
 
     for my $file (@ARGV) {
 	use File::Basename;
@@ -1415,8 +1426,8 @@ if ($0 eq __FILE__) {
 
 	use Mail::Message;
 	my $msg = Mail::Message->parse( { file => $file } );
-	$obj->set_key($id);
-	$obj->analyze($msg);
+	$udb->set_key($id);
+	$udb->add($msg);
     }
 }
 
