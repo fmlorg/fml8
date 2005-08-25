@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Thread.pm,v 1.5 2004/03/28 12:13:52 fukachan Exp $
+# $FML: Thread.pm,v 1.6 2004/10/31 07:38:47 fukachan Exp $
 #
 
 package Mail::Message::Thread;
@@ -120,7 +120,7 @@ sub analyze
     my ($self, $msg, $id) = @_;
     my $db = $self->db();
 
-    $db->analyze($msg);
+    $db->add($msg);
 }
 
 

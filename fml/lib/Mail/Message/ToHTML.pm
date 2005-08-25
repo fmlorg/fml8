@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.77 2005/08/11 09:51:48 tmu Exp $
+# $FML: ToHTML.pm,v 1.78 2005/08/19 11:15:23 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.77 2005/08/11 09:51:48 tmu Exp $;
+my $version = q$FML: ToHTML.pm,v 1.78 2005/08/19 11:15:23 fukachan Exp $;
 my $versionid = 0;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $versionid = "$1";
@@ -1003,7 +1003,7 @@ sub cache_message_info
     unless ($ndb->get('message_id', $id)) {
 	# analyze $msg only if not yet analyzed.
 	print STDERR "debug: analyze $id.\n" if $debug;
-	$ndb->analyze($msg);
+	$ndb->add($msg);
     }
     else {
 	print STDERR "debug: already analyzed!\n" if $debug;
