@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.24 2005/08/19 12:17:13 fukachan Exp $
+# $FML: DB.pm,v 1.25 2005/08/25 13:15:31 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -21,7 +21,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
 use Carp;
 use File::Spec;
 
-my $version = q$FML: DB.pm,v 1.24 2005/08/19 12:17:13 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.25 2005/08/25 13:15:31 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 # special value
@@ -972,6 +972,28 @@ sub _get_time_from_header
 =head1 DATABASE PARAMETERS MANIPULATION
 
 =cut
+
+
+# Descriptions: open database.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
+sub open
+{
+    my ($self, $args) = @_;
+    $self->_db_open($args);    
+}
+
+
+# Descriptions: close database.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
+sub close
+{
+    my ($self, $args) = @_;
+    $self->_db_open($args);    
+}
 
 
 # Descriptions: open database.
