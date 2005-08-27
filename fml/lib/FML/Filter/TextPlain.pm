@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: TextPlain.pm,v 1.13 2005/05/30 00:02:31 fukachan Exp $
+# $FML: TextPlain.pm,v 1.14 2005/08/19 12:17:08 fukachan Exp $
 #
 
 package FML::Filter::TextPlain;
@@ -215,8 +215,8 @@ sub reject_null_mail_body
 sub reject_ms_guid
 {
     my ($self, $msg, $first_msg) = @_;
-
-    for (my $mp = $msg->{ next }; $mp ; $mp = $mp->{ next } ) {
+    my ($mq) = $msg->message_chain_as_array_ref();
+    for my $mp (@$mq) {
 	# XXX croak() if GUID found.
 	$self->_probe_guid($mp);
     }
@@ -514,8 +514,8 @@ sub cleanup_buffer
 sub reject_uuencode
 {
     my ($self, $msg, $first_msg) = @_;
-
-    for (my $mp = $msg->{ next }; $mp ; $mp = $mp->{ next } ) {
+    my ($mq) = $msg->message_chain_as_array_ref();
+    for my $mp (@$mq) {
 	$self->_probe_uuencode($mp);
     }
 }
