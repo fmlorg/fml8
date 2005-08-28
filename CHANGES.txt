@@ -30,6 +30,25 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2005/08/27	
+
+   Mail::Message::DB 
+	define open() and close()
+	
+   FML::Filter::TextPlain 
+	use $msg->message_chain_as_array_ref() instead of $mp->{ next } form.
+	
+2005/08/25
+
+   Mail::Message::Thread ToHTML 
+	renamed::db->analyze() => db->add()
+	
+   Mail::Message::DB 
+	renamed methonds:
+	o analyze  -> add
+	o db_open  -> _db_open
+	o db_close -> _db_close
+
 2005/08/23
 
    IO::Adapter 
@@ -8781,4 +8800,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.247 2005/08/23 10:02:28 fukachan Exp $
+$FML: CHANGES.txt,v 1.248 2005/08/23 13:22:46 fukachan Exp $
