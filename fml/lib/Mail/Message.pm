@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.97 2004/07/26 06:39:16 fukachan Exp $
+# $FML: Message.pm,v 1.98 2004/12/08 10:07:44 fukachan Exp $
 #
 
 package Mail::Message;
@@ -655,6 +655,87 @@ sub _build_body_object
 }
 
 
+=head2 prepend($data)
+
+prepend the message to the object chain.
+
+=head2 append($data)
+
+append the message to the object chain.
+
+=cut
+
+
+# Descriptions: prepend the message to the object chain.
+#    Arguments: OBJ($self) HASH_REF($data)
+# Side Effects: update the chain of objects.
+# Return Value: none
+sub prepend
+{
+    my ($self, $data) = @_;
+    my $dp = $self->__build_message($data);
+
+    # cut and paste a new chain.
+    my $orig_prev = $self->{ prev };
+    _prev_message_is($self, $dp);
+    _prev_message_is($dp, $orig_prev);
+
+    _next_message_is($dp, $self);
+    _next_message_is($orig_prev, $dp);
+}
+
+
+# Descriptions: append the message to the object chain.
+#    Arguments: OBJ($self) HASH_REF($data)
+# Side Effects: update the chain of objects.
+# Return Value: none
+sub append
+{
+    my ($self, $data) = @_;
+    my $dp = $self->__build_message($data);
+
+    # cut and paste a new chain.
+    my $orig_next = $self->{ next };
+    _next_message_is($self, $dp);
+    _next_message_is($dp, $orig_next);
+    _prev_message_is($dp, $self);
+    _prev_message_is($orig_next, $dp);
+}
+
+
+# Descriptions: build a Mail::Message object.
+#    Arguments: OBJ($self) HASH_REF($data)
+# Side Effects: none
+# Return Value: OBJ
+sub __build_message
+{
+    my ($self, $data) = @_;
+    my $dp = undef;
+
+    if (ref($data) eq 'Mail::Message') {
+	return $data;
+    }
+    else {
+	my $my_charset = $self->charset();
+	my $charset    = $data->{ charset } || 'unknown';
+	my $type       = $data->{ type }    || 'unknown';
+	my $buf        = $data->{ data }    || ''; 
+
+	if ($type eq 'text/plain' && $my_charset eq $charset) {
+	    return new Mail::Message {
+		data_type => $type,
+		data      => \$buf,
+	    };
+	}
+	else {
+	    carp("append: unknown type");
+	}
+    }
+
+    return undef;
+}
+
+
 =head2 whole_message_header()
 
 return Mail::Header object corresponding to the header part for the
@@ -709,6 +790,18 @@ sub whole_message_body_head
     my ($self) = @_;
     my $type = $self->data_type();
     return ( ($type eq 'text/rfc822-headers') ? $self->{ next } : undef );
+}
+
+
+# Descriptions: get the last OBJ of body part in the chain.
+#               header -> body1 (HERE) -> body2 -> ... -> body_last
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: OBJ(Mail::Message)
+sub whole_message_body_tail
+{
+    my ($self) = @_;
+    return $self->__last_message();
 }
 
 
@@ -2289,12 +2382,15 @@ sub charset
 	return $self->{ charset };
     }
     # content-type: text/plain; charset=ISO-2022-JP
-    elsif (defined($buf) &&
-	   ($buf =~ /Content-Type:.*charset=\"(\S+)\"/i ||
-	    $buf =~ /Content-Type:.*charset=(\S+)/i)) {
-	my $charset = $1;
-	$charset =~ tr/A-Z/a-z/;
-	return $charset;
+    elsif (defined($buf) && $buf) {
+	my $_buf = $buf;
+	$_buf =~ s/\s*//gm;
+	if ($_buf =~ /Content-Type:.*charset=\"(\S+)\"/i ||
+	    $_buf =~ /Content-Type:.*charset=(\S+)/i) {
+	    my $charset = $1;
+	    $charset =~ tr/A-Z/a-z/;
+	    return $charset;
+	}
     }
     else {
 	return undef;
