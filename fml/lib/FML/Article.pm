@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.72 2005/05/26 09:35:40 fukachan Exp $
+# $FML: Article.pm,v 1.73 2005/06/03 09:51:49 fukachan Exp $
 #
 
 package FML::Article;
@@ -238,6 +238,45 @@ sub _try_failover
     else {
 	$curproc->logerror("article: give up failover.");
     }
+}
+
+
+=head2 prepend($data)
+
+prepend the message into the article object.
+
+=head2 append($data)
+
+append the message into the article object.
+
+=cut
+
+
+# Descriptions: prepend the message into the article object.
+#    Arguments: OBJ($self) HASH_REF($data)
+# Side Effects: update article object.
+# Return Value: none
+sub prepend
+{
+    my ($self, $data) = @_;
+    my $curproc = $self->{ _curproc };
+    my $body    = $curproc->article_message_body();
+    my $head    = $body->whole_message_body_head();
+    $head->prepend($data);
+}
+
+
+# Descriptions: append the message into the article object.
+#    Arguments: OBJ($self) HASH_REF($data)
+# Side Effects: update article object.
+# Return Value: none
+sub append
+{
+    my ($self, $data) = @_;
+    my $curproc = $self->{ _curproc };
+    my $body    = $curproc->article_message_body();
+    my $tail    = $body->whole_message_body_tail();
+    $tail->append($data);
 }
 
 
