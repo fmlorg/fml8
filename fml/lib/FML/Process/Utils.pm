@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.137 2005/08/18 10:28:42 fukachan Exp $
+# $FML: Utils.pm,v 1.138 2005/08/19 11:25:24 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1795,21 +1795,27 @@ sub langinfo_get_charset
 
     # if overwritten by some module, we use it always.
     if (defined($pcb) && $pcb->get("charset", $category)) {
+	$curproc->logdebug("charset: pcb hit");
 	$charset = $pcb->get("charset", $category);
     }
     # search charset most preferred by Accpet-Language: in our templates.
     else {
+	my $found = 0;  
+
 	# XXX Accept-Language: affets $reply_message_charset and $cgi_charset.
 	# XXX $reply_mesage_charset indirectly affets $template_file_charset.
 	# XXX So, we need to check Accept-Language: information.
-	my $acpt_lang_list = $curproc->langinfo_get_accept_language_list() || [];
+	my $acpt_lang_list = $curproc->langinfo_get_accept_language_list()||[];
 
 	if (@$acpt_lang_list) {
+	    $curproc->logdebug("charset: search Accept-Language: list");
+
 	  ACCEPT_LANGUAGE:
 	    for my $a (@$acpt_lang_list) {
 		if ($a eq 'ja' || $a eq 'en') {
 		    my $key  = sprintf("%s_charset_%s", $category, $a);
 		    $charset = $config->{ $key } || undef;
+		    $found   = 1;
 		    last ACCEPT_LANGUAGE;
 		}
 		elsif ($a eq '*') { # any charset is o.k.
@@ -1820,9 +1826,18 @@ sub langinfo_get_charset
 	else {
 	    $curproc->log("debug: no Accpet-Language:") if $debug;
 	}
+
+	unless ($found) {
+	    # Content-Type:
+	    use Mail::Message::Charset;
+	    my $c    = new Mail::Message::Charset;
+	    my $hint = $curproc->langinfo_get_language_hint($category);
+	    $charset = $c->language_to_message_charset($hint);
+	}
     }
 
     $charset ||= $default;
+    $curproc->logdebug("category=$category charset=$charset");
     $curproc->log("debug: category=$category charset=$charset") if $debug;
     return $charset;
 }
