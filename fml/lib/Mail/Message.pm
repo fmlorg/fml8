@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.98 2004/12/08 10:07:44 fukachan Exp $
+# $FML: Message.pm,v 1.99 2005/08/31 11:13:03 fukachan Exp $
 #
 
 package Mail::Message;
@@ -673,7 +673,7 @@ append the message to the object chain.
 sub prepend
 {
     my ($self, $data) = @_;
-    my $dp = $self->__build_message($data);
+    my $dp = $self->__build_simple_message($data);
 
     # cut and paste a new chain.
     my $orig_prev = $self->{ prev };
@@ -692,7 +692,7 @@ sub prepend
 sub append
 {
     my ($self, $data) = @_;
-    my $dp = $self->__build_message($data);
+    my $dp = $self->__build_simple_message($data);
 
     # cut and paste a new chain.
     my $orig_next = $self->{ next };
@@ -707,7 +707,7 @@ sub append
 #    Arguments: OBJ($self) HASH_REF($data)
 # Side Effects: none
 # Return Value: OBJ
-sub __build_message
+sub __build_simple_message
 {
     my ($self, $data) = @_;
     my $dp = undef;
