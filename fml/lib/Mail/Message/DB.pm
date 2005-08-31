@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.25 2005/08/25 13:15:31 fukachan Exp $
+# $FML: DB.pm,v 1.26 2005/08/27 14:47:00 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -21,7 +21,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
 use Carp;
 use File::Spec;
 
-my $version = q$FML: DB.pm,v 1.25 2005/08/25 13:15:31 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.26 2005/08/27 14:47:00 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 # special value
@@ -462,6 +462,12 @@ sub _analyze_thread
     }
     else {
 	_PRINT_DEBUG("no prev thread link (key=$current_key)");
+    }
+
+    # IV. cache additional information for convenience.
+    my $summary = $msg->one_line_summary() || '';
+    if ($summary) {
+	$self->_db_set($db, 'article_summary', $id, $summary);
     }
 }
 
@@ -1301,6 +1307,28 @@ sub get_key
     my ($self) = @_;
 
     return( $self->{ _key } || undef );
+}
+
+
+# Descriptions: find the head id/key  of the thread which contains $id.
+#    Arguments: OBJ($self) NUM($id)
+# Side Effects: none
+# Return Value: none
+sub find_head_key
+{
+    my ($self, $id) = @_;
+    my $db    = $self->_db_open();
+    my $count = 0;
+    my $max   = 64;
+    my $prev  = $id;
+
+  SEARCH:
+    while ($count++ < $max) {
+	last SEARCH unless $self->_db_get($db, 'prev_key', $prev);
+	$prev = $self->_db_get($db, 'prev_key', $prev);
+    }
+
+    return $prev;
 }
 
 
