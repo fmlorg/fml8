@@ -346,3 +346,37 @@ article_filter_reject_notice_recipients	=	maintainer
 article_filter_reject_notice_data_type	=	string
 
 
+=head2 スレッドの概要
+
+
+# Descriptions: 自動的にスレッドの概要を記事に追加するか否か
+#      History: none
+#        Value: YES_OR_NO
+#     Examples: no
+use_article_thread_overview		=	no
+
+# Descriptions: スレッドの概要を記事に追加する際にどこに追加するのか
+#      History: none
+#        Value: SELECT ( add_header | append_body )
+#     Examples: add_header append_body
+article_thread_overview_rules		=	add_header
+						append_body
+
+# Descriptions: スレッドの概要が始まる部分につける挨拶
+#      History: none
+#        Value: STR
+#     Examples: [本スレッドのあらすじ]
+article_thread_overview_greeting	=	$article_thread_overview_greeting_ja
+
+# Descriptions: スレッドの概要が始まる部分につける挨拶
+#      History: none
+#        Value: STR
+#     Examples: [本スレッドのあらすじ]
+article_thread_overview_greeting_ja	=	[本スレッドのあらすじ]
+
+# Descriptions: スレッドの概要が始まる部分につける挨拶
+#      History: none
+#        Value: STR
+#     Examples: [本スレッドのあらすじ]
+article_thread_overview_greeting_en	=	[this thread overview]
+
