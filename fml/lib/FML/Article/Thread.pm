@@ -3,7 +3,7 @@
 # Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Thread.pm,v 1.14 2005/08/17 10:29:33 fukachan Exp $
+# $FML: Thread.pm,v 1.15 2005/08/17 12:08:39 fukachan Exp $
 #
 
 package FML::Article::Thread;
@@ -13,11 +13,6 @@ use vars qw($debug @ISA @EXPORT @EXPORT_OK $AUTOLOAD
 	    %print_switch);
 use strict;
 use Carp;
-
-use FML::Config;
-use FML::Process::Kernel;
-@ISA = qw(FML::Process::Kernel);
-
 
 # STATES
 my $state_open        = "open";
@@ -30,13 +25,13 @@ my $state_auto_closed = "closed(auto)";
 $print_mode   = 'text';
 %print_switch = (
 		 text => {
-		     summary => \&psw_message_queue_text_summary_print,
-		     list    => \&psw_message_queue_text_list_print,
+		     summary => \&_psw_message_queue_text_summary_print,
+		     list    => \&_psw_message_queue_text_list_print,
 		 },
 
 		 html => {
-		     summary => \&psw_message_queue_html_summary_print,
-		     list    => \&psw_message_queue_html_list_print,
+		     summary => \&_psw_message_queue_html_summary_print,
+		     list    => \&_psw_message_queue_html_list_print,
 		 },
 		 );
 
@@ -57,13 +52,12 @@ This class drives primitive thread tracking system at the top level.
 We need to clarify the status of each article and each thread.
 
 One thread begins at an article id and contians a group of articles as
-members in it. Each thread has a status such that it is open now,
-analyzed or closed now.
+members in it. Each thread has a status such that it is open, analyzed
+or closed now.
 
 Each article has each meaning. A new article opens and starts a new
-thraed.  Whereas, content of an article closes a thread or threads.
-Also, he/she closes a thread by manual via command mail or CUI/GUI
-interface.
+thread. Content of an article closes a thread or threads. Also, he/she
+can close a thread by manual via command mail or CUI/GUI interface.
 
 A group of status of articles affects the status of threads.
 So, we need to trace status of articles and threads separetely.
@@ -75,7 +69,7 @@ If explicitly not closed, the status of a thread is either of
 
 =head2 new($curproc)
 
-create a C<FML::Process::Kernel> object and return it.
+constructor.
 
 =cut
 
@@ -118,8 +112,8 @@ sub new
 
 =head2 add_article($id, $msg)
 
-check the status of specified article $id where $msg is a
-Mail::Message object.
+check the content of specified article $id to update UDB where $msg is
+a Mail::Message object.
 
 This routine is expected to be called within FML::Process::Distribute.
 So, $msg must be already defined.
@@ -166,7 +160,7 @@ sub check_if_article_is_reply_message
     my $article = $self->{ _article_object };
     my $header  = $msg->whole_message_header();
 
-    # 1) get subject.
+    # 1) get subject. mime-decode it if needed.
     my $subject = $header->get('subject');
     if ($subject =~ /=\?/o) {
 	my $string = new Mail::Message::String $subject;
@@ -175,10 +169,9 @@ sub check_if_article_is_reply_message
 	$subject = $string->as_str();
     }
 
-    # 2) it looks subject has a reply tag ?
+    # 2) it looks the subject has a reply tag ?
     use FML::Header::Subject;
     my $subj = new FML::Header::Subject;
-    # XXX need $subject is already decoded.
     if ($subj->is_reply($subject)) {
 	$thread->set_article_status($id, $state_followed);
     }
@@ -253,9 +246,10 @@ sub check_thread_status
     my $thread  = $self->{ _thread_object };
     my $article = $self->{ _article_object };
 
-    # check the current thread status (XXX thread, not each member).
-    my $thread_status = $thread->get_thread_status($head_id);
-    if ($thread_status =~ /close/io) { # O.K. stop here.
+    # check the current thread status 
+    # XXX for thread, not each member !
+    my $status = $thread->get_thread_status($head_id);
+    if ($status eq $state_closed || $status eq $state_auto_closed) {
 	return;
     }
 
@@ -272,13 +266,15 @@ sub check_thread_status
 	    unless ($status) {
 		if ($id) {
 		    my $msg = $self->_init_message($id);
-		    if ($msg->has_closing_phrase()) {
-			$status = $state_auto_closed;
+		    if (defined $msg) {
+			if ($msg->has_closing_phrase()) {
+			    $status = $state_auto_closed;
+			}
 		    }
 		}
 	    }
 
-	    if ($status =~ /close/io) {
+	    if ($status eq $state_closed || $status eq $state_auto_closed) {
 		$thread->set_thread_status($head_id, $state_auto_closed);
 		last ID;
 	    }
@@ -362,7 +358,6 @@ sub _change_thread_status
     my $range   = $thread_args->{ range } || 'last:10';
     my $head_id = $thread_args->{ last_id };
     my $id_list = $mh->expand($range, 1, $head_id);
-    my $tail_id = $id_list->[ 0 ] || 1;
 
     for my $id (@$id_list) {
 	$curproc->log("$action thread $id");
@@ -371,11 +366,54 @@ sub _change_thread_status
 }
 
 
+=head1 SUMMARY
+
+=head2 get_overview($id, $thread_args)
+
+return string holding article short summaries of a thread for this
+article $id.
+
+=cut
+
+
+# Descriptions: return a bulk of brief summary. 
+#    Arguments: OBJ($self) NUM($id) HASH_REF($thread_args)
+# Side Effects: none
+# Return Value: none
+sub get_overview
+{
+    my ($self, $id, $thread_args) = @_;
+    my $curproc = $self->{ _curproc };
+    my $thread  = $self->{ _thread_object };
+    my $head_id = $thread->db->find_head_key($id);
+    my $fp      = "one_line_summary";
+    my $buf     = '';
+
+    $thread_args->{ range }   = sprintf("%s-%s", $head_id, $id);
+    $thread_args->{ last_id } = $id;
+    my $queue = $self->_generate_message_queue($fp, $thread_args);
+    for my $q (@$queue) {
+	my $s = $q->{ summary } || '';
+	$s =~ s/^\s*//;
+	$s =~ s/\s*$//;
+	if ($s) {
+	    $buf .= sprintf("   %s\n", $s);
+	}
+    }
+
+    return $buf;
+}
+
+
 =head1 PRINT STATUS OR SUMMARY
 
 =head2 print_one_line_summary($thread_args)
 
+pritn one line summary of message body.
+
 =head2 print_summary($thread_args)
+
+pritn both header and body summary. 
 
 =cut
 
@@ -422,6 +460,21 @@ sub _print_summary
 {
     my ($self, $fp, $thread_args) = @_;
     my $curproc = $self->{ _curproc };
+
+    my $queue = $self->_generate_message_queue($fp, $thread_args);
+    my $pfp   = $print_switch{ $print_mode }->{ summary };
+    $self->$pfp($curproc, $queue);
+}
+
+
+# Descriptions: prepare the corresponding message queue with this thread.
+#    Arguments: OBJ($self) STR($fp) HASH_REF($thread_args)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub _generate_message_queue
+{
+    my ($self, $fp, $thread_args) = @_;
+    my $curproc = $self->{ _curproc };
     my $thread  = $self->{ _thread_object };
     my $article = $self->{ _article_object };
     my $queue   = [];
@@ -438,32 +491,63 @@ sub _print_summary
 
 	my $list = $summary->{ $head_id } || [];
 	for my $id (@$list) {
-	    my $article_path = $article->filepath($id);
+	    my $buf = '';
 
-	    use FileHandle;
-	    my $fh = new FileHandle $article_path;
-	    if (defined $fh) {
-		use Mail::Message;
-		my $msg = Mail::Message->parse(  { fd => $fh } );
-		my $buf = $msg->$fp();
-		my $q = {
-		    cur_id  => $id,
-		    head_id => $head_id,
-		    id_list => $list,
-		    status  => $status,
-		    summary => $buf,
-		    message => $msg,
-		};
-		push(@$queue, $q);
+	    if ($fp eq 'one_line_summary') {
+		$buf = $thread->get_article_summary($id) || '';
 	    }
-	    else {
-		$curproc->logerror("no such file: $article_path");
+
+	    unless ($buf) {
+		$buf = $self->_generate_summary($fp, $thread_args, $id) || '';
 	    }
-	}
+
+	    # prepare printing data queue.
+	    my $q = {
+		cur_id  => $id,
+		head_id => $head_id,
+		id_list => $list,
+		status  => $status,
+		summary => $buf,
+	    };
+	    push(@$queue, $q);
+	} # for my $id (@$list) { ...; }
     }
 
-    my $pfp = $print_switch{ $print_mode }->{ summary };
-    $self->$pfp($curproc, $queue);
+    return $queue;
+}
+
+
+# Descriptions: generate summary from the original article file.
+#    Arguments: OBJ($self) STR($fp) HASH_REF($thread_args) NUM($id)
+# Side Effects: none
+# Return Value: STR
+sub _generate_summary
+{
+    my ($self, $fp, $thread_args, $id) = @_;
+    my $curproc = $self->{ _curproc };
+    my $thread  = $self->{ _thread_object };
+    my $article = $self->{ _article_object };
+    my $buf     = '';
+
+    my $article_path = $article->filepath($id);
+
+    use FileHandle;
+    my $fh = new FileHandle $article_path;
+    if (defined $fh) {
+	use Mail::Message;
+	my $msg = Mail::Message->parse(  { fd => $fh } );
+	$buf = $msg->$fp();
+
+	# cache on.
+	if ($buf && $fp eq 'one_line_summary') { 
+	    $thread->set_article_summary($id, $buf);
+	}
+    }
+    else {
+	$curproc->logerror("no such file: $article_path");
+    }
+
+    return $buf;
 }
 
 
@@ -553,7 +637,7 @@ sub set_print_function
 #    Arguments: OBJ($self) OBJ($curproc) ARRAY_REF($queue)
 # Side Effects: none
 # Return Value: none
-sub psw_message_queue_text_summary_print
+sub _psw_message_queue_text_summary_print
 {
     my ($self, $curproc, $queue) = @_;
 
@@ -563,7 +647,6 @@ sub psw_message_queue_text_summary_print
 	my $id_list = $q->{ id_list } || [];
 	my $status  = $q->{ status }  || 'unknown';
 	my $summary = $q->{ summary } || '';
-	my $msg     = $q->{ message } || undef;
 	my $wh      = $q->{ output_channel } || \*STDOUT;
 	my $prompt  = ">>>";
 
@@ -581,7 +664,7 @@ sub psw_message_queue_text_summary_print
 	    print $wh "\n";
 	}
 	else {
-	    carp("psw_message_queue_text_summary_print: invalid data");
+	    carp("_psw_message_queue_text_summary_print: invalid data");
 	}
     }
 }
@@ -591,7 +674,7 @@ sub psw_message_queue_text_summary_print
 #    Arguments: OBJ($self) OBJ($curproc) ARRAY_REF($queue)
 # Side Effects: none
 # Return Value: none
-sub psw_message_queue_text_list_print
+sub _psw_message_queue_text_list_print
 {
     my ($self, $curproc, $queue) = @_;
 
@@ -606,7 +689,7 @@ sub psw_message_queue_text_list_print
 	    printf $wh $format, $status, join(" ", @$id_list);
 	}
 	else {
-	    printf $wh $format, $status, $head_id, '';
+	    printf $wh $format, $status, $head_id;
 	}
     }
 }
@@ -616,7 +699,7 @@ sub psw_message_queue_text_list_print
 #    Arguments: OBJ($self) OBJ($curproc) ARRAY_REF($queue)
 # Side Effects: none
 # Return Value: none
-sub psw_message_queue_html_summary_print
+sub _psw_message_queue_html_summary_print
 {
     my ($self, $curproc, $queue) = @_;
     my $q  = $queue->[ 0 ] || {};
@@ -630,7 +713,6 @@ sub psw_message_queue_html_summary_print
 	my $id_list = $q->{ id_list } || [];
 	my $status  = $q->{ status }  || 'unknown';
 	my $summary = $q->{ summary } || '';
-	my $msg     = $q->{ message } || undef;
 	my $wh      = $q->{ output_channel } || \*STDOUT;
 	my $prompt  = "";
 
@@ -654,7 +736,7 @@ sub psw_message_queue_html_summary_print
 	    print $wh "<BR>\n";
 	}
 	else {
-	    carp("psw_message_queue_html_summary_print: invalid data");
+	    carp("_psw_message_queue_html_summary_print: invalid data");
 	}
     }
 
@@ -666,7 +748,7 @@ sub psw_message_queue_html_summary_print
 #    Arguments: OBJ($self) OBJ($curproc) ARRAY_REF($queue)
 # Side Effects: none
 # Return Value: none
-sub psw_message_queue_html_list_print
+sub _psw_message_queue_html_list_print
 {
     my ($self, $curproc, $queue) = @_;
     my $q  = $queue->[ 0 ] || {};
