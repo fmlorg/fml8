@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.100 2005/08/31 12:12:35 fukachan Exp $
+# $FML: Message.pm,v 1.101 2005/09/01 04:04:19 fukachan Exp $
 #
 
 package Mail::Message;
@@ -721,6 +721,8 @@ sub __build_simple_message
 	my $type       = $data->{ type }    || 'unknown';
 	my $buf        = $data->{ data }    || ''; 
 
+	$my_charset =~ tr/A-Z/a-z/;
+	$charset    =~ tr/A-Z/a-z/;
 	if ($type eq 'text/plain' && $my_charset eq $charset) {
 	    return new Mail::Message {
 		data_type => $type,
