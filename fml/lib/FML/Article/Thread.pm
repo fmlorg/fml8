@@ -3,7 +3,7 @@
 # Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Thread.pm,v 1.15 2005/08/17 12:08:39 fukachan Exp $
+# $FML: Thread.pm,v 1.16 2005/09/01 04:09:25 fukachan Exp $
 #
 
 package FML::Article::Thread;
@@ -368,7 +368,7 @@ sub _change_thread_status
 
 =head1 SUMMARY
 
-=head2 get_overview($id, $thread_args)
+=head2 get_outline($id, $thread_args)
 
 return string holding article short summaries of a thread for this
 article $id.
@@ -380,7 +380,7 @@ article $id.
 #    Arguments: OBJ($self) NUM($id) HASH_REF($thread_args)
 # Side Effects: none
 # Return Value: none
-sub get_overview
+sub get_outline
 {
     my ($self, $id, $thread_args) = @_;
     my $curproc = $self->{ _curproc };
