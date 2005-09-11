@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Thread.pm,v 1.7 2005/08/25 13:13:35 fukachan Exp $
+# $FML: Thread.pm,v 1.8 2005/08/25 13:39:45 fukachan Exp $
 #
 
 package Mail::Message::Thread;
@@ -245,6 +245,21 @@ sub get_article_summary
     my $db = $self->db();
 
     $db->get('article_summary', $id);
+}
+
+
+# Descriptions: destructor.
+#    Arguments: OBJ($self)
+# Side Effects: close db
+# Return Value: none
+sub DESTROY
+{
+    my ($self) = @_;
+    my $db = $self->{ _ndb };
+
+    if (defined $db) {
+	$db->DESTROY();
+    }
 }
 
 
