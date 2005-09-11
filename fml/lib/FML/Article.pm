@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.73 2005/06/03 09:51:49 fukachan Exp $
+# $FML: Article.pm,v 1.74 2005/08/31 10:11:19 fukachan Exp $
 #
 
 package FML::Article;
@@ -279,6 +279,8 @@ sub append
     $tail->append($data);
 }
 
+
+=head1 UTILITY
 
 =head2 filepath($id)
 
