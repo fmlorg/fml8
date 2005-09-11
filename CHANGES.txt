@@ -30,6 +30,72 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2005/09/11
+
+   スレッドまわりの改造中
+
+   variables
+	rename: $*_overview -> $*_outline
+	
+   Mail::Message::Thread 
+	define DESTROY()
+	
+   Mail::Message 
+   Mail::Message::Outline 
+   Mail::Message::Language::Japanese::Outline 
+	move thread outline generator codes to Mail::Message::Outline.
+	correct error messages (Mail::Message).
+	
+   FML::Process::Distribute 
+   FML::Article::Outline 
+	move thread outline generator to FML::Article::Outline
+
+2005/09/01
+
+   FML::Article::Thread 
+	remove obsolete codes.
+	
+	private-ify::psw_*() -> _psw_*().
+	
+	use article_summary cache as coudl as possible. To clean up
+	around the codes, some codes are separeted to _generate_summary().
+	
+	fix comments and documents.
+	
+	strict check of $status code.
+	
+	implement get_overview($id, $thread_args). It returns string holding
+	article short summaries of a thread for this article $id.
+	
+   FML::Process::Distribute 
+	article_thread_overview support.
+	
+   variables
+	preliminary definitions for article thread overview.
+	+article_thread_overview_greeting
+	+article_thread_overview_greeting_en
+	+article_thread_overview_greeting_ja
+	+article_thread_overview_rules
+	+use_article_thread_overview
+
+2005/08/31
+
+   Mail::Message 
+	implement new method prepend(), append() and
+	whole_message_body_tail(). 
+	fix charset() logic to handle plural header field lines.
+	
+   Mail::Message::DB 
+	implement find_head_key().
+	add() updates article_summary database, too.
+	
+   FML::Article 
+	implement append() and prepend() methods.
+	
+   FML::Process::Utils 
+	langinfo_get_charset() uses Content-Type::information as a hint
+	when Accept-Language::is not specified.
+
 2005/08/27	
 
    Mail::Message::DB 
@@ -8800,4 +8866,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.248 2005/08/23 13:22:46 fukachan Exp $
+$FML: CHANGES.txt,v 1.249 2005/08/28 14:49:10 fukachan Exp $
