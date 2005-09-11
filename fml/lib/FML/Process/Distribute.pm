@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.162 2005/08/17 10:29:34 fukachan Exp $
+# $FML: Distribute.pm,v 1.163 2005/09/01 04:10:53 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -698,79 +698,20 @@ sub _new_thread_check_post
     $tdb_args->{ id } = $article_id;
 
     # overwrite header info base on the article.
-    my $thread = new Mail::Message::Thread $tdb_args;
-    my $db     = $thread->db();
+    my $thread  = new Mail::Message::Thread $tdb_args;
+    my $db      = $thread->db();
 
     for my $key (qw(subject)) {
 	$db->set("article_$key", $article_id, $hdr->get($key));
     }
 
-    $curproc->_add_article_thread_overview($tdb_args);
+    # add thread outline to article header or/and body.
+    use FML::Article::Outline;
+    my $outline = new FML::Article::Outline $curproc;
+    $outline->add($tdb_args);
 }
 
     
-# Descriptions: add thread overview information to article object.
-#    Arguments: OBJ($curproc) HASH_REF($tdb_args)
-# Side Effects: update article.
-# Return Value: none
-sub _add_article_thread_overview
-{
-    my ($curproc, $tdb_args) = @_;
-    my $config    = $curproc->config();
-    my $pcb       = $curproc->pcb();
-    my $id        = $pcb->get('article', 'id');
-    my $_hdr      = "X-Thread-Overview";
-    my $hdr_name  = $config->{ article_thread_overview_header_field } || $_hdr;
-    my $_sep      = "=" x 60;
-    my $separator = $config->{ article_thread_overview_separator } || $_sep;
-    my $_title    = "[article thread overview]\n";
-    my $title     = $config->{ article_thread_overview_greeting } || $_title;
-
-    if ($config->yes('use_article_thread_overview')) {
-	# get overview.
-	use FML::Article::Thread;
-	my $article_thread = new FML::Article::Thread $curproc, $tdb_args;
-	my $overview = $article_thread->get_overview($id, $tdb_args);
-
-	# fix charset as could as possible.
-	my $charset  = $curproc->langinfo_get_charset("reply_message");
-	use Mail::Message::String;
-	my $str = new Mail::Message::String $overview;
-	$str->charcode_convert($charset);
-	$overview = $str->as_str();
-	my $str = new Mail::Message::String $title;
-	$str->charcode_convert($charset);
-	$title = $str->as_str();
-
-	my $rules = $config->get_as_array_ref('article_thread_overview_rules');
-	for my $rule (@$rules) {
-	    if ($rule eq 'add_header') {
-		my $_overview = $overview;
-		$_overview =~ s/^\s*//;
-		$_overview =~ s/\s*$//;
-		my $header = $curproc->article_message_header();
-		$header->add("X-Thread-Overview", $_overview);
-	    }
-
-	    if ($rule eq 'append_body') {
-		my $_overview = sprintf("%s\n%s\n%s\n%s",
-					$separator,
-					$title,
-					$overview,
-					$separator);
-		use FML::Article; 
-		my $body = new FML::Article $curproc;
-		$body->append({
-		    type    => "text/plain",
-		    charset => $charset,
-		    data    => $_overview,
-		});
-	    }
-	}
-    }
-}
-
-
 # Descriptions: the top level entry to create HTML article.
 #    Arguments: OBJ($curproc)
 # Side Effects: update html database
