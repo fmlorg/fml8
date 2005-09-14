@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.74 2005/08/31 10:11:19 fukachan Exp $
+# $FML: Outline.pm,v 1.1 2005/09/11 13:14:14 fukachan Exp $
 #
 
 package FML::Article::Outline;
@@ -45,7 +45,7 @@ sub new
 
 =head1 ARTICLE THREAD OUTLINE
 
-=head2 add($thread_db_args)
+=head2 add_outline($thread_db_args)
 
 add thread outline information to article object.
 
@@ -56,7 +56,7 @@ add thread outline information to article object.
 #    Arguments: OBJ($self) HASH_REF($tdb_args)
 # Side Effects: update article.
 # Return Value: none
-sub add
+sub add_outline
 {
     my ($self, $tdb_args) = @_;
     my $curproc = $self->{ _curproc };

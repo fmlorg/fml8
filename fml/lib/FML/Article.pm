@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.74 2005/08/31 10:11:19 fukachan Exp $
+# $FML: Article.pm,v 1.75 2005/09/11 13:09:39 fukachan Exp $
 #
 
 package FML::Article;
@@ -277,6 +277,21 @@ sub append
     my $body    = $curproc->article_message_body();
     my $tail    = $body->whole_message_body_tail();
     $tail->append($data);
+}
+
+
+# Descriptions: add thread outline to article header or/and body.
+#    Arguments: OBJ($self) HASH_REF($tdb_args)
+# Side Effects: none
+# Return Value: none
+sub add_outline
+{
+    my ($self, $tdb_args) = @_;
+    my $curproc = $self->{ _curproc };
+
+    use FML::Article::Outline;
+    my $outline = new FML::Article::Outline $curproc;
+    $outline->add_outline($tdb_args);
 }
 
 

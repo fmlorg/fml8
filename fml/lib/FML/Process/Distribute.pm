@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.163 2005/09/01 04:10:53 fukachan Exp $
+# $FML: Distribute.pm,v 1.164 2005/09/11 13:14:15 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -706,9 +706,8 @@ sub _new_thread_check_post
     }
 
     # add thread outline to article header or/and body.
-    use FML::Article::Outline;
-    my $outline = new FML::Article::Outline $curproc;
-    $outline->add($tdb_args);
+    my $article = new FML::Article $curproc;
+    $article->add_outline($tdb_args);
 }
 
     
