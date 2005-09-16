@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: TextPlain.pm,v 1.14 2005/08/19 12:17:08 fukachan Exp $
+# $FML: TextPlain.pm,v 1.15 2005/08/27 14:49:33 fukachan Exp $
 #
 
 package FML::Filter::TextPlain;
@@ -426,17 +426,10 @@ sub need_one_line_check
 sub is_citation
 {
     my ($self, $data) = @_;
-    my $trap_pat      = ''; # keyword to trap citation at the head of the line.
 
-    if ($data =~ /(\n.)/) { $trap_pat = quotemeta($1);}
-
-    # XXX-TODO: only /\n>/ regexp is correct ?
-    # > a i u e o ...
-    # > ka ki ku ke ko ...
-    if ($data =~ /\n>/) { return 1;}
-    if ($trap_pat) { if ($data =~ /$trap_pat.*$trap_pat/) { return 1;}}
-
-    return 0;
+    use Mail::Message::String;
+    my $str = new Mail::Message::String $data;
+    return $str->is_citation();
 }
 
 
@@ -451,30 +444,9 @@ sub is_signature
 {
     my ($self, $data) = @_;
 
-    if ($data =~ /\@/o    ||
-	$data =~ /TEL:/oi ||
-	$data =~ /FAX:/oi ||
-	$data =~ /:\/\//o ) {
-	return 1;
-    }
-
-    # -- fukachan ( usenet style signature ? )
-    # // fukachan ( signature derived from what ? )
-    if ($data =~ /^--/o || $data =~ /^\/\//o) {
-	return 1;
-    }
-
-    # XXX Japanese specific condition
-    use Mail::Message::Encode;
-    my $obj = new Mail::Message::Encode;
-    $data   = $obj->convert( $data, 'euc-jp' );
-
-    # "2-byte @"domain where "@" is a 2-byte "@" character.
-    if ($data =~ /[-A-Za-z0-9]\241\367[-A-Za-z0-9]/o) {
-	return 1;
-    }
-
-    return 0;
+    use Mail::Message::String;
+    my $str = new Mail::Message::String $data;
+    return $str->is_signature();
 }
 
 
