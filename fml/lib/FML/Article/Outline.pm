@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Outline.pm,v 1.1 2005/09/11 13:14:14 fukachan Exp $
+# $FML: Outline.pm,v 1.2 2005/09/14 00:02:37 fukachan Exp $
 #
 
 package FML::Article::Outline;
@@ -81,7 +81,12 @@ sub add_outline
 	my $rules = $config->get_as_array_ref('article_thread_outline_rules');
 	for my $rule (@$rules) {
 	    my $fp = sprintf("_fp_$rule", $outline, $charset, $lang);
-	    $self->$fp($outline, $charset, $lang);
+	    if ($self->can($fp)) {
+		$self->$fp($outline, $charset, $lang);
+	    }
+	    else {
+		$curproc->logerror("outline: no such rule: $rule");
+	    }
 	}
     }
 }
@@ -106,7 +111,7 @@ sub _fix_charset
 #    Arguments: OBJ($self) STR($outline) STR($charset) STR($lang)
 # Side Effects: update article header.
 # Return Value: none
-sub _fp_add_header
+sub _fp_add_outline_to_header_field
 {
     my ($self, $outline, $charset, $lang) = @_;
     my $curproc  = $self->{ _curproc };
@@ -125,13 +130,35 @@ sub _fp_add_header
 }
 
 
-# Descriptions: add thread outline to article body.
+# Descriptions: prepend thread outline to article body.
 #    Arguments: OBJ($self) STR($outline) STR($charset) STR($lang)
 # Side Effects: update article body.
 # Return Value: none
-sub _fp_append_body
+sub _fp_prepend_outline_to_body
 {
     my ($self, $outline, $charset, $lang) = @_;
+    $self->_fp_body("prepend", $outline, $charset, $lang);
+}
+
+
+# Descriptions: append thread outline to article body.
+#    Arguments: OBJ($self) STR($outline) STR($charset) STR($lang)
+# Side Effects: update article body.
+# Return Value: none
+sub _fp_append_outline_to_body
+{
+    my ($self, $outline, $charset, $lang) = @_;
+    $self->_fp_body("append", $outline, $charset, $lang);
+}
+
+
+# Descriptions: add thread outline to article body.
+#    Arguments: OBJ($self) STR($fp) STR($outline) STR($charset) STR($lang)
+# Side Effects: update article body.
+# Return Value: none
+sub _fp_body
+{
+    my ($self, $fp, $outline, $charset, $lang) = @_;
     my $curproc    = $self->{ _curproc };
     my $config     = $curproc->config();
     my $sp         = "=" x 60;
@@ -148,12 +175,14 @@ sub _fp_append_body
 			   $separator);
 
     # append.
-    my $body = $curproc->article_message_body();
-    $body->append({
-	type    => "text/plain",
-	charset => $charset,
-	data    => $_outline,
-    });
+    if ($fp eq 'prepend' || $fp eq 'append') {
+	my $body = $curproc->article_message_body();
+	$body->$fp({
+	    type    => "text/plain",
+	    charset => $charset,
+	    data    => $_outline,
+	});
+    }
 }
 
 
