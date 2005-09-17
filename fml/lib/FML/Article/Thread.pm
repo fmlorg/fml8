@@ -3,7 +3,7 @@
 # Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Thread.pm,v 1.16 2005/09/01 04:09:25 fukachan Exp $
+# $FML: Thread.pm,v 1.17 2005/09/06 12:20:39 fukachan Exp $
 #
 
 package FML::Article::Thread;
@@ -100,7 +100,7 @@ sub new
     $me->{ _thread_object } = $thread;
 
     # initialize $article object.
-    use FML::Article;
+    eval q{ use FML::Article; };
     my $article = new FML::Article $curproc;
     $me->{ _article_object } = $article;
 
