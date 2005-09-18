@@ -30,6 +30,26 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2005/09/17
+
+   FML::Filter::TextPlain 
+	is_signature() and is_citation() switched to
+	Mail::Message::String based.
+	
+   FML::Article::Thread 
+	eval use ..
+	
+   FML::Article::Outline 
+	check method existence before calling.
+	rename method names.
+
+2005/09/13
+
+   FML::Article 
+   FML::Article::Outline 
+   FML::Process::Distribute 
+	changed to FML::Article->add_outline($tdb_args) style.
+
 2005/09/11
 
    スレッドまわりの改造中
@@ -8866,4 +8886,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.249 2005/08/28 14:49:10 fukachan Exp $
+$FML: CHANGES.txt,v 1.250 2005/09/11 13:30:48 fukachan Exp $
