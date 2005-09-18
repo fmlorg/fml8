@@ -1,11 +1,11 @@
 <!--
-   $FML: apache.sgml,v 1.4 2005/06/25 15:11:36 fukachan Exp $
+   $FML: apache.sgml,v 1.1 2005/07/23 01:57:36 fukachan Exp $
 -->
 
 
 <chapter id="setup.apache">
 	<title>
-	Apache configuration
+	Apache Configuration
 	</title>
 
 
@@ -24,17 +24,17 @@ for the &fml8; CGI internals.
 
 <sect1 id="setup.apache.suexec">
 	<title>
-	Use suexec of apache
+	Use Suexec Of Apache
 	</title>
 
 <para>
 Build apache enabled with suexec. 
-Run configure  by
+Run configure by
 <screen>
 (apache 1.x)
 configure --enable-suexec --suexec-caller=www
 </screen>
-The user "www" can call suexec.
+In this case, the user "www" can call suexec.
 Please prepare a user specific for suexec-ed environment.
 </para>
 

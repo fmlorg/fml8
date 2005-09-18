@@ -1,11 +1,11 @@
 <!--
-   $FML$
+   $FML: fmldoc.sgml,v 1.1 2003/07/26 04:29:13 fukachan Exp $
    $jaFML: fmldoc.sgml,v 1.3 2002/07/28 06:26:58 fukachan Exp $
 -->
 
 <sect1 id="usage.fmldoc">
 	<title>
-	show document of perl module
+	Show Perl Module Document
 	</title>
 
 <para>

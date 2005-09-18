@@ -1,17 +1,17 @@
 <!--
-   $FML$
+   $FML: fmlconf.sgml,v 1.1 2003/07/26 04:29:13 fukachan Exp $
    $jaFML: fmlconf.sgml,v 1.4 2002/07/28 06:26:58 fukachan Exp $
 -->
 
 <sect1 id="usage.fmlconf">
 	<title>
-	show configuration of one ML
+	Show Configuration
 	</title>
 
 <para>
-fmlconf (/usr/local/bin/fmlconf) takes ML name as an argument.
+"fmlconf" (/usr/local/bin/fmlconf) takes ML name as an argument.
 It shows all variables of the specified ML.
-If -n option specified, it shows variables different from default ones.
+If "-n" option specified, it shows variables different from default ones.
 </para>
 
 <para>

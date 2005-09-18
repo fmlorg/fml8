@@ -1,25 +1,25 @@
 <!--
-   $FML: help.sgml,v 1.1 2003/07/26 04:29:13 fukachan Exp $
+   $FML: help.sgml,v 1.2 2005/07/20 10:37:45 fukachan Exp $
    $jaFML: help.sgml,v 1.1 2002/07/28 12:20:20 fukachan Exp $
 -->
 
 <sect1 id="usage.user.help">
 	<title>
-	if you know the usage of ML
+	Help: When You Want To know The Usage 
 	</title>
 
 <para>
-send the mail with 
+Send the mail with 
 <screen>
 help
 </screen>
 to elena-ctl@fml.org address.
-sends back the help file to the sender.
+It sends back the help message to the sender.
 </para>
 
 <para>
 If a file named "help" is found at $ml_home_dir, it is used as a
-template.
+message template.
 </para>
 
 </sect1>

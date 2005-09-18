@@ -1,24 +1,24 @@
 <!--
-   $FML: newml.sgml,v 1.1 2003/07/25 17:05:47 fukachan Exp $
+   $FML: newml.sgml,v 1.2 2005/07/23 01:57:37 fukachan Exp $
    $jaFML: newml.sgml,v 1.3 2003/04/15 14:51:44 fukachan Exp $
 -->
 
 
 <chapter id="setup.newml">
 	<title>
-	Create ML on UNIX
+	Create ML On Unix
 	</title>
 
 
 <sect1>
 	<title>
-	run "makefml newml" to create an ML (in the case of default domain)
+	Run "makefml newml" To Create An ML (In The Case Of Default Domain)
 	</title>
 
 <caution>
 <para>
 The usage of &fml8; makefml is same as &fml4; in the case of default
-domain.  But not in the virtual domain case. See
+domain.  But differs in the virtual domain case. See
 <link linkend="setup.newml.nondefault">
 <xref linkend="setup.newml.nondefault">
 </link>
@@ -37,7 +37,7 @@ To create an ML, use "makefml" command (CUI) in the same way as &fml4;.
 
 <para>
 In the case of non default domain (virtual domain), 
-run "makefml newdomain" command before run "makefml newml".
+run "makefml newdomain" command before running "makefml newml".
 <screen>
 % su root
 # makefml newdomain fml.org /var/spool/virtual/fml.org
@@ -55,7 +55,7 @@ run "makefml newdomain" command before run "makefml newml".
 
    <listitem>
         <para>
-	create files such as
+	Create files such as
 	<screen>
 	config.cf
 	include
@@ -68,26 +68,26 @@ run "makefml newdomain" command before run "makefml newml".
 
    <listitem>
         <para>
-	add elena ML entry into /var/spool/ml/etc/mail/aliases.
-	run postalias to rebuild /var/spool/ml/etc/mail/aliases.db.
+	Add elena ML entry into /var/spool/ml/etc/mail/aliases.
+	Run postalias to rebuild /var/spool/ml/etc/mail/aliases.db.
         </para>
    </listitem>
 
    <listitem>
         <para>
-	create ~fml/.qmail-* files for qmail.
+	Create ~fml/.qmail-* files for qmail.
         </para>
    </listitem>
 
    <listitem>
         <para>
-	update procmailrc as a sample.
+	Update procmailrc as a sample.
         </para>
    </listitem>
 
    <listitem>
         <para>
-	prepare the directory
+	Prepare the directory
 	<screen>
 	~fml/public_html/fml/mlarchive/$domain/$ml/
 	</screen>
@@ -103,7 +103,7 @@ run "makefml newdomain" command before run "makefml newml".
 
    <listitem>
         <para>
-	prepare CGI (GUI). set up 
+	Prepare CGI (GUI). Set up 
 	<screen>
 	~fml/public_html/cgi-bin/fml/$domain/admin/config.cgi
 	</screen>
@@ -123,7 +123,7 @@ run "makefml newdomain" command before run "makefml newml".
 
 <sect1 id="setup.newml.nondefault">
 	<title>
-	run "makefml newml" to create an ML (in the case of non default domain)
+	Run "makefml newml" To Create An ML (In The Case Of Virtual Domain)
 	</title>
 
 <caution>
@@ -181,7 +181,7 @@ for several MTA's such as
 /var/spool/ml/etc/postfix/virtual
 </screen>
 .
-No example for qmail.
+No example for qmail (not needed).
 No example for procmail since .procmailrc contains domain.
 </para>
 

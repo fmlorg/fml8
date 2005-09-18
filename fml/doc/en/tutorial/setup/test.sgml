@@ -1,22 +1,22 @@
 <!--
-   $FML: test.sgml,v 1.1 2003/07/25 17:05:47 fukachan Exp $
+   $FML: test.sgml,v 1.2 2005/07/23 01:57:37 fukachan Exp $
    $jaFML: test.sgml,v 1.4 2003/04/15 14:51:44 fukachan Exp $
 -->
 
 <chapter id="test">
 	<title>
-	test
+	Test
 	</title>
 
 
 <sect1>
 	<title>
-	before test
+	Before Test
 	</title>
 
 <warning>
 <para>
-set up MTA properly before test of fml.
+Set up MTA properly before test of fml.
 </para>
 </warning>
 
@@ -31,7 +31,7 @@ the mail server.
 
 <sect1>
 	<title>
-	test of MTA
+	Test Of MTA
 	</title>
 
 <para>
@@ -50,12 +50,13 @@ receives the mail.
 % echo test |Mail rudo@fml.org
 </screen>
 If it not works, check MTA configuration.
+See /var/log/maillog et.al to track errors.
 </para>
 
 <para>
 Secondary, verify mail delivery over network.
 Send a mail to rudo@fml.org from other host (not ahodori.fml.org).
-If rudo receives the mail, o.k.
+If rudo receives the mail, MTA is o.k.
 </para>
 
 <para>
@@ -67,7 +68,7 @@ If both work well, MTA configuration must be ok.
 
 <sect1>
 	<title>
-	send a mail to ML
+	Send A Mail To ML
 	</title>
 
 <para>
@@ -82,22 +83,22 @@ Create elena ML (elena@fml.org) and subscribe rudo@fml.org to elena ML.
 <para>
 Send a test mail to elena@fml.org from on the host and from other host
 (not ahodori.fml.org).  Verify the header of this test mail should be
-"From: rudo@fml.org" since &fml8; checks the From:.
+"From: rudo@fml.org" since &fml8; checks the From: header field.
 </para>
 
 
 <sect2>
 	<title>
-	checkpoints
+	Checkpoints
 	</title>
 
 <para>
-If someting not work well, check the following points: 
+If something not work well, check the following points: 
 <screen>
 check the mail server log (e.g. /var/log/maillog)
 check the fml log (e.g. /var/spool/m/elena/log)
-fml can pass the message to MTA ?
-MTA succeeds to deliver it?
+fml can pass the message to MTA ? (e.g. /var/spool/m/elena/log)
+MTA succeeds to deliver it? (e.g. /var/log/maillog)
 </screen>
 </para>
 
@@ -108,11 +109,11 @@ MTA succeeds to deliver it?
 
 <sect1>
 	<title>
-	test of fml8 itself.
+	Test Of &fml8; Itself.
 	</title>
 
 <para>
-not yet implemented.
+*** not yet implemented ***.
 </para>
 
 </sect1>
@@ -120,7 +121,7 @@ not yet implemented.
 
 <sect1>
 	<title>
-	reset after test.
+	Reset After Test.
 	</title>
 
 <para>
@@ -130,11 +131,11 @@ It is easy to re-create this mailing list (e.g. test ML).
 % makefml rmml test
 % makefml newml test
 </screen>
-The removed ML home is left as /var/spool/ml/@test.$DATE.
+The removed ML home is left as /var/spool/ml/@test.$DATE.$SEQUENCE.
 Please remove it since this is a test to avoid the duplication in the
 future.
 <screen>
-% rm -fr /var/spool/ml/@test.$DATE
+% rm -fr /var/spool/ml/@test.$DATE.*
 </screen>
 </para>
 

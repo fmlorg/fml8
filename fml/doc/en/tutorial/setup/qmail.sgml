@@ -1,18 +1,21 @@
 <!--
-   $FML: qmail.sgml,v 1.1 2003/07/25 17:05:47 fukachan Exp $
+   $FML: qmail.sgml,v 1.2 2005/07/23 01:57:37 fukachan Exp $
    $jaFML: qmail.sgml,v 1.2 2002/07/06 14:55:20 fukachan Exp $
 -->
 
 <sect1 id="setup.qmail.aliases">
 	<title>
-	MTA configuration (qmail)
+	MTA Configuration (qmail)
 	</title>
 
 <para>
 "makefml newml" creates the following files for qmail:
 <screen>
 ~fml/.qmail-fml:org-elena
+~fml/.qmail-fml:org-elena-admin
 ~fml/.qmail-fml:org-elena-ctl
+~fml/.qmail-fml:org-elena-default
+~fml/.qmail-fml:org-elena-request
 </screen>
 Hence, if /var/qmail/control/virtualdomains contains the following
 definition
@@ -32,7 +35,7 @@ ML's uses the whole one domain only for mailing list.
 
 <sect2>
 	<title>
-	virtual domain case
+	Virtual Domain
 	</title>
 
 <para>

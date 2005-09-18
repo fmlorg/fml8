@@ -1,17 +1,16 @@
 <!--
-   $FML$
+   $FML: fmladdr.sgml,v 1.1 2003/07/26 04:29:13 fukachan Exp $
    $jaFML: fmladdr.sgml,v 1.1 2002/11/09 14:16:19 fukachan Exp $
 -->
 
 <sect1 id="usage.fmladdr">
 	<title>
-	show all valid addresses (users and aliases)
+	Show Addresses (Users + Aliases)
 	</title>
 
 <para>
-fmladdr (/usr/local/bin/fmladdr)
-lists up all users on this host.
-It shows users defined in /etc/passwd and aliases defined in postfix.
+"fmladdr" (/usr/local/bin/fmladdr) lists up all users on this host.
+It shows users defined in /etc/passwd and aliases defined in Postfix.
 </para>
 
 <para>
@@ -23,10 +22,10 @@ It shows users defined in /etc/passwd and aliases defined in postfix.
 <para>
 <warning>
 <para>
-The difference between fmladdr and fmlalias is whether
-it contais users defined at /etc/passwd or not.
-fmladdr contains it but fmlalias not.
-fmlalias lists up users defined at aliases.
+The difference between "fmladdr" and "fmlalias" is whether
+it contains users defined at /etc/passwd or not.
+"fmladdr" contains it but "fmlalias" not.
+"fmlalias" lists up all users defined at aliases.
 </para>
 </warning>
 </para>

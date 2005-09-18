@@ -1,18 +1,17 @@
 <!--
-   $FML$
+   $FML: postfix.sgml,v 1.1 2003/07/25 17:05:47 fukachan Exp $
    $jaFML: postfix.sgml,v 1.3 2003/04/15 14:51:44 fukachan Exp $
 -->
 
 <sect1 id="setup.postfix.aliases">
 	<title>
-	MTA configuration (postfix)
+	MTA Configuration (postfix)
 	</title>
 
 <important>
 <para>
-If $alias_maps of postfix is properly set up,
-makefml automatically prepare fml and postfix configuration 
-for the new ML.
+If $alias_maps of Postfix is properly set up, "makefml newml"
+automatically prepares fml and postfix configuration for the new ML.
 </para>
 
 <para>
@@ -26,16 +25,16 @@ for the detail of postfix configuration.
 
 
 <para>
-makefml do not update system aliases (e.g. /etc/mail/aliases), but
+"makefml" does not update system aliases (e.g. /etc/mail/aliases), but
 updates only alias file $ml_home_prefix/etc/mail/aliases file, which
 is used only for fml.
-makefml rebuilds aliases.db automatically, too.
+"makefml" rebuilds $ml_home_prefix/etc/mail/aliases.db automatically, too.
 </para>
 
 
 <sect2>
 	<title>
-	NOTE: format of /var/spool/ml/etc/mail/aliases
+	NOTE: Format Of /var/spool/ml/etc/mail/aliases
 	</title>
 
 <para>

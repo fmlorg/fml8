@@ -1,25 +1,22 @@
 <!--
-   $FML$
+   $FML: fml.sgml,v 1.1 2003/07/26 04:29:13 fukachan Exp $
    $jaFML: fml.sgml,v 1.1 2003/01/05 08:03:23 fukachan Exp $
 -->
 
 <sect1 id="usage.fml">
 	<title>
-	fml command and makefml command
+	"fml" And "makefml" Command
 	</title>
 
 <para>
-fml (/usr/local/bin/fml) and makefml (/usr/local/bin/makefml) is same
-except for argument order.
-Please use it as you like.
+"fml" (/usr/local/bin/fml) and "makefml" (/usr/local/bin/makefml) is
+same except for argument order. Please use it as you like.
 </para>
 
 <para>
 <screen>
 % fml ML COMMNAD [OPTIONS]
-</screen>
-instead
-<screen>
+
 % makefml COMMAND ML [OPTIONS]
 </screen>
 </para>

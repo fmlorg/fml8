@@ -1,27 +1,26 @@
 <!--
-   $FML: get.sgml,v 1.1 2003/07/26 04:29:13 fukachan Exp $
+   $FML: get.sgml,v 1.2 2005/07/20 10:37:45 fukachan Exp $
    $jaFML: get.sgml,v 1.2 2003/04/15 14:51:46 fukachan Exp $
 -->
 
 <sect1 id="usage.user.get">
 	<title>
-	read past articles
+	Get Past Articles
 	</title>
 
 <para>
-send the mail with 
+Send the mail with 
 <screen>
 get NUMBER
 </screen>
-to elena-ctl@fml.org address.
-NUMBER is the article number.
-fml sends back articles by mime/multipart form to the sender.
+to elena-ctl@fml.org address where NUMBER is the article number.
+&fml8; sends back articles by mime/multipart form to the sender.
 </para>
 
 <para>
 You can use MH style arguments as NUMBER.
 <screen>
-Example:
+[Example]
 
 get 100
 get 1-100

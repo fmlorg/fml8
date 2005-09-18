@@ -1,11 +1,11 @@
 <!--
-   $FML$
+   $FML: fmlhtmlify.sgml,v 1.1 2003/07/26 04:29:13 fukachan Exp $
    $jaFML: fmlhtmlify.sgml,v 1.6 2002/11/26 11:16:38 fukachan Exp $
 -->
 
 <sect1 id="usage.fmlhtmlify">
 	<title>
-	convert article to HTML form.
+	Convert Articles To HTML Form
 	</title>
 
 <para>
@@ -16,9 +16,11 @@ to initialize the html archive.
 
 <para>
 <screen>
+[Usage]
+
 % fmlhtmlify SPOOL_DIRECTORY HTML_ARCHIVE_DIRECTORY
 
-Example:
+[Example]
 
 % fmlhtmlify /var/spool/ml/elena/spool /some/where/mlarchive/elena
 </screen>

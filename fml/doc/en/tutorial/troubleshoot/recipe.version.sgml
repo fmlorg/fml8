@@ -1,5 +1,5 @@
 <!--
-   $FML: recipe.version.sgml,v 1.1 2003/07/25 17:05:48 fukachan Exp $
+   $FML: recipe.version.sgml,v 1.2 2003/08/03 01:47:18 fukachan Exp $
    $jaFML: recipe.version.sgml,v 1.4 2003/04/15 14:51:45 fukachan Exp $
 -->
 
@@ -12,10 +12,9 @@ I want to know fml version.
 
 <answer>
 <para>
-run "fmlconf" to show all variables.
-You can find $fml_version in it. 
 <screen>
-% fmlconf test |grep fml_version
+[Example: in the case of "test" ML]
+% fmlconf test fml_version
 fml_version                          = fml-devel current-20021029
 </screen>
 </para>

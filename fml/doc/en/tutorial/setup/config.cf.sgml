@@ -1,11 +1,11 @@
 <!--
-   $FML: config.cf.sgml,v 1.1 2003/07/25 17:05:47 fukachan Exp $
+   $FML: config.cf.sgml,v 1.2 2005/07/23 01:57:36 fukachan Exp $
    $jaFML: config.cf.sgml,v 1.3 2003/04/15 14:51:44 fukachan Exp $
 -->
 
 <sect1 id="setup.config.cf">
 	<title>
-	customize config.cf
+	Customize config.cf
 	</title>
 
 <para>

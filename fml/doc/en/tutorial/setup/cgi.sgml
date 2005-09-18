@@ -1,5 +1,5 @@
 <!--
-   $FML: cgi.sgml,v 1.1 2003/07/25 17:05:47 fukachan Exp $
+   $FML: cgi.sgml,v 1.2 2005/07/23 01:57:36 fukachan Exp $
    $jaFML: cgi.sgml,v 1.4 2003/04/15 14:51:43 fukachan Exp $
 -->
 
@@ -28,8 +28,8 @@ you use suexec under apache.
 
 <para>
 Now &fml8; provides both the master cgi to control all ML's in one
-domain and a cgi for each ml. 
-You can add and remove a user, or view member list et.al by this interface.
+domain and a cgi for each ML.
+You can add and remove a user, or view member list et.al. by this interface.
 Editing of configuration on this cgi is incomplete.
 </para>
 
@@ -43,7 +43,7 @@ configuration for cgi specific reason.
 
 <sect1 id="setupcgi.install">
 	<title>
-	"makefml newml" creates CGI script always.
+	"makefml newml" Creates CGI Script Always
 	</title>
 
 <para>
@@ -58,15 +58,18 @@ In creating elena@fml.org ML, makefml creates the following cgi
 <screen>
 http://lists.fml.org/~fml/cgi-bin/fml/$domain/admin/config.cgi
 
-Example:
+[Example]
 http://lists.fml.org/~fml/cgi-bin/fml/fml.org/admin/config.cgi
 </screen>
 for all ML's of fml.org.
+</para>
+
+<para>
 To control only elena ML, please use 
 <screen>
 http://lists.fml.org/~fml/cgi-bin/fml/$domain/ml-admin/${ml_name}/config.cgi
 
-Example:
+[Example]
 http://lists.fml.org/~fml/cgi-bin/fml/fml.org/ml-admin/elena/config.cgi
 </screen>
 </para>
@@ -80,7 +83,7 @@ http://lists.fml.org/~fml/cgi-bin/fml/fml.org/ml-admin/elena/config.cgi
 
 <sect1 id="setupcgi.htaccess">
 	<title>
-	edit .htaccess
+	Edit .htaccess
 	</title>
 
 <para>
@@ -88,7 +91,7 @@ http://lists.fml.org/~fml/cgi-bin/fml/fml.org/ml-admin/elena/config.cgi
 <screen>
 http://lists.fml.org/~fml/cgi-bin/fml/$domain/.htaccess
 
-Example:
+[Example]
 http://lists.fml.org/~fml/cgi-bin/fml/fml.org/.htaccess
 </screen>
 </para>
@@ -104,7 +107,7 @@ Please edit .htaccess properly.
 </para>
 
 <para>
-Apache dos not support ~user style access by default.
+Apache does not support ~user style access by default.
 Please set up apache to enable it.
 </para>
 
@@ -113,14 +116,14 @@ Please set up apache to enable it.
 
 <sect1 id="setupcgi.admin.cgi.overview">
 	<title>
-	Example: master cgi
+	Example: Master Cgi
 	</title>
 
 <para>
-The role of this cgi is limited makefml (CUI).
+The role of this cgi is same as limited makefml (CUI).
 Though this cgi permits ML creation and destruction,
 all functions makefml has are not supported.
-The functions is limited.
+The function is limited.
 </para>
 
 <para>
@@ -156,16 +159,16 @@ options Language:    list
 
 <sect1 id="setupcgi.admin.cgi.newml">
 	<title>
-	CGI Example: create an ML
+	CGI Example: Create ML
 	</title>
 
 <para>
 Select newml and push "submit".
-no need to select ML name in this stage.
+No need to select ML name in this stage.
 </para>
 
 <para>
-You find nother menu at the center.
+You find another menu at the center.
 Specify the ML name you create and push "submit" at the center.
 </para>
 
@@ -178,7 +181,7 @@ Specify the ML name you create and push "submit" at the center.
 
 <sect1 id="setupcgi.admin.cgi.subscribe">
 	<title>
-	CGI example: subscribe
+	CGI Example: subscribe
 	</title>
 
 <para>
@@ -199,7 +202,7 @@ Specify the address to subscribe and push "submit" at the center.
 
 <sect1 id="setupcgi.admin.cgi.skin">
 	<title>
-	CGI skin selection
+	CGI Skin Selection
 	</title>	
 
 <para>

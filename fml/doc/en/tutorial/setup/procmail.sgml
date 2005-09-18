@@ -1,39 +1,39 @@
 <!--
-   $FML: procmail.sgml,v 1.1 2003/07/25 17:05:47 fukachan Exp $
+   $FML: procmail.sgml,v 1.2 2005/07/23 01:57:37 fukachan Exp $
    $jaFML: procmail.sgml,v 1.3 2003/04/15 14:51:44 fukachan Exp $
 -->
 
 <sect1 id="setup.procmail">
 	<title>
-	I want to use ML by my account.
+	I Want To Use ML By My Account.
 	</title>
 
 <para>
-When you set up a ML within your account, for example when you are
+When you set up an ML within your account, for example when you are
 using virtual domain service of ISP, you need to use a mail processor
 such as procmail.
 </para>
 
 <para>
 To catch up messages to ML's, you need to filter messages according to
-To: or Cc: in the mail header and redistribute it.
+To: or Cc: in the mail header.
 </para>
 
 <para>
 &fml8; expects the user uses a filter tool such as procmail in such a
-situation. &fml8; itself does not provide such a tool.
+situation. &fml8; distribution itself does not provide such a tool.
 </para>
 
 <para>
-makefml creates/updates ~/.procmailrc sample in running "makefml
-newml" at /var/spool/ml/etc/procmail/procmailrc. Please use it as a
+When running "makefml newml", "makefml" creates/updates ~/.procmailrc
+sample at /var/spool/ml/etc/procmail/procmailrc. Please use it as a
 sample.
 </para>
 
 
 <sect2 id="setup.procmailrc">
 	<title>
-	~/.procmailrc example
+	~/.procmailrc Example
 	</title>
 
 <para>
@@ -63,12 +63,13 @@ inbox/.
 
 <sect2>
 	<title>
-	virtual domain case
+	Virtual Domain Case
 	</title>
 
 <para>
 The procmail rules above contains ml_name and ml_domain within it.
 So it does not need special handling for virtual domain.
+It is same for both default domain and virtual domain.
 </para>
 
 <para>

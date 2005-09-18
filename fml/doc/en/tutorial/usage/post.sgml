@@ -1,33 +1,36 @@
 <!--
-   $FML: post.sgml,v 1.1 2003/07/26 04:29:13 fukachan Exp $
+   $FML: post.sgml,v 1.2 2005/07/20 10:37:45 fukachan Exp $
    $jaFML: post.sgml,v 1.7 2003/04/15 14:51:46 fukachan Exp $
 -->
 
 <sect1 id="usage.post">
 	<title>
-	post article
+	Posting Article
 	</title>
 
 <para>
-Send the mail to elena@fml.org.
-MTA (on e.g. ahodori.fml.org) receives the mail and 
-finally kicks off
+Send a mail to elena@fml.org.
+MTA running on the mailing list server host (on e.g. ahodori.fml.org) 
+receives the mail and finally kicks off
 /usr/local/libexec/fml/distribute command.
 </para>
 
 <para>
-distribute recieves the message from STDIN, rewrites the header, save
-it in the spool directory and pass it back to MTA for delivery.
+"distribute" command recieves the message from STDIN, 
+rewrites the header, 
+save it in the spool directory and 
+pass it back to MTA for delivery.
 </para>
 
 
 <sect2>
 	<title>
-	process of distribution
+	Distribution Process
 	</title>
 
 <para>
-add a tag to subject, update the article sequence number.
+1) &fml8 adds a tag to the subject, 
+update the article sequence number.
 <screen>
 Example:
 
@@ -37,15 +40,15 @@ Subject: [elena:00100] teddy bear is cute.
 </para>
 
 <para>
-save article (as a text file).
+2) save article (as a text file).
 </para>
 
 <para>
-create a HTML version of the article under ~fml/public_html/ directory.
+3) create a HTML version of the article under ~fml/public_html/ directory.
 </para>
 
 <para>
-update database on thread.
+4) update database (udb) on thread.
 </para>
 
 </sect2>
@@ -53,12 +56,12 @@ update database on thread.
 
 <sect2>
 	<title>
-	variables to control the article.
+	Variables
 	</title>
 
 <warning>
 <para>
-not yet written.
+*** sorry, not yet written ***
 </para>
 </warning>
 
@@ -67,18 +70,18 @@ not yet written.
 
 <sect2>
 	<title>
-	Boot Sequence
+	Example: Boot Sequence Of Distribute Process
 	</title>
 
 <para>
 <link linkend="bootloader">
 fml boot loader
 </link>
-boots off in this way.
+boots off in the following way.
 </para>
 
 <para>
-/usr/local/libexec/fml/distribute is symlink-ed to
+/usr/local/libexec/fml/distribute command is symlink-ed to
 /usr/local/libexec/fml/loader. These files are same.
 </para>
 
@@ -91,10 +94,11 @@ perl modules under it.
 </para>
 
 <para>
-&fml8; sets up @INC properly, fml loader loads FML::Process::Switch
-module and check $0 (process name).  fml knows the process role from
+&fml8; sets up @INC properly. fml loader loads FML::Process::Switch
+module and check $0 (process name). fml knows the process role from
 $0.  In this case of distribute, fml loads FML::Process::Distribute
-module, switch itself to it and processes distribution.
+module (defined as /usr/local/etc/fml/$fml_version/modules), 
+switch itself to it and processes distribution.
 </para>
 
 </sect2>

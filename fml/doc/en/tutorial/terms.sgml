@@ -1,11 +1,11 @@
 <!--
-   $FML: terms.sgml,v 1.3 2003/07/27 15:31:52 fukachan Exp $
+   $FML: terms.sgml,v 1.4 2005/07/23 01:58:47 fukachan Exp $
    $jaFML: terms.sgml,v 1.5 2003/04/15 14:51:35 fukachan Exp $
 -->
 
 <sect1 id="terms">
 	<title>
-	Technical terms in this tutorial
+	Technical Terms In This Tutorial
 	</title>
 
 <para>
@@ -61,7 +61,7 @@ also.
 	<term> fml (command) </term>
 	<listitem>
 	<para>
-	fml command included in &fml8; software.
+	command named "fml" included in &fml8; software.
 	fml is same as makefml command except for the argument order.
 	</para>
 	</listitem>

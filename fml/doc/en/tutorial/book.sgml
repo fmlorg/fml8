@@ -2,7 +2,7 @@
 This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
 to generate various output formats.
 
-   $FML: book.sgml,v 1.2 2003/07/26 09:10:39 fukachan Exp $
+   $FML: book.sgml,v 1.3 2005/07/23 01:58:46 fukachan Exp $
    $jaFML: book.sgml,v 1.58 2003/05/31 08:51:07 fukachan Exp $
 -->
 
@@ -20,7 +20,7 @@ to generate various output formats.
 
   <part>
 	<title>
-	fml fundamental usage
+	Fml Fundamental Usage
 	</title>
 
 	<partintro>
@@ -40,10 +40,13 @@ to generate various output formats.
 
 
   <part>
-	<title> fml: how to set up ML.</title>
+	<title>
+	How To Set Up ML
+	</title>
+
 	<partintro>
 	<para>
-	topics driven in this part.
+	Topics driven in this part.
 	</para>
 	</partintro>
 
@@ -74,12 +77,12 @@ to generate various output formats.
 
   <part>
 	<title>
-	fml: how to customise
+	How To Customise
 	</title>
 
 	<partintro>
 	<para>
-	topics driven in this part.
+	Topics driven in this part.
 	</para>
 	</partintro>
 
@@ -139,7 +142,7 @@ to generate various output formats.
 
 	<partintro>
 	<para>
-	THis part describes the design policy of fml.
+	This part describes the design policy of fml.
 	</para>
 	</partintro>
 

@@ -1,12 +1,12 @@
 <!--
-   $FML: recipe.listup.addresses.sgml,v 1.1 2003/07/25 17:05:48 fukachan Exp $
+   $FML: recipe.listup.addresses.sgml,v 1.2 2003/08/03 01:47:18 fukachan Exp $
    $jaFML: recipe.listup.addresses.sgml,v 1.2 2003/04/15 14:51:45 fukachan Exp $
 -->
 
 <qandaentry>
 <question>
 <para>
-List up pre-defined addresses on the system.
+List up pre-defined addresses on this host.
 </para>
 </question>
 
@@ -23,10 +23,10 @@ aliases.
 <para>
 <warning>
 <para>
-The difference between fmladdr and fmlalias is whether
+The difference between "fmladdr" and "fmlalias" is whether
 it contains users defined at /etc/passwd or not.
-fmladdr contains it but fmlalias not.
-fmlalias lists up only users defined at aliases.
+"fmladdr" contains it but fmlalias not.
+"fmlalias" lists up only users defined at aliases.
 </para>
 </warning>
 </para>

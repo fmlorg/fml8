@@ -1,21 +1,27 @@
 <!--
-   $FML$
+   $FML: command.sgml,v 1.1 2003/07/26 04:29:12 fukachan Exp $
    $jaFML: command.sgml,v 1.7 2003/04/15 14:51:46 fukachan Exp $
 -->
 
 <sect1 id="fml.command.bymail">
 	<title>
-	command mail (control fml by sendmail mails)
+	Command Mail (Control fml By Sending Mail)
 	</title>
 
 <para>
-fml accepts control commands which is sent as a mail.
+&fml8; accepts control commands which is sent as a mail.
 It is called "command mail".
 </para>
 
 <important>
 <para>
-The use of CUI (makefml/fml) is basic in fml world.
+The use of CUI (makefml/fml) is basic in fml world. It is expected you
+should use CUI if you can login the mailing list server.
+</para>
+
+<para>
+The role of command mail is to delegate fml control priviledge to
+users who cannot login the mailing list server.
 </para>
 
 </important>
@@ -23,11 +29,11 @@ The use of CUI (makefml/fml) is basic in fml world.
 
 <sect2 id="fml.command.bymail.flow">
 	<title>
-	flow
+	Flow
 	</title>
 
 <para>
-Consider elena ML.  Send the command mail to elena-ctl@fml.org which
+Consider elena ML. Send the command mail to elena-ctl@fml.org which
 is the address for command mail.  MTA receives the mail and finally
 kicks off /usr/local/libexec/fml/command program.  This program
 receives the mail (command mail) from STDIN , processes the requests
@@ -50,12 +56,19 @@ MIME/Multipart
 
 <sect2>
 	<title>
-	perl modules of command mails
+	Perl Modules For Command Mail
 	</title>
 
 <para>
 All modules which CUI, GUI and command mail uses are implented as
 FML::Command:: class.
+</para>
+
+<para>
+In fact, a sub set of FML::Command:: class is allowed as command mail.
+$user_command_mail_allowed_commands,
+$anonymous_command_mail_allowed_commands and
+$admin_command_mail_allowed_commands variables defines it.
 </para>
 
 </sect2>

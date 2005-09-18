@@ -1,11 +1,11 @@
 <!--
-   $FML: chapter.onhost.sgml,v 1.1 2003/07/26 04:29:12 fukachan Exp $
+   $FML: chapter.onhost.sgml,v 1.2 2005/07/20 10:37:45 fukachan Exp $
    $jaFML: chapter.onhost.sgml,v 1.8 2003/04/15 14:51:46 fukachan Exp $
 -->
 
 <chapter id="usage.onhost">
 	<title>
-	What can we do on the mailing list server host ?
+	What Can You Do On The Mailing List Server
 	</title>
 
 
@@ -16,8 +16,8 @@ greatest administrator :)
 </para>
 
 <para>
-makefml of fml8 is same as fml4 as could as possible to preserve
-compatibility.
+"makefml" command of &fml8; is same as &fml4; as could as possible to
+preserve compatibility.
 </para>
 
 <para>
@@ -31,7 +31,7 @@ on the detail of the difference.
 
 <sect1 id="usage.onhost.priviledge">
 	<title>
-	On the host
+	On The Host
 	</title>
 
 <para>
@@ -52,11 +52,12 @@ But He/She may do wrong operations.
 To avoid careless wrong operations, in usual cases you should use CUI
 (makefml or fml) to configure fml.  Of course you can edit files
 directly if you can understand fml structures. By default we recommend
-you should use CUI even on the host.
+you should use CUI always on the host.
 </para>
 
 <para>
-fml command is same as makefml command except for the argument order.
+"fml" command is same as "makefml" command except for the argument
+order.
 <screen>
 makefml COMMAND ML OPTIONS
 fml     ML COMMAND OPTIONS
@@ -69,7 +70,7 @@ Please either as you like.
 
 <sect1 id="usage.commandpolicy">
 	<title>
-	Policy of command creation
+	Policy Of Command Creation
 	</title>
 
 <para>
@@ -82,7 +83,7 @@ such commands can be shared among CUI, GUI and commmnd mail.
 
 <sect2>
 	<title>
-	operation may modify the specific ML (read/write).
+	Operation May Modify The Specific ML (Read + Write)
 	</title>
 
 <para>
@@ -95,7 +96,7 @@ modify the specific ML.
 
 <sect2>
 	<title>
-	operation read only the data of the specific ML (read only).
+	Operation For Read Only Data Of The Specific ML (Read Only)
 	</title>
 
 <para>
@@ -108,7 +109,7 @@ the specific ML.
 
 <sect2>
 	<title>
-	see the general data (read only)
+	Show The General Data (Read Only)
 	</title>
 
 <para>
@@ -129,20 +130,21 @@ fmlconf  [-n] ML
 
 <sect2>
 	<title>
-	ML specific but a command wrapper
+	ML Specific But A Command Wrapper
 	</title>
 
 <para>
 PGP / GPG related command (e.g. fmlpgp) is very command speicific.
-So, it is difficult to incorporate them into makefml/fml.
-We implement it as another command such as fmlpgp, fmlgpg, ...
+So, it looks difficult to incorporate them into "makefml" and "fml"
+framework. So we implement it as another command such as fmlpgp,
+fmlgpg, ...
 </para>
 
 </sect2>
 
 <sect2>
 	<title>
-	misc
+	Misc
 	</title>
 
 <para>
@@ -151,7 +153,7 @@ This command name begins with fml prefix.
 </para>
 
 <para>
-The conveter from text to html form.
+For example, "fmlhtmlify" is a conveter from text to html form.
 This command is used to convert both fml spool and MH folders.
 <screen>
 fmlhtmlify [-I DIR] $src_dir $dst_dir

@@ -1,17 +1,19 @@
 <!--
-   $FML: filesystem.sgml,v 1.5 2005/06/25 15:11:38 fukachan Exp $
+   $FML: filesystem.sgml,v 1.1 2005/07/23 01:57:38 fukachan Exp $
 -->
 
 
 <sect1 id="troubleshoot.filesystem">
 	<title>
-	When the file system error occurs ?
+	When The File System Error Ocuurs
 	</title>
 
 <para>
-Fundamentally, &fml8; exit abnormally to make MTA re-deliver it or
-&fml8; re-delivers it by itself. &fml8; do not lost received messages
-whereas log or summary file lacks something.
+When the file system error occurs, &fml8; exit abnormally to make MTA
+re-deliver the message again to &fml8; or &fml8; re-delivers it by
+itself without saving the article on the file system. So &fml8; do not
+lost received messages whereas both log or summary file lack
+something.
 </para>
 
 <para>
@@ -22,11 +24,11 @@ delivery process.
 
 <sect2>
 	<title>
-	When passed from MTA to &fml8;
+	When Passed From MTA MTA To &fml8;
 	</title>
 
 <para>
-&fml8; read a message and writes it into the disk once. If succeeded,
+&fml8; reads a message and writes it into the disk once. If succeeded,
 it processes more. If failed, &fml8; exits abnormally as
 exit(EX_TEMPFAIL) for MTA to re-deliver it.  See
 <link linkend="message.queue.incoming">
@@ -36,7 +38,7 @@ for more details.
 </para>
 
 <para>
-In this case, incoming queue may have a incomplete message.
+In this case, incoming message queue may have a incomplete message.
 &fml8; tries to remove it in abnormal exit.
 Even if failed, the queue management system removes it later.
 </para>
@@ -46,19 +48,20 @@ Even if failed, the queue management system removes it later.
 
 <sect2>
 	<title>
-	If the article sequence number update failed
+	If Updating Of The Article Sequence Number Failed
 	</title>
 
 <para>
 In normal case, &fml8; updates the article sequence number and
-re-reads it and compare it again.
+re-reads it and compares it again.
 If the check fails, &fml8; exit(EX_TEMPFAIL) for MTA to re-deliver it.
 </para>
 
 <caution>
 <para>
-The article sequence number updated. After that, 
-&fml8; should not do exit(EX_TEMPFAIL).
+The article sequence number updated. After that, &fml8; does not do
+exit(EX_TEMPFAIL) to deliver the message on memory as could as
+possible.
 </para>
 </caution>
 
@@ -67,7 +70,7 @@ The article sequence number updated. After that,
 
 <sect2>
 	<title>
-	When saving the article failed
+	When Saving Of Article Failed
 	</title>
 
 <caution>
@@ -77,7 +80,7 @@ In this stage, the article sequence has been updated.
 </caution>
 
 <para>
-In this case, &fml8; do not create a new article file but the original
+In this case, &fml8; does not create a new article file but the original
 message is already on the disk. The header of the article differs from
 the original one but the body content is same. So &fml8; tries to
 link(2) the original mail in the incoming queue to the article file to
@@ -91,13 +94,13 @@ the article header later. It is not implemented.
 </para>
 
 <para>
-&fml8; tries to deliver the message on the memory.
+&fml8; tries to deliver the message on memory.
 </para>
 
 <para>
 If the delivery process exits abnormally, 
-the delivery process ends incompletely
-since &fml8; can not use outgoing queue. 
+distribution of article ends incompletely
+since &fml8; can not use outgoing queue due to file system error.  
 </para>
 
 </sect2>

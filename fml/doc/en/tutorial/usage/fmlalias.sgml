@@ -1,17 +1,17 @@
 <!--
-   $FML$
+   $FML: fmlalias.sgml,v 1.1 2003/07/26 04:29:13 fukachan Exp $
    $jaFML: fmlalias.sgml,v 1.1 2002/11/09 14:16:19 fukachan Exp $
 -->
 
 <sect1 id="usage.fmlalias">
 	<title>
-	show alias configuration
+	Show Alias
 	</title>
 
 <para>
 fmlalias (/usr/local/bin/fmlalias) shows all aliases.
 Precisely speaking, it shows
-all aliases defined as valid aliases of postfix.
+all aliases defined as valid aliases of Postfix.
 </para>
 
 <para>
@@ -23,10 +23,10 @@ all aliases defined as valid aliases of postfix.
 <para>
 <warning>
 <para>
-The difference between fmladdr and fmlalias is whether
-it contais users defined at /etc/passwd or not.
-fmladdr contains it but fmlalias not.
-fmlalias lists up users defined at aliases.
+The difference between "fmladdr" and "fmlalias" is whether
+it contains users defined at /etc/passwd or not.
+"fmladdr" contains it but "fmlalias" not.
+"fmlalias" lists up all users defined at aliases.
 </para>
 </warning>
 </para>

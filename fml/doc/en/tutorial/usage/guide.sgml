@@ -1,25 +1,25 @@
 <!--
-   $FML: guide.sgml,v 1.1 2003/07/26 04:29:13 fukachan Exp $
+   $FML: guide.sgml,v 1.2 2005/07/20 10:37:45 fukachan Exp $
    $jaFML: guide.sgml,v 1.1 2002/07/28 12:20:20 fukachan Exp $
 -->
 
 <sect1 id="usage.user.guide">
 	<title>
-	get ML guide
+	Get ML Guide
 	</title>
 
 <para>
-send the mail with 
+Send the mail with 
 <screen>
 guide
 </screen>
 to elena-ctl@fml.org address.
-fml sends back the guide file to the sender.
+&fml8; sends back the guide message to the sender.
 </para>
 
 <para>
 If a file named "guide" is found at $ml_home_dir, it is used as a
-template.
+message template.
 </para>
 
 </sect1>

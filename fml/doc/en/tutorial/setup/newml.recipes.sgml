@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: newml.recipes.sgml,v 1.1 2005/07/23 01:57:36 fukachan Exp $
    $jaFML: newml.recipes.sgml,v 1.3 2004/10/06 09:07:42 fukachan Exp $
 -->
 
@@ -17,7 +17,7 @@
 
 <question>
 <para>
-specify administrator's mail address in alias file
+Specify administrator's mail address in alias file
 when "newml" command runs.
 </para>
 </question>
@@ -33,7 +33,7 @@ where ADDRESS is defined by $newml_command_ml_admin_default_address.
 By default, $newml_command_ml_admin_default_address == $fml_owner
 defined in /usr/local/etc/fml/main.cf file.
 
-Specify
+To change the value, specify
 $newml_command_ml_admin_default_address 
 in site_default_config.cf.
 <screen>
@@ -62,9 +62,9 @@ Not create a configuration file for a specific MTA not used.
 
 <answer>
 <para>
-$newml_command_mta_config_list defines 
-examples of MTA list "newml" command creates.
-Remove the specific MTA from the list.
+$newml_command_mta_config_list defines list of MTA.
+"makefml newml" command creates examples of the specified MTA's.
+Remove the specific MTA from the list to disable example creation.
 </para>
 
 <para>
