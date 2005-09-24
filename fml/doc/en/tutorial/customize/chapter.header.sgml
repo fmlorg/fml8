@@ -1,11 +1,11 @@
 <!--
-   $FML$
+   $FML: chapter.header.sgml,v 1.1 2003/07/26 07:31:28 fukachan Exp $
    $jaFML: chapter.header.sgml,v 1.3 2003/04/15 14:51:36 fukachan Exp $
 -->
 
 <chapter id="customize.header">
 	<title>
-	header rewriting
+	Header Rewriting
 	</title>
 
 <para>

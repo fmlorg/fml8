@@ -1,17 +1,17 @@
 <!--
-   $FML: fml_on_unix.sgml,v 1.1 2003/07/25 14:49:21 fukachan Exp $
+   $FML: fml_on_unix.sgml,v 1.2 2005/07/23 01:57:39 fukachan Exp $
    $jaFML: fml_on_unix.sgml,v 1.5 2003/04/15 14:51:39 fukachan Exp $
 -->
 
 <chapter id="install.fml.unix">
 	<title>
-	&fml8; installation on UNIX
+	&fml8; Installation On Unix
 	</title>
 
 
 <sect1 id="install.fml.unix.prepare">
 	<title>
-	preparation of installation
+	Preparation Of Installation
 	</title>
 
 
@@ -30,7 +30,7 @@ Create the user "fml" and the group "fml" before running configure.
 <!-- ====================================================== -->
 <sect1 id="install.fml.unix.configure">
 	<title>
-	run configure
+	Run Configure
 	</title>
 
 
@@ -43,18 +43,19 @@ Run configure (GNU autoconf) and make.
 # ./configure
 # make install
 </screen>
-configure replaces variables in scripts and .cf files.
+where configure replaces variables in scripts and .cf files.
 </para>
 
 <para>
-After runnig configure, run "make install".  The installer (perl
-scripts) reads etc/fml/install.cf configure created and install &fml8;.
+After runnig configure, run "make install". The fml installer (perl
+scripts) reads ./etc/fml/install.cf configure created and install
+&fml8; to e.g. /usr/local/.
 </para>
 
 <para>
-You can specify the user name and fundametal directory names by
-configure arguments. Customizable variables follow: configure --help
-shows them.
+You can specify the user name and fundamental directory names by
+configure arguments. Customizable variables are follows: 
+configure --help shows them.
 <screen>
 variables       default value               example
 --------------------------------------------------------
@@ -100,7 +101,7 @@ configure --help
 
 <sect2>
 	<title>
-	Example: running configure
+	Example: Running Configure
 	</title>
 
 <para>
@@ -207,7 +208,7 @@ Now you must run "make install".
 -->
 <sect1>
 	<title>
-	Appendix: directory roles
+	Appendix: Directory Roles
 	</title>
 
 <para>
@@ -233,18 +234,18 @@ Now you must run "make install".
         <row>
           <entry> /usr/local/etc/fml	</entry>
           <entry>
-	configuration files.
+	Configuration files.
 	It corresponds with 
 	&fml4;'s /usr/local/fml/.fml and default_config.ph.
-	/usr/local/etc/fmo/main.cf
-	here specify version and library paths et.al.
+	/usr/local/etc/fml/main.cf
+	has fml version and library paths et.al.
           </entry>
         </row>
 
         <row>
           <entry> /usr/local/libexec/fml 		</entry>
           <entry>
-	executables ( &fml4;'s /usr/local/fml )
+	Executables (corresponding with &fml4;'s /usr/local/fml )
 	  </entry>
         </row>
 
@@ -253,7 +254,7 @@ Now you must run "make install".
 		/usr/local/lib/fml
 	  </entry>
           <entry>
-	perl module location ( &fml4;'s /usr/local/fml )
+	Perl module location ( &fml4;'s /usr/local/fml )
 	  </entry>
         </row>
 
@@ -262,9 +263,8 @@ Now you must run "make install".
 		/usr/local/share/fml
 	  </entry>
           <entry>
-	message templates 
-	( &fml4;'s /usr/local/fml/messages/)
-	language dependendent.
+	Message templates ( &fml4;'s /usr/local/fml/messages/).
+	Template files are language dependendent.
 	  </entry>
         </row>
 
@@ -284,9 +284,11 @@ Now you must run "make install".
 		whereas /var/spool/nuinui.net for nuinui.net domain
 		(virtual domain).
 
-		See <link linkend="virtualdomain.fml8.overview">
+		See
+		<link linkend="virtualdomain.fml8.overview">
 		ml_home_prefix_maps
-		</link> for the relation between domain and directory.
+		</link>
+		for the relation between domain and directory.
 
 		Also see 
 		<link linkend="virtualdomain">
@@ -306,7 +308,7 @@ Now you must run "make install".
 <!-- ====================================================== -->
 <sect1 id="install.fml.unix.makeinstall">
 	<title>
-	fml installation: make install
+	Fml Installation: make install
 	</title>
 
 <para>
@@ -344,15 +346,16 @@ though already configure rewrites main.cf to fit your environment.
 </para>
 
 <para>
-main.cf is the most fundamental configuration to control &fml8; basic
-features: fml version control, library path, virtual domain et.al.
+The file main.cf contains the most fundamental configuration variables
+to control &fml8; basic features: fml version control, library path,
+virtual domain et.al.
 </para>
 
 <para>
-Instead, the detail of each ML configuration depends on config.cf of
-each ML such as /var/spool/ml/elena/config.cf for elena ML.
-"config.cf" can control customization of header, filter rules, member
-file locations et.al.
+Instead, the detail of each ML configuration depends on config.cf file
+of each ML such as /var/spool/ml/elena/config.cf for elena ML.
+"config.cf" can override all configuration variables: header
+customizations, filter rules, member file locations et.al.
 </para>
 
 <!-- main.cf example -->
@@ -368,7 +371,7 @@ file locations et.al.
 
 <para>
 /usr/local/etc/fml/site_default_config.cf is the configuration file
-common over all mailing list on this host(site).
+common over all mailing list on this host (site).
 <footnote>
 <para>
 This file corresponds to &fml4;'s site_force.ph.
@@ -377,8 +380,9 @@ This file corresponds to &fml4;'s site_force.ph.
 </para>
 
 <para>
+site_default_config.cf overrides default_config.cf file.
 Each ML configuration file (/var/spool/ml/elena/config.cf for elena
-ML) overwrites site_default_config.cf.
+ML) overrides site_default_config.cf.
 </para>
 
 <para>
@@ -453,7 +457,7 @@ To customize mime component filter, set
 use_mime_component_filter	=	yes
 </screen>
 at site_default_config.cf, and edit rules in 
-/usr/local/etc/fml/mime_component_filter .
+/usr/local/etc/fml/mime_component_filter file.
 </para>
 
 </sect1>
@@ -461,15 +465,14 @@ at site_default_config.cf, and edit rules in
 
 <sect1 id="install.virtual">
 	<title>
-	virtual domain
+	Virtual Domain
 	</title>
 
 <para>
-You do not need edit /usr/local/etc/fml/main.cf 
-but 
-you need to edit ml_home_prefix_maps.
-You can use "makefml newdomain" command to control ml_home_prefix_maps.
-See
+You do not need edit /usr/local/etc/fml/main.cf but you need to edit
+$ml_home_prefix_maps (/usr/local/etc/fml/ml_home_prefix file by
+default). You can use "makefml newdomain" command to control
+$ml_home_prefix_maps. See
 <link linkend="setup.newml">
 "ML creation"
 </link>
@@ -489,6 +492,9 @@ edit /usr/local/etc/fml/ml_home_prefix and set the following:
 <screen>
 nuinui.net	/var/spool/nuinui.net
 </screen>
+Please use "makefml newdomain" command to change 
+/usr/local/etc/fml/ml_home_prefix file. 
+It is recommended that you do not edit this file directly.
 </para>
 
 <warning>

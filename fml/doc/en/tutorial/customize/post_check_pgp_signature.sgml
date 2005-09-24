@@ -1,17 +1,18 @@
 <!--
-   $FML: post_check_pgp_signature.sgml,v 1.2 2005/06/25 15:11:29 fukachan Exp $
+   $FML: post_check_pgp_signature.sgml,v 1.1 2005/07/20 10:37:43 fukachan Exp $
 -->
 
 
 <sect1 id="config.post.check.pgp">
 	<title>
-	CASE STUDY: PGP/PGP based authentication in posting
+	Case Study: PGP/PGP Based Authentication In Posting
 	</title>
 
 <caution>
 <para>
-Please install Crypt::OpenPGP perl module. It is better to use OS
-dependent pacakge system since it depends a lot of other packages.
+Please install Crypt::OpenPGP perl module firstly. It is better to use
+OS dependent pacakge system since Crypt::OpenPGP depends a lot of
+other packages.
 </para>
 </caution>
 
@@ -21,15 +22,15 @@ dependent pacakge system since it depends a lot of other packages.
 	</title>
 
 <para>
-check_pgp_signature options supports PGP/GPG based auth.
+check_pgp_signature options enables PGP/GPG based auth.
 If the degital signature is confirmed, the user can post articles.
 <screen>
 article_post_restrictions       =       reject_system_special_accounts
                                         check_pgp_signature
                                         reject
 </screen>
-disabled by default.
-change article_post_restrictions if use.
+This function is disabled by default.
+Change article_post_restrictions if use.
 </para>
 
 </sect2>
@@ -37,14 +38,15 @@ change article_post_restrictions if use.
 
 <sect2>
 	<title>
-	Key operations
+	Key Operations
 	</title>
 
 <para>
-PGP KEY RING directories are separeted. For example, the keyring dir
-for article pgp auth is $ml_home_dir/etc/pgp-article-post-auth/
-directory, the keyring dir for remote administration by command mail
-is $ml_home_dir/etc/pgp-admin-command-mail-auth/ directory.
+PGP KEY RING directories are separeted for each purpose. For example,
+the keyring dir for article pgp auth is
+$ml_home_dir/etc/pgp-article-post-auth/ directory, the keyring dir for
+remote administration by command mail is
+$ml_home_dir/etc/pgp-admin-command-mail-auth/ directory.
 </para>
 
 <para>
@@ -52,7 +54,7 @@ Use pgp2, pgp5 and gpg commands to edit keys under them
 It is useful to use the following fmlpgp wrapper command.
 The wrapper sets up proper environment variables. 
 <screen>
-Example: elena ML
+[Example] operations for elena ML
 
 fmlpgp elena --article-post-auth -kg
 </screen>

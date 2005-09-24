@@ -1,11 +1,11 @@
 <!--
-   $FML: post_permit_anyone.sgml,v 1.2 2003/11/30 10:01:13 fukachan Exp $
+   $FML: post_permit_anyone.sgml,v 1.3 2005/07/20 10:37:44 fukachan Exp $
    $jaFML: post_permit_anyone.sgml,v 1.3 2003/04/15 14:51:37 fukachan Exp $
 -->
 
 <sect1 id="config.post.permitanyone">
 	<title>
-	case study: anyone can post.
+	Case Study: Anyone Can Post.
 	</title>
 
 <para>
@@ -18,7 +18,8 @@ e.g. root, postmaster) can post.
 </para>
 
 <para>
-By default, for &fml4; compatibility, 
+By default, $article_post_restrictions is defined as follows for
+&fml4; compatibility,
 <screen>
 article_post_restrictions	=	reject_system_special_accounts
 					permit_member_maps
@@ -29,9 +30,8 @@ From: looks like system accounts e.g. root, postmaster.
 </para>
 
 <para>
-This configuration means that
-system special accounts cannot post and 
-the user contained in $member_maps  can post article.
+This configuration means that system special accounts cannot post and
+only user contained in $member_maps can post article.
 </para>
 
 <para>

@@ -1,5 +1,5 @@
 <!--
-   $FML: qmail.sgml,v 1.1 2003/07/24 15:37:37 fukachan Exp $
+   $FML: qmail.sgml,v 1.2 2005/07/23 01:57:39 fukachan Exp $
    $jaFML: qmail.sgml,v 1.3 2003/04/15 14:51:39 fukachan Exp $
 -->
 
@@ -10,8 +10,8 @@
 
 <warning>
 <para>
-&fmldevel; assumes that qmail configurations is based on
-/var/qmail/control/virtualdomains always regardless of the default
+&fmldevel; assumes that qmail configurations is always based on
+/var/qmail/control/virtualdomains regardless of the default
 domain or not.
 </para>
 </warning>
@@ -46,7 +46,7 @@ See
 <link linkend="setup.qmail.aliases">
 the section on "makefml newml and qmail"
 </link>
-for ~/.qmail-* "makefml newml" creates.
+on how "makefml newml" creates ~/.qmail-* files.
 </para>
 
 </sect2>
@@ -58,11 +58,12 @@ for ~/.qmail-* "makefml newml" creates.
 	</title>
 
 <para>
-For nuinui.net domain, not the default one, specify 
+For "nuinui.net" virtual domain, not the default one, specify 
 <screen>
 nuinui.net:fml-nuinui.net
 </screen>
 at /var/qmail/control/virtualdomains.
+It is same as in default domain case.
 </para>
 
 </sect2>

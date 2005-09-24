@@ -1,21 +1,21 @@
 <!--
-   $FML: chapter.config.sgml,v 1.1 2003/07/26 07:31:27 fukachan Exp $
+   $FML: chapter.config.sgml,v 1.2 2005/07/20 10:37:43 fukachan Exp $
    $jaFML: chapter.config.sgml,v 1.3 2003/04/15 14:51:36 fukachan Exp $
 -->
 
 <chapter id="config">
 	<title>
-	Modify configuration files
+	Modify Configuration Files
 	</title>
 
 
 <sect1 id="config.sitedefaultconfig.cf">
 	<title>
-	change default for all ML's on thie host
+	Change Default For All ML's On Thie Host
 	</title>
 
 <para>
-Edit /usr/local/etc/fml/site_default_config.cf.
+Edit /usr/local/etc/fml/site_default_config.cf file.
 The format is same as config.cf.
 </para>
 

@@ -1,12 +1,12 @@
 <!--
-   $FML$
+   $FML: post_check_article_thread.sgml,v 1.1 2005/07/20 10:37:43 fukachan Exp $
    $jaFML: post_check_article_thread.sgml,v 1.3 2005/06/25 14:12:52 fukachan Exp $
 -->
 
 
 <sect1 id="config.post.check.article.thread">
 	<title>
-	CASE STUDY: article posting allowd if it is a reply to the former one.
+	Case Study: Article Posting Allowd If It Is A Reply To The Former One.
 	</title>
 
 <para>
@@ -32,26 +32,26 @@ article_post_restrictions.
 <para>
 The current implementation suppors the condition that "if the reply
 refers a known message-id within some time limit".  Precisely
-speaking, "knonw mesage-is" implies the id is found at the database
-which holds In-Reply-To: and References: of old articles within some
-time limit (e.g. one week).
+speaking, "known message-id" implies the id is found at the message-id
+database which holds In-Reply-To: and References: of old articles
+within some time limit (e.g. one week).
 </para>
 
 
 <sect2>
 	<title>
-	Examles
+	Examples
 	</title>
 
 <para>
-"check_article_thread" is the keyword to support this check.
+"check_article_thread" is the keyword to enable this check.
 <screen>
 article_post_restrictions       =       reject_system_special_accounts
                                         check_article_thread
                                         permit_member_maps
                                         reject
 </screen>
-not used by default.
+Not used by default.
 To use it, specify it at article_post_restrictions.
 </para>
 
@@ -69,8 +69,8 @@ There are some problems.
 </para>
 
 <para>
-1) what is proper time scale ?
-$article_post_article_thread_lifetime controlls it. one day by default.
+1) What is proper time scale ?
+$article_post_article_thread_lifetime controlls it. One day by default.
 <screen>
 article_post_article_thread_lifetime = 86400
 </screen>
@@ -83,7 +83,7 @@ last article ?
 </para>
 
 <para>
-2) more restricted condition support required ?
+2) More restricted condition support required ?
 If so, we should check the corelation between subject: and the thread?
 </para>
 
@@ -92,7 +92,7 @@ If so, we should check the corelation between subject: and the thread?
 
 <sect2>
 	<title>
-	Applied example: small persons can starts article thread.
+	Applied Example: Only A Few Persons Can Starts Article Thread.
 	</title>
 
 <para>
@@ -106,9 +106,9 @@ article_post_restrictions       =       reject_system_special_accounts
 
 
 </screen>
-Persons registered at members-thread-init can post article always.
-Other persons can post the article if the article is a reply to some
-other article.
+Only persons registered at members-thread-init file can post article
+always.  Other persons can post the article if the article is a reply
+to some other article.
 </para>
 
 <para>
@@ -116,7 +116,7 @@ Hmm, it looks a variation of moderator system ?
 </para>
 
 <para>
-Better if they use PGP auth.
+Better that they use PGP auth if could.
 <screen>
 member_maps			=       $tmp_dir/members-thread-init
 

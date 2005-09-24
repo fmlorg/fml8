@@ -1,30 +1,33 @@
 <!--
-   $FML: postfix.sgml,v 1.1 2003/07/24 15:37:37 fukachan Exp $
+   $FML: postfix.sgml,v 1.2 2005/07/23 01:57:39 fukachan Exp $
    $jaFML: postfix.sgml,v 1.3 2003/04/15 14:51:39 fukachan Exp $
 -->
 
 <sect1 id="install.postfix">
 	<title>
-	MTA configuration (postfix)
+	MTA Configuration (postfix)
 	</title>
 
 <para>
-Please set up postfix properly when "makefml newml" can set up a ml.
+Please set up postfix properly before "makefml newml" can set up a ml.
 </para>
 
 <sect2>
 	<title>
-	default domain (example: fml.org)
+	Default Domain (Example: fml.org)
 	</title>
 
 
 <para>
-set up /etc/postfix/main.cf like this:
+Set up /etc/postfix/main.cf like this:
 <screen>
+[/etc/postfix/main.cf]
+
 allow_mail_to_commands = alias,forward,include
 
 alias_maps	=	hash:/etc/mail/aliases
 			hash:/var/spool/ml/etc/mail/aliases
+
 </screen>
 </para>
 
@@ -40,12 +43,14 @@ $mydomain).
 
 <sect2>
 	<title>
-	virtual domain (example: nuinui.net)
+	Virtual Domain (Example: nuinui.net)
 	</title>
 
 <para>
-You need to edit both main.cf and virtual_maps.
+You need to edit /etc/postfix/main.cf to set up $virtual_maps.
 <screen>
+[/etc/postfix/main.cf]
+
 allow_mail_to_commands = alias,forward,include
 
 alias_maps	=	hash:/etc/mail/aliases
@@ -54,10 +59,14 @@ alias_maps	=	hash:/etc/mail/aliases
 
 virtual_maps	=	hash:/var/spool/nuinui.net/etc/postfix/virtual
 
+[/usr/local/etc/fml/ml_home_prefix]
+
+nuinui.net /var/spool/nuinui.net
+
 </screen>
 Both alias files and /var/spool/nuinui.net/etc/postfix/virtual are
-updated by makefml automatically.
-Here we support ml_home_prefix_maps defines
+updated by makefml automatically
+where we suppose ml_home_prefix_maps defines
 <screen>
 nuinui.net /var/spool/nuinui.net
 </screen>
@@ -67,14 +76,17 @@ relation.
 <warning>
 
 <para>
-$mydestination should contain the default domain (may be $mydomain)
-but not virtual domain (we assume we use postfix style virtual
-domain). Please see postfix document for more details.
+Postfix variable $mydestination should contain the default domain (may
+be $mydomain) but not virtual domain. Pay attention that we assume we
+use postfix style virtual domain. Please see postfix document for more
+details.
 </para>
 
 <para>
-When a new virtual domain is added, 
-add the new aliases file to $alias_maps and $virtual_maps.
+When you begin to use a new virtual domain, you need to update both
+$alias_maps and $virtual_maps in /etc/postfix/main.cf. Also, you have
+to update /usr/local/etc/fml/ml_home_prefix by running "makefml
+newdomain".
 </para>
 
 <para>

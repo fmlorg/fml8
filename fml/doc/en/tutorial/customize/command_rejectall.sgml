@@ -1,15 +1,15 @@
 <!--
-   $FML: command_rejectall.sgml,v 1.1 2003/07/26 07:31:28 fukachan Exp $
+   $FML: command_rejectall.sgml,v 1.2 2005/07/20 10:37:43 fukachan Exp $
    $jaFML: command_rejectall.sgml,v 1.3 2003/04/15 14:51:36 fukachan Exp $
 -->
 
 <sect1 id="config.command.rejectall">
 	<title>
-	case study: disable command mail
+	Case Study: Disable Command Mail
 	</title>
 
 <para>
-It is most safe to remove entries from aliases.
+It is most safe to remove command mail entries from aliases.
 </para>
 
 <para>
@@ -22,14 +22,14 @@ work and ends as soon as possible.
 </para>
 
 <para>
-This solution may be possible.
+The following solution may be possible.
 <screen>
 use_command_mail_function = yes
 
 command_mail_restrictions = reject
 </screen>
 When fml receives the incoming command mail, 
-it inform the rejection to the sender.
+it inform the rejection to the sender in all cases.
 </para>
 
 <para>

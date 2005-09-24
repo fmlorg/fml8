@@ -1,18 +1,18 @@
 <!--
-   $FML: download.sgml,v 1.2 2003/07/26 09:10:40 fukachan Exp $
+   $FML: download.sgml,v 1.3 2005/07/23 01:57:39 fukachan Exp $
    $jaFML: download.sgml,v 1.2 2002/07/06 14:55:17 fukachan Exp $
 -->
 
 <chapter id="download">
 	<title>
-	Download &fml8; source code.
+	Download &fml8; Source Code.
 	</title>
 
 
 <!-- ====================================================  -->
 <sect1 id="ftp.fml.org">
 	<title>
-	Download via ftp.
+	Download Via Ftp.
 	</title>
 
 <para>
@@ -34,7 +34,7 @@ Also, you can find a daily snapshot at
 <ulink url="ftp://ftp.fml.org/pub/fml/daily-snapshots/fml8/source/">
 ftp://ftp.fml.org/pub/fml/daily-snapshots/fml8/source/
 </ulink>.
-This snapshot is auto-build. 
+This snapshot is auto-built. 
 So it may not work well.
 </para>
 
@@ -44,7 +44,7 @@ So it may not work well.
 <!-- ====================================================  -->
 <sect1 id="anoncvs">
 	<title>
-	Access to cvs.
+	Access To Cvs.
 	</title>
 
 <para>
@@ -64,7 +64,7 @@ cvs -d cvs.fml.org:/cvsroot co fmlsrc
 <!-- ====================================================  -->
 <sect1 id="cvsweb">
 	<title>
-	Access to cvs via cvsweb.
+	Access To Cvs Via Cvsweb.
 	</title>
 
 <para>

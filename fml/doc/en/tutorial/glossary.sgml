@@ -1,5 +1,5 @@
 <!--
-   $FML: glossary.sgml,v 1.3 2003/07/27 15:31:52 fukachan Exp $
+   $FML: glossary.sgml,v 1.4 2005/07/23 01:58:47 fukachan Exp $
    $jaFML: glossary.sgml,v 1.5 2003/04/15 14:51:34 fukachan Exp $
 -->
 
@@ -103,7 +103,7 @@
 	<glossterm>	arg / args	</glossterm>
 	<glossdef>
 	<para>
-	argument.
+	argument / arguments.
 	</para>
 	</glossdef>
 

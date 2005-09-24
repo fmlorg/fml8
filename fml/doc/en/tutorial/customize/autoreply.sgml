@@ -1,21 +1,21 @@
 <!--
-   $FML: autoreply.sgml,v 1.1 2003/07/26 07:31:27 fukachan Exp $
+   $FML: autoreply.sgml,v 1.2 2005/07/20 10:37:42 fukachan Exp $
    $jaFML: autoreply.sgml,v 1.2 2003/01/05 08:00:59 fukachan Exp $
 -->
 
 <sect1 id="config.autoreply">
 	<title>
-	case study: auto file responder
+	Case Study: Auto File Responder
 	</title>
 
 <para>
 Modify delivery process ( libexec/distribute ) to send back
-/some/where/help file.  For example, when a user can send anything to
-help@fml.org, fml sends back help file to the sender.
+/some/where/help file. For example, when a user can send anything to
+help@fml.org, fml sends back the help file to the sender.
 </para>
 
 <para>
-In this case, set at config.cf
+In this case, set the following at config.cf
 <screen>
 article_post_restrictions = permit_anyone
 </screen>

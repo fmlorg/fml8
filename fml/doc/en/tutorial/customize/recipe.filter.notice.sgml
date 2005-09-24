@@ -1,5 +1,5 @@
 <!--
-   $FML: recipe.filter.notice.sgml,v 1.1 2003/07/26 07:31:28 fukachan Exp $
+   $FML: recipe.filter.notice.sgml,v 1.2 2005/07/20 10:37:44 fukachan Exp $
    $jaFML: recipe.filter.notice.sgml,v 1.2 2003/04/15 14:51:37 fukachan Exp $
 -->
 
@@ -8,14 +8,14 @@
 
 <question>
 <para>
-where the mail is sent back to when filter system rejects ?
+Where the mail is sent back to when filter system rejects ?
 </para>
 </question>
 
 <answer>
 
 <para>
-By default, these are defined
+By default, It is defined as
 <screen>
 use_article_filter_reject_notice	=	yes
 article_filter_reject_notice_recipient	=	maintainer sender
@@ -26,7 +26,7 @@ fml sends back it to both the ML maintainer and the sender.
 
 
 <para>
-To change the recipient to the sender (From: address), set
+To change the recipient to the sender (From: address) only, set
 <screen>
 article_filter_reject_notice_recipient	=	sender
 </screen>

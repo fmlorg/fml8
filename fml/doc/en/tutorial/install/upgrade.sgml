@@ -1,11 +1,11 @@
 <!--
-   $FML: upgrade.sgml,v 1.2 2003/07/26 09:06:36 fukachan Exp $
+   $FML: upgrade.sgml,v 1.3 2005/07/23 01:57:39 fukachan Exp $
    $jaFML: upgrade.sgml,v 1.3 2003/04/15 14:51:39 fukachan Exp $
 -->
 
 <chapter id="xxxgrade">
 	<title>
-	Upgrade and Downgrade of &fml8;
+	Upgrade And Downgrade Of &fml8;
 	</title>
 
 <warning>
@@ -37,8 +37,8 @@ again.
 
 <para>
 After &fml8; installation, rewrite fml_version line in
-/usr/local/etc/fml/main.cf to the version installed now.  Just when
-the file is saved, fml is changed to the new version.
+/usr/local/etc/fml/main.cf to switch fml to the version installed now.  
+Just when the file is saved, fml is changed to the new version.
 </para>
 </sect1>
 

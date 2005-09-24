@@ -1,17 +1,17 @@
 <!--
-   $FML: command_permit_anyone.sgml,v 1.1 2003/07/26 07:31:28 fukachan Exp $
+   $FML: command_permit_anyone.sgml,v 1.2 2005/07/20 10:37:43 fukachan Exp $
    $jaFML: command_permit_anyone.sgml,v 1.2 2003/01/05 08:00:59 fukachan Exp $
 -->
 
 <sect1 id="config.command.permitanyone">
 	<title>
-	case study: anyonen can use command mail.
+	Case Study: Anyonen Can Use Command Mail.
 	</title>
 
 <para>
 $command_mail_restrictions defines who can use command mail.
 By default user registerd as a poster can use command mail.
-To set anyone can use command mail, set
+To enable that anyone can use command mail, set
 <screen>
 command_mail_restrictions = permit_anyone
 </screen>

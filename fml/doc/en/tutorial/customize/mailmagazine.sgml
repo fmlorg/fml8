@@ -1,12 +1,12 @@
 <!--
-   $FML: mailmagazine.sgml,v 1.2 2003/07/27 17:47:06 fukachan Exp $
+   $FML: mailmagazine.sgml,v 1.3 2005/07/20 10:37:43 fukachan Exp $
    $jaFML: mailmagazine.sgml,v 1.3 2003/07/27 17:45:30 fukachan Exp $
 -->
 
 
 <sect1 id="config.mailmagazine.1">
 	<title>
-	case study: mail magazine (1)
+	Case Study: Mail Magazine (1)
 	</title>
 
 <warning>
@@ -81,7 +81,7 @@ use. It has only poster's addresses.
 
 <sect1 id="config.mailmagazine.2">
 	<title>
-	CASE STUDY: mail magazine (2)
+	Case Study: Mail Magazine (2)
 	</title>
 
 <para>
@@ -125,3 +125,4 @@ runs the following command by specifying the correct transport.
 </para>
 
 </sect1>
+

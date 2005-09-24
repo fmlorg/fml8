@@ -1,12 +1,12 @@
 <!--
-   $FML: case_studies.sgml,v 1.1 2003/07/26 07:31:27 fukachan Exp $
+   $FML: case_studies.sgml,v 1.2 2005/07/20 10:37:42 fukachan Exp $
    $jaFML: case_studies.sgml,v 1.4 2003/04/15 14:51:36 fukachan Exp $
 -->
 
 
 <sect1 id="sect.casestudy.01">
 	<title>
-	case study: office (1)
+	Case Study: Office (1)
 	</title>
 
 <para>
@@ -15,7 +15,7 @@ all ML's.
 </para>
 
 <para>
-no tag of subject. 
+No tag of subject. 
 <footnote>
 <para>
 This is default in &fml8; (default site_default_config.cf includes
@@ -47,30 +47,27 @@ postmaster can post.
 </para>
 
 <para>
-Disale almost all filters since a lot of customer messsages looks
+Disable almost all filters since a lot of customer messages looks
 something wrong.
 <screen>
-use_article_body_filter			=	no
-use_article_non_mime_filter		=	no
-use_article_mime_component_filter	=	no
-use_article_text_plain_filter		=	no
+use_article_filter		=	no
 </screen>
 </para>
 
 <para>
-change spool type as subdir since the number of articles may become
-over milion.
+Change spool type as subdir since the number of articles may become
+over million.
 <screen>
 spool_type			=	subdir
 </screen>
 </para>
 
 <para>
-disable command mail.
+Disable command mail.
 <screen>
 use_command_mail_function	=	no
 </screen>
-If somenoby want to use command mail (e.g. by CGI), we use this
+If someboby want to use command mail (e.g. by CGI), we use this
 variable. It is recommended to remove proper alias entries if could to
 ensure the command mail is prohibited.
 </para>
@@ -80,7 +77,7 @@ ensure the command mail is prohibited.
 
 <sect1 id="sect.casestudy.02">
 	<title>
-	case study: office (2)
+	Case Study: Office (2)
 	</title>
 
 <para>

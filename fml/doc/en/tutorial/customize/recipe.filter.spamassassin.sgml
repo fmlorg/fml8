@@ -2,19 +2,24 @@
 
 <question>
 <para>
-reject SPAM messages using spamassassin by a &fml8; hook.
+Reject SPAM messages by using spamassassin.
 </para>
 </question>
 
 <answer>
 
 <para>
-<caution>
+Case 1: use internal filter.
+<screen>
+use_article_spam_filter         =       yes
+article_spam_filter_drivers     =       spamassassin
+</screen>
+</para>
+
 <para>
+Case 2:
 In this case, &fml8; use not spamassassin internal filter but use a
 hook.
-</para>
-</caution>
 </para>
 
 <para>

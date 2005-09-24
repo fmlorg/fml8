@@ -1,17 +1,17 @@
 <!--
-   $FML$
+   $FML: chapter.message.sgml,v 1.1 2003/07/26 07:31:28 fukachan Exp $
    $jaFML: chapter.message.sgml,v 1.2 2003/04/15 14:51:36 fukachan Exp $
 -->
 
 <chapter id="customize.message">
 	<title>
-	extend message
+	Extend Message
 	</title>
 
 
 <sect1 id="customize.message.myproc">
 	<title>
-	case study: customze message
+	Case Study: Customize Message
 	</title>
 
 <para>
