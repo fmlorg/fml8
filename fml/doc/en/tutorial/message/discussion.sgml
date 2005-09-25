@@ -1,15 +1,15 @@
 <!--
-   $FML: discussion.sgml,v 1.1 2003/07/29 12:13:55 fukachan Exp $
+   $FML: discussion.sgml,v 1.2 2003/08/03 05:28:49 fukachan Exp $
    $jaFML: discussion.sgml,v 1.4 2003/04/15 14:51:42 fukachan Exp $
 -->
 
 <sect1>
 	<title>
-	Discussion: how to send back language dependent error mesages
+	Discussion: How To Send Back Language Dependent Error Mesages
 	</title>
 
 <para>
-Fml needs to send back language dependent error messages.
+fml needs to send back language dependent error messages.
 How we should implement it ?
 </para>
 
@@ -21,11 +21,11 @@ How we should implement it ?
 <!-- ===================================================== -->
 <sect2>
 	<title>
-	&fml4; case
+	&fml4; Case
 	</title>
 
 <para>
-In the case of &fml4;, &fml4; call language dependent message
+In the case of &fml4;, &fml4; calls language dependent message
 converter like this:
 <screen>
    Mesg(*e, KEYWORD, DEFAULT MESSAGE, ARGUMENT);
@@ -50,7 +50,7 @@ For example, the keyword not_found matches not_found entry in
 <!-- ===================================================== -->
 <sect2>
 	<title>
-	What &fmldevel; should do ?
+	What &fmldevel; Should Do ?
 	</title>
 
 <para>
@@ -78,7 +78,7 @@ For example, the usage is as follows:
 <screen>
 printf(catgets(catd, 30,  4,  "%s: Internal match error.\n"), progname);
 </screen>
-This function uses se 30 and entry 4 in the local definition file such
+This function uses set 30 and entry 4 in the local definition file such
 as /usr/pkg/share/nls/ja_JP.EUC/PROGNAME.cat.
 </para>
 
@@ -86,7 +86,7 @@ as /usr/pkg/share/nls/ja_JP.EUC/PROGNAME.cat.
 
 <sect3>
    <title>
-   &fmldevel;: design (temporary ?)
+   &fmldevel;: Design (Temporary ?)
    </title>
 
 <para>
@@ -151,7 +151,7 @@ $sender is ... something ...
 _EOF_
 }
 </screen>
-hmm, is it good ???
+Hmm, is it good ???
 </para>
 
 </sect3>

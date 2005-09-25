@@ -1,11 +1,11 @@
 <!--
-   $FML: dbms.sgml,v 1.2 2003/08/03 05:28:49 fukachan Exp $
+   $FML: dbms.sgml,v 1.3 2005/07/27 12:21:36 fukachan Exp $
    $jaFML: dbms.sgml,v 1.5 2003/05/31 08:51:09 fukachan Exp $
 -->
 
 <chapter id="dbms">
 	<title>
-	Database management system
+	Database Management System
 	</title>
 
 

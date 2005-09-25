@@ -1,11 +1,11 @@
 <!--
-   $FML: restriction.sgml,v 1.9 2005/06/25 15:11:35 fukachan Exp $
+   $FML: restriction.sgml,v 1.1 2005/07/27 12:21:37 fukachan Exp $
 -->
 
 
 <chapter id="restriction">
 	<title>
-	Restrict input data
+	Restrict Input Data
 	</title>
 
 <para>
@@ -16,16 +16,16 @@ provides.
 
 <sect1 id="restriction.overview">
 	<title>
-	Overview: checks of input data
+	Overview: Checks Of Input Data
 	</title>
 
 <sect2>
 	<title>
-	Restriction for article posting
+	Restriction For Article Posting
 	</title>
 
 <para>
-Restrictions for article are ambiguous or too restrictive.  In fact
+Restrictions for article are ambiguous or too restrictive. In fact
 FML::Restriction class does not provide restriction rules for article
 posting.
 </para>
@@ -39,7 +39,7 @@ Instead FML::Filter filter system checks each line of content.
 
 <sect2>
 	<title>
-	Restrictions for command mail
+	Restrictions For Command Mail
 	</title>
 
 <para>
@@ -97,6 +97,7 @@ though no checks by FML::Restriction at the entrance.
 For example, "adduser" module checks whether the input address
 is valid or not even in the case of CUI.
 These restrictions are dependent command specific modules.
+These are applied even in the case of CUI.
 </para>
 
 </sect2>
@@ -106,7 +107,7 @@ These restrictions are dependent command specific modules.
 
 <sect1 id="restriction.class">
 	<title>
-	FML::Restriction class
+	FML::Restriction Class
 	</title>
 
 <para>
@@ -137,7 +138,7 @@ if ($value =~ /^$allowed_regexp{$key}$) { ... ok, do something ... ;}
 
 <sect1 id="restrictioncgi.input.data">
 	<title>
-	How CGI restricts the input
+	How CGI Restricts The Input
 	</title>
 
 <para>
@@ -178,7 +179,7 @@ for my $key (param()) {
 
 <sect1>
 	<title>
-	Discussion: FML::Restriction is too restrictive ?
+	Discussion: FML::Restriction Is Too Restrictive ?
 	</title>
 
 <para>

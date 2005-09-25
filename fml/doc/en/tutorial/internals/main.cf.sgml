@@ -1,5 +1,5 @@
 <!--
-   $FML: main.cf.sgml,v 1.10 2004/10/06 09:07:39 fukachan Exp $
+   $FML: main.cf.sgml,v 1.1 2005/07/27 12:21:36 fukachan Exp $
 -->
 
 
@@ -9,7 +9,7 @@
 	</title>
 
 <para>
-/usr/local/etc/fml/main.cf is not specific.
+/usr/local/etc/fml/main.cf is not ML specific.
 This is meta file to define fundamental variables 
 e.g. fml version, directory path et.al.
 &fml8; loader reads them.
@@ -29,7 +29,7 @@ style.
 
 <screen>
 #
-# $FML: main.cf.sgml,v 1.10 2004/10/06 09:07:39 fukachan Exp $
+# $FML: main.cf.sgml,v 1.1 2005/07/27 12:21:36 fukachan Exp $
 #
 
 # fml version

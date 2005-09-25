@@ -1,5 +1,5 @@
 <!--
-   $FML: directory.sgml,v 1.1 2005/07/27 12:21:36 fukachan Exp $
+   $FML: directory.sgml,v 1.2 2005/08/03 13:22:06 fukachan Exp $
 -->
 
 
@@ -11,7 +11,7 @@
 
 <sect1 id="directory.subdir.hier.level">
 	<title>
-	Q: how recursively sub directory can be created ?
+	Q: How Recursively Sub Directory Can Be Created ?
 	</title>
 
 <para>
@@ -22,7 +22,7 @@ The structore holding the html-ized article is as follows:
 </para>
 
 <para>
-one sub-directory by default.
+One sub-directory by default.
 </para>
 
 <para>

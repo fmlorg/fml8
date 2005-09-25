@@ -1,20 +1,20 @@
 <!--
-   $FML: chapter.sgml,v 1.1 2003/08/02 01:19:11 fukachan Exp $
+   $FML: chapter.sgml,v 1.2 2005/07/20 10:39:17 fukachan Exp $
    $jaFML: chapter.sgml,v 1.12 2003/04/15 14:51:37 fukachan Exp $
 -->
 
 <chapter id="delivery">
 	<TITLE>
-	&fml8; mail delivery system
+	&fml8; Mail Delivery System
 	</TITLE>
 
 <sect1 id="fml8-delivery">
 	<title>
-	The difference between &fml4; and &fml8;
+	The Difference Between &fml4; And &fml8;
 	</title>
 
 <para>
-One of puposes of &fml8; is unification and abstraction of member
+One of purposes of &fml8; is unification and abstraction of member
 list operations. Mail distribution is based on the following module
 Mail::Delivery.
 </para>
@@ -58,12 +58,12 @@ object.
 	<link linkend="module.mail.message">
 	Mail::Message
 	</link>
-	object
+	Object
 	</title>
 
 <para>
 This object provies message analyzer.
-It analyzes a message and build the following object chains
+It analyzes a message and build the following object chains on memory.
 <screen>
 header -> body
 header -> preamble -> part1 -> part2 -> trailor (multipart)
@@ -99,7 +99,7 @@ system like MTA. Now fml8 can deliver again messages by itself.
 
 <sect1>
 	<title>
-	Discussion: FML::Mailer is apropriate ?
+	Discussion: FML::Mailer Is Apropriate ?
 	</title>
 
 <para>

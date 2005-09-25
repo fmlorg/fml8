@@ -1,11 +1,11 @@
 <!--
-   $FML: style.sgml,v 1.14 2005/06/25 15:11:35 fukachan Exp $
+   $FML: style.sgml,v 1.1 2005/08/03 13:22:06 fukachan Exp $
 -->
 
 
 <chapter id="programingstyle">
 	<TITLE>
-	Programming style
+	Programming Style
 	</TITLE>
 
 <para>
@@ -24,7 +24,7 @@ on FML.ORG programming style.
 <!-- ==================================================== -->
 <sect1 id="variable-naming-convention">
 	<title>
-	Variable naming convension
+	Variable Naming Convension
 	</title>
 
 <para>
@@ -39,14 +39,14 @@ We expect $article_* variables for them.
 </para>
 
 <para>
-Iit seems better to use CLASS_default_XXX syntax not
+It seems better to use CLASS_default_XXX syntax not
 default_XXX.
 </para>
 
 
 <sect2>
 	<title>
-	Structure of variable naming
+	Structure Of Variable Naming
 	</title>
 
 <para>
@@ -78,7 +78,7 @@ report_mail_XXX
 </para>
 
 <para>
-Other example (header);
+Other example (header):
 <screen>
 header_XXX
 header_default_XXX
@@ -133,7 +133,7 @@ article {
 
 <sect2>
 	<title>
-	Example: Standard pattern (e.g. log.cf lock.cf)
+	Example: Standard Pattern (e.g. log.cf lock.cf)
 	</title>
 
 <screen>
@@ -198,7 +198,7 @@ PROGRAM_VARIABLE_ATTRIBUTE
 <!-- ==================================================== -->
 <sect1 id="design.policy">
 	<title>
-	A few topics on design and coding style
+	A Few Topics On Design And Coding Style
 	</title>
 
 <warning>
@@ -212,17 +212,17 @@ on style.
 
 <sect2>
 	<title>
-	A few cautions
+	A Few Cautions
 	</title>
 
 
 <para>
-apply quotemeta() for search key.
+Apply quotemeta() for search key.
 </para>
 
 
 <para>
-use access method for object not handle directly within objects.
+Use access method for object not handle directly within objects.
 Example: To access to main.cf object, not use
 <screen>
 $curproc->{ ... }->{ main_cf }
@@ -236,13 +236,13 @@ style.
 
 
 <para>
-better not to use @EXPORT and @EXPORT_OK.
+It is better not to use @EXPORT and @EXPORT_OK.
 </para>
 
 
 <para>
 How depth of classes is allowed ? 
-two such as Srting::is_japanese_string() ?
+two such as String::is_japanese_string() ?
 At least 3, I think. 
 </para>
 
@@ -254,7 +254,7 @@ At least 3, I think.
 <!-- ==================================================== -->
 <sect1>
 	<title>
-	Programming style original idea
+	Programming Style Original Idea
 	</title>
 
 <warning>
@@ -269,7 +269,7 @@ Here is the original idea log.
 	<listitem>
 	<para>
 	We can use polymorphism in perl.
-	use it and object composition instaed of multiple inheritence.
+	Use it and object composition instaed of multiple inheritence.
 	</para>
 
 	</listitem>
@@ -319,7 +319,7 @@ Here is the original idea log.
 
 
 <para>
-	polymorphism and re-use is important
+	Polymorphism and re-use is important
 	especially in sub-classes.
 </para>
 

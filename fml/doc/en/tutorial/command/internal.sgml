@@ -1,16 +1,16 @@
 <!--
-   $FML: internal.sgml,v 1.3 2004/03/12 14:05:04 fukachan Exp $
+   $FML: internal.sgml,v 1.4 2005/07/20 10:37:42 fukachan Exp $
    $jaFML: internal.sgml,v 1.6 2003/04/15 14:51:36 fukachan Exp $
 -->
 
 <sect1 id="fml.command.internal.change">
 	<title>
-	How differ coding style among &fml4; and &fml8;
+	How Differ Coding Style Among &fml4; And &fml8;
 	</title>
 
 <para>
-Consider "help" command as an example of an fml command,
-which sends back help message to the sender.
+Consider localization of "help" command as an example of an fml
+command, which sends back help message to the sender.
 </para>
 
 <para>

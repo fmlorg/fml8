@@ -1,13 +1,12 @@
 <!--
-   $FML: language.sgml,v 1.1 2003/07/29 12:13:55 fukachan Exp $
+   $FML: language.sgml,v 1.2 2003/08/03 05:28:50 fukachan Exp $
    $jaFML: language.sgml,v 1.5 2003/04/15 14:51:42 fukachan Exp $
 -->
 
 
 <sect1 id="message.nl">
 	<title>
-	Message internationalization: a
-	the usage of reply_message_nl()
+	Message Internationalization: The Usage Of reply_message_nl()
 	</title>
 
 <para>
@@ -39,10 +38,10 @@ reply_mesage_nl().
 </para>
 
 <para>
-Usual $VARIABLE is also expaned by replacing it with value of config.cf.
-For example, $ml_name is expanded to ML name defined in config.cf.
-$_arg_ prefix is used for lexical scope variables to avoid
-conflicts against variables in config.cf.
+Usual $VARIABLE is also expaned by replacing it with value of config
+name space.  For example, $ml_name is expanded to ML name defined in
+config.cf. In fact $_arg_ prefix is used for lexical scope variables
+to avoid conflicts against variables in config.cf.
 </para>
 
 </sect1>

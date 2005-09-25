@@ -1,22 +1,22 @@
 <!--
-   $FML: create_program.sgml,v 1.1 2003/08/02 01:19:11 fukachan Exp $
+   $FML: create_program.sgml,v 1.2 2003/08/02 14:53:24 fukachan Exp $
    $jaFML: create_program.sgml,v 1.6 2003/04/15 14:51:38 fukachan Exp $
 -->
 
 <chapter id="program.create">
 	<title>
-	Create a new program
+	Create A New Program
 	</title>
 
 
 <sect1>
 	<title>
-	Create a program (CUI)
+	Create A Program (CUI)
 	</title>
 
 <para>
 Firstly, prepare a new module in FML::Process class. See
-FML::Process::Scheduler as the least functional model and see
+FML::Process::Calendar as the least functional model and see
 FML::Process::Distribute for the most complicated class.
 </para>
 
@@ -86,7 +86,7 @@ define the program as $bin_programs or $exec_programs in install.cf.in.
 
 <sect1>
 	<title>
-	Create a program (CGI)
+	Create A Program (CGI)
 	</title>
 
 <para>

@@ -1,11 +1,11 @@
 <!--
-   $FML: filename.sgml,v 1.1 2003/07/26 07:58:26 fukachan Exp $
+   $FML: filename.sgml,v 1.2 2003/08/03 05:28:49 fukachan Exp $
    $jaFML: filename.sgml,v 1.3 2003/04/15 14:51:41 fukachan Exp $
 -->
 
 <chapter id="filename">
 	<title>
-	[Caution] file names
+	[Caution] File Names
 	</title>
 
 <para>
@@ -16,7 +16,7 @@ References: fml-devel 205
 
 <sect1 id="filename.basic">
 	<title>
-	Filename structure
+	Filename Structure
 	</title>
 
 <para>
@@ -49,7 +49,7 @@ for several password files.
 
 <sect1>
 	<title>
-	Case study: address list
+	Case Study: Address List
 	</title>
 
 <para>
@@ -67,7 +67,7 @@ recipient_maps	=	recipients
 
 <sect1>
 	<title>
-	Case study: list of remote administrators
+	Case Study: List Of Remote Administrators
 	</title>
 
 <para>
@@ -82,7 +82,7 @@ members-admin
 
 <sect1>
 	<title>
-	Case study: list of moderators
+	Case Study: List Of Moderators
 	</title>
 
 
@@ -99,7 +99,7 @@ members-moderator
 
 <sect1>
 	<title>
-	Case study: remote administrator password files
+	Case Study: Remote Administrator Password Files
 	</title>
 
 
@@ -111,7 +111,7 @@ etc/passwd-admin
 
 <warning>
 <para>
-etc/passwd is used in the case of &fml4;.
+etc/passwd, lack of role name, was used in the case of &fml4;.
 </para>
 </warning>
 

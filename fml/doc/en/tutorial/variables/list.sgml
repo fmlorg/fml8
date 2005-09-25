@@ -1114,8 +1114,8 @@ ldap_query_add_as_ldif</entry>
 <entry>
  attributes to add into $ldap_base_dn entry.</entry>
 <entry>
-fmlrecipient:&address
-   fmlmember:&address
+fmlrecipient:&amp;address
+   fmlmember:&amp;address
    </entry>
 </row>
 <row>
@@ -1124,8 +1124,8 @@ ldap_query_delete_as_ldif</entry>
 <entry>
  attributes to remove from $ldap_base_dn entry.</entry>
 <entry>
-fmlrecipient:&address
-   fmlmember:&address
+fmlrecipient:&amp;address
+   fmlmember:&amp;address
    </entry>
 </row>
 <row>

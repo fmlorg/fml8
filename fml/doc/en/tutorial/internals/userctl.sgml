@@ -1,28 +1,28 @@
 <!--
-   $FML: userctl.sgml,v 1.3 2004/10/06 09:07:40 fukachan Exp $
+   $FML: userctl.sgml,v 1.1 2005/07/27 12:21:37 fukachan Exp $
 -->
 
 
 <chapter id="userctl">
 	<title>
-	subscribe / unsubscribe
+	Subscribe / Unsubscribe
 	</title>
 
 
 <sect1 id="userctl.deladd">
 	<title>
-	which map subscribe/unsubscribe is operated to ?
+	Which Map Subscribe/Unsubscribe Is Operated To ?
 	</title>
 
 <para>
-Subscribe/unsubscribe is operated to $primary_*map.
+Subscribe/unsubscribe is operated to $primary_*_map.
 </para>
 
 <para>
 For example, 
 subscription of remote administrators is operated into
 both $primary_admin_member_map and $primary_admin_recipient_map.
-unsubscription of remote administrators is operated into
+Unsubscription of remote administrators is operated into
 both $primary_admin_member_map and $primary_admin_recipient_map.
 </para>
 

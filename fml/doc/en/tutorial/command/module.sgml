@@ -1,5 +1,5 @@
 <!--
-   $FML: module.sgml,v 1.2 2003/08/02 03:05:53 fukachan Exp $
+   $FML: module.sgml,v 1.3 2005/07/20 10:37:42 fukachan Exp $
    $jaFML: module.sgml,v 1.4 2003/04/15 14:51:36 fukachan Exp $
 -->
 
@@ -30,7 +30,7 @@ $command is the specified command name.
 
 <sect2>
 	<title>
-	User command in command mail
+	User Command In Command Mail
 	</title>
 
 <para>
@@ -50,11 +50,11 @@ confirmation before the real subscription process runs.
 
 <sect2>
 	<title>
-	Admin command (administrative command in command mail)
+	Admin Command (Administrative Command In Command Mail)
 	</title>
 
 <para>
-call FML::Command::Admin::$command for $command via FML::Command
+It calles FML::Command::Admin::$command for $command via FML::Command
 via FML::Process::Command.
 </para>
 

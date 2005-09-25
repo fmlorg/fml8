@@ -1,5 +1,5 @@
 <!--
-   $FML: filter.sgml,v 1.9 2005/06/25 15:11:34 fukachan Exp $
+   $FML: filter.sgml,v 1.1 2005/08/03 13:22:06 fukachan Exp $
 -->
 
 
@@ -186,11 +186,11 @@ suitable for mime component filter when we consider the meaning of
 "cutoff" operation.
 </para>
 
-</sect2>
-
 <para>
 ( NOT TRANSLATED AFTER THIS )
 </para>
+
+</sect2>
 
 </sect1>
 

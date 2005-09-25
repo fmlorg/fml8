@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: log.sgml,v 1.1 2005/07/23 01:57:38 fukachan Exp $
    $jaFML: log.sgml,v 1.2 2004/10/06 09:07:41 fukachan Exp $
 -->
 
@@ -12,7 +12,7 @@
 
 <sect1 id="operations.log.see">
 	<title>
-	See log
+	See Log
 	</title>
 
 <para>
@@ -32,15 +32,12 @@ GUI uses log command.
 
 <sect1 id="operations.log.computeroutput">
 	<title>
-	Show computer oriented log
+	Show Computer Oriented Log
 	</title>
 
 <para>
-When another command or CGI calls &fml8; CUI and wants to analyze the
-output, please use the following option.
-</para>
-
-<para>
+When not fml program or CGI calls &fml8; CUI and such program wants to
+analyze the output, you can use use the following option.
 <screen>
 % makefml --log-computer-output COMMAND ML_NAME
 % fml --log-computer-output     ML_NAME COMMAND
@@ -65,20 +62,20 @@ The command line option --log-computer-output is same effect as
 <screen>
 use_log_computer_output = yes
 </screen>
-in config.cf
+in config.cf file.
 </para>
 
 <para>
 When "use_log_computer_output = yes" specified in config.cf, all
-programs are affected. So all programs shows the computer oriented log
-to STDERR. So use of command line option is recommended.
+programs are affected. All programs shows the computer oriented log to
+STDERR. So use of command line option is recommended.
 </para>
 
 <para>
-We should use perl module which holds a set of functions.  In this
+We should use perl module which holds a set of functions. In this
 case, the print out engine is the class called as
 FML::Log::Print::Simple. The output style is contolled by
-$log_computer_output_engine in config.cf
+$log_computer_output_engine in config.cf file.
 </para>
 
 </sect1>

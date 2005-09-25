@@ -1,5 +1,5 @@
 <!--
-   $FML: command.sgml,v 1.1 2003/07/26 04:29:12 fukachan Exp $
+   $FML: command.sgml,v 1.2 2005/09/18 13:55:57 fukachan Exp $
    $jaFML: command.sgml,v 1.7 2003/04/15 14:51:46 fukachan Exp $
 -->
 
@@ -42,13 +42,12 @@ The mail to send back is passed to MTA for delivery via SMTP.
 </para>
 
 <warning>
+
 <para>
-The result is aggreagated to one msssage as
-<link linkend="message.reply">
-MIME/Multipart
-</link>
-. This is different from &fml4; behaviour.
+The result is aggreagated to one msssage as MIME/Multipart. This is
+different from &fml4; behaviour. 
 </para>
+
 </warning>
 
 </sect2>

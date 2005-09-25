@@ -1,18 +1,18 @@
 <!--
-   $FML: extension.sgml,v 1.2 2003/08/02 03:05:53 fukachan Exp $
+   $FML: extension.sgml,v 1.3 2005/07/20 10:37:42 fukachan Exp $
    $jaFML: extension.sgml,v 1.10 2003/04/15 14:51:36 fukachan Exp $
 -->
 
 
 <sect1 id="fml.command.hack.commandmail">
 	<title>
-	Command extension: command mail
+	Command Extension: Command Mail
 	</title>
 
 
 <warning>
 <para>
-To make a new command usable for all ML's on this host, 
+To make a new local command usable for all ML's on this host, 
 you need to put the module you wrote at
 <screen>
 /usr/local/lib/fml/site_local/
@@ -31,11 +31,11 @@ where $ml_home_dir = /var/spool/ml/elena.
 
 <sect2>
 	<title> 
-	Create a new user command
+	Create A New User Command
 	</title>
 
 <para>
-Consider to make a new user command "uja".
+Consider to make a new local user command "uja".
 Pick up a command at FML::Command::User, cut and paste it.
 Please put it at
 <screen>
@@ -59,7 +59,7 @@ user_command_mail_allowed_commands += uja
 
 <sect2>
 	<title> 
-	Create a new admin command such as "admin uja"
+	Create A New Admin Command Such As "admin uja"
 	</title>
 
 <para>
@@ -84,12 +84,12 @@ admin_command_mail_allowed_commands += uja
 
 <sect1 id="fml.command.hack.makefml">
 	<title>
-	CUI command extension: makefml/fml
+	CUI Command Extension: makefml/fml
 	</title>
 
 <warning>
 <para>
-To make a new command usable for all ML's on this host, 
+To make a new local command usable for all ML's on this host, 
 put the module you wrote at
 <screen>
 /usr/local/lib/fml/site_local/
@@ -124,7 +124,7 @@ of CUI implies administrator use.
 
 <sect1 id="fml.command.hack.cgi">
 	<title>
-	GUI command extension: CGI
+	GUI Command Extension: CGI
 	</title>
 
 
@@ -134,7 +134,7 @@ You need another work to create a menu screen.
 </para>
 
 <para>
-To make a new command usable for all ML's on this host, 
+To make a new local command usable for all ML's on this host, 
 put the module you wrote at
 <screen>
 /usr/local/lib/fml/site_local/

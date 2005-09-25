@@ -1,11 +1,11 @@
 <!--
-   $FML: chapter.sgml,v 1.3 2003/08/02 03:05:53 fukachan Exp $
+   $FML: chapter.sgml,v 1.4 2005/07/20 10:37:41 fukachan Exp $
    $jaFML: chapter.sgml,v 1.7 2002/12/25 11:50:42 fukachan Exp $
 -->
 
 <chapter id="fml.command.modules">
 	<title>
-	Command (command mail, CUI and GUI)
+	Command (Command Mail, CUI And GUI)
 	</title>
 
 

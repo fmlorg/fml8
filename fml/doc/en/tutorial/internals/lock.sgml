@@ -1,5 +1,5 @@
 <!--
-   $FML: lock.sgml,v 1.5 2005/06/25 15:11:34 fukachan Exp $
+   $FML: lock.sgml,v 1.1 2005/07/27 12:21:36 fukachan Exp $
 -->
 
 
@@ -16,7 +16,7 @@ Synchronization among processes uses lock.
 
 <sect1 id="lock.overview">
 	<title>
-	Overview: lock
+	Overview: Lock
 	</title>
 
 <para>
@@ -70,7 +70,7 @@ Currently we attension we use short critical region.
 	</title>
 
 <para>
-mutex lock in calling *_maps.
+Mutex lock in calling *_maps.
 </para>
 
 <para>

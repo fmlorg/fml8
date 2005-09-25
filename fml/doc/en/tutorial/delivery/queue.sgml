@@ -1,11 +1,11 @@
 <!--
-    $FML: queue.sgml,v 1.1 2003/08/02 01:19:11 fukachan Exp $
+    $FML: queue.sgml,v 1.2 2005/07/20 10:39:17 fukachan Exp $
     $jaFML: queue.sgml,v 1.3 2003/04/15 14:51:37 fukachan Exp $
 -->
 
 <sect1 id="message.queue.incoming">
 	<TITLE>
-	incoming queuing
+	Incoming Queuing
 	</TITLE>
 
 <para>
@@ -16,12 +16,12 @@ MTA kicks off a fml process. It reads a message from STDIN.
 The fml process reads a message once and write it onto the hard disk
 (write it into the incoming queue). After the queuing succeeded, the
 process starts to analyze a message. For this logic, the original mail
-is saved after that.
+is saved before main processing starts.
 </para>
 
 <para>
-If the queuing fails, call exit(EX_TEMPFAIL). In almost cases,
-exit(75).  If MTA receives this exit code, MTA tries to deliver again
+If the queuing fails, fml calls exit(EX_TEMPFAIL). In almost cases,
+exit(75). If MTA receives this exit code, MTA tries to deliver again
 later.
 </para>
 
@@ -35,7 +35,7 @@ The queus is removed when the process ends.
 
 <sect1 id="message.queue.outgoing">
 	<TITLE>
-	fml sends back a mail message
+	fml Sends Back A Mail Message
 	</TITLE>
 
 <para>
@@ -45,7 +45,7 @@ process.
 </para>
 
 <para>
-article delivery processing is a little diffferent but based on
+Article delivery processing is a little diffferent but based on
 queueing by Mail::Delivery::Queue. If someting error occurs in
 delivery, another fml process tries to deliver it later.
 </para>
@@ -53,11 +53,11 @@ delivery, another fml process tries to deliver it later.
 
 <sect2>
 	<title>
-	Coding in &fml8; sources.
+	Coding In &fml8; Sources.
 	</title>
 
 <para>
-Code like this to send back a message:
+Code is like this to send back a message:
 <screen>
 $curproc->reply_message( "you are not a ML member." );
 </screen>
@@ -92,7 +92,7 @@ $curproc->reply_message( {
 
 <sect1 id="message.queue">
 	<TITLE>
-	mail queue and delivery system
+	Mail Queue And Delivery System
 	</TITLE>
 
 <para>
@@ -124,7 +124,7 @@ In manipulating queue, we should lock the target queue by flock(2).
 
 <sect1>
 	<TITLE>
-	mail queue directory
+	Mail Queue Directory
 	</TITLE>
 
 <para>
@@ -152,7 +152,7 @@ Hence files under active/ is delivery ready.
 
 <sect2>
 	<title>
-	lock the queue
+	Lock The Queue
 	</title>
 
 <para>

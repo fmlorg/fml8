@@ -1,17 +1,17 @@
 <!--
-   $FML: struct.sgml,v 1.2 2003/08/03 05:28:49 fukachan Exp $
+   $FML: struct.sgml,v 1.3 2005/07/27 12:21:37 fukachan Exp $
    $jaFML: struct.sgml,v 1.2 2003/04/15 14:51:41 fukachan Exp $
 -->
 
 <appendix id="structure">
 	<title>
-	Struct curproc (object in fact)
+	Struct curproc (Object In Fact)
 	</title>
 
 
 <sect1 id="structure.curproc">
 	<title>
-	curproc object
+	curproc Object
 	</title>
 
 <para>
@@ -25,7 +25,7 @@ Example of FML::Process::Distribute object.
 
 <sect1 id="structure.pcb">
 	<title>
-	PCB category list
+	PCB Category List
 	</title>
 
 <para>

@@ -1,22 +1,22 @@
 <!--
-   $FML: merge.sgml,v 1.3 2005/06/25 15:11:34 fukachan Exp $
+   $FML: merge.sgml,v 1.1 2005/07/27 12:21:37 fukachan Exp $
 -->
 
 
 <chapter id="merge.internal.to.fml8">
 	<title>
-	Convert another ML system to &fml8;
+	Convert Another ML System To &fml8;
 	</title>
 
 
 <sect1 id="merge.internal.fml4to8">
 	<title>
-	Implementation: &fml4; to &fml8;
+	Implementation: &fml4; To &fml8;
 	</title>
 
 <sect2>
 	<title>
-	Case 1: /var/spool/ml/elena/ from &fml4; to &fml8;
+	Case 1: /var/spool/ml/elena/ From &fml4; To &fml8;
 	</title>
 
 <para>
@@ -69,7 +69,7 @@ case of &fml8;. We should warn it ?
 
 <sect2>
 	<title>
-	Case 2: convert the whole /var/spool/ml/ from &fml4; to &fml8;
+	Case 2: Convert The Whole /var/spool/ml/ From &fml4; To &fml8;
 	</title>
 
 <para>
@@ -79,7 +79,7 @@ Apply case 1 for all ML's.
 <para>
 If we can stop all ML's, it is easy to remove
 /var/spool/ml/etc/fml/aliases of &fml4; firstly and apply case 1 steps.
-stop MTA in migration.
+Please stop MTA in migration.
 </para>
 
 </sect2>
@@ -87,7 +87,7 @@ stop MTA in migration.
 
 <sect2>
 	<title>
-	Discussion: use half and half of &fml4; and &fml8; softwares.
+	Discussion: Use Half And Half Of &fml4; And &fml8; Softwares.
 	</title>
 
 <para>

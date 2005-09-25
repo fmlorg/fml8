@@ -1,11 +1,11 @@
 <!--
-   $FML: chapter.sgml,v 1.1 2003/07/28 15:20:18 fukachan Exp $
+   $FML: chapter.sgml,v 1.2 2003/08/03 05:28:49 fukachan Exp $
    $jaFML: chapter.sgml,v 1.5 2003/04/15 14:51:42 fukachan Exp $
 -->
 
 <chapter id="mail.manipulation">
 	<title>
-	Manipulate message (mail message)
+	Manipulate Message (Mail Message)
 	</title>
 
 <para>
@@ -22,16 +22,16 @@ Mail::Bounce, Mail::Delivery depend on this class.
 <!-- ======================================= -->
 <sect1>
 	<title>
-	Mail::Message class
+	Mail::Message Class
 	</title>
 
 <para>
 A mail consists of one header and one body.
-A multipart mail consists of several parts.
+A multipart mail body consists of several parts.
 </para>
 
 <para>
-The mail delivery needs not to know the detail of a message.
+The mail delivery module needs not to know the detail of a message.
 But the filter system needs to know the structure of the message.
 </para>
 
@@ -41,7 +41,7 @@ These modules depend
 Mail::Message class
 </link>
 to know the message structure.
-For eample, Mail::Bounce, Mail::Delivery et.al. uses this.
+For example, Mail::Bounce, Mail::Delivery et.al. use this class.
 </para>
 
 <para>
@@ -66,7 +66,7 @@ The usage is as follows:
 <!-- ======================================= -->
 <sect1>
 	<title>
-	Mail::Message::Parse class
+	Mail::Message::Parse Class
 	</title>
 
 <para>
@@ -87,7 +87,7 @@ class.
 <!-- ======================================= -->
 <sect1>
 	<title>
-	Mail::Message::Compose class
+	Mail::Message::Compose Class
 	</title>
 
 <para>

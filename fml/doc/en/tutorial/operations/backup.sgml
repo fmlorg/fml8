@@ -1,12 +1,12 @@
 <!--
-   $FML$
+   $FML: backup.sgml,v 1.1 2005/07/23 01:57:38 fukachan Exp $
    $jaFML: backup.sgml,v 1.3 2004/10/06 09:07:41 fukachan Exp $
 -->
 
 
 <chapter id="operations.backup">
 	<title>
-	Back up of configurations
+	Back Up Of Configurations
 	</title>
 
 
@@ -21,13 +21,13 @@ These directories holds all articles, log files and others et.al.
 </para>
 
 <para>
-It is better to back up MTA configurations. 
+It is better to back up MTA configurations, too. 
 For example, /etc/postfix in the case of Postfix.
 </para>
 
 <para>
-In summary, 
-the following three (2 + number of domains fml8 operatates) are targets.
+In summary, the following three (generally speaking 2 + number of
+domains fml8 operatates) are targets.
 <screen>
 /etc/postfix/
 /usr/local/etc/fml/
@@ -38,7 +38,7 @@ $ml_home_prefix	(e.g. /var/spool/ml/)
 
 <sect1 id="operations.backup.fml8.include">
 	<title>
-	Back up &fml8; configurations
+	Back Up &fml8; Configurations
 	</title>
 
 <para>
@@ -64,7 +64,7 @@ following files.
 
 <sect2>
 	<title>
-	Configuration files back up
+	Configuration Files To Back Up
 	</title>
 
 <para>
@@ -107,7 +107,7 @@ So back up all under them.
 
 <sect2>
 	<title>
-	Address list back up
+	Address List To Back Up
 	</title>
 
 <para>
@@ -116,13 +116,13 @@ Lists of mail addresses are
 /ML_HOME_DIRECTORY/members*
 /ML_HOME_DIRECTORY/recipients*
 </screen>
-Article delivery uses recipients and members. For other roles, 
-&fml8; uses members-$role and recipients-$role.
-So, back up all members* and recipients* files.
+Article delivery uses both recipients and members. For other roles,
+&fml8; uses members-$role and recipients-$role. So, back up all
+members* and recipients* files.
 </para>
 
 <para>
-Remoto administration by command mail (admin command mail) uses 
+Remote administration by command mail (admin command mail) uses 
 the following password files
 <screen>
 /ML_HOME_DIRECTORY/etc/passwd-$role
@@ -137,7 +137,7 @@ the following password files
 
 <sect1 id="operations.backup.fml8.exclude">
 	<title>
-	Back up all files except for some large directories.
+	Back Up All Files Except For Some Large Directories.
 	</title>
 
 <para>

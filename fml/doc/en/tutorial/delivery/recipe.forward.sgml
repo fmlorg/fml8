@@ -1,12 +1,12 @@
 <!--
-   $FML$
+   $FML: recipe.forward.sgml,v 1.1 2003/07/28 10:41:29 fukachan Exp $
    $jaFML: recipe.forward.sgml,v 1.2 2003/04/15 14:51:38 fukachan Exp $
 -->
 
 <qandaentry>
 <question>
 <para>
-switch forwarding address regarding the mail content.
+Wwitch forwarding address regarding the mail content.
 </para>
 </question>
 
