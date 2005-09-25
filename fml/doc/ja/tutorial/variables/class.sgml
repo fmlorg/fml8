@@ -122,6 +122,13 @@ article {
           $use_article_text_plain_filter
    }
 
+   article_thread_outline { 
+    ?     $article_thread_outline_greeting_en
+    ?     $article_thread_outline_greeting_ja
+          $article_thread_outline_rules
+          $use_article_thread_outline
+   }
+
    article_virus_filter { 
     ?     $article_virus_filter_clamav_options
     ?     $article_virus_filter_drivers

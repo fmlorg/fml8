@@ -367,6 +367,34 @@ reject_not_iso2022jp_japanese_string
 </row>
 <row>
 <entry>
+article_thread_outline_greeting_en</entry>
+<entry>
+ スレッドの概要が始まる部分につける挨拶</entry>
+<entry>
+[outline of this thread]
+   </entry>
+</row>
+<row>
+<entry>
+article_thread_outline_greeting_ja</entry>
+<entry>
+ スレッドの概要が始まる部分につける挨拶</entry>
+<entry>
+[本スレッドのあらすじ]
+   </entry>
+</row>
+<row>
+<entry>
+article_thread_outline_rules</entry>
+<entry>
+ スレッドの概要を記事に追加する際にどこに追加するのか</entry>
+<entry>
+add_header
+   append_body
+   </entry>
+</row>
+<row>
+<entry>
 article_virus_filter_clamav_options</entry>
 <entry>
  --mbox needed for mail files.</entry>
@@ -1106,8 +1134,8 @@ ldap_query_add_as_ldif</entry>
 <entry>
  attributes to add into $ldap_base_dn entry.</entry>
 <entry>
-fmlrecipient:&address
-   fmlmember:&address
+fmlrecipient:&amp;address
+   fmlmember:&amp;address
    </entry>
 </row>
 <row>
@@ -1116,8 +1144,8 @@ ldap_query_delete_as_ldif</entry>
 <entry>
  attributes to remove from $ldap_base_dn entry.</entry>
 <entry>
-fmlrecipient:&address
-   fmlmember:&address
+fmlrecipient:&amp;address
+   fmlmember:&amp;address
    </entry>
 </row>
 <row>
@@ -1826,7 +1854,7 @@ select fml_address from $sql_table
    and
    fml_domain = '$ml_domain'
    and
-   fml_address like '%&regexp%'
+   fml_address like '%&amp;regexp%'
    </entry>
 </row>
 <row>
@@ -2150,6 +2178,15 @@ use_article_text_plain_filter</entry>
  先頭の text/plain 部分に対するフィルタ。</entry>
 <entry>
 yes
+   </entry>
+</row>
+<row>
+<entry>
+use_article_thread_outline</entry>
+<entry>
+ 自動的にスレッドの概要を記事に追加するか否か</entry>
+<entry>
+no
    </entry>
 </row>
 <row>
