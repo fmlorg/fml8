@@ -16,6 +16,3 @@ CATALOG "/usr/pkg/share/sgml/docbook/dsssl/modular/catalog"
 CATALOG "/usr/pkg/share/sgml/iso8879/catalog"
 CATALOG "/usr/pkg/share/sgml/iso12083/catalog"
 CATALOG "/usr/pkg/share/sgml/openjade/catalog"
-
-CATALOG "/usr/pkg/share/sgml/stylesheets/sgmltools/sgmltools.cat"
-CATALOG "/usr/pkg/share/sgml/dtd/sgmltools/catalog"
