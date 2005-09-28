@@ -1,11 +1,11 @@
 <!--
-   $FML: fml.sgml,v 1.2 2003/07/27 18:11:40 fukachan Exp $
+   $FML: fml.sgml,v 1.3 2005/07/23 01:57:40 fukachan Exp $
    $jaFML: fml.sgml,v 1.4 2003/04/15 14:51:43 fukachan Exp $
 -->
 
 <chapter id="overview.fml">
 	<title>
-	&fmldevel; overview
+	&fmldevel; Overview
 	</title>
 
 <para>
@@ -20,7 +20,7 @@ on the detail of difference between &fml4; and &fml8;.
 <!-- ======================================================== -->
 <sect1 id="overview.fml8">
 	<title>
-	&fmldevel; features
+	&fmldevel; Features
 	</title>
 
 <para>
@@ -31,7 +31,7 @@ on the detail of difference between &fml4; and &fml8;.
 	<para>
 	&fml8; configuration file format is changed to
 	<link linkend="internal.config.cf">
-	new postfix style format configuration files (.cf files).
+	new Postfix style format configuration files (.cf files).
 	</link>
 	</para>
     </listitem>
@@ -211,7 +211,7 @@ on the detail of difference between &fml4; and &fml8;.
 <!-- ======================================================== -->
 <sect1 id="overview.fml8.install">
 	<title>
-	installation overview
+	Installation Overview
 	</title>
 
 
@@ -309,7 +309,7 @@ The brief flow of installation is as follows:
 % makefml newml elena
 </screen>
 You can use "fml" instead of makefml. 
-Both are same except for the syntax.
+Both are same except for the argument order.
 <screen>
 % su fml
 % fml elena newml
@@ -337,7 +337,7 @@ Both are same except for the syntax.
    <listitem>
 	<para>
 	<link linkend="guide.config.cf">
-	Cutomize your ML.
+	Customize your ML.
 	</link>
 	</para>
    </listitem>
@@ -357,7 +357,7 @@ It is different from &fml4;.
 <!-- ============================================================= -->
 <sect1 id="guide.newml">
 	<title>
-	Create an ML
+	Create An ML
 	</title>
 
 <para>
@@ -408,7 +408,7 @@ for the virtual domain case detail.
 <!-- ============================================================= -->
 <sect1 id="guide.subscribe">
 	<title>
-	add a new user to ML
+	Add A New User To ML
 	</title>
 
 <para>
@@ -431,7 +431,7 @@ specify the whole adress of ML name.
 <!-- ============================================================= -->
 <sect1 id="guide.unsubscribe">
 	<title>
-	remove the user
+	Remove The User
 	</title>
 
 <para>
@@ -454,7 +454,7 @@ specify the whole adress of ML name.
 <!-- ============================================================= -->
 <sect1 id="guide.config.cf">
 	<title>
-	customize
+	Customize
 	</title>
 
 <warning>
@@ -472,7 +472,7 @@ Edit configuration files anyway now.
 
 <sect2>
 	<title>
-	common configurations on this host
+	Common Configurations On This Host
 	</title>
 
 <para>
@@ -504,7 +504,7 @@ for the configurable variation.
 
 <sect2>
 	<title>
-	elena ML's configuration
+	elena ML's Configuration
 	</title>
 
 <para>
@@ -514,7 +514,7 @@ format is
  a little modified postfix style. 
 </link>
 It is different from both &fml4;'s config.ph and cf.
-Add hooks after =cut line.
+Add hooks after =cut line if needed.
 </para>
 
 <para>

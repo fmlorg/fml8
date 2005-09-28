@@ -1,5 +1,5 @@
 <!--
-   $FML: filter.sgml,v 1.1 2005/08/03 13:22:06 fukachan Exp $
+   $FML: filter.sgml,v 1.2 2005/09/25 04:27:18 fukachan Exp $
 -->
 
 
@@ -32,12 +32,12 @@ e.g. line length limit of one line.
 
 <sect1  id="internals.filter.overview">
 	<title>
-	Overview of filter system
+	Overview Of Filter System
 	</title>
 
 <para>
 There are three types of filter system for content check such as for
-header, body and mime structure based.  Other than the tree cases, we
+header, body and mime structure based. Other than the tree cases, we
 should consider text/plain and non mime text (text/?) filter. So there
 may be four types of filter.
 <screen>
@@ -64,7 +64,7 @@ may be four types of filter.
 </screen>
 Other than these filters, content_filter using SMTP/LMTP can be needed
 but not implemented. If you need content_filter, please use the
-function of postfix.
+function of Postfix.
 </para>
 
 <!-- XXX-TODO traffic filter -->
@@ -77,7 +77,7 @@ Traffic based filter is also needed but not implemented yet.
 
 <sect1 id="internals.filter.config">
 	<title>
-	Configuration variables
+	Configuration Variables
 	</title>
 
 <para>
@@ -101,7 +101,7 @@ function_A_rules         = rule_01 urle_02
 
 <sect1 id="internals.filter.size">
 	<title>
-	Size limit
+	Size Limit
 	</title>
 
 <para>
@@ -121,7 +121,7 @@ the input message is analyzed already.
 
 <sect1 id="internals.filter.command">
 	<title>
-	limit for command mail
+	Limit For Command Mail
 	</title>
 
 <para>
@@ -137,7 +137,7 @@ the input message is analyzed already.
 
 <sect1 id="internals.filter.mimecomponent">
 	<title>
-	mime component filter rules
+	Mime Component Filter Rules
 	</title>
 
 <para>
@@ -176,14 +176,14 @@ But there are several problems of rule construction.
 
 <sect2>
 	<title>
-	first match vs last match ?
+	First Match Vs Last Match ?
 	</title>
 
 <para>
-This is a filter but not a router filter.  Router filter is first
-match almost cases.  But both first match and last match are not
-suitable for mime component filter when we consider the meaning of
-"cutoff" operation.
+This is a filter but not a router filter. Router filter is first match
+in almost cases. But both first match and last match are not suitable
+for mime component filter when we consider the meaning of "cutoff"
+operation.
 </para>
 
 <para>
@@ -197,7 +197,7 @@ suitable for mime component filter when we consider the meaning of
 
 <sect1 id="internals.filter.mimecomponent.functions">
 	<title>
-	Discussion: mime component filter needs what functions ?
+	Discussion: Mime Component Filter Needs What Functions ?
 	</title>
 
 <para>

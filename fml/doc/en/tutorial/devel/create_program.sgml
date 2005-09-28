@@ -1,5 +1,5 @@
 <!--
-   $FML: create_program.sgml,v 1.2 2003/08/02 14:53:24 fukachan Exp $
+   $FML: create_program.sgml,v 1.3 2005/09/25 04:27:17 fukachan Exp $
    $jaFML: create_program.sgml,v 1.6 2003/04/15 14:51:38 fukachan Exp $
 -->
 
@@ -78,7 +78,8 @@ lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 mead@ -> loader
 </screen>
 As a test, you symlink it explicitly. For the canonical programs, fml
 installer symlinks them according to fml/etc/install.cf. You need to
-define the program as $bin_programs or $exec_programs in install.cf.in.
+define the program as $bin_programs or $exec_programs in install.cf.in
+(configure generates install.cf).
 </para>
 
 </sect1>
@@ -107,7 +108,7 @@ These modules have the following relation.
 </para>
 
 <para>
-How to write CGI programs is same as one of CUI. CUI modules locate
+How to write CGI programs is same as one of CUI. GUI modules locate
 under FML::CGI to clarify the difference between CUI and GUI.
 </para>
 

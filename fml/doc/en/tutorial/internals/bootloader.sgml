@@ -1,16 +1,16 @@
 <!--
-   $FML: bootloader.sgml,v 1.13 2005/06/25 15:11:33 fukachan Exp $
+   $FML: bootloader.sgml,v 1.1 2005/07/27 12:21:35 fukachan Exp $
 -->
 
 
 <chapter id="bootloader">
 	<title>
-	&fml8; boot loader to resolv version dependence dynamically
+	&fml8; Boot Loader To Resolve Version Dependence Dynamically
 	</title>
 
 <para>
-&fml8; provides a boot loader to resolv version dependence dynamically.
-For example, the loader boot straps &fml8; as follows:
+&fml8; provides a boot loader to resolve version dependence
+dynamically. For example, the loader boot straps &fml8; as follows:
 <screen>
 fml (libexec/distribute) boots like this ...
 
@@ -36,7 +36,7 @@ fml (libexec/distribute) boots like this ...
 
 <sect1 id="bootloader.example.distribute">
 	<title>
-	Case: distribution
+	Case: Distribution
 	</title>
 
 <para>
@@ -44,10 +44,11 @@ fml (libexec/distribute) boots like this ...
 </para>
 
 <para>
-/usr/local/libexec/fml/distributre (== /usr/local/libexec/fml/loader
-in fact) reads /usr/local/etc/fml/main.cf and resolvers the version it
-should use from $fml_version variable.  Let $fml_version
-current-20010501.  The loader uses library perl modules under
+/usr/local/libexec/fml/distributre (is same as
+/usr/local/libexec/fml/loader in fact) reads
+/usr/local/etc/fml/main.cf and resolvers the version it should use
+from $fml_version variable. Let $fml_version current-20010501. The
+loader uses library perl modules under
 /usr/local/lib/fml/current-20010501/.
 </para>
 
@@ -74,7 +75,7 @@ argument and drives the object.
 
 <sect1 id="bootloader.classes">
 	<title>
-	FML::Process:: class structure
+	FML::Process:: Class Structure
 	</title>
 
 <para>
@@ -94,7 +95,7 @@ FML::Process::Mead       >-|    |
 
 <sect1 id="bootloader.classes2">
 	<title>
-	Modules in process execution
+	Modules In Process Execution
 	</title>
 
 <itemizedlist>
@@ -172,7 +173,7 @@ $process->finish($args);
 
 <sect1 id="bootloader.resolv.mlxxx">
 	<title>
-	Discussion: where function should resolve $ml_name and $ml_domain.
+	Discussion: Where Function Should Resolve $ml_name And $ml_domain.
 	</title>
 
 <para>

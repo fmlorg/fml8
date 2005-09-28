@@ -1,11 +1,11 @@
 <!--
-   $FML: chapter.sgml,v 1.4 2005/06/25 15:11:28 fukachan Exp $
+   $FML: chapter.sgml,v 1.1 2005/08/03 13:26:43 fukachan Exp $
 -->
 
 
 <chapter id="changes">
 	<title>
-	Difference between &fml4; and &fml8;
+	Difference Between &fml4; And &fml8;
 	</title>
 
 
@@ -14,14 +14,14 @@ In this chapter, we describe the difference beetween &fml4; and &fml8;
 </para>
 
 <para>
-Intuitively fml4 vs fml8 is equal to sendmail vs postfix.
+Intuitively fml4 vs fml8 is equal to sendmail vs Postfix.
 It is good image.
 </para>
 
 
 <sect1 id="changes.license">
 	<title>
-	Difference between &fml4; and &fml8;: License.
+	Difference Between &fml4; And &fml8;: License.
 	</title>
 
 <para>
@@ -58,7 +58,7 @@ You need to clarify the license before installation.
 
 <sect1 id="changes.command.mail">
 	<title>
-	Difference between &fml4; and &fml8;: Command mail and error messages.
+	Difference Between &fml4; And &fml8;: Command Mail And Error Messages.
 	</title>
 
 <para>
@@ -81,7 +81,7 @@ tar.gz and zip formats are not supported..
 
 <sect1 id="changes.cui">
 	<title>
-	Difference between &fml4; and &fml8;: CUI
+	Difference Between &fml4; And &fml8;: CUI
 	</title>
 
 <para>
@@ -138,7 +138,7 @@ This behaviour is UNIX style.
 
 <sect1 id="changes.gui">
 	<title>
-	Difference between &fml4; and &fml8;: GUI (CGI)
+	Difference Between &fml4; And &fml8;: GUI (CGI)
 	</title>
 
 <para>
@@ -175,7 +175,7 @@ See
 <xref linkend="filename">
 </link>
 for the file naming convention.
-You need not ot know the detail,
+You need not to know the detail,
 since the conversion tools convert files from &fml4; style to &fml8; one.
 But it is useful to know it to see files.
 </para>

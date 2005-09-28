@@ -1,11 +1,11 @@
 <!--
-   $FML: ml.sgml,v 1.1 2003/07/24 15:37:37 fukachan Exp $
+   $FML: ml.sgml,v 1.2 2003/07/27 18:11:40 fukachan Exp $
    $jaFML: ml.sgml,v 1.3 2003/04/15 14:51:43 fukachan Exp $
 -->
 
 <chapter id="overview.ml">
 	<title>
-	mailing list ?
+	What Is Mailing List ?
 	</title>
 
 <sect1 id="overview.email">
@@ -19,9 +19,11 @@ Email is an electirc version of mail.
 
 <para>
 One email has the following structure which consists of two parts.
-The former is the header, the latter is the body. The separator
-between them is one null line (empty line).
+The former is header, the latter is body. The separator between them
+is one null line (empty line).
 <screen>
+[Example]
+
 From: rudo@nuinui.net
 To: kenken@nuinui.net
 Subject: asobo.
@@ -39,7 +41,7 @@ See RFC822 and RFC2822 for more details of definitions.
 
 <sect1 id="overview.mailinglist">
 	<title>
-	mailing list (ML)
+	Mailing List (Ml)
 	</title>
 
 <para>
@@ -51,7 +53,7 @@ the ML.
 
 <sect2 id="overview.mldriver">
 	<title>
-	model of an ML.
+	Model Of An ML.
 	</title>
 
 <para>

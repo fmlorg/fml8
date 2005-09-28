@@ -19,7 +19,7 @@ Q: installation of fml
 8: run "configure" and "make install" at the source top directory.
 	In fact "make install" executes install.pl script.
 
-Q: Behaviour of install script
+Q: behaviour of install script
 4: interactive by default.
 	You can use interactive menu for most important options.
 8: not interactive.
@@ -36,7 +36,7 @@ Q: create ML
 
 Q: templates of alias files "makefml newml" generates.
 4: only for sendmail (also used as postfix for compatibility).
-8: all for postfix, sendmail, qmail, procmail MTA's.
+8: postfix, sendmail, qmail and procmail.
 
 Q: alias file path "makefml newml" generates.
 4: /var/spool/ml/etc/aliases
@@ -64,7 +64,7 @@ Q: test of fml
 
 Q: set up LISTSERV style server.
 4: makefml fmlserv ML
-	listserv majordomo is same as.
+	listserv and majordomo is same as.
 8: not implemented
 
 
@@ -208,7 +208,7 @@ Q: set up password of remote administrator (3).
 #
 Q: menu style configuration tool.
 4: makefml config ML
-8: incomplete.
+8: makefml config ML, though it is incomplete.
 
 Q: edit configuration file.
 4: "makefml edit ML".
@@ -223,7 +223,7 @@ Q: fml4 specific configuration file conversion (generate cf to config.ph)
 4: "makefml update-config ML".
 	Commands (update config-update update-config.ph) are same.
 	the operations is shown.
-8: no corresponding idea (one configuration file).
+8: no corresponding idea (since &fml8; uses one configuration file).
 
 
 #
@@ -341,7 +341,7 @@ Q: dist-encrypt (PGP, GPG KEY RING operation)
 #
 Q: set up popfml (emulate MTA and ML via POP).
 4: makefml popfml
-8: fetchfml
+8: not corresponding one. use fetchfml.
 
 Q: set up password for POP.
 4: makefml pop_passwd

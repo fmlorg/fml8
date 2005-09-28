@@ -1,17 +1,17 @@
 <!--
-   $FML: IO.sgml,v 1.1 2003/07/28 10:41:30 fukachan Exp $
+   $FML: IO.sgml,v 1.2 2003/08/03 01:47:17 fukachan Exp $
    $jaFML: IO.sgml,v 1.4 2003/04/15 14:51:42 fukachan Exp $
 -->
 
 <chapter id="module.io.adapter">
 	<title>
-	IO abstraction layer (IO::Adapter class)
+	IO Abstraction Layer (IO::Adapter Class)
 	</title>
 
 
 <sect1 id="module.io.adapter.overview">
 	<title>
-	IO::Adapter overview
+	IO::Adapter Overview
 	</title>
 
 <para>
@@ -35,8 +35,8 @@ file:/var/spool/ml/elena/recipients
 unix.group:root
 nis.group:root
 mysql:id
-postgresql:id  (not yet implemented)
-ldap:id        (not yet implemented)
+postgresql:id
+ldap:id      
 </screen>
 </para>
 
@@ -55,7 +55,7 @@ IO::Adapter".
 
 <sect1 id="module.io.adapter.methods">
 	<title>
-	IO::Adapter methods
+	IO::Adapter Methods
 	</title>
 
 <para>
@@ -103,14 +103,14 @@ between &fml4; and &fml8; but it is mandatory for further abstraction.
 
 <sect1>
 	<title>
-	Argument type of methods
+	Argument Type Of Methods
 	</title>
 
 <para>
-The argument needs nothing or STR as the argument and the return value
-is STR. get_next_key() is typical as the no argument case. This method
-is used to list up the content of files or retrieve the specific
-address in the file.
+The argument needs nothing, STR or ARRAY_REF as the argument and the
+return value is STR. get_next_key() is typical as the no argument
+case. This method is used to list up the content of files or retrieve
+the specific address in the file.
 </para>
 
 <para>
@@ -122,7 +122,7 @@ KEY_STR => [
      VALUE_STR_3
 ]
 </screen>
-This is used as the return value to represent ARRAY. For example,
+This is used as the return value to represent ARRAY_REF. For example,
 "actives" file of &fml4; consists of lines which have plural space
 separeted entries. So it can be representated as a type of array.
 <screen>
@@ -137,8 +137,13 @@ rudo@nuinui.net => [
 </para>
 
 <para>
+If retrieval value could be represented as ARRAY_REF, argument of
+store operations alsot needs ARRAY_REF.
+</para>
+
+<para>
 It is summarized as follows.
-The argument is one of "nothing" or "STR".
+The argument is one of "nothing", "STR" or ARRAY_REF.
 The return value is either of STR of ARRAY_REF (array reference).
 <screen>
 argument     return value
@@ -158,7 +163,7 @@ STR       => [STR, STR, ... ]
 
 <sect1 id="module.io.adapter.map.file">
 	<title>
-	File map
+	File Map
 	</title>
 
 <para>
@@ -172,7 +177,7 @@ The format of text file is space separated.
 
 <sect1 id="module.io.adapter.map.unixgroup">
 	<title>
-	Unixgroup map
+	Unixgroup Map
 	</title>
 
 <para>
@@ -204,7 +209,7 @@ kenken
 
 <sect1 id="module.io.adapter.map.nis">
 	<title>
-	NIS map
+	Nis Map
 	</title>
 
 <para>
@@ -216,13 +221,13 @@ It is same as one of /etc/group but the data is retrieved from NIS/YP.
 
 <sect1 id="module.io.adapter.map.mysql">
 	<title>
-	MySQL map
+	MySQL Map
 	</title>
 
 <para>
 For easy maintenance, it is better to write all mysql configurations
 in one file. For example, it is good that we have only to write SQL
-configuratinos in config.cf.
+configurations in config.cf.
 </para>
 
 <para>
@@ -274,12 +279,12 @@ method.
 <sect2>
 	<title>
 	Discussion:
-	How to write sql statements in config.cf ?
+	How To Write SQL Statements In config.cf ?
 	(fml-devel 204)
 	</title>
 
 <para>
-How about lexical scope ? The .cf files cannot define all variables
+How about lexical scope ? The .cf files cannot contain all variables
 since lexical scope variables exist.
 We use &amp;varname syntax for such lexical scope variables.
 </para>

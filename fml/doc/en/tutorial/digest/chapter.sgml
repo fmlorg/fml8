@@ -1,20 +1,21 @@
 <!--
-   $FML: chapter.sgml,v 1.2 2003/08/02 14:53:25 fukachan Exp $
+   $FML: chapter.sgml,v 1.3 2005/07/20 10:39:17 fukachan Exp $
    $jaFML: chapter.sgml,v 1.3 2003/04/15 14:51:39 fukachan Exp $
 -->
 
 <chapter id="digest">
 	<title>
-	Digest delivery
+	Digest Delivery
 	</title>
 
 <para>
-run
+Run
 <screen>
 /usr/local/libexec/fml/digest $ml_name
 </screen>
 periodically for digest delivery. It aggregates articles into one
-message and send it to members defined by $digest_recipient_maps.
+MIME/multipart message and send it to members defined by
+$digest_recipient_maps.
 </para>
 
 <warning>
@@ -26,7 +27,7 @@ Digest delivery program is a simple version yet now.
 
 <sect1 id="digest.config.files">
 	<title>
-	Files used for digest delivery control
+	Files Used For Digest Delivery Control
 	</title>
 
 <para>
@@ -58,7 +59,7 @@ so you can use mysql here.
 
 <sect1 id="digest.command">
 	<title>
-	Idea: digest related commands
+	Idea: Digest Related Commands
 	</title>
 
 

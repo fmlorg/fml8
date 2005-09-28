@@ -1,15 +1,15 @@
 <!--
-   $FML: cgi.examples.sgml,v 1.3 2005/06/25 15:11:33 fukachan Exp $
+   $FML: cgi.examples.sgml,v 1.1 2005/07/27 12:21:35 fukachan Exp $
 -->
 
 
 <sect1 id="cgi.internal.example.isa">
 	<title>
-	CGI implementation: inheritance among CGI classes
+	CGI Implementation: Inheritance Among CGI Classes
 	</title>
 
 <para>
-@ISA of config.cgi follow:
+@ISA of config.cgi follows:
 <screen>
 FML::CGI::Menu   FML::Process::CGI::Kernel FML::Process::CGI::Param
 </screen>

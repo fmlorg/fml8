@@ -1,11 +1,11 @@
 <!--
-   $FML: hook.sgml,v 1.6 2004/10/06 09:07:39 fukachan Exp $
+   $FML: hook.sgml,v 1.1 2005/07/28 13:27:48 fukachan Exp $
 -->
 
 
 <chapter id="hook">
 	<title>
-	HOOK
+	Hook
 	</title>
 
 
@@ -15,7 +15,7 @@
 	</title>
 
 <para>
-Hooks are requierd to resolve complicated problems or for compilcated
+Hooks are required to resolve complicated problems or for compilcated
 customization. But there are several problems in implemantation.
 </para>
 
@@ -31,7 +31,7 @@ $ROLE_FUNCTION_end_hook
 </para>
 
 <para>
-There is no common hook amongh processes.  Each process has each hook.
+There is no common hook among processes. Each process has each hook.
 In other words, there is no common hook. You need to define plural
 hooks for different processes even if the hook is same content.
 <screen>
@@ -48,12 +48,12 @@ since perl beginners may code it.
 use strict;
 </screen>
 definition but not effective in evalauating hooks.
-In evaluating a hook, apply
+In evaluating a hook, &fml8; evaluate it as
 <screen>
 no strict;
 HOOK CONTENT
 </screen>
-, that is disable the strict check, and evaluates the hook.
+to disable the strict check.
 </para>
 
 <para>
@@ -68,11 +68,11 @@ We should provide hooks when we can see $curproc.
 
 <sect1 id="hook.naming.convention">
 	<title>
-	Hook naming convension
+	Hook Naming Convension
 	</title>
 
 <para>
-hook standard form is
+Hook standard form is
 <screen>
 ROLE_METHOD_start_hook
 ROLE_METHOD_end_hook
@@ -90,7 +90,7 @@ the following hooks:
 fmlconf_run_start_hook
 fmlconf_run_end_hook
 </screen>
-The actual code calling hooks follows:
+The actual code calling hooks as follows:
 <screen>
 sub run
 {

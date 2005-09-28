@@ -1,15 +1,15 @@
 <!--
-   $FML: nativelanguage.sgml,v 1.1 2003/07/28 15:20:18 fukachan Exp $
+   $FML: nativelanguage.sgml,v 1.2 2003/08/03 01:47:17 fukachan Exp $
    $jaFML: nativelanguage.sgml,v 1.3 2003/04/15 14:51:43 fukachan Exp $
 -->
 
 <chapter>
 	<title>
-	Language dependent functions
+	Language Dependent Functions
 	</title>
 
 <para>
-Fml needs language dependent functions internally. Especially, JIS
+&fml8; needs language dependent functions internally. Especially, JIS
 to/from EUC-JP Janapese code conversion is used anywhere since
 Japanese mail messages are written in JIS code but programs are easy
 to use strings in EUC-JP.
@@ -26,7 +26,7 @@ for the language dependence handling in messages.
 
 <sect1>
 	<title>
-	Something::Language:: class
+	Something::Language:: Class
 	</title>
 
 <para>

@@ -1,11 +1,11 @@
 <!--
-   $FML: create.sgml,v 1.2 2003/08/03 01:47:17 fukachan Exp $
+   $FML: create.sgml,v 1.3 2005/07/20 10:39:17 fukachan Exp $
    $jaFML: create.sgml,v 1.2 2003/04/15 14:51:42 fukachan Exp $
 -->
 
 <chapter id="module.create">
 	<title>
-	Execise: create a new program
+	Execise: Create A New Program
 	</title>
 
 
@@ -18,19 +18,19 @@ framework. Here the program name is "fmlsch" and the cgi is
 
 <sect1>
 	<title>
-	Case study: create a fmlsch
+	Case Study: Create A fmlsch
 	</title>
 
 
 <sect2>
 	<title>
-	Step 1: add fmlsch into installer configuration
+	Step 1: Add fmlsch Into Installer Configuration
 	</title>
 
 <para>
 Prepare fml/bin/fmlsch.in, 
 add fmlsch into $bin_programs in fml/etc/install.cf.in.
-Run configreu to re-create fml/etc/install.cf.
+Run configure to re-create fml/etc/install.cf.
 </para>
 
 </sect2>
@@ -38,7 +38,7 @@ Run configreu to re-create fml/etc/install.cf.
 
 <sect2>
 	<title>
-	Step 2: build a module
+	Step 2: Build A Module
 	</title>
 
 
@@ -51,6 +51,7 @@ Import other libraries if needed.
 For fmlsch we import
 HTML-CalendarMonthSimple-1.02.tar.gz
 from CPAN.
+See cpan/ directory.
 </para>
 
 <para>
@@ -62,13 +63,12 @@ Also, install Date-Calc if your system has not it.
 
 <sect2>
 	<title>
-	Step 3: modify FML::Process:: class
+	Step 3: Modify FML::Process:: Class
 	</title>
 
 <para>
-FML::Demo::Calendar works mainly but we build the machanism how &fml8;
-loads and runs it. We modify FML::Process class for &fml8; bootloader
-to call FML::Demo::Calendar.
+FML::Demo::Calendar works mainly. We need to prepare FML::Process
+class for &fml8; bootloader to call FML::Demo::Calendar.
 </para>
 
 <para>
@@ -87,7 +87,7 @@ command line options parsed by Getopt::Long().
 
 <para>
 Create FML::Process::Calender module by copy-and-pasting other
-FML::Process:: modules :-) However fmlsch has only to contain least
+FML::Process:: modules :-) Though fmlsch has only to contain least
 functions, you need to write FML::Process::Calender::run() method.
 For undefined methods, fml loads FML::Process::Kernel functions
 (inheritence).
@@ -100,13 +100,13 @@ For undefined methods, fml loads FML::Process::Kernel functions
 
 <sect1>
 	<title>
-	Case study: fmlsch.cgi
+	Case Study: fmlsch.cgi
 	</title>
 
 
 <para>
-The way of hacking is similar to fmlsch. The differnce is that the
-target to modify is FML::CGI:: class. FML::CGI::Calender is a
+The way of hacking is similar to fmlsch. The differnce is the target
+to modify, which is FML::CGI:: class. FML::CGI::Calender is a
 sub-class of FML::Process::CGI.
 </para>
 

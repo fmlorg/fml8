@@ -1,11 +1,11 @@
 <!--
-   $FML: io_abstraction.sgml,v 1.5 2005/06/25 15:11:34 fukachan Exp $
+   $FML: io_abstraction.sgml,v 1.1 2005/07/28 13:27:48 fukachan Exp $
 -->
 
 
 <chapter id="io.abstraction">
 	<title>
-	IO Interface and operations
+	IO Interface And Operations
 	</title>
 
 <para>
@@ -38,7 +38,7 @@ abstraction layer.
 
 <sect1 id="io.abstraction.overview">
 	<title>
-	Fundamentals of IO::Adapter
+	Fundamentals Of IO::Adapter
 	</title>
 
 <para>
@@ -94,7 +94,7 @@ At least, enough to write user management codes.
 
 <sect1 id="io.abstraction.ops">
 	<title>
-	Methods / operation vector
+	Methods / Operation Vector
 	</title>
 
 <para>
@@ -131,7 +131,7 @@ The argument is a map which calls map dependent constructor.
 	</title>
 
 <para>
-For a file, call open(2), for RDBMS, connect to the specified sql
+For a file, call open(2), for RDBMS, connect to the specified SQL
 server.
 </para>
 
@@ -144,7 +144,7 @@ server.
 	</title>
 
 <para>
-reverse of open().
+Reverse of open().
 </para>
 
 </sect2>
@@ -167,7 +167,7 @@ It is similar to RDBMS.
 
 <para>
 The primary key is a mail address. This assumption is correct in the
-case of mailing list deriver. This is basic data structure.
+case of mailing list driver. This is basic data structure.
 </para>
 
 </sect2>
@@ -179,7 +179,7 @@ case of mailing list deriver. This is basic data structure.
 	</title>
 
 <para>
-delete KEY and the associated VALUE.
+Delete KEY and the associated VALUE.
 </para>
 
 </sect2>
@@ -191,7 +191,7 @@ delete KEY and the associated VALUE.
 	</title>
 
 <para>
-search data corresponding with the primary key within an object.
+Search data corresponding with the primary key within an object.
 </para>
 
 <para>
@@ -200,7 +200,7 @@ Regular expression search is useful.
 </para>
 
 <para>
-The returl value is STR of ARRAY_REF (KEY => [ VALUE, VALUE2, VALUE3 ]).
+The return value is STR of ARRAY_REF (KEY => [ VALUE, VALUE2, VALUE3 ]).
 </para>
 
 </sect2>
@@ -212,7 +212,7 @@ The returl value is STR of ARRAY_REF (KEY => [ VALUE, VALUE2, VALUE3 ]).
 	</title>
 
 <para>
-return the list of primary keys like this:
+Return the list of primary keys like this:
 <screen>
 while ($obj->get_next_key()) { ... }
 </screen>
@@ -240,7 +240,7 @@ This operation corresponds to FIRST_KEY() and NEXT_KEY() of perl hash.
 
 <para>
 What expected in using ARRAY_REF as the return value ? 
-a list of PRIMARY KEY ?
+A list of PRIMARY KEY ?
 </para>
 
 </sect2>
@@ -248,13 +248,13 @@ a list of PRIMARY KEY ?
 
 <sect2>
 	<title>
-	How to get all primary keys ?
+	How To Get All Primary Keys ?
 	</title>
 
 <para>
-We need to call get_next_keys() again and again.  It may be useful to
-implement special method to return a list of keys but it is not
-implemented.
+We need to call get_next_keys() again and again to retrieve all
+keys. It may be useful to implement special method to return a list of
+keys but it is not implemented.
 </para>
 
 <para>
@@ -268,7 +268,7 @@ It is of no use to implement specific method for this.
 
 <sect2>
 	<title>
-	HASH_REF as return value ?
+	HASH_REF As Return Value ?
 	</title>
 
 <para>

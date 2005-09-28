@@ -1,5 +1,5 @@
 <!--
-   $FML: errormail.sgml,v 1.7 2005/06/25 14:43:08 fukachan Exp $
+   $FML: errormail.sgml,v 1.1 2005/07/28 13:27:48 fukachan Exp $
 -->
 
 
@@ -14,9 +14,9 @@ mead (/usr/local/fml/libexec/mead) of &fml4;
 </para>
 
 <para>
-set "$use_error_mail_analyzer_function = yes" to enable error mail
+Set "$use_error_mail_analyzer_function = yes" to enable error mail
 analyzer function. By default, $use_error_mail_analyzer_function is
-yes. That is, &fml8; error analyzer is enabled by default but &fml4;
+"yes". That is, &fml8; error analyzer is enabled by default but &fml4;
 not. This default behaviour differs from &fml4;.
 </para>
 
@@ -31,14 +31,14 @@ In fact, typical functions of &fml8; are enabled by default.
 	</title>
 
 <para>
-&fml8; sets up that $ml-admin address (address error messages returned
-to) calls /usr/local/libexec/fml/error in creating a ML.
+In creating a ML, &fml8; sets up that $ml-admin address (address error
+messages returned to) calls /usr/local/libexec/fml/error.
 </para>
 
 <para>
 /usr/local/libexec/fml/error reads a message, analyzes it and creates
 a chain of Mail::Message objects on memory. Mail::Bounce class
-analyzes the detail of error based on the object.
+analyzes the detail of error based on the objects.
 </para>
 
 <para>
@@ -62,7 +62,7 @@ member/recipient list.
 
 <sect1 id="error.internal.algorithm">
 	<title>
-	Algorithm of error detection
+	Algorithm Of Error Detection
 	</title>
 
 <para>
@@ -83,10 +83,9 @@ determine whether the address is effective or not.
 </para>
 
 <para>
-This logic depends on just the total number of errors.  If the traffic
-of ML is high, little configuration error of recipients caueses
-removal of the address soon.
-This is the main problem of this logic.
+This logic depends on just the total number of errors. If the traffic
+of ML is high, even a little configuration error of recipients caueses
+removal of the address soon. This is the main problem of this logic.
 </para>
 
 </sect2>
@@ -101,10 +100,11 @@ This is the main problem of this logic.
 Count up the number of continuous days that error messages returned.
 If the number oversomes the threshold, &fml8; removes the
 corresponding address. The threshold is 14 days by default.
+That implies continuous errors in 14 days.
 </para>
 
 <para>
-This logic assumes that the traffic of a ML is at least one message
+This logic assumes that the traffic of an ML is at least one message
 per day. In other words, this logic requires the continuous error. So,
 little configuration error in the side of recipient has no effect.
 </para>
@@ -125,7 +125,7 @@ message per day, this algorithm does not work.
 
 <sect1 id="error.internal.cache">
 	<title>
-	Cache of error messages data
+	Cache Of Error Messages Data
 	</title>
 
 <para>
@@ -147,14 +147,17 @@ class. All IO should be done via methods provided by FML::Error::Cache.
 
 <sect1 id="error.internal.message.forward">
 	<title>
-	Forward error messages
+	Forward Error Messages
 	</title>
 
 <para>
 You can specify the location the error message is forwarded to as
 $maintainer_recipient_maps
 variable.
-Undefiend by default.
+</para>
+
+<para>
+Undefined by default.
 Error messages are logged at a log file but not forwarded.
 </para>
 

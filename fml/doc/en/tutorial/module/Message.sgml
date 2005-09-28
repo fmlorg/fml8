@@ -1,16 +1,16 @@
 <!--
-   $FML: Message.sgml,v 1.1 2003/07/28 10:41:30 fukachan Exp $
+   $FML: Message.sgml,v 1.2 2003/08/03 01:47:17 fukachan Exp $
    $jaFML: Message.sgml,v 1.2 2003/04/15 14:51:42 fukachan Exp $
 -->
 
 <chapter id="module.mail.message">
 	<title>
-	Mail::Message module
+	Mail::Message Module
 	</title>
 
 <sect1 id="module.mail.message.overview">
 	<title>
-	Mail::Message overview
+	Mail::Message Overview
 	</title>
 
 <para>
@@ -28,7 +28,7 @@ If not multipart
 
 else if multipart
 
-   header -> preamble -> part1 -> part2 -> trailor
+   header -> preamble -> part1 -> part2 -> ... -> trailor
 </screen>
 The link between objects is double link list. Mail::Message class
 provides several methods to manipulate these structures.
@@ -59,7 +59,7 @@ Mail::Message module manual.
 
 <sect1 id="module.mail.message.parse">
 	<title>
-	Mail::Message module: analyze
+	Mail::Message Module: Analyze
 	</title>
 
 <para>
@@ -91,7 +91,7 @@ the whole message (content-type in the mail header).
 
 <sect1 id="module.mail.message.create">
 	<title>
-	Mail::Message module: create a new object
+	Mail::Message Module: Create A New Object
 	</title>
 
 <para>
@@ -120,7 +120,7 @@ is MIME::Lite class in fact :-)
 
 <sect1 id="module.mail.message.headerop">
 	<title>
-	Mail::Message module: header manipulations
+	Mail::Message Module: Header Manipulations
 	</title>
 
 <para>
@@ -153,7 +153,7 @@ It tells whether this message is text or multipart.
 
 <sect1 id="module.mail.message.bodyop">
 	<title>
-	Mail::Message module: manipulate messabe body
+	Mail::Message Module: Manipulate Messabe Body
 	</title>
 
 <para>
@@ -165,14 +165,14 @@ header -> body
 
 else if multipart
 
-header -> preamble -> part1 -> part2 -> trailor
+header -> preamble -> part1 -> part2 -> ... -> trailor
 </screen>
 </para>
 
 
 <para>
 header_data_type() return the type of the whole type.
-It is the information from Content-Type: in the whole message header.
+It is known from Content-Type: in the whole message header.
 </para>
 
 <para>
@@ -191,7 +191,7 @@ system checks the first text field in a lot of cases.
 
 <sect1 id="module.mail.message.search">
 	<title>
-	Mail::Message module: search
+	Mail::Message Module: Search
 	</title>
 
 <para>
@@ -204,7 +204,7 @@ chain and returns the first matched object.
 
 <sect1 id="module.mail.message.print">
 	<title>
-	Mail::Message module: print
+	Mail::Message Module: Print
 	</title>
 
 <para>
@@ -224,7 +224,7 @@ codes.
 
 <sect1 id="module.mail.message.utils">
 	<title>
-	Mail::Message module: utility functions
+	Mail::Message Module: Utility Functions
 	</title>
 
 <sect2>
@@ -248,7 +248,7 @@ is_empty() tells the object data is empty or not.
 
 <sect2>
 	<title>
-	General information
+	General Information
 	</title>
 
 <para>
@@ -272,7 +272,7 @@ encoding mechanism.
 
 <sect2>
 	<title>
-	Mail::Message internals
+	Mail::Message Internals
 	</title>
 
 <para>
@@ -288,7 +288,7 @@ Caution that N starts from 1 not 0.
 
 
 <para>
-header() return the header part of a multipart block (header part of
+header() returns the header part of a multipart block (header part of
 an object). data() returns the data part (data part of an object).
 Respectively, alias of message_fields($size) and message_text($size).
 </para>
@@ -300,7 +300,7 @@ Respectively, alias of message_fields($size) and message_text($size).
 
 <sect1 id="module.mail.message.ref">
 	<title>
-	Refernces
+	References
 	</title>
 
 <para>
