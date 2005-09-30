@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.12 2004/04/07 11:01:01 fukachan Exp $
+# $FML: Makefile,v 1.13 2005/06/25 13:16:30 fukachan Exp $
 #
 
 # targets
@@ -41,3 +41,7 @@ export:
 
 scan:
 	@ $(_MAKE) scan
+
+check:
+	@ perl ../../../../regress/doc/check.pl
+
