@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.user.sgml,v 1.2 2002/07/28 12:20:19 fukachan Exp $
+   $FML: chapter.user.sgml,v 1.3 2004/10/06 09:07:43 fukachan Exp $
 -->
 
 
@@ -14,6 +14,7 @@
 &sect.usage.post;
 &sect.usage.help;
 &sect.usage.get;
+&sect.usage.chaddr;
 &sect.usage.unsubscribe;
 
 &sect.usage.command;
