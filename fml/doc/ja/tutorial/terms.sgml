@@ -1,11 +1,21 @@
 <!--
-	$FML: terms.sgml,v 1.4 2002/07/06 14:55:14 fukachan Exp $
+	$FML: terms.sgml,v 1.5 2005/06/25 15:11:32 fukachan Exp $
 -->
 
 <sect1 id="terms">
 	<title>
 	本チュートリアル中における用語について
 	</title>
+
+<para>
+ソースを読む際などに役に立つ、
+より細かな関数名および変数名関連についての用語集が別途
+<link linkend="glossary">
+<xref linkend="glossary">
+</link>
+にあります。そちらも参照して下さい。
+</para>
+
 
 <variablelist>
 
@@ -20,6 +30,83 @@
 	<term> # </term>
 	<listitem>
 	<para>	ユーザ root のプロンプト </para>
+	</listitem>
+   </varlistentry>
+
+   <varlistentry>
+	<term> ~ </term>
+	<listitem>
+	<para>	ユーザのホームディレクトリ </para>
+	</listitem>
+   </varlistentry>
+
+   <varlistentry>
+	<term> CUI </term>
+	<listitem>
+	<para>
+	コマンドラインで使う設定ツール、たとえば makefml と fml の類。
+	</para>
+	</listitem>
+   </varlistentry>
+
+   <varlistentry>
+	<term> fml </term>
+	<listitem>
+	<para>
+	fml ソフトウエアの総称、一般論を話している場合には使うことがある
+	</para>
+	</listitem>
+   </varlistentry>
+
+   <varlistentry>
+	<term> fml (コマンド) </term>
+	<listitem>
+	<para>
+	&fml8; にある fml というコマンドのこと。
+	引数の順番が異なる makefml コマンド同等品。
+	</para>
+	</listitem>
+   </varlistentry>
+
+   <varlistentry>
+	<term> ユーザ fml </term>
+	<listitem>
+	<para>
+	fml という名のユーザ。&fml8; を動かすユーザアカウント。
+	</para>
+	</listitem>
+   </varlistentry>
+
+   <varlistentry>
+	<term> fml4 </term>
+	<listitem>
+	<para>	&fml4; シリーズのこと </para>
+	</listitem>
+   </varlistentry>
+
+   <varlistentry>
+	<term> fml8 </term>
+	<listitem>
+	<para>	&fml8; シリーズのこと </para>
+	</listitem>
+   </varlistentry>
+
+   <varlistentry>
+	<term> GUI </term>
+	<listitem>
+	<para>
+	CGI インターフェイスのこと。
+	</para>
+	</listitem>
+   </varlistentry>
+
+   <varlistentry>
+	<term> makefml (コマンド) </term>
+	<listitem>
+	<para>
+	&fml4; および &fml8; にある設定支援コマンドのこと。
+	fml が走っているメールサーバにログインして使うもの。
+	</para>
 	</listitem>
    </varlistentry>
 
