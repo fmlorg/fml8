@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.92 2004/12/08 10:39:24 fukachan Exp $
+	$FML: chapters.ent,v 1.93 2005/06/25 14:18:25 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -59,6 +59,7 @@
 <!entity chapter.customize.mlstyle  SYSTEM "customize/chapter.ml_style.sgml">
 <!entity chapter.customize.header   SYSTEM "customize/chapter.header.sgml">
 <!entity chapter.customize.command  SYSTEM "customize/chapter.command.sgml">
+<!entity chapter.customize.message  SYSTEM "customize/chapter.message.sgml">
 
 <!entity sect.config.autoreply              SYSTEM "customize/autoreply.sgml">
 <!entity sect.config.command.permit.anyone  SYSTEM "customize/command_permit_anyone.sgml">
@@ -91,6 +92,7 @@
 <!entity sect.usage.guide            SYSTEM "usage/guide.sgml">
 <!entity sect.usage.subscribe        SYSTEM "usage/subscribe.sgml">
 <!entity sect.usage.unsubscribe      SYSTEM "usage/unsubscribe.sgml">
+<!entity sect.usage.chaddr           SYSTEM "usage/chaddr.sgml">
 <!entity sect.usage.get              SYSTEM "usage/get.sgml">
 <!entity sect.usage.help             SYSTEM "usage/help.sgml">
 <!entity sect.usage.post             SYSTEM "usage/post.sgml">
@@ -117,11 +119,9 @@
 
 <!-- う〜ん、分類は…？;-) -->
 <!entity chapter.directory           SYSTEM "internals/directory.sgml">
-<!entity chapter.db                  SYSTEM "internals/db.sgml">
 <!entity chapter.db.modules          SYSTEM "internals/db_modules.sgml">
 <!entity chapter.dbms                SYSTEM "internals/dbms.sgml">
 <!entity chapter.hook                SYSTEM "internals/hook.sgml">
-<!entity chapter.policy              SYSTEM "policy.sgml">
 
 <!entity chapter.filename            SYSTEM "internals/filename.sgml">
 
@@ -178,7 +178,6 @@
 
 <!-- 開発 -->
 <!entity chapter.cvstree             SYSTEM "devel/cvstree.sgml">
-<!entity chapter.cvstags             SYSTEM "devel/cvstags.sgml">
 <!entity chapter.docbook             SYSTEM "devel/docbook.sgml">
 <!entity chapter.inet6               SYSTEM "devel/inet6.sgml">
 <!entity chapter.program.create      SYSTEM "devel/create_program.sgml">
