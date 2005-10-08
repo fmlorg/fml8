@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.sgml,v 1.5 2005/06/25 15:11:31 fukachan Exp $
+   $FML: chapter.sgml,v 1.6 2005/10/08 03:37:41 fukachan Exp $
 -->
 
 
@@ -156,8 +156,14 @@ digestoff
 </sect1>
 
 
-<!-- ¥ì¥·¥Ô¡Çs -->
-&sect.digest.recipes;
+<!-- recipies -->
+<sect1 id="digest.recipes">
+        <title> 
+        recipes
+        </title> 
+
+	&sect.digest.recipes;
+</sect1>
 
 
 </chapter>
