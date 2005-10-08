@@ -1,5 +1,5 @@
 <!--
-   $FML: fml_on_unix.sgml,v 1.2 2005/07/23 01:57:39 fukachan Exp $
+   $FML: fml_on_unix.sgml,v 1.3 2005/09/24 13:53:42 fukachan Exp $
    $jaFML: fml_on_unix.sgml,v 1.5 2003/04/15 14:51:39 fukachan Exp $
 -->
 
@@ -510,5 +510,14 @@ site_default_config.cf is applied to all domains.
 &sect.install.postfix;
 &sect.install.qmail;
 
+<!-- recipes -->
+<!-- recipes -->
+<sect1 id="install.recipes">
+	<title> 
+	recipes
+	</title> 
+
+	&sect.install.recipes;
+</sect1>
 
 </chapter>

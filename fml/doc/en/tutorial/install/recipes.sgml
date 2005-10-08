@@ -1,0 +1,217 @@
+<!--
+ $FML$
+
+   ユーザ fml 以外(例えば自分)で fml を使いたい
+   current, stable, release どれをダウンロードするべき？
+   インストールの際にユーザ fml になるタイミングは？
+   ドキュメント抜きのインストールをしたい
+   インストール後に /usr/local/fml/doc を消したい
+   ユーザ root でインストールしたい
+   インストール時に perl のパスを指定したい
+   jperl で fml を使いたい
+   elena ML を上書きしたい
+   /var/spool/ml/etc/aliases をカスタマイズしたい
+   メールサーバは Unix で稼働させ fml は Windows 2000/NT4 で動かしたい
+   ロックをせずに上書きインストールをしたい
+    ML を初期化したい
+
+-->
+
+<qandaset>
+
+
+<qandaentry>
+
+<question>
+<para>
+Can we use other user as fml process ?
+</para>
+</question>
+
+<answer>
+<para>
+Run configure with --with-fml-owner option.
+<screen>
+configure --with-fml-owner=$USER
+</screen>
+</para>
+
+<para>
+Do not use your own account but use fml specific user for all fml processes.
+</para>
+
+<para>
+Please use procmail et.al. if fml processes are kicked off by .forward
+not aliases. See /var/spool/ml/etc/procmail/procmailrc for more
+details on procmail usage.
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+When should we change use to fml in installation ?
+</para>
+</question>
+
+<answer>
+<para>
+In installation.
+</para>
+
+<para>
+You can download source code and run configure by not user root
+(e.g. user fml), but run "make install" by user root.
+It may be better to run by user too always.
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Can we install &fml8; without document.
+</para>
+</question>
+
+<answer>
+<para>
+Yes by default.
+&fml8; does not install document.
+If you need documentation, please install ./SOURCE/Documentation/ into
+/usr/local/share/doc/fml8/$FML_VERSION/.
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Can we specify per path in installation ?
+</para>
+</question>
+
+<answer>
+<para>
+No directly. Run configure with proper environment variable PATH.
+<screen>
+% env PATH=/some/where/:$PATH sh configure
+</screen>
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Can we use jperl ?
+</para>
+</question>
+
+<answer>
+<para>
+Unknown.
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Can we overwrite elena ML ?
+</para>
+</question>
+
+<answer>
+<para>
+Run "makefml newml" with --force option.
+<screen>
+% makefml --force newml elena
+</screen>
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Can we edit alias files under /var/spool/ml/etc ?
+</para>
+</question>
+
+<answer>
+<para>
+Yes but please control them by yourself. These files are controlled by
+makefml/fml scripts. These scripts edit them. If the ML is removed,
+the corresponding entries are removed and cannot be back.
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Can we use &fml7; on Windows 2000/NT4 but MTA on Unix server ?
+</para>
+</question>
+
+<answer>
+<para>
+Caution: not tested.
+</para>
+
+<para>
+It can be. Run fetchfml on Windows 2000 or NT4 and run MTA on Unix.
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Can we initialize ML ?
+</para>
+</question>
+
+<answer>
+<para>
+It is easy to run rmml once and newml again.
+<screen>
+% makefml rmml elena
+% makefml newml elena
+</screen>
+</para>
+</answer>
+
+</qandaentry>
+
+
+
+</qandaset>

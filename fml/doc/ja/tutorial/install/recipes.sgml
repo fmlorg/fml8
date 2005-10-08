@@ -1,0 +1,201 @@
+<!--
+ $FML$
+-->
+
+<qandaset>
+
+
+<qandaentry>
+
+<question>
+<para>
+ユーザ fml 以外(例えば自分)で fml を使いたい
+</para>
+</question>
+
+<answer>
+<para>
+fml を動かすプロセスのユーザ fml を他のユーザにしたいのであれば、
+configure オプションの  --with-fml-owner で変更できます。
+</para>
+
+<para>
+自分のアカウントで実行するのはやめましょう。fml 専用ユーザを用意するこ
+とが推奨です。
+</para>
+
+<para>
+aliases からの起動ではなく、
+一般ユーザの権限としてＭＬを実行するのであれば
+procmail の利用を考えてみて下さい。
+設定は /var/spool/ml/etc/procmail/procmailrc を参考にして下さい。
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+インストールの際にユーザ fml になるタイミングは？
+</para>
+</question>
+
+<answer>
+<para>
+ダウンロードと configure の実行はユーザ fml で行なってもかまいませんが、
+インストールはユーザ root で行なって下さい。
+</para>
+
+<para>
+ダウンロードからインストールまで全てユーザ root で行なってもよいでしょ
+う。
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+ドキュメント抜きのインストールをしたい
+</para>
+</question>
+
+<answer>
+<para>
+現在、&fml8; はドキュメントをインストールしません。 逆に、ドキュメント
+が必要ならソースの Documentation/ 以下を適切な場所(たとえば 
+/usr/local/share/doc/fml8/バージョン番号/)にコピーして下さい。
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+インストール時に perl のパスを指定したい
+</para>
+</question>
+
+<answer>
+<para>
+configure を実行する際に環境変数 PATH を適切に設定しつつ
+実行して下さい。
+<screen>
+% env PATH=/some/where/:$PATH sh configure 
+</screen>
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+jperl で fml を使いたい
+</para>
+</question>
+
+<answer>
+<para>
+動くかどうかまったく分かりません。
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+elena ML を上書きしたい
+</para>
+</question>
+
+<answer>
+<para>
+--force つきで newml を実行して下さい。 
+<screen>
+% makefml --force newml elena
+</screen>
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+/var/spool/ml/etc/ 以下の aliases ファイルを編集しても大丈夫ですか？
+</para>
+</question>
+
+<answer>
+<para>
+はい、編集してもかまいませんが内容は自分で管理するようにして下さい。本
+来そこは makefml/fml が自動で編集するところですので、ＭＬを消せば削除
+されますし、削除後にＭＬ復活を行なっても元には戻りませんので注意して下
+さい。
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+メールサーバは Unix で稼働させ fml は Windows 2000/NT4 で動かしたい
+</para>
+</question>
+
+<answer>
+<para>
+注意: テストしていないです。
+</para>
+
+<para>
+fetchfml を Windows 2000/NT4 で動かし、
+MTA を Unix で動かせば良いでしょう。
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+ML を初期化したい
+</para>
+</question>
+
+<answer>
+<para>
+いちど rmml して、もういちど newml を実行するのが簡単です。
+<screen>
+% makefml rmml elena
+% makefml newml elena
+</screen>
+</para>
+</answer>
+
+</qandaentry>
+
+
+</qandaset>
