@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.onhost.sgml,v 1.12 2005/06/25 15:11:38 fukachan Exp $
+   $FML: chapter.onhost.sgml,v 1.13 2005/09/30 13:25:22 fukachan Exp $
 -->
 
 
@@ -212,7 +212,5 @@ libexec/ と bin/ にあるプログラム群(.cgi は除く)すべてに共通する
 &sect.usage.fmlconf;
 &sect.usage.fmldoc;
 &sect.usage.fmlhtmlify;
-&sect.usage.fmlsummary;
-&sect.usage.fmlthread;
 
 </chapter>
