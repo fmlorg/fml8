@@ -5,12 +5,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: varlist.pl,v 1.1 2001/11/24 06:55:23 fukachan Exp $
+# $FML: varlist.pl,v 1.2 2002/04/01 23:41:24 fukachan Exp $
 #
 
 use strict;
 use Carp;
 use Getopt::Long;
+use lib qw(../../../../fml/lib ../../../../cpan/lib);
 
 my %option  = ();
 my %list    = ('__table_head__' => {
@@ -149,8 +150,11 @@ sub _print_row
     print $list{ $varname }->{ desc };
     print $table_entry_end;
 
+    my $x = $list{ $varname }->{ value };
+
     print $table_entry_begin;
-    print $list{ $varname }->{ value };
+    use HTML::FromText;
+    print text2html($x);
     print $table_entry_end;
 
     print $table_block_end;
