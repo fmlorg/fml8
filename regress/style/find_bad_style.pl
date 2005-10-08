@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: find_bad_style.pl,v 1.8 2004/01/04 13:37:14 fukachan Exp $
+# $FML: find_bad_style.pl,v 1.9 2004/03/12 12:16:35 fukachan Exp $
 #
 
 use strict;
@@ -16,6 +16,7 @@ my $in_sub    = 0;
 my $in_head   = 0;
 my $defined   = 0;
 my $ioadapter = 0; 
+my $mdqueue   = 0;
 my $close     = 0;
 my $count     = 0;
 my $copyright = '';
@@ -82,9 +83,10 @@ while (<>) {
     # 1. check the usage of open() and close() under not check of defined()
     # 
     if (/IO::Adapter/) { $ioadapter = 1;};
+    if (/Mail::Delivery::Queue/) { $mdqueue = 1;}
     if (/defined/) { $defined = 1;}
     if (/\$\S+\-\>(close|open)\(/ && (!/^sub /) && (!/^=head/) && (!/\$self/)) {
-	unless ($defined || $ioadapter) {
+	unless ($defined || $ioadapter || $mdqueue) {
 	    $buf .= " ===> ". $_;
 	    $buf =~ s/\n/\n\t/gm;
 	    $buf =~ s/^/\t/;
@@ -143,6 +145,7 @@ while (<>) {
 	$in_sub    = 1;
 	$defined   = 0;
 	$ioadapter = 0;
+	$mdqueue   = 0;
     }
     if (/^sub .*\}/ || /^\}/o) {
 	$in_sub = 0;
