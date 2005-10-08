@@ -1,0 +1,87 @@
+<!--
+ $FML$
+-->
+
+<qandaset>
+
+
+<qandaentry>
+
+<question>
+<para>
+まとめ送りはいつ実行してもよいのか
+</para>
+</question>
+
+<answer>
+<para>
+いつでもかまいません。
+crontab を適当に書き換えて下さい。
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+まとめ送りの圧縮形式のデフォルトを変更したい
+</para>
+</question>
+
+<answer>
+<para>
+現在は MIME/Multipart しかサポートしていないので、
+変更ということがそもそもありえません。
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+makefml add の時にまとめ送りパラメータも指定したい
+</para>
+</question>
+
+<answer>
+<para>
+現在は MIME/Multipart しかサポートしていないので、
+まとめ送りパラメータの指定ということがそもそもありえません。
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+まとめ送りのログを別ファイルに記録したい 
+</para>
+</question>
+
+<answer>
+<para>
+変数はありません。HOOK を書けばできます。
+<screen>
+[Example]
+
+$article_digest_prepare_start_hook = q{
+	$config->{ log_file } = "/some/where/log.digest";
+};
+</screen>
+</para>
+</answer>
+
+</qandaentry>
+
+
+</qandaset>
+

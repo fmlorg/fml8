@@ -1,0 +1,84 @@
+<!--
+ $FML$
+-->
+
+<qandaset>
+
+
+<qandaentry>
+
+<question>
+<para>
+When digest program should run ?
+</para>
+</question>
+
+<answer>
+<para>
+Anytime OK. Please edit crontab.
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Can we change default compression style in digest delivery ?
+</para>
+</question>
+
+<answer>
+<para>
+No since &fml8; supports only MIME/Multipart now.
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Can we specify parameters in running "makefml add" ?
+</para>
+</question>
+
+<answer>
+<para>
+No since &fml8; supports only MIME/Multipart now.
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Can we log digest log mesages in the file other than the default log file ?
+</para>
+</question>
+
+<answer>
+<para>
+Not configurable. But you can if you us HOOK.
+<screen>
+[Example]
+
+$article_digest_prepare_start_hook = q{
+	$config->{ log_file } = "/some/where/log.digest";
+};
+</screen>
+</para>
+</answer>
+
+</qandaentry>
+
+
+</qandaset>
+
