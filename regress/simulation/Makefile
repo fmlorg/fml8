@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.78 2004/05/19 14:20:26 fukachan Exp $
+# $FML: Makefile,v 1.79 2004/05/22 13:37:32 fukachan Exp $
 #
 
 TMPFILE	=	/tmp/log.fml-devel.test
@@ -54,7 +54,9 @@ check:
 	   sed -e 's@^lib//@@' -e 's@^lib/@@' |\
 	   tee 44_STYLE
 	@ echo "-- check messages"
-	@ (cd ../../fml/share/message; sh .diag.sh )
+	@ (cd ../../fml/share/message; sh .diag.sh ) >> 33_TODO
+	@ echo "-- check tutorial"
+	@ make _doc_check |tee -a 33_TODO
 	@ echo "-- clean up."
 	- test -s 33_TODO  || rm -f 33_TODO
 	- test -s 44_STYLE || rm -f 44_STYLE
@@ -137,3 +139,9 @@ $(LIST_TARGET): ../../fml/etc/src/config.cf.ja/command.cf
 _doc_tutorial:
 	(cd ../../fml/doc/ja/tutorial;make -f Makefile.local)
 	(cd ../../fml/doc/en/tutorial;make -f Makefile.local)
+
+_doc_check:
+	(cd ../../fml/doc/ja/tutorial;make check)
+	(cd ../../fml/doc/en/tutorial;make check)
+
+
