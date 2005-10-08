@@ -581,7 +581,7 @@ command_mail_reply_prompt</entry>
 <entry>
  command prompt in message reply</entry>
 <entry>
->>>
+&gt;&gt;&gt;
    </entry>
 </row>
 <row>

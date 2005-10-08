@@ -592,7 +592,7 @@ command_mail_reply_prompt</entry>
 <entry>
  command prompt in message reply</entry>
 <entry>
->>>
+&gt;&gt;&gt;
    </entry>
 </row>
 <row>
@@ -1850,7 +1850,7 @@ sql_query_find</entry>
  注意: 各行を取り出すのではなく</entry>
 <entry>
 select fml_address from $sql_table
-   where	fml_ml = '$ml_name'
+   where        fml_ml = '$ml_name'
    and
    fml_domain = '$ml_domain'
    and
