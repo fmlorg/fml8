@@ -1,0 +1,187 @@
+<!--
+ $FML$
+-->
+
+<qandaset>
+
+
+<qandaentry>
+
+<question>
+<para>
+ＭＬを間違って消してしまった。元に戻したい (CUI,CGI,admin コマンド)
+</para>
+</question>
+
+<answer>
+<para>
+「makefml rmml」でＭＬを消していれば
+<screen>
+% makefml reviveml ＭＬ名
+</screen>
+で戻せます。
+</para>
+
+<para>
+CGI でも同様です。rmml で消していれば reviveml で復活できます。
+</para>
+
+<para>
+リモート管理(admin コマンド)では、この操作は出来ません。
+</para>
+
+<para>
+もちろん「rm -fr /var/spool/ml/elena」などとしてＭＬを消去してしまって
+いれば元に戻す方法ありません.バックアップから戻して下さい(こまめにバッ
+クアップをとりましょう)。
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+投稿できるアドレスを増やす (CUI,CGI,admin コマンド)
+</para>
+</question>
+
+<answer>
+<para>
+特別な利用法などないなら、普通にユーザとして登録してください。
+<screen>
+% makefml add ＭＬ名 メールアドレス
+</screen>
+</para>
+
+<para>
+会社からも、夜、自宅からもＭＬに投稿したいが、受取先は会社だけにしたい
+なら、投稿可能なアドレスだけを増やして下さい(member_mapsにのみ登録)。
+</para>
+
+<para>
+ＭＬサーバの上であれば makefml を使って下さい。
+<screen>
+% makefml addmember ＭＬ名 メールアドレス
+</screen>
+このコマンドは次の４つどれでも一緒です。
+add2member
+add2members
+addmember
+addmembers
+</para>
+
+<para>
+リモート管理(admin コマンド)でも同様です。
+<screen>
+To: elena-ctl@fml.org
+Subject: 
+
+admin pass パスワード
+admin addmember ＭＬ名 メールアドレス
+</screen>
+</para>
+
+<para>
+いまのところ CGI ではこのコマンドが使えるようになっていません。
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+配送先アドレスだけを増やす
+</para>
+</question>
+
+<answer>
+
+<para>
+ＭＬの投稿は出来ないが記事の受信者として増やす場合です。
+たとえば
+<link linkend="config.mailmagazine.1">
+メールマガジン
+</link>
+のようなケースです。
+</para>
+
+<para>
+ＭＬサーバの上であれば makefml を使って下さい。
+<screen>
+% makefml addrecipient ＭＬ名 メールアドレス
+</screen>
+これで recipient_maps にのみアドレスが登録されます。
+このコマンドは
+add2recipient
+add2recipients
+addrecipient
+addrecipients
+のどれでも同じ意味です。
+</para>
+
+<para>
+リモート管理(admin コマンド)でも同様です。
+<screen>
+To: elena-ctl@fml.org
+Subject: 
+
+admin pass パスワード
+admin addrecipient ＭＬ名 メールアドレス
+</screen>
+</para>
+
+<para>
+いまのところ CGI ではこのコマンドが使えるようになっていません。
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+登録されているメールアドレスを変更する
+</para>
+</question>
+
+<answer>
+<para>
+ＭＬサーバの上であれば makefml を使って下さい。
+<screen>
+% makefml chaddr ＭＬ名 旧メールアドレス 新メールアドレス
+</screen>
+</para>
+
+<para>
+リモート管理(admin コマンド)でも同様です。
+<screen>
+To: elena-ctl@fml.org
+Subject: 
+
+admin pass パスワード
+admin chaddr ＭＬ名 旧メールアドレス 新メールアドレス
+</screen>
+</para>
+
+<para>
+CGI でも chaddr コマンドが利用可能です。
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+</qandaset>
+

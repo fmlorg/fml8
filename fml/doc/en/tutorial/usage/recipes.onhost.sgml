@@ -1,0 +1,189 @@
+<!--
+ $FML$
+-->
+
+<qandaset>
+
+
+<qandaentry>
+
+<question>
+<para>
+I've removed ML accidentally. 
+Can I revive it ?
+(CUI,CGI,admin command)
+</para>
+</question>
+
+<answer>
+<para>
+If you have removed ML by running "makefml rmml", please use
+<screen>
+% makefml reviveml ML
+</screen>
+</para>
+
+<para>
+Same as CGI.
+</para>
+
+<para>
+When you use admin command (remote administration), 
+you cannot use this operation.
+</para>
+
+<para>
+If you have removed ML by running "rm -fr /var/spool/ml/elena", 
+you cannot revive it.
+Please revive ML from back-up.
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Add an address who can post (CUI,CGI,admin command)
+</para>
+</question>
+
+<answer>
+<para>
+Usually run
+<screen>
+% makefml add ML ADDRESS
+</screen>
+</para>
+
+<para>
+If you post from both office and home but want to receive article at office, 
+it is better to add an address who can post but not receive.
+It implies we should add the address to only member_maps.
+</para>
+
+<para>
+On the mailing list server host, use makefml.
+<screen>
+% makefml addmember ML ADDRESS
+</screen>
+The following 4 commands are same function:
+add2member
+add2members
+addmember
+addmembers
+</para>
+
+<para>
+When you use "admin command", as in same way.
+<screen>
+To: elena-ctl@fml.org
+Subject: 
+
+admin pass PASSWORD
+admin addmember ML ADDRESS
+</screen>
+</para>
+
+<para>
+CGI does not provide this function now.
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Add an address who receive articles but not post.
+</para>
+</question>
+
+<answer>
+
+<para>
+The usage of address, who cannot post but can receive articles, 
+is for such as 
+<link linkend="config.mailmagazine.1">
+mail magazine
+</link>
+case.
+</para>
+
+<para>
+n the mailing list server host, use makefml.
+<screen>
+% makefml addrecipient ML ADDRESS
+</screen>
+This ADDRESS is added to only recipient_maps.
+The following 4 commands are same function:
+add2recipient
+add2recipients
+addrecipient
+addrecipients
+
+</para>
+
+<para>
+The usage is same in "admin command".
+<screen>
+To: elena-ctl@fml.org
+Subject: 
+
+admin pass PASSWORD
+admin addrecipient ML ADDRESS
+</screen>
+</para>
+
+<para>
+CGI does not provide this function.
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Change registered address.
+</para>
+</question>
+
+<answer>
+<para>
+On the mailing list server host, use makefml.
+<screen>
+% makefml chaddr ML OLD-ADDRESS NEW-ADDRESS
+</screen>
+</para>
+
+<para>
+The usage is same in "admin command".
+<screen>
+To: elena-ctl@fml.org
+Subject: 
+
+admin pass PASSWORD
+admin chaddr ML OLD-ADDRESS NEW-ADDRESS
+</screen>
+</para>
+
+<para>
+"chaddr" command is available in using CGI.
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+</qandaset>
