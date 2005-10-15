@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.onhost.sgml,v 1.2 2005/07/20 10:37:45 fukachan Exp $
+   $FML: chapter.onhost.sgml,v 1.3 2005/09/18 13:55:56 fukachan Exp $
    $jaFML: chapter.onhost.sgml,v 1.8 2003/04/15 14:51:46 fukachan Exp $
 -->
 
@@ -198,5 +198,14 @@ Plural -o are acceptable.
 &sect.usage.fmlconf;
 &sect.usage.fmldoc;
 &sect.usage.fmlhtmlify;
+
+<sect1 id="usage.recipes">
+	<title>
+	Recipes
+	</title>
+
+&sect.usage.onhost.recipes;
+
+</sect1>
 
 </chapter>

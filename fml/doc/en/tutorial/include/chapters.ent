@@ -1,5 +1,5 @@
 <!--
-   $FML: chapters.ent,v 1.4 2005/10/08 03:37:42 fukachan Exp $
+   $FML: chapters.ent,v 1.5 2005/10/08 07:32:55 fukachan Exp $
    $jaFML: chapters.ent,v 1.75 2003/06/20 22:03:12 fukachan Exp $
 -->
 
@@ -58,6 +58,8 @@
 <!entity chapter.config             SYSTEM "customize/chapter.config.sgml">
 <!entity chapter.usage.user         SYSTEM "usage/chapter.user.sgml">
 <!entity chapter.usage.onhost       SYSTEM "usage/chapter.onhost.sgml">
+<!entity sect.usage.user.recipes    SYSTEM "usage/recipes.user.sgml">
+<!entity sect.usage.onhost.recipes  SYSTEM "usage/recipes.onhost.sgml">
 <!entity chapter.customize.mlstyle  SYSTEM "customize/chapter.ml_style.sgml">
 <!entity chapter.customize.header   SYSTEM "customize/chapter.header.sgml">
 <!entity chapter.customize.command  SYSTEM "customize/chapter.command.sgml">
