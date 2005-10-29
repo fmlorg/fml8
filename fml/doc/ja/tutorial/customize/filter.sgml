@@ -1,19 +1,20 @@
 <!--
-   $FML: filter.sgml,v 1.4 2004/10/06 09:07:34 fukachan Exp $
+   $FML: filter.sgml,v 1.5 2004/12/08 10:39:24 fukachan Exp $
 -->
 
 
-<chapter>
+<chapter id="filter">
 	<title>
 	フィルタ
 	</title>
 
-<qandaset>
+<sect1 id="filter.recipes">
+	<title>
+	レシピ’s
+	</title>
 
-&recipe.filter.notice;
-&recipe.filter.spamassassin;
-&recipe.filter.attachments;
+&sect.customize.filter.recipes;
 
-</qandaset>
+</sect1>
 
 </chapter>

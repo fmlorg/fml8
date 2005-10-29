@@ -1,0 +1,256 @@
+<!--
+ $FML$
+-->
+
+<qandaset>
+
+
+<qandaentry>
+
+<question>
+<para>
+危ない添付ファイルがついてきたメールは拒否する HOOK
+</para>
+</question>
+
+<answer>
+
+<para>
+fml8 は、あらかじめ入力されたメッセージを解析し、鎖状の Mail::Message 
+オブジェクトの形で持っています。そこで、MIME/Multipart の各部分のヘッ
+ダを取り出して、正規表現で順に確認すればよいだけです。
+</para>
+
+<para>
+HOOK でなんとかする/ごまかす例は次の通りです。
+どちらの例でも、マッチした場合、stop_this_process() 命令で、
+これ以上の処理を止めています。
+また、この例では何もエラーメッセージを返そうとしていないため、
+結果として、このメッセージは無視されて終りになっています。
+</para>
+
+<para>
+返事をしてあげたいなら、 reply_message() で、何か返事を返してあげてく
+ださい…が、たぶんウィルスとかなので、返事してあげなくてもいいとおもふ。
+</para>
+
+<para>
+.exe など特定のファイル拡張子にマッチするか？を調べる例。
+に昔の fml8 (2004/12/08 以前)なら、こんな感じ。
+<screen>
+$distribute_verify_request_start_hook = q{
+    my $msg = $curproc->incoming_message() || undef;
+    for (my $m = $msg; $m ; $m = $m->{ next } ) {
+	my $hs = $m->message_fields() || '';
+	if ($hs =~ /filename=.*\.(com|vbs|vbe|wsh|wse|js|exe|doc|rtf)/o) {
+	    $curproc->log("attachment \.$1 found");
+	    $curproc->stop_this_process();
+	}
+    }
+};
+</screen>
+2004/12/08 以降なら、こんなかんじ。
+<screen>
+$distribute_verify_request_start_hook = q{
+    my $msg  = $curproc->incoming_message() || undef;
+    my $list = $msg->message_chain_as_array_ref();
+    for my $m (@$list) {
+	my $hs = $m->message_fields() || '';
+	if ($hs =~ /filename=.*\.(com|vbs|vbe|wsh|wse|js|exe|doc|rtf)/o) {
+	    $curproc->log("[new] attachment \.$1 found");
+	    $curproc->stop_this_process();
+	}
+    }
+};
+</screen>
+</para>
+
+<para>
+別の解としては、
+<screen>
+Content-Disposition: attachment;
+</screen>
+という表示になることを前提に、これを引っかけるという案もあります。
+<screen>
+$distribute_verify_request_start_hook = q{
+    my $msg = $curproc->incoming_message() || undef;
+    for (my $m = $msg; $m ; $m = $m->{ next } ) {
+	my $hs = $m->message_fields() || '';
+	if ($hs =~ /Content-Disposition:.*attachment;/o) {
+	    $curproc->log("attachment \.$1 found");
+	    $curproc->stop_this_process();
+	}
+    }
+};
+</screen>
+2004/12/08 以降なら、こんなかんじ。
+<screen>
+$distribute_verify_request_start_hook = q{
+    my $msg  = $curproc->incoming_message() || undef;
+    my $list = $msg->message_chain_as_array_ref();
+    for my $m (@$list) {
+	my $hs = $m->message_fields() || '';
+	if ($hs =~ /Content-Disposition:.*attachment;/o) {
+	    $curproc->log("[new] attachment \.$1 found");
+	    $curproc->stop_this_process();
+	}
+    }
+};
+</screen>
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+フィルタで弾いた時に、エラーメールをどこへ返す
+</para>
+</question>
+
+<answer>
+
+<para>
+デフォルトでは
+<screen>
+use_article_filter_reject_notice	=	yes
+article_filter_reject_notice_recipient	=	maintainer sender
+</screen>
+となっています。
+つまり、エラーメールを返し、返す先はＭＬの管理者と送信者の両方です。
+</para>
+
+
+<para>
+返送する先を送信者( From: のアドレス )にするには
+<screen>
+article_filter_reject_notice_recipient	=	sender
+</screen>
+としてください。
+</para>
+
+
+<para>
+ＭＬの管理者と送信者( From: のアドレス )の両方に返すには
+<screen>
+article_filter_reject_notice_recipient	=	maintainer sender
+</screen>
+としてください。
+</para>
+
+
+<para>
+そもそもエラーメールを返さないようにするには、
+<screen>
+use_article_filter_reject_notice	=	no
+</screen>
+としてください。
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+spamassassin で SPAM メールを無視する。
+</para>
+</question>
+
+<answer>
+
+<para>
+<caution>
+<para>
+そもそも spamassassin をよびだす内蔵フィルタがあるのですが、
+それをあえて使わない例です。
+</para>
+
+</caution>
+</para>
+
+<para>
+1. 内蔵フィルタの方の設定です。
+<screen>
+use_article_spam_filter         =       yes
+article_spam_filter_drivers     =       spamassassin
+</screen>
+</para>
+
+<para>
+2. HOOK でなんとかする/ごまかす例は次の通りです。
+<screen>
+$distribute_verify_request_end_hook = q{
+        my $spamassassin = '/usr/pkg/bin/spamc -c';
+
+        use FileHandle;
+        my $wh  = new FileHandle "| $spamassassin";
+
+        if (defined $wh) {
+                $wh->autoflush(1);
+                my $msg = $curproc->incoming_message();
+                $msg->print($wh);
+                $wh->close();
+                if ($?) {
+                        $curproc->log("spam: (code = $?)");
+                        $curproc->stop_this_process();  
+                }
+        }
+};
+</screen>
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+<question>
+<para>
+spamassassin で SPAM メールと判定したら、
+ヘッダに X-Spam-Status: Yes をつける。
+</para>
+</question>
+
+<answer>
+<para>
+<screen>
+$distribute_verify_request_end_hook = q{
+	my $spamassassin = '/usr/pkg/bin/spamc -c';
+
+	use FileHandle;
+	my $wh  = new FileHandle "| $spamassassin";
+
+	if (defined $wh) {
+		$wh->autoflush(1);
+		my $msg = $curproc->incoming_message();
+		$msg->print($wh);
+		$wh->close();
+		if ($?) {
+			$curproc->log("spam: (code = $?)");
+			my $hdr = $curproc->incoming_message_header();
+			$hdr->add('X-Spam-Status', 'Yes');
+		}
+	}
+};
+</screen>
+</para>
+
+<para>
+ちょっとトリッキーですが、動きます。
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+</qandaset>
