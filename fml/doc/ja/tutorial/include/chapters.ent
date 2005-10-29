@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.96 2005/10/08 07:32:55 fukachan Exp $
+	$FML: chapters.ent,v 1.97 2005/10/15 10:56:07 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -57,12 +57,17 @@
 <!entity chapter.config             SYSTEM "customize/chapter.config.sgml">
 <!entity chapter.usage.user         SYSTEM "usage/chapter.user.sgml">
 <!entity chapter.usage.onhost       SYSTEM "usage/chapter.onhost.sgml">
-<!entity sect.usage.user.recipes    SYSTEM "usage/recipes.user.sgml">
-<!entity sect.usage.onhost.recipes  SYSTEM "usage/recipes.onhost.sgml">
 <!entity chapter.customize.mlstyle  SYSTEM "customize/chapter.ml_style.sgml">
 <!entity chapter.customize.header   SYSTEM "customize/chapter.header.sgml">
 <!entity chapter.customize.command  SYSTEM "customize/chapter.command.sgml">
 <!entity chapter.customize.message  SYSTEM "customize/chapter.message.sgml">
+
+<!entity sect.usage.user.recipes       SYSTEM "usage/recipes.user.sgml">
+<!entity sect.usage.onhost.recipes     SYSTEM "usage/recipes.onhost.sgml">
+<!entity sect.customize.header.recipes SYSTEM "customize/recipes.header.sgml">
+<!entity sect.customize.auth.recipes   SYSTEM "customize/recipes.auth.sgml">
+<!entity sect.customize.subscribe.recipes SYSTEM "customize/recipes.subscribe.sgml">
+
 
 <!entity sect.config.autoreply              SYSTEM "customize/autoreply.sgml">
 <!entity sect.config.command.permit.anyone  SYSTEM "customize/command_permit_anyone.sgml">
@@ -79,17 +84,12 @@
 
 
 
-<!entity recipe.header.tag.uppercase SYSTEM "customize/recipe.header.tag.uppercase.sgml">
-<!entity recipe.header.tag.lowercase SYSTEM "customize/recipe.header.tag.lowercase.sgml">
-
 <!-- フィルタ -->
 <!entity chapter.customize.filter    SYSTEM "customize/filter.sgml">
-<!entity recipe.filter.notice        SYSTEM "customize/recipe.filter.notice.sgml">
-<!entity recipe.filter.spamassassin  SYSTEM "customize/recipe.filter.spamassassin.sgml">
-<!entity recipe.filter.attachments   SYSTEM "customize/recipe.filter.attachments.sgml">
 <!entity chapter.filter              SYSTEM "internals/filter.sgml">
 <!entity var.filter.rules            SYSTEM "variables/filter.rules.sgml">
 <!entity var.filter.size             SYSTEM "variables/filter.size.sgml">
+<!entity sect.customize.filter.recipes SYSTEM "customize/recipes.filter.sgml">
 
 
 <!entity sect.usage.guide            SYSTEM "usage/guide.sgml">
@@ -215,6 +215,8 @@
 
 <!-- トラブルシューティング -->
 <!entity chapter.troubleshoot         SYSTEM "troubleshoot/chapter.sgml">
+<!entity troubleshoot.recipes         SYSTEM "troubleshoot/recipes.sgml">
+
 
 <!entity recipe.version               SYSTEM "troubleshoot/recipe.version.sgml">
 <!entity recipe.listup.addresses      SYSTEM "troubleshoot/recipe.listup.addresses.sgml">
