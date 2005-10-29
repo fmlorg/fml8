@@ -14,6 +14,15 @@ default value(s)</entry>
 <tbody>
 <row>
 <entry>
+address_compare_function_domain_matching_level</entry>
+<entry>
+ domain matching level in comparing mail addresses</entry>
+<entry>
+3
+   </entry>
+</row>
+<row>
+<entry>
 address_compare_function_type</entry>
 <entry>
  case insensitive comparison of user part of mail address.</entry>
@@ -380,6 +389,34 @@ reject_not_iso2022jp_japanese_string
    reject_japanese_command_syntax
    reject_ms_guid
    permit
+   </entry>
+</row>
+<row>
+<entry>
+article_thread_outline_greeting_en</entry>
+<entry>
+ greeting prepended to thread outline</entry>
+<entry>
+[outline of this thread]
+   </entry>
+</row>
+<row>
+<entry>
+article_thread_outline_greeting_ja</entry>
+<entry>
+ スレッドの概要が始まる部分につける挨拶</entry>
+<entry>
+[本スレッドのあらすじ]
+   </entry>
+</row>
+<row>
+<entry>
+article_thread_outline_rules</entry>
+<entry>
+ where should we add thread outline ?</entry>
+<entry>
+add_outline_to_header
+   append_outline_to_body
    </entry>
 </row>
 <row>
@@ -2120,6 +2157,15 @@ use_article_text_plain_filter</entry>
  use text/plain filter, which is a simple syntax checker.</entry>
 <entry>
 yes
+   </entry>
+</row>
+<row>
+<entry>
+use_article_thread_outline</entry>
+<entry>
+ add thread outline automatically ?</entry>
+<entry>
+no
    </entry>
 </row>
 <row>

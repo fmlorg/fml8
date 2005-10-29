@@ -14,6 +14,15 @@ default value(s)</entry>
 <tbody>
 <row>
 <entry>
+address_compare_function_domain_matching_level</entry>
+<entry>
+ メールアドレスを比較する際のドメイン比較レベル</entry>
+<entry>
+3
+   </entry>
+</row>
+<row>
+<entry>
 address_compare_function_type</entry>
 <entry>
  メンバーチェックをする際に、ユーザパートの比較で</entry>
@@ -389,8 +398,8 @@ article_thread_outline_rules</entry>
 <entry>
  スレッドの概要を記事に追加する際にどこに追加するのか</entry>
 <entry>
-add_header
-   append_body
+add_outline_to_header
+   append_outline_to_body
    </entry>
 </row>
 <row>
