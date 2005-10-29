@@ -314,6 +314,12 @@ use_address_compare_function = yes
 #     Examples: user_part_case_insensitive
 address_compare_function_type = user_part_case_insensitive
 
+# Descriptions: domain matching level in comparing mail addresses
+#      History: ML_MEMBER_CHECK
+#        Value: NUM
+#     Examples: 3
+address_compare_function_domain_matching_level	=	3
+
 
 =head2 restrictinos
 
@@ -1529,6 +1535,36 @@ article_filter_reject_notice_recipients	=	maintainer
 #        Value: SELECT ( multipart string )
 #     Examples: string
 article_filter_reject_notice_data_type	=	string
+
+
+=head2 article thread
+
+
+# Descriptions: add thread outline automatically ?
+#      History: none
+#        Value: YES_OR_NO
+#     Examples: no
+use_article_thread_outline		=	no
+
+# Descriptions: where should we add thread outline ?
+#      History: none
+#        Value: SELECT ( add_outline_to_header | append_outline_to_body )
+#     Examples: add_header append_body
+article_thread_outline_rules		=	add_outline_to_header
+						append_outline_to_body
+
+# Descriptions: スレッドの概要が始まる部分につける挨拶
+#      History: none
+#        Value: STR
+#     Examples: [本スレッドのあらすじ]
+article_thread_outline_greeting_ja	=	[本スレッドのあらすじ]
+
+# Descriptions: greeting prepended to thread outline
+#      History: none
+#        Value: STR
+#     Examples: [outline of this thread]
+article_thread_outline_greeting_en	=	[outline of this thread]
+
 
 =head2	ARTICLE SPAM FILTER CONFIGURATIONS
 

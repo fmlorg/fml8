@@ -323,6 +323,13 @@ use_address_compare_function = yes
 address_compare_function_type = user_part_case_insensitive
 
 
+# Descriptions: メールアドレスを比較する際のドメイン比較レベル
+#      History: ML_MEMBER_CHECK
+#        Value: NUM
+#     Examples: 3
+address_compare_function_domain_matching_level	=	3
+
+
 =head2	各機能における制限( ***_restrictions )
 
 
@@ -1579,10 +1586,10 @@ use_article_thread_outline		=	no
 
 # Descriptions: スレッドの概要を記事に追加する際にどこに追加するのか
 #      History: none
-#        Value: SELECT ( add_header | append_body )
+#        Value: SELECT ( add_outline_to_header | append_outline_to_body )
 #     Examples: add_header append_body
-article_thread_outline_rules		=	add_header
-						append_body
+article_thread_outline_rules		=	add_outline_to_header
+						append_outline_to_body
 
 # Descriptions: スレッドの概要が始まる部分につける挨拶
 #      History: none
@@ -1593,7 +1600,7 @@ article_thread_outline_greeting_ja	=	[本スレッドのあらすじ]
 # Descriptions: スレッドの概要が始まる部分につける挨拶
 #      History: none
 #        Value: STR
-#     Examples: [本スレッドのあらすじ]
+#     Examples: [outline of this thread]
 article_thread_outline_greeting_en	=	[outline of this thread]
 
 
