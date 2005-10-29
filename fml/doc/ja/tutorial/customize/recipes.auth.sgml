@@ -1,0 +1,83 @@
+<!--
+ $FML$
+-->
+
+<qandaset>
+
+
+<qandaentry>
+
+<question>
+<para>
+メールアドレスの From 認証を厳しくしたい
+</para>
+</question>
+
+<answer>
+<para>
+デフォルトの From アドレス認証で
+ドメインの比較するレベルを変更したい場合は、
+config.cf で
+address_compare_function_domain_matching_level を設定して下さい。
+<footnote>
+<para>
+&fml4; の ADDRESS_CHECK_MAX です。
+</para>
+</footnote>
+<screen>
+[/var/spool/ml/elena/config.cf]
+
+address_compare_function_domain_matching_level = 4
+
+</screen>
+たとえば、user@mail.example.co.jp というアドレスに対して、
+3 なら example.co.jp までが比較の対象、
+4 なら mail.example.co.jp までが比較の対象ということになります。
+</para>
+
+<para>
+From アドレス認証以外に PGP/GPG 認証を使うことも出来ます。
+くわしくは
+<link linkend="config.post.check.pgp">
+<xref linkend="config.post.check.pgp">
+</link>
+の節を見て下さい。
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+メールアドレスの From アドレス認証を行なわない
+</para>
+</question>
+
+<answer>
+<para>
+<screen>
+[/var/spool/ml/elena/config.cf]
+
+use_address_compare_function = no
+
+</screen>
+とすれば From アドレス認証の際に、メールアドレスに関わらず正当なアドレ
+スとみなされます(常に認証が成功します）。
+</para>
+
+<para>
+もちろん、これは From アドレス認証にまつわる部分だけで、PGP/GPG 認証な
+どとは別の話です(つまり、この変数を no にしても PGP/GPG 認証を使うこと
+が出来ます)。
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+</qandaset>
