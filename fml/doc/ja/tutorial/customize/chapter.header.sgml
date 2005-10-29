@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.header.sgml,v 1.4 2004/04/07 11:07:02 fukachan Exp $
+   $FML: chapter.header.sgml,v 1.5 2004/10/06 09:07:34 fukachan Exp $
 -->
 
 
@@ -21,12 +21,7 @@ Mail::Header のメソッドは何でも利用可能です。
 	レシピ’s
 	</title>
 
-<qandaset>
-
-&recipe.header.tag.uppercase;
-&recipe.header.tag.lowercase;
-
-</qandaset>
+&sect.customize.header.recipes;
 
 </sect1>
 
