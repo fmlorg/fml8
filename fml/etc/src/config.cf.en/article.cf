@@ -345,3 +345,33 @@ article_filter_reject_notice_recipients	=	maintainer
 #        Value: SELECT ( multipart string )
 #     Examples: string
 article_filter_reject_notice_data_type	=	string
+
+
+=head2 article thread
+
+
+# Descriptions: add thread outline automatically ?
+#      History: none
+#        Value: YES_OR_NO
+#     Examples: no
+use_article_thread_outline		=	no
+
+# Descriptions: where should we add thread outline ?
+#      History: none
+#        Value: SELECT ( add_outline_to_header | append_outline_to_body )
+#     Examples: add_header append_body
+article_thread_outline_rules		=	add_outline_to_header
+						append_outline_to_body
+
+# Descriptions: スレッドの概要が始まる部分につける挨拶
+#      History: none
+#        Value: STR
+#     Examples: [本スレッドのあらすじ]
+article_thread_outline_greeting_ja	=	[本スレッドのあらすじ]
+
+# Descriptions: greeting prepended to thread outline
+#      History: none
+#        Value: STR
+#     Examples: [outline of this thread]
+article_thread_outline_greeting_en	=	[outline of this thread]
+
