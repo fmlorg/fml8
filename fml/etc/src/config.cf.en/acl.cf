@@ -18,6 +18,12 @@ use_address_compare_function = yes
 #     Examples: user_part_case_insensitive
 address_compare_function_type = user_part_case_insensitive
 
+# Descriptions: domain matching level in comparing mail addresses
+#      History: ML_MEMBER_CHECK
+#        Value: NUM
+#     Examples: 3
+address_compare_function_domain_matching_level	=	3
+
 
 =head2 restrictinos
 
