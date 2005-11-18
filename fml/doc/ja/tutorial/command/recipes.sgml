@@ -1,0 +1,156 @@
+<!--
+ $FML$
+-->
+
+<qandaset>
+
+
+<qandaentry>
+
+<question>
+<para>
+news というファイルを送り返すコマンドを作る
+</para>
+</question>
+
+<answer>
+<para>
+このＭＬの最新情報が書き込まれている
+$ml_home_dir/news というファイルがあるとしましょう。
+これをＭＬのメンバーなら誰でも取り寄せられるようにしたい。
+そういった例を考えます。
+</para>
+
+<para>
+一番簡単な作り方は help コマンドをぱくることです:)
+たとえば FML::Command::User::help モジュール(
+/usr/local/lib/fml/$VERSION/FML/Command/User/help.pm
+)をコピーして
+FML::Command::User::news (
+/usr/local/lib/fml/site_local/FML/Command/User/news.pm
+)
+モジュールをつくってください。
+そして、news.pm の中の help という文字列を news に変えるだけです。
+<screen>
+[例]
+
+... 略 ...
+
+sub process
+{
+    my ($self, $curproc, $command_args) = @_;
+
+    $self->send_user_xxx_message($curproc, $command_args, "news");
+}
+... 略 ...
+</screen>
+</para>
+
+<para>
+<link linkend="customize.command.myproc">
+<xref linkend="customize.command.myproc">
+</link>
+や
+<link linkend="fml.command.hack.commandmail">
+<xref linkend="fml.command.hack.commandmail">
+</link>
+も参照してみてください。
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+mget コマンドのファイルモードのデフォルトを変更したい
+</para>
+</question>
+
+<answer>
+<para>
+いまのところできません。
+</para>
+
+<para>
+じつのところ、get コマンドと mget コマンドは同じです。
+そして、いまのところ get コマンドのファイルモードは変更できません。
+</para>
+</answer>
+
+</qandaentry>
+
+
+
+<qandaentry>
+
+<question>
+<para>
+get コマンドを mget mp と同じ意味にする
+</para>
+</question>
+
+<answer>
+<para>
+&fml8; ではデフォルトでそういう意味になっています。
+</para>
+
+<para>
+正確には、get と mget は同じコマンドで、get コマンドのファイルモードは
+(いまのところ) MIME/Multipart しかありません。
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+command status report を抑制したい
+</para>
+</question>
+
+<answer>
+<para>
+いまのところ、
+フィルタについては off/on できますが、
+一般には出来ません。
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+コマンドメールの内容を監視したい
+</para>
+</question>
+
+<answer>
+<para>
+(1) ログを perl で加工する。
+</para>
+
+<para>
+(2) コマンドメール自体のコピーを受けとる。
+たとえば、コマンドメールを受けとる設定のところに管理者も追加しておくと
+いった具合です。
+<screen>
+elena-ctl: :include:/var/spool/ml/elena/include-ctl, elena-admin
+</screen>
+</para>
+</answer>
+
+</qandaentry>
+
+
+
+</qandaset>
+
