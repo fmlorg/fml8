@@ -1,5 +1,5 @@
 <!--
-   $FML: post_permit_anyone.sgml,v 1.6 2004/10/06 09:07:34 fukachan Exp $
+   $FML: post_permit_anyone.sgml,v 1.7 2005/06/25 15:11:29 fukachan Exp $
 -->
 
 
@@ -51,5 +51,40 @@ article_post_restrictions =	reject_system_special_accounts
 ところで処理が終りに、マッチしない場合は次の条件を試すことになっていま
 す。
 </para>
+
+
+
+<sect2 id="recipes.config.post.permitanyone">
+	<title>
+	レシピ’s
+	</title>
+
+<qandaset>
+
+<qandaentry>
+
+<question>
+<para>
+自ドメインなら誰でも投稿できる ML
+</para>
+</question>
+
+<answer>
+<para>
+&fml4; のように HOOK でグローバル変数をいじくり回すといった
+危ないことが出来ないので &fml8; では簡単には出来ません。
+</para>
+
+<para>
+どうしましょう… とりあえず未実装というべき？
+</para>
+</answer>
+
+</qandaentry>
+
+</qandaset>
+
+</sect2>
+
 
 </sect1>
