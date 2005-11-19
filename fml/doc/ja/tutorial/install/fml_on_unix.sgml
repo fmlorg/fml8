@@ -1,5 +1,5 @@
 <!--
-   $FML: fml_on_unix.sgml,v 1.10 2005/06/25 15:11:32 fukachan Exp $
+   $FML: fml_on_unix.sgml,v 1.11 2005/10/08 07:32:54 fukachan Exp $
 -->
 
 
@@ -398,7 +398,7 @@ mani.cf は大枠の最も基本的な設定です。より細かな設定、たとえばサイト共
 デフォルトでは &fml4; と合わせるために、および見本として:)
 subject のタグをつけない設定とフィルタ関連の設定だけが入っています。
 <screen>
-# $FML: fml_on_unix.sgml,v 1.10 2005/06/25 15:11:32 fukachan Exp $
+# $FML: fml_on_unix.sgml,v 1.11 2005/10/08 07:32:54 fukachan Exp $
 #
 #               site default_config.cf EXAMPLE
 #
@@ -527,6 +527,7 @@ site_default_config.cf はドメインに関わらず適用されることに注意してく
 	recipes
 	</title> 
 
+	<!-- TABLE_OF_RECIPES -->
 	&sect.install.recipes;
 </sect1>
 

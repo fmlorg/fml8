@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.onhost.sgml,v 1.14 2005/10/08 07:31:57 fukachan Exp $
+   $FML: chapter.onhost.sgml,v 1.15 2005/10/15 10:56:08 fukachan Exp $
 -->
 
 
@@ -218,6 +218,7 @@ libexec/ と bin/ にあるプログラム群(.cgi は除く)すべてに共通する
 	Recipes
 	</title>
 
+<!-- TABLE_OF_RECIPES -->
 &sect.usage.onhost.recipes;
 
 </sect1>

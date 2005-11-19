@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.sgml,v 1.13 2004/10/06 09:07:35 fukachan Exp $
+   $FML: chapter.sgml,v 1.14 2005/06/25 15:11:30 fukachan Exp $
 -->
 
 
@@ -137,6 +137,7 @@ FML::Process::QueueManager に合併するべきかもしれない。
 	配送に関する TIPS 	
 	</title>
 
+<!-- TABLE_OF_RECIPES -->
 <qandaset>
 
 &recipe.delivery.forward;

@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.header.sgml,v 1.5 2004/10/06 09:07:34 fukachan Exp $
+   $FML: chapter.header.sgml,v 1.6 2005/10/29 04:21:38 fukachan Exp $
 -->
 
 
@@ -21,6 +21,7 @@ Mail::Header のメソッドは何でも利用可能です。
 	レシピ’s
 	</title>
 
+<!-- TABLE_OF_RECIPES -->
 &sect.customize.header.recipes;
 
 </sect1>

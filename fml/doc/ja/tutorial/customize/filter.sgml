@@ -1,5 +1,5 @@
 <!--
-   $FML: filter.sgml,v 1.5 2004/12/08 10:39:24 fukachan Exp $
+   $FML: filter.sgml,v 1.6 2005/10/29 04:20:00 fukachan Exp $
 -->
 
 
@@ -13,6 +13,7 @@
 	¥ì¥·¥Ô¡Çs
 	</title>
 
+<!-- TABLE_OF_RECIPES -->
 &sect.customize.filter.recipes;
 
 </sect1>

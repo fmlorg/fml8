@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.ml_style.sgml,v 1.7 2005/06/25 12:08:40 fukachan Exp $
+   $FML: chapter.ml_style.sgml,v 1.8 2005/10/29 04:28:41 fukachan Exp $
 -->
 
 
@@ -30,6 +30,7 @@
 	¥ì¥·¥Ô¡Çs [Ç§¾Ú]
 	</title>
 
+<!-- TABLE_OF_RECIPES -->
 &sect.customize.auth.recipes;
 
 </sect1>
@@ -39,6 +40,7 @@
 	¥ì¥·¥Ô¡Çs [ÅÐÏ¿´ØÏ¢]
 	</title>
 
+<!-- TABLE_OF_RECIPES -->
 &sect.customize.subscribe.recipes;
 
 </sect1>
