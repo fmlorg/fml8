@@ -1,5 +1,5 @@
 <!--
-   $FML: preface.sgml,v 1.24 2005/07/19 23:45:36 fukachan Exp $
+   $FML: preface.sgml,v 1.25 2005/11/19 03:44:24 fukachan Exp $
 -->
 
 
@@ -273,6 +273,6 @@ fml-devel £Í£Ì¤Î¥í¥°¤Ï
 &sect.terms;
 
 <!-- list of recipes -->
-&lor.recipes;
+&list.recipes;
 
 </preface>
