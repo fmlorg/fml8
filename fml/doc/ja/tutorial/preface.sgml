@@ -1,5 +1,5 @@
 <!--
-   $FML: preface.sgml,v 1.23 2005/06/25 15:11:27 fukachan Exp $
+   $FML: preface.sgml,v 1.24 2005/07/19 23:45:36 fukachan Exp $
 -->
 
 
@@ -272,5 +272,7 @@ fml-devel ＭＬのログは
 <!-- テクニカルタームの定義を与える -->
 &sect.terms;
 
+<!-- list of recipes -->
+&lor.recipes;
 
 </preface>

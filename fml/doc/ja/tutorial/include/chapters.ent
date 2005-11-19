@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.97 2005/10/15 10:56:07 fukachan Exp $
+	$FML: chapters.ent,v 1.98 2005/10/29 04:25:28 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -22,9 +22,10 @@
 
 
 <!-- メタレベル -->
-<!entity bookinfo   SYSTEM "include/bookinfo.sgml">
-<!entity preface    SYSTEM "preface.sgml">
-<!entity sect.terms SYSTEM "terms.sgml">
+<!entity bookinfo    SYSTEM "include/bookinfo.sgml">
+<!entity preface     SYSTEM "preface.sgml">
+<!entity sect.terms  SYSTEM "terms.sgml">
+<!entity lor.recipes SYSTEM "lor.sgml">
 
 
 <!-- パート I: introduction 〜 インストール、テストまで -->
