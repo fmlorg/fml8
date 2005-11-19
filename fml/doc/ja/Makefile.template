@@ -1,8 +1,8 @@
 #
-# $FML: Makefile.template,v 1.7 2005/06/25 10:03:37 fukachan Exp $
+# $FML: Makefile.template,v 1.8 2005/06/26 00:05:30 fukachan Exp $
 #
 
-TMP_DIR     = /tmp/sgmltools
+TMP_DIR     = ./tmp
 
 # targets
 SOURCE      = book
@@ -80,3 +80,5 @@ _init:
 	test -d $(TARGET_HTML_DIR) || mkdir $(TARGET_HTML_DIR)
 	test -d $(TARGET_TEXT_DIR) || mkdir $(TARGET_TEXT_DIR)
 	test -d $(TMP_DIR) || mkdir $(TMP_DIR)
+	perl ../../../../fml/utils/bin/listup_recipes.pl > tmp/lor.sgml.new
+	mv tmp/lor.sgml.new tmp/lor.sgml
