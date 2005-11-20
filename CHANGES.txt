@@ -30,6 +30,25 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2005/11/19
+
+   ドキュメンテーション
+	レシピ一覧を作るようにしてみました。
+	「FML バイブル」のレシピコレクションを参考にしてレシピを追加中
+	ですが、未実装のものは未実装と書いてあります。
+
+   fml/utils/bin/listup_recipes.pl 
+	generate list of recipes
+
+2005/10/29
+
+   variables
+	change naming of $article_thread_outline_rules. fix comments.
+	add $article_thread_outline_*
+
+   ドキュメンテーション
+	「FML バイブル」のレシピコレクションを参考にしてレシピを追加中
+
 2005/09/17
 
    FML::Filter::TextPlain 
@@ -8886,4 +8905,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.250 2005/09/11 13:30:48 fukachan Exp $
+$FML: CHANGES.txt,v 1.251 2005/09/18 14:01:28 fukachan Exp $
