@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.79 2004/05/22 13:37:32 fukachan Exp $
+# $FML: Makefile,v 1.80 2005/10/08 04:20:50 fukachan Exp $
 #
 
 TMPFILE	=	/tmp/log.fml-devel.test
@@ -80,11 +80,10 @@ _link:
 	ln -s ../../fml/lib/FML/Command       Command
 	ln -s ../../fml/lib/FML/Command/Admin AdminCommand
 	ln -s ../../fml/lib/FML/Command/User  UserCommand
-	ln -s ../../fml/lib/FML/MTAControl    MTAControl
+	ln -s ../../fml/lib/FML/MTA/Control   MTAControl
 	ln -s ../../fml/lib/IO
 	ln -s ../../fml/lib/Tie
 	ln -s ../../fml/lib/Mail
-	ln -s ../../fml/lib/Mail/ThreadTrack
 	ln -s ../../fml/libexec
 	ln -s /var/spool/ml/elena/log
 	ln -s ../../cpan/doc doc-devel
@@ -116,7 +115,7 @@ diag:
 	env PATH=/usr/pkg/bin:$$PATH make check
 
 depend:
-	perl ../style/list_up_dependence.pl `find lib/ -type f |grep pm` |\
+	perl ../style/listup_dependence.pl `find lib/ -type f |grep pm` |\
 	tee 55_DEPEND.bak
 
 
