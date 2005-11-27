@@ -1,0 +1,23 @@
+<!--
+   $FML$
+-->
+
+
+<chapter id="customize.body">
+	<title>
+	本文の書き換え
+	</title>
+
+
+<sect1 id="recipies.cutomize.body">
+	<title>
+	レシピ’s
+	</title>
+
+<!-- TABLE_OF_RECIPES -->
+&sect.customize.body.recipes;
+
+</sect1>
+
+
+</chapter>
