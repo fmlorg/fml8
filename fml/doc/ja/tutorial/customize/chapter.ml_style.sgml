@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.ml_style.sgml,v 1.8 2005/10/29 04:28:41 fukachan Exp $
+   $FML: chapter.ml_style.sgml,v 1.9 2005/11/19 03:45:05 fukachan Exp $
 -->
 
 
@@ -42,6 +42,16 @@
 
 <!-- TABLE_OF_RECIPES -->
 &sect.customize.subscribe.recipes;
+
+</sect1>
+
+<sect1 id="cuctomize.recipes.delivery">
+	<title>
+	レシピ’s [配送関連]
+	</title>
+
+<!-- TABLE_OF_RECIPES -->
+&sect.customize.delivery.recipes;
 
 </sect1>
 

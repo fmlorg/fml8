@@ -1,0 +1,158 @@
+<!--
+   $FML: @recipe_template,v 1.1 2003/01/07 11:39:13 fukachan Exp $
+-->
+
+<qandaset>
+
+<qandaentry>
+
+<question>
+<para>
+Subject: に応じて配送リストを変更したい
+</para>
+</question>
+
+<answer>
+<para>
+Subject のキーワードによって受信者を切替えることを考えます。
+</para>
+
+<para>
+たとえばSubjectに「資料請求」とあるメールであれば、ＭＬドライバがちょ
+くせつ資料請求を担当する人たちへフォワードしてあげると効率がよいでしょ
+う。
+</para>
+
+<para>
+これを実現するためには、こんな HOOK が考えられます。
+<screen>
+
+$distribute_run_start_hook = q{
+	my $config  = $curproc->config();
+	my $header  = $curproc->incoming_message_header();
+	my $subject = $header->get('subject') || '';
+
+	use Mail::Message::String;
+	my $sbj = new Mail::Message::String $subject;
+	$sbj->charcode_convert_to_internal_code();
+	$buf = $sbj->as_str();
+
+	my $map = '';
+	# 注意: このファイルは EUC-JP で書いて下さい
+	if ($buf =~ /資料請求/i) {
+	    # 資料請求をうけたら info@example.co.jp 相当のメンバーへ送信
+	    $map = '$ml_home_dir/recipients.info';
+	}
+	else {
+	    # デフォルト
+	    $map = '$ml_home_dir/recipients';
+	}
+
+	if ($map) {
+	    $config->set("recipient_maps", $map);
+	}
+};
+
+</screen>
+ここで $ml_home_dir/recipients.info (/var/spool/ml/elena/recipients.info)
+には資料請求を担当する人たちのアドレスが書かれています。
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+昼と夜で配送リストを変更する
+</para>
+</question>
+
+<answer>
+<para>
+前のレシピも参照して下さい。
+基本的なロジックは同じで、条件文が時間になるだけです。
+<screen>
+
+$distribute_run_start_hook = q{
+	my $config  = $curproc->config();
+
+	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) =
+	       localtime(time);
+
+	my $map = '';
+	if ($hour > 9 && $hour <= 17) {
+	    # 昼の部の人たち
+	    $map = '$ml_home_dir/recipients.daytime';
+	}
+	else {
+	    # 夜の部の人たち
+	    $map = '$ml_home_dir/recipients.night';
+	}
+
+	if ($map) {
+	    $config->set("recipient_maps", $map);
+	}
+};
+
+</screen>
+</para>
+</answer>
+
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+/etc/group を反映したＭＬ
+</para>
+</question>
+
+<answer>
+
+<para>
+&fml8; の IO は IO::Adapter による抽象化をしています。たとえば受信者を
+グループ fml に含まれるユーザ宛にするには次のようにするだけで十分です。
+<screen>
+[config.cf]
+
+recipient_maps = unix.group:fml
+
+</screen>
+
+</para>
+</answer>
+
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+送信者(投稿者)には ML の記事は配送しない
+</para>
+</question>
+
+<answer>
+
+<para>
+この機能が必要なのは、送信したメールの記録が残るメールリーダを使ってい
+る場合、ＭＬから戻ってくる記事は必要ないと思う人がいるからだそうです。
+</para>
+
+<para>
+&fml8; では、いまのところ出来ません。未実装です。
+</para>
+</answer>
+
+</qandaentry>
+
+
+</qandaset>
