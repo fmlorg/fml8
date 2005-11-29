@@ -1,5 +1,5 @@
 <!--
-   $FML: directory.sgml,v 1.5 2004/10/06 09:07:38 fukachan Exp $
+   $FML: directory.sgml,v 1.6 2005/06/25 15:11:34 fukachan Exp $
 -->
 
 
@@ -47,6 +47,54 @@ HTML 化されたファイルをおくサブディレクトリを 1000 ごとに用意すると、
 ベルくらいにするだろうと。ここでは関係ない議論だけど。
 メールを一万通ためる人が100人いるだけでもうだめ。
 </para>
+
+</sect1>
+
+
+<sect1 id="directory.recipes">
+	<title>
+	レシピ's
+	</title>
+
+<qandaset>
+
+<qandaentry>
+
+<question>
+<para>
+ディレクトリ名はどこに定義されていますか？
+</para>
+</question>
+
+<answer>
+<para>
+/usr/local/etc/fml/defaults/$VERSION/default_config.cf
+にデフォルトの定義が書かれています。
+各ＭＬの config.cf で上書きも出来ます。
+動作時に使っている値は fmlconf で表示させるとよいでしょう。
+<screen>
+
+% fmlconf ＭＬ名 | grep _dir
+
+</screen>
+これらの値を HOOK で使う際には config オブジェクトから取り出して下さい。
+<screen>
+
+$_xxx_hook = q{
+	my $config = $curproc->config();
+	my $xxxdir = $config->{ some_where_dir };
+
+	... 略 ...
+}
+
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+</qandaset>
 
 </sect1>
 

@@ -1,5 +1,5 @@
 <!--
-   $FML: directory.sgml,v 1.2 2005/08/03 13:22:06 fukachan Exp $
+   $FML: directory.sgml,v 1.3 2005/09/25 04:27:18 fukachan Exp $
 -->
 
 
@@ -44,5 +44,52 @@ It must be enough to assume that 1 million articles for one ML.
 
 </sect1>
 
+
+<sect1 id="directory.recipes">
+	<title>
+	Recipes
+	</title>
+
+<qandaset>
+
+<qandaentry>
+
+<question>
+<para>
+Where directory names are defined ?
+</para>
+</question>
+
+<answer>
+<para>
+There are default definitiions at 
+/usr/local/etc/fml/defaults/$VERSION/default_config.cf file.
+Each config.cf of each ML overloads them.
+Use fmlconf command to show the current value.
+<screen>
+
+% fmlconf $ml_name | grep _dir
+
+</screen>
+You can extract values from config object in a hook.
+<screen>
+
+$_xxx_hook = q{
+	my $config = $curproc->config();
+	my $xxxdir = $config->{ some_where_dir };
+
+	... snip ...
+}
+
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+</qandaset>
+
+</sect1>
 
 </chapter>
