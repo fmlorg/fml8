@@ -1,5 +1,5 @@
 <!--
-   $FML: post_permit_anyone.sgml,v 1.3 2005/07/20 10:37:44 fukachan Exp $
+   $FML: post_permit_anyone.sgml,v 1.4 2005/09/24 13:53:41 fukachan Exp $
    $jaFML: post_permit_anyone.sgml,v 1.3 2003/04/15 14:51:37 fukachan Exp $
 -->
 
@@ -37,5 +37,38 @@ only user contained in $member_maps can post article.
 <para>
 Attention that reject_XXX and permit_XXX statement is first match.
 </para>
+
+
+<sect2 id="recipes.config.post.permitanyone">
+	<title>
+	recipes
+	</title>
+
+<qandaset>
+
+<qandaentry>
+
+<question>
+<para>
+Any persons in a domain can post always.
+</para>
+</question>
+
+<answer>
+
+<para>
+It is not easy to handle global variables in the case of &fml4; .
+</para>
+
+<para>
+not implemented.
+</para>
+</answer>
+
+</qandaentry>
+
+</qandaset>
+
+</sect2>
 
 </sect1>
