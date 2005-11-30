@@ -1,0 +1,125 @@
+<!--
+ $FML$
+-->
+
+<qandaset>
+
+
+<qandaentry>
+
+<question>
+<para>
+サービス案内を自動で送り返す
+</para>
+</question>
+
+<answer>
+<para>
+ガイドを送り返す仕組みを利用すると良いでしょう。デフォルトではテンプレー
+トのガイド案内が使われますが、各ＭＬのホームディレクトリに guide ファ
+イルをおけばそれを送り返してくれます。
+</para>
+
+<para>
+「メールの内容にかかわらず常にガイドを送り返す」には、もうひと捻り必要
+です。
+</para>
+
+<para>
+このためには次のように HOOK で常に guide コマンドを実行するようにする
+とよいでしょう。なお通常の処理は行なわないようにしています。
+<screen>
+
+$distribute_run_start_hook = q{
+
+	# guide コマンドを呼び出します。
+	# guide コマンドの内容は汎用のメールキューシステムに渡されます。
+	use FML::Command;
+	my $dispatch = new FML::Command;
+	my $context  = $curproc->command_context_init("guide");
+	$dispatch->guide($curproc, $context);
+
+	# 通常の処理を行ないません。
+	$curproc->stop_this_process();
+
+};
+
+# コマンドメールでも同じくガイドを送り返すように
+$command_mail_run_start_hook = $distribute_run_start_hook;
+
+</screen>
+&fml4; と異なり、配送用とコマンドメール用それぞれのプロセスごとにHOOK 
+が分かれていることに注意して下さい。このため最後に同じ内容のコマンドメー
+ル用の HOOK も定義しています(コピーしています)。
+<screen>
+$command_mail_run_start_hook = $distribute_run_start_hook;
+</screen>
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+
+<qandaentry>
+
+<question>
+<para>
+お礼”も”返す意見受け付け用ＭＬ
+</para>
+</question>
+
+<answer>
+<para>
+前レシピに似ていますが、少し違います。
+</para>
+
+<para>
+たとえば意見受付用のＭＬを考えてみましょう。
+このＭＬに意見を送ってくれた人には、
+とりあえずお礼の返事
+「ご意見ありがとうございました。返事はしばらく待ってね。」を出し、
+メールは関係者に配送します。
+よって、
+(1) だれでも投稿できて、
+(2) お礼を常に出し、
+(3) さらに普通のＭＬとして動作する、
+ように設定します。
+</para>
+
+<para>
+<screen>
+[config.cf]
+
+article_post_restrictions = permit_anyone
+
+=cut
+
+$distribute_run_start_hook = q{
+    my $cred   = $curproc->credential();
+    my $sender = $cred->sender();
+
+    # ＭＬのメンバーでないならガイドを送り返します。
+    # ＭＬのメンバーに対しては普通のＭＬとなります。
+    unless ($cred->is_member($sender)) { 
+
+	# guide コマンドを呼び出します。
+	use FML::Command;
+	my $dispatch = new FML::Command;
+	my $context  = $curproc->command_context_init("guide");
+	$dispatch->guide($curproc, $context);
+    }
+
+};
+
+</screen>
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+</qandaset>
+

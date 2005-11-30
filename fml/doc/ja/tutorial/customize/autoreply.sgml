@@ -1,5 +1,5 @@
 <!--
-   $FML: autoreply.sgml,v 1.4 2004/10/06 09:07:34 fukachan Exp $
+   $FML: autoreply.sgml,v 1.5 2005/06/25 15:11:29 fukachan Exp $
 -->
 
 
@@ -43,5 +43,15 @@ $curproc->stop_this_process();
 これで、この HOOK 以降、正常の処理が無視されるようになります。
 つまり、なにも実行されなくなるというわけです。
 </para>
+
+
+<sect2>
+	<title>
+	レシピ’s
+	</title>
+
+&sect.customize.autoreply.recipes;
+
+</sect2>
 
 </sect1>
