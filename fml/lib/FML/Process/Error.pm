@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.53 2005/08/10 15:03:25 fukachan Exp $
+# $FML: Error.pm,v 1.54 2005/08/19 12:17:09 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -117,7 +117,8 @@ sub verify_request
 
     # set dummy sender to avoid unexpected error
     if ($maintainer) {
-	$curproc->{'credential'}->set( 'sender', $maintainer );
+	my $cred = $curproc->credential();
+	$cred->set( 'sender', $maintainer );
     }
     else {
 	$curproc->logerror("maintainer not defined.");

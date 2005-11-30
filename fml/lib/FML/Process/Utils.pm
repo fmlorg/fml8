@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.139 2005/08/31 11:15:43 fukachan Exp $
+# $FML: Utils.pm,v 1.140 2005/11/30 21:58:27 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1315,7 +1315,7 @@ sub __ml_home_prefix_from_main_cf
 sub ___search_in_ml_home_prefix_maps
 {
     my ($curproc, $main_cf, $domain, $prefix_maps) = @_;
-    my $cred = $curproc->{ credential };
+    my $cred = $curproc->credential();
 
     if (@$prefix_maps) {
 	my $dir  = '';
@@ -1669,7 +1669,7 @@ sub address_resolve
 {
     my ($curproc, $list) = @_;
     my $config = $curproc->config();
-    my $cred   = $curproc->{ credential };
+    my $cred   = $curproc->credential();
     my $result = [];
 
     for my $rcpt (@$list) {
@@ -2049,7 +2049,7 @@ sub command_line_cui_specific_recipient
     my ($curproc) = @_;
     my $args      = $curproc->{ __parent_args };
     my $rcpt      = $args->{ options }->{ 'send-to' } || '';
-    my $cred      = $curproc->{ credential };
+    my $cred      = $curproc->credential();
     my $sender    = $cred->sender() || '';
 
     return( $rcpt || $sender || '' );

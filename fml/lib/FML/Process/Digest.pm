@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Digest.pm,v 1.23 2005/06/04 08:51:30 fukachan Exp $
+# $FML: Digest.pm,v 1.24 2005/08/10 15:03:25 fukachan Exp $
 #
 
 package FML::Process::Digest;
@@ -116,7 +116,8 @@ sub verify_request
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     # set sender against further errors
-    $curproc->{'credential'}->set( 'sender', $maintainer );
+    my $cred = $curproc->credential();
+    $cred->set( 'sender', $maintainer );
 
     $eval = $config->get_hook( 'article_digest_verify_request_end_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
@@ -147,7 +148,8 @@ sub run
     my ($curproc, $args) = @_;
     my $config     = $curproc->config();
     my $maintainer = $config->{ maintainer };
-    my $sender     = $curproc->{'credential'}->{'sender'};
+    my $cred       = $curproc->credential();
+    my $sender     = $cred->sender();
 
     my $eval = $config->get_hook( 'article_digest_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
