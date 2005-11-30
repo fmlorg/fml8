@@ -1,5 +1,5 @@
 <!--
-   $FML: case_studies.sgml,v 1.8 2005/06/25 15:11:29 fukachan Exp $
+   $FML: case_studies.sgml,v 1.9 2005/08/03 13:45:10 fukachan Exp $
 -->
 
 
@@ -111,7 +111,7 @@ Subject: (SUPPORT 10000)
 これは、HOOK で実現します。
 <screen>
 $command_verify_request_end_hook = q{
-        my $cred = $curproc->{ credential };
+        my $cred = $curproc->credential();
         my $from = $cred->sender();
 
         unless ($from =~ /\@example\.co\.jp/i) {
