@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.62 2004/07/23 15:59:00 fukachan Exp $
+# $FML: Credential.pm,v 1.63 2005/05/27 03:03:31 fukachan Exp $
 #
 
 package FML::Credential;
@@ -69,9 +69,12 @@ sub new
     my ($self, $curproc) = @_;
     my ($type) = ref($self) || $self;
     my $me     = \%Credential;
+    my $config = $curproc->config();
+    my $level  = 
+	$config->{ address_compare_function_domain_matching_level } || 3;
 
     # default comparison level
-    set_compare_level( $me, 3 );
+    set_compare_level( $me, $level );
 
     _reconfigure($me);
 
