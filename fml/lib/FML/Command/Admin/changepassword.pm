@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: changepassword.pm,v 1.15 2004/07/23 13:03:50 fukachan Exp $
+# $FML: changepassword.pm,v 1.16 2005/05/27 03:03:34 fukachan Exp $
 #
 
 package FML::Command::Admin::changepassword;
@@ -125,7 +125,7 @@ sub process
 	    # XXX-TODO really ???
 	    # XXX special treatment only for command mails.
 	    if ($myname eq 'command' || $myname eq 'fml.pl') {
-		my $cred  = $curproc->{ credential };
+		my $cred  = $curproc->credential();
 		$address  = $cred->sender(); # From: in the header
 		$password = $options->[ 0 ];
 	    }
@@ -166,7 +166,7 @@ sub _change_password
 {
     my ($self, $curproc, $command_args, $address, $password) = @_;
     my $config = $curproc->config();
-    my $cred   = $curproc->{ credential };
+    my $cred   = $curproc->credential();
 
     # XXX We should always add/rewrite only $primary_*_map maps via
     # XXX command mail, CUI and GUI.

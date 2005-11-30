@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.164 2005/09/11 13:14:15 fukachan Exp $
+# $FML: Distribute.pm,v 1.165 2005/09/14 00:02:37 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -216,7 +216,8 @@ sub run
     my ($curproc, $args) = @_;
     my $config     = $curproc->config();
     my $maintainer = $config->{ maintainer };
-    my $sender     = $curproc->{'credential'}->{'sender'};
+    my $cred       = $curproc->credential();
+    my $sender     = $cred->sender();
     my $_data_type =
 	$config->{ article_post_restrictions_reject_notice_data_type };
     my $data_type  = $_data_type || 'string';
@@ -512,7 +513,7 @@ sub _header_rewrite
 sub _deliver_article
 {
     my ($curproc) = @_;
-    my $cred    = $curproc->{ credential };
+    my $cred    = $curproc->credential();
     my $config  = $curproc->config();                 # FML::Config   object
     my $message = $curproc->article_message();        # Mail::Message object
     my $header  = $curproc->article_message_header(); # FML::Header   object

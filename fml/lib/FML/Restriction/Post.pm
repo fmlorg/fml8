@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.19 2005/05/30 03:32:34 fukachan Exp $
+# $FML: Post.pm,v 1.20 2005/05/31 13:14:05 fukachan Exp $
 #
 
 package FML::Restriction::Post;
@@ -49,7 +49,7 @@ sub reject_system_special_accounts
 {
     my ($self, $rule, $sender) = @_;
     my $curproc = $self->{ _curproc };
-    my $cred    = $curproc->{ credential };
+    my $cred    = $curproc->credential();
     my $match   = $cred->match_system_special_accounts($sender);
 
     if ($match) {
@@ -96,7 +96,7 @@ sub permit_member_maps
 {
     my ($self, $rule, $sender) = @_;
     my $curproc = $self->{ _curproc };
-    my $cred    = $curproc->{ credential };
+    my $cred    = $curproc->credential();
 
     # Q: the mail sender is an ML member?
     if ($cred->is_member($sender)) {

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digest.pm,v 1.13 2004/04/23 04:10:32 fukachan Exp $
+# $FML: digest.pm,v 1.14 2004/06/29 10:02:43 fukachan Exp $
 #
 
 package FML::Command::User::digest;
@@ -68,7 +68,7 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
     my $config = $curproc->config();
-    my $cred   = $curproc->{ credential };
+    my $cred   = $curproc->credential();
 
     # XXX We should always add/rewrite only $primary_*_map maps via
     # XXX command mail, CUI and GUI.
@@ -82,7 +82,8 @@ sub process
     my $cache_dir     = $config->{ db_dir };
     my $keyword       = $config->{ confirm_command_prefix };
     my $command       = $command_args->{ command };
-    my $address       = $curproc->{ credential }->sender();
+    my $cred          = $curproc->credential();
+    my $address       = $cred->sender();
     my $mode          = '';
 
     # fundamental check

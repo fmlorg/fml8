@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: off.pm,v 1.22 2005/08/17 10:36:36 fukachan Exp $
+# $FML: off.pm,v 1.23 2005/08/17 12:08:44 fukachan Exp $
 #
 
 package FML::Command::Admin::off;
@@ -81,7 +81,7 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
     my $config  = $curproc->config();
-    my $cred    = $curproc->{ credential };
+    my $cred    = $curproc->credential();
     my $options = $command_args->{ options } || [];
     my $address = $command_args->{ command_data } || $options->[ 0 ];
 

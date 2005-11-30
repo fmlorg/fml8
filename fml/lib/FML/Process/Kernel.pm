@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.267 2005/08/19 11:23:02 fukachan Exp $
+# $FML: Kernel.pm,v 1.268 2005/08/19 12:17:09 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -265,7 +265,7 @@ sub _credential_init
 
     use FML::Credential;
     my $cred = new FML::Credential $curproc;
-    $curproc->{'credential'} = $cred;
+    $curproc->{ 'credential' } = $cred;
 }
 
 
@@ -559,7 +559,7 @@ sub _init_event_timeout
 =head2 credential_verify_sender($args)
 
 validate the mail sender (From: in the header not SMTP SENEDER).  If
-valid, it sets the adddress within $curproc->{ credential } object as
+valid, it sets the adddress within $curproc->credential() object as
 a side effect.
 
 =cut
@@ -609,7 +609,8 @@ sub credential_verify_sender
 	my $safe = new FML::Restriction::Base;
 	if ($safe->regexp_match('address', $from)) {
 	    # o.k. From: is proven to be valid now.
-	    $curproc->{'credential'}->set( 'sender', $from );
+	    my $cred = $curproc->credential();
+	    $cred->set( 'sender', $from );
 	}
 	else {
 	    $curproc->stop_this_process();
@@ -1040,7 +1041,7 @@ sub config_cf_files_load
 	}
 
 	use FML::Credential;
-	my $cred = $curproc->{ credential };
+	my $cred = $curproc->credential();
 	my $s = "configuration error: \$maintainer == \$article_post_address";
 	if ($maintainer && $ml_address) {
 	    if ($cred->is_same_address($maintainer, $ml_address)) {
@@ -1292,7 +1293,7 @@ sub is_permit_post
 {
     my ($curproc) = @_;
     my $config    = $curproc->config();
-    my $cred      = $curproc->{ credential }; # user credential
+    my $cred      = $curproc->credential(); # user credential
     my $sender    = $cred->sender();
     my $rules     = $config->get_as_array_ref( "article_post_restrictions" );
 
@@ -1782,7 +1783,9 @@ sub _analyze_recipients
 
     # if both specified, use default sender.
     unless (@$recipient || @$recipient_maps) {
-	$recipient = [ $curproc->{ credential }->sender() ];
+	my $cred   = $curproc->credential(); 
+	my $sender = $cred->sender();
+	$recipient = [ $sender ];
     }
 
     # aggregation of recepients: [ A, A, B ] -> [ A, B ]
@@ -2448,8 +2451,10 @@ sub queue_in
 
     # default recipient if undefined.
     unless ($rcptkey) {
-	if (defined $curproc->{ credential }) {
-	    $rcptkey = $curproc->{ credential }->sender();
+	my $cred   = $curproc->credential(); 
+	my $sender = $cred->sender() || undef;
+	if (defined $cred) {
+	    $rcptkey = $sender;
 	}
     }
 

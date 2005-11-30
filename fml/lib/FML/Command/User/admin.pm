@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: admin.pm,v 1.12 2005/05/30 03:28:06 fukachan Exp $
+# $FML: admin.pm,v 1.13 2005/05/30 06:52:23 fukachan Exp $
 #
 
 package FML::Command::User::admin;
@@ -153,7 +153,7 @@ sub process
 sub _try_admin_auth
 {
     my ($self, $curproc, $command_args) = @_;
-    my $cred     = $curproc->{ credential };
+    my $cred     = $curproc->credential();
     my $sender   = $cred->sender();
     my $opt_args = { address => $sender };
     my $class    = $command_args->{ comsubname } || '';

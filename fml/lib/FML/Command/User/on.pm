@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: on.pm,v 1.17 2004/04/23 04:10:32 fukachan Exp $
+# $FML: on.pm,v 1.18 2004/06/26 11:47:58 fukachan Exp $
 #
 
 package FML::Command::User::on;
@@ -70,7 +70,7 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
     my $config = $curproc->config();
-    my $cred   = $curproc->{ credential };
+    my $cred   = $curproc->credential();
 
     # XXX We should always add/rewrite only $primary_*_map maps via
     # XXX command mail, CUI and GUI.

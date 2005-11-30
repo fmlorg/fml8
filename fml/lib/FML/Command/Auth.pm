@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.39 2004/12/05 16:19:06 fukachan Exp $
+# $FML: Auth.pm,v 1.40 2005/05/26 09:46:01 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -80,7 +80,7 @@ sub permit_anyone
 sub permit_admin_member_maps
 {
     my ($self, $curproc, $optargs) = @_;
-    my $cred   = $curproc->{ credential };
+    my $cred   = $curproc->credential();
     my $sender = $cred->sender();
     my $match  = $cred->is_privileged_member($sender);
 
@@ -100,7 +100,7 @@ sub permit_admin_member_maps
 sub reject_system_special_accounts
 {
     my ($self, $curproc, $optargs) = @_;
-    my $cred   = $curproc->{ credential };
+    my $cred   = $curproc->credential();
     my $sender = $cred->sender();
     my $match  = $cred->match_system_special_accounts($sender);
 
@@ -130,7 +130,7 @@ sub check_admin_member_password
 {
     my ($self, $curproc, $optargs) = @_;
     my $function = "check_admin_member_password";
-    my $cred     = $curproc->{ credential };
+    my $cred     = $curproc->credential();
     my $sender   = $cred->sender();
     my $config   = $curproc->config();
     my $status   = 0;
@@ -245,7 +245,7 @@ sub check_admin_member_password
 sub change_password
 {
     my ($self, $curproc, $command_args, $up_args) = @_;
-    my $cred     = $curproc->{ credential };
+    my $cred     = $curproc->credential();
     my $map      = $up_args->{ map };
     my $address  = $up_args->{ address  };
     my $password = $up_args->{ password };

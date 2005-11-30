@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: addrecipient.pm,v 1.4 2005/08/17 10:36:36 fukachan Exp $
+# $FML: addrecipient.pm,v 1.5 2005/08/17 12:08:43 fukachan Exp $
 #
 
 package FML::Command::Admin::addrecipient;
@@ -81,7 +81,7 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
     my $config  = $curproc->config();
-    my $cred    = $curproc->{ credential };
+    my $cred    = $curproc->credential();
     my $options = $command_args->{ options };
     my $address = $command_args->{ command_data } || $options->[ 0 ];
 

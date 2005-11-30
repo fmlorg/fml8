@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.113 2005/06/04 08:49:08 fukachan Exp $
+# $FML: Command.pm,v 1.114 2005/08/10 15:03:24 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -347,7 +347,7 @@ sub _command_switch
     my ($curproc, $context) = @_;
     my $config   = $curproc->config();
     my $prompt   = $config->{ command_mail_reply_prompt } || '>>>';
-    my $cred     = $curproc->{ credential }; # user credential
+    my $cred     = $curproc->credential(); # user credential
     my $sender   = $cred->sender();
     my $comname  = $context->{ comname };
     my $msg_args = $context->{ msg_args } || {};
@@ -422,7 +422,7 @@ sub _command_execute
     my ($curproc, $command_args) = @_;
     my $config   = $curproc->config();
     my $prompt   = $config->{ command_mail_reply_prompt } || '>>>';
-    my $cred     = $curproc->{ credential };
+    my $cred     = $curproc->credential();
     my $sender   = $cred->sender();
     my $msg_args = $command_args->{ msg_args } || {};
 

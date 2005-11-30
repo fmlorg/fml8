@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digest.pm,v 1.23 2005/08/17 10:36:36 fukachan Exp $
+# $FML: digest.pm,v 1.24 2005/08/17 12:08:43 fukachan Exp $
 #
 
 package FML::Command::Admin::digest;
@@ -158,7 +158,7 @@ sub _digest_on
 {
     my ($self, $curproc, $command_args, $dargs) = @_;
     my $config               = $curproc->config();
-    my $cred                 = $curproc->{ credential };
+    my $cred                 = $curproc->credential();
     my $address              = $dargs->{ address };
     my $recipient_map        = $dargs->{ primary_recipient_map };
     my $digest_recipient_map = $dargs->{ primary_digest_recipient_map };
@@ -216,7 +216,7 @@ sub _digest_off
 {
     my ($self, $curproc, $command_args, $dargs) = @_;
     my $config               = $curproc->config();
-    my $cred                 = $curproc->{ credential };
+    my $cred                 = $curproc->credential();
     my $address              = $dargs->{ address };
     my $recipient_map        = $dargs->{ primary_recipient_map };
     my $digest_recipient_map = $dargs->{ primary_digest_recipient_map };

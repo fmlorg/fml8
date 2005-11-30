@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.18 2005/05/30 03:28:07 fukachan Exp $
+# $FML: Command.pm,v 1.19 2005/05/31 13:14:05 fukachan Exp $
 #
 
 package FML::Restriction::Command;
@@ -130,7 +130,7 @@ sub permit_admin_member_maps
 {
     my ($self, $rule, $sender) = @_;
     my $curproc = $self->{ _curproc };
-    my $cred    = $curproc->{ credential };
+    my $cred    = $curproc->credential();
     my $match   = $cred->is_privileged_member($sender);
 
     if ($match) {

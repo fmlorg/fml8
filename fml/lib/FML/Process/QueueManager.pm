@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.35 2005/05/27 03:03:37 fukachan Exp $
+# $FML: QueueManager.pm,v 1.36 2005/06/04 01:35:25 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -170,7 +170,7 @@ sub send
 sub _send
 {
     my ($self, $curproc, $q) = @_;
-    my $cred  = $curproc->{ credential };
+    my $cred  = $curproc->credential();
     my $info  = $q->getidinfo();
     my $qfile = $info->{ 'path' };
     my $qid   = $info->{ 'id' };

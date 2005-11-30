@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.46 2005/08/09 03:22:22 fukachan Exp $
+# $FML: Filter.pm,v 1.47 2005/08/19 11:18:36 fukachan Exp $
 #
 
 package FML::Filter;
@@ -452,7 +452,7 @@ sub command_mail_filter_reject_notice
 sub _filter_reject_notice
 {
     my ($self, $curproc, $msg_args, $class) = @_;
-    my $cred   = $curproc->{ credential };
+    my $cred   = $curproc->credential();
     my $config = $curproc->config();
     my $msg    = $curproc->incoming_message();
     my $r      = $msg_args->{ _arg_reason } || 'unknown';

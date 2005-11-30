@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.35 2005/08/17 12:08:40 fukachan Exp $
+# $FML: Error.pm,v 1.36 2005/08/20 02:16:03 fukachan Exp $
 #
 
 package FML::Error;
@@ -289,7 +289,7 @@ sub is_list_address
     my ($self, $addr)  = @_;
     my $curproc = $self->{ _curproc };
     my $config  = $curproc->config();
-    my $cred    = $curproc->{ credential };
+    my $cred    = $curproc->credential();
     my $addrs   = $config->get_as_array_ref('list_addresses');
     my $match   = 0;
 
@@ -333,7 +333,7 @@ sub remove_bouncers
 {
     my ($self)  = @_;
     my $curproc = $self->{ _curproc };
-    my $cred    = $curproc->{ credential };
+    my $cred    = $curproc->credential();
     my $list    = $self->{ _list_to_be_removed };
 
     use FML::Restriction::Base;

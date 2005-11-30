@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HomePrefix.pm,v 1.7 2004/10/03 12:07:52 fukachan Exp $
+# $FML: HomePrefix.pm,v 1.8 2005/05/27 03:03:35 fukachan Exp $
 #
 
 package FML::ML::HomePrefix;
@@ -101,7 +101,7 @@ sub add
 {
     my ($self, $domain, $dir) = @_;
     my $curproc = $self->{ _curproc };
-    my $cred    = $curproc->{ credential };
+    my $cred    = $curproc->credential();
     my $pri_map = $self->primary_map();
 
     $self->_sanity_check();
