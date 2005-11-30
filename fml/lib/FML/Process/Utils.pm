@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.138 2005/08/19 11:25:24 fukachan Exp $
+# $FML: Utils.pm,v 1.139 2005/08/31 11:15:43 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -90,6 +90,23 @@ sub scheduler
 
     if (defined $curproc->{ scheduler }) {
 	return $curproc->{ scheduler };
+    }
+    else {
+	return undef;
+    }
+}
+
+
+# Descriptions: return credential object.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: OBJ
+sub credential
+{
+    my ($curproc) = @_;
+
+    if (defined $curproc->{ credential }) {
+	return $curproc->{ credential };
     }
     else {
 	return undef;
