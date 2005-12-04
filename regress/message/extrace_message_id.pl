@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: extrace_message_id.pl,v 1.1 2001/04/23 17:32:45 fukachan Exp $
+# $FML: extrace_message_id.pl,v 1.2 2005/07/27 12:16:20 fukachan Exp $
 #
 
 use strict;
@@ -26,14 +26,14 @@ for my $f (@ARGV) {
         header_class => 'FML::Header',
     });
 
-    my $header = $msg->rfc822_message_header;
+    my $header = $msg->whole_message_header;
     my $mid    = $header->get('message-id');
 
     print "Message-ID: ";
     print $header->get('message-id');
     print "\n";
     print "\n";
-    print "  cleanup> ", $header->address_clean_up($mid);
+    print "  cleanup> ", $header->address_cleanup($mid);
     print "\n";
     print "\n";
     print "In-Reply-To: ";

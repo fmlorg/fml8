@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: basic_io.pl,v 1.5 2002/04/18 14:18:09 fukachan Exp $
+# $FML: summary.pl,v 1.1 2004/03/28 13:15:07 fukachan Exp $
 #
 
 use strict;
@@ -24,7 +24,7 @@ for my $f (@ARGV) {
     my $wh  = new FileHandle "> $tmp";
     my $msg = Mail::Message->parse( { fd => $fh } );
 
-    print $msg->one_line_summary($wh);
+    print $msg->one_line_summary();
     print "\n";
     print "\n";
 }
