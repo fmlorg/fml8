@@ -30,6 +30,26 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2005/12/01
+
+   FML::Process::Utils 
+	define credential() method
+
+   FML::Command::Admin::changepassword addrecipient digest 
+                        off on addmember 
+   FML::Command::User::admin chaddr digest off on subscribe unsubscribe 
+   FML::Command::Auth 
+   FML::ML::HomePrefix 
+   FML::Process::Command Distribute Kernel QueueManager 
+   FML::Restriction::Command Post 
+   FML::Filter Error 
+   FML::Process::Digest Error Utils 
+	use $curproc->credential();
+	
+   FML::Credential 
+	use $address_compare_function_domain_matching_level
+
+
 2005/11/19
 
    ドキュメンテーション
@@ -8905,4 +8925,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.251 2005/09/18 14:01:28 fukachan Exp $
+$FML: CHANGES.txt,v 1.252 2005/11/20 14:29:55 fukachan Exp $
