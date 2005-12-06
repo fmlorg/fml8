@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML$
+# $FML: list_up_whats_new.sh,v 1.2 2001/08/19 16:11:28 fukachan Exp $
 #
 
 date=$1
