@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML$
+# $FML: list_up_message_arg,v 1.1 2003/05/31 04:42:31 fukachan Exp $
 #
 
 dir=../../fml/share/message/

@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: .list_up_command_lock.pl,v 1.1 2003/04/12 14:02:35 fukachan Exp $
+# $FML: list_up_command_lock.pl,v 1.1 2003/05/31 04:42:31 fukachan Exp $
 #
 
 for my $x (<AdminCommand/*pm UserCommand/*pm>) {

@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML: list_up.sh,v 1.1.1.1 2001/02/11 13:27:44 fukachan Exp $
+# $FML: list_up.sh,v 1.2 2001/06/17 09:00:30 fukachan Exp $
 #
 
 tmp=/tmp/$$
