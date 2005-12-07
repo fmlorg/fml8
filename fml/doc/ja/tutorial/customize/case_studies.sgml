@@ -1,5 +1,5 @@
 <!--
-   $FML: case_studies.sgml,v 1.9 2005/08/03 13:45:10 fukachan Exp $
+   $FML: case_studies.sgml,v 1.10 2005/11/30 23:42:31 fukachan Exp $
 -->
 
 
@@ -116,7 +116,7 @@ $command_verify_request_end_hook = q{
 
         unless ($from =~ /\@example\.co\.jp/i) {
                 $curproc->stop_this_process();
-                LogError("deny command request from $from");
+                $curproc->logerror("deny command request from $from");
         }
 };
 </screen>  
