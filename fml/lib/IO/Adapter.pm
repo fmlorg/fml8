@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.37 2005/08/23 08:39:09 fukachan Exp $
+# $FML: Adapter.pm,v 1.38 2005/08/23 09:56:13 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -170,6 +170,11 @@ sub new
 	    $me->{_file} = $1;
 	    $me->{_type} = 'file';
 	    $pkg         = 'IO::Adapter::File';
+	}
+	elsif ($map =~ /pcre:(\S+)/) {
+	    $me->{_file} = $1;
+	    $me->{_type} = 'file';
+	    $pkg         = 'IO::Adapter::PCRE';
 	}
 	elsif ($map =~ /unix\.group:(\S+)/) {
 	    $me->{_name} = $1;
