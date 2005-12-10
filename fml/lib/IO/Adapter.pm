@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.38 2005/08/23 09:56:13 fukachan Exp $
+# $FML: Adapter.pm,v 1.39 2005/12/08 10:05:57 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -113,6 +113,9 @@ This wrapper provides IO like a usual file for the specified C<$map>.
    file            file:$file_name (prefix file: is optional).
                    For example, file:/var/spool/ml/elena/recipients
 
+   pcre            pcre:$file_name
+                   e.g. pcre:/var/spool/ml/elena/sender_check
+
    unix.group      unix.group:$group_name
                    For example, unix.group:fml
 
@@ -123,10 +126,8 @@ This wrapper provides IO like a usual file for the specified C<$map>.
    mysql           mysql:$schema_name
 
    postgresql      postgresql:$schema_name
-                   *** not yet implemented ***
 
    ldap            ldap:$schema_name
-                   *** not yet implemented ***
 
 =head1 METHODS
 
