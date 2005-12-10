@@ -30,6 +30,12 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2005/12/09
+
+   IO::Adapter 
+   IO::Adapter::PCRE 
+	pcre: support
+
 2005/12/01
 
    FML::Process::Utils 
@@ -8925,4 +8931,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.252 2005/11/20 14:29:55 fukachan Exp $
+$FML: CHANGES.txt,v 1.253 2005/12/04 12:31:44 fukachan Exp $
