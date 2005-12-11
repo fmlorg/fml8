@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.63 2005/05/27 03:03:31 fukachan Exp $
+# $FML: Credential.pm,v 1.64 2005/11/30 23:37:56 fukachan Exp $
 #
 
 package FML::Credential;
@@ -423,7 +423,8 @@ sub has_address_in_map
 
     # $curproc->lock($lock_channel);   # READER LOCK
     my $_user = quotemeta($user);
-    my $addrs = $obj->find($_user , { want => 'key', all => 1 });
+    my $addrs = $obj->find($_user , 
+			   { want => 'key', all => 1, hints => [ $address ] });
     # $curproc->unlock($lock_channel); # READER LOCK
 
     if (ref($addrs) && $debug) {

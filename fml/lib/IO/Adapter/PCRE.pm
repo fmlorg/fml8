@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: PCRE.pm,v 1.1 2005/12/08 10:05:58 fukachan Exp $
 #
 
 package IO::Adapter::PCRE;
@@ -60,7 +60,8 @@ sub md_find
 {
     my ($self, $regexp, $args) = @_;
     my $case_sensitive = $args->{ case_sensitive } ? 1 : 0;
-    my $want           = $args->{ want } || 'key,value';
+    my $want           = $args->{ want }  || 'key,value';
+    my $hints          = $args->{ hints } || [];
     my $show_all       = $args->{ all } ? 1 : 0;
     my (@buf, $x);
 
@@ -74,20 +75,36 @@ sub md_find
 	};
     }
 
+    $self->open();
+
     my $pcre;
   LINE:
     while ($pcre = $self->get_next_key()) {
-	print "($regexp =~ /$pcre/)\n";
+	if ($debug) {
+	    print "SEARCH: ($regexp|[@$hints]) =~ /$pcre/\n";
+	}
 
 	if ($show_all) {
             if ($case_sensitive) {
 		if ($regexp =~ /$pcre/) {
 		    push(@buf, $regexp);
 		}
+
+		for my $hint (@$hints) {
+		    if ($hint =~ /$pcre/) {
+			push(@buf, $hint);
+		    }
+		}
 	    }
 	    else {
 		if ($regexp =~ /$pcre/i) {
 		    push(@buf, $regexp);
+		}
+
+		for my $hint (@$hints) {
+		    if ($hint =~ /$pcre/i) {
+			push(@buf, $hint);
+		    }
 		}
 	    }
 	}
@@ -97,15 +114,31 @@ sub md_find
 		    $x = $regexp;
 		    last LINE;
 		}
+
+		for my $hint (@$hints) {
+		    if ($hint =~ /$pcre/) {
+			$x = $regexp;
+			last LINE;
+		    }
+		}
 	    }
 	    else {
 		if ($regexp =~ /$pcre/i) {
 		    $x = $regexp;
 		    last LINE;
 		}
+
+		for my $hint (@$hints) {
+		    if ($hint =~ /$pcre/i) {
+			$x = $regexp;
+			last LINE;
+		    }
+		}
 	    }
 	}
     }
+
+    $self->close();
 
     return( $show_all ? \@buf : $x );
 }
