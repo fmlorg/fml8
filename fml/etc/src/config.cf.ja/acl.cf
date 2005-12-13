@@ -53,6 +53,7 @@ article_post_restrictions	=	reject_system_special_accounts
 #			permit_member_maps
 #			permit_anonymous_command
 #			permit_user_command
+#			check_pgp_signature
 #			reject_system_special_accounts
 #			reject
 #		)
@@ -69,6 +70,7 @@ command_mail_restrictions	=	reject_system_special_accounts
 #			permit_anyone
 #			permit_admin_member_maps
 #			check_admin_member_password
+#			check_pgp_signature
 #			reject_system_special_accounts
 #			reject
 #		)
