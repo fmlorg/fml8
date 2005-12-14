@@ -1,7 +1,4 @@
-<!--
-   $FML: recipe.header.tag.uppercase.sgml,v 1.1 2002/10/29 03:32:21 fukachan Exp $
--->
-
+<qandaset>
 
 <qandaentry>
 
@@ -22,3 +19,5 @@
 </answer>
 
 </qandaentry>
+
+</qandaset>

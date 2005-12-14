@@ -1,8 +1,4 @@
-<!--
-# $FML$
-   $jaFML: @recipe_template,v 1.1 2003/01/07 11:39:13 fukachan Exp $
--->
-
+<qandaset>
 
 <qandaentry>
 
@@ -23,3 +19,5 @@
 </answer>
 
 </qandaentry>
+
+</qandaset>
