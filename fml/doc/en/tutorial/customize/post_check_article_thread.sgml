@@ -1,5 +1,5 @@
 <!--
-   $FML: post_check_article_thread.sgml,v 1.1 2005/07/20 10:37:43 fukachan Exp $
+   $FML: post_check_article_thread.sgml,v 1.2 2005/09/24 13:53:41 fukachan Exp $
    $jaFML: post_check_article_thread.sgml,v 1.3 2005/06/25 14:12:52 fukachan Exp $
 -->
 
@@ -40,8 +40,20 @@ within some time limit (e.g. one week).
 
 <sect2>
 	<title>
-	Examples
+	Recipes
 	</title>
+
+<qandaset>
+
+<qandaentry>
+
+<question>
+<para>
+Article Posting Allowd If It Is A Reply To The Former One.
+</para>
+</question>
+
+<answer>
 
 <para>
 "check_article_thread" is the keyword to enable this check.
@@ -54,6 +66,12 @@ article_post_restrictions       =       reject_system_special_accounts
 Not used by default.
 To use it, specify it at article_post_restrictions.
 </para>
+
+</answer>
+
+</qandaentry>
+
+</qandaset>
 
 </sect2>
 
@@ -92,8 +110,20 @@ If so, we should check the corelation between subject: and the thread?
 
 <sect2>
 	<title>
-	Applied Example: Only A Few Persons Can Starts Article Thread.
+	Recipes
 	</title>
+
+<qandaset>
+
+<qandaentry>
+
+<question>
+<para>
+Only A Few Persons Can Starts Article Thread.
+</para>
+</question>
+
+<answer>
 
 <para>
 <screen>
@@ -127,6 +157,12 @@ article_post_restrictions       =       reject_system_special_accounts
 
 </screen>
 </para>
+
+</answer>
+
+</qandaentry>
+
+</qandaset>
 
 </sect2>
 

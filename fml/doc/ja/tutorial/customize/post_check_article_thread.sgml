@@ -1,5 +1,5 @@
 <!--
-   $FML: post_check_article_thread.sgml,v 1.2 2004/11/14 12:04:58 fukachan Exp $
+   $FML: post_check_article_thread.sgml,v 1.3 2005/06/25 14:12:52 fukachan Exp $
 -->
 
 
@@ -36,8 +36,20 @@
 
 <sect2>
 	<title>
-	設定例
+	レシピ
 	</title>
+
+<qandaset>
+
+<qandaentry>
+
+<question>
+<para>
+フォローする場合なら誰でも投稿可能なＭＬ
+</para>
+</question>
+
+<answer>
 
 <para>
 設定例は次のようになります。
@@ -51,6 +63,12 @@ article_post_restrictions       =       reject_system_special_accounts
 もちろんデフォルトでは使いません。
 利用したい場合は、明示的に article_post_restrictions を変更して下さい。
 </para>
+
+</answer>
+
+</qandaentry>
+
+</qandaset>
 
 </sect2>
 
@@ -110,8 +128,19 @@ $article_post_article_thread_lifetime という変数で制御できるようにして
 
 <sect2>
 	<title>
-	応用例: 特定少数の人だけがスレッドをたてられるＭＬ
+	レシピ
 	</title>
+
+<qandaset>
+<qandaentry>
+
+<question>
+<para>
+特定少数の人だけがスレッドをたてられるＭＬ
+</para>
+</question>
+
+<answer>
 
 <para>
 <screen>
@@ -156,6 +185,12 @@ article_post_restrictions       =       reject_system_special_accounts
 
 </screen>
 </para>
+
+</answer>
+
+</qandaentry>
+
+</qandaset>
 
 </sect2>
 

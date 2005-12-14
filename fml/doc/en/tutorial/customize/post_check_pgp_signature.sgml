@@ -1,5 +1,5 @@
 <!--
-   $FML: post_check_pgp_signature.sgml,v 1.1 2005/07/20 10:37:43 fukachan Exp $
+   $FML: post_check_pgp_signature.sgml,v 1.2 2005/09/24 13:53:41 fukachan Exp $
 -->
 
 
@@ -18,8 +18,20 @@ other packages.
 
 <sect2>
 	<title>
-	Configuration Example
+	Recipes
 	</title>
+
+<qandaset>
+
+<qandaentry>
+
+<question>
+<para>
+PGP/PGP Based Authentication In Posting
+</para>
+</question>
+
+<answer>
 
 <para>
 check_pgp_signature options enables PGP/GPG based auth.
@@ -32,6 +44,12 @@ article_post_restrictions       =       reject_system_special_accounts
 This function is disabled by default.
 Change article_post_restrictions if use.
 </para>
+
+</answer>
+
+</qandaentry>
+
+</qandaset>
 
 </sect2>
 

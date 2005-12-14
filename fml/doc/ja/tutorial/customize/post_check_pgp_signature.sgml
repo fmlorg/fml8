@@ -1,5 +1,5 @@
 <!--
-   $FML: post_check_pgp_signature.sgml,v 1.1 2005/06/05 09:20:22 fukachan Exp $
+   $FML: post_check_pgp_signature.sgml,v 1.2 2005/06/25 15:11:29 fukachan Exp $
 -->
 
 
@@ -19,8 +19,19 @@ OS 附属のパッケージシステムを使えないとしんどいです。
 
 <sect2>
 	<title>
-	設定例
+	レシピ
 	</title>
+
+<qandaset>
+<qandaentry>
+
+<question>
+<para>
+PGP/GPG の電子署名で投稿制限をするＭＬ
+</para>
+</question>
+
+<answer>
 
 <para>
 設定例は次のようになります。
@@ -34,6 +45,12 @@ article_post_restrictions       =       reject_system_special_accounts
 もちろんデフォルトでは使いません。
 利用したい場合は、明示的に article_post_restrictions を変更して下さい。
 </para>
+
+</answer>
+
+</qandaentry>
+
+</qandaset>
 
 </sect2>
 

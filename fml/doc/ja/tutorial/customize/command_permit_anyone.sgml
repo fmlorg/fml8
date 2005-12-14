@@ -1,5 +1,5 @@
 <!--
-   $FML: command_permit_anyone.sgml,v 1.3 2004/04/07 11:07:02 fukachan Exp $
+   $FML: command_permit_anyone.sgml,v 1.4 2004/10/06 09:07:34 fukachan Exp $
 -->
 
 
@@ -21,5 +21,82 @@ command_mail_restrictions = permit_anyone
 って、こんな設定していいのか/いつ使うんだ？というのはありますが…
 設定は可能です。
 </para>
+
+
+<sect2>
+	<title>
+	レシピ’s
+	</title>
+
+<qandaset>
+
+<qandaentry>
+
+<question>
+<para>
+誰でもコマンドメールが使える
+</para>
+</question>
+
+<answer>
+<para>
+<screen>
+command_mail_restrictions = permit_anyone
+</screen>
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+システムアカウントを除き誰でもコマンドメールが使える
+</para>
+</question>
+
+<answer>
+<para>
+<screen>
+command_mail_restrictions = reject_system_accounts
+                            permit_anyone
+</screen>
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+コマンドメールを誰も使えないようにする
+</para>
+</question>
+
+<answer>
+<para>
+<screen>
+command_mail_restrictions = reject
+</screen>
+</para>
+
+<para>
+これ以外にも方法があります。くわしくは
+<link linkend="config.command.rejectall">
+<xref linkend="config.command.rejectall">
+</link>
+を参照して下さい。
+</para>
+</answer>
+
+</qandaentry>
+
+</qandaset>
+
+</sect2>
 
 </sect1>

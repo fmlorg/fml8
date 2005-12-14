@@ -1,5 +1,5 @@
 <!--
-   $FML: command_permit_anyone.sgml,v 1.2 2005/07/20 10:37:43 fukachan Exp $
+   $FML: command_permit_anyone.sgml,v 1.3 2005/09/24 13:53:41 fukachan Exp $
    $jaFML: command_permit_anyone.sgml,v 1.2 2003/01/05 08:00:59 fukachan Exp $
 -->
 
@@ -16,5 +16,81 @@ To enable that anyone can use command mail, set
 command_mail_restrictions = permit_anyone
 </screen>
 </para>
+
+<sect2>
+	<title>
+	Recipes
+	</title>
+
+<qandaset>
+
+<qandaentry>
+
+<question>
+<para>
+Anyone can use command mail.
+</para>
+</question>
+
+<answer>
+<para>
+<screen>
+command_mail_restrictions = permit_anyone
+</screen>
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Anyone except system accounts can use command mail.
+</para>
+</question>
+
+<answer>
+<para>
+<screen>
+command_mail_restrictions = reject_system_accounts
+                            permit_anyone
+</screen>
+</para>
+</answer>
+
+</qandaentry>
+
+<qandaentry>
+
+<question>
+<para>
+nobody use command mail.
+</para>
+</question>
+
+<answer>
+<para>
+<screen>
+command_mail_restrictions = reject
+</screen>
+</para>
+
+<para>
+There are other methods to disable command mail.
+See
+<link linkend="config.command.rejectall">
+<xref linkend="config.command.rejectall">
+</link>
+for more details.
+</para>
+</answer>
+
+</qandaentry>
+
+</qandaset>
+
+</sect2>
 
 </sect1>
