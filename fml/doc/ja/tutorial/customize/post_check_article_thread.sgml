@@ -1,5 +1,5 @@
 <!--
-   $FML: post_check_article_thread.sgml,v 1.3 2005/06/25 14:12:52 fukachan Exp $
+   $FML: post_check_article_thread.sgml,v 1.4 2005/12/14 12:39:16 fukachan Exp $
 -->
 
 
@@ -20,7 +20,7 @@
 </para>
 
 <para>
-そこで、2004/10/28 以降の article-post_restrictions には、特定の条件を
+そこで、2004/10/28 以降の article_post_restrictions には、特定の条件を
 満たせば短時間だけ From: のアドレス(認証に使うメールアドレス)に関わら
 ず投稿可能なオプション機能が追加されています。
 </para>

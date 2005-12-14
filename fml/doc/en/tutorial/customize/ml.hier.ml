@@ -1,5 +1,5 @@
 <!--
-   $FML: ml.hier.ml,v 1.1 2003/08/02 01:19:10 fukachan Exp $
+   $FML: ml.hier.ml,v 1.2 2005/07/20 10:37:43 fukachan Exp $
    $jaFML: ml.hier.ml,v 1.1 2002/07/29 12:16:19 fukachan Exp $
 
 -->
@@ -42,7 +42,7 @@ member_maps 	+=	$ml_home_dir/../sales-3/members
 Instead of $member_maps change, it is simple that you allow post from
 anybody. If so set
 <screen>
-post_restrictions	=	permit_anyone
+article_post_restrictions	=	permit_anyone
 </screen>
 </para>
 

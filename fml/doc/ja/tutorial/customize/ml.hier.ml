@@ -1,5 +1,5 @@
 <!--
-   $FML: ml.hier.ml,v 1.1 2002/07/29 12:16:19 fukachan Exp $
+   $FML: ml.hier.ml,v 1.2 2004/04/07 11:07:02 fukachan Exp $
 
    階層化されたＭＬ: $member_maps $recipient_maps をよろしく書く
 
@@ -44,7 +44,7 @@ member_maps 	+=	$ml_home_dir/../sales-3/members
 社内用の場合はか、member_maps を変更せずとも
 誰でも投稿できるように
 <screen>
-post_restrictions	=	permit_anyone
+article_post_restrictions	=	permit_anyone
 </screen>
 と設定してしまうのもアリでしょう。
 </para>

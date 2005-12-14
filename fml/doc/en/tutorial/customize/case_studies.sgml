@@ -1,5 +1,5 @@
 <!--
-   $FML: case_studies.sgml,v 1.4 2005/11/30 23:42:31 fukachan Exp $
+   $FML: case_studies.sgml,v 1.5 2005/12/07 11:50:57 fukachan Exp $
    $jaFML: case_studies.sgml,v 1.4 2003/04/15 14:51:36 fukachan Exp $
 -->
 
@@ -40,7 +40,7 @@ outgoing_mail_header_x_ml_name          =       office#$ml_name
 <para>
 Anybody can post to this ML since customers send mails to this address.
 <screen>
-post_restrictions		=	permit_anyone
+article_post_restrictions		=	permit_anyone
 </screen>
 In this case, anybody including system special accounts e.g. root,
 postmaster can post.
