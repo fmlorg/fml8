@@ -1,5 +1,5 @@
 <!--
-   $FML: config.cf.sgml,v 1.13 2004/10/06 09:07:38 fukachan Exp $
+   $FML: config.cf.sgml,v 1.14 2005/06/25 15:11:33 fukachan Exp $
 -->
 
 
@@ -270,6 +270,48 @@ get() はこのハッシュではなく %_fml_config_result の値を返しています。
 	</title>
 
 &var.table.class.variables;
+
+</sect1>
+
+
+<sect1 id="recipes.internal.config.cf">
+	<title>
+	レシピ’s	
+	</title>
+
+<qandaset>
+
+<qandaentry>
+
+<question>
+<para>
+config.cf 内で使って良い関数はどれですか？
+</para>
+</question>
+
+<answer>
+
+<para>
+「$curproc のメソッド」です。
+</para>
+
+<para>
+フックで使える関数の話であることに注意して下さい。
+</para>
+
+<para>
+&fml4; の設定ファイル config.ph と異なり &fml8; の config.cf では 
+=cut より前は変数を書く場所です。
+perl の関数を書く場所ではありません。
+=cut よりうしろにはフックつまり perl script を書きます。
+</para>
+
+</answer>
+
+</qandaentry>
+
+</qandaset>
+
 
 </sect1>
 
