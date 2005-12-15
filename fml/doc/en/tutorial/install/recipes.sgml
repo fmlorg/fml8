@@ -1,5 +1,5 @@
 <!--
- $FML$
+ $FML: recipes.sgml,v 1.1 2005/10/08 07:32:54 fukachan Exp $
 
    ユーザ fml 以外(例えば自分)で fml を使いたい
    current, stable, release どれをダウンロードするべき？
@@ -175,7 +175,7 @@ the corresponding entries are removed and cannot be back.
 
 <question>
 <para>
-Can we use &fml7; on Windows 2000/NT4 but MTA on Unix server ?
+Can we use &fml8; on Windows 2000/NT4 but MTA on Unix server ?
 </para>
 </question>
 
