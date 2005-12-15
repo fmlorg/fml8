@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.14 2005/09/30 13:23:15 fukachan Exp $
+# $FML: Makefile,v 1.15 2005/10/29 05:14:12 fukachan Exp $
 #
 
 # targets
@@ -21,7 +21,7 @@ TARGET_DIR  = ../../../../Documentation/ja/$(BOOK)
 ### RULES
 ###
 
-_ARGV = SOURCE=$(SOURCE) BOOK=$(BOOK) BOOK_ID=$(BOOK_ID)
+_ARGV = SOURCE=$(SOURCE) BOOK=$(BOOK) BOOK_ID=$(BOOK_ID) LANG_HINT=ja
 _MAKE = $(MAKE) -f ../Makefile.template $(_ARGV)
 
 
