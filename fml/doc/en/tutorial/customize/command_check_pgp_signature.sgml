@@ -1,0 +1,85 @@
+<!--
+ $FML$
+-->
+
+<sect1 id="config.command.mail.check.pgp">
+	<title>
+	Case Study: Authenticate command mail by PGP/GPG
+	</title>
+
+<qandaset>
+
+<qandaentry>
+
+<question>
+<para>
+Authenticate user mode command mail by PGP/GPG.
+</para>
+</question>
+
+<answer>
+<para>
+<screen>
+
+command_mail_restrictions	=	check_pgp_signature
+					reject
+
+</screen>
+Use CLI (
+fmlgpg fmlgpgv fmlpgp fmlpgp5 fmlpgpe fmlpgpk fmlpgps fmlpgpv
+) to manipulate PGP/GPG keys.
+<screen>
+Example: generate key for mailing list "ML_NAME".
+
+% fmlpgp --command-mail-auth ML_NAME -kg
+
+</screen>
+See
+<link linkend="config.post.check.pgp">
+<xref linkend="config.post.check.pgp">
+</link>
+for more details.
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Authenticate admin command mail by PGP/GPG.
+</para>
+</question>
+
+<answer>
+<para>
+<screen>
+
+admin_command_mail_restrictions	=	check_pgp_signature
+					reject
+
+</screen>
+Use CLI (
+fmlgpg fmlgpgv fmlpgp fmlpgp5 fmlpgpe fmlpgpk fmlpgps fmlpgpv
+) to manipulate PGP/GPG keys.
+<screen>
+Example: generate key for mailing list "ML_NAME".
+
+% fmlpgp --admin-command-mail-auth ML_NAME -kg
+
+</screen>
+See
+<link linkend="config.post.check.pgp">
+<xref linkend="config.post.check.pgp">
+</link>
+for more details.
+</para>
+</answer>
+
+</qandaentry>
+
+</qandaset>
+
+</sect1>

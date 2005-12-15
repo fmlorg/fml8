@@ -1,0 +1,86 @@
+<!--
+ $FML$
+-->
+
+
+<sect1 id="config.command.mail.check.pgp">
+	<title>
+	ケーススタディ: PGP/GPG でコマンドメールを認証する
+	</title>
+
+<qandaset>
+
+<qandaentry>
+
+<question>
+<para>
+PGP/GPG で(ユーザモードの)コマンドメールを認証したい
+</para>
+</question>
+
+<answer>
+<para>
+<screen>
+
+command_mail_restrictions	=	check_pgp_signature
+					reject
+
+</screen>
+鍵は 
+fmlgpg fmlgpgv fmlpgp fmlpgp5 fmlpgpe fmlpgpk fmlpgps fmlpgpv
+コマンドを使って設定して下さい。
+<screen>
+例: ＭＬ名用のキーを生成する
+
+% fmlpgp --command-mail-auth ＭＬ名 -kg
+
+</screen>
+また
+<link linkend="config.post.check.pgp">
+<xref linkend="config.post.check.pgp">
+</link>
+を参考にしてみて下さい。
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+PGP/GPG で admin コマンドメールを認証したい
+</para>
+</question>
+
+<answer>
+<para>
+<screen>
+
+admin_command_mail_restrictions	=	check_pgp_signature
+					reject
+
+</screen>
+鍵は 
+fmlgpg fmlgpgv fmlpgp fmlpgp5 fmlpgpe fmlpgpk fmlpgps fmlpgpv
+コマンドを使って設定して下さい。
+<screen>
+例: ＭＬ名用のキーを生成する
+
+% fmlpgp --admin-command-mail-auth ＭＬ名 -kg
+
+</screen>
+また
+<link linkend="config.post.check.pgp">
+<xref linkend="config.post.check.pgp">
+</link>
+を参考にしてみて下さい。
+</para>
+</answer>
+
+</qandaentry>
+
+</qandaset>
+
+</sect1>

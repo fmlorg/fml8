@@ -1,5 +1,5 @@
 <!--
-   $FML: chapters.ent,v 1.5 2005/10/08 07:32:55 fukachan Exp $
+   $FML: chapters.ent,v 1.6 2005/10/15 10:56:07 fukachan Exp $
    $jaFML: chapters.ent,v 1.75 2003/06/20 22:03:12 fukachan Exp $
 -->
 
@@ -71,7 +71,7 @@
 <!entity sect.config.post.permit.anyone     SYSTEM "customize/post_permit_anyone.sgml">
 <!entity sect.config.post.check.article.thread SYSTEM "customize/post_check_article_thread.sgml">
 <!entity sect.config.post.check.pgp SYSTEM "customize/post_check_pgp_signature.sgml">
-
+<!entity sect.config.command.mail.check.pgp SYSTEM "customize/command_check_pgp_signature.sgml">
 
 <!entity sect.config.ml.hier		SYSTEM "customize/ml.hier.ml">
 
