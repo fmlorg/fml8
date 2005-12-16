@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digest.pm,v 1.15 2005/11/30 23:30:38 fukachan Exp $
+# $FML: digest.pm,v 1.16 2005/11/30 23:34:45 fukachan Exp $
 #
 
 package FML::Command::User::digest;
@@ -82,7 +82,6 @@ sub process
     my $cache_dir     = $config->{ db_dir };
     my $keyword       = $config->{ confirm_command_prefix };
     my $command       = $command_args->{ command };
-    my $cred          = $curproc->credential();
     my $address       = $cred->sender();
     my $mode          = '';
 
