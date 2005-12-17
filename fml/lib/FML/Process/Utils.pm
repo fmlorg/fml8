@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.140 2005/11/30 21:58:27 fukachan Exp $
+# $FML: Utils.pm,v 1.141 2005/11/30 23:50:19 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -2053,6 +2053,40 @@ sub command_line_cui_specific_recipient
     my $sender    = $cred->sender() || '';
 
     return( $rcpt || $sender || '' );
+}
+
+
+=head1 CURPROC UTILITY
+
+=head2 dup_curproc_args()
+
+duplicate $args corresponding to $curproc.
+
+=cut
+
+
+# Descriptions: duplicate $args corresponding to $curproc.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: HASH_REF
+sub dup_curproc_args
+{
+    my ($curproc) = @_;
+    my $args      = $curproc->{ __parent_args };
+    my $hash      = {};
+
+    my ($k, $v);
+    while (($k, $v) = each %$args) {
+	$v = $args->{ $k };
+	if (ref($v)) {
+	    $hash->{ $k } = $v;
+	}
+	else {
+	    $hash->{ $k } = sprintf("%s", $v);
+	}
+    }
+
+    return $hash;
 }
 
 
