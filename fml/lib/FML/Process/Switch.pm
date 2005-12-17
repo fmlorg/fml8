@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.109 2005/06/03 09:55:17 fukachan Exp $
+# $FML: Switch.pm,v 1.110 2005/08/11 04:14:43 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -249,19 +249,22 @@ restart new another process (switch to it on running).
 
 
 # Descriptions: restart new another process (switch to it on running).
-#    Arguments: OBJ($curproc) HASH_REF($args) 
+#    Arguments: OBJ($curproc) 
 #               STR($new_myname) STR($ml_name) STR($ml_domain)
 # Side Effects: none
 # Return Value: none
 sub NewProcess
 {
-    my ($curproc, $args, $new_myname, $ml_name, $ml_domain) = @_;
+    my ($curproc, $new_myname, $ml_name, $ml_domain) = @_;
     my $ml_addr = sprintf("%s@%s", $ml_name, $ml_domain);
 
     use File::Basename;
     my $old_myname = basename($0);
 
-    # reset $args
+    # fake another $args as could as possible. 
+    # XXX (ARGV options main_cf module_info argv curproc cf_list)
+    # XXX these are references, which inherits the original value in $args.
+    my $args = $curproc->dup_curproc_args();
     $args->{ myname }           = $new_myname;
     $args->{ program_name }     = $new_myname;
     $args->{ program_fullname } =~ s/$old_myname/$new_myname/;

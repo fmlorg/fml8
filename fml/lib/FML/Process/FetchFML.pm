@@ -3,7 +3,7 @@
 # Copyright (C) 2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: FetchFML.pm,v 1.4 2005/08/19 12:08:17 fukachan Exp $
+# $FML: FetchFML.pm,v 1.5 2005/08/23 12:32:06 fukachan Exp $
 #
 
 package FML::Process::FetchFML;
@@ -142,7 +142,6 @@ sub run
 
 	    use FML::Process::Switch;
 	    &FML::Process::Switch::NewProcess($curproc,
-					      $args,
 					      $myname,
 					      $ml_name,
 					      $ml_domain);
