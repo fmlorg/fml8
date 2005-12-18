@@ -30,6 +30,61 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2005/12/18
+
+   モデレータモードの基本的な実装を行なう
+
+   variables
+	fetchfml_queue_dir = $var_dir/mail/queue-fetchfml
+	define moderation definition::enable, queue_dir
+
+   Mail::Delivery::Queue 
+	enhanced dup_conent() to take two arguments.
+	
+   FML::Process::Switch 
+	NewProcess() takes hints as args to overload configuration in
+	a new process. 
+	
+   FML::Process::Utils 
+	comment on incomplete dup_command_args
+	
+   FML::Restriction::{Command,Post}
+	implement permit_forward_to_moderator.
+	
+   FML::Command::User::confirm 
+	pass _confirm_id information to called process.
+	support "moderate" command.
+	
+   FML::Process::Kernel 
+	workaround::unlock() call lock object via IO::Adapter if saved
+	object undefined.
+	
+	bug fix loop check functions to check enabler variable definition.
+	
+   FML::Moderate 
+	o fix comments.
+	o if (defined ) { .. open .. }
+	
+   FML::Confirm 
+	implement id(), set(), get()
+	
+   FML::Command 
+	add more debug codes
+
+2005/12/17
+
+   FML::Process::FetchFML Switch 
+	not need to pass $args to FML::Process::Switch::NewProcess() which
+	fake $args by $curproc->dup_curproc_args().
+	
+   FML::Process::Utils 
+	implement dup_curproc_args() template
+
+2005/12/16
+
+   FML::Command::User::digest 
+	fix duplicated definition.
+
 2005/12/10
 
    FML::Credential 
@@ -8937,4 +8992,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.254 2005/12/10 01:33:13 fukachan Exp $
+$FML: CHANGES.txt,v 1.255 2005/12/11 14:25:58 fukachan Exp $
