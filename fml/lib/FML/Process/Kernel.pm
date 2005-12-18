@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.268 2005/08/19 12:17:09 fukachan Exp $
+# $FML: Kernel.pm,v 1.269 2005/11/30 23:30:38 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -392,7 +392,8 @@ sub unlock
     ($channel, $lock_file) = $curproc->_lock_init($channel);
 
     my $pcb = $curproc->pcb();
-    my $io  = $pcb->get('lock', $channel);
+    my $map = sprintf("file:%s", $lock_file);
+    my $io  = $pcb->get('lock', $channel) || new IO::Adapter $map;
 
     if (defined $io) {
 	my $r = $io->unlock( { file => $lock_file } );
@@ -411,7 +412,7 @@ sub unlock
 	}
     }
     else {
-	$curproc->logerror("object undefined, cannot unlock");
+	$curproc->logerror("object undefined, cannot unlock channel=$channel");
 	croak("Error: object undefined, cannot unlock");
     }
 }
@@ -647,16 +648,18 @@ sub simple_loop_check
 	$config->get_as_array_ref( 'incoming_mail_header_loop_check_rules' );
     my $match     = 0;
 
-  RULE:
-    for my $rule (@$rules) {
-	if ($header->can($rule)) {
-	    $match = $header->$rule($config) ? $rule : 0;
-	}
-	else {
-	    $curproc->logwarn("header->${rule}() is undefined");
-	}
+    if ($config->yes('use_incoming_mail_header_loop_check')) { 
+      RULE:
+	for my $rule (@$rules) {
+	    if ($header->can($rule)) {
+		$match = $header->$rule($config) ? $rule : 0;
+	    }
+	    else {
+		$curproc->logwarn("header->${rule}() is undefined");
+	    }
 
-	last RULE if $match;
+	    last RULE if $match;
+	}
     }
 
     # This $match contains the first matched rule name (== reason).
