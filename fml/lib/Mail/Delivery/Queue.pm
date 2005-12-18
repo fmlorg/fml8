@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.53 2005/08/09 03:23:31 fukachan Exp $
+# $FML: Queue.pm,v 1.54 2005/08/19 12:17:12 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -1082,18 +1082,19 @@ duplicate content at a class $class other than incoming.
 
 
 # Descriptions: duplicate content at a class $class other than incoming.
-#    Arguments: OBJ($self) STR($class)
+#               return new queue id generated in dupilication.
+#    Arguments: OBJ($self) STR($old_class) STR($new_class)
 # Side Effects: none
-# Return Value: NUM(1 or 0)
+# Return Value: STR
 sub dup_content
 {
-    my ($self, $class) = @_;
+    my ($self, $old_class, $new_class) = @_;
     my $id         = $self->id();
     my $new_id     = _new_queue_id();
-    my $queue_file = $self->incoming_file_path($id);
-    my $new_qf     = $self->local_file_path($class, $new_id);
+    my $queue_file = $self->local_file_path($old_class, $id);
+    my $new_qf     = $self->local_file_path($new_class, $new_id);
 
-    return( link($queue_file, $new_qf) ? 1 : 0 );
+    return( link($queue_file, $new_qf) ? $new_id : undef );
 }
 
 
