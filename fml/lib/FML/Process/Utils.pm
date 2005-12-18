@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.141 2005/11/30 23:50:19 fukachan Exp $
+# $FML: Utils.pm,v 1.142 2005/12/17 13:47:58 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -2075,6 +2075,7 @@ sub dup_curproc_args
     my $args      = $curproc->{ __parent_args };
     my $hash      = {};
 
+    # XXX-TODO: incomplete duplication
     my ($k, $v);
     while (($k, $v) = each %$args) {
 	$v = $args->{ $k };
