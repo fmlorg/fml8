@@ -339,6 +339,8 @@ address_compare_function_domain_matching_level	=	3
 #			permit_anyone
 #			permit_member_maps
 #			check_article_thread
+#			check_pgp_signature
+#			permit_forward_to_moderator
 #			reject_system_special_accounts
 #			reject
 #		)
@@ -2725,8 +2727,8 @@ use_fetchfml_function	=	no
 #               which holds messages fetched via POP3/IMAP4.
 #      History: none
 #        Value: DIR
-#     Examples: /var/spool/ml/elena/var/mail/fetchfml
-fetchfml_queue_dir = $var_dir/mail/fetchfml
+#     Examples: /var/spool/ml/elena/var/mail/queue-fetchfml
+fetchfml_queue_dir = $var_dir/mail/queue-fetchfml
 
 
 # Descriptions: protocol to fetch messages.
@@ -2811,6 +2813,25 @@ fetchfml_pop_servers			=	localhost
 #        Value: STR
 #     Examples: imap.example.co.jp
 fetchfml_imap_servers			=	localhost
+
+
+
+=head1 moderate
+
+
+# Descriptions: use moderate function or not.
+#      History: none
+#        Value: YES_OR_NO
+#     Examples: yes / no
+use_moderate_function	=	yes
+
+
+# Descriptions: queue_dir moderate uses as temporary incoming queue 
+#               which holds messages fetched via POP3/IMAP4.
+#      History: none
+#        Value: DIR
+#     Examples: /var/spool/ml/elena/var/mail/queue-moderate
+moderate_queue_dir = $var_dir/mail/queue-moderate
 
 
 
