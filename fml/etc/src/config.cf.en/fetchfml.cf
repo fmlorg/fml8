@@ -12,8 +12,8 @@ use_fetchfml_function	=	no
 #               which holds messages fetched via POP3/IMAP4.
 #      History: none
 #        Value: DIR
-#     Examples: /var/spool/ml/elena/var/mail/fetchfml
-fetchfml_queue_dir = $var_dir/mail/fetchfml
+#     Examples: /var/spool/ml/elena/var/mail/queue-fetchfml
+fetchfml_queue_dir = $var_dir/mail/queue-fetchfml
 
 
 # Descriptions: protocol to fetch messages.
