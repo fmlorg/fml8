@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Confirm.pm,v 1.17 2004/07/23 04:02:46 fukachan Exp $
+# $FML: Confirm.pm,v 1.18 2005/05/27 03:03:31 fukachan Exp $
 #
 
 package FML::Confirm;
@@ -115,7 +115,21 @@ sub assign_id
     # 2. save the time map: { MD5 => ASSIGNED_UNIX_TIME }
     $self->store_id( $md5sum );
 
+    # 3. internal later use. 
+    $self->{ _cur_id } = $md5sum;
+
     return $id;
+}
+
+
+# Descriptions: return the current confirmation id.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub id
+{
+    my ($self) = @_;
+    return( $self->{ _cur_id } || undef ); 
 }
 
 
@@ -220,6 +234,48 @@ sub get_address
     my $db = $self->_open_db();
     if (defined $db) {
 	$found = $db->{ "address-$id" } || '';
+	$self->_close_db();
+    }
+
+    return $found;
+}
+
+
+=head2 set($id, $key, $value)
+
+=head2 get($id, $key)
+
+=cut
+
+
+# Descriptions: get $key value for $id.
+#    Arguments: OBJ($self) STR($id) STR($key) STR($value)
+# Side Effects: none
+# Return Value: STR
+sub set
+{
+    my ($self, $id, $key, $value) = @_;
+
+    my $db = $self->_open_db();
+    if (defined $db) {
+	$db->{ "$key-$id" } = $value;
+	$self->_close_db();
+    }
+}
+
+
+# Descriptions: get $key value for $id.
+#    Arguments: OBJ($self) STR($id) STR($key)
+# Side Effects: none
+# Return Value: STR
+sub get
+{
+    my ($self, $id, $key) = @_;
+    my $found = '';
+
+    my $db = $self->_open_db();
+    if (defined $db) {
+	$found = $db->{ "$key-$id" } || '';
 	$self->_close_db();
     }
 
