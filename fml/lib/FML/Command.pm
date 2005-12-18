@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.48 2004/06/27 06:08:55 fukachan Exp $
+# $FML: Command.pm,v 1.49 2004/07/23 15:58:59 fukachan Exp $
 #
 
 # XXX
@@ -342,11 +342,15 @@ sub AUTOLOAD
 	    $lock_channel = $command->lock_channel() || $default_lock_channel;
 	}
 
+	$curproc->logdebug("$pkg lock=$need_lock channel=$lock_channel");
+
 	# run the actual process
 	if ($command->can('process')) {
-	    $curproc->lock($lock_channel)   if $need_lock;
+	    $curproc->logdebug("$pkg lock")   if $need_lock;
+	    $curproc->lock($lock_channel)     if $need_lock;
 	    $command->process($curproc, $command_args);
-	    $curproc->unlock($lock_channel) if $need_lock;
+	    $curproc->logdebug("$pkg unlock") if $need_lock;
+	    $curproc->unlock($lock_channel)   if $need_lock;
 	}
 	else {
 	    $curproc->logerror("${pkg} has no process method");
