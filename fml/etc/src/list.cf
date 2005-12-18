@@ -27,6 +27,7 @@ threadtrack.cf
 cgi.cf
 mta.cf
 fetchfml.cf
+moderate.cf
 paths.cf
 system_dependence.cf
 compatibility.cf

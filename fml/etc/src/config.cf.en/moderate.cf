@@ -1,0 +1,18 @@
+=head1 moderate
+
+
+# Descriptions: use moderate function or not.
+#      History: none
+#        Value: YES_OR_NO
+#     Examples: yes / no
+use_moderate_function	=	yes
+
+
+# Descriptions: queue_dir moderate uses as temporary incoming queue 
+#               which holds messages fetched via POP3/IMAP4.
+#      History: none
+#        Value: DIR
+#     Examples: /var/spool/ml/elena/var/mail/queue-moderate
+moderate_queue_dir = $var_dir/mail/queue-moderate
+
+
