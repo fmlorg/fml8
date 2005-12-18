@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.20 2005/05/31 13:14:05 fukachan Exp $
+# $FML: Post.pm,v 1.21 2005/11/30 23:30:39 fukachan Exp $
 #
 
 package FML::Restriction::Post;
@@ -145,7 +145,7 @@ sub reject
 }
 
 
-=head1 EXTENSION
+=head1 EXTENSION: ARTICHLE THREAD BASED AUTH
 
 =head2 check_article_thread($rule, $sender)
 
@@ -195,6 +195,14 @@ sub check_article_thread
     }
 }
 
+
+=head1 EXTENSION: PGP/GPG AUTH
+
+=head2 check_pgp_signature($rule, $sender)
+
+check PGP signature in message.
+
+=cut
 
 # Descriptions: check PGP signature in message.
 #    Arguments: OBJ($self) STR($rule) STR($sender)
@@ -271,6 +279,38 @@ sub _reset_pgp_environment
     my ($self) = @_;
     delete $ENV{'PGPPATH'};
     delete $ENV{'GNUPGHOME'};
+}
+
+
+=head1 EXTENSION: MODERATOR
+
+=head2 permit_forward_to_moderator($rule, $sender)
+
+forward the incoming message to moderators.
+
+=cut
+
+
+# Descriptions: forward the incoming message to moderators.
+#    Arguments: OBJ($self) STR($rule) STR($sender)
+# Side Effects: none
+# Return Value: NUM
+sub permit_forward_to_moderator
+{
+    my ($self, $rule, $sender) = @_;
+    my $curproc = $self->{ _curproc };
+
+    $curproc->log("match permit_forward_to_moderator");
+
+    eval q{
+	use FML::Moderate;
+	my $moderation = new FML::Moderate $curproc;
+	$moderation->forward_to_moderator();
+    };
+    if ($@) { $curproc->logerror($@);}
+
+    # always OK.
+    return("matched", "permit");
 }
 
 

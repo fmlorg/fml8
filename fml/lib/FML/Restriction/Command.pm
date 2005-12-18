@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.19 2005/05/31 13:14:05 fukachan Exp $
+# $FML: Command.pm,v 1.20 2005/11/30 23:30:39 fukachan Exp $
 #
 
 package FML::Restriction::Command;
@@ -169,7 +169,11 @@ sub check_admin_member_password
 }
 
 
-=head2 check_pgp_signature
+=head1 EXTENSION: PGP/GPG AUTH
+
+=head2 check_pgp_signature($rule, $sender, $context)
+
+check PGP signature in message.
 
 =cut
 
@@ -265,6 +269,36 @@ sub _reset_pgp_environment
     my ($self) = @_;
     delete $ENV{'PGPPATH'};
     delete $ENV{'GNUPGHOME'};
+}
+
+
+=head1 EXTENSION: MODERATOR
+
+=head2 permit_forward_to_moderator($rule, $sender)
+
+forward the incoming message to moderators.
+
+=cut
+
+
+# Descriptions: forward the incoming message to moderators.
+#    Arguments: OBJ($self) STR($rule) STR($sender)
+# Side Effects: none
+# Return Value: NUM
+sub permit_forward_to_moderator
+{
+    my ($self, $rule, $sender) = @_;
+    my $curproc = $self->{ _curproc };
+
+    eval q{
+	use FML::Moderate;
+	my $moderation = new FML::Moderate $curproc;
+	$moderation->forward_to_moderator();
+    };
+    if ($@) { $curproc->logerror($@);}
+
+    # always OK.
+    return("matched", "permit");
 }
 
 
