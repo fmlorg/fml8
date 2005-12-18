@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.110 2005/08/11 04:14:43 fukachan Exp $
+# $FML: Switch.pm,v 1.111 2005/12/17 13:47:32 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -251,11 +251,12 @@ restart new another process (switch to it on running).
 # Descriptions: restart new another process (switch to it on running).
 #    Arguments: OBJ($curproc) 
 #               STR($new_myname) STR($ml_name) STR($ml_domain)
+#               HASH_REF($hints)
 # Side Effects: none
 # Return Value: none
 sub NewProcess
 {
-    my ($curproc, $new_myname, $ml_name, $ml_domain) = @_;
+    my ($curproc, $new_myname, $ml_name, $ml_domain, $hints) = @_;
     my $ml_addr = sprintf("%s@%s", $ml_name, $ml_domain);
 
     use File::Basename;
@@ -270,6 +271,13 @@ sub NewProcess
     $args->{ program_fullname } =~ s/$old_myname/$new_myname/;
     $args->{ argv }             = [ $ml_addr ];
     $args->{ ARGV }             = [ $ml_addr ];
+    $args->{ curproc }          = {};
+
+    # overload options
+    my $_opts = $hints->{ config_overload } || {};
+    for my $k (keys %$_opts) { 
+	$args->{ options }->{ o }->{ $k } = $_opts->{ $k };
+    }
 
     # start a new process.
     eval q{
