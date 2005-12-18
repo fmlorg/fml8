@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: POP3.pm,v 1.4 2005/08/19 12:08:18 fukachan Exp $
+# $FML: POP3.pm,v 1.5 2005/08/23 13:16:20 fukachan Exp $
 #
 
 package FML::MUA::POP3;
@@ -97,9 +97,10 @@ sub login
 sub retrieve
 {
     my ($self, $r_args) = @_;
-    my $curproc = $self->{ _curproc };
-    my $pop     = $self->{ _pop }   || undef;
-    my $class   = $r_args->{ class } || undef;
+    my $curproc   = $self->{ _curproc };
+    my $pop       = $self->{ _pop }   || undef;
+    my $class     = $r_args->{ class } || undef;
+    my $tmp_queue = "incoming";
 
     if (defined $pop && defined $class) {
 	my $msgnums = $pop->list; # hashref of msgnum => size
@@ -108,7 +109,7 @@ sub retrieve
 	foreach my $msgnum (keys %$msgnums) {
 	    my $q = $self->_new_queue_file($r_args);
 	    if (defined $q) {
-		my $wh = $q->open("incoming", { mode => "w" });
+		my $wh = $q->open($tmp_queue, { mode => "w" });
 		if (defined $wh) {
 		    $wh->autoflush(1);
 
@@ -120,7 +121,7 @@ sub retrieve
 		    }
 		    else {
 			my $id = $q->id();
-			$q->dup_content($class);
+			$q->dup_content($tmp_queue, $class);
 			$q->remove();
 			$pop->delete($msgnum);
 			$curproc->log("fetched: qid=$id");
