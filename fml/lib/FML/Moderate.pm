@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: Moderate.pm,v 1.1 2005/12/18 12:21:15 fukachan Exp $
 #
 
 package FML::Moderate;
@@ -149,11 +149,13 @@ sub _queue_init
 
 =head2 distribute_article($mid)
 
+distribute article.
+
 =cut
 
 
 # Descriptions: distribute article.
-#    Arguments: OBJ($self) STR($mid)
+#    Arguments: OBJ($self) STR($qid)
 # Side Effects: do another process.
 # Return Value: none
 sub distribute_article
@@ -167,33 +169,37 @@ sub distribute_article
     my $ml_domain = $config->{ ml_domain };
 
     my $queue = $self->_queue_init($qid);
+    if (defined $queue) {
+	eval q{
+	    close(STDIN);
+	    unless ($queue->open($q_class, { in_channel => *STDIN{IO} })) {
+		my $qid = $queue->id();
+		$curproc->logerror("cannot open qid=$qid");
+	    }
 
-    eval q{
-	close(STDIN);
-	unless ($queue->open($q_class, { in_channel => *STDIN{IO} })) {
-	    my $qid = $queue->id();
-	    $curproc->logerror("cannot open qid=$qid");
-	}
+	    $curproc->log("emulate $myname for $ml_name\@$ml_domain ML");
 
-	$curproc->log("emulate $myname for $ml_name\@$ml_domain ML");
+	    my $hints = {
+		config_overload => {
+		    'article_post_restrictions'           => 'permit_anyone',
+		    'use_incoming_mail_header_loop_check' => 'no',
+		},
+	    };
 
-	my $hints = {
-	    config_overload => {
-		'article_post_restrictions'           => 'permit_anyone',
-		'use_incoming_mail_header_loop_check' => 'no',
-	    },
+	    use FML::Process::Switch;
+	    &FML::Process::Switch::NewProcess($curproc,
+					      $myname,
+					      $ml_name,
+					      $ml_domain,
+					      $hints);
+	    $curproc->log("emulation done");
 	};
-
-	use FML::Process::Switch;
-	&FML::Process::Switch::NewProcess($curproc,
-					  $myname,
-					  $ml_name,
-					  $ml_domain,
-					  $hints);
-	$curproc->log("emulation done");
-    };
-    if ($@) {
-	$curproc->logerror($@);
+	if ($@) {
+	    $curproc->logerror($@);
+	}
+    }
+    else {
+	$curproc->logerror("moderate: queue undefined.");
     }
 }
 
