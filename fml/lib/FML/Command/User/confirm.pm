@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: confirm.pm,v 1.32 2004/04/23 04:10:31 fukachan Exp $
+# $FML: confirm.pm,v 1.33 2004/06/26 11:47:57 fukachan Exp $
 #
 
 package FML::Command::User::confirm;
@@ -124,6 +124,7 @@ sub process
     if ($found = $confirm->find($id)) { # if request is found
 	unless ($confirm->is_expired($id, $expire_limit)) {
 	    my $address = $confirm->get_address($id);
+	    $command_args->{ _confirm_id } = $id;
 	    $self->_switch_command($class, $address, $curproc, $command_args);
 	}
 	else { # if requset is expired
@@ -165,8 +166,9 @@ sub _switch_command
     if ($class eq 'subscribe'   ||
 	$class eq 'unsubscribe' ||
 	$class eq 'chaddr' ||
-	$class eq 'on' ||
-	$class eq 'off') {
+	$class eq 'on'     ||
+	$class eq 'off'    || 
+	$class eq 'moderate') {
 	$command_args->{ command_data } = $address;
 	$command_args->{ command_mode } = 'Admin';
 	$command_args->{ override_need_no_lock } = 1; # already locked
