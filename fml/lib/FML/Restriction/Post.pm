@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.22 2005/12/18 11:53:59 fukachan Exp $
+# $FML: Post.pm,v 1.23 2005/12/19 03:07:31 fukachan Exp $
 #
 
 package FML::Restriction::Post;
@@ -283,6 +283,44 @@ sub _reset_pgp_environment
 
 
 =head1 EXTENSION: MODERATOR
+
+=head2 permit_moderator_member_maps($rule, $sender)
+
+permit if $sender is an ML moderator member.
+
+=cut
+
+
+# Descriptions: permit if $sender is an ML moderator member.
+#    Arguments: OBJ($self) STR($rule) STR($sender)
+# Side Effects: none
+# Return Value: ARRAY(STR, STR)
+sub permit_moderator_member_maps
+{
+    my ($self, $rule, $sender) = @_;
+    my $curproc = $self->{ _curproc };
+    my $cred    = $curproc->credential();
+
+    # Q: the mail sender is an ML moderator member?
+    if ($cred->is_moderator_member($sender)) {
+	# A: Yes, we permit this article to distribute.
+	return("matched", "permit");
+    }
+    else {
+	# A: No, deny distribution
+	$curproc->logerror("$sender is not an ML moderator member");
+	$curproc->logerror( $cred->error() );
+
+	# save reason for later use.
+	# XXX the deny reason is first match.
+	unless ($curproc->restriction_state_get_deny_reason()) {
+	    $curproc->restriction_state_set_deny_reason($rule);
+	}
+    }
+
+    return(0, undef);
+}
+
 
 =head2 permit_forward_to_moderator($rule, $sender)
 
