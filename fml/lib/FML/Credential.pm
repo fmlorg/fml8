@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.64 2005/11/30 23:37:56 fukachan Exp $
+# $FML: Credential.pm,v 1.65 2005/12/11 13:10:25 fukachan Exp $
 #
 
 package FML::Credential;
@@ -352,6 +352,24 @@ sub is_recipient
     $self->_is_member({
 	address     => $address,
 	member_maps => $recipient_maps,
+    });
+}
+
+
+# Descriptions: sender of the current process is an ML moderator member or not.
+#    Arguments: OBJ($self) STR($address)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub is_moderator_member
+{
+    my ($self, $address) = @_;
+    my $curproc     = $self->{ _curproc };
+    my $config      = $curproc->config();
+    my $member_maps = $config->get_as_array_ref('moderator_member_maps');
+
+    $self->_is_member({
+	address     => $address,
+	member_maps => $member_maps,
     });
 }
 
