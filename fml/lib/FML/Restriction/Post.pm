@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.21 2005/11/30 23:30:39 fukachan Exp $
+# $FML: Post.pm,v 1.22 2005/12/18 11:53:59 fukachan Exp $
 #
 
 package FML::Restriction::Post;
@@ -310,7 +310,7 @@ sub permit_forward_to_moderator
     if ($@) { $curproc->logerror($@);}
 
     # always OK.
-    return("matched", "permit");
+    return("matched", "ignore");
 }
 
 
