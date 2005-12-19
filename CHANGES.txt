@@ -3,9 +3,10 @@
 
   [最近のまとめ]
 
-  FML_CURRENT_VERSION=7.98.5
+  FML_CURRENT_VERSION=7.98.6
 
   8.0 PRE_ALPHA
+	7.98.6	fundamentals of moderator mode implemented.
 	7.98.5	add reviveml command (to revive a removed ML).
 		add PostgreSQL support.
 		add LDAP support.
@@ -29,6 +30,29 @@
 
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
+
+2005/12/19
+
+   モデレータモードのバグとり
+
+   FML::Process::Distribute Kernel 
+	change is_permit_post() retruns action string not number to
+	support 3 permit/ignore/deny states.
+	
+   FML::Moderate 
+	remove moderation queue if distribution succeded.
+	
+   FML::Restriction::Post 
+	permit_forward_to_moderator() returns (matched, ignore)
+
+   モデデータからのメールなら投稿を許す命令を追加。
+   考え用によっては一番単純なメールマガジンはこれを使えば良い(推奨はしない)
+
+   FML::Credential 
+	implement is_moderator_member()
+	
+   FML::Restriction::Post 
+	implement permit_moderator_member_maps().
 
 2005/12/18
 
@@ -8992,4 +9016,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.255 2005/12/11 14:25:58 fukachan Exp $
+$FML: CHANGES.txt,v 1.256 2005/12/18 12:52:47 fukachan Exp $
