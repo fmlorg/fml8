@@ -996,7 +996,7 @@ fetchfml_queue_dir</entry>
 <entry>
  queue_dir fetchfml uses as temporary incoming queue </entry>
 <entry>
-$var_dir/mail/fetchfml
+$var_dir/mail/queue-fetchfml
    </entry>
 </row>
 <row>
@@ -1463,6 +1463,15 @@ ml_local_share_dir</entry>
  ML local share/</entry>
 <entry>
 $ml_local_dir/share
+   </entry>
+</row>
+<row>
+<entry>
+moderate_queue_dir</entry>
+<entry>
+ queue_dir moderate uses as temporary incoming queue </entry>
+<entry>
+$var_dir/mail/queue-moderate
    </entry>
 </row>
 <row>
@@ -2355,6 +2364,15 @@ use_log_rotate</entry>
  rotate log files or not.</entry>
 <entry>
 no
+   </entry>
+</row>
+<row>
+<entry>
+use_moderate_function</entry>
+<entry>
+ use moderate function or not.</entry>
+<entry>
+yes
    </entry>
 </row>
 <row>

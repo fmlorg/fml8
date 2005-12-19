@@ -587,6 +587,14 @@ ml_local {
    }
 }
 
+moderate {
+
+   moderate { 
+          $moderate_queue_dir
+          $use_moderate_function
+   }
+}
+
 moderator {
 
    moderator_member { 
