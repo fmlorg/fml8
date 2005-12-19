@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Moderate.pm,v 1.1 2005/12/18 12:21:15 fukachan Exp $
+# $FML: Moderate.pm,v 1.2 2005/12/18 12:28:49 fukachan Exp $
 #
 
 package FML::Moderate;
@@ -186,12 +186,23 @@ sub distribute_article
 		},
 	    };
 
-	    use FML::Process::Switch;
-	    &FML::Process::Switch::NewProcess($curproc,
-					      $myname,
-					      $ml_name,
-					      $ml_domain,
-					      $hints);
+	    eval q{
+		use FML::Process::Switch;
+		&FML::Process::Switch::NewProcess($curproc,
+						  $myname,
+						  $ml_name,
+						  $ml_domain,
+						  $hints);
+	    };
+
+	    unless ($@) {
+		# remove submitted moderation queue if distribution succeeded.
+		$curproc->incoming_message_stack_queue_for_removal($queue);
+	    }
+	    else {
+		$curproc->logerror($@);
+	    }
+
 	    $curproc->log("emulation done");
 	};
 	if ($@) {
