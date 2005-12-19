@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.269 2005/11/30 23:30:38 fukachan Exp $
+# $FML: Kernel.pm,v 1.270 2005/12/18 12:24:09 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1291,7 +1291,7 @@ The restriction rules follows the order of C<article_post_restrictions>.
 # Descriptions: permit this post process
 #    Arguments: OBJ($curproc)
 # Side Effects: set the error reason at "check_restriction" in pcb.
-# Return Value: NUM(1 or 0)
+# Return Value: STR
 sub is_permit_post
 {
     my ($curproc) = @_;
@@ -1317,11 +1317,11 @@ sub is_permit_post
 
 	if ($match) {
 	    $curproc->logdebug("match rule=$rule sender=$sender");
-	    return($result eq "permit" ? 1 : 0);
+	    return($result);
 	}
     }
 
-    return 0; # deny by default
+    return ''; # deny by default
 }
 
 

@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.165 2005/09/14 00:02:37 fukachan Exp $
+# $FML: Distribute.pm,v 1.166 2005/11/30 23:30:38 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -234,8 +234,13 @@ sub run
 
     # $curproc->lock();
     unless ($curproc->is_refused()) {
-	if ($curproc->is_permit_post()) {
+	my $action = $curproc->is_permit_post();
+	if ($action eq 'permit') {
 	    $curproc->_deliver_article_prep($args);
+	}
+	elsif ($action eq 'ignore') {
+	    $curproc->log("ignore article submission");
+	    $curproc->stop_this_process();
 	}
 	else {
 	    $curproc->logerror("deny article submission");
