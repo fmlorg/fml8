@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: configtest.pl,v 1.2 2004/12/29 01:02:26 fukachan Exp $
+# $FML: configtest.pl,v 1.3 2004/12/30 04:42:41 fukachan Exp $
 #
 
 use strict;
@@ -11,7 +11,7 @@ use vars qw(@failed_queue %failed_queue $base_dir);
 my $base_dir = shift || '/var/spool/ml';
 
 for my $f (sort <$base_dir/*/config.ph>) {
-    if (-f $f) {
+    if (-f $f && is_ok($f)) {
 	print "\n// check $f\n";
 	eval q{ check($f); };
 	print $@ if $@;
@@ -19,7 +19,7 @@ for my $f (sort <$base_dir/*/config.ph>) {
 }
 
 for my $f (sort <$base_dir/*/.fml4rc/config.ph>) {
-    if (-f $f) {
+    if (-f $f && is_ok($f)) {
 	print "\n// check $f\n";
 	eval q{ check($f); };
 	print $@ if $@;
@@ -72,7 +72,7 @@ sub check
         print "# Q: $k => $y\n";
 	my $query = "# Q: $k => $y\n";
 
-        if ($x = $config_ph->translate($diff, $k, $v)) {
+        if ($x = $config_ph->translate($config, $diff, $k, $v)) {
 	    if ($x =~ /IGNORED (since .*)/) {
 		print "# A: OK (IGNORED $1)\n";
 	    }
@@ -114,4 +114,25 @@ sub _sort_order
     $y = "zzz_$y" if $y =~ /HOOK/o;
 
     $x cmp $y;
+}
+
+
+sub is_ok
+{
+    my ($file) = @_;
+
+    use FileHandle;
+    my $rh = new FileHandle $file;
+    if (defined $rh) {
+	my $buf;
+	while ($buf = <$rh>) {
+	    if ($buf =~ /^exit/) {
+		return 0;
+	    }
+	}
+
+	$rh->close();
+    }
+
+    return 1;
 }
