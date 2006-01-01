@@ -1,8 +1,0 @@
-MANIFEST
-Makefile.PL
-README
-CHANGES
-lib/Class/ParmList.pm
-t/01_object.t
-t/02_simple_parms.t
-t/03_parse_parms.t

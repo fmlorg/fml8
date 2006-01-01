@@ -1,5 +1,0 @@
-MANIFEST
-Makefile.PL
-README
-lib/Class/NamedParms.pm
-t/general.t
