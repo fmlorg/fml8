@@ -33,8 +33,16 @@
 
 2006/01/01
 
-   あけましておめでとうございます。今年の目標は official release だな。
+   あけましておめでとうございます。今年の目標は official release なん
+   だけど…
    ＃ fml 4 直接エミュレータ以外は全部できてるつもりなんだけど
+
+   FML::Merge::FML4::config_ph 
+	pass $config to translation*() methods.
+	support MODERATOR_MEMBER_LIST, ADMIN_LOG_DEFAULT_LINE_LIMIT.
+	implement translate_not_yet_implemented().
+	clean up.
+	modify comments.
 
 2005/12/31
 
@@ -9026,4 +9034,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.257 2005/12/19 12:17:21 fukachan Exp $
+$FML: CHANGES.txt,v 1.258 2006/01/01 09:37:06 fukachan Exp $
