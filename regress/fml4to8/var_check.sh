@@ -1,28 +1,30 @@
 #!/bin/sh
 #
-# $FML: var_check.sh,v 1.1 2004/12/09 03:46:18 fukachan Exp $
+# $FML: var_check.sh,v 1.2 2004/12/15 23:16:07 fukachan Exp $
 #
 
 
 echo "// compare cf/MANIFEST and RULES.txt"
 
-
+# 1. get variable list of cf/MANIFEST
 egrep '^[A-Z]' ../../../../../gnu/dist/fml4/cf/MANIFEST |\
 awk '{print $1}' |\
 sed -e s/:.*$//  |\
 sed -e s/:// -e /LOCAL_CONFIG/d -e /^INFO$/d |\
 sort | uniq > /tmp/list.manifest
 
+# 2. get variable list of RULES.txt
 egrep '^\.if' RULES.txt |\
 awk '{print $2}' |\
 sort | uniq > /tmp/list.rules
 
-# 
+# 2.1. fix variable list.
 echo "=> fix list.rules"
-echo REJECT_POST_HANDLER >> /tmp/list.rules
+echo REJECT_POST_HANDLER    >> /tmp/list.rules
 echo REJECT_COMMAND_HANDLER >> /tmp/list.rules
 sort -o /tmp/list.rules /tmp/list.rules
 
+# 3. compare variable list
 diff -ub /tmp/list.manifest /tmp/list.rules && echo "ok (no difference)"
 
 # 
