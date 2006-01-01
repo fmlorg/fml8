@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: config_ph.pm,v 1.15 2005/01/23 00:54:37 fukachan Exp $
+# $FML: config_ph.pm,v 1.16 2005/08/20 02:10:53 fukachan Exp $
 #
 
 package FML::Merge::FML4::config_ph;
@@ -311,7 +311,7 @@ sub gen_dummy_macros
 
 =head1 TRANSLATION FROM 4 TO 8
 
-=head2 translate($key, $value)
+=head2 translate($config, $diff, $key, $value)
 
 translate fml4 config {$key => $value } to fml8 one if could.
 
@@ -319,21 +319,28 @@ translate fml4 config {$key => $value } to fml8 one if could.
 
 
 # Descriptions: translate fml4 config {$key => $value } to fml8 one if could.
-#    Arguments: OBJ($self) HASH_REF($diff) STR($key) STR($value)
+#    Arguments: OBJ($self) 
+#               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR
 sub translate
 {
-    my ($self, $diff, $key, $value) = @_;
+    my ($self, $config, $diff, $key, $value) = @_;
     my $dispatch = {
-	rule_convert           => \&translate_xxx,
-	rule_ignore            => \&translate_ignore,
-	rule_prefer_fml4_value => \&translate_xxx,
-	rule_prefer_fml8_value => \&translate_use_fml8_value,
+	rule_convert             => \&translate_xxx,
+	rule_ignore              => \&translate_ignore,
+	rule_not_yet_implemented => \&translate_not_yet_implemented,
+	rule_prefer_fml4_value   => \&translate_xxx,
+	rule_prefer_fml8_value   => \&translate_use_fml8_value,
     };
 
     use FML::Merge::FML4::Rules;
-    my $s = FML::Merge::FML4::Rules::translate($self, $dispatch, $diff, $key, $value);
+    my $s = FML::Merge::FML4::Rules::translate($self, 
+					       $dispatch,
+					       $config,
+					       $diff, 
+					       $key,
+					       $value);
     return $s;
 }
 
@@ -344,7 +351,7 @@ sub translate
 # Return Value: STR
 sub translate_xxx
 {
-    my ($self, $diff, $key, $value) = @_;
+    my ($self, $config, $diff, $key, $value) = @_;
 
     if ($key eq 'SUBJECT_TAG_TYPE'         ||
 	$key eq 'BRACKET'                  ||
@@ -354,7 +361,7 @@ sub translate_xxx
 	$key eq 'SUBJECT_FORM_LONG_ID'     ||
 	$key eq 'SUBJECT_HML_FORM'         ||
 	$key eq 'HML_FORM_LONG_ID') {
-	return $self->_fix_subject_tag($diff, $key, $value);
+	return $self->_fix_subject_tag($config, $diff, $key, $value);
     }
     elsif ($key eq 'MAINTAINER') {
 	return "maintainer = $value";
@@ -381,7 +388,7 @@ sub translate_xxx
 	return "smtp_servers = $host:$port";
     }
     elsif ($key eq 'SPOOL_DIR') {
-	my $v = $self->_fix_dir($diff, $key, $value, "spool");
+	my $v = $self->_fix_dir($config, $diff, $key, $value, "spool");
 	if ($v) {
 	    return "spool_dir = $v";
 	}
@@ -390,7 +397,7 @@ sub translate_xxx
 	}
     }
     elsif ($key eq 'TMP_DIR') {
-	my $v = $self->_fix_dir($diff, $key, $value, "tmp");
+	my $v = $self->_fix_dir($config, $diff, $key, $value, "tmp");
 	if ($v) {
 	    return "tmp_dir = $v";
 	}
@@ -399,19 +406,23 @@ sub translate_xxx
 	}
     }
     elsif ($key eq 'ADMIN_MEMBER_LIST') {
-	$value = $self->_fix_map($diff, $key, $value);
+	$value = $self->_fix_map($config, $diff, $key, $value);
 	return "primary_admin_member_map = $value";
     }
     elsif ($key eq 'MEMBER_LIST') {
-	$value = $self->_fix_map($diff, $key, $value);
+	$value = $self->_fix_map($config, $diff, $key, $value);
 	return "primary_member_map = $value";
     }
     elsif ($key eq 'ACTIVE_LIST') {
-	$value = $self->_fix_map($diff, $key, $value);
+	$value = $self->_fix_map($config, $diff, $key, $value);
 	return "primary_recipient_map = $value";
     }
+    elsif ($key eq 'MODERATOR_MEMBER_LIST') {
+	$value = $self->_fix_map($config, $diff, $key, $value);
+	return "primary_moderator_member_map = $value";
+    }
     elsif ($key eq 'PASSWD_FILE') {
-	$value = $self->_fix_map($diff, $key, $value);
+	$value = $self->_fix_map($config, $diff, $key, $value);
 	return "primary_admin_member_password_map = $value";
     }
     elsif ($key eq 'LOGFILE') {
@@ -430,10 +441,10 @@ sub translate_xxx
 	return "summary_file = $value";
     }
     elsif ($key eq 'SKIP_FIELDS') {
-	return $self->_fix_skip_fields($diff, $key, $value);
+	return $self->_fix_skip_fields($config, $diff, $key, $value);
     }
     elsif ($key eq 'FILE_TO_REGIST') {
-	$value = $self->_fix_map($diff, $key, $value);
+	$value = $self->_fix_map($config, $diff, $key, $value);
 	my $s = '';
 	$s .= "primary_member_map      = $value\n";
 	$s .= "primary_recipient_map   = $value\n";
@@ -443,14 +454,18 @@ sub translate_xxx
 	return "incoming_mail_cache_size = $value\n";
     }
     elsif ($key eq 'ML_MEMBER_CHECK') {
-	return $self->_fix_acl_policy($diff, $key, $value);
+	return $self->_fix_acl_policy($config, $diff, $key, $value);
     }
     elsif ($key eq 'LOAD_LIBRARY') {
-	return $self->_fix_module_definition($diff, $key, $value);
+	return $self->_fix_module_definition($config, $diff, $key, $value);
     }
     elsif ($key eq 'TZone') {
-	return $self->_fix_time_zone($diff, $key, $value);
+	return $self->_fix_time_zone($config, $diff, $key, $value);
     }
+    elsif ($key eq 'ADMIN_LOG_DEFAULT_LINE_LIMIT') {
+	return "log_command_tail_starting_location = $value\n";
+    }
+
 
     return '# ***ERROR*** UNKNOWN TRANSLATION RULE';
 }
@@ -462,7 +477,7 @@ sub translate_xxx
 # Return Value: STR
 sub _fix_map
 {
-    my ($self, $diff, $key, $value) = @_;
+    my ($self, $config, $diff, $key, $value) = @_;
 
     $value =~ s@\$DIR/@\$ml_home_dir/@g;
     return $value;
@@ -477,18 +492,19 @@ sub _fix_dir
 {
     my ($self, $diff, $key, $value, $match) = @_;
     my $x = $value;
+    my $i = 16;
 
     $x =~ s@\$DIR/@@;
-    $x =~ s@^/@@;
-    $x =~ s@^/@@;
-    $x =~ s@^/@@;
+    $x =~ s@\./@@;
+    while ($i-- > 0) { $x =~ s@^/@@;}
 
-    print "// CHECK key=<$key> value=<$value> x=<$x>\n";
-    if ($key eq $x) {
+    print "# CHECK key=<$key> value=<$value> x=<$x>\n";
+    if ($value eq $x) {
 	return "";
     }
     else {
 	$value =~ s@\$DIR/@\$ml_home_dir/@;
+	$value =~ s@\./@\$ml_home_dir/@;
 	return $value;
     }
 }
@@ -500,7 +516,7 @@ sub _fix_dir
 # Return Value: STR
 sub _fix_acl_policy
 {
-    my ($self, $diff, $key, $value) = @_;
+    my ($self, $config, $diff, $key, $value) = @_;
 
     if ($key eq 'ML_MEMBER_CHECK') {
 	if ($value) {
@@ -522,7 +538,7 @@ sub _fix_acl_policy
 # Return Value: STR
 sub _fix_module_definition
 {
-    my ($self, $diff, $key, $value) = @_;
+    my ($self, $config, $diff, $key, $value) = @_;
 
     if ($key eq 'LOAD_LIBRARY') {
 	if ($value eq 'libfml.pl') {
@@ -540,7 +556,7 @@ sub _fix_module_definition
 # Return Value: STR
 sub _fix_time_zone
 {
-    my ($self, $diff, $key, $value) = @_;
+    my ($self, $config, $diff, $key, $value) = @_;
 
     if ($value eq ' JST') {
 	return "system_timezone = +0900";
@@ -556,7 +572,7 @@ sub _fix_time_zone
 # Return Value: STR
 sub _fix_skip_fields
 {
-    my ($self, $diff, $key, $value) = @_;
+    my ($self, $config, $diff, $key, $value) = @_;
     my (@fields) = split(/\|/, $value);
 
     return "unsafe_header_fields = @fields";
@@ -569,7 +585,7 @@ sub _fix_skip_fields
 # Return Value: STR
 sub _fix_subject_tag
 {
-    my ($self, $diff, $key, $value) = @_;
+    my ($self, $config, $diff, $key, $value) = @_;
     my $s = "article_header_rewrite_rules += rewrite_article_subject_tag\n\n";
 
     # ensure uniqueness
@@ -638,9 +654,9 @@ sub _fix_subject_tag
 # Return Value: STR
 sub translate_use_fml8_value
 {
-    my ($self, $diff, $key, $value) = @_;
+    my ($self, $config, $diff, $key, $value) = @_;
 
-   return "# IGNORED since \$$key uses fml8 value";
+   return "# IGNORED since \$$key prefers fml8 value.";
 }
 
 
@@ -650,9 +666,21 @@ sub translate_use_fml8_value
 # Return Value: STR
 sub translate_ignore
 {
-    my ($self, $diff, $key, $value) = @_;
+    my ($self, $config, $diff, $key, $value) = @_;
 
-   return "# IGNORED since \$$key is of no means";
+   return "# IGNORED since \$$key is of no means.";
+}
+
+
+# Descriptions: show this variable is not yet implemented.
+#    Arguments: OBJ($self) HASH_REF($diff) STR($key) STR($value)
+# Side Effects: none
+# Return Value: STR
+sub translate_not_yet_implemented
+{
+    my ($self, $config, $diff, $key, $value) = @_;
+
+   return "# ERROR. SORRY \$$key IS NOT YET IMPLEMENTED.";
 }
 
 
