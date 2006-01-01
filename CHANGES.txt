@@ -37,6 +37,11 @@
    だけど…
    ＃ fml 4 直接エミュレータ以外は全部できてるつもりなんだけど
 
+   remove not-used modules.
+	Class::NamedParms
+	Class::ParmList
+	AsciiDB::*
+
    FML::Merge::FML4::config_ph 
 	pass $config to translation*() methods.
 	support MODERATOR_MEMBER_LIST, ADMIN_LOG_DEFAULT_LINE_LIMIT.
@@ -9034,4 +9039,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.258 2006/01/01 09:37:06 fukachan Exp $
+$FML: CHANGES.txt,v 1.259 2006/01/01 14:29:38 fukachan Exp $
