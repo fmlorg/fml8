@@ -7,6 +7,15 @@
         XXX 遠大なビジョンやとりあえず後まわしでよいものは STATUS.txt へ
 
 
+[TODO]	4 to 8 ルール判定の間違い
+
+	default_config.ph との差分だけを取り出してルールを適用すると
+	複数の条件文を適用しなければいけないルールにマッチしない。
+
+	複数条件文が表現できてない
+		if ($key eq .. && $value eq ...) {} に展開すると大間違い
+
+
 [TODO]	config tool
 
 	多言語サポート
@@ -51,6 +60,11 @@
 [TODO]	ドキュメント: 4 to 8 の解説ってあってる？
 
 [TODO]	スレッド関連のモジュールとドキュメントを全部見直せよ
+
+	FML::Article::Thread
+		print_one_line_summary は、まいかい
+		メッセージをパースしてるのですが、
+		DB の article_summary にいれておけばいいでしょう
 
 	スレッド DB 再生成の呪文がないよ;)
 
@@ -144,11 +158,6 @@
 		->regexp_match() スタイルにしてほしい
 
 
-[TODO]	IO::Adapter
-		LDAP
-		PostgreSQL
-
-
 [TODO]	FML::Command::Admin::dir
 	cgi_menu() ?
 	ディレクトリ listing してくれる perl module ないかな？
@@ -156,7 +165,6 @@
 
 [TODO]	remove $msg->{ next }
 
-	FML/Filter/TextPlain.pm
 	Mail/Message/ToHTML.pm
 	Mail/Message.pm
 	Mail/Bounce/Postfix19991231.pm
@@ -192,6 +200,28 @@
 ======================================================================
 ○		FNF-ify およびドキュメント
 
+[TODO]	このネーミングはどうなん？
+
+	* TODO
+
+ 	FixIt                                    Mail/Bounce/FixBrokenAddress
+	
+	address_cleanup                          FML/Header
+	address_cleanup                          Mail/Bounce
+	
+	---------->8---------->8---------->8---------->8---------->8
+	* けすべき
+	
+	method_regexp                            FML/Restriction/CGI
+	param_regexp                             FML/Restriction/CGI
+	
+	* どうなんだろう？
+	
+	regexp_compile                           FML/Header/Subject
+	
+	command_regexp_match                     FML/Restriction/Command
+	regexp_match                             FML/Restriction/Base
+	safe_regexp_match                        FML/Command
 
 
 [TODO]	HOOK のガイドライン？
@@ -217,40 +247,25 @@
    * 重たいので後回しにされてるもの
 	Mail/Delivery/Queue.pm
 	Mail/Delivery/SMTP.pm
-
 	Mail/Message.pm
-	Mail/Message/ToHTML.pm
-
 	FML/Filter/MimeComponent.pm
 
-   * スレッド関連のモジュール (2004/06 のオーバホールの残り?)
-	FML/Article/Thread.pm
+   * スレッド関連のモジュール
 	FML/CGI/Thread.pm
-	Mail/Message/Thread.pm
 	Mail/Message/ToHTML.pm
-	FML/Process/HTMLify.pm
-	Mail/Message/DB.pm
-	FML/Command/Admin/thread.pm
-	FML/Command/Admin/htmlify.pm
 
    * IN/OUT のチェック
 	Mail/Message/ToHTML.pm
 
-	OUT のちぇっくで最重要なのは？
-
-	Mail/Message/ToHTML.pm
-
-	Mail/Message/Print などに集結させるべきだろう？
+	Mail/Message/Print などに集結させるべきだろうか？
 		print_axss (against cross site scripting).
 
   * ちょっとコーディングスタイルが古いかな?
 
 	FML::Header
 	FML::Header::Subject
-	File::Sequence
 	Mail::Delivery::* (?)
 	FML::Filter::TextPlain
-	FML::Filter::Header
 
    * 使ってないモジュール?
 	FML::Data::Deadline
@@ -258,4 +273,4 @@
 	FML::Sys::Alias
 
 ----------
-$FML: 00_MEMO,v 1.119 2005/05/27 04:40:28 fukachan Exp $
+$FML: 00_MEMO,v 1.120 2005/08/18 14:14:41 fukachan Exp $
