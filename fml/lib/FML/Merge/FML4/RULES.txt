@@ -1,5 +1,5 @@
 #
-# $FML: RULES.txt,v 1.7 2004/12/30 04:36:34 fukachan Exp $
+# $FML: RULES.txt,v 1.8 2005/01/19 13:46:11 fukachan Exp $
 #     BASED ON fml/cf/MANIFEST 1.104
 #
 #	.convert		よろしく変換して頑張る
@@ -9,9 +9,13 @@
 #				まだ、設定変更できない
 #	.ignore			実装方式が違うので、変換が無意味
 #				対応するものがない、実装予定もない
-
-
-
+#
+# 新キーワード？
+#	.convert		変換するルーチンを呼び出す
+#	.use_fml8_value		fml8 のデフォルトと同じ or fml8 の値が優先 
+#	.not_yet_implemented	未実装(予定はあるが実装されていない)
+#	.not_support		fml8 ではサポート予定なしの機能。
+#				「無視する」(.ignore)といっても良いが…
 
 #########################################################################
 ##### Section: Fundamental Configuration (CF Version, debug, Language) ##
@@ -20,13 +24,20 @@
 # # define 6.0 for fml 3.0 + fukui-newconfig.
 # CFVersion:	6.1
 .if CFVersion
-	.unavailable
+	.not_support
 
 
 # # global debug option. if non-nil, debug mode.
 # # In debug mode, fml does not distribute posted articles.
 # # value: 1/0
 # debug:		 0
+.if debug >= 1
+
+	use_debug = yes
+
+.if debug == 0
+
+	use_debug = no
 
 
 # # fml 3.0 generates template files, $DIR/{help,welcome} in $LANGUAGE
@@ -101,20 +112,28 @@
 
 .if PERMIT_POST_FROM == members_only
 	.if REJECT_POST_HANDLER == reject
-
-	article_post_restrictions = reject_system_special_accounts permit_member_maps reject
+		.use_fml8_value
 
 .if PERMIT_POST_FROM == members_only
 	.if REJECT_POST_HANDLER == auto_subscribe
-		.ignore
+		.not_support
 
 .if PERMIT_POST_FROM == members_only
 	.if REJECT_POST_HANDLER == ignore
 		.not_yet_implemented
 
 .if PERMIT_POST_FROM == moderator
+	.if MODERATOR_FORWARD_TYPE == 1
 		.not_yet_implemented
 
+.if PERMIT_POST_FROM == moderator
+	.if MODERATOR_FORWARD_TYPE == 2
+
+	article_post_restrictions = reject_system_special_accounts permit_forward_to_moderator
+
+.if PERMIT_POST_FROM == moderator
+	.if MODERATOR_FORWARD_TYPE == 3
+		.not_yet_implemented
 
 
 # # $CONTROL_ADDRESS is the address you send a command request to.
@@ -154,11 +173,11 @@
 
 .if PERMIT_COMMAND_FROM == members_only
 	.if REJECT_COMMAND_HANDLER == reject
-		.fml8_default
+		.use_fml8_value
 
 .if PERMIT_COMMAND_FROM == members_only
 	.if REJECT_COMMAND_HANDLER == auto_subscribe
-		.ignore
+		.not_support
 
 .if PERMIT_COMMAND_FROM == members_only
 	.if REJECT_COMMAND_HANDLER == ignore
@@ -169,7 +188,6 @@
 		.not_yet_implemented
 
 
-
 # # obsolete (though you can use it)
 # # When $MAIL_LIST_ACCEPT_COMMAND = 1,
 # # both $MAIL_LIST and $CONTROL_ADDRESS accept commands
@@ -177,7 +195,7 @@
 # # value: 1/0
 # MAIL_LIST_ACCEPT_COMMAND:
 .if MAIL_LIST_ACCEPT_COMMAND
-	.ignore
+	.not_support
 
 
 # # ## Sub Section: Maintainer ##
@@ -191,7 +209,7 @@
 
 # MAINTAINER_SIGNATURE:	
 .if MAINTAINER_SIGNATURE
-	.ignore
+	.not_yet_implemented
 
 
 # # ## Sub Section: ML_FN ##
@@ -203,7 +221,7 @@
 # # value: string
 # ML_FN:
 .if ML_FN
-	.ignore
+	.not_yet_implemented
 
 
 
@@ -296,7 +314,7 @@
 # # value: confirmation/subject/body/no-keyword
 # AUTO_REGISTRATION_TYPE:	confirmation
 .if AUTO_REGISTRATION_TYPE == confirmation
-	.fml8_default
+	.use_fml8_value
 
 .if AUTO_REGISTRATION_TYPE == subject
 	.not_yet_implemented
@@ -313,10 +331,10 @@
 # # value: string
 # AUTO_REGISTRATION_KEYWORD:	subscribe
 .if AUTO_REGISTRATION_KEYWORD == subscribe
-	.fml8_default
+	.use_fml8_value
 
 .if AUTO_REGISTRATION_KEYWORD != subscribe
-	.ignore
+	.not_support
 
 
 # # when automatic registration,
@@ -325,7 +343,7 @@
 # # value: string
 # AUTO_REGISTRATION_DEFAULT_MODE:
 .if AUTO_REGISTRATION_DEFAULT_MODE
-	.convert
+	.not_support
 
 
 # # "confirmation" (default) mode configurations
@@ -333,38 +351,38 @@
 # # value: string
 # CONFIRMATION_ADDRESS:
 .if CONFIRMATION_ADDRESS == CONTROL_ADDRESS
-	.fml8_default
+	.use_fml8_value
 
 .if CONFIRMATION_ADDRESS != CONTROL_ADDRESS
-	.ignore
+	.not_support
 
 
 # CONFIRMATION_SUBSCRIBE:		subscribe
 .if CONFIRMATION_SUBSCRIBE == subscribe
-	.fml8_default
+	.use_fml8_value
 
 .if CONFIRMATION_SUBSCRIBE != subscribe
-	.ignore
+	.not_support
 
 
 # CONFIRMATION_KEYWORD:		confirm
 .if CONFIRMATION_KEYWORD == confirm
-	.fml8_default
+	.use_fml8_value
 
 .if CONFIRMATION_KEYWORD != confirm
-	.ignore
+	.not_support
 
 
 # CONFIRMATION_WELCOME_STATEMENT:
 .if CONFIRMATION_WELCOME_STATEMENT
-	.ignore
+	.not_support
 
 
 # # "subscribe" needs no YOUR NAME.
 # # value: 1/0
 # CONFIRMATION_SUBSCRIBE_NEED_YOUR_NAME: 1
 .if CONFIRMATION_SUBSCRIBE_NEED_YOUR_NAME
-	.ignore
+	.not_support
 
 
 # # file to send back "what is confirmation?" with "confirmation request"
@@ -372,7 +390,7 @@
 # # value: filename string
 # CONFIRMATION_FILE:	 $DIR/confirm
 .if CONFIRMATION_FILE
-	.ignore
+	.not_support
 
 
 # # Expire of request queue. The unit is "hour". (default, 168 == 7*24)
@@ -394,10 +412,10 @@
 # # value: string
 # DEFAULT_SUBSCRIBE:  subscribe
 .if DEFAULT_SUBSCRIBE == subscribe
-	.fml8_default
+	.use_fml8_value
 
 .if DEFAULT_SUBSCRIBE != subscribe
-	.ignore
+	.not_support
 
 
 # # In adding a new member, fml sends $WELCOME_FILE to him/her.
@@ -406,14 +424,14 @@
 # # value: filename string
 # WELCOME_FILE:	 $DIR/welcome
 .if WELCOME_FILE
-	.ignore
+	.not_support
 
 
 # # subject of mail ($WELCOME_FILE) sent to a new member
 # # value: string
 # WELCOME_STATEMENT:Welcome to our $ML_FN\n         You are added automatically
 .if WELCOME_STATEMENT == Welcome to our $ML_FN\n         You are added automatically
-	.ignore
+	.not_support
 
 
 # # Enforce file to add a new member address for some purposes.
@@ -432,23 +450,23 @@
 # # value: 1/0
 # AUTO_REGISTERED_UNDELIVER_P:  1
 .if AUTO_REGISTERED_UNDELIVER_P == 1
-	.fml8_default
+	.use_fml8_value
 
 .if AUTO_REGISTERED_UNDELIVER_P == 0
-	.ignore
+	.not_support
 
 # TYPO
 .if AUTO_REGISTERD_UNDELIVER_P == 1
-	.fml8_default
+	.use_fml8_value
 
 
 
 # AUTO_REGISTRATION_LINES_LIMIT:  0
 .if AUTO_REGISTRATION_LINES_LIMIT == 0
-	.ignore
+	.not_support
 
 .if AUTO_REGISTRATION_LINES_LIMIT > 0
-	.ignore
+	.not_support
 
 
 
@@ -499,7 +517,7 @@
 
 .if REMOTE_ADMINISTRATION_REQUIRE_PASSWORD == 1
 
-	admin_command_mail_restrictions += check_admin_member_password
+	admin_command_mail_restrictions = reject_system_special_accounts check_admin_member_password reject
 
 
 # # Of course, the remote control requires some kind of authentication.
@@ -517,25 +535,30 @@
 # REMOTE_ADMINISTRATION_AUTH_TYPE:	crypt
 .if REMOTE_ADMINISTRATION_AUTH_TYPE == crypt
 
-	admin_command_mail_restrictions += check_admin_member_password
+	admin_command_mail_restrictions = reject_system_special_accounts check_admin_member_password reject
 
 .if REMOTE_ADMINISTRATION_AUTH_TYPE == address
 	.not_yet_implemented
 
 .if REMOTE_ADMINISTRATION_AUTH_TYPE == md5
-	.not_yet_implemented
+
+	admin_command_mail_restrictions = reject_system_special_accounts check_admin_member_password reject
 
 .if REMOTE_ADMINISTRATION_AUTH_TYPE == pgp
-	.not_yet_implemented
+
+	admin_command_mail_restrictions = reject_system_special_accounts check_pgp_signature reject
 
 .if REMOTE_ADMINISTRATION_AUTH_TYPE == pgp2
-	.not_yet_implemented
+
+	admin_command_mail_restrictions = reject_system_special_accounts check_pgp_signature reject
 
 .if REMOTE_ADMINISTRATION_AUTH_TYPE == pgp5
-	.not_yet_implemented
+
+	admin_command_mail_restrictions = reject_system_special_accounts check_pgp_signature reject
 
 .if REMOTE_ADMINISTRATION_AUTH_TYPE == gpg
-	.not_yet_implemented
+
+	admin_command_mail_restrictions = reject_system_special_accounts check_pgp_signature reject
 
 
 # # address list of members who can send a command mail from remote
@@ -549,7 +572,7 @@
 # # value: filename string
 # ADMIN_HELP_FILE:	$DIR/help-admin
 .if ADMIN_HELP_FILE
-	.ignore
+	.use_fml8_value
 
 
 # # password file to authenticate members
@@ -567,7 +590,7 @@
 # # value: 1/0
 # ADMIN_ADD_SEND_WELCOME_FILE:	0
 .if ADMIN_ADD_SEND_WELCOME_FILE == 0
-	.fml8_default
+	.use_fml8_value
 
 .if ADMIN_ADD_SEND_WELCOME_FILE == 1
 	.not_yet_implemented
@@ -578,15 +601,14 @@
 # # value: number
 # ADMIN_LOG_DEFAULT_LINE_LIMIT:	100
 .if ADMIN_LOG_DEFAULT_LINE_LIMIT
-
-	log_command_tail_starting_location = ADMIN_LOG_DEFAULT_LINE_LIMIT
+	.convert
 
 
 # # PGP directory path (obsolete in fml 4.0)
 # # value: filename string
 # PGP_PATH:		$DIR/etc/pgp
 .if PGP_PATH == $DIR/etc/pgp
-	.not_yet_implemented
+	.use_fml8_value
 
 
 # # If you enforce the following *KEYRING_DIR in $CFVersion < 6.1,
@@ -594,29 +616,29 @@
 # # value: 1/0
 # USE_FML40_PGP_PATH:	1
 .if USE_FML40_PGP_PATH == 1
-	.not_yet_implemented
+	.use_fml8_value
 
 
 # # fml 4.0
 # # value: directory string
 # DIST_AUTH_KEYRING_DIR:		$DIR/etc/dist-auth
 .if DIST_AUTH_KEYRING_DIR == $DIR/etc/dist-auth
-	.not_yet_implemented
+	.use_fml8_value
 
 
 # DIST_ENCRYPT_KEYRING_DIR:	$DIR/etc/dist-encrypt
 .if DIST_ENCRYPT_KEYRING_DIR == $DIR/etc/dist-encrypt
-	.not_yet_implemented
+	.use_fml8_value
 
 
 # ADMIN_AUTH_KEYRING_DIR:		$DIR/etc/admin-auth
 .if ADMIN_AUTH_KEYRING_DIR == $DIR/etc/admin-auth
-	.not_yet_implemented
+	.use_fml8_value
 
 
 # ADMIN_ENCRYPT_KEYRING_DIR:	$DIR/etc/admin-encrypt
 .if ADMIN_ENCRYPT_KEYRING_DIR == $DIR/etc/admin-encrypt
-	.not_yet_implemented
+	.use_fml8_value
 
 
 
@@ -626,8 +648,9 @@
 # # "moderator" certification type
 # # value: 1/2/3
 # MODERATOR_FORWARD_TYPE:	2
-.if MODERATOR_FORWARD_TYPE == 2
-	.not_yet_implemented
+#
+# !!! MODERATOR_FORWARD_TYPE は PERMIT_*_FROM の条件文の中でチェック !!!
+#
 
 
 # # member list who receives submitted article.
@@ -641,7 +664,7 @@
 # # value: filename string
 # MODERATOR_MEMBER_LIST:	$DIR/moderators
 .if MODERATOR_MEMBER_LIST
-	.not_yet_implemented
+	.convert
 
 
 # # expire old submitted but not certified articles
@@ -683,18 +706,18 @@
 # # value: 1/0
 # NOT_USE_UNIX_FROM_LOOP_CHECK:  0
 .if NOT_USE_UNIX_FROM_LOOP_CHECK == 0
-	.ignore
+	.not_support
 
 
 .if NOT_USE_UNIX_FROM_LOOP_CHECK == 1
-	.ignore
+	.not_support
 
 
 # # check Message-Id: duplication to avoid mail loop
 # # value: 1/0
 # CHECK_MESSAGE_ID:	1
 .if CHECK_MESSAGE_ID == 1
-	.fml8_default
+	.use_fml8_value
 
 .if CHECK_MESSAGE_ID == 0
 
@@ -714,7 +737,7 @@
 # # value: 1/0
 # LOG_CONNECTION:	0
 .if LOG_CONNECTION
-	.ignore
+	.not_support
 
 
 # # address check levels, which level is the tree depth from the root.
@@ -732,7 +755,7 @@
 # # value: number
 # ADDR_CHECK_MAX:		3
 .if ADDR_CHECK_MAX == 3
-	.fml8_default
+	.use_fml8_value
 
 .if ADDR_CHECK_MAX != 3
 	.not_yet_implemented
@@ -745,7 +768,7 @@
 # # value: number
 # INCOMING_MAIL_SIZE_LIMIT:
 .if INCOMING_MAIL_SIZE_LIMIT == 0
-	.ignore
+	.not_support
 
 .if INCOMING_MAIL_SIZE_LIMIT != 0
 	.use_fml8_value
@@ -756,7 +779,7 @@
 # # value: 1/0
 # NOTIFY_MAIL_SIZE_OVERFLOW:	1
 .if NOTIFY_MAIL_SIZE_OVERFLOW == 1
-	.fml8_default
+	.use_fml8_value
 
 .if NOTIFY_MAIL_SIZE_OVERFLOW == 0
 	.not_yet_implemented
@@ -806,7 +829,7 @@
 # # value: string
 # DISTRIBUTE_FILTER_HOOK:
 .if DISTRIBUTE_FILTER_HOOK
-	.ignore
+	.not_support
 
 
 # # $FILTER_NOTIFY_REJECTION enables fml.pl notifies the rejection to
@@ -814,7 +837,7 @@
 # # value: 1/0
 # FILTER_NOTIFY_REJECTION:
 .if FILTER_NOTIFY_REJECTION == 1
-	.fml8_default
+	.use_fml8_value
 
 .if FILTER_NOTIFY_REJECTION == 0
 	.not_yet_implemented
@@ -1030,7 +1053,7 @@
 # # value: confirmation
 # UNSUBSCRIBE_AUTH_TYPE:
 .if UNSUBSCRIBE_AUTH_TYPE == confirmation
-	.fml8_default
+	.use_fml8_value
 
 .if UNSUBSCRIBE_AUTH_TYPE != confirmation
 	.not_yet_implemented
@@ -1040,7 +1063,7 @@
 # # value: confirmation / ""
 # CHADDR_AUTH_TYPE:
 .if CHADDR_AUTH_TYPE == confirmation
-	.fml8_default
+	.use_fml8_value
 
 .if CHADDR_AUTH_TYPE != confirmation
 	.not_yet_implemented
@@ -1127,10 +1150,10 @@
 # #	 /received-date+x-posted/received-date+x-original-date
 # DATE_TYPE:	original-date
 .if DATE_TYPE == original-date
-	.fml8_default
+	.use_fml8_value
 
 .if DATE_TYPE != original-date
-	.ignore
+	.not_support
 
 
 # # In article header, fml adds following header fields.
@@ -1183,7 +1206,7 @@
 # # You do not expect a lot on this option.
 # STRIP_BRACKETS:  0
 .if STRIP_BRACKETS == 0
-	.ignore
+	.not_support
 
 
 # # You can customize your own bracket by these variables.
@@ -1234,7 +1257,7 @@
 # # value: 1/0
 # USE_ORIGINAL_MESSAGE_ID:	1
 .if USE_ORIGINAL_MESSAGE_ID == 1
-	.fml8_default
+	.use_fml8_value
 
 .if USE_ORIGINAL_MESSAGE_ID == 0
 	.not_yet_implemented
@@ -1256,7 +1279,7 @@
 # # value: 1/0
 # APPEND_STARDATE:
 .if APPEND_STARDATE == 1
-	.fml8_default
+	.use_fml8_value
 
 .if APPEND_STARDATE == 0
 
@@ -1318,32 +1341,32 @@
 # # value: 0/1/2
 # REWRITE_TO:
 .if REWRITE_TO == 2
-	.ignore
+	.not_support
 
 .if REWRITE_TO == 1
-	.ignore
+	.not_support
 
 .if REWRITE_TO == 0
-	.fml8_default
+	.use_fml8_value
 
 
 # # Default values if no value (no field) is given.
 # # value: string
 # Subject:
 .if Subject
-	.ignore
+	.not_support
 
 # From_address:	 not.found
 .if From_address == not.found
-	.ignore
+	.not_support
 
 # User:		 not.found
 .if User == not.found
-	.ignore
+	.not_support
 
 # Date:		 not.found
 .if Date == not.found
-	.ignore
+	.not_support
 
 
 # # TIME ZONE;  +0900 is RFC822 syntax (I like JST but ... ;-)
@@ -1372,10 +1395,10 @@
 # # value: 1/0
 # PASS_ALL_FIELDS_IN_HEADER: 1
 .if PASS_ALL_FIELDS_IN_HEADER == 1
-	.fml8_default
+	.use_fml8_value
 
 .if SUPERFLUOUS_HEADERS == 1
-	.fml8_default
+	.use_fml8_value
 
 
 # # ignore header field irrespective of @HdrFieldsOrder and
@@ -1390,7 +1413,7 @@
 # # value: 1/0
 # ALLOW_WRONG_LINES_IN_HEADER: 1
 .if ALLOW_WRONG_LINES_IN_HEADER == 1
-	.ignore
+	.not_support
 
 
 
@@ -1402,14 +1425,14 @@
 # # value: 1/0
 # COMMAND_SYNTAX_EXTENSION:  1
 .if COMMAND_SYNTAX_EXTENSION == 1
-	.ignore
+	.not_support
 
 
 # # "Subject: # commands" is available?
 # # value: 1/0
 # USE_SUBJECT_AS_COMMANDS:	0
 .if USE_SUBJECT_AS_COMMANDS == 0
-	.ignore
+	.not_support
 
 
 # # obsolete
@@ -1418,17 +1441,17 @@
 # # value: 1/0
 # USE_WARNING:			0
 .if USE_WARNING == 0
-	.fml8_default
+	.use_fml8_value
 
 .if USE_WARNING == 1
-	.ignore
+	.not_support
 
 
 # # obsolete: since this is the same as --ctladdr.
 # # value: 1/0
 # COMMAND_ONLY_SERVER:	0
 .if COMMAND_ONLY_SERVER
-	.fml8_default
+	.use_fml8_value
 
 
 # # **ATTENTION**
@@ -1444,21 +1467,21 @@
 # # value: number
 # COMMAND_CHECK_LIMIT:  	3
 .if COMMAND_CHECK_LIMIT == 3
-	.ignore
+	.not_support
 
 
 # # obsolete
 # # value: number
 # GUIDE_CHECK_LIMIT:	3
 .if GUIDE_CHECK_LIMIT == 3
-	.ignore
+	.not_support
 
 
 # # obsolete
 # # value: string
 # GUIDE_KEYWORD:	guide
 .if GUIDE_KEYWORD == guide
-	.ignore
+	.not_support
 
 
 
@@ -1508,12 +1531,12 @@
 # # value: mode string
 # MGET_MODE_DEFAULT:
 .if MGET_MODE_DEFAULT
-	.ignore
+	.not_support
 
 
 # MGET_TEXT_MODE_DEFAULT:
 .if MGET_TEXT_MODE_DEFAULT
-	.ignore
+	.not_support
 
 
 # # The reply for "mget" commands sends long reply mails as splitten mails
@@ -1526,7 +1549,7 @@
 
 # SLEEPTIME:		60
 .if SLEEPTIME
-	.ignore
+	.not_support
 
 
 # # almost obsolete
@@ -1537,31 +1560,31 @@
 # # value: string
 # MIME_VERSION:
 .if MIME_VERSION
-	.ignore
+	.not_support
 
 # MIME_CONTENT_TYPE:
 .if MIME_CONTENT_TYPE
-	.ignore
+	.not_support
 
 # MIME_MULTIPART_BOUNDARY:
 .if MIME_MULTIPART_BOUNDARY
-	.ignore
+	.not_support
 
 # MIME_MULTIPART_CLOSE_DELIMITER:
 .if MIME_MULTIPART_CLOSE_DELIMITER
-	.ignore
+	.not_support
 
 # MIME_MULTIPART_DELIMITER:
 .if MIME_MULTIPART_DELIMITER
-	.ignore
+	.not_support
 
 # MIME_MULTIPART_PREAMBLE:
 .if MIME_MULTIPART_PREAMBLE
-	.ignore
+	.not_support
 
 # MIME_MULTIPART_TRAILER:
 .if MIME_MULTIPART_TRAILER
-	.ignore
+	.not_support
 
 
 # # Japanese specific
@@ -1569,26 +1592,26 @@
 # # value: 1/0
 # USE_SJIS_IN_ISH:
 .if USE_SJIS_IN_ISH
-	.ignore
+	.not_support
 
 
 # # RFC1153 configurations; see doc/tutorial for the detail
 # # value: number
 # RFC1153_ISSUE:
 .if RFC1153_ISSUE
-	.ignore
+	.not_support
 
 
 # # value: number / string
 # RFC1153_VOL:
 .if RFC1153_VOL
-	.ignore
+	.not_support
 
 
 # # value: filename string
 # RFC1153_SEQUENCE_FILE:
 .if RFC1153_SEQUENCE_FILE
-	.ignore
+	.not_support
 
 
 # # ## Sub Section: MTA specific ##
@@ -1624,7 +1647,7 @@
 # # value: string
 # MGET_SUBJECT_TEMPLATE:	result for mget _DOC_MODE_ _PART_ _ML_FN_
 .if MGET_SUBJECT_TEMPLATE == result for mget _DOC_MODE_ _PART_ _ML_FN_
-	.ignore
+	.not_support
 
 
 # # send error message to Reply-To: ? or From: ?
@@ -1634,7 +1657,7 @@
 # # value: from / reply-to
 # MESSAGE_RETURN_ADDR_POLICY: reply-to
 .if MESSAGE_RETURN_ADDR_POLICY == reply-to
-	.ignore
+	.not_support
 
 
 #########################################################################
@@ -1658,29 +1681,28 @@
 # # value: string
 # MSEND_SUBJECT_TEMPLATE:	Digest _ARTICLE_RANGE_ _PART_ _ML_FN_
 .if MSEND_SUBJECT_TEMPLATE
-	.ignore
+	.not_support
 
 
 # # Digest/Matome Okuri rc file
 # # value: filename string
 # MSEND_RC:	 $VARLOG_DIR/msendrc
-.if MSEND_RC != $VARLOG_DIR/msendrc
+.if MSEND_RC
 	.convert
-
 
 # # rfc1153 or rfc934
 # # obsoletes $USE_RFC1153, $USE_RFC1153_DIGEST, $USE_RFC934
 # # value: mode string
 # MSEND_MODE_DEFAULT:
 .if MSEND_MODE_DEFAULT
-	.ignore
+	.not_support
 
 
 # # Subject:
 # # value: string
 # MSEND_DEFAULT_SUBJECT:
 .if MSEND_DEFAULT_SUBJECT
-	.ignore
+	.not_support
 
 
 # # If no articles to send, we send "no traffic" to the member of $MAIL_LIST
@@ -1775,7 +1797,7 @@
 # # value: filename string
 # DENY_FILE:	 $DIR/deny
 .if DENY_FILE != $DIR/deny
-	.ignore
+	.not_support
 
 
 # # $LOGFILE		log file
@@ -1788,7 +1810,7 @@
 
 # MGET_LOGFILE:    $DIR/log
 .if MGET_LOGFILE != $DIR/log
-	.ignore
+	.not_support
 
 
 # # suffix extension if defined. For example log.2000
@@ -1804,7 +1826,7 @@
 # # value: filename string
 # DEBUG_LOGFILE:    $DIR/log.debug
 .if DEBUG_LOGFILE == $DIR/log.debug
-	.ignore
+	.not_support
 
 
 # # article summary file
@@ -1825,16 +1847,16 @@
 # # value: filename string
 # LOCK_FILE:	 $VARRUN_DIR/lockfile.v7
 .if LOCK_FILE == $VARRUN_DIR/lockfile.v7
-	.ignore
+	.not_support
 
 .if LOCK_DIR
-	.ignore
+	.not_support
 
 .if LOCKDIR
-	.ignore
+	.not_support
 
 .if LOCKFILE
-	.ignore
+	.not_support
 
 
 
@@ -1851,10 +1873,10 @@
 # # value: 1/0
 # USE_INET6: 1
 .if USE_INET6 == 1
-	.fml8_default
+	.use_fml8_value
 
 .if USE_INET6 == 0
-	.ignore
+	.not_support
 
 
 # # value: string
@@ -1917,22 +1939,22 @@
 # # value: 1/0
 # NOT_TRACE_SMTP:  	0
 .if NOT_TRACE_SMTP == 0
-	.fml8_default
+	.use_fml8_value
 
 .if NOT_TRACE_SMTP == 1
-	.ignore
+	.not_support
 
 
 # TRACE_SMTP_DELAY:
 .if TRACE_SMTP_DELAY
-	.ignore
+	.not_support
 
 
 # # smtp profile for debug
 # # value: 1/0
 # USE_SMTP_PROFILE:	0
 .if USE_SMTP_PROFILE == 0
-	.ignore
+	.not_support
 
 
 # # You can use plural MTA for parallel delivery.
@@ -1948,7 +1970,7 @@
 # # value: string
 # DEFAULT_RELAY_SERVER:
 .if DEFAULT_RELAY_SERVER
-	.ignore
+	.not_support
 
 
 # # obsolete today
@@ -1959,14 +1981,14 @@
 # # value: 1/0
 # RELAY_HACK:
 .if RELAY_HACK
-	.ignore
+	.not_support
 
 
 # # obsolete today
 # # value: filename string
 # CF_DEF:
 .if CF_DEF
-	.ignore
+	.not_support
 
 
 # # list-outgoing@domain is a real distribution address. Fml does not
@@ -2047,10 +2069,10 @@
 # # value: 1/0
 # USE_MIME:		1
 .if USE_MIME == 1
-	.fml8_default
+	.use_fml8_value
 
 .if USE_MIME == 0
-	.ignore
+	.not_support
 
 
 # # special hack to treat broken MIME ending (e.g. by MacOS X)
@@ -2067,7 +2089,7 @@
 # # value: 1/0
 # MIME_DECODED_ARTICLE:
 .if MIME_DECODED_ARTICLE
-	.ignore
+	.not_support
 
 
 
@@ -2090,11 +2112,11 @@
 # # value: string
 # PREAMBLE_MAILBODY:
 .if PREAMBLE_MAILBODY
-	.ignore
+	.not_support
 
 # TRAILER_MAILBODY:
 .if TRAILER_MAILBODY
-	.ignore
+	.not_support
 
 
 
@@ -2111,17 +2133,17 @@
 # # value: string
 # GOOD_BYE_PHRASE:
 .if GOOD_BYE_PHRASE
-	.ignore
+	.not_support
 
 # FACE_MARK:
 .if FACE_MARK
-	.ignore
+	.not_support
 
 
 # # value: function name string
 # PROC_GEN_INFO:		GenInfo
 .if PROC_GEN_INFO
-	.ignore
+	.not_support
 
 
 
@@ -2132,10 +2154,10 @@
 # # value: 1/0
 # USE_FLOCK:	 1
 .if USE_FLOCK == 1
-	.fml8_default
+	.use_fml8_value
 
 .if USE_FLOCK == 0
-	.ignore
+	.not_support
 
 
 # # In rename(2) base lock case,
@@ -2143,7 +2165,7 @@
 # # value: number
 # MAX_TIMEOUT:	 200
 .if MAX_TIMEOUT == 200
-	.ignore
+	.not_support
 
 
 
@@ -2165,7 +2187,7 @@
 # # value: 1/0
 # COMPAT_FML15:		0
 .if COMPAT_FML15 == 0
-	.ignore
+	.not_support
 
 
 # # newsyslog library maximum number. default is 4.
@@ -2183,11 +2205,11 @@
 # # value: filename string
 # CRONTAB:			etc/crontab
 .if CRONTAB == etc/crontab
-	.ignore
+	.not_support
 
 # CRON_PIDFILE:			var/run/cron.pid
 .if CRON_PIDFILE == var/run/cron.pid
-	.ignore
+	.not_support
 
 
 # # not used generally. This is "cron of fml package" configuration.
@@ -2195,14 +2217,14 @@
 # # value: 1/0
 # CRON_NOTIFY:			1
 .if CRON_NOTIFY == 1
-	.ignore
+	.not_support
 
 
 # # cross operations
 # # value: 1/0
 # USE_CROSSPOST:
 .if USE_CROSSPOST
-	.ignore
+	.not_support
 
 
 # # Under $USE_MEMBER_NAME is set, commands on member lists
@@ -2259,7 +2281,7 @@
 # # value: 1/0
 # USE_ARCHIVE:			0
 .if USE_ARCHIVE == 0
-	.ignore
+	.not_support
 
 
 # # spool/articles is aggregated to "$ARCHIVE_DIR/100.tar.gz"
@@ -2267,19 +2289,19 @@
 # # value: number
 # ARCHIVE_UNIT:			100
 .if ARCHIVE_UNIT == 100
-	.ignore
+	.not_support
 
 
 # DEFAULT_ARCHIVE_UNIT:		100
 .if DEFAULT_ARCHIVE_UNIT == 100
-	.ignore
+	.not_support
 
 
 # # spool/articles is aggregated to "$ARCHIVE_DIR/100.tar.gz"
 # # value: directory string
 # ARCHIVE_DIR:			var/archive
 .if ARCHIVE_DIR == var/archive
-	.ignore
+	.not_support
 
 
 # # "index" command
@@ -2288,14 +2310,14 @@
 # # value: filename string
 # INDEX_FILE:			$DIR/index
 .if INDEX_FILE == $DIR/index
-	.ignore
+	.not_support
 
 
 # # show directory name in "index" command result? default is "no".
 # # value: 1/0
 # INDEX_SHOW_DIRNAME:		0
 .if INDEX_SHOW_DIRNAME == 0
-	.ignore
+	.not_support
 
 
 
@@ -2311,12 +2333,12 @@
 # # value: directory string
 # LIBRARY_DIR:			var/library
 .if LIBRARY_DIR == var/library
-	.ignore
+	.not_support
 
 
 # LIBRARY_ARCHIVE_DIR:		archive
 .if LIBRARY_ARCHIVE_DIR == archive
-	.ignore
+	.not_support
 
 
 # # ## Sub Section: newsyslog(8) ##
@@ -2332,7 +2354,7 @@
 # # value: number / (number + K/M)
 # AMLIST_NEWSYSLOG_LIMIT:	150K
 .if AMLIST_NEWSYSLOG_LIMIT == 150K
-	.ignore
+	.not_support
 
 
 
@@ -2367,7 +2389,7 @@
 # # value: 1/0
 # HTML_THREAD:			1
 .if HTML_THREAD == 1
-	.fml8_default
+	.use_fml8_value
 
 .if HTML_THREAD == 0
 	.not_yet_implemented
@@ -2376,7 +2398,7 @@
 # # value: 1/0
 # HTML_INDEX_REVERSE_ORDER:	1
 .if HTML_INDEX_REVERSE_ORDER == 1
-	.fml8_default
+	.use_fml8_value
 
 .if HTML_INDEX_REVERSE_ORDER == 0
 	.not_yet_implemented
@@ -2386,7 +2408,7 @@
 # # value: directory string
 # HTML_DIR:			htdocs
 .if HTML_DIR == htdocs
-	.ignore
+	.not_support
 
 
 # # expire old html articles if non-zero value is defined.
@@ -2436,7 +2458,7 @@
 # # value: default / prefer-in-reply-to
 # HTML_THREAD_REF_TYPE:		prefer-in-reply-to
 .if HTML_THREAD_REF_TYPE == prefer-in-reply-to
-	.fml8_default
+	.use_fml8_value
 
 .if HTML_THREAD_REF_TYPE == default
 	.not_yet_implemented
@@ -2448,7 +2470,7 @@
 # # value: "" / reverse-number
 # HTML_THREAD_SORT_TYPE:
 .if HTML_THREAD_SORT_TYPE == reverse-number
-	.fml8_default
+	.use_fml8_value
 
 .if HTML_THREAD_SORT_TYPE == NULL
 	.not_yet_implemented
@@ -2493,32 +2515,32 @@
 # # value: 1/0
 # USE_DATABASE:
 .if USE_DATABASE
-	.fml8_default
+	.use_fml8_value
 
 
 # # value:
 # DATABASE_METHOD:
 .if DATABASE_METHOD
-	.ignore
+	.not_support
 
 
 # # value:
 # DATABASE_CACHE_FILE_SUFFIX:
 .if DATABASE_CACHE_FILE_SUFFIX
-	.ignore
+	.not_support
 
 
 # # value: filename
 # DATABASE_DRIVER: toymodel.pl
 .if DATABASE_DRIVER == toymodel.pl
-	.ignore
+	.not_support
 
 
 # # attributes to inform database drivers
 # # value:
 # DATABASE_DRIVER_ATTRIBUTES: always_lower_domain
 .if DATABASE_DRIVER_ATTRIBUTES == always_lower_domain
-	.ignore
+	.not_support
 
 
 # # ## Sub Section: RDBMS
@@ -2526,37 +2548,37 @@
 # # value: string
 # SQL_SERVER_HOST:
 .if SQL_SERVER_HOST
-	.ignore
+	.not_support
 
 
 # # value: number
 # SQL_SERVER_PORT:
 .if SQL_SERVER_PORT
-	.ignore
+	.not_support
 
 
 # # value: string
 # SQL_SERVER_USER:
 .if SQL_SERVER_USER
-	.ignore
+	.not_support
 
 
 # # value: string
 # SQL_DATABASE_NAME:
 .if SQL_DATABASE_NAME
-	.ignore
+	.not_support
 
 
 # # value: string
 # SQL_SERVER_PASSWORD:
 .if SQL_SERVER_PASSWORD
-	.ignore
+	.not_support
 
 
 # # value: string
 # SQL_DATABASE_NAME:
 .if SQL_DATABASE_NAME
-	.ignore
+	.not_support
 
 
 
@@ -2565,27 +2587,27 @@
 # # value: string
 # LDAP_SERVER_HOST:
 .if LDAP_SERVER_HOST
-	.ignore
+	.not_support
 
 
 # LDAP_SERVER_PASSWORD:
 .if LDAP_SERVER_PASSWORD
-	.ignore
+	.not_support
 
 
 # LDAP_SEARCH_BASE:
 .if LDAP_SEARCH_BASE
-	.ignore
+	.not_support
 
 
 # LDAP_SERVER_BIND:
 .if LDAP_SERVER_BIND
-	.ignore
+	.not_support
 
 
 # LDAP_QUERY_FILTER:
 .if LDAP_QUERY_FILTER
-	.ignore
+	.not_support
 
 
 
@@ -2601,31 +2623,31 @@
 # # value: 1/0
 # USE_WHOIS:
 .if USE_WHOIS
-	.ignore
+	.not_support
 
 
 # # value: string
 # DEFAULT_WHOIS_SERVER:
 .if DEFAULT_WHOIS_SERVER
-	.ignore
+	.not_support
 
 
 # # value: filename string
 # WHOIS_DB:		$VARDB_DIR/whoisdb
 .if WHOIS_DB == $VARDB_DIR/whoisdb
-	.ignore
+	.not_support
 
 
 # WHOIS_HELP_FILE:
 .if WHOIS_HELP_FILE
-	.ignore
+	.not_support
 
 
 # # do Japanese conversion or not? for the result from whois server
 # # value: 1/0
 # WHOIS_JCODE_P:		1
 .if WHOIS_JCODE_P == 1
-	.ignore
+	.not_support
 
 
 
@@ -2833,28 +2855,28 @@
 	.use_fml8_value
 
 .if PROHIBIT_COMMAND_FOR_STRANGER == 0
-	.ignore
+	.not_support
 
 .if USE_LIBMIME == 1
 	.use_fml8_value
 
 .if USE_LIBMIME == 0
-	.ignore
+	.not_support
 
 .if LIBMIMEDIR
-	.ignore
+	.not_support
 
 .if RPG_ML_FORM_FLAG == 1
 	.use_fml8_value
 
 .if RPG_ML_FORM_FLAG == 0
-	.ignore
+	.not_support
 
 .if SUN_OS_413 == 1
-	.ignore
+	.not_support
 
 .if SUN_OS_413 == 0
-	.ignore
+	.not_support
 
 .if SUBJECT_HML_FORM
 	.convert
@@ -2866,13 +2888,13 @@
 	.convert
 
 .if DEFAULT_HTTP_PORT
-	.ignore
+	.not_support
 
 .if DEFAULT_GOPHER_PORT
-	.ignore
+	.not_support
 
 .if DEFAULT_HTML_FIELD
-	.ignore
+	.not_support
 
 .if CP
 	.use_fml8_value
@@ -2881,22 +2903,22 @@
 	.use_fml8_value
 
 .if FML
-	.ignore
+	.not_support
 
 .if LOAD_LIBRARY
 	.convert
 
 .if STORED_BOUNDARY
-	.ignore
+	.not_support
 
 .if AGAINST_NIFTY
-	.ignore
+	.not_support
 
 .if _Ds
-	.ignore
+	.not_support
 
 .if _Dm
-	.ignore
+	.not_support
 
 
 # LOCAL_CONFIG:
