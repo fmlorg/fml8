@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: config_ph.pm,v 1.16 2005/08/20 02:10:53 fukachan Exp $
+# $FML: config_ph.pm,v 1.17 2006/01/01 14:02:09 fukachan Exp $
 #
 
 package FML::Merge::FML4::config_ph;
@@ -346,7 +346,8 @@ sub translate
 
 
 # Descriptions: translate fml4 config {$key => $value } to fml8 one if could.
-#    Arguments: OBJ($self) HASH_REF($diff) STR($key) STR($value)
+#    Arguments: OBJ($self)
+#               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR
 sub translate_xxx
@@ -472,7 +473,8 @@ sub translate_xxx
 
 
 # Descriptions: handle map info.
-#    Arguments: OBJ($self) HASH_REF($diff) STR($key) STR($value)
+#    Arguments: OBJ($self) 
+#               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR
 sub _fix_map
@@ -485,12 +487,14 @@ sub _fix_map
 
 
 # Descriptions: handle directory info.
-#    Arguments: OBJ($self) HASH_REF($diff) STR($key) STR($value) STR($match)
+#    Arguments: OBJ($self)
+#               HASH_REF($config) HASH_REF($diff) 
+#               STR($key) STR($value) STR($match)
 # Side Effects: none
 # Return Value: STR
 sub _fix_dir
 {
-    my ($self, $diff, $key, $value, $match) = @_;
+    my ($self, $config, $diff, $key, $value, $match) = @_;
     my $x = $value;
     my $i = 16;
 
@@ -511,7 +515,8 @@ sub _fix_dir
 
 
 # Descriptions: acl policy.
-#    Arguments: OBJ($self) HASH_REF($diff) STR($key) STR($value)
+#    Arguments: OBJ($self) 
+#               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR
 sub _fix_acl_policy
@@ -533,7 +538,8 @@ sub _fix_acl_policy
 
 
 # Descriptions: acl policy.
-#    Arguments: OBJ($self) HASH_REF($diff) STR($key) STR($value)
+#    Arguments: OBJ($self) 
+#               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR
 sub _fix_module_definition
@@ -551,7 +557,8 @@ sub _fix_module_definition
 
 
 # Descriptions: fix time zone.
-#    Arguments: OBJ($self) HASH_REF($diff) STR($key) STR($value)
+#    Arguments: OBJ($self) 
+#               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR
 sub _fix_time_zone
@@ -567,7 +574,8 @@ sub _fix_time_zone
 
 
 # Descriptions: handle subject tag related conversion.
-#    Arguments: OBJ($self) HASH_REF($diff) STR($key) STR($value)
+#    Arguments: OBJ($self) 
+#               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR
 sub _fix_skip_fields
@@ -580,7 +588,8 @@ sub _fix_skip_fields
 
 
 # Descriptions: handle subject tag related conversion.
-#    Arguments: OBJ($self) HASH_REF($diff) STR($key) STR($value)
+#    Arguments: OBJ($self) 
+#               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR
 sub _fix_subject_tag
@@ -649,7 +658,8 @@ sub _fix_subject_tag
 
 
 # Descriptions: ignore translation since this variable uses fml8 value.
-#    Arguments: OBJ($self) HASH_REF($diff) STR($key) STR($value)
+#    Arguments: OBJ($self) 
+#               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR
 sub translate_use_fml8_value
@@ -661,7 +671,8 @@ sub translate_use_fml8_value
 
 
 # Descriptions: ignore translation since this variable uses fml8 value.
-#    Arguments: OBJ($self) HASH_REF($diff) STR($key) STR($value)
+#    Arguments: OBJ($self) 
+#               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR
 sub translate_ignore
@@ -673,7 +684,8 @@ sub translate_ignore
 
 
 # Descriptions: show this variable is not yet implemented.
-#    Arguments: OBJ($self) HASH_REF($diff) STR($key) STR($value)
+#    Arguments: OBJ($self) 
+#               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR
 sub translate_not_yet_implemented
@@ -694,7 +706,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
