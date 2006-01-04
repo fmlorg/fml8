@@ -35,8 +35,42 @@
 
    fml 4 -> 8 変換ルール生成プログラムのバグを修正した。
 
+   FML::Merge::FML4::config_ph 
+	change diff() return value to ($config, $diff), ARRAY of HASH_REF's.
+	add debug codes.
+	
+   FML::Merge::FML4::Rules 
+	regen::converter fixed.
+	
+   fml4to8::configtest.pl 
+	follow change of diff() return value.
+	croak() if eval() fails.
+	
+   gen_rules.pl 
+	2nd generation prototype::check diff between default_config.ph and
+	config.ph and translate rules bsaed on config.ph vlaues.
+	
+	fix copyright of module header template.
+	
+	modify private function names.
+	fix bug of output indent level.
+	croak() if unknown rule found.
+	
+	modify initialization logic.
+	add missing comments.
+	check the current key in appling if() conditions.
+
    modules
 	updated to File::MMagic 1.25
+
+2006/01/02
+
+   FML::Merge::FML4::RULES.txt 
+	new keyword system.
+	fix some rules.
+	
+   FML::Merge::FML4::Rules 
+	regen
 
 2006/01/01
 
@@ -9046,4 +9080,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.260 2006/01/01 14:56:09 fukachan Exp $
+$FML: CHANGES.txt,v 1.261 2006/01/04 12:36:18 fukachan Exp $
