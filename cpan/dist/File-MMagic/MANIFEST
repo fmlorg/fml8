@@ -7,4 +7,9 @@ README.en
 Makefile.PL
 t/01-selfcheck.t
 t/02-extmagic.t
-
+t/03-typecheck.t
+t/test.html
+t/04-string-mod.t
+t/test-magic
+contrib/Build.PL
+META.yml                                 Module meta-data (added by MakeMaker)

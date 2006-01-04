@@ -1,6 +1,6 @@
 # File::MMagic
 #
-# $Id: MMagic.pm,v 1.54 2002/09/12 05:04:06 knok Exp $
+# $Id: MMagic.pm,v 1.64 2005/08/27 14:59:09 knok Exp $
 #
 # This program is originated from file.kulp that is a production of The
 # Unix Reconstruction Projct.
@@ -113,8 +113,8 @@ File::MMagic - Guess file type
   use FileHandle;
 
   $mm = new File::MMagic; # use internal magic file
-  # $mm = File::MMagic::new('/etc/magic'); # use external magic file
-  # $mm = File::MMagic::new('/usr/share/etc/magic'); # if you use Debian
+  # $mm = File::MMagic->new('/etc/magic'); # use external magic file
+  # $mm = File::MMagic->new('/usr/share/etc/magic'); # if you use Debian
   $res = $mm->checktype_filename("/somewhere/unknown/file");
 
   $fh = new FileHandle "< /somewhere/unknown/file2";
@@ -173,12 +173,21 @@ application/x-bzip2, application/x-gzip, text/html, text/plain
 
 =item $mm->removeFileExts
 
-Removes filename pattern checks. Specify one or more patterns. If no
+Remove filename pattern checks. Specify one or more patterns. If no
 pattern is specified, all are removed.
 
 Returns a hash containing the removed entries.
 
 =item $mm->addMagicEntry
+
+Add a new magic entry in the object. The format is same as magic(5) file.
+
+  Ex.
+  # Add a entry
+  $mm->addMagicEntry("0\tstring\tabc\ttext/abc");
+  # Add a entry with a sub entry
+  $mm->addMagicEntry("0\tstring\tdef\t");
+  $mm->addMagicEntry(">10\tstring\tghi\ttext/ghi");
 
 =item $mm->readMagicHandle
 
@@ -297,7 +306,7 @@ use strict;
 use vars qw(
 %TEMPLATES %ESC $VERSION
 $magicFile $checkMagic $followLinks $fileList
-$dataLoc $allowEightbit
+$allowEightbit
 );
 
 BEGIN {
@@ -330,9 +339,8 @@ BEGIN {
 	    t => "\t",
 	    f => "\f");
 
-$VERSION = "1.16";
+$VERSION = "1.25";
 $allowEightbit = 1;
-undef $dataLoc;
 }
 
 sub new {
@@ -345,7 +353,15 @@ sub new {
 	my $fh = *File::MMagic::DATA{IO};
 	binmode($fh);
 	bless $fh, 'FileHandle' if ref $fh ne 'FileHandle';
-	$dataLoc = $fh->tell() if (! defined $dataLoc);
+	my $dataLoc;
+	# code block to localise the no strict;, contribute by Simon Matthews
+	{
+	    no strict 'refs';
+	    my $instance = \${ "$class\::_instance" };
+	    $$instance = $fh->tell() unless $$instance;
+	    $dataLoc = $$instance;
+	}
+
 	$fh->seek($dataLoc, 0);
 	&readMagicHandle($self, $fh);
     } else {
@@ -388,13 +404,13 @@ sub new {
 			],
 		 "text/x-roff" => [
 			      '^\\.\\\\"',
-			      "^\\.SH",
-			      "^\\.PP",
-			      "^\\.TH",
-			      "^\\.BR",
-			      "^\\.SS",
-			      "^\\.TP",
-			      "^\\.IR",
+			      "^\\.SH ",
+			      "^\\.PP ",
+			      "^\\.TH ",
+			      "^\\.BR ",
+			      "^\\.SS ",
+			      "^\\.TP ",
+			      "^\\.IR ",
 				   ],
 		};
 
@@ -450,6 +466,19 @@ sub removeFileExts {
 sub addMagicEntry {
     my $self = shift;
     my $entry = shift;
+    if ($entry =~ /^>/) {
+	$entry =~ s/^>//;
+	my $depth = 1;
+	my $entref = ${${$self->{magic}}[0]}[2];
+	while ($entry =~ /^>/) {
+	    $entry =~ s/^>//;
+	    $depth ++;
+	    $entref = ${${$entref}[0]}[2];
+	}
+	$entry = '>' x $depth . $entry;
+	unshift @{$entref}, [$entry, -1, []];
+	return $self;
+    }
     unshift @{$self->{magic}}, [$entry, -1, []];
     return $self;
 }
@@ -698,11 +727,11 @@ sub check_binary {
     my ($data) = @_;
     my $len = length($data);
     if ($allowEightbit) {
-	my $count = ($data =~ tr/[\x00-\x08\x0b-\x0c\x0e-\x1a\x1c-\x1f]//); # exclude TAB, ESC, nl, cr
+	my $count = ($data =~ tr/\x00-\x08\x0b-\x0c\x0e-\x1a\x1c-\x1f//); # exclude TAB, ESC, nl, cr
         return 1 if ($len <= 0); # no contents
         return 1 if (($count/$len) > 0.1); # binary
     } else {
-	my $count = ($data =~ tr/[\x00-\x08\x0b-\x0c\x0e-\x1a\x1c-\x1f\x80-\xff]//); # exclude TAB, ESC, nl, cr
+	my $count = ($data =~ tr/\x00-\x08\x0b-\x0c\x0e-\x1a\x1c-\x1f\x80-\xff//); # exclude TAB, ESC, nl, cr
         return 1 if ($len <= 0); # no contents
         return 1 if (($count/$len) > 0.3); # binary
     }
@@ -768,7 +797,7 @@ sub magicMatch {
 	$fh->seek($offset,0) or return;
     }
 
-    if ($type eq 'string') {
+    if ($type =~ /^string/) {
 	# read the length of the match string unless the
 	# comparison is '>' ($numbytes == 0), in which case 
 	# read to the next null or "\n". (that's what BSD's file does)
@@ -924,7 +953,7 @@ sub magicMatchStr {
 	$str = substr($str, $offset);
     }
 
-    if ($type eq 'string') {
+    if ($type =~ /^string/) {
 	# read the length of the match string unless the
 	# comparison is '>' ($numbytes == 0), in which case 
 	# read to the next null or "\n". (that's what BSD's file does)
@@ -957,6 +986,7 @@ sub magicMatchStr {
 	#numeric
 
 	# read up to 4 bytes
+        return if (length($str) < 4);
 	$data = substr($str, 0, 4);
 
 	# If template is a ref to an array of 3 letters, 
@@ -1186,7 +1216,7 @@ sub readMagicLine {
     }
     
     # check if type is valid
-    if (!exists($TEMPLATES{$type})) {
+    if (!exists($TEMPLATES{$type}) && $type !~ /^string/) {
 	warn "Invalid type '$type' at line $line_num\n";
 	return;
     }
@@ -1213,7 +1243,7 @@ sub readMagicLine {
     else { $operator = '='; }
     
 
-    if ($type eq 'string') {
+    if ($type =~ /string/) {
 	$testval = $line;
 
 	# do octal/hex conversion
@@ -1421,7 +1451,7 @@ __DATA__
 #0	string		RIFF		audio/x-msvideo	
 0	string		RIFF
 #					- WAVE format
->8	string		WAVE		audio/x-wav	
+>8	string		WAVE		audio/x-wav
 
 #------------------------------------------------------------------------------
 # c-lang:  file(1) magic for C programs or various scripts
@@ -1635,6 +1665,9 @@ __DATA__
 # PostScript
 0	string		%!		application/postscript
 0	string		\004%!		application/postscript
+# EPS
+# Jason's support for EPSF <jmaggard@timesdispatch.com>
+47 string  EPSF  image/eps
 
 # Acrobat
 # (due to clamen@cs.cmu.edu)

@@ -1,3 +1,84 @@
+2005-08-27  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Version 1.25.
+
+	* Moved Build.PL to contrib directory.
+
+2005-08-01  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Version 1.24.
+
+	* MMagic.pm (check_binary): Removed brackets, closes #13535.
+	  (Reported by dakkar, thank you)
+
+2005-07-29  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm: Version 1.23.
+
+2004-04-21  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm (magicMatchStr): Added a length check.
+	  Reported by Tadamasa Teranishi, thank you.
+
+2004-03-17  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Build.PL: Added.
+	  Contributed by Ryuji Abe, thank you.
+
+2004-03-15  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm: Version 1.22.
+	  Changed to treat string/[BCc] as same as string.
+
+	* Added the 4th test.
+
+2003-11-21  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Version 1.21.
+
+	* Fixed some tests (bad usage of new method).
+
+	* Added the third test.
+	  Contributed by Simon Matthews, thank you!
+
+2003-11-20  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm (new): Fixed mod_perl issue.
+	  Contributed by Simon Matthews, thank you!
+
+2003-07-31  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Version 1.20.
+
+	* MMagic.pm (addMagicEntry): Added a capability of adding sub entry.
+
+2003-05-08  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Version 1.19.
+
+	* MMagic.pm (new): Changed the scope of $dataLoc variable.
+	  I think it should be fix the following problem.
+	  https://rt.cpan.org/Ticket/Display.html?id=2499
+	  If the problem is still there, mail me please.
+	  (Reported and patch contributed by Mark Stosberg, thank you)
+
+	* MMagic.pm (__DATA__): Added EPS entry.
+	  (Contributed by Jason Maggard, thank you)
+
+2003-03-26  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Version 1.18.
+
+	* MMagic.pm (new): Fixed special entry for x-roff.
+	(Reported by Okayasu, thank you)
+
+2003-03-03  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Version 1.17.
+
+	* MMagic.pm (__DATA__): Removed unnecessary tab in audio/x-wav.
+	(Reported by Knut Haugen, thank you)
+
 2002-09-12  NOKUBI Takatsugu  <knok@daionet.gr.jp>
 
         * Version 1.16.
