@@ -225,13 +225,13 @@ III部　fmlのカスタマイズ
 		現代では、こんな仕様はオーバースペックで不要なのではな
 		いかとも思います。そういうわけで後回しです。
 
-	[TODO]	rmml したＭＬをふっかつさせることは？
+	[DONE]	rmml したＭＬをふっかつさせることは？
 
-		renew コマンドでしょうか？
+		reviveml コマンドでしょうか？
 
 		動作は「一番日付が最近の @xxx.yyyymmdd を探して戻す」
 		となります。しかしながら aliases を復活させる問題があ
-		るので、もう一度 newml もする必要があるだろう…
+		るので、もう一度 newml もする必要がありますね。
 
 	[TODO]	期限つきのＭＬ入会 subscribe
 
@@ -350,9 +350,9 @@ III部　fmlのカスタマイズ
 
 		confirmation は fml8 で、登録作業は makefml コマンドで
 
-	[TODO] モデレータ 
+	[DONE] モデレータ 
 
-		moderator_*_map だけ定義がある。定義があるだけ;)
+		fml4 のタイプ 2 だけ実装しましたが 1 と 3 は
 
 	[TODO] 複数の管理者による運用
 
@@ -638,7 +638,7 @@ VII部　Advanced Study
 
 	[削除] replace メソッドは削除した
 
-	[TODO] PostgreSQL 対応
+	[DONE] PostgreSQL 対応
 
 
 37章　配送の高速化について (+ 配送関係の TIPS )
@@ -680,4 +680,4 @@ VIII部　付録
 
 
 ---
-$FML: STATUS.txt,v 1.36 2004/06/25 04:11:36 fukachan Exp $
+$FML: STATUS.txt,v 1.37 2005/06/26 00:08:00 fukachan Exp $
