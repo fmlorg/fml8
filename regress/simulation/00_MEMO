@@ -7,19 +7,13 @@
         XXX 遠大なビジョンやとりあえず後まわしでよいものは STATUS.txt へ
 
 
-[TODO]	4 to 8 ルール判定の間違い
-
-	default_config.ph との差分だけを取り出してルールを適用すると
-	複数の条件文を適用しなければいけないルールにマッチしない。
-
-	複数条件文が表現できてない
-		if ($key eq .. && $value eq ...) {} に展開すると大間違い
-
-
 [TODO]	config tool
 
 	多言語サポート
 	GUI config
+
+
+[TODO]	CGI は cookie をつかったほうがいいのかなぁ？
 
 
 [TODO]	CGI スキンを動的に切替えられる？
@@ -273,4 +267,4 @@
 	FML::Sys::Alias
 
 ----------
-$FML: 00_MEMO,v 1.120 2005/08/18 14:14:41 fukachan Exp $
+$FML: 00_MEMO,v 1.121 2006/01/02 01:15:28 fukachan Exp $
