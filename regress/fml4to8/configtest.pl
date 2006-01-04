@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: configtest.pl,v 1.3 2004/12/30 04:42:41 fukachan Exp $
+# $FML: configtest.pl,v 1.4 2006/01/01 14:06:44 fukachan Exp $
 #
 
 use strict;
@@ -14,6 +14,7 @@ for my $f (sort <$base_dir/*/config.ph>) {
     if (-f $f && is_ok($f)) {
 	print "\n// check $f\n";
 	eval q{ check($f); };
+	croak($@) if $@;
 	print $@ if $@;
     }
 }
@@ -22,6 +23,7 @@ for my $f (sort <$base_dir/*/.fml4rc/config.ph>) {
     if (-f $f && is_ok($f)) {
 	print "\n// check $f\n";
 	eval q{ check($f); };
+	croak($@) if $@;
 	print $@ if $@;
     }
 }
@@ -59,7 +61,7 @@ sub check
     my $default_config_ph = "./fml/etc/compat/fml4/default_config.ph";
     $config_ph->set_default_config_ph($default_config_ph);
 
-    my $diff = $config_ph->diff($old_config_ph);
+    my ($config, $diff) = $config_ph->diff($old_config_ph);
 
     # print out;
     my ($k, $v, $x, $y);
