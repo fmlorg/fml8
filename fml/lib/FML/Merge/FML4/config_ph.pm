@@ -4,15 +4,18 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: config_ph.pm,v 1.17 2006/01/01 14:02:09 fukachan Exp $
+# $FML: config_ph.pm,v 1.18 2006/01/02 01:13:07 fukachan Exp $
 #
 
 package FML::Merge::FML4::config_ph;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
 	    $count $default_config_ph
-	    $result %result);
+	    $result %diff_result %config_result);
 use Carp;
+
+my $debug = 0;
+
 
 =head1 NAME
 
@@ -59,13 +62,14 @@ sub set_default_config_ph
 # Descriptions: diff config.ph and return it as HASH_REF.
 #    Arguments: OBJ($self) STR($file)
 # Side Effects: none
-# Return Value: HASH_REF
+# Return Value: ARRAY(HASH_REF, HASH_REF)
 sub diff
 {
     my ($self, $file) = @_;
 
     # reset always
-    %result = ();
+    %diff_result   = ();
+    %config_result = ();
 
     $self->_load_default_config_ph();
 
@@ -74,7 +78,7 @@ sub diff
     print "error: $@\n" if $@;
 
     # print $result if defined $result;
-    return \%result;
+    return( \%config_result,  \%diff_result );
 }
 
 
@@ -149,7 +153,7 @@ sub _gen_eval_string
 
 
 # Descriptions: generate diff config.ph against defualt_config.ph and
-#               save it at %result (global variable).
+#               save it at %diff_result (global variable).
 #    Arguments: STR($package) HASH_REF($stab)
 # Side Effects: none
 # Return Value: none
@@ -176,7 +180,17 @@ sub dump_variable
 	    $val =~ s/$ml_domain/\$ml_domain/g;
 	    if ($val && ($val ne $def)) {
 		$rbuf .= "# $key => $val\n";
-		$result{ $key } = $val;
+		$diff_result{ $key } = $val;
+	    }
+
+	    # save all values.
+	    $config_result{ $key } = $val;
+
+	    if ($debug) {
+		print "CONFIG: $key => $val\n";
+		if ($diff_result{ $key }) {
+		    print "  DIFF: $diff_result{$key}\n";
+		}
 	    }
 	}
     }
