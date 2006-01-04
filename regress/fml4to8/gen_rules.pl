@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: gen_rules.pl,v 1.5 2006/01/04 06:45:52 fukachan Exp $
+# $FML: gen_rules.pl,v 1.6 2006/01/04 07:13:37 fukachan Exp $
 #
 
 use strict;
@@ -248,7 +248,6 @@ sub _print_translated_rules
 
     if ($found) {
 	_print("return \$s if defined \$s;");
-	_print("\$s = undef;");
 	_print("\n");
     }
 }
@@ -266,11 +265,16 @@ sub _parse_if
 }
 
 
+# Descriptions: print 1st level if statement.
+#    Arguments: none
+# Side Effects: print if statements.
+# Return Value: none
 sub _print_if
 {
     my $i = 0;
 
     # 1. check if differences are found.
+    _print("\$s = undef;");
     __print("if (");
     $if_stack++;
     for my $rule (@if_stack) {
@@ -278,7 +282,7 @@ sub _print_if
 	    print " || ";
 	}
 	if ($rule =~ /^\.if\s+(\S+)/) {
-	    print "\$diff->{ $1 }";
+	    print "(\$key eq '$1' && \$diff->{ $1 })";
 	    $i++;
 	}
     }
@@ -292,6 +296,10 @@ sub _print_if
 }
 
 
+# Descriptions: print 2nd level if statement.
+#    Arguments: ARRAY(@rules)
+# Side Effects: print if statements.
+# Return Value: none
 sub __print_if
 {
     my (@rules)  = @_;
@@ -302,12 +310,10 @@ sub __print_if
 	    if ($value =~ /^\d+$/o) {
 		_print("if (\$config->{ $key } $op $value) {");
 		$if_stack++;
-		_print("\$s = undef;");
 	    }
 	    else {
 		_print("if (\$config->{ $key } eq '$value') {");
 		$if_stack++;
-		_print("\$s = undef;");
 	    }
 	}
 	elsif ($rule =~ /^\.if\s+(\S+)\s+\!=\s+(\S+)/) {
@@ -315,19 +321,16 @@ sub __print_if
 	    if ($value =~ /^\d+$/o) {
 		_print("if (\$config->{ $key } \!= $value) {");
 		$if_stack++;
-		_print("\$s = undef;");
 	    }
 	    else {
 		_print("if (\$config->{ $key } ne '$value') {");
 		$if_stack++;
-		_print("\$s = undef;");
 	    }
 	}
 	elsif ($rule =~ /^\.if\s+(\S+)\s*$/) {
 	    my ($key) = $1;
 	    _print("if (\$config->{ $key }) {");
 	    $if_stack++;
-	    _print("\$s = undef;");
 	}
     }
 }
