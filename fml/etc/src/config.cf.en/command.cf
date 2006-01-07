@@ -149,25 +149,45 @@ command_mail_reply_prompt			=	>>>
 
 
 # Descriptions: use comnfirmation in subscribe command ?
-#      History:
-#        Value: SELECT ( confirmation )
+#      History: $MANUAL_REGISTRATION_TYPE
+#        Value: SELECT ( confirmation manual )
 #     Examples:
 subscribe_command_auth_type	=	confirmation
 
 
+# Descriptions: operate action automatically or manually by maintainer ?
+#      History: $PERMIT_POST_HANDLER $PERMIT_COMMAND_HANDER
+#        Value: SELECT ( automatic manual )
+#     Examples:
+subscribe_command_operation_mode	=	automatic
+
+
 # Descriptions: use comnfirmation in chaddr command ?
-#      History:
+#      History: $MANUAL_REGISTRATION_TYPE
 #        Value: SELECT ( confirmation )
 #     Examples:
 chaddr_command_auth_type	=	confirmation
 
 
+# Descriptions: operate action automatically or manually by maintainer ?
+#      History: $PERMIT_POST_HANDLER $PERMIT_COMMAND_HANDER
+#        Value: SELECT ( automatic manual )
+#     Examples:
+chaddr_command_operation_mode	=	automatic
+
+
 # Descriptions: use comnfirmation in unsubscribe command ?
-#      History:
+#      History: $MANUAL_REGISTRATION_TYPE
 #        Value: SELECT ( confirmation )
 #     Examples:
 unsubscribe_command_auth_type	=	confirmation
 
+
+# Descriptions: operate action automatically or manually by maintainer ?
+#      History: $PERMIT_POST_HANDLER $PERMIT_COMMAND_HANDER
+#        Value: SELECT ( automatic manual )
+#     Examples:
+unsubscribe_command_operation_mode	=	automatic
 
 
 # Descriptions: effective command in normal commnd mail (for usual users)
