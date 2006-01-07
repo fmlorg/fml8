@@ -2231,26 +2231,47 @@ get_command_request_limit	=	100
 
 # Descriptions: subscribe コマンドで confirmation 認証(コールバック認証)
 #               を行なうか否か？
-#      History:
-#        Value: SELECT ( confirmation )
+#      History: $MANUAL_REGISTRATION_TYPE
+#        Value: SELECT ( confirmation manual )
 #     Examples:
 subscribe_command_auth_type	=	confirmation
 
 
+# Descriptions: subscribe の処理は自動か？管理者による手動か？
+#      History: $PERMIT_POST_HANDLER $PERMIT_COMMAND_HANDER
+#        Value: SELECT ( automatic manual )
+#     Examples:
+subscribe_command_operation_mode	=	automatic
+
+
 # Descriptions: chaddr コマンドで confirmation 認証(コールバック認証)
 #               を行なうか否か？
-#      History:
-#        Value: SELECT ( confirmation )
+#      History: $MANUAL_REGISTRATION_TYPE
+#        Value: SELECT ( confirmation manual )
 #     Examples:
 chaddr_command_auth_type	=	confirmation
 
 
+# Descriptions: chaddr の処理は自動か？管理者による手動か？
+#      History: $PERMIT_POST_HANDLER $PERMIT_COMMAND_HANDER
+#        Value: SELECT ( automatic manual )
+#     Examples:
+chaddr_command_operation_mode	=	automatic
+
+
 # Descriptions: unsubscribe コマンドで confirmation 認証(コールバック認証)
 #               を行なうか否か？
-#      History:
-#        Value: SELECT ( confirmation )
+#      History: $MANUAL_REGISTRATION_TYPE
+#        Value: SELECT ( confirmation manual )
 #     Examples:
 unsubscribe_command_auth_type	=	confirmation
+
+
+# Descriptions: unsubscribe の処理は自動か？管理者による手動か？
+#      History: $PERMIT_POST_HANDLER $PERMIT_COMMAND_HANDER
+#        Value: SELECT ( automatic manual )
+#     Examples:
+unsubscribe_command_operation_mode	=	automatic
 
 
 =head2	newml command
