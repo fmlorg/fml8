@@ -3,9 +3,11 @@
 
   [最近のまとめ]
 
-  FML_CURRENT_VERSION=7.98.6
+  FML_CURRENT_VERSION=7.98.7
 
   8.0 PRE_ALPHA
+	7.98.7	confirmation + manual subscribe/chaddr/unsubscribe
+		manual subscribe/chaddr/unsubscribe
 	7.98.6	fundamentals of moderator mode implemented.
 	7.98.5	add reviveml command (to revive a removed ML).
 		add PostgreSQL support.
@@ -30,6 +32,35 @@
 
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
+
+2006/01/07
+
+   variables
+	+chaddr_command_operation_mode  	=       automatic
+	+subscribe_command_operation_mode       =       automatic
+	+unsubscribe_command_operation_mode     =       automatic
+
+   FML::Command::User::subscribe chaddr unsubscribe 
+   FML::Command::Message 
+	move location of reseting compare_level.
+	
+	rewritten to call FML::Command::Message->send_notification() not
+	direct reply_message() calls in Command::User:::class.
+	
+	send_notification() works differently according to the value of
+	$XXX_command_auth_type variable.
+	
+   FML::Command::User::confirm 
+	Accoding to ${command}_command_operation_mode, it works differently.
+	
+	1. XXX_command_operation_mode == automatic, fml8 do subscription
+	et.al. automatically.
+	
+	2. XXX_command_operation_mode == manual, notify "the request is
+	confirmed" to $maintainer, who do actual subscription et.al.
+	
+   FML::User::Control 
+	use reply_message() in chaddr operations to send back log.
 
 2006/01/04
 
@@ -9080,4 +9111,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.261 2006/01/04 12:36:18 fukachan Exp $
+$FML: CHANGES.txt,v 1.262 2006/01/04 12:37:50 fukachan Exp $
