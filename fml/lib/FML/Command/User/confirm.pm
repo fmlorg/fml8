@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: confirm.pm,v 1.34 2005/12/18 12:01:08 fukachan Exp $
+# $FML: confirm.pm,v 1.35 2005/12/18 12:26:30 fukachan Exp $
 #
 
 package FML::Command::User::confirm;
@@ -123,9 +123,11 @@ sub process
     my $found = '';
     if ($found = $confirm->find($id)) { # if request is found
 	unless ($confirm->is_expired($id, $expire_limit)) {
-	    my $address = $confirm->get_address($id);
-	    $command_args->{ _confirm_id } = $id;
-	    $self->_switch_command($class, $address, $curproc, $command_args);
+	    $self->_switch_process($confirm, 
+				   $class,
+				   $id, 
+				   $curproc, 
+				   $command_args);
 	}
 	else { # if requset is expired
 	    $curproc->reply_message_nl('error.expired', "request expired");
@@ -141,6 +143,50 @@ sub process
 	$curproc->logerror("no such confirmation request id=$id");
 	croak("no such confirmation request id=$id");
     }
+}
+
+
+# Descriptions: load module for the actual process and
+#               switch this process to it.
+#               We support only {subscribe,unsubscribe,chaddr} now.
+#    Arguments: OBJ($self) OBJ($confirm) STR($class) STR($id)
+#               OBJ($curproc) HASH_REF($command_args)
+# Side Effects: module loaded
+# Return Value: none
+sub _switch_process
+{
+    my ($self, $confirm, $class, $id, $curproc, $command_args) = @_;
+    my $config  = $curproc->config(); 
+    my $command = $class;
+    my $varname = "${command}_command_operation_mode";
+    my $mode    = $config->{ $varname } || 'confirmation';
+    my $address = $confirm->get_address($id);
+    my $request = $confirm->get_request($id);
+
+    # pass confirmation id to the command layer.
+    $command_args->{ _confirm_id }      = $id;
+    $command_args->{ _confirm_address } = $address;
+    $command_args->{ _confirm_request } = $request;
+
+    # 1. XXX_command_operation_mode == automatic
+    #    fml8 do subscription et.al. automatically.
+    if ($mode eq 'automatic') {
+	$self->_switch_command($class, $address, $curproc, $command_args);
+    }
+    # 2. XXX_command_operation_mode == manual
+    #    notify "the request is confirmed" to $maintainer,
+    #    who do actual subscription et.al.
+    elsif ($mode eq 'manual') {
+	$self->_forward_request($class, $address, $curproc, $command_args);
+    }
+    else {
+	croak("unknown operation mode");
+    }
+
+    # clean up.
+    delete $command_args->{ _confirm_id };
+    delete $command_args->{ _confirm_address };
+    delete $command_args->{ _confirm_request };
 }
 
 
@@ -203,6 +249,44 @@ sub _switch_command
 	$curproc->command_context_set_normal_stop();
 	$curproc->log("need no more command processing.");
     }
+}
+
+
+# Descriptions: load module for the actual process and
+#               switch this process to it.
+#               We support only {subscribe,unsubscribe,chaddr} now.
+#    Arguments: OBJ($self) STR($class) STR($address)
+#               OBJ($curproc) HASH_REF($command_args)
+# Side Effects: module loaded
+# Return Value: none
+sub _forward_request
+{
+    my ($self, $class, $address, $curproc, $command_args) = @_;
+    my $msg        = $curproc->incoming_message();
+    my $config     = $curproc->config();
+    my $maintainer = $config->{ maintainer };
+    my $action     = "?";
+    my $command    = $class;
+    my $request    = $command_args->{ _confirm_request };
+    my (@address)  = split(/\s+/, $address);
+    my $user_args  = { recipient => \@address };
+    my $rm_args    = {
+	recipient    => $maintainer,
+	_arg_address => $address,
+	_arg_command => $command,
+	_arg_request => $request,
+    };
+    my $default    = "send back the following confirmation.";
+    my $default2   = "?";
+    my $key1       = 'command.forward_request_to_admin';
+    my $key2       = 'command.receive_confirmed_request';
+
+    # 2.1 notify "forwarded request to maintainer(s)." to sender(s).
+    $curproc->reply_message_nl($key1, "", $user_args);
+
+    # 2.2 notify request to maintainer(s).
+    $curproc->reply_message_nl($key2, $default2, $rm_args);
+    $curproc->reply_message($msg, $rm_args);	
 }
 
 
