@@ -1,0 +1,17 @@
+received $_arg_command request which is already confirmed.
+
+Please the following $_arg_command operation.
+
+	$_arg_request
+
+Example 1: use fml CUI on ML server host.
+
+ 	% su fml
+ 	% fml $ml_name@$ml_domain $_arg_request
+
+Example 2: send admin command mail.
+
+	admin $_arg_request
+
+Example 3: use admin CGI.
+

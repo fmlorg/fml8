@@ -1,0 +1,17 @@
+$_arg_command リクエスト(confirmation 済み)を受け付けました。
+
+以下の $_arg_command 処理を行なって下さい。
+
+   処理内容	$_arg_request
+
+実行例1: ＭＬサーバ上で fml コマンドを使う。
+
+	% su fml
+	% fml $ml_name@$ml_domain $_arg_request
+
+実行例2: ＭＬサーバ上に管理者用のコマンドメールを送る。
+
+	admin $_arg_request
+
+実行例3: (実行が許されているなら) 管理者用の CGI を使って行なう。
+
