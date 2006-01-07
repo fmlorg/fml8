@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: subscribe.pm,v 1.33 2005/08/11 04:07:33 fukachan Exp $
+# $FML: subscribe.pm,v 1.34 2005/11/30 23:30:38 fukachan Exp $
 #
 
 package FML::Command::User::subscribe;
@@ -116,6 +116,8 @@ sub process
     }
     # if not, try confirmation before subscribe
     else {
+	$cred->set_compare_level( $compare_level );
+
 	$curproc->log("new subscriber, try confirmation");
 	use FML::Confirm;
 	my $confirm = new FML::Confirm $curproc, {
@@ -125,12 +127,12 @@ sub process
 	    address   => $address,
 	    buffer    => $command,
 	};
-	my $id = $confirm->assign_id;
-	$curproc->reply_message_nl('command.confirm');
-	$curproc->reply_message("\n$id\n");
-    }
 
-    $cred->set_compare_level( $compare_level );
+	use FML::Command::Message;
+	my $_msg    = new FML::Command::Message;
+	my $sc_args = { command => "subscribe" };
+	$_msg->send_confirmation($curproc, $command_args, $confirm, $sc_args);
+    }
 }
 
 

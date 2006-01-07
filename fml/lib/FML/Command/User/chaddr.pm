@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.33 2005/11/30 23:30:38 fukachan Exp $
+# $FML: chaddr.pm,v 1.34 2005/11/30 23:34:45 fukachan Exp $
 #
 
 package FML::Command::User::chaddr;
@@ -172,6 +172,8 @@ sub process
     # 1. request from $old_addr : $old_addr (member now) -> $new_addr
     # 2. request from $new_addr : $old_addr -> $new_addr (member now)
     if ($cred->is_member($old_addr) || $cred->is_member($new_addr)) {
+	$cred->set_compare_level( $compare_level );
+
 	$curproc->log("chaddr request, try confirmation");
 
 	# XXX-TODO: no confirmation case ?
@@ -184,9 +186,14 @@ sub process
 	    address   => "$old_addr $new_addr",
 	    buffer    => $command,
 	};
-	my $id = $confirm->assign_id;
-	$curproc->reply_message_nl('command.confirm', '', $optargs);
-	$curproc->reply_message("\n$id\n", $optargs);
+
+	use FML::Command::Message;
+	my $_msg    = new FML::Command::Message;
+	my $sc_args = { 
+	    command => "chaddr",
+	    rm_args => $optargs,
+	};
+	$_msg->send_confirmation($curproc, $command_args, $confirm, $sc_args);
     }
     # try confirmation before chaddr.
     else {
@@ -194,8 +201,6 @@ sub process
 	$cred->set_compare_level( $compare_level );
 	croak("not member");
     }
-
-    $cred->set_compare_level( $compare_level );
 }
 
 
