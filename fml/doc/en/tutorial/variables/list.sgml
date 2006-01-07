@@ -559,6 +559,15 @@ confirmation
 </row>
 <row>
 <entry>
+chaddr_command_operation_mode</entry>
+<entry>
+ operate action automatically or manually by maintainer ?</entry>
+<entry>
+automatic
+   </entry>
+</row>
+<row>
+<entry>
 command_mail_auth_gpg_config_dir</entry>
 <entry>
  gpg configurations for (user) commnad mail authentication.</entry>
@@ -1880,6 +1889,15 @@ confirmation
 </row>
 <row>
 <entry>
+subscribe_command_operation_mode</entry>
+<entry>
+ operate action automatically or manually by maintainer ?</entry>
+<entry>
+automatic
+   </entry>
+</row>
+<row>
+<entry>
 system_has_alarm</entry>
 <entry>
  has alarm(2) ?</entry>
@@ -2058,6 +2076,15 @@ unsubscribe_command_auth_type</entry>
  use comnfirmation in unsubscribe command ?</entry>
 <entry>
 confirmation
+   </entry>
+</row>
+<row>
+<entry>
+unsubscribe_command_operation_mode</entry>
+<entry>
+ operate action automatically or manually by maintainer ?</entry>
+<entry>
+automatic
    </entry>
 </row>
 <row>

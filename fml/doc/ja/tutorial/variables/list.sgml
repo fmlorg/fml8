@@ -542,6 +542,15 @@ confirmation
 </row>
 <row>
 <entry>
+chaddr_command_operation_mode</entry>
+<entry>
+ chaddr の処理は自動か？管理者による手動か？</entry>
+<entry>
+automatic
+   </entry>
+</row>
+<row>
+<entry>
 command_mail_auth_gpg_config_dir</entry>
 <entry>
  gpg configurations for (user) commnad mail authentication.</entry>
@@ -1910,6 +1919,15 @@ confirmation
 </row>
 <row>
 <entry>
+subscribe_command_operation_mode</entry>
+<entry>
+ subscribe の処理は自動か？管理者による手動か？</entry>
+<entry>
+automatic
+   </entry>
+</row>
+<row>
+<entry>
 system_has_alarm</entry>
 <entry>
  alarm(2) があるか？</entry>
@@ -2088,6 +2106,15 @@ unsubscribe_command_auth_type</entry>
  unsubscribe コマンドで confirmation 認証(コールバック認証)</entry>
 <entry>
 confirmation
+   </entry>
+</row>
+<row>
+<entry>
+unsubscribe_command_operation_mode</entry>
+<entry>
+ unsubscribe の処理は自動か？管理者による手動か？</entry>
+<entry>
+automatic
    </entry>
 </row>
 <row>

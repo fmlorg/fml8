@@ -226,6 +226,7 @@ chaddr_command {
 
    chaddr_command { 
           $chaddr_command_auth_type
+    ?     $chaddr_command_operation_mode
    }
 }
 
@@ -291,6 +292,7 @@ subscribe_command {
 
    subscribe_command { 
           $subscribe_command_auth_type
+    ?     $subscribe_command_operation_mode
    }
 }
 
@@ -298,6 +300,7 @@ unsubscribe_command {
 
    unsubscribe_command { 
           $unsubscribe_command_auth_type
+    ?     $unsubscribe_command_operation_mode
    }
 }
 
