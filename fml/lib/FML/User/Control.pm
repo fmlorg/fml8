@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.17 2005/08/17 12:08:41 fukachan Exp $
+# $FML: Control.pm,v 1.18 2005/08/19 11:25:41 fukachan Exp $
 #
 
 package FML::User::Control;
@@ -293,6 +293,7 @@ sub _try_chaddr_in_map
     my $config      = $curproc->config();
     my $old_address = $uc_args->{ old_address };
     my $new_address = $uc_args->{ new_address };
+    my (@address)   = ($old_address, $new_address);
 
     #
     my $is_old_address_ok  = 0;
@@ -308,6 +309,7 @@ sub _try_chaddr_in_map
     }
     else {
 	my $msg_args = {};
+	$msg_args->{ recipient }    = \@address;
 	$msg_args->{ _arg_address } = $old_address;
 	# $msg_args->{ _arg_map }   = $curproc->map_to_term_nl($map);
 	$msg_args->{ _arg_map }     = sprintf("TERM_NL(%s)",
@@ -325,6 +327,7 @@ sub _try_chaddr_in_map
     }
     else {
 	my $msg_args = {};
+	$msg_args->{ recipient }    = \@address;
 	$msg_args->{ _arg_address } = $new_address;
 	# $msg_args->{ _arg_map }   = $curproc->map_to_term_nl($map);
 	$msg_args->{ _arg_map }     = sprintf("TERM_NL(%s)",
@@ -352,14 +355,26 @@ sub _try_chaddr_in_map
     #
     if ($is_old_address_ok && $is_new_address_ok) {
 	{
+	    my $msg_args = {};
+	    $msg_args->{ recipient }    = \@address;
+	    $msg_args->{ _arg_address } = $new_address;
+	    $msg_args->{ _arg_map }     = sprintf("TERM_NL(%s)",
+						  $curproc->map_to_term($map));
+
 	    my $obj = new IO::Adapter $map, $config;
 	    $obj->open();
 	    $obj->add( $new_address );
 	    unless ($obj->error()) {
 		$curproc->log("add $new_address to map=$map");
+		$curproc->reply_message_nl('command.add_ok',
+					   "$new_address added.",
+					   $msg_args);
 	    }
 	    else {
 		$curproc->logerror("fail to add $new_address to map=$map");
+		$curproc->reply_message_nl('command.add_fail',
+					   "failed to add $new_address",
+					   $msg_args);
 	    }
 	    $obj->close();
 	}
@@ -367,6 +382,12 @@ sub _try_chaddr_in_map
 	# restart map to add the new address.
 	# XXX we need to restart or rewrind map.
 	{
+	    my $msg_args = {};
+	    $msg_args->{ recipient }    = \@address;
+	    $msg_args->{ _arg_address } = $old_address;
+	    $msg_args->{ _arg_map }     = sprintf("TERM_NL(%s)",
+						  $curproc->map_to_term($map));
+
 	    my $obj = new IO::Adapter $map, $config;
 	    $obj->touch();
 
@@ -375,9 +396,15 @@ sub _try_chaddr_in_map
 	    unless ($obj->error()) {
 		$obj->close();
 		$curproc->log("remove $old_address from map=$map");
+		$curproc->reply_message_nl('command.del_ok',
+					   "$old_address removed.",
+					   $msg_args);
 	    }
 	    else {
 		$curproc->logerror("fail to delete $old_address to map=$map");
+		$curproc->reply_message_nl('command.del_fail',
+					   "failed to remove $old_address",
+					   $msg_args);
 	    }
 	}
     }
