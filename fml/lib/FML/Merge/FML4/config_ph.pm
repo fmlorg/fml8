@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: config_ph.pm,v 1.18 2006/01/02 01:13:07 fukachan Exp $
+# $FML: config_ph.pm,v 1.19 2006/01/04 07:47:26 fukachan Exp $
 #
 
 package FML::Merge::FML4::config_ph;
@@ -378,6 +378,12 @@ sub translate_xxx
 	$key eq 'HML_FORM_LONG_ID') {
 	return $self->_fix_subject_tag($config, $diff, $key, $value);
     }
+    elsif ($key eq 'PERMIT_POST_FROM'      ||
+	   $key eq 'REJECT_POST_HANDLER'   ||
+	   $key eq 'PERMIT_COMMAND_FROM'   ||
+	   $key eq 'REJECT_COMMAND_HANDLER') {
+	return $self->_fix_restrictions($config, $diff, $key, $value);
+    }
     elsif ($key eq 'MAINTAINER') {
 	return "maintainer = $value";
     }
@@ -483,6 +489,123 @@ sub translate_xxx
 
 
     return '# ***ERROR*** UNKNOWN TRANSLATION RULE';
+}
+
+
+# Descriptions: restrictions
+#    Arguments: OBJ($self) 
+#               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
+# Side Effects: none
+# Return Value: STR
+sub _fix_restrictions
+{
+    my ($self, $config, $diff, $key, $value) = @_;
+    my $p_result = '';
+    my $c_result = '';
+
+    unless ( $self->{ _cache }->{ restrictions } ) {
+	my $permit_post_from       = $config->{ PERMIT_POST_FROM }       || '';
+	my $reject_post_handler    = $config->{ REJECT_POST_HANDLER }    || '';
+	my $permit_command_from    = $config->{ PERMIT_COMMAND_FROM }    || '';
+	my $reject_command_handler = $config->{ REJECT_COMMAND_HANDLER } || '';
+
+ 	# flags
+	my $mode      = 'manual';
+	my $symmetric = 1;
+
+	# 
+	# permit_*_from based
+	# 
+	if ($permit_post_from eq 'anyone') {
+	    $p_result .= "article_post_restrictions = ";
+	    $p_result .= "reject_system_special_accounts ";
+	    $p_result .= "permit_anyone ";
+	    $p_result .= "reject\n";
+	}
+	elsif ($permit_post_from eq 'members_only') { # fml8 default
+	    ;
+	}
+	elsif ($permit_post_from eq 'moderator') {
+	    $p_result .= "article_post_restrictions = ";
+	    $p_result .= "reject_system_special_accounts ";
+	    $p_result .= "permit_forward_to_moderator ";
+	    $p_result .= "reject\n";
+	}
+
+	#
+	# handler based
+	# 
+	if ($reject_post_handler =~ /auto_regist|autoregist|auto_subscribe/) {
+	    $mode     = "automatic";
+	    $symmetric = 1;
+	}
+	elsif ($reject_post_handler =~ /auto_asymmetric_regist/) {
+	    $mode     = "automatic";
+	    $symmetric = 0;
+	}
+	elsif ($reject_post_handler eq 'ignore') {
+	    if ($p_result =~ /article_post_restrictions/) {
+		$p_result =~ s/\s+reject\s*$/ ignore/g;
+	    }
+	    else {
+		$c_result .= "\n";
+		$p_result .= "article_post_restrictions = ";
+		$p_result .= "reject_system_special_accounts ";
+		$p_result .= "permit_member_maps ";
+		$p_result .= "ignore\n";
+	    }
+	}
+	elsif ($reject_post_handler eq 'reject') {
+
+	}
+
+	if ($reject_command_handler eq 'ignore') {
+	    if ($c_result =~ /command_mail_restrictions/) {
+		$c_result =~ s/\s+reject\s*$/ ignore/g;
+	    }
+	    else {
+		$c_result .= "\n";
+		$c_result .= "command_mail_restrictions = ";
+		$c_result .= "reject_system_special_accounts ";
+		$c_result .= "permit_anonymous_command ";
+		$c_result .= "permit_user_command ";
+		$c_result .= "ignore\n";
+	    }
+	}
+	elsif ($reject_command_handler =~ 
+	    /auto_regist|autoregist|auto_subscribe/) {
+	    $mode     = "automatic";
+	    $symmetric = 1;
+	}
+	elsif ($reject_command_handler =~ /auto_asymmetric_regist/) {
+	    $mode     = "automatic";
+	    $symmetric = 0;
+	}
+	elsif ($reject_command_handler eq "reject") {
+	    ;
+	}
+
+	unless ($symmetric) {
+	    ; # ?
+	}
+
+	if ($mode eq 'manual') {
+	    $c_result .= "\nsubscribe_command_operation_mode = manual\n";
+	}
+	elsif ($mode eq 'automatic') {
+	    $c_result .= "\nsubscribe_command_operation_mode = automatic\n";
+	}
+	else {
+	    $c_result .= "\n# unknown operation mode = $mode\n";
+	}
+
+	$self->{ _cache }->{ restrictions } = 1;
+
+	return "$p_result\n$c_result\n";
+    }
+    else {
+	return "# OK (already translated)\n";
+    }
 }
 
 
