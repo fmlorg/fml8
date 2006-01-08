@@ -333,26 +333,35 @@ III部　fmlのカスタマイズ
 
 
 
-	[TODO] 自動登録/手動登録をどこで指定するの？デフォルトは自動
+	[DONE] 自動登録/手動登録をどこで指定するの？デフォルトは自動
 
-		うーん、コマンドごとに指定できるようにしないとか？
+		コマンドごとに指定できるようにする。
 
-		$subscribe_command_mode	=	auto / manual
-		$chaddr_command_mode	=	auto / manual
-		$unsubscribe_command_mode =	auto / manual
+		$subscribe_command_operation_mode   = automatic / manual
+		$chaddr_command_operation_mode      = automatic / manual
+		$unsubscribe_command_operation_mode = automatic / manual
 
-	[TODO] 自動登録の confirmation 以外のモードは必要か？ 
+	[DONE] 自動登録の confirmation 以外のモードは必要か？ 
 
-		今はデフォルトで confirm つきの自動登録です。
-		いまは confirmation タイプしかありません。
+		confirmation ではなくリクエストをそのまま
+		管理者へフォワードするオプションあり。
 
-	[TODO] コマンドメールによる手動登録
+		$subscribe_command_auth_type   = confirmation / manual
+		$chaddr_command_auth_type      = confirmation / manual
+		$unsubscribe_command_auth_type = confirmation / manual
 
-		confirmation は fml8 で、登録作業は makefml コマンドで
+	[DONE] コマンドメールによる手動登録
+
+		confirmation は fml8 で、登録作業は makefml コマンドなど。
+
+		設定例: subscribe を
+		$subscribe_command_auth_type      = confirmation
+		$subscribe_command_operation_mode = manual
+
 
 	[DONE] モデレータ 
 
-		fml4 のタイプ 2 だけ実装しましたが 1 と 3 は
+		fml4 のタイプ 2 だけ実装しましたが 1 と 3 は未実装
 
 	[TODO] 複数の管理者による運用
 
@@ -680,4 +689,4 @@ VIII部　付録
 
 
 ---
-$FML: STATUS.txt,v 1.37 2005/06/26 00:08:00 fukachan Exp $
+$FML: STATUS.txt,v 1.38 2006/01/04 01:09:09 fukachan Exp $
