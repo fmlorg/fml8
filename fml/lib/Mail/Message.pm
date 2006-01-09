@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.102 2005/09/02 09:12:17 fukachan Exp $
+# $FML: Message.pm,v 1.103 2005/09/11 13:12:45 fukachan Exp $
 #
 
 package Mail::Message;
@@ -719,7 +719,7 @@ sub __build_simple_message
 	my $my_charset = $self->charset();
 	my $charset    = $data->{ charset } || 'unknown';
 	my $type       = $data->{ type }    || 'unknown';
-	my $buf        = $data->{ data }    || ''; 
+	my $buf        = $data->{ data }    || '';
 
 	$my_charset =~ tr/A-Z/a-z/;
 	$charset    =~ tr/A-Z/a-z/;
@@ -2868,7 +2868,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

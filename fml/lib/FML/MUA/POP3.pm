@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2005 Ken'ichi Fukamachi
+#  Copyright (C) 2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: POP3.pm,v 1.5 2005/08/23 13:16:20 fukachan Exp $
+# $FML: POP3.pm,v 1.6 2005/12/18 12:03:52 fukachan Exp $
 #
 
 package FML::MUA::POP3;
@@ -14,7 +14,7 @@ use Carp;
 use FileHandle;
 
 # optional queue class.
-my $opt_class = [ "article_post", "command_mail", "error_mail_analyzer" ]; 
+my $opt_class = [ "article_post", "command_mail", "error_mail_analyzer" ];
 
 
 =head1 NAME
@@ -173,7 +173,7 @@ sub _new_queue_file
 {
     my ($self, $r_args) = @_;
     my $curproc   = $self->{ _curproc };
-    my $config    = $curproc->config(); 
+    my $config    = $curproc->config();
     my $queue_dir = $config->{ fetchfml_queue_dir };
     my $class     = $r_args->{ class } || undef;
 
@@ -199,7 +199,7 @@ sub pickup_queue
     my $queue_dir = $config->{ fetchfml_queue_dir };
 
     use Mail::Delivery::Queue;
-    my $queue      = new Mail::Delivery::Queue { 
+    my $queue      = new Mail::Delivery::Queue {
 	directory   => $queue_dir,
 	local_class => $opt_class,
     };
@@ -332,7 +332,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2005 Ken'ichi Fukamachi
+Copyright (C) 2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

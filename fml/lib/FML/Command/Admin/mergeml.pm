@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2004 Ken'ichi Fukamachi
+#  Copyright (C) 2004,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: mergeml.pm,v 1.5 2004/11/24 12:24:32 fukachan Exp $
+# $FML: mergeml.pm,v 1.6 2004/11/25 12:07:40 fukachan Exp $
 #
 
 package FML::Command::Admin::mergeml;
@@ -111,7 +111,7 @@ sub process
 
 
 # Descriptions: merge ML configurations.
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($command_args) HASH_REF($params)
 # Side Effects: none
 # Return Value: none
@@ -174,7 +174,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2004 Ken'ichi Fukamachi
+Copyright (C) 2004,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

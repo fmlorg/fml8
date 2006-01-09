@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.142 2005/12/17 13:47:58 fukachan Exp $
+# $FML: Utils.pm,v 1.143 2005/12/18 11:53:26 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -279,7 +279,7 @@ sub incoming_message_get_current_queue
 sub incoming_message_stack_queue_for_removal
 {
     my ($curproc, $queue) = @_;
-    my $shm = $curproc->shared_hash_get("incoming_message", 
+    my $shm = $curproc->shared_hash_get("incoming_message",
 					"queue_stack_for_removal");
 
     if (defined $queue) {
@@ -307,7 +307,7 @@ sub incoming_message_remove_queue
     }
 
     # 2. additional todo (e.g. fetchfml requests).
-    my $shm = $curproc->shared_hash_get("incoming_message", 
+    my $shm = $curproc->shared_hash_get("incoming_message",
 					"queue_stack_for_removal");
 
     my $rmlist = $shm->{ stack } || [];
@@ -1817,7 +1817,7 @@ sub langinfo_get_charset
     }
     # search charset most preferred by Accpet-Language: in our templates.
     else {
-	my $found = 0;  
+	my $found = 0;
 
 	# XXX Accept-Language: affets $reply_message_charset and $cgi_charset.
 	# XXX $reply_mesage_charset indirectly affets $template_file_charset.
@@ -2147,7 +2147,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

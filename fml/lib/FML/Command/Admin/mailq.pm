@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: mailq.pm,v 1.10 2004/09/03 12:43:55 fukachan Exp $
+# $FML: mailq.pm,v 1.11 2004/09/04 03:13:16 fukachan Exp $
 #
 
 package FML::Command::Admin::mailq;
@@ -91,7 +91,7 @@ sub _list_up_queue
 	if ($q->is_valid_queue()) {
 	    # 1. the first line is "queue-id sender".
 	    printf $format, $qid, $info->{sender};
-	    
+
 	    # 2. list up recipients after 2nd lines.
 	    my $rq = $info->{ recipients };
 	    for my $r (@$rq) {
@@ -122,7 +122,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

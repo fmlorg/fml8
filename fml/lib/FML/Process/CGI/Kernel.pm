@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.88 2005/08/17 10:33:18 fukachan Exp $
+# $FML: Kernel.pm,v 1.89 2005/08/19 11:23:03 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -432,7 +432,7 @@ sub cgi_execute_command
     my $comname = $command_args->{ comname };
     my $config  = $curproc->config();
 
-    # XXX $comname is one of strings defined in the config file, 
+    # XXX $comname is one of strings defined in the config file,
     # XXX NOT user defined one.
     unless ($config->has_attribute("admin_cgi_allowed_commands", $comname)) {
 	$curproc->logerror("cgi deny command: mode=$commode level=cgi");
@@ -897,7 +897,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

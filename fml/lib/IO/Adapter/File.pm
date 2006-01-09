@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.60 2004/08/14 05:02:00 fukachan Exp $
+# $FML: File.pm,v 1.61 2005/05/27 03:03:40 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -641,7 +641,7 @@ For example, to set sequence number to the specified value $new_id:
 sub sequence_increment
 {
     my ($self, $args) = @_;
-    my $backup = sprintf("%s.%d.%d.%d.bak", 
+    my $backup = sprintf("%s.%d.%d.%d.bak",
 			 $args->{ file }, time, $$, $Counter++);
     my $file   = $args->{ file };
     my $id     = 0;
@@ -810,7 +810,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

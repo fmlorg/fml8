@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: confirm.pm,v 1.36 2006/01/07 15:28:03 fukachan Exp $
+# $FML: confirm.pm,v 1.37 2006/01/08 03:06:59 fukachan Exp $
 #
 
 package FML::Command::User::confirm;
@@ -123,10 +123,10 @@ sub process
     my $found = '';
     if ($found = $confirm->find($id)) { # if request is found
 	unless ($confirm->is_expired($id, $expire_limit)) {
-	    $self->_switch_process($confirm, 
+	    $self->_switch_process($confirm,
 				   $class,
-				   $id, 
-				   $curproc, 
+				   $id,
+				   $curproc,
 				   $command_args);
 	}
 	else { # if requset is expired
@@ -156,7 +156,7 @@ sub process
 sub _switch_process
 {
     my ($self, $confirm, $class, $id, $curproc, $command_args) = @_;
-    my $config  = $curproc->config(); 
+    my $config  = $curproc->config();
     my $command = $class;
     my $varname = "${command}_command_operation_mode";
     my $mode    = $config->{ $varname } || 'confirmation';
@@ -213,7 +213,7 @@ sub _switch_command
 	$class eq 'unsubscribe' ||
 	$class eq 'chaddr' ||
 	$class eq 'on'     ||
-	$class eq 'off'    || 
+	$class eq 'off'    ||
 	$class eq 'moderate') {
 	$command_args->{ command_data } = $address;
 	$command_args->{ command_mode } = 'Admin';
@@ -286,7 +286,7 @@ sub _forward_request
 
     # 2.2 notify request to maintainer(s).
     $curproc->reply_message_nl($key2, $default2, $rm_args);
-    $curproc->reply_message($msg, $rm_args);	
+    $curproc->reply_message($msg, $rm_args);
 }
 
 

@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.26 2005/08/27 14:47:00 fukachan Exp $
+# $FML: DB.pm,v 1.27 2005/08/31 03:47:47 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -21,7 +21,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
 use Carp;
 use File::Spec;
 
-my $version = q$FML: DB.pm,v 1.26 2005/08/27 14:47:00 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.27 2005/08/31 03:47:47 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 # special value
@@ -165,7 +165,7 @@ the full mail address such as C<elena@fml.org> since fml8 uses
 different $db_base_dir for each domain.
 
 For example, this module creates/updates the following databases (e.g.
-/$db_base_dir/$db_name/$table.db where $table is 'article', 
+/$db_base_dir/$db_name/$table.db where $table is 'article',
 'message_id', 'sender', et.al.).
 
    /var/spool/ml/@udb@/thread/elena/articles.db
@@ -445,7 +445,7 @@ sub _analyze_thread
     }
 
     # III. if $idp (link to the previous message) found,
-    #      update prev_key (itself to preious) and 
+    #      update prev_key (itself to preious) and
     #      next_key (previous to itself) database.
     if (defined($idp) && $idp && $idp =~ /^\d+$/o) {
 	if ($idp != $current_key) {
@@ -987,7 +987,7 @@ sub _get_time_from_header
 sub open
 {
     my ($self, $args) = @_;
-    $self->_db_open($args);    
+    $self->_db_open($args);
 }
 
 
@@ -998,7 +998,7 @@ sub open
 sub close
 {
     my ($self, $args) = @_;
-    $self->_db_open($args);    
+    $self->_db_open($args);
 }
 
 
@@ -1494,7 +1494,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

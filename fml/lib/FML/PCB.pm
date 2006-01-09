@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: PCB.pm,v 1.21 2005/05/27 03:03:32 fukachan Exp $
+# $FML: PCB.pm,v 1.22 2005/06/01 10:23:33 fukachan Exp $
 #
 
 package FML::PCB;
@@ -122,8 +122,8 @@ sub dump_variables
 	    printf "%-21s => {\n", $current_context;
 	    printf "   %-18s => {\n", $k;
 	    printf "      %-15s => %-15s\n", $xk, $xv;
-	    printf "   }\n"; 
-	    printf "}\n\n"; 
+	    printf "   }\n";
+	    printf "}\n\n";
 	}
     }
 }
@@ -173,7 +173,7 @@ get the current context name.
 
 # Descriptions: switch the current context.
 #    Arguments: OBJ($self) STR($context)
-# Side Effects: overload $current_context. 
+# Side Effects: overload $current_context.
 # Return Value: none
 sub set_current_context
 {
@@ -224,7 +224,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

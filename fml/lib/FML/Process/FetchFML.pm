@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2005 Ken'ichi Fukamachi
+# Copyright (C) 2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: FetchFML.pm,v 1.5 2005/08/23 12:32:06 fukachan Exp $
+# $FML: FetchFML.pm,v 1.6 2005/12/17 13:47:32 fukachan Exp $
 #
 
 package FML::Process::FetchFML;
@@ -274,7 +274,7 @@ sub _fetchfml_retrieve
 	    $curproc->logerror("object undefined.");
 	}
 
-	if ($mua->error()) { 
+	if ($mua->error()) {
 	    $curproc->logerror($mua->error());
 	    next MUA;
 	}
@@ -402,7 +402,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2005 Ken'ichi Fukamachi
+Copyright (C) 2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

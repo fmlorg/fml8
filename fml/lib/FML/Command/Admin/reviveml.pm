@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2005 Ken'ichi Fukamachi
+#  Copyright (C) 2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: reviveml.pm,v 1.1 2005/08/23 09:32:58 fukachan Exp $
 #
 
 package FML::Command::Admin::reviveml;
@@ -53,7 +53,7 @@ sub process
     my $ml_domain = $curproc->ml_domain();
 
     my $ml_home_dir      = $curproc->ml_home_dir($ml_name, $ml_domain);
-    my $ml_home_dir_prev = 
+    my $ml_home_dir_prev =
 	$curproc->ml_home_dir_find_latest_removed_path($ml_name, $ml_domain);
 
     $curproc->logdebug("ml_name=$ml_name ml_domain=$ml_domain");
@@ -82,7 +82,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2005 Ken'ichi Fukamachi
+Copyright (C) 2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

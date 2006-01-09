@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledDir.pm,v 1.25 2004/07/23 15:59:16 fukachan Exp $
+# $FML: JournaledDir.pm,v 1.26 2005/05/27 04:30:23 fukachan Exp $
 #
 
 package Tie::JournaledDir;
@@ -228,7 +228,7 @@ sub FETCH
   FILE:
     for my $f (@$files) {
 	if (-f $f) {
-	    # XXX the file list is already in reverse order 
+	    # XXX the file list is already in reverse order
 	    # XXX since we nned to do last match in the latest file.
 	    my $obj = new Tie::JournaledFile {
 		'match_condition' => 'last',
@@ -456,7 +456,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

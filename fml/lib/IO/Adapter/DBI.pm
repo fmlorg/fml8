@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DBI.pm,v 1.33 2005/08/17 12:08:47 fukachan Exp $
+# $FML: DBI.pm,v 1.34 2005/08/23 08:38:22 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -138,14 +138,14 @@ sub open
     my $password   = $self->{ _sql_password} || '';
     my $last_error = '';
     my $dbh        = undef;
- 
+
   DSN:
     for my $dsn (@$dsn_list) {
 	print STDERR "open $dsn\n" if $debug;
 
 	# try to connect
 	use DBI;
-	$dbh = DBI->connect($dsn, $user, $password, { 
+	$dbh = DBI->connect($dsn, $user, $password, {
 	    RaiseError => 1,
 	    AutoCommit => 0,
 	});
@@ -291,7 +291,7 @@ sub _fetch_all
 {
     my ($self, $args) = @_;
     my $config = $self->{ _config };
-    my $query  = 
+    my $query  =
 	$config->{ sql_query_get_next_key } || $config->{ sql_get_next_key };
 
     $self->execute({ query => $query });
@@ -422,7 +422,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

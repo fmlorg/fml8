@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2005 Ken'ichi Fukamachi
+#  Copyright (C) 2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Moderate.pm,v 1.2 2005/12/18 12:28:49 fukachan Exp $
+# $FML: Moderate.pm,v 1.3 2005/12/19 03:06:32 fukachan Exp $
 #
 
 package FML::Moderate;
@@ -65,7 +65,7 @@ sub forward_to_moderator
     $queue->remove();
     if ($nqid) {
 	$curproc->log("moderation request queue-in: qid=$nqid");
-    } 
+    }
 
     # 2. generate confirm id.
     $self->_send_confirmation($rm_args, { queue_id => $nqid });
@@ -134,7 +134,7 @@ sub _queue_init
 	    directory   => $queue_dir,
 	    local_class => [ $moderation_queue ],
 	    id          => $qid,
-	};	
+	};
     }
     else {
 	return new Mail::Delivery::Queue {
@@ -225,7 +225,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2005 Ken'ichi Fukamachi
+Copyright (C) 2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

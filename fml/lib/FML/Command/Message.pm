@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: Message.pm,v 1.1 2006/01/07 14:43:25 fukachan Exp $
 #
 
 package FML::Command::Message;
@@ -46,10 +46,10 @@ sub new
 
 send back confirmation message.
 
-1. if $XXX_command_auth_type == confirmation, 
+1. if $XXX_command_auth_type == confirmation,
 1.1 send back confirmation to address (From:).
-   
-2. if $XXX_command_auth_type == manual, 
+
+2. if $XXX_command_auth_type == manual,
 2.1 notify "forwarded request to maintainer(s)." to sender.
 2.2 notify request to maintainer(s).
 
@@ -57,7 +57,7 @@ send back confirmation message.
 
 
 # Descriptions: send back confirmation message.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args) 
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 #               OBJ($confirm) HASH_REF($sc_args)
 # Side Effects: messages sent.
 # Return Value: none
@@ -88,15 +88,15 @@ sub send_confirmation
     #    So, fml8 do nothing.
     elsif ($mode eq 'manual') {
 	my $msg        = $curproc->incoming_message();
-	my $maintainer = $config->{ maintainer }; 
-	my $_rm_args   = { 
+	my $maintainer = $config->{ maintainer };
+	my $_rm_args   = {
 	    recipient    => $maintainer,
 	    _arg_command => $command,
 	};
 	my $default    = "send back the following confirmation.";
 
 	# 2.1 notify "forwarded request to maintainer(s)." to sender.
-	$curproc->reply_message_nl('command.forward_request_to_admin', 
+	$curproc->reply_message_nl('command.forward_request_to_admin',
 				   "",
 				   $rm_args);
 
@@ -104,9 +104,9 @@ sub send_confirmation
 	$curproc->reply_message_nl('command.receive_request', "", $_rm_args);
 	$curproc->reply_message_nl('command.confirm', $default, $_rm_args);
 	$curproc->reply_message("\n$id\n", $_rm_args);
-	$curproc->reply_message($msg, $_rm_args);	
+	$curproc->reply_message($msg, $_rm_args);
     }
-    # 3. fatal error if neither of automatic nor manual. 
+    # 3. fatal error if neither of automatic nor manual.
     else {
 	$curproc->logerror("unknown operation mode");
 	croak("unknown operation mode");

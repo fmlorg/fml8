@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2005 Ken'ichi Fukamachi
+# Copyright (C) 2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: PGP.pm,v 1.4 2005/08/06 07:48:04 fukachan Exp $
+# $FML: PGP.pm,v 1.5 2005/08/10 15:03:27 fukachan Exp $
 #
 
 package FML::Process::PGP;
@@ -287,9 +287,9 @@ sub _setup_pgp_environment
 	$curproc->mkdir($gpg_config_dir, "mode=private");
     }
 
-    # 
+    #
     # CONVENSIONAL NAME.
-    # 
+    #
     $curproc->_symlink_admin_dir("pgp");
     $curproc->_symlink_admin_dir("gpg");
 }
@@ -348,7 +348,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2005 Ken'ichi Fukamachi
+Copyright (C) 2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

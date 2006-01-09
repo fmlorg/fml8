@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.23 2005/12/19 03:07:31 fukachan Exp $
+# $FML: Post.pm,v 1.24 2005/12/19 11:29:40 fukachan Exp $
 #
 
 package FML::Restriction::Post;
@@ -184,7 +184,7 @@ sub check_article_thread
 	}
     }
 
-    # 
+    #
     if ($match) {
 	$curproc->logdebug("check_article_thread matched. ($match sec old)");
 	return("matched", "permit");
@@ -362,7 +362,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

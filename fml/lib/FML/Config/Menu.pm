@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.6 2005/08/10 12:55:32 fukachan Exp $
+# $FML: Menu.pm,v 1.7 2005/08/20 01:27:32 fukachan Exp $
 #
 
 package FML::Config::Menu;
@@ -139,7 +139,7 @@ sub run_cui
 
     if ($output) {
 	$self->{ _output } = $output;
-	
+
 	print STDERR "*** DIFF (debug) ***\n";
 	print STDERR $output, "\n";
 	print STDERR "*** DIFF END ***\n";
@@ -329,7 +329,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

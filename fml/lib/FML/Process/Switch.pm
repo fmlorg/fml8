@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.111 2005/12/17 13:47:32 fukachan Exp $
+# $FML: Switch.pm,v 1.112 2005/12/18 11:52:49 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -249,7 +249,7 @@ restart new another process (switch to it on running).
 
 
 # Descriptions: restart new another process (switch to it on running).
-#    Arguments: OBJ($curproc) 
+#    Arguments: OBJ($curproc)
 #               STR($new_myname) STR($ml_name) STR($ml_domain)
 #               HASH_REF($hints)
 # Side Effects: none
@@ -262,7 +262,7 @@ sub NewProcess
     use File::Basename;
     my $old_myname = basename($0);
 
-    # fake another $args as could as possible. 
+    # fake another $args as could as possible.
     # XXX (ARGV options main_cf module_info argv curproc cf_list)
     # XXX these are references, which inherits the original value in $args.
     my $args = $curproc->dup_curproc_args();
@@ -275,7 +275,7 @@ sub NewProcess
 
     # overload options
     my $_opts = $hints->{ config_overload } || {};
-    for my $k (keys %$_opts) { 
+    for my $k (keys %$_opts) {
 	$args->{ options }->{ o }->{ $k } = $_opts->{ $k };
     }
 
@@ -614,7 +614,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

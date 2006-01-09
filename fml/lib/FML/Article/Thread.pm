@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
+# Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Thread.pm,v 1.17 2005/09/06 12:20:39 fukachan Exp $
+# $FML: Thread.pm,v 1.18 2005/09/17 01:33:04 fukachan Exp $
 #
 
 package FML::Article::Thread;
@@ -246,7 +246,7 @@ sub check_thread_status
     my $thread  = $self->{ _thread_object };
     my $article = $self->{ _article_object };
 
-    # check the current thread status 
+    # check the current thread status
     # XXX for thread, not each member !
     my $status = $thread->get_thread_status($head_id);
     if ($status eq $state_closed || $status eq $state_auto_closed) {
@@ -376,7 +376,7 @@ article $id.
 =cut
 
 
-# Descriptions: return a bulk of brief summary. 
+# Descriptions: return a bulk of brief summary.
 #    Arguments: OBJ($self) NUM($id) HASH_REF($thread_args)
 # Side Effects: none
 # Return Value: none
@@ -413,7 +413,7 @@ pritn one line summary of message body.
 
 =head2 print_summary($thread_args)
 
-pritn both header and body summary. 
+pritn both header and body summary.
 
 =cut
 
@@ -539,7 +539,7 @@ sub _generate_summary
 	$buf = $msg->$fp();
 
 	# cache on.
-	if ($buf && $fp eq 'one_line_summary') { 
+	if ($buf && $fp eq 'one_line_summary') {
 	    $thread->set_article_summary($id, $buf);
 	}
     }
@@ -791,7 +791,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

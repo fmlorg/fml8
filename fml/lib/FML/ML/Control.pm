@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.9 2005/08/17 12:08:46 fukachan Exp $
+# $FML: Control.pm,v 1.10 2005/08/18 10:23:09 fukachan Exp $
 #
 
 package FML::ML::Control;
@@ -71,7 +71,7 @@ sub adjust_params_for_virtual_domain
 	# post is exceptional.
 	$ml_name_post    = sprintf("%s",$ml_name, $ml_domain);
 
-	# 
+	#
         $is_default_domain = 1;
     }
     else {
@@ -84,7 +84,7 @@ sub adjust_params_for_virtual_domain
 	# post is exceptional.
 	$ml_name_post    = sprintf("%s=%s",$ml_name, $ml_domain);
 
-	# 
+	#
         $is_default_domain = 0;
     }
 
@@ -568,7 +568,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

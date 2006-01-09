@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: config_ph.pm,v 1.19 2006/01/04 07:47:26 fukachan Exp $
+# $FML: config_ph.pm,v 1.20 2006/01/08 12:32:51 fukachan Exp $
 #
 
 package FML::Merge::FML4::config_ph;
@@ -333,7 +333,7 @@ translate fml4 config {$key => $value } to fml8 one if could.
 
 
 # Descriptions: translate fml4 config {$key => $value } to fml8 one if could.
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR
@@ -349,10 +349,10 @@ sub translate
     };
 
     use FML::Merge::FML4::Rules;
-    my $s = FML::Merge::FML4::Rules::translate($self, 
+    my $s = FML::Merge::FML4::Rules::translate($self,
 					       $dispatch,
 					       $config,
-					       $diff, 
+					       $diff,
 					       $key,
 					       $value);
     return $s;
@@ -493,7 +493,7 @@ sub translate_xxx
 
 
 # Descriptions: restrictions
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR
@@ -513,9 +513,9 @@ sub _fix_restrictions
 	my $mode      = 'manual';
 	my $symmetric = 1;
 
-	# 
+	#
 	# permit_*_from based
-	# 
+	#
 	if ($permit_post_from eq 'anyone') {
 	    $p_result .= "article_post_restrictions = ";
 	    $p_result .= "reject_system_special_accounts ";
@@ -534,7 +534,7 @@ sub _fix_restrictions
 
 	#
 	# handler based
-	# 
+	#
 	if ($reject_post_handler =~ /auto_regist|autoregist|auto_subscribe/) {
 	    $mode     = "automatic";
 	    $symmetric = 1;
@@ -572,7 +572,7 @@ sub _fix_restrictions
 		$c_result .= "ignore\n";
 	    }
 	}
-	elsif ($reject_command_handler =~ 
+	elsif ($reject_command_handler =~
 	    /auto_regist|autoregist|auto_subscribe/) {
 	    $mode     = "automatic";
 	    $symmetric = 1;
@@ -610,7 +610,7 @@ sub _fix_restrictions
 
 
 # Descriptions: handle map info.
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR
@@ -625,7 +625,7 @@ sub _fix_map
 
 # Descriptions: handle directory info.
 #    Arguments: OBJ($self)
-#               HASH_REF($config) HASH_REF($diff) 
+#               HASH_REF($config) HASH_REF($diff)
 #               STR($key) STR($value) STR($match)
 # Side Effects: none
 # Return Value: STR
@@ -652,7 +652,7 @@ sub _fix_dir
 
 
 # Descriptions: acl policy.
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR
@@ -675,7 +675,7 @@ sub _fix_acl_policy
 
 
 # Descriptions: acl policy.
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR
@@ -694,7 +694,7 @@ sub _fix_module_definition
 
 
 # Descriptions: fix time zone.
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR
@@ -711,7 +711,7 @@ sub _fix_time_zone
 
 
 # Descriptions: handle subject tag related conversion.
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR
@@ -725,7 +725,7 @@ sub _fix_skip_fields
 
 
 # Descriptions: handle subject tag related conversion.
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR
@@ -795,7 +795,7 @@ sub _fix_subject_tag
 
 
 # Descriptions: ignore translation since this variable uses fml8 value.
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR
@@ -808,7 +808,7 @@ sub translate_use_fml8_value
 
 
 # Descriptions: ignore translation since this variable uses fml8 value.
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR
@@ -821,7 +821,7 @@ sub translate_ignore
 
 
 # Descriptions: show this variable is not yet implemented.
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR

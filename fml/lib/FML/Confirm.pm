@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Confirm.pm,v 1.18 2005/05/27 03:03:31 fukachan Exp $
+# $FML: Confirm.pm,v 1.19 2005/12/18 12:34:25 fukachan Exp $
 #
 
 package FML::Confirm;
@@ -115,7 +115,7 @@ sub assign_id
     # 2. save the time map: { MD5 => ASSIGNED_UNIX_TIME }
     $self->store_id( $md5sum );
 
-    # 3. internal later use. 
+    # 3. internal later use.
     $self->{ _cur_id } = $md5sum;
 
     return $id;
@@ -129,7 +129,7 @@ sub assign_id
 sub id
 {
     my ($self) = @_;
-    return( $self->{ _cur_id } || undef ); 
+    return( $self->{ _cur_id } || undef );
 }
 
 
@@ -371,7 +371,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2001,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

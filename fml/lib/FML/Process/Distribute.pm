@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.166 2005/11/30 23:30:38 fukachan Exp $
+# $FML: Distribute.pm,v 1.167 2005/12/19 03:06:02 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -580,7 +580,7 @@ sub _deliver_article
 	$curproc->unlock($lock_channel);
     }
     else {
-	# XXX-TODO: o.k. ? 
+	# XXX-TODO: o.k. ?
 	$curproc->logerror("queue: cannot initialize queue system");
 	$fatal = 1;
     }
@@ -716,7 +716,7 @@ sub _new_thread_check_post
     $article->add_outline($tdb_args);
 }
 
-    
+
 # Descriptions: the top level entry to create HTML article.
 #    Arguments: OBJ($curproc)
 # Side Effects: update html database
@@ -772,7 +772,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

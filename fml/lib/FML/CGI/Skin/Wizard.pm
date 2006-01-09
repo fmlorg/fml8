@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.12 2004/07/23 13:16:33 fukachan Exp $
+# $FML: Wizard.pm,v 1.1 2004/10/09 12:06:46 fukachan Exp $
 #
 
 package FML::CGI::Skin::Wizard;
@@ -117,7 +117,7 @@ sub run_cgi_menu
     # 2. list up command.
     my $next_button = $curproc->message_nl("cgi.button_next", "next");
     print "<P>\n";
-    print $curproc->message_nl("cgi.select_command", 
+    print $curproc->message_nl("cgi.select_command",
 			       "2. select command.");
     print "\n<BR>\n";
 
@@ -181,7 +181,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2004 Ken'ichi Fukamachi
+Copyright (C) 2004,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

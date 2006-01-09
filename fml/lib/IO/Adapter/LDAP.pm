@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2005 Ken'ichi Fukamachi
+#  Copyright (C) 2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: LDAP.pm,v 1.16 2005/08/23 08:42:42 fukachan Exp $
 #
 
 package IO::Adapter::LDAP;
@@ -75,7 +75,7 @@ sub open
 	for my $host (@servers) {
 	    my $ldap = Net::LDAP->new( $host ) or $self->error_set($@);
 	    if (defined $ldap) {
-		$self->{ _ldap } = $ldap; 
+		$self->{ _ldap } = $ldap;
 		my $mesg = $ldap->bind($root, password => $password);
 		$mesg->code && $self->error_set($mesg->error);
 		return $mesg;
@@ -292,13 +292,13 @@ sub _fetch_all
     my $attr   = $config->{ "ldap_query_${mode}_result_attribute" };
     my $filter = $config->{ "ldap_query_${mode}_search_filter" };
 
-    my $mesg = $ldap->search(base   => $root, 
+    my $mesg = $ldap->search(base   => $root,
 			     filter => $filter,
 			     attrs  => [ $attr ] );
-    $mesg->code && $self->error_set($mesg->error);    
+    $mesg->code && $self->error_set($mesg->error);
 
     my $a = [];
-    for my $entry ($mesg->entries) { 
+    for my $entry ($mesg->entries) {
 	my $r = $entry->get_value($attr, asref => 1) || [];
 	push(@$a, @$r);
     }
@@ -435,7 +435,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2005 Ken'ichi Fukamachi
+Copyright (C) 2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

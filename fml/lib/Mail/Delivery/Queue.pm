@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.54 2005/08/19 12:17:12 fukachan Exp $
+# $FML: Queue.pm,v 1.55 2005/12/18 11:39:37 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -121,7 +121,7 @@ sub new
     my $files  = [];
     push(@$files, $qf_new);
     $me->{ _cleanup_files } = $files;
-    
+
 
     return bless $me, $type;
 }
@@ -154,7 +154,7 @@ sub _new_queue_id
     $Counter++;
     my $id = sprintf("%d.%d.%d", time, $$, $Counter);
 
-    eval q{ 
+    eval q{
 	use Time::HiRes qw(usleep gettimeofday);
 	($seconds, $microseconds) = gettimeofday;
     };
@@ -320,7 +320,7 @@ sub _list_ordered_by_policy
 	# create hash { TIME_SLICE => [ qid1,  qid2,  ... ] }
 	$queue_hash = {};
 	for my $q (@$list) {
-	    if ($q =~ /^(\d+)/o) { 
+	    if ($q =~ /^(\d+)/o) {
 		my $t = int( $1 / 87400 );
 		$qlist = $queue_hash->{ $t } || [];
 		push(@$qlist, $q);
@@ -400,7 +400,7 @@ sub update_schedule
     my $id          = $policy_args->{ queue_id } || $self->id();
     my $qf_deferred = $self->deferred_file_path($id);
 
-    # get hints. 
+    # get hints.
     my $hints = $self->_update_schedule_info($id);
     my $sleep = $hints->{ sleep } || 300;
     my $time  = time + $sleep;
@@ -463,7 +463,7 @@ sub sleep_queue
 }
 
 
-# Descriptions: change mode. 
+# Descriptions: change mode.
 #               move active queue to deferred one, vice versa.
 #    Arguments: OBJ($self) STR($id) STR($to_mode)
 # Side Effects: update queue.
@@ -477,7 +477,7 @@ sub _change_queue_mode
     if ($self->lock()) {
 	my $qf_deferred = $self->deferred_file_path($id);
 	my $qf_active   = $self->active_file_path($id);
-	my $qstr_args   = { 
+	my $qstr_args   = {
 	    queue_id    => $id,
 	};
 
@@ -636,7 +636,7 @@ sub last_modified_time
     use File::stat;
     for my $class (@class_list, @local_class_list) {
         my $fp    = sprintf("%s_file_path", $class);
-        my $file  = $self->can($fp) ? $self->$fp($id) : 
+        my $file  = $self->can($fp) ? $self->$fp($id) :
 	    $self->local_file_path($class, $id);
 
 	if (-f $file) {
@@ -980,7 +980,7 @@ sub remove
     my $removed = 0;
     for my $class (@class_list, @local_class_list) {
         my $fp = sprintf("%s_file_path", $class);
-        my $f  = $self->can($fp) ? $self->$fp($id) : 
+        my $f  = $self->can($fp) ? $self->$fp($id) :
 	    $self->local_file_path($class, $id);
 
 	if (-f $f) {
@@ -1039,13 +1039,13 @@ sub is_valid_queue
     my $qf_deferred   = $self->deferred_file_path($id);
     my $qf_sender     = $self->sender_file_path($id);
     my $qf_recipients = $self->recipients_file_path($id);
-    
+
     for my $f ($qf_sender, $qf_recipients) {
 	$ok++ if -f $f && -s $f;
     }
 
     # XXX You need lock() before calling is_valid_*_queue() method.
-    # 
+    #
     # if "-s $qf_active ; rename() in some other process; -s $qf_deferred"
     # operation is done, this check fails.
     # make this check more robust, check again.
@@ -1152,7 +1152,7 @@ sub close
 {
     my ($self, $class) = @_;
     my $channel = $self->{ "_${class}_channel" } || undef;
-    
+
     if (defined $channel) {
 	close($channel);
     }
@@ -1605,7 +1605,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

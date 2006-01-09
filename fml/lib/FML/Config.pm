@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.99 2005/05/26 09:36:45 fukachan Exp $
+# $FML: Config.pm,v 1.100 2005/08/20 01:27:31 fukachan Exp $
 #
 
 package FML::Config;
@@ -550,7 +550,7 @@ sub read
 
 
 # Descriptions: merge the specified hash values into $file.
-#    Arguments: OBJ($self) STR($file) HASH_REF($hash_ref) 
+#    Arguments: OBJ($self) STR($file) HASH_REF($hash_ref)
 # Side Effects: none
 # Return Value: none
 sub merge_into_file
@@ -972,7 +972,7 @@ Specify all at mode to dump all variables.
 
     $cfargs = { mode => all };
 
-Specify get_diff_as_hash_ref at mode to show 
+Specify get_diff_as_hash_ref at mode to show
 only variables differed from the original one.
 
     $cfargs = { mode => get_diff_as_hash_ref };
@@ -1324,7 +1324,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

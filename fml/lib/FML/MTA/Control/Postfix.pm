@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.8 2005/08/17 10:44:47 fukachan Exp $
+# $FML: Postfix.pm,v 1.9 2005/08/18 10:20:57 fukachan Exp $
 #
 
 package FML::MTA::Control::Postfix;
@@ -256,7 +256,7 @@ sub postfix_get_aliases_as_hash_ref
     for my $map (@$maps) {
 	$curproc->ui_message("scan key = $key, map = $map") if $debug;
 
-	# XXX this map has no prefix such as file:, hash:, dbm:, ... 
+	# XXX this map has no prefix such as file:, hash:, dbm:, ...
 	if ($map =~ /^\w+:/) {
 	    $curproc->ui_message("* ignored $map");
 	    next MAP;
@@ -457,7 +457,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

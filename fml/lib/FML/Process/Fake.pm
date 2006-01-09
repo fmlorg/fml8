@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
+# Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Fake.pm,v 1.14 2005/08/10 15:03:27 fukachan Exp $
+# $FML: Fake.pm,v 1.15 2005/08/17 10:54:09 fukachan Exp $
 #
 
 package FML::Process::Fake;
@@ -227,13 +227,13 @@ sub _faker_init
     $curproc->log_message_init();
 
     # we assume
-    # 
+    #
     # [/etc/postfix/virtual]
     #         @domain faker=domain@${default_domain}
-    # 
+    #
     # [default_domain's alias file]
     #         faker=domain: "|/usr/local/libexec/fml/faker @domain"
-    # 
+    #
     if ($curproc->is_valid_domain_syntax($faker_domain)) {
 	$curproc->_set_emul_domain($faker_domain);
     }
@@ -513,7 +513,7 @@ sub _set_emul_ml_list
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -548,7 +548,7 @@ sub _set_emul_user_list
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -570,7 +570,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

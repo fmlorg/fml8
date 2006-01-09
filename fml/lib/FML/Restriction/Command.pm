@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.20 2005/11/30 23:30:39 fukachan Exp $
+# $FML: Command.pm,v 1.21 2005/12/18 11:53:59 fukachan Exp $
 #
 
 package FML::Restriction::Command;
@@ -87,7 +87,7 @@ sub permit_user_command
 }
 
 
-# Descriptions: permit specific anonymous command 
+# Descriptions: permit specific anonymous command
 #               even if $sender is a stranger.
 #    Arguments: OBJ($self) STR($rule) STR($sender) HASH_REF($v_args)
 # Side Effects: none
@@ -394,7 +394,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

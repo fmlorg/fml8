@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+# Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.69 2005/06/04 08:49:09 fukachan Exp $
+# $FML: Configure.pm,v 1.70 2005/08/10 15:03:25 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -140,7 +140,7 @@ sub run
 }
 
 
-# Descriptions: send a report mail 
+# Descriptions: send a report mail
 #               if --allow-send-message or --allow-reply-message
 #               option specified.
 #    Arguments: OBJ($curproc) HASH_REF($args)
@@ -311,7 +311,7 @@ sub _makefml
 	options      => \@options,
 	argv         => $argv,
 
-	# save raw argv for {new,rm}domain commands, which need 
+	# save raw argv for {new,rm}domain commands, which need
 	# for some programs to interprete $ml_name as ml_domain.
 	canon_argv   => {
 	    ml_name  => $argv_ml_name,
@@ -379,7 +379,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

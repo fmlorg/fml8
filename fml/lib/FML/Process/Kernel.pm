@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.270 2005/12/18 12:24:09 fukachan Exp $
+# $FML: Kernel.pm,v 1.271 2005/12/19 03:06:02 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -648,7 +648,7 @@ sub simple_loop_check
 	$config->get_as_array_ref( 'incoming_mail_header_loop_check_rules' );
     my $match     = 0;
 
-    if ($config->yes('use_incoming_mail_header_loop_check')) { 
+    if ($config->yes('use_incoming_mail_header_loop_check')) {
       RULE:
 	for my $rule (@$rules) {
 	    if ($header->can($rule)) {
@@ -829,12 +829,12 @@ sub ml_variables_resolve
 	# Example: when fml.pl firstly runs without config.cf (fml8) file,
 	#          fml.pl should generate config.cf and continue to run.
 	my $config_ph_path = $config_cf_path;
-	$config_ph_path    =~ s/config.cf/config.ph/;	
+	$config_ph_path    =~ s/config.cf/config.ph/;
 	use File::stat;
 	my $stat_ph = -f $config_ph_path ? stat($config_ph_path) : undef;
 	my $stat_cf = -f $config_cf_path ? stat($config_cf_path) : undef;
-	if ((! -f $config_cf_path) || 
-	    (defined $stat_ph && defined $stat_cf && 
+	if ((! -f $config_cf_path) ||
+	    (defined $stat_ph && defined $stat_cf &&
 	     $stat_ph->mtime > $stat_cf->mtime)) {
 	    my $fallback       = $resolver_args->{ fallback } || undef;
 	    my $fallback_args  = {
@@ -919,10 +919,10 @@ sub __debug_ml_xxx
 	@delayed_buffer = ();
 
 	for my $var (qw(ml_name ml_domain ml_home_prefix ml_home_dir)) {
-	    $curproc->logdebug(sprintf("%-25s = %s", 
+	    $curproc->logdebug(sprintf("%-25s = %s",
 				       "(debug)$str $var",
-				       (defined $config->{ $var } ? 
-					$config->{ $var } : 
+				       (defined $config->{ $var } ?
+					$config->{ $var } :
 					'')));
 	}
     }
@@ -1584,7 +1584,7 @@ sub logdebug
 		    msg_args => $msg_args,
 		    level    => 'debug',
 		    caller   => \@c,
-		});		
+		});
 	    }
 	}
 	else {
@@ -1656,8 +1656,8 @@ If given, makefml/fml ignores message output.
 
 
 # Descriptions: top level reply message interface.
-#               It injects the specified message into the system 
-#               global message queue on memory in fact. 
+#               It injects the specified message into the system
+#               global message queue on memory in fact.
 #               reply_message_inform() recollects them and send it later.
 #    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($rm_args)
 # Side Effects: none
@@ -1786,7 +1786,7 @@ sub _analyze_recipients
 
     # if both specified, use default sender.
     unless (@$recipient || @$recipient_maps) {
-	my $cred   = $curproc->credential(); 
+	my $cred   = $curproc->credential();
 	my $sender = $cred->sender();
 	$recipient = [ $sender ];
     }
@@ -2454,7 +2454,7 @@ sub queue_in
 
     # default recipient if undefined.
     unless ($rcptkey) {
-	my $cred   = $curproc->credential(); 
+	my $cred   = $curproc->credential();
 	my $sender = $cred->sender() || undef;
 	if (defined $cred) {
 	    $rcptkey = $sender;
@@ -2757,7 +2757,7 @@ sub incoming_message_cleanup_queue
     # XXX ONLY WHEN VALID $ml_home_dir EXISTS.
     if ($curproc->_is_valid_ml_home_dir()) {
 	# 1. remove incoming queue files.
-	# 2. remove queues marked as removal in incoming/ queue. 
+	# 2. remove queues marked as removal in incoming/ queue.
 	#    XXX cond. 1 must include cond. 2,
 	#    XXX but we try again to ensure garbage collection.
 	$curproc->incoming_message_remove_queue();
@@ -2768,7 +2768,7 @@ sub incoming_message_cleanup_queue
 
 	    use Mail::Delivery::Queue;
 	    my $queue_dir = $config->{ mail_queue_dir };
-	    my $queue     = new Mail::Delivery::Queue { 
+	    my $queue     = new Mail::Delivery::Queue {
 		directory => $queue_dir,
 	    };
 	    $queue->set_log_function($fp);
@@ -3083,7 +3083,7 @@ sub sysflow_reopen_stderr_channel
 	$curproc->is_under_mta_process() ||
 	defined $option->{ quiet }  || defined $option->{ q } ||
 	$config->yes('use_log_dup') || $option->{ 'log-dup' } ||
-	$config->yes('use_log_computer_output') || 
+	$config->yes('use_log_computer_output') ||
 	$option->{'log-computer-output'}) {
 	my $tmpfile = $curproc->tmp_file_path();
 	my $pcb     = $curproc->pcb();
@@ -3292,7 +3292,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
