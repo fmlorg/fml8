@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.84 2005/08/08 03:53:23 fukachan Exp $
+# $FML: Header.pm,v 1.85 2005/08/19 12:17:07 fukachan Exp $
 #
 
 package FML::Header;
@@ -386,31 +386,23 @@ sub add_x_sequence
 }
 
 
+=head2 rewrite_subject_tag($config, $rw_args)
 =head2 rewrite_article_subject_tag($config, $rw_args)
 
 add subject tag like [elena:00010].
 The actual function definitions exist in C<FML::Header::Subject>.
 
-=head2 rewrite_reply_to
-
-replace C<Reply-To:> with this ML's address for post.
-add reply-to: if not specified.
-
-=head2 rewrite_errors_to
-
-replace C<Errors-To:> with this ML's address for post.
-add errors-to: if not specified.
-
-=head2 rewrite_date
-
-replace original C<Date:> to C<X-Date:>.
-and now fml process time add to C<Date:>.
-
-=head2 rewrite_received
-
-replace original C<Received:> to C<X-Received:>.
-
 =cut
+
+# Descriptions: rewrite subject if needed.
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
+# Side Effects: update $header
+# Return Value: none
+sub rewrite_subject_tag
+{
+    my ($header, $config, $rw_args) = @_;
+    $header->rewrite_article_subject_tag($config, $rw_args);
+}
 
 
 # Descriptions: rewrite subject if needed.
@@ -477,6 +469,14 @@ sub rewrite_article_subject_tag_orig
 }
 
 
+=head2 rewrite_reply_to
+
+replace C<Reply-To:> with this ML's address for post.
+add reply-to: if not specified.
+
+=cut
+
+
 # Descriptions: rewrite Reply-To: to this ML's address.
 #               add Reply-To: if not specified.
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
@@ -493,6 +493,33 @@ sub rewrite_reply_to
 }
 
 
+=head2 rewrite_reply_to_enforce_article_post_address
+
+enfoece replacement of C<Reply-To:> with this ML's address for post.
+
+=cut
+
+
+# Descriptions: enforce rewriting Reply-To: to this ML's address.
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
+# Side Effects: update $header
+# Return Value: none
+sub rewrite_reply_to_enforce_article_post_address
+{
+    my ($header, $config, $rw_args) = @_;
+
+    $header->replace('Reply-To', $config->{ article_post_address });
+}
+
+
+=head2 rewrite_errors_to
+
+replace C<Errors-To:> with this ML's address for post.
+add errors-to: if not specified.
+
+=cut
+
+
 # Descriptions: rewrite Errors-To: to the maintainer.
 #               add Errors-To: if not specified.
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
@@ -502,9 +529,17 @@ sub rewrite_errors_to
 {
     my ($header, $config, $rw_args) = @_;
     my $value = $config->{ outgoing_mail_header_errors_to };
- 
+
     $header->add('Errors-To', $value);
 }
+
+
+=head2 rewrite_date
+
+replace original C<Date:> to C<X-Date:>.
+and now fml process time add to C<Date:>.
+
+=cut
 
 
 # Descriptions: rewrite Date: to X-Date: if needed.
@@ -523,6 +558,13 @@ sub rewrite_date
     $header->add('X-Date', $orgdate) if ($orgdate);
     $header->replace('Date', $newdate);
 }
+
+
+=head2 rewrite_stardate
+
+add/rewrite startrek stardate if needed.
+
+=cut
 
 
 # Descriptions: add/rewrite startrek stardate if needed.
@@ -545,6 +587,13 @@ sub rewrite_stardate
 }
 
 
+=head2 rewrite_precedence
+
+add/rewrite Precedence: field if needed.
+
+=cut
+
+
 # Descriptions: add/rewrite Precedence: field if needed.
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
@@ -561,6 +610,13 @@ sub rewrite_precedence
 	$header->add('Precedence', $precedence);
     }
 }
+
+
+=head2 rewrite_received
+
+replace original C<Received:> to C<X-Received:>.
+
+=cut
 
 
 # Descriptions: rewrite Received: to X-Received: if needed.
