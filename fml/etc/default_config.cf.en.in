@@ -887,7 +887,9 @@ use_article_header_rewrite		=	yes
 #        Value: MIX (
 #			delete_unsafe_header_fields
 #			rewrite_article_subject_tag
+#			rewrite_subject_tag
 #			rewrite_reply_to
+#			rewrite_reply_to_enforce_article_post_address
 #			rewrite_errors_to
 #			add_software_info
 #			add_fml_ml_name
