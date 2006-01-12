@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Calendar.pm,v 1.1 2004/12/23 12:32:04 fukachan Exp $
+# $FML: Calendar.pm,v 1.2 2005/05/27 00:53:23 fukachan Exp $
 #
 
 package FML::Demo::Calendar;
@@ -47,6 +47,25 @@ this routine needs C<HTML::CalendarMonthSimple>.
 It parses files in ~/.schedule/ and output the schedule of this month
 as HTML TABLE by default. To see it, you need a WWW browser
 e.g. "w3m".
+
+=head1 FILES in ~/.schedule/
+
+Theare are arbitrary number of files. This module treis to parse all
+files here and use only valid entries found in them.
+
+The file format follows:
+
+    # comment: the format is /^(\d+\/\d+)\s+(.*)/ or /^(*\/\d+)\s+(.*)/
+    DATE CONTENT 
+    DATE CONTENT FORMAT IS ARBITORARY
+
+where null lines or space lines are ignored.
+
+    # the first day!
+    01/01 shougatu yasumi
+
+    # 20 of each month
+    */20 doctor.
 
 
 =head1 METHODS
@@ -504,7 +523,7 @@ Ken'chi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2004,2005 Ken'chi Fukamachi
+Copyright (C) 2004,2005,2006 Ken'chi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
