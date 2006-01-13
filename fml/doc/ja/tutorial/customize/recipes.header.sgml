@@ -1,5 +1,5 @@
 <!--
- $FML: recipes.header.sgml,v 1.1 2005/10/29 04:21:38 fukachan Exp $
+ $FML: recipes.header.sgml,v 1.2 2006/01/13 00:07:14 fukachan Exp $
 -->
 
 <qandaset>
@@ -182,7 +182,7 @@ $article_header_rewrite_end_hook = q{
     my $reply_to = '';
     for my $a (@addrlist) {
         my $_addr = $a->address;
-        if ($curproc->is_valid_ml_address($_addr)) {
+        if ($curproc->is_fml8_managed_address($_addr)) {
             $reply_to .= $reply_to ? ", $_addr" : $_addr;
         }
     }
