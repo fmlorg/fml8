@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.143 2005/12/18 11:53:26 fukachan Exp $
+# $FML: Utils.pm,v 1.144 2006/01/09 14:00:54 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1398,9 +1398,15 @@ sub config_cf_filepath
 sub is_config_cf_exist
 {
     my ($curproc, $ml, $domain) = @_;
-    my $f = $curproc->config_cf_filepath($ml, $domain);
+    my $status = 0;
 
-    return ( -f $f ? 1 : 0 );
+    eval {
+	my $f = $curproc->config_cf_filepath($ml, $domain);
+	$status = ( -f $f ? 1 : 0 );
+    };
+    if ($@) { return 0;}
+
+    return $status;
 }
 
 
@@ -1585,6 +1591,28 @@ sub is_allow_reply_message
     }
 
     return 0;
+}
+
+
+=head2 is_fml8_managed_address($address)
+
+check if $address is one of valid ml address fml8 on this host
+manages.
+
+=cut
+
+
+# Descriptions: check if $address is one of valid ml address fml8 on
+#               this host manages.
+#    Arguments: OBJ($curproc) STR($address)
+# Side Effects: none
+# Return Value: NUM(0 or 1)
+sub is_fml8_managed_address
+{
+    my ($curproc, $address)   = @_;
+    my ($ml_name, $ml_domain) = split(/\@/, $address);
+    
+    return $curproc->is_config_cf_exist($ml_name, $ml_domain);
 }
 
 
