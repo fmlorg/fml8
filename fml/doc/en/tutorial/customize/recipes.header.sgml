@@ -1,23 +1,25 @@
 <!--
- $FML: recipes.header.sgml,v 1.1 2005/10/29 04:21:38 fukachan Exp $
+ $FML$
 -->
 
 <qandaset>
 
+
 <qandaentry>
 
 <question>
 <para>
-記事のヘッダの Subject: のタグを大文字にしたい
+make subject tag uppercase. 
 </para>
 </question>
 
 <answer>
 <para>
+
 <screen>
 article_subject_tag = [\U$ml_name\E:%05d]
 </screen>
-(注意: この機能を使う場合には 2002/10/29 以降の snapshot を使ってください)。 
+
 </para>
 </answer>
 
@@ -28,19 +30,18 @@ article_subject_tag = [\U$ml_name\E:%05d]
 
 <question>
 <para>
-記事のヘッダの Subject: のタグを小文字にしたい
+make subject tag lowercase.
 </para>
 </question>
 
 <answer>
 <para>
-Unix 上では、たいてい小文字を使うので、ＭＬ名前も小文字でしょう。
-だから、普通は何もしなくても小文字のはずですが、
-念のため、小文字を強制したいなら、つぎのようにしてください。
 <screen>
 article_subject_tag = [\L$ml_name\E:%05d]
 </screen>
-(注意: この機能を使う場合には 2002/10/29 以降の snapshot を使ってください)。 
+On unix, you must use lowercase by default. 
+So the ml_name must be in lower case.
+You need not use this setting in almost cases.
 </para>
 </answer>
 
@@ -51,20 +52,20 @@ article_subject_tag = [\L$ml_name\E:%05d]
 
 <question>
 <para>
-いつでも Reply-To: を投稿用アドレスに強制する。
+Enforece Reply-To: as address for post.
 </para>
 </question>
 
 <answer>
 <para>
-次の HOOK を config.cf の最後(=cutより後)に書いて下さい。
+Append the following hook at the last of config.cf (after =cut line).
 <screen>
 $article_header_rewrite_end_hook = q{
     my $ml = $config->{ article_post_address };
     $header->replace('Reply-To', $ml);
 };
 </screen>
-なおヘッダ書き換えルールに以下の命令を追加しても同じことが出来ます。
+or you can obtain the same effect by setting
 <screen>
 article_header_rewrite_rules += rewrite_reply_to_enforce_article_post_address
 </screen>
@@ -78,13 +79,13 @@ article_header_rewrite_rules += rewrite_reply_to_enforce_article_post_address
 
 <question>
 <para>
-Reply-To: を送信者に設定する。
+set Reply-To: as the sender.
 </para>
 </question>
 
 <answer>
 <para>
-次の HOOK を config.cf の最後(=cutより後)に書いて下さい。
+Append the following hook at the last of config.cf (after =cut line).
 <screen>
 $article_header_rewrite_end_hook = q{
     my $cred   = $curproc->credential();
@@ -93,7 +94,6 @@ $article_header_rewrite_end_hook = q{
     $header->replace('Reply-To', $sender);
 };
 </screen>
-
 </para>
 </answer>
 
@@ -104,13 +104,13 @@ $article_header_rewrite_end_hook = q{
 
 <question>
 <para>
-Reply-To: を「送信者 ＋ ＭＬ」に設定する。
+set Reply-To: as the sender + ML.
 </para>
 </question>
 
 <answer>
 <para>
-次の HOOK を config.cf の最後(=cutより後)に書いて下さい。
+Append the following hook at the last of config.cf (after =cut line).
 <screen>
 $article_header_rewrite_end_hook = q{
     my $ml     = $config->{ article_post_address };
@@ -131,13 +131,14 @@ $article_header_rewrite_end_hook = q{
 
 <question>
 <para>
-ＭＬメンバーからの投稿であれば、Reply-To: を「送信者＋ＭＬ」にする。
+If the posting is from a ML member, 
+set Reply-To: as the sender + ML itself.
 </para>
 </question>
 
 <answer>
 <para>
-次の HOOK を config.cf の最後(=cutより後)に書いて下さい。
+Append the following hook at the last of config.cf (after =cut line).
 <screen>
 $article_header_rewrite_end_hook = q{
     my $ml     = $config->{ article_post_address };
@@ -150,7 +151,6 @@ $article_header_rewrite_end_hook = q{
     }
 };
 </screen>
-
 </para>
 </answer>
 
@@ -161,15 +161,13 @@ $article_header_rewrite_end_hook = q{
 
 <question>
 <para>
-To: と Cc: の中にある fml8 が管理しているＭＬのアドレスだけを
-Reply-To: に設定する。
+set Reply-To: as fml8 managed addresses found in To: and Cc: field.
 </para>
 </question>
 
 <answer>
 <para>
-だいぶ複雑ですが HOOK で実現できます。
-次の HOOK を config.cf の最後(=cutより後)に書いて下さい。
+Append the following hook at the last of config.cf (after =cut line).
 <screen>
 $article_header_rewrite_end_hook = q{
     my $to   = $header->get('to');
@@ -197,4 +195,6 @@ $article_header_rewrite_end_hook = q{
 </qandaentry>
 
 
+
 </qandaset>
+
