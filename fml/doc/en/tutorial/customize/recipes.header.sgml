@@ -1,8 +1,79 @@
 <!--
- $FML: recipes.header.sgml,v 1.1 2006/01/13 00:07:14 fukachan Exp $
+ $FML: recipes.header.sgml,v 1.2 2006/01/13 00:15:35 fukachan Exp $
 -->
 
 <qandaset>
+
+
+<qandaentry>
+
+<question>
+<para>
+Add tag such as [elena:00100] at Subject:.
+</para>
+</question>
+
+<answer>
+<para>
+no tag by default.
+You can specify subject tag as sprintf form.
+<screen>
+[/var/spool/ml/elena/config.cf]
+
+article_subject_tag = [$ml_name:%05d]
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Change digit of the number part of Subject: [elena:00100].
+</para>
+</question>
+
+<answer>
+<para>
+You can specify subject tag as sprintf form.
+For example, %07 if 7 digits.
+<screen>
+[/var/spool/ml/elena/config.cf]
+
+article_subject_tag = [$ml_name:%07d]
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+no 0 padding in subject tag.
+</para>
+</question>
+
+<answer>
+<para>
+
+<screen>
+[/var/spool/ml/elena/config.cf]
+
+article_subject_tag = [$ml_name:%d]
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
 
 
 <qandaentry>
@@ -195,6 +266,316 @@ $article_header_rewrite_end_hook = q{
 </qandaentry>
 
 
+<qandaentry>
+
+<question>
+<para>
+remove X-Face: header field.
+</para>
+</question>
+
+<answer>
+<para>
+
+<screen>
+unsafe_header_fields  += x-face
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+copy Sender: field to X-Sender: field.
+</para>
+</question>
+
+<answer>
+<para>
+
+<screen>
+$article_header_rewrite_end_hook = q{
+   my $header   = $curproc->article_message_header();
+   $header->add('X-Sender', $header->get('Sender'));
+};
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+move Received: to X-Received: field.
+</para>
+</question>
+
+<answer>
+<para>
+Copy Received: to X-Received: field and delete Received: after that.
+<screen>
+$article_header_rewrite_end_hook = q{
+   my $header   = $curproc->article_message_header();
+   $header->add('X-Received', $header->get('Received'));
+   $header->delete('Received');
+};
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+If the input mail has no Reply-To:, pass it without appending Reply-to: field.
+</para>
+</question>
+
+<answer>
+<para>
+In config.cf, add the following configuration.
+<screen>
+article_header_rewrite_rules    -=      rewrite_reply_to
+</screen>
+</para>
+
+<para>
+By default, &fml8; add "Reply-To: $article_post_address" to 
+the message without Reply-To: field.
+This effect is done by rewrite_reply_to directive in 
+$article_header_rewrite_rules variable.
+So, rewriting of Reply-To: is disabled if you remove the directive.
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Pass To:, Cc: and Reply-To: through. 
+</para>
+</question>
+
+<answer>
+<para>
+same as the previous recipe since To: and Cc: is pass through by default.
+<screen>
+article_header_rewrite_rules    -=      rewrite_reply_to
+</screen>
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Pass Message-ID through.
+</para>
+</question>
+
+<answer>
+<para>
+nothing todo. &fml8; passes Message-ID: field through by default.
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+rewrite Message-ID: to ML specific one.
+</para>
+</question>
+
+<answer>
+<para>
+
+<screen>
+[/var/spool/ml/elena/config.cf]
+
+$article_header_rewrite_end_hook = q{
+	my $header = $curproc->article_message_header();
+
+	# generate specific Message-Id
+	my $ml_name   = $config->{ ml_name };
+	my $ml_domain = $config->{ ml_domain };
+	my $new_id    = sprintf("%s-%d\@%s", $ml_name, $$, $ml_domain);
+
+	# backup the original Message-Id at X-Message-Id field.
+	$header->add('X-Message-Id', $header->get('Message-Id'));
+
+	# replace Message-Id field.
+	$header->replace('Message-Id', $new_id);
+};
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Specify X-ML-Info: field.
+</para>
+</question>
+
+<answer>
+<para>
+Enforce mail header field.
+<screen>
+$article_header_rewrite_end_hook = q{
+        my $header = $curproc->article_message_header();
+        $header->replace('X-ML-Info', "oresama id");
+};
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Specify Reply-To: in system message mail.
+</para>
+</question>
+
+<answer>
+<para>
+unimplemented.
+In fact, 
+<screen>
+outgoing_mail_header_reply_to = ADDRESS
+</screen>
+changes Reply-To: in system message mail but 
+it is derived from wrong &fml8; implementation.
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Pass only specified header fields.
+</para>
+</question>
+
+<answer>
+<para>
+In the current &fml8; implementation, 
+you should use the following hook.
+<screen>
+
+    $article_header_rewrite_end_hook = q{
+	my $header       = $curproc->article_message_header();
+	my (@tags)       = $header->tags();
+
+	# define valid header fields to allow.
+	my (@valid_tags) = qw(to from reply-to subject date message-id);
+
+        for my $tag (@tags) {
+            my $valid = 0;
+          SCAN:
+            for my $v (@valid_tags) {
+                if ($tag =~ /^$v$/i) {
+                    $valid = 1;
+                    last SCAN;
+                }
+            }
+            unless ($valid) {
+                $header->delete($tag);
+            }
+        }
+    };
+
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Enforce use of In-Reply-To: or References: header field.
+</para>
+</question>
+
+<answer>
+<para>
+There is a reply message to have no In-Reply-To: nor References: header field.
+Firstly, It provides no thread relation.
+Secondly, it may be a spam message since it is unusual today.
+</para>
+
+<para>
+If Subject: field indicates reply message but no 
+In-Reply-To: nor References: header field, 
+you can reject this message by using this hook.
+<screen>
+    $article_post_verify_request_end_hook = q{
+	my $header      = $curproc->incoming_message_header();
+	my $subject     = $header->get('subject')     || '';
+	my $in_reply_to = $header->get("In-Reply-To") || '';
+	my $references  = $header->get("References")  || '';
+
+	my $_subject = new Mail::Message::Subject $subject;
+	if ($_subject->has_reply_tag()) {
+	    unless ($in_reply_to || $references) {
+		$curproc->log("reject invalid reply message");
+		$curproc->stop_this_process();
+		$curproc->policy_reject_this_message();
+	    }
+	}
+    };
+</screen>
+In this case error message is sent to the sender.
+If you have only to ignore this message not reply,   
+replace 
+policy_reject_this_message()
+to 
+policy_ignore_this_message()
+method.
+</para>
+</answer>
+
+</qandaentry>
+
 
 </qandaset>
-

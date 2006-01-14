@@ -1,8 +1,80 @@
 <!--
- $FML: recipes.header.sgml,v 1.2 2006/01/13 00:07:14 fukachan Exp $
+ $FML: recipes.header.sgml,v 1.3 2006/01/13 00:15:35 fukachan Exp $
 -->
 
 <qandaset>
+
+
+<qandaentry>
+
+<question>
+<para>
+Subject: に [elena:00100] のようなタグをつける
+</para>
+</question>
+
+<answer>
+<para>
+デフォルトではタグはつきません。
+&fml8; ではタグを sprintf 形式で指定することになっています。
+<screen>
+[/var/spool/ml/elena/config.cf]
+
+article_subject_tag = [$ml_name:%05d]
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Subject: [elena:00100] の数字部分(00100)の桁数を変える
+</para>
+</question>
+
+<answer>
+<para>
+&fml8; ではタグを sprintf 形式で指定することになっています。
+たとえば７桁なら %07 などとすればよいだけです。
+<screen>
+[/var/spool/ml/elena/config.cf]
+
+article_subject_tag = [$ml_name:%07d]
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Subject: のタグの数字(00100)の0パディングをなくしたい。
+</para>
+</question>
+
+<answer>
+<para>
+
+<screen>
+[/var/spool/ml/elena/config.cf]
+
+article_subject_tag = [$ml_name:%d]
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
 
 <qandaentry>
 
@@ -191,6 +263,319 @@ $article_header_rewrite_end_hook = q{
 };
 </screen>
 
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+不要なヘッダフィールド X-Face: を消す
+</para>
+</question>
+
+<answer>
+<para>
+<screen>
+unsafe_header_fields  += x-face
+</screen>
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Sender: を X-Sender: にコピーする。
+</para>
+</question>
+
+<answer>
+<para>
+
+<screen>
+$article_header_rewrite_end_hook = q{
+   my $header   = $curproc->article_message_header();
+   $header->add('X-Sender', $header->get('Sender'));
+};
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Received: を X-Received: へ移動させる。
+</para>
+</question>
+
+<answer>
+<para>
+X-Received: へコピーした後で Received: を消します。
+<screen>
+$article_header_rewrite_end_hook = q{
+   my $header   = $curproc->article_message_header();
+   $header->add('X-Received', $header->get('Received'));
+   $header->delete('Received');
+};
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+元のメールに Reply-To: がなければ、そのままにしたい。
+</para>
+</question>
+
+<answer>
+<para>
+config.cf で
+<screen>
+article_header_rewrite_rules    -=      rewrite_reply_to
+</screen>
+としてください。
+</para>
+
+<para>
+デフォルトでは Reply-To: のないメールのヘッダに対し「Reply-To: 投稿用
+アドレス」が追加されます。これは article_header_rewrite_rules にある 
+rewrite_reply_to 命令によります。よって、これをルールから削除してしま
+えば Reply-To: に対する書き換えルールが無効となるというわけです。
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+To: Cc: Reply-To: を全部そのまま素通しにする。
+</para>
+</question>
+
+<answer>
+<para>
+前レシピと同じです。
+</para>
+
+<para>
+To: と Cc: は元々素通しです。そのため config.cf で
+<screen>
+article_header_rewrite_rules    -=      rewrite_reply_to
+</screen>
+とするだけで十分です。
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+記事の Message-ID: は元の値のまま通したい。
+</para>
+</question>
+
+<answer>
+<para>
+素通しがデフォルトの挙動ですので、なにもする必要はありません。
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+記事に ML 独自の Message-ID: をつけたい
+</para>
+</question>
+
+<answer>
+<para>
+
+<screen>
+[/var/spool/ml/elena/config.cf]
+
+$article_header_rewrite_end_hook = q{
+	my $header = $curproc->article_message_header();
+
+	# Message-Id を生成 (この例は適当です)
+	my $ml_name   = $config->{ ml_name };
+	my $ml_domain = $config->{ ml_domain };
+	my $new_id    = sprintf("%s-%d\@%s", $ml_name, $$, $ml_domain);
+
+	# X-Message-Id にオリジナルの Message-Id をバックアップしておく
+	$header->add('X-Message-Id', $header->get('Message-Id'));
+
+	# Message-Id を入れ換える
+	$header->replace('Message-Id', $new_id);
+};
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+X-ML-Info: の内容を指定する。
+</para>
+</question>
+
+<answer>
+<para>
+ようするにメールヘッダの値を強制指定します。
+<screen>
+$article_header_rewrite_end_hook = q{
+        my $header = $curproc->article_message_header();
+        $header->replace('X-ML-Info', "oresama id");
+};
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+レポートメールの Reply-To: を指定する。
+</para>
+</question>
+
+<answer>
+<para>
+未実装です。
+現在の fml8 でも、実際には
+<screen>
+outgoing_mail_header_reply_to = アドレス
+</screen>
+でレポートメールの Reply-To: を指定できるのですが、
+これは今の実装が間違っていますね _o_
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+特定のヘッダだけを通したい
+</para>
+</question>
+
+<answer>
+<para>
+現状の &fml8; では、次のような HOOK で実現するしかありません。
+<screen>
+
+    $article_header_rewrite_end_hook = q{
+	my $header       = $curproc->article_message_header();
+	my (@tags)       = $header->tags();
+
+	# 通したいヘッダフィールドを定義する 	
+	my (@valid_tags) = qw(to from reply-to subject date message-id);
+
+        for my $tag (@tags) {
+            my $valid = 0;
+          SCAN:
+            for my $v (@valid_tags) {
+                if ($tag =~ /^$v$/i) {
+                    $valid = 1;
+                    last SCAN;
+                }
+            }
+            unless ($valid) {
+                $header->delete($tag);
+            }
+        }
+    };
+
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+In-Reply-To: か References: を強制したい。
+</para>
+</question>
+
+<answer>
+<para>
+記事への返事にも関わらず In-Reply-To: も References: もないメールがあります。
+一つには、スレッド関係が分からないので見づらいという問題があります。
+二つには、通常そういったメールはないので普通のメールではなく SPAM などの
+類ではないかという可能性です。
+</para>
+
+<para>
+Subject に返事の印( Re: など)がなく、In-Reply-To: または References: 
+ヘッダがないなら拒否する HOOK です。
+<screen>
+    $article_post_verify_request_end_hook = q{
+	my $header      = $curproc->incoming_message_header();
+	my $subject     = $header->get('subject')     || '';
+	my $in_reply_to = $header->get("In-Reply-To") || '';
+	my $references  = $header->get("References")  || '';
+
+	my $_subject = new Mail::Message::Subject $subject;
+	if ($_subject->has_reply_tag()) {
+	    unless ($in_reply_to || $references) {
+		$curproc->log("reject invalid reply message");
+		$curproc->stop_this_process();
+		$curproc->policy_reject_this_message();
+	    }
+	}
+    };
+</screen>
+拒否した旨のメールを送信者へ送っています。
+もしエラーメッセージを送信者に返さず単に無視するだけでいいなら
+policy_reject_this_message
+を
+policy_ignore_this_message
+にしてください。
 </para>
 </answer>
 
