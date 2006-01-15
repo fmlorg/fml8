@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.144 2006/01/09 14:00:54 fukachan Exp $
+# $FML: Utils.pm,v 1.145 2006/01/13 00:17:08 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -390,6 +390,44 @@ sub article_message
 	$curproc->logerror("\$curproc->{ article }->{ message } not defined");
 	return undef;
     }
+}
+
+
+=head1 OUR POLICY UTILITY
+
+=head2 policy_ignore_this_message($reason)
+
+ignore this message by our policy.
+
+=head2 policy_reject_this_message($reason)
+
+reject this message by our policy. It returns error message to the
+sender.
+
+=cut
+
+
+# Descriptions: ignore this message by our policy.
+#    Arguments: OBJ($curproc) STR($reason)
+# Side Effects: none
+# Return Value: none
+sub policy_ignore_this_message
+{
+    my ($curproc, $reason) = @_;
+    $curproc->stop_this_process($reason);
+}
+
+
+# Descriptions: reject this message by our policy.
+#               return error message to the sender.
+#    Arguments: OBJ($curproc) STR($reason)
+# Side Effects: none
+# Return Value: none
+sub policy_reject_this_message
+{
+    my ($curproc, $reason) = @_;
+    $curproc->stop_this_process($reason);
+    $curproc->reply_message_nl('error.reject', 'reject your message');
 }
 
 
