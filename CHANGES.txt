@@ -37,6 +37,9 @@
 
   いろいろとレシピ’sを書く、書く、書く…
 
+   FML::Process::Utils 
+	implement policy_ignore_this_message(), policy_reject_this_message().
+
 2006/01/13
 
    FML::Process::Utils 
@@ -9148,4 +9151,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.263 2006/01/07 15:55:48 fukachan Exp $
+$FML: CHANGES.txt,v 1.264 2006/01/15 13:54:34 fukachan Exp $
