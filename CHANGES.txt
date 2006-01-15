@@ -33,6 +33,43 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2006/01/15
+
+  いろいろとレシピ’sを書く、書く、書く…
+
+2006/01/13
+
+   FML::Process::Utils 
+	is_config_cf_exist() evals the statements.
+	
+	implement is_fml8_managed_address() which checks the given address is
+	either of fml8 managed ml addresses.
+
+2006/01/12
+
+   ドキュメント: Reply-To: hacks をいろいろ書いておきました。
+
+   FML::Demo::Calendar
+	on the format of files in ~/.schedule/ directory.
+
+2006/01/09
+
+   FML::Header 
+	add rewrite_subject_tag() equal to rewrite_article_subject_tag().
+	rewrite_reply_to_enforce_article_post_address()
+	fix comments.
+	
+   variables
+	$article_header_rewrite_rules supports more 2 rules:
+	+ rewrite_subject_tag
+	+ rewrite_reply_to_enforce_article_post_address
+
+2006/01/08
+
+   FML::Merge::FML4::config_ph 
+	add prototype to translate PERMIT*_FROM and REJECT_*_HANDER
+	combinations.
+
 2006/01/07
 
    variables
@@ -9111,4 +9148,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.262 2006/01/04 12:37:50 fukachan Exp $
+$FML: CHANGES.txt,v 1.263 2006/01/07 15:55:48 fukachan Exp $
