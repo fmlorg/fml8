@@ -1,5 +1,5 @@
 <!--
- $FML$
+ $FML: recipes.sgml,v 1.1 2005/10/29 05:13:11 fukachan Exp $
 -->
 
 
@@ -24,10 +24,11 @@ fml をインストールしたホスト上から投稿できない
 
 <para>
 こういった場合には不完全な情報しか与えられていませんから、メール全体を
-生成するのはコマンドの役目です。ただ、こういった場合に From: の部分が
-「ユーザ」だけとか「ユーザ＠ FQDN 」だったりします。
-きちんと「ユーザ＠正しいドメイン」の形に生成されるようになっていないと
-&fml8; としては正当なユーザには見えません。
+生成するのは Mail コマンド(もしくは Mail コマンドからメールを渡された 
+MTA )の役目です。ただ、こういった場合に From: の部分が「ユーザ」だけと
+か「ユーザ＠ FQDN 」だったりします。きちんと「ユーザ＠正しいドメイン」
+の形に生成されるようになっていないと&fml8; としては正当なユーザには見
+えません。
 </para>
 
 <para>
@@ -39,4 +40,136 @@ fml をインストールしたホスト上から投稿できない
 </qandaentry>
 
 
+<qandaentry>
 
+<question>
+<para>
+CGI で ML を作成したがメールサーバに反映されていない
+</para>
+</question>
+
+<answer>
+<para>
+ログを見てみて下さい。
+まず WWW サーバ側に出力されているログを確認して下さい。
+fml からのエラーメッセージが記録されている可能性があります。
+<screen>
+/usr/local/apache/logs/error_log
+/usr/local/apache/logs/suexec_log
+</screen>
+ＭＬのホームディレクトリすら出来ていないなら
+(そのＭＬのログファイルがありませんから)
+これらのログファイルを解析するしか方法がありません。
+</para>
+
+<para>
+中途半端にＭＬがセットアップされている（例えばホームディレクトリはある
+が、aliases に反映されていない）場合には、fml のログファイル(例:
+/var/spool/ml/elena/log)を見てみて下さい。
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+何度も同じメールが来る
+</para>
+</question>
+
+<answer>
+<para>
+<link linkend="troubleshoot.delivery.duplication">
+<xref linkend="troubleshoot.delivery.duplication">
+</link>
+を参照。
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+特定の人に配送されてない気がする
+</para>
+</question>
+
+<answer>
+<para>
+<link linkend="troubleshoot.delivery.duplication">
+<xref linkend="troubleshoot.delivery.duplication">
+</link>
+を参照。
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+ＭＬのメンバーでないアドレスからエラーメールがくる
+</para>
+</question>
+
+<answer>
+<para>
+(1) ＭＬの受信者の中にメールを転送している人がいると、
+その転送先からエラーメールが管理者へ返ってくる可能性があります。
+</para>
+
+<para>
+(2) SPAM メールです。
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+aliases から fml に変更したら 2 通来るようになった。
+</para>
+</question>
+
+<answer>
+
+<para>
+バグではなく MTA の挙動からそうなる可能性はあります。
+たとえば aliases が次のようになっていたとします。
+<screen>
+elena: rudo, kenken, hitomi
+</screen>
+この aliases のＭＬに
+<screen>
+From: rudo
+To: elena 
+Cc: rudo 
+
+test
+</screen>
+というメールを投稿したとすると rudo には一通届くだけです。MTA が elena 
+ＭＬの受信者を調べ rudo 宛の重複分を取り除くからです。
+</para>
+
+<para>
+elena ＭＬを fml に変更すると、
+この重複削除の効果はなくなります。そのため、
+elena ＭＬ経由 rudo 宛にとどく分と
+rudo 宛に直接配送されてくる分の２つになるというわけです。
+</para>
+
+</answer>
+
+</qandaentry>

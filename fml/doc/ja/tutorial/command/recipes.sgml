@@ -1,8 +1,132 @@
 <!--
- $FML$
+ $FML: recipes.sgml,v 1.1 2005/11/18 11:44:54 fukachan Exp $
 -->
 
+
 <qandaset>
+
+
+<qandaentry>
+
+<question>
+<para>
+コマンドメールなどの返事は Reply-To: ではなく From: へ
+</para>
+</question>
+
+<answer>
+<para>
+コマンドメールの送信者(From:)へ返事を返すのがデフォルトの挙動です。
+<screen>
+
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+help などのメッセージをアップグレードする
+</para>
+</question>
+
+<answer>
+<para>
+アップグレードすれば自動的にアップグレードされます。
+&fml4; と異なり &fml8;  では help コマンドのメッセージテンプレートは
+次のようなパスに存在するからです。
+<screen>
+/usr/local/share/fml/$VERSION/message/euc-jp/user/help
+/usr/local/share/fml/$VERSION/message/us-ascii/user/help
+</screen>
+</para>
+
+<para>
+ただしＭＬのホームディレクトリに help ファイルがある場合は
+それが help コマンドの返事に使われています。
+よって help ファイルを自分で用意しているなら
+自分で編集してください。
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+help メッセージの元ファイルをカスタマイズする。
+</para>
+</question>
+
+<answer>
+<para>
+&fml8; では help コマンドのメッセージテンプレートは次のようなパスに存
+在します。これを編集してしまうというのが第一案。ただし、これをするとバー
+ジョンアップをした際に変更点が無効になってしまいます。
+<screen>
+/usr/local/share/fml/$VERSION/message/euc-jp/user/help
+/usr/local/share/fml/$VERSION/message/us-ascii/user/help
+</screen>
+</para>
+
+<para>
+ＭＬ独自の help メッセージは
+ＭＬホームディレクトリの下に「local/share/message/言語/」を作り、
+その下におけば有効になります。
+<screen>
+[Example]
+
+/var/spool/ml/elena/local/share/message/euc-jp/user/help
+/var/spool/ml/elena/local/share/message/us-ascii/user/help
+</screen>
+常にこのファイルが使われるので、
+バージョンアップしても内容は変わりません。
+それが欠点です。
+</para>
+
+<para>
+なおＭＬのホームディレクトリに help ファイルがある場合は
+それが help コマンドの返事に使われています。
+よって help ファイルを自分で用意しているなら
+自分で編集してください。
+この場合も、常にこのファイルが使われるので、
+バージョンアップしても内容は変わりません。
+それが欠点です。
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+confirmation メッセージをカスタマイズする
+</para>
+</question>
+
+<answer>
+<para>
+help メッセージのカスタマイズと同様ですので、
+くわしくは前レシピを参照して下さい。
+<screen>
+/usr/local/share/fml/$VERSION/message/euc-jp/command/confirm
+/usr/local/share/fml/$VERSION/message/us-ascii/command/confirm
+</screen>
+</para>
+</answer>
+
+</qandaentry>
 
 
 <qandaentry>

@@ -1,8 +1,71 @@
 <!--
-   $FML: @recipe_template,v 1.1 2003/01/07 11:39:13 fukachan Exp $
+   $FML: recipes.delivery.sgml,v 1.1 2005/11/28 11:16:47 fukachan Exp $
 -->
 
 <qandaset>
+
+
+<qandaentry>
+
+<question>
+<para>
+MAINTAINER を elena-admin 以外にしたい。
+</para>
+</question>
+
+<answer>
+<para>
+config.cf で maintainer 変数を設定して下さい。
+<screen>
+maintainer = アドレス
+
+[EXAMPLE]
+
+maintainer = admin@example.co.jp
+</screen>
+設定するアドレス( admin@example.co.jp )でメールを受けとれるように
+しておいてください。
+なおメールサーバによってはメールの送信者が自ドメイン以外からの場合、
+受信を拒否することがあるので注意して下さい。
+</para>
+
+<para>
+単にエラーメールなどの受取先を変えたいだけなら、
+maintainer ( elena ML なら elena-admin@fml.org ) 
+のフォワード先を変更する方が簡単です。
+その設定は /etc/mail/aliases を変更するか、
+$maintainer_recipient_maps で行なえます。
+前者は MTA がフォワード先を変更していますが、
+後者では elena-admin 宛のメールを fml8 が受けて、
+fml8 が $maintainer_recipient_maps にしたがって再配送を行なっています。
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+リモート管理者はＭＬのメンバーでなくても投稿したい。
+</para>
+</question>
+
+<answer>
+<para>
+なにもしなくても構いません。
+次のように設定されているので、&fml8; のデフォルトでそのように動きます。
+<screen>
+member_maps             =       $primary_member_map
+                                $admin_member_maps
+</screen>
+</para>
+</answer>
+
+</qandaentry>
+
 
 <qandaentry>
 
