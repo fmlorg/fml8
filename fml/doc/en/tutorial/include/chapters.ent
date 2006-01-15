@@ -1,5 +1,5 @@
 <!--
-   $FML: chapters.ent,v 1.6 2005/10/15 10:56:07 fukachan Exp $
+   $FML: chapters.ent,v 1.7 2005/12/15 03:07:24 fukachan Exp $
    $jaFML: chapters.ent,v 1.75 2003/06/20 22:03:12 fukachan Exp $
 -->
 
@@ -218,7 +218,9 @@
 <!entity recipe.version               SYSTEM "troubleshoot/recipe.version.sgml">
 <!entity recipe.listup.addresses      SYSTEM "troubleshoot/recipe.listup.addresses.sgml">
 <!entity recipe.listup.aliases        SYSTEM "troubleshoot/recipe.listup.aliases.sgml">
+
 <!entity sect.troubleshoot.filesystem SYSTEM "troubleshoot/filesystem.sgml">
+<!entity sect.troubleshoot.delivery   SYSTEM "troubleshoot/delivery.sgml">
  
 
 <!-- changes -->

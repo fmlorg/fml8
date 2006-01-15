@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.sgml,v 1.5 2005/10/29 05:13:11 fukachan Exp $
+   $FML: chapter.sgml,v 1.6 2005/11/19 03:45:07 fukachan Exp $
 -->
 
 
@@ -30,5 +30,7 @@
 <!-- ファイルシステム -->
 &sect.troubleshoot.filesystem;
 
+<!-- 配送 -->
+&sect.troubleshoot.delivery;
 
 </chapter>
