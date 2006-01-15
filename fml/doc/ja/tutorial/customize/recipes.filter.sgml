@@ -1,8 +1,81 @@
 <!--
- $FML$
+ $FML: recipes.filter.sgml,v 1.1 2005/10/29 04:20:00 fukachan Exp $
 -->
 
 <qandaset>
+
+
+<qandaentry>
+
+<question>
+<para>
+フィルタシステムを使わない独自のフィルタを設定したい
+</para>
+</question>
+
+<answer>
+<para>
+&fml8; のフィルタシステムで利用可能なフィルタは 
+<screen>
+/usr/local/etc/fml//defaults/$VERSION/default_config.cf.ja
+</screen>
+を読むと分かります。
+</para>
+
+<para>
+この内蔵フィルタで実装されていない内容のフィルタは
+article_post_verify_request_end_hook
+article_filter_start_hook  
+article_filter_end_hook  
+article_post_run_start_hook  
+のいづれかの HOOK でおこなえばよいでしょう。
+<screen>
+$article_filter_start_hook = q{
+	my $header = $curproc->incoming_message_header();
+	my $body   = $curproc->incoming_message_body();
+
+	if (条件) {
+		$curproc->policy_reject_this_message();
+	}
+};
+</screen>
+のように書けば良いでしょう。
+例については以下のレシピも参照して下さい。
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+message/partial をフィルタしたい。
+</para>
+</question>
+
+<answer>
+<para>
+mime component filter で「message/partial * reject」を設定して下さい。
+<screen>
+[/usr/local/etc/fml/mime_component_filter]
+
+# allow only text/plain messages.
+message/partial *		reject
+text/plain	*		permit
+text/html	*		reject
+multipart/*	!text/plain	reject
+</screen>
+</para>
+
+<para>
+注意: このフィルタは全ＭＬに反映されます。
+</para>
+</answer>
+
+</qandaentry>
 
 
 <qandaentry>
@@ -246,6 +319,75 @@ $distribute_verify_request_end_hook = q{
 
 <para>
 ちょっとトリッキーですが、動きます。
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+SPAM 対策として、To: および Cc: に ML 名を必須としたい
+</para>
+</question>
+
+<answer>
+<para>
+HOOK で行なうなら次のようになります。
+<screen>
+$article_filter_end_hook = q{
+	my $header = $curproc->incoming_message_header();
+	my $addr   = $config->{ article_post_address };
+	my $to     = $header->get('To') || '';
+	my $cc     = $header->get('Cc') || '';
+	my $to_cc  = "$to, $cc";
+	my $found  = 0;
+
+	use Mail::Address;
+	my (@addrlist) = Mail::Address->parse($to_cc);
+	for my $a (@addrlist) {
+		my $_addr = $a->address();
+		if ($_addr =~ /^$addr$/i) {
+			$found = 1;
+		}	
+	}
+
+	if ($found) {
+		$curproc->log("article_post_address found in header");
+	}
+	else {
+		$curproc->log("article_post_address not found in header");
+		$curproc->policy_reject_this_message();
+	}
+};
+</screen>
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+ＭＬ独自の Message-ID: をつけて矯正したい
+</para>
+</question>
+
+<answer>
+<para>
+未実装です。
+</para>
+
+<para>
+&fml4; では「In-Reply-To: や References: をつけてくれない MUA があるた
+めにスレッドがうまく扱えない」という問題を解決するために、ＭＬ独自の 
+Message-ID: をつけて矯正するという機能がありました。現代では、そういっ
+た MUA も死に絶えたでしょうから &fml8; では考慮しないことにします。
 </para>
 
 </answer>
