@@ -1,5 +1,5 @@
 <!--
-   $FML: fml.sgml,v 1.9 2005/07/19 23:46:14 fukachan Exp $
+   $FML: fml.sgml,v 1.10 2005/08/03 13:45:11 fukachan Exp $
 -->
 
 
@@ -546,5 +546,7 @@ HOOK (perl script)を書く場合は、
 
 </sect1>
 
+<!-- TABLE_OF_RECIPES -->
+&sect.overview.fml.recipes;
 
 </chapter>

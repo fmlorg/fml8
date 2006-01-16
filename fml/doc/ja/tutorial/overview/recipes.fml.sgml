@@ -1,0 +1,87 @@
+<!--
+ $FML$
+-->
+
+<sect1 id="recipes.overview.fml">
+	<title>
+	レシピ’s
+	</title>
+
+
+<qandaset>
+
+
+<qandaentry>
+
+<question>
+<para>
+なぜ &fml4; の次が &fml8; なのですか？
+</para>
+</question>
+
+<answer>
+<para>
+大きく内部構造を変える時に 1 bit ずらすのが伝統だからです :-)
+</para>
+
+<para>
+&fml8; は 4 のコードを全て捨てて一から作りなおされたソフトウエアです。
+4 から 5 だと単なる 4 のアップグレードだと思われるので 1 bit ずらして 
+8 にしました。
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+&fml4; と &fml8; の相違点は何ですか？
+</para>
+</question>
+
+<answer>
+<para>
+<link linkend="changes">
+<xref linkend="changes">
+</link>
+にまとめてありますので、参照して下さい。
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+current, stable, release どれをダウンロードするべきですか？
+</para>
+</question>
+
+<answer>
+<para>
+今のところ &fml8 にはそういった違いがありません。
+ファイルの日付を見て新しいものを選んで下さい。
+</para>
+
+<para>
+ダウンロードについては、
+<link linkend="download">
+<xref linkend="download">
+</link>
+を参照して下さい。
+</para>
+</answer>
+
+</qandaentry>
+
+
+</qandaset>
+
+
+</sect1>

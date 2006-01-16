@@ -1,0 +1,91 @@
+<!--
+ $FML$
+-->
+
+<sect1 id="recipes.overview.fml">
+	<title>
+	Recipes
+	</title>
+
+
+<qandaset>
+
+
+<qandaentry>
+
+<question>
+<para>
+Why &fml8; is the next official release of &fml4; series ?
+</para>
+</question>
+
+<answer>
+
+<para>
+1 bit shift of version with greate internal change is traditional :-)
+</para>
+
+<para>
+&fml8; is build from scratch by discarding &fml4; source codes.
+&fml8; is not a upgraded &fml4; software.
+So we use 1 bit shifted version number for &fml8;.
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+</qandaset>
+
+
+<qandaentry>
+
+<question>
+<para>
+What difference between &fml4; and &fml8; ?
+</para>
+</question>
+
+<answer>
+<para>
+See
+<link linkend="changes">
+<xref linkend="changes">
+</link>
+fore more details.
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Which of current, stable and release should we download ?
+</para>
+</question>
+
+<answer>
+<para>
+&fml8; does not provide such release line today.
+Please download the latest one by comparing file name which has date in int.
+</para>
+
+<para>
+See
+<link linkend="download">
+<xref linkend="download">
+</link>
+on download.
+</para>
+</answer>
+
+</qandaentry>
+
+</qandaset>
+
+
+</sect1>

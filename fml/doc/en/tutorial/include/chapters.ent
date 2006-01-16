@@ -1,5 +1,5 @@
 <!--
-   $FML: chapters.ent,v 1.7 2005/12/15 03:07:24 fukachan Exp $
+   $FML: chapters.ent,v 1.8 2006/01/15 15:32:03 fukachan Exp $
    $jaFML: chapters.ent,v 1.75 2003/06/20 22:03:12 fukachan Exp $
 -->
 
@@ -29,8 +29,10 @@
 
 
 <!-- part I: introduction .. test -->
-<!entity chapter.overview.fml     SYSTEM "overview/fml.sgml">
-<!entity chapter.overview.ml      SYSTEM "overview/ml.sgml">
+<!entity chapter.overview.fml      SYSTEM "overview/fml.sgml">
+<!entity chapter.overview.ml       SYSTEM "overview/ml.sgml">
+<!entity sect.overview.ml.recipes  SYSTEM "overview/recipes.ml.sgml">
+<!entity sect.overview.fml.recipes SYSTEM "overview/recipes.fml.sgml">
 
 
 <!-- part II: set up -->
