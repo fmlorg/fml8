@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.command.sgml,v 1.3 2004/10/06 09:07:34 fukachan Exp $
+   $FML: chapter.command.sgml,v 1.4 2005/06/25 15:11:29 fukachan Exp $
 -->
 
 
@@ -36,6 +36,16 @@ help コマンドの応答には、このモジュール help.pm が使われます。
 package の名前空間に気をつけてください。
 </para>
 </caution>
+
+</sect1>
+
+
+<sect1 id="customize.command.recipes">
+	<title>
+	レシピ’s
+	</title>
+
+&sect.customize.command.recipes;
 
 </sect1>
 

@@ -1,5 +1,5 @@
 <!--
-   $FML: chapters.ent,v 1.9 2006/01/16 03:21:34 fukachan Exp $
+   $FML: chapters.ent,v 1.10 2006/01/16 10:24:27 fukachan Exp $
    $jaFML: chapters.ent,v 1.75 2003/06/20 22:03:12 fukachan Exp $
 -->
 
@@ -119,6 +119,7 @@
 <!entity sect.command.internal       SYSTEM "command/internal.sgml">
 <!entity sect.command.extension      SYSTEM "command/extension.sgml">
 <!entity sect.command.module         SYSTEM "command/module.sgml">
+<!entity sect.command.recipes        SYSTEM "command/recipes.sgml">
 
 
 <!-- ? ;-) -->

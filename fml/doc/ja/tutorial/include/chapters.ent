@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.106 2006/01/16 03:21:34 fukachan Exp $
+	$FML: chapters.ent,v 1.107 2006/01/16 10:24:27 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -74,6 +74,7 @@
 <!entity sect.customize.subscribe.recipes SYSTEM "customize/recipes.subscribe.sgml">
 <!entity sect.customize.delivery.recipes  SYSTEM "customize/recipes.delivery.sgml">
 <!entity sect.customize.autoreply.recipes SYSTEM "customize/recipes.autoreply.sgml">
+<!entity sect.customize.command.recipes SYSTEM "customize/recipes.command.sgml">
 
 
 <!entity sect.config.autoreply              SYSTEM "customize/autoreply.sgml">

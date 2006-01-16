@@ -1,5 +1,5 @@
 <!--
- $FML: recipes.sgml,v 1.1 2005/11/18 11:44:54 fukachan Exp $
+ $FML: recipes.sgml,v 1.2 2006/01/15 13:49:57 fukachan Exp $
 -->
 
 
@@ -275,6 +275,4 @@ elena-ctl: :include:/var/spool/ml/elena/include-ctl, elena-admin
 </qandaentry>
 
 
-
 </qandaset>
-
