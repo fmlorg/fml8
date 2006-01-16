@@ -1,5 +1,5 @@
 <!--
- $FML: recipes.sgml,v 1.1 2005/10/29 05:13:11 fukachan Exp $
+ $FML: recipes.sgml,v 1.2 2006/01/15 13:49:57 fukachan Exp $
 -->
 
 
@@ -71,6 +71,40 @@ fml からのエラーメッセージが記録されている可能性があります。
 </answer>
 
 </qandaentry>
+
+<qandaentry>
+
+<question>
+<para>
+配送に失敗した記事を自動で再送したい
+</para>
+</question>
+
+<answer>
+<para>
+MTA 間での再送エラーは MTA が再配送を試みます。
+Sendmail の歴史的なパラメータが五日間でしたので、
+五日間再配送を試みるくらいの MTA が多いと思います。
+</para>
+
+<para>
+&fml8; と MTA 間でエラーが生じた場合は 
+&fml8; のメールキューに入り、
+&fml8; が MTA への再送を試みます。
+この部分の動作において &fml8; は MTA です。
+</para>
+
+<para>
+参考: 
+<link linkend="delivery">
+<xref linkend="delivery">
+</link>
+も参照して下さい。
+</para>
+</answer>
+
+</qandaentry>
+
 
 
 <qandaentry>
@@ -170,6 +204,24 @@ elena ＭＬ経由 rudo 宛にとどく分と
 rudo 宛に直接配送されてくる分の２つになるというわけです。
 </para>
 
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+flock が動かない OS なのですが？
+</para>
+</question>
+
+<answer>
+<para>
+fml8 は flock(2) 必須ですので、fml8 は動きません(たぶん動くけど動作が
+変になる)。
+</para>
 </answer>
 
 </qandaentry>

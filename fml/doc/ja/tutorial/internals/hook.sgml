@@ -1,5 +1,5 @@
 <!--
-   $FML: hook.sgml,v 1.5 2004/05/22 12:33:49 fukachan Exp $
+   $FML: hook.sgml,v 1.6 2004/10/06 09:07:39 fukachan Exp $
 -->
 
 
@@ -120,6 +120,18 @@ sub run
 単純に hook2 でいいのかもしれないし、
 可能であればもう少し理解しやすい名前にするべきでしょう。
 </para>
+
+</sect1>
+
+
+<sect1 id="hook.recipes">
+	<title>
+	レシピ’s
+	</title>
+
+<qandaset>
+&sect.hook.recipes;
+</qandaset>
 
 </sect1>
 

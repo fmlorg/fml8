@@ -1,0 +1,156 @@
+<!--
+ $FML$
+-->
+
+
+<qandaset>
+
+
+<qandaentry>
+
+<question>
+<para>
+show fml error log of yesterday.
+</para>
+</question>
+
+<answer>
+<para>
+daily.pl of &fml4; is not implemented yet.
+</para>
+
+<para>
+Currently use grep to parse the log file.
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+See old logs.
+</para>
+</question>
+
+<answer>
+<para>
+&fml8; appends log messages continuously into the log file at
+$ml_home_directory by default. All log messages exist in it.
+</para>
+
+<para>
+On the other hand, Unix log expires. 
+So you cannot trace too lod messages.
+</para>
+
+<para>
+Please tune parameters of expiration tools e.g. newsyslog which
+program differs from unix variants to variants to save log messages in
+at least 3 months.
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Centralize log messages.
+</para>
+</question>
+
+<answer>
+<para>
+Unix uses syslog mechanism.
+To redirect all messages to /var/log/messages, set the following:
+<screen>
+[/etc/syslog.conf]
+
+*.*		/var/log/messages
+</screen>
+</para>
+
+<para>
+Also, &fml8; can use syslog mechanism.
+<screen>
+[/var/spool/ml/elena/config.cf]
+
+log_type	=	syslog
+</screen>
+</para>
+
+<para>
+To use these configuration, all messages are centralized to
+/var/log/messages file.
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+extract specific log messages in monitoring.
+</para>
+</question>
+
+<answer>
+<para>
+<screen>
+% tail -F /var/spool/ml/elena/log | grep 'PATTERN'
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+extrace the specific log messages with coping it.
+</para>
+</question>
+
+<answer>
+<para>
+
+<screen>
+% tail -F /var/spool/ml/elena/log | grep 'PATTERN' | tee FILE
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Expire old log files.
+</para>
+</question>
+
+<answer>
+<para>
+Newsyslog mechanism provided by &fml4; is not implemented.
+</para>
+</answer>
+
+</qandaentry>
+
+
+</qandaset>

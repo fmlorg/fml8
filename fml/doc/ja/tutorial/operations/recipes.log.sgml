@@ -1,0 +1,168 @@
+<!--
+ $FML$
+-->
+
+<qandaset>
+
+<qandaentry>
+
+<question>
+<para>
+前日の fml のエラーログを出したい
+</para>
+</question>
+
+<answer>
+<para>
+&fml4; の daily.pl にあたるものは未実装です。
+</para>
+
+<para>
+現状ではログファイルを grep してください。
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+古いログを見たい
+</para>
+</question>
+
+<answer>
+<para>
+&fml8; はデフォルトではＭＬのホームディレクトリにあるログファイルにひ
+たすら書き込んでいきます。ＭＬが始まった時からの記録が全てここにありま
+す。
+</para>
+
+<para>
+一方、Unix のログは一定期間後に削除されていってしまうのであまり古いロ
+グは追えません。
+</para>
+
+<para>
+newsyslog など(OS によって仕組みは異なる) OS 附属のシステムが古いログ
+の消去をしてます。あらかじめ、これらのパラメータを調整し、三カ月程度は
+保存するようにしておきましょう。
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+ログを一極集中させたい
+</para>
+</question>
+
+<answer>
+<para>
+Unix では syslog というメカニズムでログを管理しています。syslogd が受
+けとったメッセージは /etc/syslog.conf に従いファイルへの書き込みや他ホ
+ストへの転送がなされます。
+<screen>
+[/etc/syslog.conf]
+
+# すべてのログを /var/log/messages へ出力する
+*.*		/var/log/messages
+</screen>
+</para>
+
+<para>
+&fml8; のログはデフォルトでは各ＭＬのホームディレクトリにあるログファ
+イルへ書き込まれますが syslog へ出力することも出来ます。
+<screen>
+[/var/spool/ml/elena/config.cf]
+
+log_type	=	syslog
+</screen>
+</para>
+
+<para>
+上述の「全てを記録する syslog 」設定とあわせて /var/log/messages にシ
+ステム全てのログと fml のログを集めることが出来るというわけです。
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+ログを見張りつつ特定の行だけを見たい
+</para>
+</question>
+
+<answer>
+<para>
+fml8 の問題というより Unix コマンドの使い方の話です。
+</para>
+
+<para>
+ある「パターン」にマッチするメッセージだけを表示させたいなら次のように
+します。
+<screen>
+% tail -F /var/spool/ml/elena/log | grep 'パターン'
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+ログのコピーをとりつつ見張り、かつエラー行だけ見る
+</para>
+</question>
+
+<answer>
+<para>
+fml8 の問題というより Unix コマンドの使い方の話です。
+</para>
+
+<para>
+
+<screen>
+% tail -F /var/spool/ml/elena/log | grep 'パターン' | tee ファイル
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+古いログファイルを消去したい
+</para>
+</question>
+
+<answer>
+<para>
+&fml4; の newsyslog 機能に当たるものは未実装です。
+</para>
+</answer>
+
+</qandaentry>
+
+
+</qandaset>

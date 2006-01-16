@@ -1,5 +1,5 @@
 <!--
-   $FML: log.sgml,v 1.1 2003/11/29 12:51:36 fukachan Exp $
+   $FML: log.sgml,v 1.2 2004/10/06 09:07:41 fukachan Exp $
 -->
 
 
@@ -85,6 +85,16 @@ FML::Log::Print::Simple)は config.cf で log_computer_output_engine を
 作り、それを、この変数に指定してください。モジュールは
 FML::Log::Print::Simpleを参考に、hack してみてください:)
 </para>
+
+</sect1>
+
+
+<sect1 id="operations.log.recipes">
+	<title>
+	レシピ’s
+	</title>
+
+&sect.op.log.recipes;
 
 </sect1>
 

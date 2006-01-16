@@ -1,0 +1,62 @@
+<!--
+   $FML$
+-->
+
+
+<qandaentry>
+
+<question>
+<para>
+HOOK で使うべきおすすめの変数名はなんですか？
+</para>
+</question>
+
+<answer>
+<para>
+HOOK 内で使う変数を my() で制限してくれれば、特に制限はないです。
+<screen>
+$hook = q{
+	my $x = $config->{ xxx };
+	my $y = $config->{ yyy };
+	if ($x eq $y) {
+	    SOME ACTION
+	}
+};
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+HOOK で変更してよい変数はなんですか？
+</para>
+</question>
+
+<answer>
+
+<para>
+$config オブジェクトへの代入操作は問題ありません。
+また $curproc が提供するアクセスメソッドで変更できるものについても
+自由にアクセスメソッドを使って下さい。
+</para>
+
+<para>
+理屈の上では HOOK で $curproc 経由でアクセスできる全てのものを変更して
+好きなように &fml8; を操作することが出来ますが、アップグレードなどの保
+証は一切ありません。
+</para>
+
+<para>
+アップグレードしても問題のない HOOK を書くには
+$curproc のアクセスメソッドだけを使って書くようにしてください。
+</para>
+
+</answer>
+
+</qandaentry>

@@ -1,5 +1,5 @@
 <!--
-   $FML: hook.sgml,v 1.1 2005/07/28 13:27:48 fukachan Exp $
+   $FML: hook.sgml,v 1.2 2005/09/28 11:05:51 fukachan Exp $
 -->
 
 
@@ -118,6 +118,18 @@ sub run
 This case is fundamental. More granular hooks must be needed.
 The naming convension may differ from this convension.
 </para>
+
+</sect1>
+
+
+<sect1 id="hook.recipes">
+	<title>
+	Recipes
+	</title>
+
+<qandaset>
+&sect.hook.recipes;
+</qandaset>
 
 </sect1>
 
