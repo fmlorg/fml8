@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.sgml,v 1.2 2005/07/20 10:39:17 fukachan Exp $
+   $FML: chapter.sgml,v 1.3 2005/09/25 04:27:17 fukachan Exp $
    $jaFML: chapter.sgml,v 1.12 2003/04/15 14:51:37 fukachan Exp $
 -->
 
@@ -128,7 +128,7 @@ FML::Mailer should be merged into FML::Process::QueueManager class?
 
 <qandaset>
 
-&recipe.delivery.forward;
+&recipes.delivery;
 
 </qandaset>
 

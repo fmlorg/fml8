@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.sgml,v 1.4 2005/09/18 13:55:56 fukachan Exp $
+   $FML: chapter.sgml,v 1.5 2006/01/15 15:32:03 fukachan Exp $
    $jaFML: chapter.sgml,v 1.3 2002/11/09 14:16:19 fukachan Exp $
 -->
 
@@ -12,9 +12,8 @@
 
 <qandaset>
 
-&recipe.version;
-&recipe.listup.addresses;
-&recipe.listup.aliases;
+&troubleshoot.version.recipes;
+&troubleshoot.address.recipes;
 
 </qandaset>
 

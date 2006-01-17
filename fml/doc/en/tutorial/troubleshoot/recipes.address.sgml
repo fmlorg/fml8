@@ -1,6 +1,5 @@
 <!--
-   $FML: recipe.listup.addresses.sgml,v 1.2 2003/08/03 01:47:18 fukachan Exp $
-   $jaFML: recipe.listup.addresses.sgml,v 1.2 2003/04/15 14:51:45 fukachan Exp $
+ $FML$
 -->
 
 <qandaentry>
@@ -17,6 +16,37 @@ List up pre-defined addresses on this host.
 aliases. 
 <screen>
 % fmladdr
+</screen>
+</para>
+
+<para>
+<warning>
+<para>
+The difference between "fmladdr" and "fmlalias" is whether
+it contains users defined at /etc/passwd or not.
+"fmladdr" contains it but fmlalias not.
+"fmlalias" lists up only users defined at aliases.
+</para>
+</warning>
+</para>
+
+</answer>
+</qandaentry>
+
+
+<qandaentry>
+<question>
+<para>
+List up defined aliases on this host
+</para>
+</question>
+
+<answer>
+
+<para>
+Run "fmlalias". It shows all addresses defined in aliases files.
+<screen>
+% fmlalias
 </screen>
 </para>
 

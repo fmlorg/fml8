@@ -1,21 +1,20 @@
 <!--
-   $FML: recipe.version.sgml,v 1.4 2003/04/15 14:51:45 fukachan Exp $
+   $FML: recipe.version.sgml,v 1.3 2005/09/18 13:55:56 fukachan Exp $
+   $jaFML: recipe.version.sgml,v 1.4 2003/04/15 14:51:45 fukachan Exp $
 -->
-
 
 <qandaentry>
 <question>
 <para>
-fml のバージョンが知りたい。
+I want to know fml version.
 </para>
 </question>
 
 <answer>
 <para>
-fmlconf が各ＭＬの変数一覧を表示してくれます。どのＭＬ(実は適当なＭＬ
-でも良い)を指定しても良いので、fmlconf を実行して下さい。例えば
 <screen>
-% fmlconf test |grep fml_version
+[Example: in the case of "test" ML]
+% fmlconf test fml_version
 fml_version                          = fml-devel current-20021029
 </screen>
 </para>
@@ -26,7 +25,7 @@ fml_version                          = fml-devel current-20021029
 <qandaentry>
 <question>
 <para>
-Postfix のバージョンが知りたい。
+Check Postfix version.
 </para>
 </question>
 
@@ -44,7 +43,7 @@ Postfix のバージョンが知りたい。
 <qandaentry>
 <question>
 <para>
-Sendmail のバージョンが知りたい。
+Check Sendmail version.
 </para>
 </question>
 
