@@ -1,5 +1,5 @@
 <!--
-   $FML: recipes.delivery.sgml,v 1.1 2005/11/28 11:16:47 fukachan Exp $
+   $FML: recipes.delivery.sgml,v 1.2 2006/01/15 13:49:56 fukachan Exp $
 -->
 
 <qandaset>
@@ -216,6 +216,30 @@ recipient_maps = unix.group:fml
 </answer>
 
 </qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+特定の受信者だけ記事の内容を変更したい
+</para>
+</question>
+
+<answer>
+<para>
+&fml4; でも出来ませんが &fml8; でも出来ません。
+</para>
+
+<para>
+そもそもＭＬは投稿された記事をＭＬのメンバーへ配送するものなので
+一部の受信者だけ記事の内容を変更するのは難しいことです。
+</para>
+
+</answer>
+
+</qandaentry>
+
 
 
 </qandaset>
