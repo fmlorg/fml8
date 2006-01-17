@@ -1,5 +1,5 @@
 <!--
- $FML: recipes.filter.sgml,v 1.1 2005/10/29 04:20:00 fukachan Exp $
+ $FML: recipes.filter.sgml,v 1.2 2006/01/15 13:47:38 fukachan Exp $
 -->
 
 <qandaset>
@@ -43,6 +43,26 @@ $article_filter_start_hook = q{
 例については以下のレシピも参照して下さい。
 </para>
 
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+特定のメールアドレスを拒否したい
+</para>
+</question>
+
+<answer>
+<para>
+たとえば特定のドメイン(\S+\@example.co.jp)は全部はじきたいといった
+フィルタのことです。
+内蔵フィルタの一部として実装しようと考えていますが、
+残念ながら未実装です _o_
+</para>
 </answer>
 
 </qandaentry>
