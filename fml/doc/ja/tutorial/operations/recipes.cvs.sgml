@@ -1,0 +1,27 @@
+<!--
+ $FML$
+-->
+
+<qandaset>
+
+
+<qandaentry>
+
+<question>
+<para>
+設定ファイルをバージョン管理したい
+</para>
+</question>
+
+<answer>
+<para>
+まだ &fml8; が自動で cvs を走らせるようになっていませんので、
+ときどき手動で行なって下さい。
+</para>
+</answer>
+
+</qandaentry>
+
+
+</qandaset>
+

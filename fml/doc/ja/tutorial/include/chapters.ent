@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.108 2006/01/16 12:02:07 fukachan Exp $
+	$FML: chapters.ent,v 1.109 2006/01/17 04:46:04 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -196,6 +196,11 @@
 <!entity chapter.op.log              SYSTEM "operations/log.sgml">
 <!entity chapter.op.backup           SYSTEM "operations/backup.sgml">
 <!entity sect.op.log.recipes         SYSTEM "operations/recipes.log.sgml">
+<!entity chapter.op.archive          SYSTEM "operations/archive.sgml">
+<!entity op.archive.recipes          SYSTEM "operations/recipes.archive.sgml">
+<!entity chapter.op.move             SYSTEM "operations/move.sgml">
+<!entity op.move.recipes             SYSTEM "operations/recipes.move.sgml">
+<!entity op.cvs.recipes              SYSTEM "operations/recipes.cvs.sgml">
 
 
 <!-- misc -->
@@ -223,6 +228,7 @@
 <!entity chapter.troubleshoot         SYSTEM "troubleshoot/chapter.sgml">
 <!entity troubleshoot.recipes         SYSTEM "troubleshoot/recipes.sgml">
 <!entity troubleshoot.recipes.message SYSTEM "troubleshoot/recipes.message.sgml">
+<!entity troubleshoot.recipes.command SYSTEM "troubleshoot/recipes.command.sgml">
 
 
 <!entity troubleshoot.version.recipes SYSTEM "troubleshoot/recipes.version.sgml">

@@ -1,0 +1,27 @@
+<!--
+ $FML$
+-->
+
+<qandaset>
+
+
+<qandaentry>
+
+<question>
+<para>
+メールサーバを引越ししますが、
+IP アドレスの変更に関係のある &fml8; のファイルはありますか？
+</para>
+</question>
+
+<answer>
+<para>
+ありません。
+</para>
+</answer>
+
+</qandaentry>
+
+
+</qandaset>
+

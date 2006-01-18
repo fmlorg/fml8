@@ -1,0 +1,25 @@
+<!--
+ $FML$
+-->
+
+
+<chapter id="archive">
+	<title>
+	アーカイブ
+	</title>
+
+<para>
+未実装です。
+</para>
+
+<sect1 id="archive.recipes">
+	<title>
+	レシピ’s
+	</title>
+
+&op.archive.recipes;
+
+</sect1>
+
+
+</chapter>

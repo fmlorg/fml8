@@ -1,0 +1,155 @@
+<!--
+ $FML$
+
+-->
+
+
+<qandaentry>
+
+<question>
+<para>
+help を取り寄せると化けています
+</para>
+</question>
+
+<answer>
+
+<para>
+&fml8; では ISO-2022-JP に変換してから送信していますし、
+ヘッダにも適切な Content-Type: をつけています。
+</para>
+
+<para>
+化けるようなら、これらの処理を行なうモジュールがうまく動作していない可
+能性があります。ヘッダの確認と、そのメールの文字コードの確認をしてみて
+ください。
+</para>
+
+<para>
+また、そのヘルプファイルと、ヘルプを取り寄せるトリガーになったコマンド
+メールを見せていただけるとさいわいです。
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+get できない
+</para>
+</question>
+
+<answer>
+<para>
+返されたエラーメッセージおよびログファイルを見てみて下さい。
+</para>
+
+<para>
+ログの no such file は get しようとしたファイルがないということです。
+そのメッセージの後にアクセスしようとしたファイルのフルパスが書いてあるので
+確認してみて下さい。
+</para>
+
+<para>
+ログの invalid argument は指示されたパラメータの何かが不正であった場合
+にでます。また、指定した記事番号が存在しなかった場合にもこのエラーメッ
+セージが出ることがあります。
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+get で ish モードなどが動かない
+</para>
+</question>
+
+<answer>
+<para>
+特殊な圧縮形式は未サポートです。
+&fml8; の get および mget は送り返す際に MIME/Multipart 形式しか
+サポートしていません。
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+subscribe しようとすると無視されるようです？
+</para>
+</question>
+
+<answer>
+<para>
+メールアドレスの表現形式は制限されています。
+表現の範囲は FML::Restriction::Base クラスに定義されており、
+次のようになっています。
+<screen>
+my $domain_regexp  = '[-A-Za-z0-9\.]+';    # domain of user@domain
+my $user_regexp    = '[-A-Za-z0-9\._\+]+'; # user of user@domain
+</screen>
+不正なアドレスの場合、ログに次のように残りつつ無視されます。
+<screen>
+error: unsafe From: アドレス
+error: ignore this request.
+</screen>
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+' を含むアドレスがうまく扱えない
+</para>
+</question>
+
+<answer>
+<para>
+扱えるメールアドレスの表現形式が制限されているためです。
+前レシピ参照。
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+"xxx"@yyy.or.jp というアドレスだとうまく subscribe できません。
+</para>
+</question>
+
+<answer>
+<para>
+そもそも、このアドレスには有効なユーザ部分がありません。
+コメントだけですのでエラーになって当然です。
+</para>
+
+<para>
+扱えるメールアドレスの表現形式は制限されています。
+前々レシピも参照。
+</para>
+</answer>
+
+</qandaentry>
+
+

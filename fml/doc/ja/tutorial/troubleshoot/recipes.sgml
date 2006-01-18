@@ -1,5 +1,5 @@
 <!--
- $FML: recipes.sgml,v 1.2 2006/01/15 13:49:57 fukachan Exp $
+ $FML: recipes.sgml,v 1.3 2006/01/16 10:24:27 fukachan Exp $
 -->
 
 
@@ -222,6 +222,80 @@ flock が動かない OS なのですが？
 fml8 は flock(2) 必須ですので、fml8 は動きません(たぶん動くけど動作が
 変になる)。
 </para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+記事番号が１にもどってしまった
+</para>
+</question>
+
+<answer>
+<para>
+ということは起こらないように作ってあります(記事番号がアップデートでき
+ないならそもそも &fml8; の処理が途中で止まるようになっている)。
+</para>
+
+<para>
+ロジックに抜けがあって起きる可能性があるかもしれませんが、実際にそうい
+う現象がおきてみないとよくわかりません。いまのところ、ないと信じています。
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+間違えて消してしまった！
+</para>
+</question>
+
+<answer>
+<para>
+自動でバックアップなどはしてないので打つ手はありません。
+</para>
+
+<para>
+ミスオペレーションの可能性を考えて、つねに
+<link linkend="operations.backup">
+バックアップ
+</link>
+をとっておくべきです。
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+ディスクが足りない時に消してよいファイルは？
+</para>
+</question>
+
+<answer>
+
+<para>
+安全に消せる領域は、ほとんどありません。
+</para>
+
+<para>
+あえていえば、ねんのため記録している受信したメールおよび送信したメール
+のログである var/mail/incoming や var/mail/outgoing くらいでしょう。ま
+た過去のログが不要であれば log を消すという案もありますが、あまりおす
+すめできません。
+</para>
+
 </answer>
 
 </qandaentry>
