@@ -1,0 +1,110 @@
+<!--
+ $FML$
+-->
+
+<qandaset>
+
+
+<qandaentry>
+
+<question>
+<para>
+initialize ML by admin command. 
+</para>
+</question>
+
+<answer>
+<para>
+now allowd. 
+Please use CUI on the mail server host.
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+add or remove a log of user by admin command.
+</para>
+</question>
+
+<answer>
+<para>
+Specific command not yet supported. 
+Use ordinary admin commands.
+<screen>
+admin add ..
+admin add ..
+admin add ..
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+send welcome message when "admin add" runs.
+</para>
+</question>
+
+<answer>
+<para>
+not implemented.
+<screen>
+
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+restrict subscribers.
+</para>
+</question>
+
+<answer>
+<para>
+not implemented.
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+I forget how to use admin command ?
+</para>
+</question>
+
+<answer>
+<para>
+See &fml8; document ;-)
+<screen>
+http://www.fml.org/software/fml8/
+</screen>
+</para>
+</answer>
+
+</qandaentry>
+
+
+
+</qandaset>
+

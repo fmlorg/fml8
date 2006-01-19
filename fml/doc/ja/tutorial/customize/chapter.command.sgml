@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.command.sgml,v 1.4 2005/06/25 15:11:29 fukachan Exp $
+   $FML: chapter.command.sgml,v 1.5 2006/01/16 12:02:07 fukachan Exp $
 -->
 
 
@@ -45,7 +45,23 @@ package の名前空間に気をつけてください。
 	レシピ’s
 	</title>
 
+<sect2>
+	<title>
+	コマンド一般
+	</title>
+
 &sect.customize.command.recipes;
+
+</sect2>
+
+<sect2>
+	<title>
+	admin コマンド
+	</title>
+
+&sect.customize.command.admin.recipes;
+
+</sect2>
 
 </sect1>
 

@@ -1,0 +1,112 @@
+<!--
+ $FML$
+-->
+
+<qandaset>
+
+
+<qandaentry>
+
+<question>
+<para>
+admin コマンドでＭＬの再初期化をしたい
+</para>
+</question>
+
+<answer>
+<para>
+そういう危ないことは出来ません。
+CUI を実行する権限のある人に頼んで下さい。
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+admin コマンドでＭＬのメンバーリストを一気に削除/登録
+</para>
+</question>
+
+<answer>
+<para>
+いまのところ、便利なコマンドは作ってないので、
+「admin useradd アドレス」や「admin userdel アドレス」
+を書き連ねる方法しかありません _o_
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+admin add 時に welcome を送る
+</para>
+</question>
+
+<answer>
+<para>
+未実装です。
+<screen>
+
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+admin add で登録できるメールアドレスの範囲を制限したい
+</para>
+</question>
+
+<answer>
+<para>
+メールアドレス自体の表現範囲は制限されています。
+FML::Restriction::Base をみてください。
+</para>
+
+<para>
+subscribe 可能な人を特定のドメインだけに限りたいといった機能は未実装です。
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+管理用のコマンドを忘れた
+</para>
+</question>
+
+<answer>
+<para>
+特別な方法はないのですが、
+あえていえば &fml8; のドキュメントを読んで下さい :-)
+</para>
+
+<para>
+http://www.fml.org/software/fml8/
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+</qandaset>
