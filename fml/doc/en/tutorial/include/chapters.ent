@@ -1,5 +1,5 @@
 <!--
-   $FML: chapters.ent,v 1.12 2006/01/17 04:46:03 fukachan Exp $
+   $FML: chapters.ent,v 1.13 2006/01/18 14:56:34 fukachan Exp $
    $jaFML: chapters.ent,v 1.75 2003/06/20 22:03:12 fukachan Exp $
 -->
 
@@ -79,10 +79,16 @@
 
 <!entity sect.customize.casestudies	SYSTEM "customize/case_studies.sgml">
 
+<!-- www ml archive -->
+<!entity chapter.www			SYSTEM "customize/chapter.www.ml">
+<!entity sect.www.archive.recipes	SYSTEM "customize/recipes.www.ml">
 
 
 <!entity recipe.header.tag.uppercase SYSTEM "customize/recipe.header.tag.uppercase.sgml">
 <!entity recipe.header.tag.lowercase SYSTEM "customize/recipe.header.tag.lowercase.sgml">
+<!entity sect.customize.command.recipes SYSTEM "customize/recipes.command.sgml">
+<!entity sect.customize.command.admin.recipes SYSTEM "customize/recipes.command.admin.sgml">
+
 
 <!-- filter -->
 <!entity chapter.customize.filter    SYSTEM "customize/filter.sgml">
