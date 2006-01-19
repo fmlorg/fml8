@@ -1,0 +1,22 @@
+<!--
+ $FML$
+-->
+
+
+<chapter id="operations.move">
+	<title>
+	サーバの引越し
+	</title>
+
+
+<sect1 id="operations.move.recipes">
+	<title>
+	レシピ’s
+	</title>
+
+&op.move.recipes;
+
+</sect1>
+
+
+</chapter>
