@@ -1,5 +1,5 @@
 <!--
- $FML: recipes.header.sgml,v 1.3 2006/01/13 00:15:35 fukachan Exp $
+ $FML: recipes.header.sgml,v 1.4 2006/01/14 06:04:48 fukachan Exp $
 -->
 
 <qandaset>
@@ -580,6 +580,30 @@ policy_ignore_this_message
 </answer>
 
 </qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+そもそも、あらゆるヘッダ書き換え処理を止めたい
+</para>
+</question>
+
+<answer>
+<para>
+use_article_header_rewrite を no にして書き換え機能全体を止めて下さい。
+<screen>
+[/var/spool/ml/elena/config.cf]
+
+use_article_header_rewrite = no
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
 
 
 </qandaset>
