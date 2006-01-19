@@ -2,7 +2,7 @@
 This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
 to generate various output formats.
 
-   $FML: book.sgml,v 1.4 2005/09/18 13:55:54 fukachan Exp $
+   $FML: book.sgml,v 1.5 2006/01/18 14:56:34 fukachan Exp $
    $jaFML: book.sgml,v 1.58 2003/05/31 08:51:07 fukachan Exp $
 -->
 
@@ -94,8 +94,13 @@ to generate various output formats.
 	<!-- customize -->
 	&chapter.customize.mlstyle;
 	&chapter.customize.header;
+	&chapter.customize.body;
 	&chapter.customize.command;
 	&chapter.customize.filter;
+	&chapter.customize.message;
+
+	<!-- www ml archive -->
+	&chapter.www;
 
 	<!-- thread track system -->
 	&chapter.threadtrack;
