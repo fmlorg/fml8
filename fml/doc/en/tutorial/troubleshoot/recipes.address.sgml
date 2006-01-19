@@ -1,5 +1,5 @@
 <!--
- $FML$
+ $FML: recipes.address.sgml,v 1.1 2006/01/17 04:46:03 fukachan Exp $
 -->
 
 <qandaentry>
@@ -62,4 +62,24 @@ it contains users defined at /etc/passwd or not.
 </para>
 
 </answer>
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+List up all ML addresses containing the specific member address.
+</para>
+</question>
+
+<answer>
+<para>
+For each ML, run the following command:
+<screen>
+% fml ML list |grep ADDRESS
+</screen>
+</para>
+</answer>
+
 </qandaentry>
