@@ -1,0 +1,8 @@
+
+			SET UP
+
+% cd work
+% cvs -d cvs.fml.org:/cvsroot co fml
+% cd fml
+% make __dist FMLMK_CONF=$PWD/../../fmlmk.conf 
+% ( cd /var/tmp/daily_fml_snapshots/distrib/ ; make install )
