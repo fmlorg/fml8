@@ -1,0 +1,80 @@
+<!--
+ $FML$
+-->
+
+<qandaset>
+
+
+<qandaentry>
+
+<question>
+<para>
+convert articles to html form after ML runs without html conversion.
+</para>
+</question>
+
+<answer>
+<para>
+use fmlhtmlify command.
+<screen>
+Example
+
+% fmlhtmlify /var/spool/ml/elena/spool ~fml/public/fml/mlarchive/DOMAIN/ML
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+convert articles to html form for resetting.
+</para>
+</question>
+
+<answer>
+<para>
+use fmlhtmlify command.
+<screen>
+Example
+
+% fmlhtmlify /var/spool/ml/elena/spool ~fml/public/fml/mlarchive/DOMAIN/ML
+</screen>
+
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+How to create html archive on a different machine?
+</para>
+</question>
+
+<answer>
+<para>
+1. syncrhnize archive by e.g. rsync.
+</para>
+
+<para>
+2. set up html converter such as mhonarch on the machine.
+</para>
+
+<para>
+3. NFS but pay attension network structure in using NFS seen from Internet.
+</para>
+</answer>
+
+</qandaentry>
+
+
+</qandaset>
+

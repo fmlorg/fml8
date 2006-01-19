@@ -1,0 +1,36 @@
+<!--
+ $FML$
+-->
+
+
+<chapter id="www.archive">
+	<title>
+	WWW でＭＬの記事を公開する
+	</title>
+
+<para>
+デフォルトで &fml8; は
+<screen>
+~fml/public_html/fml/mlarchive/ドメイン名/ＭＬ名/
+</screen>
+以下に記事を HTML 化しています。
+</para>
+
+<para>
+個人ディレクトリを公開できるように apache で suexec の設定をするなり、
+このディレクトリだけ公開するなり WWW サーバの設定をすればＭＬの記事を
+公開できます。
+</para>
+
+
+<sect1 id="www.archive.recipes">
+	<title>
+	レシピ’s
+	</title>
+
+&sect.www.archive.recipes;
+
+</sect1>
+
+
+</chapter>

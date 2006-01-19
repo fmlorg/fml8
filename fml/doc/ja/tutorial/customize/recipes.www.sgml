@@ -1,0 +1,97 @@
+<!--
+ $FML$
+-->
+
+<qandaset>
+
+
+<qandaentry>
+
+<question>
+<para>
+運用の途中から html 化したくなった場合
+</para>
+</question>
+
+<answer>
+<para>
+まず、デフォルトで HTML 化されているので、あえて機能を無効にしていなければ、
+公開するために WWW サーバを設定すれば良いだけです。
+</para>
+
+<para>
+一度無効にした場合ですが、fmlhtmlify コマンドで HTML 化をすることがで
+きます。
+<screen>
+% fmlhtmlify 記事のあるディレクトリ HTMLを置くディレクトリ
+
+例
+
+% fmlhtmlify /var/spool/ml/elena/spool ~fml/public/fml/mlarchive/ドメイン/ＭＬ
+</screen>
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+HTML 化をやりなおす
+</para>
+</question>
+
+<answer>
+<para>
+fmlhtmlify コマンドを使って下さい。
+<screen>
+% fmlhtmlify 記事のあるディレクトリ HTMLを置くディレクトリ
+
+例
+
+% rm -fr ~fml/public/fml/mlarchive/ドメイン/ＭＬ
+% fmlhtmlify /var/spool/ml/elena/spool ~fml/public/fml/mlarchive/ドメイン/ＭＬ
+</screen>
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+記事を HTML 化したいが WWW サーバと &fml; のサーバが違うのですが？
+</para>
+</question>
+
+<answer>
+<para>
+案 1 は定期的に記事を転送することです。 
+<screen>
+% rsync -av ~fml/public/fml/mlarchive/ドメイン/ＭＬ 他のマシン:/パス/
+</screen>
+rsync over ssh を自動で実行するには少し特殊な ssh の設定が必要ですので
+注意して下さい。
+</para>
+
+<para>
+案 2 は他のマシンの側に HTML を実行するコマンド(たとえば mhonarc )を仕
+掛けておくというものです。
+</para>
+
+<para>
+案 3 として WWW サーバのファイルシステムに NFS 経由でアクセスするとい
+うのもありえますが、NFS サーバがインターネットから見える場所にあるよう
+なネットワーク構成はいけません。構成を良く考える必要があります。
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+</qandaset>
