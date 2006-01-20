@@ -1,10 +1,10 @@
 #!/bin/sh 
 #
-# $FML$
+# $FML: emul_post.sh,v 1.1 2006/01/19 14:23:21 fukachan Exp $
 #
 
 dir=`pwd`
-msg=`pwd`/../testmails/text=plain
+msg=${1:-`pwd`/../testmails/text=plain}
 
 . $dir/config.sh
 
