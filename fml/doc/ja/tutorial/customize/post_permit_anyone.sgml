@@ -1,5 +1,5 @@
 <!--
-   $FML: post_permit_anyone.sgml,v 1.7 2005/06/25 15:11:29 fukachan Exp $
+   $FML: post_permit_anyone.sgml,v 1.8 2005/11/19 08:24:33 fukachan Exp $
 -->
 
 
@@ -72,11 +72,24 @@ article_post_restrictions =	reject_system_special_accounts
 <answer>
 <para>
 &fml4; のように HOOK でグローバル変数をいじくり回すといった
-危ないことが出来ないので &fml8; では簡単には出来ません。
+危ないことは出来せん。
 </para>
 
 <para>
-どうしましょう… とりあえず未実装というべき？
+IO::Adapter の pcre サポートを利用すれば example.co.jp ドメインからの
+投稿を許し、それ以外からの投稿を拒否する restrictions が書けます。
+<screen>
+[/var/spool/ml/elena/config.cf]
+
+article_post_restrictions       =       reject_system_special_accounts
+                                        permit_member_maps
+                                        reject
+
+member_maps                     =       pcre:$ml_home_dir/sender.pcre
+
+[$ml_home_dir/domains]
+        \S+\@example.co.jp
+</screen>
 </para>
 </answer>
 
