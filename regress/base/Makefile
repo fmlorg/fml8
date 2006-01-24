@@ -1,8 +1,8 @@
 #
-# $FML: Makefile,v 1.8 2002/04/18 14:18:06 fukachan Exp $
+# $FML: Makefile,v 1.9 2002/05/11 08:34:52 fukachan Exp $
 #
 
-PERL = perl -I ../../fml/lib -I ../../cpan/lib -I ../../img/lib
+PERL = perl -I ../lib -I ../../fml/lib -I ../../cpan/lib -I ../../img/lib
 
 test:
 	@ echo "* miscellaneous functions"
