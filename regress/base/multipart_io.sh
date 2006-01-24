@@ -1,7 +1,9 @@
 #!/bin/sh
 #
-# $FML: multipart_io.sh,v 1.9 2001/04/13 04:32:30 fukachan Exp $
+# $FML: multipart_io.sh,v 1.10 2001/06/17 09:00:29 fukachan Exp $
 #
+
+PERL="perl -I ../lib -I ../../fml/lib -I ../../cpan/lib -I ../../img/lib"
 
 dir=`dirname $0`
 
@@ -15,21 +17,28 @@ DIFF () {
 	local file=`basename $msg`
  
 	sed -n '1,/^$/p' $msg > $tmp
-	perl $dir/multipart_io.pl $msg  >> $tmp
-	diff -ub $msg $tmp && echo $file ok || echo $file fail
+	$PERL $dir/multipart_io.pl $msg  >> $tmp
+
+	ok=0
+	diff -ub $msg $tmp > /dev/null && ok=1 || ok=0 
+	if [ $ok = 1 ];then
+		printf "%-40s ... %s\n" `basename $file` "ok"
+	else
+		printf "%-40s ... %s\n" `basename $file` "fail"
+	fi
 }
 
 
-echo "* text operations test"
+echo "=> basic message"
 xdir=$dir/../testmails
 
 for x in $xdir/text*
 do
-   env test_mode=1 ../message/basic_io.pl $x
+   env test_mode=1 $PERL ../message/basic_io.pl $x
 done
 
 
-echo "* multipart operations test"
+echo "=> multipart"
 xdir=$dir/../testmails
 
 for x in $xdir/multipart*
@@ -37,8 +46,8 @@ do
    DIFF $x
 done
 
-
-echo "   ++ errormails/ has broken multipart messages ;0"
+echo "=> errormails"
+# echo "   ++ errormails/ has broken multipart messages ;0"
 xdir=$dir/../errormails
 
 # ../errormails has broken multipart messages ;0
@@ -48,6 +57,6 @@ while read file
 do
 	DIFF $file
 done
-echo "   ++ errormails/ test ends"; echo ""
+# echo "   ++ errormails/ test ends"; echo ""
 
 exit 0;
