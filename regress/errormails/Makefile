@@ -1,8 +1,9 @@
 #
-# $FML$
+# $FML: Makefile,v 1.2 2001/07/31 14:03:39 fukachan Exp $
 #
 
-BOUNCE = perl -I ../../fml/lib -I ../../cpan/lib ../message/bounce.pl 
+PERL   = perl -I ../lib -I ../../fml/lib -I ../../cpan/lib 
+BOUNCE = $(PERL) ../message/bounce.pl 
 
 all:check
 
