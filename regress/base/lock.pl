@@ -1,34 +1,41 @@
 #!/usr/bin/env perl
 #
-# $FML: lock.pl,v 1.6 2002/04/18 14:18:07 fukachan Exp $
+#  Copyright (C) 2002,2006 Ken'ichi Fukamachi
+#   All rights reserved. This program is free software; you can
+#   redistribute it and/or modify it under the same terms as Perl itself.
+#
+# $FML: lock.pl,v 1.7 2002/05/11 08:34:52 fukachan Exp $
 #
 
 use strict;
 my $debug = defined $ENV{'debug'} ? 1 : 0;
 
-use File::SimpleLock;
-my $lockobj = new File::SimpleLock;
+my $map = "/tmp/fml8";
 
-print STDERR "File::SimpleLock ";
+use FML::Test::Utils;
+my $tool = new FML::Test::Utils;
+$tool->set_title("file lock");
 
-my $r = $lockobj->lock( { file => '/tmp/fml5' });
+use IO::Adapter;
+my $io = new IO::Adapter $map;
+my $r  = $io->lock( { file => $map } );
+
 if ($r) { 
-    print STDERR "lock ($$) ... ok\n";
+    $tool->print_ok();
 }
 else {
-    print STDERR $lockobj->error, "\n";
+    $tool->print_error($io->error);
 }
 
 sleep 1;
 
-print STDERR "File::SimpleLock ";
-
-$r = $lockobj->unlock( { file => '/tmp/fml5' });
+$tool->set_title("file unlock");
+$r = $io->unlock( { file => '/tmp/fml5' });
 if ($r) { 
-    print STDERR "unlock ... ok\n";
+    $tool->print_ok();
 }
 else {
-    print STDERR $lockobj->error, "\n";
+    $tool->print_error($io->error);
 }
 
 exit 0;

@@ -1,6 +1,10 @@
 #!/usr/bin/env perl
 #
-# $FML: mime.pl,v 1.8 2002/04/18 14:18:07 fukachan Exp $
+#  Copyright (C) 2002,2006 Ken'ichi Fukamachi
+#   All rights reserved. This program is free software; you can
+#   redistribute it and/or modify it under the same terms as Perl itself.
+#
+# $FML: mime.pl,v 1.9 2002/08/17 05:26:48 fukachan Exp $
 #
 
 use strict;
@@ -9,6 +13,10 @@ use MIME::Base64;
 use MIME::QuotedPrint;
 
 my $debug = defined $ENV{'debug'} ? 1 : 0;
+
+use FML::Test::Utils;
+my $tool = new FML::Test::Utils;
+$tool->set_title("mime");
 
 use Mail::Message::Encode;
 my $obj = new Mail::Message::Encode;
@@ -42,8 +50,12 @@ sub try_mime
 
     $buf =~ s/\n/\n   |/g;
     print $buf, "\n" if $debug;
-    print ($orig_str eq $out_str_b64 ? "base64 ... ok\n" : "fail\n");
-    print ($orig_str eq $out_str_qp  ? "qp     ... ok\n" : "fail\n");
+
+    $tool->set_title("mime base64");
+    $tool->diff($orig_str, $out_str_b64);
+
+    $tool->set_title("mime qp");
+    $tool->diff($orig_str, $out_str_qp);
 }
 
 

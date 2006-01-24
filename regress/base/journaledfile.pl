@@ -1,6 +1,10 @@
 #!/usr/bin/env perl
 #
-# $FML: journaledfile.pl,v 1.4 2002/05/11 08:34:52 fukachan Exp $
+#  Copyright (C) 2002,2006 Ken'ichi Fukamachi
+#   All rights reserved. This program is free software; you can
+#   redistribute it and/or modify it under the same terms as Perl itself.
+#
+# $FML: journaledfile.pl,v 1.5 2002/08/03 10:33:27 fukachan Exp $
 #
 
 use strict;
@@ -9,17 +13,19 @@ use Tie::JournaledFile;
 
 $| = 1;
 
+use FML::Test::Utils;
+my $tool = new FML::Test::Utils;
+$tool->set_title("Tie::JournaledFile write");
+
 #
 # 1. read/write
 #
-print "Tie::JournaledFile write ... ";
-
 my $debug = defined $ENV{'debug'} ? 1 : 0;
 my %db   = ();
 my $file = '/tmp/fml5/cache.txt';
 my $buf  = '';
 my $key  = "rudo$$";
-chop($buf = `date`);
+chomp($buf = `date`);
 
 tie %db, 'Tie::JournaledFile', { file => $file };
 $db{ $key } = $buf;
@@ -30,30 +36,19 @@ print "   ", `ls -l $file` if $debug;
 tie %db, 'Tie::JournaledFile', { file => $file };
 
 print "verify written string ... " if $debug;
-if ($db{ $key } eq $buf) {
-    print "ok\n";
-} 
-else {
-    print "fail\n";
-    print "   >", $db{ $key }, "<\n";
-    print "   >", $buf, "<\n";
-}
+$tool->diff($db{ $key }, $buf);
 
 
 #
 # 2. keys
 #
-print "Tie::JournaledFile keys ... ";
+$tool->set_title("Tie::JournaledFile keys");
 
 my @p = keys %db;
 my $count_orig = ` awk '{print $1}' $file | sort | uniq | wc -l `;
+$count_orig =~ s/\s+//g;
 my $count = $#p + 1;
 
-if ($count_orig == $count) {
-    print "ok\n";
-}
-else {
-    print "fail ($count_orig != $count)\n";
-}
+$tool->diff($count_orig, $count);
 
 exit 0;

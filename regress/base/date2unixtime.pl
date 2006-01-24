@@ -1,6 +1,10 @@
 #!/usr/bin/env perl
 #
-# $FML: date2unixtime.pl,v 1.3 2002/04/18 14:18:07 fukachan Exp $
+#  Copyright (C) 2002,2006 Ken'ichi Fukamachi
+#   All rights reserved. This program is free software; you can
+#   redistribute it and/or modify it under the same terms as Perl itself.
+#
+# $FML: date2unixtime.pl,v 1.4 2002/05/11 08:34:52 fukachan Exp $
 #
 
 use strict;
@@ -12,19 +16,20 @@ require 'ctime.pl';
 
 my $t    = time;
 my $date = ctime( $t );
+$date =~ s/[\s\n]*$//;
 
-chop $date;
+my $dp = new Mail::Message::Date;
+my $tx = $dp->date_to_unixtime( $date );
 
-my $tx = Mail::Message::Date::date_to_unixtime( $date );
+use FML::Test::Utils;
+my $tool = new FML::Test::Utils;
+$tool->set_title("Mail::Message::Date");
 
-print STDERR "Mail::Message::Date ";
-print STDERR "(date -> unixtime): $t => $date => $tx\n" if $debug;
-
-if ($t == $tx) {
-   print STDERR "ok\n";
+if ($debug) {
+    print STDERR "Mail::Message::Date ";
+    print STDERR "(date -> unixtime): $t => $date => $tx\n";
 }
-else {
-   print STDERR "fail\n";
-}
+
+$tool->diff($t, $tx);
 
 exit 0;
