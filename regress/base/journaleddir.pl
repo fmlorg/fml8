@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: journaleddir.pl,v 1.6 2002/05/11 08:34:52 fukachan Exp $
+# $FML: journaleddir.pl,v 1.7 2002/08/03 10:33:27 fukachan Exp $
 #
 
 BEGIN {
@@ -13,11 +13,14 @@ use Tie::JournaledDir;
 
 $| = 1; 
 
-my $key  = shift || 'uja';
-my $unit = shift || 2;
-my $dir  = "/tmp/fml5/jd";
-
+my $key   = shift || 'uja';
+my $unit  = shift || 2;
+my $dir   = "/tmp/fml5/jd";
 my $debug = defined $ENV{'debug'} ? 1 : 0;
+
+use FML::Test::Utils;
+my $tool = new FML::Test::Utils;
+$tool->set_title("Tie::JournaledDir");
 
 if (-d $dir) {
     use DirHandle;
@@ -45,23 +48,23 @@ for my $k (keys %$testpat) {
 }
 
 # 1.1 write/read
-print "Tie::JournaledDir write ... ";
+$tool->set_title("Tie::JournaledDir write [1]");
 &_write($testpat);
 &_read($testpat);
 
 # 1.2 write/read
-print "Tie::JournaledDir write 2 ... ";
+$tool->set_title("Tie::JournaledDir write [2]");
 &_write2($testpat);
 &_write($testpat);
 &_write2($testpat);
 &_read($testpat);
 
 # 2. keys
-print "Tie::JournaledDir keys ... ";
+$tool->set_title("Tie::JournaledDir keys");
 &_keys($testpat);
 
 # 3. get_all_values()
-print "Tie::JournaledDir get_all_values ... ";
+$tool->set_title("Tie::JournaledDir get_all_values");
 &_get_all_values($testpat);
 
 exit 0;
@@ -104,10 +107,10 @@ sub _read
     }
 
     if ($error) {
-	print " fail\n";
+	$tool->print_error();
     }
     else {
-	print " ok\n";
+	$tool->print_ok();
     }
 
     untie %db;
@@ -134,7 +137,7 @@ sub _write
 	print "$key " if $debug;
 
 	# XXX use several files in dir/
-	print "." unless $debug;
+	print "." if $debug;
 	sleep 1;
 
 	untie %db;
@@ -163,7 +166,7 @@ sub _write2
     print "$key " if $debug;
 
     # XXX use several files in dir/
-    print "." unless $debug;
+    print "." if $debug;
     sleep 1;
 
     untie %db;
@@ -201,12 +204,7 @@ sub _keys
     my $len_orig = length(keys %$raw_access);
     my $len      = length(keys %db);
 
-    if ($len == $len_orig) {
-	print "ok\n";
-    }
-    else {
-	print "fail\n";
-    }
+    $tool->diff($len, $len_orig);
 
     untie %db;
 }
@@ -215,7 +213,6 @@ sub _keys
 sub _get_all_values
 {
     unless ($debug) {
-	print "not check if not in debug mode\n";
 	return;
     }
 
