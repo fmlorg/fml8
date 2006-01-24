@@ -1,12 +1,16 @@
 #!/usr/bin/env perl
 #
-# $FML: test.overload.pl,v 1.2 2002/04/18 14:18:09 fukachan Exp $
+# $FML: test.overload.pl,v 1.3 2002/07/22 09:38:10 fukachan Exp $
 #
 
 use strict;
 use Carp;
 use lib qw(../../fml/lib ../../cpan/lib);
 use FML::Config;
+
+use FML::Test::Utils;
+my $tool = new FML::Test::Utils;
+$tool->set_title("config.cf overload");
 
 my $debug  = defined $ENV{'debug'} ? 1 : 0;
 my $config = new FML::Config;
@@ -25,11 +29,6 @@ for my $f (@ARGV) {
 
 $prev_x[ 0 ] =~ s/xxx/yyy/;
 
-if ($prev_x[ 0 ] eq $prev_x[ 1 ]) {
-    print STDERR "ok\n";
-}
-else {
-    print STDERR "fail\n";
-}
+$tool->diff($prev_x[ 0 ], $prev_x[ 1 ]);
 
-1;
+exit 0;

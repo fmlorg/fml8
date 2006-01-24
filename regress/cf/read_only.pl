@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: test.overload.pl,v 1.2 2002/04/18 14:18:09 fukachan Exp $
+# $FML: read_only.pl,v 1.1 2002/07/22 09:38:40 fukachan Exp $
 #
 
 use strict;
@@ -11,6 +11,9 @@ use FML::Config;
 my $debug  = defined $ENV{'debug'} ? 1 : 0;
 my $value  = 'a	b c READ_ONLY($map)';
 
+use FML::Test::Utils;
+my $tool = new FML::Test::Utils;
+$tool->set_title("config.cf READ_ONLY");
 
 # test 1: 
 #         READ_ONLY(x y) -> READ_ONLY(x) READ_ONLY(y)
@@ -19,10 +22,10 @@ my $config = new FML::Config;
 $config->set( 'map',  'x y' );
 $config->set( 'test', $value );
 if ( $config->{ test } =~ /READ_ONLY\(x\)\s+READ_ONLY\(y\)/) {
-    print "ok\n";
+    $tool->print_ok();
 }
 else {
-    print "fail\n";
+    $tool->print_error();
 }
 
 
@@ -33,11 +36,10 @@ my $config = new FML::Config;
 $config->set( 'map',  'x y z' );
 $config->set( 'test', $value );
 if ( $config->{ test } =~ /READ_ONLY\(x\)\s+READ_ONLY\(y\)\s+READ_ONLY\(z\)/) {
-    print "ok\n";
+    $tool->print_ok();
 }
 else {
-    print "fail\n";
-    print $config->{ test }, "\n";
+    $tool->print_error($config->{ test });
 }
 
 1;
