@@ -5,13 +5,16 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: bounce.pl,v 1.8 2001/07/30 23:00:06 fukachan Exp $
+# $FML: bounce.pl,v 1.9 2005/07/27 12:16:20 fukachan Exp $
 #
 
 use strict;
 use Carp;
 use lib qw(../../cpan/lib);
 use Mail::Message;
+
+use FML::Test::Utils;
+my $tool = new FML::Test::Utils;
 
 for my $f (@ARGV) {
     print "// check $f\n" if $ENV{'debug'};
@@ -23,7 +26,7 @@ for my $f (@ARGV) {
     my $bouncer = new Mail::Bounce;
     $bouncer->analyze( $msg );
     print "\n--- result (debug)\n\n" if $ENV{'debug'};
-    printf "# %-20s ... %s\n", $f, ($bouncer->address_list ? "ok" : "fail");
+    printf "# %-40s ... %s\n", $f, ($bouncer->address_list ? "ok" : "fail");
 
     if ($ENV{'dump'}) { 
 	eval qq{ require Data::Dumper; Data::Dumper->import();};

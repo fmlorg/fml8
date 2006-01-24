@@ -5,13 +5,19 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: basic_io.pl,v 1.5 2002/04/18 14:18:09 fukachan Exp $
+# $FML: basic_io.pl,v 1.6 2004/12/08 07:26:15 fukachan Exp $
 #
 
 use strict;
 use Carp;
 use lib qw(../../cpan/lib);
 use Mail::Message;
+
+my $debug = $ENV{ debug } ? 1 : 0;
+
+use FML::Test::Utils;
+my $tool = new FML::Test::Utils;
+$tool->set_title("message basic io test");
 
 my $test_mode = $ENV{'test_mode'} ? 1 : 0;
 
@@ -37,12 +43,22 @@ for my $f (@ARGV) {
     my $fd = new IO::Handle;
     my $i  = 0;
     open($fd, "diff -ub $f $tmp|");
-    while (<$fd>) { $i++; print "      ", $_ if $i > 3;}
+    while (<$fd>) {
+	$i++;
+	if ($debug) {
+	    print "      ", $_ if $i > 3;
+	}
+    }
     close($fd);
 
-    print "$f ";
-    print $i ? "fail" : "ok";
-    print "\n";
+    use File::Basename;
+    $tool->set_title(basename($f));
+    if ($i) {
+	$tool->print_error();
+    }
+    else {
+	$tool->print_ok();
+    }
 }
 
 unlink $tmp;
