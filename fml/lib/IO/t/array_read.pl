@@ -4,18 +4,22 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: array_map.pl,v 1.5 2002/01/27 13:11:59 fukachan Exp $
+# $FML: array_map.pl,v 1.6 2002/04/01 23:41:14 fukachan Exp $
 #
 
 use Carp;
 use strict;
 
+use FML::Test::Utils;
+my $tool = new FML::Test::Utils;
+$tool->set_title("array read");
+
 my $map = ['a', 'b', 'c'];
 
 use IO::Adapter;
 my $obj = new IO::Adapter $map;
-$obj->open || croak("cannot open $map");
-if ($obj->error) { croak( $obj->error );}
+$obj->open || $tool->error("cannot open $map");
+if ($obj->error) { $tool->error( $obj->error );}
 
 my $x;
 my @recipients = ();
@@ -30,10 +34,10 @@ for my $c (@$map) {
 }
 
 if ($ok == $i) {
-    print STDERR "$map reading ... ok\n";
+    $tool->print_ok();
 }
 else {
-    exit 1;
+    $tool->error();
 }
 
 exit 0;

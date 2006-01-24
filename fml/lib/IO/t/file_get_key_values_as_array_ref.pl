@@ -4,43 +4,40 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get_value_as_array_ref.pl,v 1.1 2003/02/11 14:20:32 fukachan Exp $
+# $FML: get_value_as_array_ref.pl,v 1.2 2003/07/21 03:43:56 fukachan Exp $
 #
 
 use strict;
 use Carp;
 
-my $org_file = "/var/spool/ml/elena/etc/passwd-admin";
-my $map      = "file:". $org_file;
-my $addr     = $ENV{'USER'};
-my $key      = 'fukachan@sapporo.iij.ad.jp';
+my $file     = "/tmp/io.$$";
+my $map      = "file:$file";
+my $key      = 'fukachan@example.com';
 my $debug    = defined $ENV{ 'debug' } ? 1 : 0;
+my $password = crypt($key, $key);
 
-### MAIN ###
-print "${map}->get_value_as_array_ref() ... ";
+use FML::Test::Utils;
+my $tool = new FML::Test::Utils;
+$tool->set_title("file get_value_as_array_ref");
 
-print "ignored\n";
-exit 0;
+$tool->set_content($file, "$key $password");
 
-# append
 use IO::Adapter;
 my $obj = new IO::Adapter $map;
 $obj->open();
 
-#
-# 1. compare passwords.
-#
-my $a   = $obj->get_value_as_array_ref( $key );
-my $p   = $a->[0];
-my $pwd = _read($org_file);
-my $pn  = $pwd->{ $key }->[ 1 ];
+my $a   = $obj->get_key_values_as_array_ref( $key );
+my $pwd = _read($file);
 
-if ($p eq $pn) {
-    print "ok\n";
-}
-else {
-    print "not ok ('$p' ?= '$pn')\n";
-}
+$tool->set_title("file get_value_as_array_ref [0]");
+my $p   = $a->[0];
+my $pn  = $pwd->{ $key }->[0];
+$tool->diff($p, $pn);
+
+$tool->set_title("file get_value_as_array_ref [1]");
+my $p   = $a->[1];
+my $pn  = $pwd->{ $key }->[1];
+$tool->diff($p, $pn);
 
 if ($debug) {
     my $i = 0;

@@ -1,11 +1,10 @@
-#!/usr/bin/env perl
 #-*- perl -*-
 #
 #  Copyright (C) 2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: lock.pl,v 1.1 2004/04/10 07:40:02 fukachan Exp $
+# $FML: sequence.pl,v 1.1 2004/04/11 12:58:40 fukachan Exp $
 #
 
 use strict;
@@ -13,15 +12,16 @@ use Carp;
 
 my $debug = 0;
 my $i     = 0;
-my $file  = "/tmp/io.adapter.$$";
+my $file  = "/tmp/io.$$";
 my $map   = "file:$file";
 my %log   = ();
 my %pid   = ();
 my $fail  = 0;
 my $reason = '';
 
-### MAIN ###
-print "${file}->sequence_increment() ... ";
+use FML::Test::Utils;
+my $tool = new FML::Test::Utils;
+$tool->set_title("file sequence increment");
 
 use IO::Adapter;
 
@@ -42,39 +42,11 @@ for my $i (0 .. 5) {
     }
 }
 
-show_result();
-
-
-#
-# 2. replace
-#
-$fail   = 0;
-$reason = '';
-
-print "${file}->seqeunce_replace()   ... ";
-my $obj = new IO::Adapter $map;
-$obj->sequence_replace(10);
-if ($obj->error()) {
-    $reason .= $obj->error();
-    $reason .= "\t\n";
-    $fail++;
+if ($fail) {
+    $tool->print_error($reason);
 }
-
-show_result();
+else {
+    $tool->print_ok();
+}
 
 exit 0;
-
-
-sub show_result
-{
-    print $fail ? "fail\n" : "ok\n";
-    if ($fail) {
-	print "\t", $reason, "\n";
-    }
-
-    if ($debug) {
-	my $obj = new IO::Adapter $map;
-	$obj->open();
-	print "debug = ", $obj->getline(), "\n";
-    }
-}

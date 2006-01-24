@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: add.pl,v 1.2 2003/07/21 03:43:56 fukachan Exp $
+# $FML: lock.pl,v 1.1 2004/04/10 07:40:02 fukachan Exp $
 #
 
 use strict;
@@ -18,7 +18,9 @@ my %log   = ();
 my %pid   = ();
 
 ### MAIN ###
-print "${file}->lock()/unlock()\n";
+use FML::Test::Utils;
+my $tool = new FML::Test::Utils;
+$tool->set_title("file lock/unlock");
 
 use IO::Adapter;
 
@@ -46,10 +48,10 @@ for my $i (0 .. 5) {
 
 	print STDERR "$i [$$]\t$log{ $i }" if $debug;
 	if ($ok == 2) {
-	    print "ok [$$] (wait for $t sec)\n";
+	    $tool->print_ok("[$$] (wait for $t sec)");
 	}
 	else {
-	    print "fail [$$] (wait for $t sec)\n";
+	    $tool->print_error("[$$] (wait for $t sec)");
 	}
 
 	exit(0);
