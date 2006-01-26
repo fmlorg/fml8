@@ -1,5 +1,5 @@
 <!--
- $FML$
+ $FML: recipes.subscribe.sgml,v 1.1 2005/10/29 04:28:42 fukachan Exp $
 -->
 
 <qandaset>
@@ -8,19 +8,55 @@
 
 <question>
 <para>
-closed + confirm をしたい(自動登録でない時の subscribe コマンドの挙動)
+subscribe の登録作業は手動でしたい
+(&fml4; の closed + confirm 相当)
 </para>
 </question>
 
 <answer>
 <para>
-未実装です。
 subscribe は confirmation つきの自動登録がデフォルトです。
 <screen>
+[config.cf のデフォルト値]
 
+subscribe_command_auth_type      = confirmation
+
+subscribe_command_operation_mode = automatic
 </screen>
+<para>
 
 </para>
+<screen>
+[config.cf]
+
+subscribe_command_auth_type      = confirmation
+
+subscribe_command_operation_mode = manual
+</screen>
+と設定した場合は、次のような挙動になります。
+(1) &fml8; が confirmation を行ないリクエストの正当性を確認します。
+(2) 一方、アドレスの登録作業は自動では行なわれません。
+    管理者へは登録作業を依頼するメールが &fml8; から出されます。
+    そのメールを見たら登録作業(admin コマンド、CUI、GUI)をして下さい。
+</para>
+
+<para>
+ようするにデフォルトの自動登録過程の最後が自動ではなく手動に変わっただ
+けです。
+</para>
+
+<para>
+confirmation も登録も管理者が自ら行なう場合は次のようにして下さい。
+まぁこの場合ＭＬドライバを使う意義がないような気もしますが…
+<screen>
+[config.cf]
+
+subscribe_command_auth_type      = manual
+
+subscribe_command_operation_mode = manual
+</screen>
+</para>
+
 </answer>
 
 </qandaentry>
@@ -51,6 +87,64 @@ unsubscribe コマンドでも confirmation を使いたい
 
 <question>
 <para>
+unsubscribe の登録作業は手動でしたい
+(&fml4; の closed + confirm 相当)
+</para>
+</question>
+
+<answer>
+<para>
+unsubscribe は confirmation つきの自動登録がデフォルトです。
+<screen>
+[config.cf のデフォルト値]
+
+unsubscribe_command_auth_type      = confirmation
+
+unsubscribe_command_operation_mode = automatic
+</screen>
+<para>
+
+</para>
+<screen>
+[config.cf]
+
+unsubscribe_command_auth_type      = confirmation
+
+unsubscribe_command_operation_mode = manual
+</screen>
+と設定した場合は、次のような挙動になります。
+(1) &fml8; が confirmation を行ないリクエストの正当性を確認します。
+(2) 一方、アドレスの登録作業は自動では行なわれません。
+    管理者へは登録作業を依頼するメールが &fml8; から出されます。
+    そのメールを見たら登録作業(admin コマンド、CUI、GUI)をして下さい。
+</para>
+
+<para>
+ようするにデフォルトの自動登録過程の最後が自動ではなく手動に変わっただ
+けです。
+</para>
+
+<para>
+confirmation も登録も管理者が自ら行なう場合は次のようにして下さい。
+まぁこの場合ＭＬドライバを使う意義がないような気もしますが…
+<screen>
+[config.cf]
+
+unsubscribe_command_auth_type      = manual
+
+unsubscribe_command_operation_mode = manual
+</screen>
+</para>
+
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
 chaddr コマンドでも confirmation を使いたい。
 </para>
 </question>
@@ -63,6 +157,64 @@ chaddr コマンドでも confirmation を使いたい。
 </screen>
 
 </para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+chaddr の登録作業は手動でしたい
+(&fml4; の closed + confirm 相当)
+</para>
+</question>
+
+<answer>
+<para>
+chaddr は confirmation つきの自動登録がデフォルトです。
+<screen>
+[config.cf のデフォルト値]
+
+chaddr_command_auth_type      = confirmation
+
+chaddr_command_operation_mode = automatic
+</screen>
+<para>
+
+</para>
+<screen>
+[config.cf]
+
+chaddr_command_auth_type      = confirmation
+
+chaddr_command_operation_mode = manual
+</screen>
+と設定した場合は、次のような挙動になります。
+(1) &fml8; が confirmation を行ないリクエストの正当性を確認します。
+(2) 一方、アドレスの登録作業は自動では行なわれません。
+    管理者へは登録作業を依頼するメールが &fml8; から出されます。
+    そのメールを見たら登録作業(admin コマンド、CUI、GUI)をして下さい。
+</para>
+
+<para>
+ようするにデフォルトの自動登録過程の最後が自動ではなく手動に変わっただ
+けです。
+</para>
+
+<para>
+confirmation も登録も管理者が自ら行なう場合は次のようにして下さい。
+まぁこの場合ＭＬドライバを使う意義がないような気もしますが…
+<screen>
+[config.cf]
+
+chaddr_command_auth_type      = manual
+
+chaddr_command_operation_mode = manual
+</screen>
+</para>
+
 </answer>
 
 </qandaentry>
@@ -120,17 +272,30 @@ fml 3.0 以前の auto_regist を使い続けたい
 
 <answer>
 <para>
-未実装です（？）。
-<screen>
-
-</screen>
-
+auto_regist を指定した場合 fml 3.0 以前の挙動になります。
+これはメンバーリストにも配送のリストにも members ファイルだけを使うと
+いうものです。
 </para>
+
+<para>
+これをエミュレーションするには、とりあえず
+<screen>
+primary_recipient_map = $primary_member_map 
+</screen>
+とすればよいことになりますが、自動登録時にエラーがでます(すでにメンバー
+です)。エラーを回避するため登録対象である primary_recipient_map はその
+ままダミーのファイルとして残し、実際の配送リスト(recipient_maps)は
+members になるようにしてしまうのがよいでしょう。
+<screen>
+recipient_maps = $primary_member_map 
+</screen>
+この場合 recipients というファイルにも登録作業が行なわれていますが、
+実際の挙動には関係ありません。配送リストには members が使われます。
+</para>
+
 </answer>
 
 </qandaentry>
 
 
-
 </qandaset>
-
