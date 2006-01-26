@@ -1,5 +1,5 @@
 <!--
- $FML: recipes.subscribe.sgml,v 1.1 2005/10/29 04:28:42 fukachan Exp $
+ $FML: recipes.subscribe.sgml,v 1.2 2006/01/26 12:07:18 fukachan Exp $
 -->
 
 <qandaset>
@@ -23,9 +23,9 @@ subscribe_command_auth_type      = confirmation
 
 subscribe_command_operation_mode = automatic
 </screen>
-<para>
-
 </para>
+
+<para>
 <screen>
 [config.cf]
 
@@ -102,9 +102,9 @@ unsubscribe_command_auth_type      = confirmation
 
 unsubscribe_command_operation_mode = automatic
 </screen>
-<para>
-
 </para>
+
+<para>
 <screen>
 [config.cf]
 
@@ -181,9 +181,9 @@ chaddr_command_auth_type      = confirmation
 
 chaddr_command_operation_mode = automatic
 </screen>
-<para>
-
 </para>
+
+<para>
 <screen>
 [config.cf]
 
