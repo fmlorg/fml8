@@ -2553,6 +2553,7 @@ trap 'rm -fr `echo "\
 	fml/bin/fmldoc \
 	fml/bin/fmlhtmlify \
 	fml/bin/fmlsch \
+	fml/bin/fmlproj \
 	fml/bin/fmlpgp  \
 	fml/bin/fmlpgp5 \
 	fml/bin/fmlpgpe \
@@ -2709,6 +2710,7 @@ CONFIG_FILES=\${CONFIG_FILES-"\
 	fml/bin/fmldoc \
 	fml/bin/fmlhtmlify \
 	fml/bin/fmlsch \
+	fml/bin/fmlproj \
 	fml/bin/fmlpgp  \
 	fml/bin/fmlpgp5 \
 	fml/bin/fmlpgpe \

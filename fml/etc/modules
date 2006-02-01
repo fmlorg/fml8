@@ -1,5 +1,5 @@
 #
-# $FML: modules,v 1.13 2005/05/29 08:18:03 fukachan Exp $
+# $FML: modules,v 1.14 2005/06/03 05:10:18 fukachan Exp $
 #
 # map between programs and modules (like /etc/name_to_sysnum on solaris ?)
 #
@@ -70,3 +70,4 @@ loader__--ctladdr	FML::Process::Command
 # demo
 fmlsch			FML::Process::Calendar
 fmlsch.cgi		FML::CGI::Calendar
+fmlproj			FML::Process::Project

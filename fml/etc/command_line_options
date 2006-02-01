@@ -1,5 +1,5 @@
 #
-# $FML: command_line_options,v 1.17 2005/05/29 08:18:03 fukachan Exp $
+# $FML: command_line_options,v 1.18 2005/06/03 05:10:18 fukachan Exp $
 #
 # map between programs and options
 #
@@ -49,6 +49,7 @@ menu.cgi
 # demo
 fmlsch		debug! help! -D=s -F=s -m=s a! h! -o=s%
 fmlsch.cgi		
+fmlproj		debug! html! csv!
 
 # compatibility
 fml.pl		ctladdr! debug! help! -c=s -o=s%
