@@ -4,16 +4,17 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.101 2006/01/09 14:00:53 fukachan Exp $
+# $FML: Config.pm,v 1.102 2006/02/03 04:17:18 fukachan Exp $
 #
 
 package FML::Config;
 use strict;
 use Carp;
 use vars qw($need_expansion_variables
-	    %_fml_config_result
-	    %_fml_config
-	    %_default_fml_config
+	    $_fml_pool
+	    $_fml_config_result
+	    $_fml_config
+	    $_default_fml_config
 	    $object_id
 	    $_fml_user_hooks
 	    $current_context
@@ -27,6 +28,18 @@ my $debug = 0;
 # XXX we set $current_context as $ml_name@$ml_domain for lisetserv.
 $current_context = '__default__';
 
+# init HASH_REF.
+{
+    unless (defined $_fml_pool) { $_fml_pool = {};}
+    my $pool = $_fml_pool;
+    $pool->{ $current_context }->{ _fml_config_result }  = {};
+    $pool->{ $current_context }->{ _fml_config }         = {};
+    $pool->{ $current_context }->{ _default_fml_config } = {};
+    $_fml_config_result  = $pool->{ $current_context }->{_fml_config_result};
+    $_fml_config         = $pool->{ $current_context }->{_fml_config};
+    $_default_fml_config = $pool->{ $current_context }->{_default_fml_config};
+    unless (%$_fml_config) { $_fml_config->{ _pid } = $$;}
+}
 
 =head1 NAME
 
@@ -80,7 +93,7 @@ called.
 =head2 new($cfargs)
 
 special method used only in the fml initialization phase.
-This method binds $curproc and the %_fml_config hash on memory.
+This method binds $curproc and the %$_fml_config hash on memory.
 
 Internally this method uses C<tie()> to get and set a key to a value.
 For example, C<get()> and C<set()> described below is a wrapper for
@@ -94,17 +107,17 @@ pseudo variable C<_pid> is reserved for process id reference.
 
 # Descriptions: constructor.
 #               newly blessed object is binded to internal variable
-#               %_fml_config. So changes are shared among all objects.
+#               %$_fml_config. So changes are shared among all objects.
 #    Arguments: OBJ($self) HASH_REF($cfargs)
-# Side Effects: object is binded to common %_fml_config area
+# Side Effects: object is binded to common %$_fml_config area
 # Return Value: OBJ
 sub new
 {
     my ($self, $cfargs) = @_;
 
-    unless (defined %_fml_config) { %_fml_config = ( _pid => $$ );}
+    unless (%$_fml_config) { $_fml_config->{ _pid } = $$;}
 
-    # prepare the tied hash to %_fml_config;
+    # prepare the tied hash to %$_fml_config;
     # to support $config->{ variable } syntax.
     my $me = {};
     tie %$me, $self;
@@ -219,7 +232,7 @@ alias of C<load_file( filename )>.
 =head2 load_file( filename )
 
 read the configuration file, split keys and the values in it and set
-them to %_fml_config.
+them to %$_fml_config.
 
 =cut
 
@@ -242,22 +255,21 @@ sub overload
 sub load_file
 {
     my ($self, $file) = @_;
-    my $config = \%_fml_config;
 
     if (-f $file) {
 	# read configuration file
 	$self->_read_file({
 	    file   => $file,
-	    config => $config,
+	    config => $_fml_config,
 	});
 
-	# At the first time, save $config to another hash, which is used
+	# At the first time, save $_fml_config to another hash, which is used
 	# as a default value at variable comparison.
-	unless (%_default_fml_config) {
-	    %_default_fml_config = %_fml_config;
+	unless (%$_default_fml_config) {
+	    __hash_copy($_default_fml_config, $_fml_config);
 	}
 
-	# flag on: we need $config->{ key } needs variable expansion
+	# flag on: we need $_fml_config->{ key } needs variable expansion
 	$need_expansion_variables = 1;
     }
 }
@@ -655,7 +667,7 @@ sub write
 
 =head2 expand_variables()
 
-expand all variables in C<%_default_fml_config> and C<%_fml_config>.
+expand all variables in C<%$_default_fml_config> and C<%$_fml_config>.
 The expanded result is saved in the same hash.
 
   XXX obsolete ? This method is used before hook is introduced.
@@ -678,17 +690,17 @@ sub expand_variables
     my ($self) = @_;
 
     # always expand variables within itself.
-    _expand_variables( \%_default_fml_config );
-    # _expand_nextlevel( \%_default_fml_config ); # XXX looks not needed ?
+    _expand_variables( $_default_fml_config );
+    # _expand_nextlevel( $_default_fml_config ); # XXX looks not needed ?
 
     # XXX 2001/05/05
-    # XXX %_fml_config        has variables before expansion.
-    # XXX %_fml_config_result has variables after expansion.
+    # XXX $_fml_config        has variables before expansion.
+    # XXX $_fml_config_result has variables after expansion.
     # XXX copying is important here.
-    __hash_copy(\%_fml_config_result, \%_fml_config);
+    __hash_copy($_fml_config_result, $_fml_config);
 
-    _expand_variables( \%_fml_config_result );
-    _expand_nextlevel( \%_fml_config_result );
+    _expand_variables( $_fml_config_result );
+    _expand_nextlevel( $_fml_config_result );
 }
 
 
@@ -897,8 +909,8 @@ sub yes
 {
     my ($self, $key) = @_;
 
-    if (defined $_fml_config_result{$key}) {
-	my $val = $_fml_config_result{$key};
+    if (defined $_fml_config_result->{$key}) {
+	my $val = $_fml_config_result->{$key};
 	$val =~ s/^\s*//o;
 	$val =~ s/\s*$//o;
 
@@ -922,8 +934,8 @@ sub no
 {
     my ($self, $key) = @_;
 
-    if (defined $_fml_config_result{$key}) {
-	my $val = $_fml_config_result{$key};
+    if (defined $_fml_config_result->{$key}) {
+	my $val = $_fml_config_result->{$key};
 	$val =~ s/^\s*//o;
 	$val =~ s/\s*$//o;
 
@@ -947,8 +959,8 @@ sub has_attribute
     # sanity
     return 0 unless defined $attribute;
 
-    if (defined $_fml_config_result{$key}) {
-	my (@attribute) = split(/\s+/, $_fml_config_result{$key});
+    if (defined $_fml_config_result->{$key}) {
+	my (@attribute) = split(/\s+/, $_fml_config_result->{$key});
 
       ATTR:
 	for my $k (@attribute) {
@@ -999,18 +1011,18 @@ sub dump_variables
     $self->expand_variables();
 
     # find apropriate $format.
-    for $k (keys %_fml_config_result) {
+    for $k (keys %$_fml_config_result) {
 	$len = $len > length($k) ? $len : length($k);
     }
     my $format = '%-'. $len. 's = %s'. "\n";
 
     # o.k. here we go.
     # 1. dump 1st level.
-    for $k (sort keys %_fml_config_result) {
+    for $k (sort keys %$_fml_config_result) {
 	$use_sql = 1 if $k =~ /^\[/o;
 
 	next unless $k =~ /^[a-z0-9]/io;
-	$v = $_fml_config_result{ $k };
+	$v = $_fml_config_result->{ $k };
 
 	# print out all keys
 	if ($dump_mode eq 'all') {
@@ -1019,8 +1031,8 @@ sub dump_variables
 	# compare the value with the default one
 	# print key if values for the key differs.
 	else {
-	    if (defined $_default_fml_config{ $k }) {
-		if ($v ne $_default_fml_config{ $k }) {
+	    if (defined $_default_fml_config->{ $k }) {
+		if ($v ne $_default_fml_config->{ $k }) {
 		    if ($dump_mode eq 'get_diff_as_hash_ref') {
 			$diff->{ $k } = $v;
 		    }
@@ -1043,10 +1055,10 @@ sub dump_variables
     # 2. dump 2nd level if needed (if $use_sql).
     if ($use_sql) {
 	my $ns_key;
-	for $k (sort keys %_fml_config_result) {
+	for $k (sort keys %$_fml_config_result) {
 	    if ($k =~ /^\[/o) {
 		$ns_key = $k;
-		my $hash_ref = $_fml_config_result{ $k };
+		my $hash_ref = $_fml_config_result->{ $k };
 
 		unless ($dump_mode eq 'get_diff_as_hash_ref') {
 		    print "\n$k\n";
@@ -1185,6 +1197,19 @@ sub set_context
 
     # initialize;
     $current_context = $context;
+
+    unless (defined $_fml_pool->{ $current_context }->{ _fml_config_result }) {
+	my $p = $_fml_pool; 
+	$p->{ $current_context }->{ _fml_config_result }  = {};
+	$p->{ $current_context }->{ _fml_config }         = {};
+	$p->{ $current_context }->{ _default_fml_config } = {};
+    }
+
+    my $p = $_fml_pool; 
+    $_fml_config_result  = $p->{ $current_context }->{ _fml_config_result };
+    $_fml_config         = $p->{ $current_context }->{ _fml_config };
+    $_default_fml_config = $p->{ $current_context }->{ _default_fml_config };
+    unless (%$_fml_config) { $_fml_config->{ _pid } = $$;}
 }
 
 
@@ -1201,14 +1226,14 @@ sub get_context
 
 =head1 TIEED HASH
 
-tie() operations for hash are binded to \%_fml_config.
+tie() operations for hash are binded to $_fml_config.
 For example, C<get()> and C<set()> described above is a wrapper for
 tie() IO.
 
 =cut
 
 
-# Descriptions: begin op for tie() with %_fml_config.
+# Descriptions: begin op for tie() with %$_fml_config.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -1216,13 +1241,13 @@ sub TIEHASH
 {
     my ($self) = @_;
     my ($type) = ref($self) || $self;
-    my $me     = \%_fml_config;
+    my $me     = $_fml_config;
     return bless $me, $type;
 }
 
 
 
-# Descriptions: FETCH op for tie() with %_fml_config.
+# Descriptions: FETCH op for tie() with %$_fml_config.
 #    Arguments: OBJ($self) STR($key)
 # Side Effects: none
 # Return Value: STR
@@ -1237,8 +1262,8 @@ sub FETCH
 	$need_expansion_variables = 0;
     }
 
-    if (defined($_fml_config_result{$key})) {
-	my $x = $_fml_config_result{$key};
+    if (defined($_fml_config_result->{$key})) {
+	my $x = $_fml_config_result->{$key};
 
 	# HASH_REF such as [mysql:fml] => { ... }
 	if (ref($x)) {
@@ -1257,9 +1282,9 @@ sub FETCH
 }
 
 
-# Descriptions: STORE op for tie() with %_fml_config.
+# Descriptions: STORE op for tie() with %$_fml_config.
 #    Arguments: OBJ($self) STR($key) STR($value)
-# Side Effects: update %_fml_config
+# Side Effects: update %$_fml_config
 # Return Value: STR or UNDEF
 sub STORE
 {
@@ -1274,39 +1299,39 @@ sub STORE
     }
 
     if (defined $key && defined $value) {
-	$_fml_config{$key} = $value;
+	$_fml_config->{$key} = $value;
     }
 }
 
 
-# Descriptions: DELETE op for tie() with %_fml_config.
+# Descriptions: DELETE op for tie() with %$_fml_config.
 #    Arguments: OBJ($self) STR($key)
-# Side Effects: update %_fml_config
+# Side Effects: update %$_fml_config
 # Return Value: none
 sub DELETE
 {
     my ($self, $key) = @_;
 
     # XXX-TODO: how to handle the next level ?
-    delete $_fml_config_result{$key};
-    delete $_fml_config{$key};
+    delete $_fml_config_result->{$key};
+    delete $_fml_config->{$key};
 }
 
 
-# Descriptions: CLEAR op for tie() with %_fml_config.
+# Descriptions: CLEAR op for tie() with %$_fml_config.
 #    Arguments: OBJ($self)
-# Side Effects: update %_fml_config
+# Side Effects: update %$_fml_config
 # Return Value: none
 sub CLEAR
 {
     my ($self) = @_;
 
-    undef %_fml_config_result;
-    undef %_fml_config;
+    undef %$_fml_config_result;
+    undef %$_fml_config;
 }
 
 
-# Descriptions: FIRSTKEY op for tie() with %_fml_config.
+# Descriptions: FIRSTKEY op for tie() with %$_fml_config.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
@@ -1316,7 +1341,7 @@ sub FIRSTKEY
 
     $self->expand_variables();
 
-    my (%keys) = %_fml_config_result;
+    my (%keys) = %$_fml_config_result;
     $self->{ '_keys' } = \%keys;
 
     my $keys = $self->{ _keys };
@@ -1324,7 +1349,7 @@ sub FIRSTKEY
 }
 
 
-# Descriptions: NEXTKEY op for tie() with %_fml_config.
+# Descriptions: NEXTKEY op for tie() with %$_fml_config.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
@@ -1345,9 +1370,37 @@ if ($0 eq __FILE__) {
     my $config = new FML::Config;
     $config->load_file( "etc/default_config.cf.ja" );
 
+    print "\n1. tie\n";
     tie %db, 'FML::Config';
     for my $k (keys %db) {
 	printf "%30s => %s\n", $k, $db{ $k };
+    }
+
+    print "\n2. context switch\n";
+    print "current context = ", $config->get_context(), "\n";
+
+    print "\n2.1\n";
+    my $saved_context = $config->get_context();
+    $config->set_context("aho");
+    $config->{ "X" } = "Y";
+    {
+	print "current context = ", $config->get_context(), "\n";
+	my %db = ();
+	tie %db, 'FML::Config';
+	for my $k (keys %db) {
+	    printf "%30s => %s\n", $k, $db{ $k };
+	}
+    }
+
+    print "\n2.2\n";
+    $config->set_context($saved_context);
+    {
+	print "current context = ", $config->get_context(), "\n";
+	my %db = ();
+	tie %db, 'FML::Config';
+	for my $k (keys %db) {
+	    printf "%30s => %s\n", $k, $db{ $k };
+	}
     }
 }
 
