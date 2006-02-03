@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.100 2005/08/20 01:27:31 fukachan Exp $
+# $FML: Config.pm,v 1.101 2006/01/09 14:00:53 fukachan Exp $
 #
 
 package FML::Config;
@@ -1158,6 +1158,44 @@ sub get_hook
     else {
 	return '';
     }
+}
+
+
+=head1 CONTEXT SWITCHING
+
+=head2 set_context($context)
+
+set up context identifier.
+
+=head2 get_context
+
+return context identifier.
+
+=cut
+
+
+# Descriptions: set up context.
+#    Arguments: OBJ($self) STR($context)
+# Side Effects: update $current_context variable.
+# Return Value: none
+sub set_context
+{
+    my ($self, $context) = @_;
+    my $saved_context    = $self->get_context();
+
+    # initialize;
+    $current_context = $context;
+}
+
+
+# Descriptions: get context.
+#    Arguments: OBJ($self) STR($context)
+# Side Effects: none
+# Return Value: STR
+sub get_context
+{
+    my ($self) = @_;
+    return $current_context;
 }
 
 
