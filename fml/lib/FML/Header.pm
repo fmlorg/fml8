@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.86 2006/01/09 11:04:54 fukachan Exp $
+# $FML: Header.pm,v 1.87 2006/01/09 14:08:07 fukachan Exp $
 #
 
 package FML::Header;
@@ -140,6 +140,9 @@ sub address_cleanup
 {
     my ($self, $addr) = @_;
 
+    # error is an exception.
+    if ($addr eq '<>') { return $addr;}
+
     use Mail::Address;
     my (@addrlist) = Mail::Address->parse($addr);
 
@@ -150,7 +153,7 @@ sub address_cleanup
 	$addr =~ s/>\s*$//;
 
 	# return the result.
-	return $addr;
+	return( $addr || "<>" );
     }
     else {
 	return undef;
