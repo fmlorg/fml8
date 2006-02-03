@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.102 2006/02/03 04:17:18 fukachan Exp $
+# $FML: Config.pm,v 1.103 2006/02/03 08:43:21 fukachan Exp $
 #
 
 package FML::Config;
@@ -1214,7 +1214,7 @@ sub set_context
 
 
 # Descriptions: get context.
-#    Arguments: OBJ($self) STR($context)
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
 sub get_context
