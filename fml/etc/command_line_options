@@ -1,5 +1,5 @@
 #
-# $FML: command_line_options,v 1.18 2005/06/03 05:10:18 fukachan Exp $
+# $FML: command_line_options,v 1.19 2006/02/01 12:35:45 fukachan Exp $
 #
 # map between programs and options
 #
@@ -14,7 +14,7 @@ digest		debug! help! -c=s -o=s%
 distribute	debug! help! -c=s -o=s%
 error		debug! help! -c=s -o=s%
 mead		debug! help! -c=s -o=s%
-faker		debug! help! -c=s -o=s%
+createonpost	debug! help! -c=s -o=s%
 fetchfml	debug! help! -c=s -o=s% article-post! command-mail! error! error-mail-analyzer!
 
 # bin/

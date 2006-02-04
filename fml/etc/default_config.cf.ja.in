@@ -2858,6 +2858,66 @@ moderate_queue_dir = $var_dir/mail/queue-moderate
 
 
 
+=head1 CREATE-ON-POST
+
+# Descriptions: CREATE-ON-POST 機能を使うか否か？
+#               なお、この変数は createonpost プログラムでのみ意味がある。
+#      History: NONE
+#        Value: YES_OR_NO
+#     Examples: yes
+use_createonpost_function	=	yes
+
+
+# Descriptions:
+#      History: NONE
+#        Value: MIX (
+#			reject_errormail
+#			reject_fml8_managed_address
+#			reject_createonpost_domain
+#			permit_createonpost_sender_maps
+#			permit_anyone
+#               )
+#     Examples: permit_anyone
+createonpost_sender_restrictions =	reject_system_special_accounts
+					reject_errormail	
+					reject_fml8_managed_address
+					reject_createonpost_domain
+					permit_anyone
+
+# Descriptions:
+#      History: NONE
+#        Value: MIX (
+#			reject_errormail
+#			reject_fml8_managed_address
+#			reject_createonpost_domain
+#			permit_createonpost_subscribe_maps
+#			permit_anyone
+#               )
+#     Examples: permit_anyone
+createonpost_subscribe_restrictions =	reject_system_special_accounts
+					reject_errormail
+					reject_fml8_managed_address
+					reject_createonpost_domain
+ 					permit_anyone
+
+
+# Descriptions: 
+#               ファイルの中は、たとえば \S+\@example.com
+#      History: NONE
+#        Value: FILE
+#     Examples:
+createonpost_sender_maps	=	pcre:$ml_home_dir/sender.pcre
+
+
+# Descriptions: 
+#               ファイルの中は、たとえば \S+\@example.com
+#      History: NONE
+#        Value: FILE
+#     Examples:
+createonpost_subscribe_maps	=	pcre:$ml_home_dir/subscribe.pcre
+
+
+
 =head1 program paths
 
 # Descriptions:
@@ -3599,6 +3659,14 @@ ldap_query_find_search_filter		=	(&(objectclass=*)(ou=$ml_name@$ml_domain))
 # $command_mail_run_start_hook = q{ 1;};
 # $command_mail_verify_request_end_hook = q{ 1;};
 # $command_mail_verify_request_start_hook = q{ 1;};
+# $createonpost_finish_end_hook = q{ 1;};
+# $createonpost_finish_start_hook = q{ 1;};
+# $createonpost_prepare_end_hook = q{ 1;};
+# $createonpost_prepare_start_hook = q{ 1;};
+# $createonpost_run_end_hook = q{ 1;};
+# $createonpost_run_start_hook = q{ 1;};
+# $createonpost_verify_request_end_hook = q{ 1;};
+# $createonpost_verify_request_start_hook = q{ 1;};
 # $distribute_finish_end_hook = q{ 1;};
 # $distribute_finish_start_hook = q{ 1;};
 # $distribute_prepare_end_hook = q{ 1;};

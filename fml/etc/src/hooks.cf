@@ -32,6 +32,14 @@
 # $command_mail_run_start_hook = q{ 1;};
 # $command_mail_verify_request_end_hook = q{ 1;};
 # $command_mail_verify_request_start_hook = q{ 1;};
+# $createonpost_finish_end_hook = q{ 1;};
+# $createonpost_finish_start_hook = q{ 1;};
+# $createonpost_prepare_end_hook = q{ 1;};
+# $createonpost_prepare_start_hook = q{ 1;};
+# $createonpost_run_end_hook = q{ 1;};
+# $createonpost_run_start_hook = q{ 1;};
+# $createonpost_verify_request_end_hook = q{ 1;};
+# $createonpost_verify_request_start_hook = q{ 1;};
 # $distribute_finish_end_hook = q{ 1;};
 # $distribute_finish_start_hook = q{ 1;};
 # $distribute_prepare_end_hook = q{ 1;};

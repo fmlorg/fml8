@@ -28,6 +28,7 @@ cgi.cf
 mta.cf
 fetchfml.cf
 moderate.cf
+createonpost.cf
 paths.cf
 system_dependence.cf
 compatibility.cf

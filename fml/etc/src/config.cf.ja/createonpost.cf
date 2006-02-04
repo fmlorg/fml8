@@ -1,0 +1,59 @@
+=head1 CREATE-ON-POST
+
+# Descriptions: CREATE-ON-POST 機能を使うか否か？
+#               なお、この変数は createonpost プログラムでのみ意味がある。
+#      History: NONE
+#        Value: YES_OR_NO
+#     Examples: yes
+use_createonpost_function	=	yes
+
+
+# Descriptions:
+#      History: NONE
+#        Value: MIX (
+#			reject_errormail
+#			reject_fml8_managed_address
+#			reject_createonpost_domain
+#			permit_createonpost_sender_maps
+#			permit_anyone
+#               )
+#     Examples: permit_anyone
+createonpost_sender_restrictions =	reject_system_special_accounts
+					reject_errormail	
+					reject_fml8_managed_address
+					reject_createonpost_domain
+					permit_anyone
+
+# Descriptions:
+#      History: NONE
+#        Value: MIX (
+#			reject_errormail
+#			reject_fml8_managed_address
+#			reject_createonpost_domain
+#			permit_createonpost_subscribe_maps
+#			permit_anyone
+#               )
+#     Examples: permit_anyone
+createonpost_subscribe_restrictions =	reject_system_special_accounts
+					reject_errormail
+					reject_fml8_managed_address
+					reject_createonpost_domain
+ 					permit_anyone
+
+
+# Descriptions: 
+#               ファイルの中は、たとえば \S+\@example.com
+#      History: NONE
+#        Value: FILE
+#     Examples:
+createonpost_sender_maps	=	pcre:$ml_home_dir/sender.pcre
+
+
+# Descriptions: 
+#               ファイルの中は、たとえば \S+\@example.com
+#      History: NONE
+#        Value: FILE
+#     Examples:
+createonpost_subscribe_maps	=	pcre:$ml_home_dir/subscribe.pcre
+
+
