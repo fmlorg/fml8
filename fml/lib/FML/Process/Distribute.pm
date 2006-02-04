@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.167 2005/12/19 03:06:02 fukachan Exp $
+# $FML: Distribute.pm,v 1.168 2006/01/09 14:00:54 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -136,6 +136,18 @@ sub verify_request
     if ($curproc->filter_state_get_tempfail_request()) {
 	$curproc->exit_as_tempfail(); # XXX LONG JUMP!
         # NOT REACH HERE
+    }
+
+    # ADDRESS FAULT HANDLING: used in the case of CREATE-ON-POST.
+    unless ($curproc->is_refused()) {
+	if ($curproc->is_address_fault()) {
+	    eval q{
+		use FML::Fault::Address;
+		my $fault = new FML::Fault::Address $curproc;
+		$fault->try_subscribe();
+	    };
+	    $curproc->logerror($@) if $@;
+	}
     }
 
     $eval  = $config->get_hook( 'distribute_verify_request_end_hook' );
