@@ -2777,6 +2777,65 @@ moderate_queue_dir = $var_dir/mail/queue-moderate
 
 
 
+=head1 CREATE-ON-POST
+
+# Descriptions: use CREATE-ON-POST or not ?
+#               This variable is meaningful only in createonpost program.
+#      History: NONE
+#        Value: YES_OR_NO
+#     Examples: yes
+use_createonpost_function	=	yes
+
+
+# Descriptions:
+#      History: NONE
+#        Value: MIX (
+#			reject_errormail
+#			reject_fml8_managed_address
+#			reject_createonpost_domain
+#			permit_createonpost_sender_maps
+#			permit_anyone
+#               )
+#     Examples: permit_anyone
+createonpost_sender_restrictions =	reject_system_special_accounts
+					reject_errormail	
+					reject_fml8_managed_address
+					reject_createonpost_domain
+					permit_anyone
+
+# Descriptions:
+#      History: NONE
+#        Value: MIX (
+#			reject_errormail
+#			reject_fml8_managed_address
+#			reject_createonpost_domain
+#			permit_createonpost_subscribe_maps
+#			permit_anyone
+#               )
+#     Examples: permit_anyone
+createonpost_subscribe_restrictions =	reject_system_special_accounts
+					reject_errormail
+					reject_fml8_managed_address
+					reject_createonpost_domain
+ 					permit_anyone
+
+
+# Descriptions: 
+#               For eaxmple, this file contains \S+\@example.com line.
+#      History: NONE
+#        Value: FILE
+#     Examples:
+createonpost_sender_maps	=	pcre:$ml_home_dir/sender.pcre
+
+
+# Descriptions: 
+#               For eaxmple, this file contains \S+\@example.com line.
+#      History: NONE
+#        Value: FILE
+#     Examples:
+createonpost_subscribe_maps	=	pcre:$ml_home_dir/subscribe.pcre
+
+
 
 =head1 program paths
 
