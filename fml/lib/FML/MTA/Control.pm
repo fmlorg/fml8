@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.6 2004/07/23 13:16:40 fukachan Exp $
+# $FML: Control.pm,v 1.7 2005/05/27 00:55:46 fukachan Exp $
 #
 
 package FML::MTA::Control;
@@ -338,6 +338,46 @@ sub remove_postfix_style_virtual
     else {
 	warn("cannot open $virtual")     unless defined $rh;
 	warn("cannot open $virtual_new") unless defined $wh;
+    }
+}
+
+
+# Descriptions: set up create-on-post configurations.
+#    Arguments: OBJ($self)
+#               HASH_REF($curproc) HASH_REF($params) HASH_REF($optargs)
+# Side Effects: update aliases
+# Return Value: none
+sub install_createonpost
+{
+    my ($self, $curproc, $params, $optargs) = @_;
+    my $mta_type = $optargs->{ mta_type } || $self->{ mta_type };
+
+    if ($self->is_valid_mta_type($mta_type)) {
+	my $method = "${mta_type}_install_createonpost";
+	$self->$method($curproc, $params, $optargs);
+    }
+    else {
+	croak("unknown MTA");
+    }
+}
+
+
+# Descriptions: disable create-on-post configurations.
+#    Arguments: OBJ($self)
+#               HASH_REF($curproc) HASH_REF($params) HASH_REF($optargs)
+# Side Effects: update aliases
+# Return Value: none
+sub remove_createonpost
+{
+    my ($self, $curproc, $params, $optargs) = @_;
+    my $mta_type = $optargs->{ mta_type } || $self->{ mta_type };
+
+    if ($self->is_valid_mta_type($mta_type)) {
+	my $method = "${mta_type}_remove_createonpost";
+	$self->$method($curproc, $params, $optargs);
+    }
+    else {
+	croak("unknown MTA");
     }
 }
 

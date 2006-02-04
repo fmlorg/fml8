@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.10 2005/08/18 10:23:09 fukachan Exp $
+# $FML: Control.pm,v 1.11 2006/01/09 14:00:54 fukachan Exp $
 #
 
 package FML::ML::Control;
@@ -146,6 +146,7 @@ sub install_template_files
 {
     my ($self, $curproc, $command_args, $params) = @_;
     my $config       = $curproc->config();
+    my $mode         = $self->get_mode() || 'newml';
     my $template_dir = $curproc->newml_command_template_files_dir();
     my $ml_home_dir  = $params->{ ml_home_dir };
     my $templ_files  =
@@ -162,14 +163,16 @@ sub install_template_files
     }
 
     # 2. set up MTA specific files e.g. include, .qmail-*
-    use FML::MTA::Control;
+    unless ($mode eq 'createonpost' || $mode eq 'create-on-post') {
+	use FML::MTA::Control;
 
-    # 2.1 setup include include-ctl ... (postfix/sendmail style)
-    # 2.2 setup ~fml/.qmail-* (qmail style)
-    my $list = $config->get_as_array_ref('newml_command_mta_config_list');
-    for my $mta (@$list) {
-	my $obj = new FML::MTA::Control { mta_type => $mta };
-	$obj->setup($curproc, $params);
+	# 2.1 setup include include-ctl ... (postfix/sendmail style)
+	# 2.2 setup ~fml/.qmail-* (qmail style)
+	my $list = $config->get_as_array_ref('newml_command_mta_config_list');
+	for my $mta (@$list) {
+	    my $obj = new FML::MTA::Control { mta_type => $mta };
+	    $obj->setup($curproc, $params);
+	}
     }
 }
 
@@ -490,6 +493,96 @@ sub setup_listinfo
 }
 
 
+=head1 CREATE-ON-POST
+
+=cut
+
+
+# Descriptions: set up or fix create-on-post environment.
+#    Arguments: OBJ($self)
+#               OBJ($curproc)
+#               HASH_REF($command_args)
+#               HASH_REF($params)
+# Side Effects: fix include, virtual files.
+# Return Value: none
+sub install_createonpost
+{
+    my ($self, $curproc, $command_args, $params) = @_;
+    my $config    = $curproc->config(); 
+    my $ml_name   = $curproc->ml_name();
+    my $ml_domain = $curproc->ml_domain();
+
+    # 1. set up virtual.
+    eval q{
+	my $list = $config->get_as_array_ref('newml_command_mta_config_list');
+	for my $mta (@$list) {
+	    my $optargs = { mta_type => $mta, key => $ml_name };
+
+	    use FML::MTA::Control;
+	    my $obj = new FML::MTA::Control;
+	    if ($obj->can('install_createonpost')) {
+		$obj->install_createonpost($curproc, $params, $optargs);
+	    }
+	    else {
+		$curproc->ui_message("ignoring create-on-post setup for $mta");
+	    }
+	}
+    };
+
+    # 2. remove include* files.
+    use File::Spec;
+    my $ml_home_dir = $curproc->ml_home_dir($ml_name, $ml_domain);
+    for my $file (qw(include include-ctl include-error)) {
+	my $dst = File::Spec->catfile($ml_home_dir, $file);
+	unlink($dst);
+    }
+
+    # 3. reset include file.
+    my $include = File::Spec->catfile($ml_home_dir, "include");
+    my $prefix  = $curproc->executable_prefix();
+    my $program = File::Spec->catfile($prefix, "createonpost");
+
+    use FileHandle;
+    my $wh = new FileHandle "> $include";
+    if (defined $wh) {
+	print $wh "\"| $program $ml_name\@$ml_domain\"\n";
+	$wh->close();
+    }
+}
+
+
+# Descriptions: disable create-on-post environment.
+#    Arguments: OBJ($self)
+#               OBJ($curproc)
+#               HASH_REF($command_args)
+#               HASH_REF($params)
+# Side Effects: fix include, virtual files.
+# Return Value: none
+sub remove_createonpost
+{
+    my ($self, $curproc, $command_args, $params) = @_;
+    my $config  = $curproc->config(); 
+    my $ml_name = $config->{ ml_name };
+    my $list    = $config->get_as_array_ref('newml_command_mta_config_list');
+
+    eval q{
+	for my $mta (@$list) {
+	    my $optargs = { mta_type => $mta, key => $ml_name };
+
+	    use FML::MTA::Control;
+	    my $obj = new FML::MTA::Control;
+	    if ($obj->can('remove_createonpost')) {
+		$obj->remove_createonpost($curproc, $params, $optargs);
+	    }
+	    else {
+		my $s = "ignoring create-on-post disabler for $mta";
+		$curproc->ui_message($s);
+	    }
+	}
+    };
+}
+
+
 =head1 ML REMOVE
 
 =cut
@@ -555,6 +648,44 @@ sub remove_aliases
 	}
     };
     croak($@) if $@;
+}
+
+
+=head1 UTILITY
+
+=head2 set_mode($mode)
+
+set mode.
+
+=head2 get_mode()
+
+get mode.
+
+=cut
+
+
+# Descriptions: set mode.
+#    Arguments: OBJ($self) STR($mode)
+# Side Effects: none
+# Return Value: none
+sub set_mode
+{
+    my ($self, $mode) = @_;
+
+    if (defined $mode) {
+	$self->{ _current_mode } = $mode;
+    }
+}
+
+
+# Descriptions: get mode.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: none
+sub get_mode
+{
+    my ($self) = @_;
+    return( $self->{ _current_mode } || '' );
 }
 
 
