@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.79 2004/03/16 12:53:40 fukachan Exp $
+# $FML: newml.pm,v 1.80 2004/07/23 13:16:35 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -68,10 +68,8 @@ sub process
     my ($self, $curproc, $command_args) = @_;
     my $options        = $curproc->command_line_options();
     my $config         = $curproc->config();
-
-    # XXX-TODO: can we here use $curproc->ml_*() ?
-    my $ml_name        = $config->{ ml_name };
-    my $ml_domain      = $config->{ ml_domain };
+    my $ml_name        = $command_args->{ ml_name };
+    my $ml_domain      = $command_args->{ ml_domain };
     my $ml_home_prefix = $curproc->ml_home_prefix($ml_domain);
     my $ml_home_dir    = $curproc->ml_home_dir($ml_name, $ml_domain);
     my $owner          = $config->{ newml_command_ml_admin_default_address }||
@@ -146,7 +144,9 @@ sub process
     # 5. prepare listinfo url
     $control->init_ml_home_dir($curproc, $command_args, $params);
     $control->install_template_files($curproc, $command_args, $params);
-    $control->update_aliases($curproc, $command_args, $params);
+    if ($self->is_update_alias($curproc, $command_args)) {
+	$control->update_aliases($curproc, $command_args, $params);
+    }
     $control->setup_mail_archive_dir($curproc, $command_args, $params);
     $control->setup_cgi_interface($curproc, $command_args, $params);
     $control->setup_listinfo($curproc, $command_args, $params);
@@ -201,7 +201,7 @@ sub set_force_mode
 # Descriptions: return if force mode is enabled or not.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: none
-# Return Value: none
+# Return Value: NUM
 sub get_force_mode
 {
     my ($self, $curproc, $command_args) = @_;
@@ -212,6 +212,24 @@ sub get_force_mode
     }
     else {
 	return( (defined $options->{ force }) ? 1 : 0 );
+    }
+}
+
+
+# Descriptions: check if we should update alias files.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: none
+# Return Value: NUM
+sub is_update_alias
+{
+    my ($self, $curproc, $command_args) = @_;
+    my $option = $curproc->command_line_cui_specific_options() || {};
+
+    if (defined $option->{ 'update-alias' }) {
+	return( $option->{ 'update-alias' } eq 'no' ? 0 : 1 );
+    }
+    else {
+	return 1;
     }
 }
 
