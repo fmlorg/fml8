@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.9 2005/08/18 10:20:57 fukachan Exp $
+# $FML: Postfix.pm,v 1.10 2006/01/09 14:00:54 fukachan Exp $
 #
 
 package FML::MTA::Control::Postfix;
@@ -443,6 +443,109 @@ sub postfix_update_virtual_map
 	else {
 	    warn("postmap='$postmap' not found");
 	}
+    }
+}
+
+
+# Descriptions: set up create-on-post configurations.
+#    Arguments: OBJ($self)
+#               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
+# Side Effects: create include*
+# Return Value: none
+sub postfix_install_createonpost
+{
+    my ($self, $curproc, $params, $optargs) = @_;
+    my $config    = $curproc->config();
+    my $ml_name   = $config->{ ml_name };
+    my $ml_domain = $config->{ ml_domain };
+    my $postmap   = $config->{ path_postmap };
+    my $virtual   = $config->{ postfix_virtual_map_file };
+    my $cop       = sprintf("%s=%s", $ml_name, $ml_domain);
+    my $dup       = 0;
+
+    # 1. check duplication
+    if (-f $virtual) {
+	use FileHandle;
+	my $rh = new FileHandle $virtual;
+	if (defined $rh) {
+	    my $buf;
+	  LINE:
+	    while ($buf = <$rh>) {
+		if ($buf =~ /<CREATE-ON-POST>/) {
+		    my $err = "error: create-on-post already defined";
+		    warn($err);
+		    $dup = 1;
+		    last LINE;
+		}
+	    }
+	    $rh->close();
+	}
+    }
+  
+    # 2. install create-on-post entry into virtual.
+    unless ($dup) {
+        $curproc->ui_message("updating $virtual database for create-on-post");
+	use FileHandle;
+	my $wh = new FileHandle ">> $virtual";
+	if (defined $wh) {
+	    print $wh "\n";
+	    print $wh "### <CREATE-ON-POST>\n";
+	    print $wh "\@$ml_domain\t$cop\n";
+	    print $wh "### </CREATE-ON-POST>\n";
+	    print $wh "\n";
+	    $wh->close();
+	}
+
+	# rebuild .map file.
+	$self->postfix_update_virtual_map($curproc, $params, $optargs);
+    }
+}
+
+
+# Descriptions: disable create-on-post configurations.
+#    Arguments: OBJ($self)
+#               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
+# Side Effects: create include*
+# Return Value: none
+sub postfix_remove_createonpost
+{
+    my ($self, $curproc, $params, $optargs) = @_;
+    my $config    = $curproc->config();
+    my $ml_name   = $config->{ ml_name };
+    my $ml_domain = $config->{ ml_domain };
+    my $postmap   = $config->{ path_postmap };
+    my $virtual   = $config->{ postfix_virtual_map_file };
+    my $tmp       = sprintf("%s.tmp.%s", $virtual, $$);
+    my $cop       = sprintf("%s=%s", $ml_name, $ml_domain);
+    my $found     = 0;
+
+    # remove create-on-post entry into virtual.
+    $curproc->ui_message("removing $virtual database for create-on-post");
+    use FileHandle;
+    my $rh = new FileHandle $virtual;
+    my $wh = new FileHandle "> $tmp";
+    if (defined $wh) {
+	my $buf;
+      LINE:
+	while($buf = <$rh>) {
+	    if ($buf =~ /<CREATE-ON-POST>/
+		.. 
+		$buf =~ /<\/CREATE-ON-POST>/) {
+		next LINE;
+	    }
+	    print $wh $buf;
+	}
+	$wh->close();
+	$rh->close();
+
+	unless (rename($tmp, $virtual)) {
+	    my $s = "fail to rename virtual file";
+	    $curproc->ui_message("error: $s");
+	    $curproc->logerror($s);
+	}
+	
+	# rebuild .map file.
+	$self->postfix_update_virtual_map($curproc, $params, $optargs);
     }
 }
 
