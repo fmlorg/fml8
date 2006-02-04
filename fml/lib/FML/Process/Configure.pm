@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.70 2005/08/10 15:03:25 fukachan Exp $
+# $FML: Configure.pm,v 1.71 2006/01/09 14:00:54 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -284,10 +284,11 @@ See <FML::Process::Switch()> on C<$args> for more details.
 sub _makefml
 {
     my ($curproc, $args) = @_;
-    my $config  = $curproc->config();
-    my $ml_name = $config->{ ml_name };
-    my $myname  = $curproc->myname();
-    my $argv    = $curproc->command_line_argv();
+    my $config    = $curproc->config();
+    my $ml_name   = $curproc->ml_name();
+    my $ml_domain = $curproc->ml_domain();
+    my $myname    = $curproc->myname();
+    my $argv      = $curproc->command_line_argv();
     my ($method, $argv_ml_name, @options);
 
     # XXX hmm, HARD-CODED but no idea.
@@ -308,6 +309,7 @@ sub _makefml
 	comname      => $method,
 	command      => "$method @options",
 	ml_name      => $ml_name,
+	ml_domain    => $ml_domain,
 	options      => \@options,
 	argv         => $argv,
 
