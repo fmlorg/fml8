@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.112 2005/12/18 11:52:49 fukachan Exp $
+# $FML: Switch.pm,v 1.113 2006/01/09 14:00:54 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -269,15 +269,23 @@ sub NewProcess
     $args->{ myname }           = $new_myname;
     $args->{ program_name }     = $new_myname;
     $args->{ program_fullname } =~ s/$old_myname/$new_myname/;
-    $args->{ argv }             = [ $ml_addr ];
-    $args->{ ARGV }             = [ $ml_addr ];
+    $args->{ argv }             = $hints->{ argv } || [ $ml_addr ];
+    $args->{ ARGV }             = $hints->{ ARGV } || [ $ml_addr ];
     $args->{ curproc }          = {};
+
+    if (defined $hints->{ options }) {
+	$args->{ options } = $hints->{ options };
+    }
 
     # overload options
     my $_opts = $hints->{ config_overload } || {};
     for my $k (keys %$_opts) {
 	$args->{ options }->{ o }->{ $k } = $_opts->{ $k };
     }
+
+    # context switch (save current context)
+    my $saved_context = $curproc->context_switch_get_context();
+    $curproc->set_process_title($new_myname);
 
     # start a new process.
     eval q{
@@ -289,6 +297,9 @@ sub NewProcess
 	&FML::Process::Flow::ProcessStart($obj, $args);
     };
     $curproc->logerror($@) if $@;
+
+    # context switch (back again)
+    $curproc->context_switch_set_context($saved_context);
 }
 
 
