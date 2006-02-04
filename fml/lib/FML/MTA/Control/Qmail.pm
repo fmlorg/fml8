@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Qmail.pm,v 1.5 2005/08/17 10:44:47 fukachan Exp $
+# $FML: Qmail.pm,v 1.6 2005/08/17 12:08:47 fukachan Exp $
 #
 
 package FML::MTA::Control::Qmail;
@@ -37,8 +37,38 @@ set up aliases and virtual maps for qmail.
 sub qmail_install_alias
 {
     my ($self, $curproc, $params, $optargs) = @_;
+    my $config       = $curproc->config();
+    my $template_dir = $curproc->newml_command_template_files_dir();
+    my $ml_home_dir  = $params->{ ml_home_dir };
 
-    0;
+    use File::Spec;
+
+    my $qmail_template_files =
+	$config->get_as_array_ref('newml_command_qmail_template_files');
+    my $fml_owner_home_dir = $config->{ fml_owner_home_dir };
+    my $ml_name   = $config->{ ml_name };
+    my $ml_domain = $config->{ ml_domain }; $ml_domain =~ s/\./:/g;
+    for my $file (@$qmail_template_files) {
+	# XXX-TODO: we should define dot-qmail file name generator as method.
+	my $xfile = $file;
+	$xfile =~ s/dot-/\./;
+	$xfile =~ s/dot-/\./;
+	$xfile =~ s/qmail/qmail-$ml_domain-$ml_name/;
+
+	my $src   = File::Spec->catfile($template_dir, $file);
+	my $dst   = File::Spec->catfile($fml_owner_home_dir, $xfile);
+
+	$curproc->ui_message("creating $dst");
+	$self->_install($src, $dst, $params);
+    }
+
+    my $virtual_domain_conf = $config->{ qmail_virtualdomains_file };
+    unless (-f $virtual_domain_conf) {
+	if (0) {
+	    $curproc->ui_message("  XXX We assume $ml_domain:fml-$ml_domain");
+	    $curproc->ui_message("  XXX in $virtual_domain_conf");
+	}
+    }
 }
 
 
@@ -139,39 +169,8 @@ sub qmail_alias_maps
 sub qmail_setup
 {
     my ($self, $curproc, $params, $optargs) = @_;
-    my $config       = $curproc->config();
-    my $template_dir = $curproc->newml_command_template_files_dir();
-    my $ml_home_dir  = $params->{ ml_home_dir };
 
-    use File::Spec;
-
-    my $qmail_template_files =
-	$config->get_as_array_ref('newml_command_qmail_template_files');
-    my $fml_owner_home_dir = $config->{ fml_owner_home_dir };
-    my $ml_name   = $config->{ ml_name };
-    my $ml_domain = $config->{ ml_domain }; $ml_domain =~ s/\./:/g;
-    for my $file (@$qmail_template_files) {
-	# XXX-TODO: we should define dot-qmail file name generator as method.
-	my $xfile = $file;
-	$xfile =~ s/dot-/\./;
-	$xfile =~ s/dot-/\./;
-	$xfile =~ s/qmail/qmail-$ml_domain-$ml_name/;
-
-	my $src   = File::Spec->catfile($template_dir, $file);
-	my $dst   = File::Spec->catfile($fml_owner_home_dir, $xfile);
-
-	$curproc->ui_message("creating $dst");
-	$self->_install($src, $dst, $params);
-    }
-
-    my $virtual_domain_conf = $config->{ qmail_virtualdomains_file };
-    unless (-f $virtual_domain_conf) {
-	if (0) {
-	    $curproc->ui_message("  XXX We assume $ml_domain:fml-$ml_domain");
-	    $curproc->ui_message("  XXX in $virtual_domain_conf");
-	}
-    }
-
+    0;
 }
 
 
