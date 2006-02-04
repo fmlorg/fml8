@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.271 2005/12/19 03:06:02 fukachan Exp $
+# $FML: Kernel.pm,v 1.272 2006/01/09 14:00:54 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -150,15 +150,18 @@ sub new
     $curproc->{ main_cf }       = $args->{ main_cf };
     $curproc->{ __parent_args } = $args;
 
-    # 3.2 bind FML::Config object to $curproc
+    # 3.2 initialize context for further use of config object name space.
+    _context_init($curproc);
+
+    # 3.3 bind FML::Config object to $curproc
     use FML::Config;
     $curproc->{ config } = new FML::Config $cfargs;
 
-    # 3.3 initialize PCB (Process Control Block)
+    # 3.4 initialize PCB (Process Control Block)
     use FML::PCB;
     $curproc->{ pcb } = new FML::PCB;
 
-    # 3.4
+    # 3.5
     # object-ify. bless! bless! bless!
     bless $curproc, $self;
 
@@ -266,6 +269,24 @@ sub _credential_init
     use FML::Credential;
     my $cred = new FML::Credential $curproc;
     $curproc->{ 'credential' } = $cred;
+}
+
+
+# Descriptions: initialize context information for context switch.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: none
+sub _context_init
+{
+    my ($curproc) = @_;
+
+    use FML::Config;
+    my $_config = new FML::Config;
+    $_config->set_context("$curproc");
+
+    use FML::PCB;
+    my $_pcb = new FML::PCB;
+    $_pcb->set_context("$curproc");
 }
 
 
