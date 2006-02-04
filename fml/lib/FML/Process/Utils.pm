@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.145 2006/01/13 00:17:08 fukachan Exp $
+# $FML: Utils.pm,v 1.146 2006/01/15 13:53:53 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -253,6 +253,10 @@ sub incoming_message_set_current_queue
     if (defined $pcb) {
 	$pcb->set("incoming_smtp_transaction", "queue_object", $queue);
     }
+    else {
+	$curproc->logerror("no pcb");
+	return undef;
+    }
 }
 
 
@@ -267,6 +271,10 @@ sub incoming_message_get_current_queue
 
     if (defined $pcb) {
 	$pcb->get("incoming_smtp_transaction", "queue_object") || undef;
+    }
+    else {
+	$curproc->logerror("no pcb");
+	return undef;
     }
 }
 
@@ -2154,6 +2162,147 @@ sub dup_curproc_args
     }
 
     return $hash;
+}
+
+
+# Descriptions: set process title (setproctitle()).
+#    Arguments: OBJ($curproc) STR($title)
+# Side Effects: none
+# Return Value: none
+sub set_process_title
+{
+    my ($curproc, $title) = @_;
+    $0 = $title;
+}
+
+
+# Descriptions: return process title.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub get_process_title
+{
+    my ($curproc) = @_;
+    return $0;
+}
+
+
+=head2 context_switch_get_context()
+
+return saved context information.
+
+=head2 context_switch_set_context($context)
+
+replace context information with the specified one.
+
+=cut
+
+
+# Descriptions: return saved context.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: HASH_REF
+sub context_switch_get_context
+{
+    my ($curproc)     = @_;
+    my $config        = $curproc->config();
+    my $config_saved  = $config->get_context();
+    my $pcb           = $curproc->pcb();   
+    my $pcb_saved     = $pcb->get_context();
+    my $process_title = $curproc->get_process_title();
+    my $context       = {
+	config_saved_context => $config_saved,
+	pcb_saved_context    => $pcb_saved,
+	process_title        => $process_title,
+    };
+
+    return $context;
+}
+
+
+# Descriptions: reset the context.
+#    Arguments: OBJ($curproc) HASH_REF($context)
+# Side Effects: none
+# Return Value: STR
+sub context_switch_set_context
+{
+    my ($curproc, $context)= @_;
+    my $config             = $curproc->config();
+    my $config_context     = $context->{ config_saved_context };
+    my $pcb                = $curproc->pcb();   
+    my $pcb_context        = $context->{ pcb_saved_context };
+    my $process_title      = $context->{ process_title };
+
+    # context switch: back again.
+    $config->set_context($config_context);
+    $pcb->set_context($pcb_context);
+    $curproc->set_process_title($process_title);
+}
+
+
+=head1 FAULT
+
+=cut
+
+
+# Descriptions: set address fault.
+#    Arguments: OBJ($curproc)
+# Side Effects: set shared memory
+# Return Value: none
+sub set_address_fault
+{
+    my ($curproc) = @_;
+    my $shm = $curproc->shared_hash_get("system", "fault");
+    $shm->{ "address_fault" } = "yes";
+}
+
+
+# Descriptions: get address fault value.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub get_address_fault
+{
+    my ($curproc) = @_;
+    my $shm       = $curproc->shared_hash_get("system", "fault");
+    return( $shm->{ "address_fault" } || 'no' );
+}
+
+
+# Descriptions: check if the address fault requested.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: NUM
+sub is_address_fault
+{
+    my ($curproc) = @_;
+    my $is_fault  = $curproc->get_address_fault();
+
+    return( $is_fault eq 'yes' ? 1 : 0 );
+}
+
+
+# Descriptions: set address fault list.
+#    Arguments: OBJ($curproc) ARRAY_REF($list)
+# Side Effects: set shared memory
+# Return Value: none
+sub set_address_fault_list
+{
+    my ($curproc, $list) = @_;
+    my $shm = $curproc->shared_hash_get("system", "fault_list");
+    $shm->{ "address_fault_list" } = $list;
+}
+
+
+# Descriptions: get address fault list as ARRAY_REF.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub get_address_fault_list
+{
+    my ($curproc) = @_;
+    my $shm       = $curproc->shared_hash_get("system", "fault_list");
+    return( $shm->{ "address_fault_list" } || [] );
 }
 
 
