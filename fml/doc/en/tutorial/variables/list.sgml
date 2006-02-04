@@ -675,6 +675,24 @@ confirm
 </row>
 <row>
 <entry>
+createonpost_sender_maps</entry>
+<entry>
+ </entry>
+<entry>
+pcre:$ml_home_dir/sender.pcre
+   </entry>
+</row>
+<row>
+<entry>
+createonpost_subscribe_maps</entry>
+<entry>
+ </entry>
+<entry>
+pcre:$ml_home_dir/subscribe.pcre
+   </entry>
+</row>
+<row>
+<entry>
 db_dir</entry>
 <entry>
  directoy to hold several data files</entry>
@@ -2254,6 +2272,15 @@ yes
 use_command_mail_size_filter</entry>
 <entry>
  use size based filter</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_createonpost_function</entry>
+<entry>
+ use CREATE-ON-POST or not ?</entry>
 <entry>
 yes
    </entry>

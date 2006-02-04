@@ -658,6 +658,24 @@ confirm
 </row>
 <row>
 <entry>
+createonpost_sender_maps</entry>
+<entry>
+ </entry>
+<entry>
+pcre:$ml_home_dir/sender.pcre
+   </entry>
+</row>
+<row>
+<entry>
+createonpost_subscribe_maps</entry>
+<entry>
+ </entry>
+<entry>
+pcre:$ml_home_dir/subscribe.pcre
+   </entry>
+</row>
+<row>
+<entry>
 db_dir</entry>
 <entry>
  各種データファイルを置くディレクトリ</entry>
@@ -2284,6 +2302,15 @@ yes
 use_command_mail_size_filter</entry>
 <entry>
  サイズ情報を根拠にしたフィルタリングをするか？</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_createonpost_function</entry>
+<entry>
+ CREATE-ON-POST 機能を使うか否か？</entry>
 <entry>
 yes
    </entry>

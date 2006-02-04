@@ -311,6 +311,23 @@ user_command {
    }
 }
 
+createonpost {
+
+   createonpost { 
+          $use_createonpost_function
+   }
+
+   createonpost_sender { 
+          $createonpost_sender_maps
+          $createonpost_sender_restrictions
+   }
+
+   createonpost_subscribe { 
+          $createonpost_subscribe_maps
+          $createonpost_subscribe_restrictions
+   }
+}
+
 debug {
 
    debug { 
