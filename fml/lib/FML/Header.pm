@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.87 2006/01/09 14:08:07 fukachan Exp $
+# $FML: Header.pm,v 1.88 2006/02/03 11:06:50 fukachan Exp $
 #
 
 package FML::Header;
@@ -834,14 +834,29 @@ sub _update_xxx_message_id_cache
 
     $mid = $header->address_cleanup($mid);
     if ($mid) {
-	use FML::Header::MessageID;
-	my $xargs = { directory => $dir };
-	my $db    = FML::Header::MessageID->new->db_open($xargs);
+	$header->insert_message_id_cache($config, $mid, $dir);
+    }
+}
 
-	if (defined $db) {
-	    # save the current id and time (unix time).
-	    $db->{ $mid } = time;
-	}
+
+# Descriptions: raw level routine to update message id cache.
+#               use $message_id_cache_dir as the cache dir
+#               if $dir argument not specified.
+#    Arguments: OBJ($header) OBJ($config) STR($mid) STR($dir)
+# Side Effects: update cache
+# Return Value: none
+sub insert_message_id_cache
+{
+    my ($header, $config, $mid, $dir) = @_;
+    my $cache_dir = $dir || $config->{ 'message_id_cache_dir' };
+
+    use FML::Header::MessageID;
+    my $xargs = { directory => $cache_dir };
+    my $db    = FML::Header::MessageID->new->db_open($xargs);
+
+    if (defined $db) {
+	# save the current id and time (unix time).
+	$db->{ $mid } = time;
     }
 }
 
