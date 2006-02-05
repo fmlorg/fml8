@@ -3,7 +3,7 @@
 # Copyright (C) 2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: CreateOnPost.pm,v 1.1 2006/02/04 08:00:09 fukachan Exp $
+# $FML: CreateOnPost.pm,v 1.2 2006/02/05 01:02:52 fukachan Exp $
 #
 
 package FML::Process::CreateOnPost;
@@ -445,6 +445,7 @@ sub _is_ml_address
     my ($ctl, $admin);
 
     # elena
+    # XXX if you create xxx-ctl or xxx-admin ML, it should be allowed.
     if ($curproc->is_fml8_managed_address($addr)) {
 	return 1;
     }
