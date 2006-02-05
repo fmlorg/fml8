@@ -33,6 +33,111 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2006/02/05
+
+   FML::Header 
+	implement raw level insert_message_id_cache() method to access
+	cache more directly.
+	rewritten to use it.
+	
+   FML::Process::Kernel 
+	add a new message-id to the outgoing message fml8 generates and cache
+	it in our message-id database for further loop check.
+	
+   FML::Process::CreateOnPost 
+	ignore *-ctl and *-admin addresses as a ML one.
+	implement reject_list_header_field derective.
+	
+   FML::Process::CreateOnPost 
+	comments on _is_ml_address() logic: if you create xxx-ctl or
+	xxx-admin ML, it should be allowed.
+
+   variables
+	$createonpost_sender_restrictions += reject_list_header_field
+
+2006/02/04
+
+   CREATE-ON-POST implemented.
+	CREATE-ON-POST は「動的にＭＬを生成」する仕組みです。
+
+	存在しないＭＬに投稿すると fault がおき、fault handler が
+	ＭＬの生成処理を行なう。アドレスの登録も fault で行なう。
+	メカニズムとしては fml4 エミュレータの fallback 処理と同じ。
+
+		ml fault	存在しないＭＬなら、ＭＬを作る
+
+		address fault	アドレスが登録されているか？を調べ
+				未登録の場合には登録処理をする
+				(走り始めた配送プロセスが fault を処理)。
+
+   variables	
+	define CREATE-ON-POST function.
+	
+   FML::Config 
+	context switch safe
+	fix comments (FNF)
+	
+   FML::Header 
+	return <> for error mail sender
+	
+   FML::PCB 
+	context switch safe
+	
+   FML::ML::Control 
+   FML::MTA::Control 
+	implement createonpost function dispatcher
+	
+   FML::MTA::Control::Postfix 
+	Postfix specific CREATE-ON-POST operations.
+	
+   FML::MTA::Control::Qmail 
+	qmail_install_alias() install ~fml::.qmail-* files not qmail_setup()
+	method.
+	
+   FML::Process::Utils 
+	define several methods around $0 handling, address fault handling and
+	context switching.
+	+set_process_title()
+	+get_process_title()
+	+set_address_fault()
+	+get_address_fault()
+	+is_address_fault()
+	+set_address_fault_list()
+	+get_address_fault_list()
+	+context_switch_get_context()
+	+context_switch_set_context()
+
+   FML::Process::Distribute 
+   FML::Fault::Address 
+	address fault handling
+	
+   FML::Process::Configure 
+	use $curproc->{ml_name,ml_domain}() method.
+	$command_args includes ml_domain info.
+	
+   FML::Process::Kernel 
+	initialize context information when constructor runs.
+	
+   FML::Process::Switch 
+	prefer $hints if specified for argv, ARGV and options.
+	support context switching in executing new (child) process.
+	
+   FML::Command::Admin::rmml 
+	use $command_args->{ ml_name } and $command_args->{ ml_domain };
+	
+   FML::Command::Admin::newml 
+	use $command_args->{ ml_name } and $command_args->{ ml_domain };
+	not udpate alias relates information if update-alias = no specified.
+
+2006/02/03
+
+   FML::Config 
+	define {set,get}_context() method.
+
+2006/01/24
+
+  各種テスト、オーヴァホール
+
 2006/01/19
 
   いろいろとレシピ’sを書く、書く、書く…
@@ -9157,4 +9262,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.265 2006/01/15 15:34:01 fukachan Exp $
+$FML: CHANGES.txt,v 1.266 2006/01/21 10:31:57 fukachan Exp $
