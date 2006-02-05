@@ -2793,12 +2793,15 @@ use_createonpost_function	=	yes
 #			reject_errormail
 #			reject_fml8_managed_address
 #			reject_createonpost_domain
+#			reject_list_header_field
+#			reject_system_special_accounts
 #			permit_createonpost_sender_maps
 #			permit_anyone
 #               )
 #     Examples: permit_anyone
 createonpost_sender_restrictions =	reject_system_special_accounts
 					reject_errormail	
+					reject_list_header_field
 					reject_fml8_managed_address
 					reject_createonpost_domain
 					permit_anyone
