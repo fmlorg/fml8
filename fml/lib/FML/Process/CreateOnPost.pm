@@ -3,7 +3,7 @@
 # Copyright (C) 2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: CreateOnPost.pm,v 1.7 2006/01/09 14:00:54 fukachan Exp $
+# $FML: CreateOnPost.pm,v 1.1 2006/02/04 08:00:09 fukachan Exp $
 #
 
 package FML::Process::CreateOnPost;
@@ -392,7 +392,7 @@ sub _run_createonpost
     # 1. 
     my $cop_list= $class_to_address->{ $ADDR_CREATE_ON_POST } || [];
     for my $ml (@$cop_list) {
-	if ($curproc->is_fml8_managed_address($ml)) {
+	if ($curproc->_is_ml_address($ml)) {
 	    $curproc->log("ml exist: $ml");
 	}
 	else {
@@ -418,12 +418,46 @@ sub _run_createonpost
 
     # 3. run distribute processes.
     for my $ml (@$cop_list) {
-        if ($curproc->is_fml8_managed_address($ml)) {
-	    $curproc->_distribute_ml($ml);
-        }
+	# XXX bound for elena (NOT elena-ctl NOR elena-admin).
+        if ($curproc->_is_ml_address($ml)) {
+	    if ($curproc->is_fml8_managed_address($ml)) {
+		$curproc->_distribute_ml($ml);
+	    }
+	    else {
+		$curproc->logwarn("$ml ignored");
+	    }
+	}
         else {
             $curproc->logerror("$ml not found");
         }
+    }
+}
+
+
+# Descriptions: check if the given address is one of ML addresses
+#               (ML, ML-ctl and ML-admin).
+#    Arguments: OBJ($curproc) STR($addr)
+# Side Effects: none
+# Return Value: NUM
+sub _is_ml_address
+{
+    my ($curproc, $addr) = @_;
+    my ($ctl, $admin);
+
+    # elena
+    if ($curproc->is_fml8_managed_address($addr)) {
+	return 1;
+    }
+    # elena-ctl
+    elsif ($addr =~ /-ctl\@/) {
+	return 1;
+    }
+    # elena-admin
+    elsif ($addr =~ /-admin\@/) {
+	return 1;
+    }
+    else {
+	return 0;
     }
 }
 
