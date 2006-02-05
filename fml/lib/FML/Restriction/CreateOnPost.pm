@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: CreateOnPost.pm,v 1.1 2006/02/04 08:00:09 fukachan Exp $
 #
 
 package FML::Restriction::CreateOnPost;
@@ -84,6 +84,25 @@ sub reject_createonpost_domain
     my $ml_domain = $curproc->ml_domain();
 
     if ($sender =~ /\@$ml_domain$/i) {
+	return("matched", "deny");
+    }
+
+    return(0, undef);
+}
+
+
+# Descriptions: 
+#    Arguments: OBJ($self) STR($rule) STR($sender)
+# Side Effects: none
+# Return Value: ARRAY(STR, STR)
+sub reject_list_header_field
+{
+    my ($self, $rule, $sender) = @_;
+    my $curproc   = $self->{ _curproc };
+    my $header    = $curproc->incoming_message_header();
+    my $list_help = $header->get("List-Help") || '';
+
+    if ($list_help) {
 	return("matched", "deny");
     }
 
