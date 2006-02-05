@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.272 2006/01/09 14:00:54 fukachan Exp $
+# $FML: Kernel.pm,v 1.273 2006/02/04 07:51:41 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -2413,6 +2413,7 @@ sub queue_in
     my $reply_to     = $config->{ outgoing_mail_header_reply_to }   || $_rpto;
     my $precedence   = $config->{ outgoing_mail_header_precedence } || 'bulk';
     my $errors_to    = $config->{ outgoing_mail_header_errors_to }  || $sender;
+    my $message_id   = $curproc->_generate_message_id();
     my $is_multipart = 0;
     my $rcptkey      = '';
     my $rcptlist     = [];
@@ -2517,7 +2518,8 @@ sub queue_in
 		Subject       => $subject,
 		"Errors-To:"  => $errors_to,
 		"Precedence:" => $precedence,
-		"X-Stardate"  => $stardate,
+		"X-Stardate:" => $stardate,
+		"Message-Id:" => $message_id,
 		Type          => "multipart/mixed",
 	        Datestamp     => undef,
 	};
@@ -2627,7 +2629,8 @@ sub queue_in
 		Subject       => $subject,
 		"Errors-To:"  => $errors_to,
 		"Precedence:" => $precedence,
-		"X-Stardate"  => $stardate,
+		"X-Stardate:" => $stardate,
+		"Message-Id:" => $message_id,
 		Data          => $s,
 	        Datestamp     => undef,
 	};
@@ -2732,6 +2735,30 @@ sub _add_into_cleanup_queue
     else {
 	$curproc->{ __tmp_file_cleanup } = [ $file ];
     }
+}
+
+
+# Descriptions: generate a new Message-ID: string and cache it in our database.
+#    Arguments: OBJ($curproc)
+# Side Effects: update message_id cache.
+# Return Value: STR
+sub _generate_message_id
+{
+    my ($curproc) = @_;
+    my $config    = $curproc->config();
+
+    # generate a new message-id string.
+    use FML::Header::MessageID;
+    my $mid = FML::Header::MessageID->new->gen_id($config);
+
+    # insert generated message-id into the cache.
+    use FML::Header;
+    my $header = new FML::Header;
+    my $_mid   = $header->address_cleanup($mid);
+    $header->insert_message_id_cache($config, $_mid);
+
+    # return generated message-id.
+    return $mid;
 }
 
 
