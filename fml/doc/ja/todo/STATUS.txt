@@ -242,22 +242,14 @@ III部　fmlのカスタマイズ
 		o.k. so, how to kick off removal process ?
 
 
+	[DONE]	動的にＭＬを作成する CREATE-ON-POST
+
+
 	[TODO]	期限つきのＭＬ作成
 
 
-	[TODO]	期限つきの自動ＭＬ作成 (途中まで実装済み)
+	[TODO]	期限つきの自動ＭＬ作成
 
-		libexec/faker
-			時刻を FML::User::DB でどっかに記録
-				shared_db_dir/ml_create_time
-				
-		いや、うむをいわさず、newml コマンドでごーでいいのかな？
-			
-		/etc/postfix/virtual
-		   @nuinui.net       faker=nuinui.net
-
-		/etc/mail/aliases
-		   faker=nuinui.net  :include:/ml/nuinui.net/@@faker@@/include
 
 
 12章　fmlの設定ファイルを変更する
@@ -689,4 +681,4 @@ VIII部　付録
 
 
 ---
-$FML: STATUS.txt,v 1.38 2006/01/04 01:09:09 fukachan Exp $
+$FML: STATUS.txt,v 1.39 2006/01/08 01:40:02 fukachan Exp $
