@@ -7,10 +7,33 @@
         XXX 遠大なビジョンやとりあえず後まわしでよいものは STATUS.txt へ
 
 
+[TODO]	command_args をあちこちで生書きしないように
+
+
+[TODO]	config.gw は不要では？
+
+
+[TODO]	remove -> delete 
+
+	メソッドを両方用意できるなら両方がいいだろう。
+
+		sub delete_header
+		sub remove_header == delete_header
+
+
 [TODO]	config tool
 
 	多言語サポート
 	GUI config
+
+
+[TODO]	MTI トラフィックフィルタ
+
+	   単位時間あたりの投稿数を制限したい
+	   単位時間あたりのコマンドメール数を制限したい
+	   MTI のデータベースで dbmopen() 以外のものが使いたい
+	   MTI の結果を他のプログラムでも使いたい
+	   リモート管理者は MTI の対象にしない
 
 
 [TODO]	CGI は cookie をつかったほうがいいのかなぁ？
@@ -52,6 +75,7 @@
 
 
 [TODO]	ドキュメント: 4 to 8 の解説ってあってる？
+
 
 [TODO]	スレッド関連のモジュールとドキュメントを全部見直せよ
 
@@ -104,21 +128,6 @@
 
 
 ======================================================================
-○		アドレスの操作
-
-
-[TODO]	reply-to: special hack
-
-	   if (	To: ml1, ml2 ) {
-		set Reply-To: ml1, ml2
-	   }
-
-	if ($curproc->is_fml8_managed_address($address)) {
-		...
-	}
-
-
-======================================================================
 ○	内部構造
 
 
@@ -131,6 +140,8 @@
 	OUTPUT をどうすればよいか？で決まる処理はなんとかなる。
 	入力は自動判定になるが、出力は設定ファイルで決まる。
 
+		もんだいは Mail/Message/ToHTML.pm だけみたい
+
 	問題は HTML 化のような入力が動的に変化する場合だ。
 	基本的に入力は自動判定ということで、処理は同様なのだが、
 	出力(たとえば .html の content-type)も入力と同期して変化するべきだ。
@@ -139,9 +150,6 @@
 [TODO]	エラートラップ・フレームワーク
 
 	use shared memory ?
-
-
-[TODO]	FML::Config は、コンテキスト切替時にどうする？
 
 
 [TODO]	FML::Restriction
@@ -267,4 +275,4 @@
 	FML::Sys::Alias
 
 ----------
-$FML: 00_MEMO,v 1.121 2006/01/02 01:15:28 fukachan Exp $
+$FML: 00_MEMO,v 1.122 2006/01/04 08:22:52 fukachan Exp $
