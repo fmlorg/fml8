@@ -3,11 +3,17 @@
 
 =head2	データベース
 
+# Descriptions: user database directory.
+#      History: NONE
+#        Value: DIR
+#     Examples: /var/spool/ml/elena/var/db/user_info
+user_db_dir			=	$db_dir/user_info
+
 # Descriptions: primary { address => gecos_field } map.
 #      History: none
 #        Value: MAP
 #     Examples:
-primary_user_db_gecos_map	=	$db_dir/gecos
+primary_user_db_gecos_map	=	$user_db_dir/gecos
 
 # Descriptions: { address => gecos_field } maps.
 #      History: none
@@ -19,10 +25,12 @@ user_db_gecos_maps		=	$primary_user_db_gecos_map
 #      History: none
 #        Value: MAP
 #     Examples:
-primary_user_db_subscribe_date_map	=	$db_dir/subscribe_date
+primary_user_db_subscribe_date_map	=	$user_db_dir/subscribe_date
 
 # Descriptions: { address => unix time when subscribed } maps.
 #      History: none
 #        Value: MAP_LIST
 #     Examples:
 user_db_subscribe_date_maps	=	$primary_user_db_subscribe_date_map
+
+
