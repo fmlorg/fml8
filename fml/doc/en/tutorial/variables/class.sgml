@@ -857,6 +857,10 @@ user {
           $primary_user_db_subscribe_date_map
           $user_db_subscribe_date_maps
    }
+
+   user_* {
+          $user_db_dir
+   }
 }
 
 x {

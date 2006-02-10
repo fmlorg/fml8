@@ -1756,7 +1756,7 @@ primary_user_db_gecos_map</entry>
 <entry>
  primary { address => gecos_field } map.</entry>
 <entry>
-$db_dir/gecos
+$user_db_dir/gecos
    </entry>
 </row>
 <row>
@@ -1765,7 +1765,7 @@ primary_user_db_subscribe_date_map</entry>
 <entry>
  primary { address => unix time when subscribed } map.</entry>
 <entry>
-$db_dir/subscribe_date
+$user_db_dir/subscribe_date
    </entry>
 </row>
 <row>
@@ -2494,6 +2494,15 @@ help
    admin
    objective
    summary
+   </entry>
+</row>
+<row>
+<entry>
+user_db_dir</entry>
+<entry>
+ user database directory.</entry>
+<entry>
+$db_dir/user_info
    </entry>
 </row>
 <row>
