@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.8 2006/02/04 07:52:30 fukachan Exp $
+# $FML: Control.pm,v 1.9 2006/02/04 08:10:08 fukachan Exp $
 #
 
 package FML::MTA::Control;
@@ -193,13 +193,13 @@ sub install_alias
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
-sub remove_alias
+sub delete_alias
 {
     my ($self, $curproc, $params, $optargs) = @_;
     my $mta_type = $optargs->{ mta_type } || $self->{ mta_type };
 
     if ($self->is_valid_mta_type($mta_type)) {
-	my $method = "${mta_type}_remove_alias";
+	my $method = "${mta_type}_delete_alias";
 	$self->$method($curproc, $params, $optargs);
     }
     else {
@@ -231,13 +231,13 @@ sub install_virtual_map
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
-sub remove_virtual_map
+sub delete_virtual_map
 {
     my ($self, $curproc, $params, $optargs) = @_;
     my $mta_type = $optargs->{ mta_type } || $self->{ mta_type };
 
     if ($self->is_valid_mta_type($mta_type)) {
-	my $method = "${mta_type}_remove_virtual_map";
+	my $method = "${mta_type}_delete_virtual_map";
 	$self->$method($curproc, $params, $optargs);
     }
     else {
@@ -287,7 +287,7 @@ sub _install
 #               HASH_REF($p)
 # Side Effects: update virtual_map
 # Return Value: none
-sub remove_postfix_style_virtual
+sub delete_postfix_style_virtual
 {
     my ($self, $curproc, $params, $optargs, $p) = @_;
     my $removed = 0;
@@ -367,13 +367,13 @@ sub install_createonpost
 #               HASH_REF($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
-sub remove_createonpost
+sub delete_createonpost
 {
     my ($self, $curproc, $params, $optargs) = @_;
     my $mta_type = $optargs->{ mta_type } || $self->{ mta_type };
 
     if ($self->is_valid_mta_type($mta_type)) {
-	my $method = "${mta_type}_remove_createonpost";
+	my $method = "${mta_type}_delete_createonpost";
 	$self->$method($curproc, $params, $optargs);
     }
     else {

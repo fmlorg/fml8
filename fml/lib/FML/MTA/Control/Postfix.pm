@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.10 2006/01/09 14:00:54 fukachan Exp $
+# $FML: Postfix.pm,v 1.11 2006/02/04 07:58:03 fukachan Exp $
 #
 
 package FML::MTA::Control::Postfix;
@@ -63,7 +63,7 @@ sub postfix_install_alias
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
-sub postfix_remove_alias
+sub postfix_delete_alias
 {
     my ($self, $curproc, $params, $optargs) = @_;
     my $config    = $curproc->config();
@@ -408,7 +408,7 @@ sub postfix_install_virtual_map
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: remove/udpate postfix virtual_maps and the .db
 # Return Value: none
-sub postfix_remove_virtual_map
+sub postfix_delete_virtual_map
 {
     my ($self, $curproc, $params, $optargs) = @_;
     my $config = $curproc->config();
@@ -419,7 +419,7 @@ sub postfix_remove_virtual_map
 	map => $map,
     };
 
-    $self->remove_postfix_style_virtual($curproc, $params, $optargs, $p);
+    $self->delete_postfix_style_virtual($curproc, $params, $optargs, $p);
 }
 
 
@@ -507,7 +507,7 @@ sub postfix_install_createonpost
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: create include*
 # Return Value: none
-sub postfix_remove_createonpost
+sub postfix_delete_createonpost
 {
     my ($self, $curproc, $params, $optargs) = @_;
     my $config    = $curproc->config();

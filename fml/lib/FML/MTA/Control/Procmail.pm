@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Procmail.pm,v 1.6 2005/05/26 10:20:06 fukachan Exp $
+# $FML: Procmail.pm,v 1.7 2005/08/17 10:44:47 fukachan Exp $
 #
 
 package FML::MTA::Control::Procmail;
@@ -59,7 +59,7 @@ sub procmail_install_alias
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
-sub procmail_remove_alias
+sub procmail_delete_alias
 {
     my ($self, $curproc, $params, $optargs) = @_;
     my $config    = $curproc->config();
@@ -273,7 +273,7 @@ sub procmail_install_virtual_map
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: remove/udpate procmail virtual_maps and the .db
 # Return Value: none
-sub procmail_remove_virtual_map
+sub procmail_delete_virtual_map
 {
     my ($self, $curproc, $params, $optargs) = @_;
 }
@@ -302,7 +302,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

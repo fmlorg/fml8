@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: reviveml.pm,v 1.1 2005/08/23 09:32:58 fukachan Exp $
+# $FML: reviveml.pm,v 1.2 2006/01/09 14:00:54 fukachan Exp $
 #
 
 package FML::Command::Admin::reviveml;
@@ -54,7 +54,7 @@ sub process
 
     my $ml_home_dir      = $curproc->ml_home_dir($ml_name, $ml_domain);
     my $ml_home_dir_prev =
-	$curproc->ml_home_dir_find_latest_removed_path($ml_name, $ml_domain);
+	$curproc->ml_home_dir_find_latest_deleted_path($ml_name, $ml_domain);
 
     $curproc->logdebug("ml_name=$ml_name ml_domain=$ml_domain");
     $curproc->logdebug("dir=$ml_home_dir_prev -> $ml_home_dir");

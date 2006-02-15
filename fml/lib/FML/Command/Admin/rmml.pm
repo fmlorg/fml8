@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: rmml.pm,v 1.27 2006/02/04 07:58:43 fukachan Exp $
+# $FML: rmml.pm,v 1.28 2006/02/04 08:10:08 fukachan Exp $
 #
 
 package FML::Command::Admin::rmml;
@@ -100,8 +100,8 @@ sub process
     # o.k. here we go!
     use FML::ML::Control;
     my $ml = new FML::ML::Control;
-    $ml->remove_ml_home_dir($curproc, $command_args, $params);
-    $ml->remove_aliases($curproc, $command_args, $params);
+    $ml->delete_ml_home_dir($curproc, $command_args, $params);
+    $ml->delete_aliases($curproc, $command_args, $params);
 }
 
 

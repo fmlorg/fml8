@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.36 2005/08/20 02:16:03 fukachan Exp $
+# $FML: Error.pm,v 1.37 2005/11/30 23:30:39 fukachan Exp $
 #
 
 package FML::Error;
@@ -29,7 +29,7 @@ FML::Error - front end of error messages analyzer.
     $error->analyze();
 
     # remove addresses analyze() determined as bouncers.
-    $error->remove_bouncers();
+    $error->delete_bouncers();
 
 =head1 DESCRIPTION
 
@@ -227,7 +227,7 @@ sub analyze
 
     # saved for further reference.
     $self->{ _analyzer } = $analyzer;
-    $self->{ _list_to_be_removed } = $analyzer->get_address_to_be_removed();
+    $self->{ _list_to_be_removed } = $analyzer->get_address_to_be_deleted();
 
     # clean up.
     $self->db_close();
@@ -314,12 +314,12 @@ sub is_list_address
 }
 
 
-=head2 remove_bouncers()
+=head2 delete_bouncers()
 
 delete mail addresses, which analyze() determined as bouncers, by
-remove_address() method.
+delete_address() method.
 
-You need to call analyze() method before calling remove_bouncers() to
+You need to call analyze() method before calling delete_bouncers() to
 list up addresses to remove.
 
 =cut
@@ -329,7 +329,7 @@ list up addresses to remove.
 #    Arguments: OBJ($self)
 # Side Effects: update user address lists.
 # Return Value: none
-sub remove_bouncers
+sub delete_bouncers
 {
     my ($self)  = @_;
     my $curproc = $self->{ _curproc };
@@ -348,20 +348,20 @@ sub remove_bouncers
 		if ($safe->regexp_match('address', $addr)) {
 		    if ($cred->is_member( $addr ) ||
 			$cred->is_recipient( $addr )) {
-			$self->remove_address( $addr );
+			$self->delete_address( $addr );
 		    }
 		    else {
-			my $s = "remove_bouncers: <$addr> seems not a member";
+			my $s = "delete_bouncers: <$addr> seems not a member";
 			$curproc->logwarn($s);
 		    }
 		}
 		else {
-		    $curproc->logerror("remove_bouncers: <$addr> unsafe expr");
+		    $curproc->logerror("delete_bouncers: <$addr> unsafe expr");
 		    next ADDR;
 		}
 	    }
 	    else {
-		my $s = "remove_bouncers: <$addr> is one of ml addr. ignored";
+		my $s = "delete_bouncers: <$addr> is one of ml addr. ignored";
 		$curproc->logwarn($s);
 	    }
 	}
@@ -372,7 +372,7 @@ sub remove_bouncers
 }
 
 
-=head2 remove_address( $address )
+=head2 delete_address( $address )
 
 delete the specified address by C<FML::Command::Admin::unsubscribe>.
 
@@ -383,7 +383,7 @@ delete the specified address by C<FML::Command::Admin::unsubscribe>.
 #    Arguments: OBJ($self) STR($address)
 # Side Effects: none
 # Return Value: none
-sub remove_address
+sub delete_address
 {
     my ($self, $address) = @_;
     my $curproc = $self->{ _curproc };
@@ -395,10 +395,10 @@ sub remove_address
 
     # check if $address is a safe string.
     if ($safe->regexp_match('address', $address)) {
-	$curproc->log("remove_address <$address>");
+	$curproc->log("delete_address <$address>");
     }
     else {
-	my $s = "remove_address: invalid address syntax: <$address>";
+	my $s = "delete_address: invalid address syntax: <$address>";
 	$curproc->logerror($s);
 	return;
     }
@@ -480,7 +480,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

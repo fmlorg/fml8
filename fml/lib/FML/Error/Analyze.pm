@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.31 2005/08/10 12:12:34 fukachan Exp $
+# $FML: Analyze.pm,v 1.32 2005/08/17 12:08:46 fukachan Exp $
 #
 
 package FML::Error::Analyze;
@@ -70,7 +70,7 @@ return summary of address and points as HASH_REF.
 	address2 => point,
     };
 
-=head2 get_address_to_be_removed()
+=head2 get_address_to_be_deleted()
 
 return addresses to be removed.
 
@@ -99,13 +99,13 @@ sub get_summary
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: ARRAY_REF
-sub get_address_to_be_removed
+sub get_address_to_be_deleted
 {
     my ($self)   = @_;
     my $analyzer = $self->{ _analyzer };
 
     if (defined $analyzer) {
-	return $analyzer->get_address_to_be_removed();
+	return $analyzer->get_address_to_be_deleted();
     }
     else {
 	return [];
@@ -198,7 +198,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

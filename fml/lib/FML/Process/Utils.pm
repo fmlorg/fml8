@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.146 2006/01/15 13:53:53 fukachan Exp $
+# $FML: Utils.pm,v 1.147 2006/02/04 06:45:53 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -728,7 +728,7 @@ sub unique
 
 =head1 ml_home_dir handling
 
-=head2 ml_home_dir_removed_path($ml_home_prefix, $ml_name)
+=head2 ml_home_dir_deleted_path($ml_home_prefix, $ml_name)
 
 return ml_home_dir to be removed.
 
@@ -744,7 +744,7 @@ return ml_home_dir to be removed.
 #    Arguments: OBJ($curproc) STR($ml_name) STR($ml_domain)
 # Side Effects: none
 # Return Value: STR
-sub ml_home_dir_removed_path
+sub ml_home_dir_deleted_path
 {
     my ($curproc, $ml_name, $ml_domain) = @_;
     my $ml_home_prefix = $curproc->ml_home_prefix($ml_domain);
@@ -778,7 +778,7 @@ sub ml_home_dir_removed_path
 #    Arguments: OBJ($curproc) STR($ml_name) STR($ml_domain)
 # Side Effects: none
 # Return Value: STR
-sub ml_home_dir_find_latest_removed_path
+sub ml_home_dir_find_latest_deleted_path
 {
     my ($curproc, $ml_name, $ml_domain) = @_;
     my $ml_home_prefix = $curproc->ml_home_prefix($ml_domain);

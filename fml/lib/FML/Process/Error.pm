@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
+# Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.54 2005/08/19 12:17:09 fukachan Exp $
+# $FML: Error.pm,v 1.55 2005/11/30 23:50:19 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -221,7 +221,7 @@ sub _cleanup_bouncers
 	    use FML::Error;
 	    my $error = new FML::Error $curproc;
 	    $error->analyze();
-	    $error->remove_bouncers();
+	    $error->delete_bouncers();
 	};
 	$curproc->logerror($@) if $@;
 
@@ -345,7 +345,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

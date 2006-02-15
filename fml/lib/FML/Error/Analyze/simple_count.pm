@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: simple_count.pm,v 1.11 2005/08/10 12:12:35 fukachan Exp $
+# $FML: simple_count.pm,v 1.12 2005/08/17 12:08:45 fukachan Exp $
 #
 
 package FML::Error::Analyze::simple_count;
@@ -143,7 +143,7 @@ sub get_summary
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: ARRAY_REF
-sub get_address_to_be_removed
+sub get_address_to_be_deleted
 {
     my ($self) = @_;
 
@@ -175,7 +175,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

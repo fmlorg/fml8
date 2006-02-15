@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Qmail.pm,v 1.7 2006/02/04 07:06:35 fukachan Exp $
+# $FML: Qmail.pm,v 1.8 2006/02/04 08:10:08 fukachan Exp $
 #
 
 package FML::MTA::Control::Qmail;
@@ -76,7 +76,7 @@ sub qmail_install_alias
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
-sub qmail_remove_alias
+sub qmail_delete_alias
 {
     my ($self, $curproc, $params, $optargs) = @_;
     my $config       = $curproc->config();
@@ -225,7 +225,7 @@ sub qmail_install_virtual_map
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
-sub qmail_remove_virtual_map
+sub qmail_delete_virtual_map
 {
     0;
 }

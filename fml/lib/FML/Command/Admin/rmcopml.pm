@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: rmcopml.pm,v 1.1 2006/02/04 08:00:09 fukachan Exp $
 #
 
 package FML::Command::Admin::rmcopml;
@@ -74,7 +74,7 @@ sub process
     use FML::ML::Control;
     my $control = new FML::ML::Control;
     $control->set_mode("create-on-post");
-    $control->remove_createonpost($curproc, $command_args);
+    $control->delete_createonpost($curproc, $command_args);
 }
 
 

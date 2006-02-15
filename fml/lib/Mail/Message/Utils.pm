@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.13 2005/08/06 10:06:00 fukachan Exp $
+# $FML: Utils.pm,v 1.14 2005/08/19 11:15:24 fukachan Exp $
 #
 
 package Mail::Message::Utils;
@@ -19,16 +19,16 @@ Mail::Message::Utils - utility functions for Mail::Message.
 =head1 SYNOPSIS
 
    use Mail::Message::Utils;
-   return Mail::Message::Utils::remove_subject_tag_like_string($str);
+   return Mail::Message::Utils::delete_subject_tag_like_string($str);
 
 =head1 DESCRIPTION
 
 utility function for message manipulation.
-Currently only remove_subject_tag_like_string() is implemented.
+Currently only delete_subject_tag_like_string() is implemented.
 
 =head1 METHODS
 
-=head2 remove_subject_tag_like_string(str)
+=head2 delete_subject_tag_like_string(str)
 
 remove subject tag like string such as [elena 100].
 
@@ -39,7 +39,7 @@ remove subject tag like string such as [elena 100].
 #    Arguments: STR($str)
 # Side Effects: none
 # Return Value: STR
-sub remove_subject_tag_like_string
+sub delete_subject_tag_like_string
 {
     my ($str) = @_;
 
@@ -184,7 +184,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

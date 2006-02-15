@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sendmail.pm,v 1.6 2005/05/26 12:23:34 fukachan Exp $
+# $FML: Sendmail.pm,v 1.7 2005/08/17 10:44:47 fukachan Exp $
 #
 
 package FML::MTA::Control::Sendmail;
@@ -50,10 +50,10 @@ sub sendmail_install_alias
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
-sub sendmail_remove_alias
+sub sendmail_delete_alias
 {
     my ($self, $curproc, $params, $optargs) = @_;
-    $self->postfix_remove_alias($curproc, $params, $optargs);
+    $self->postfix_delete_alias($curproc, $params, $optargs);
 }
 
 
@@ -189,7 +189,7 @@ sub sendmail_install_virtual_map
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: remove/udpate sendmail virtual_maps and the .db
 # Return Value: none
-sub sendmail_remove_virtual_map
+sub sendmail_delete_virtual_map
 {
     my ($self, $curproc, $params, $optargs) = @_;
     my $config = $curproc->config();
@@ -199,7 +199,7 @@ sub sendmail_remove_virtual_map
 	key => $key,
 	map => $map,
     };
-    $self->remove_postfix_style_virtual($curproc, $params, $optargs, $p);
+    $self->delete_postfix_style_virtual($curproc, $params, $optargs, $p);
 }
 
 
@@ -272,7 +272,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

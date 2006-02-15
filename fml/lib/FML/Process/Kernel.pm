@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.273 2006/02/04 07:51:41 fukachan Exp $
+# $FML: Kernel.pm,v 1.274 2006/02/05 01:07:13 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -2785,7 +2785,7 @@ sub tmp_file_cleanup
 	if ($curproc->is_event_timeout($channel)) {
 	    my $config   = $curproc->config();
 	    my $tmp_dir  = $config->{ tmp_dir };
-	    $curproc->_remove_too_old_files_in_dir($tmp_dir);
+	    $curproc->_delete_too_old_files_in_dir($tmp_dir);
 	    $curproc->event_set_timeout($channel, time + 24*3600);
 	}
     }
@@ -2903,7 +2903,7 @@ sub global_tmp_dir_path
 #    Arguments: OBJ($curproc) STR($dir) NUM($_limit)
 # Side Effects: remove too old incoming queue files.
 # Return Value: none
-sub _remove_too_old_files_in_dir
+sub _delete_too_old_files_in_dir
 {
     my ($curproc, $dir, $_limit) = @_;
     my $limit = $_limit || 14*24*3600; # 2 weeks by default.

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.11 2006/01/09 14:00:54 fukachan Exp $
+# $FML: Control.pm,v 1.12 2006/02/04 07:52:30 fukachan Exp $
 #
 
 package FML::ML::Control;
@@ -558,7 +558,7 @@ sub install_createonpost
 #               HASH_REF($params)
 # Side Effects: fix include, virtual files.
 # Return Value: none
-sub remove_createonpost
+sub delete_createonpost
 {
     my ($self, $curproc, $command_args, $params) = @_;
     my $config  = $curproc->config(); 
@@ -571,8 +571,8 @@ sub remove_createonpost
 
 	    use FML::MTA::Control;
 	    my $obj = new FML::MTA::Control;
-	    if ($obj->can('remove_createonpost')) {
-		$obj->remove_createonpost($curproc, $params, $optargs);
+	    if ($obj->can('delete_createonpost')) {
+		$obj->delete_createonpost($curproc, $params, $optargs);
 	    }
 	    else {
 		my $s = "ignoring create-on-post disabler for $mta";
@@ -595,7 +595,7 @@ sub remove_createonpost
 #               HASH_REF($params)
 # Side Effects: remove ml_home_dir, update aliases entry
 # Return Value: none
-sub remove_ml_home_dir
+sub delete_ml_home_dir
 {
     my ($self, $curproc, $command_args, $params) = @_;
     my $ml_name        = $params->{ ml_name };
@@ -606,7 +606,7 @@ sub remove_ml_home_dir
     $curproc->ui_message("removing ml_home_dir for $ml_name");
 
     # /var/spool/ml/elena -> /var/spool/ml/@elena
-    my $removed_dir = $curproc->ml_home_dir_removed_path($ml_name, $ml_domain);
+    my $removed_dir = $curproc->ml_home_dir_deleted_path($ml_name, $ml_domain);
     rename($ml_home_dir, $removed_dir);
 
     if (-d $removed_dir && (! -d $ml_home_dir)) {
@@ -627,7 +627,7 @@ sub remove_ml_home_dir
 #               HASH_REF($params)
 # Side Effects: update aliases entry
 # Return Value: none
-sub remove_aliases
+sub delete_aliases
 {
     my ($self, $curproc, $command_args, $params) = @_;
     my $config  = $curproc->config();
@@ -641,9 +641,9 @@ sub remove_aliases
 	    # XXX-TODO: $optargs = { mta_type => $mta } valid ?
 	    my $optargs = { mta_type => $mta };
 	    my $obj = new FML::MTA::Control;
-	    $obj->remove_alias($curproc, $params, $optargs);
+	    $obj->delete_alias($curproc, $params, $optargs);
 	    $obj->update_alias($curproc, $params, $optargs);
-	    $obj->remove_virtual_map($curproc, $params, $optargs);
+	    $obj->delete_virtual_map($curproc, $params, $optargs);
 	    $obj->update_virtual_map($curproc, $params, $optargs);
 	}
     };
