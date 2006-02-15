@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.55 2005/12/18 11:39:37 fukachan Exp $
+# $FML: Queue.pm,v 1.56 2006/01/09 14:00:55 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -955,6 +955,10 @@ sub touch
 }
 
 
+=head2 delete()
+
+remove all queue assigned to this object C<$self>.
+
 =head2 remove()
 
 remove all queue assigned to this object C<$self>.
@@ -965,6 +969,17 @@ check if the queue file is broken or not.
 return 1 (valid) or 0 (broken).
 
 =cut
+
+
+# Descriptions: remove queue files for this object (queue).
+#    Arguments: OBJ($self)
+# Side Effects: remove queue file(s)
+# Return Value: none
+sub delete
+{
+    my ($self) = @_;
+    $self->remove();
+}
 
 
 # Descriptions: remove queue files for this object (queue).
