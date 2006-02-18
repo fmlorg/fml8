@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Info.pm,v 1.4 2005/05/27 03:03:40 fukachan Exp $
+# $FML: Info.pm,v 1.5 2005/08/17 10:41:27 fukachan Exp $
 #
 
 package FML::User::Info;
@@ -22,13 +22,13 @@ FML::User::Info - maintain user information.
 
     use FML::User::Info;
     my $data = new FML::User::Info $curproc;
-    $data->import_from_mail_header($curproc, $info);
+    $data->set_subscribe_date($address, time);
 
 =head1 DESCRIPTION
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 constuctor.
 
@@ -36,12 +36,12 @@ constuctor.
 
 
 # Descriptions: constructor.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($infoargs)
+#    Arguments: OBJ($self) OBJ($curproc)
 # Side Effects: create object
 # Return Value: OBJ
 sub new
 {
-    my ($self, $curproc, $infoargs) = @_;
+    my ($self, $curproc) = @_;
     my ($type) = ref($self) || $self;
     my $me     = { _curproc => $curproc };
 
@@ -52,7 +52,7 @@ sub new
 }
 
 
-=head2 add($info)
+=head2 set_header_info($address)
 
 top level entrance to update user database based on header
 information.
@@ -61,14 +61,13 @@ information.
 
 
 # Descriptions: update user database based on header information.
-#    Arguments: OBJ($self) HASH_REF($info)
+#    Arguments: OBJ($self) STR($address)
 # Side Effects: update db.
 # Return Value: none
-sub add
+sub set_header_info
 {
-    my ($self, $info) = @_;
+    my ($self, $address) = @_;
     my $curproc = $self->{ _curproc };
-    my $address = $info->{ address };
     my $header  = $curproc->incoming_message_header();
     my $from    = $header->get('from');
 
@@ -79,15 +78,16 @@ sub add
     #   expire    Account expiration time.
     #   gecos     General information about the user.
 
+    # 1. GECOS INFORMATION
     # XXX-TODO: correct logic if multiple matched ?
     use Mail::Address;
-    my (@addrlist) = Mail::Address->parse($from);
-    for my $a (@addrlist) {
-	my $gecos = $a->comment();
+    my (@addr_list) = Mail::Address->parse($from);
+    for my $_addr (@addr_list) {
+	my $gecos = $_addr->comment();
 	if ($gecos) { $self->set_gecos($address, $gecos);}
     }
 
-    $self->set_subscribe_date($address, time);
+    # 2. 
 }
 
 
