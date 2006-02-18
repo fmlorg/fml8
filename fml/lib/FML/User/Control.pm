@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.19 2006/01/07 15:45:16 fukachan Exp $
+# $FML: Control.pm,v 1.20 2006/01/08 03:06:59 fukachan Exp $
 #
 
 package FML::User::Control;
@@ -144,16 +144,18 @@ sub user_add
     }
 
     # update user database.
-    if ($curproc->is_under_mta_process()) {
-	eval q{
-	    use FML::User::Info;
-	    my $user_info = new FML::User::Info $curproc;
-	    $user_info->add({
-		address => $address,
-	    });
-	};
-	$curproc->logerror($@) if $@;
-    }
+    eval q{
+	use FML::User::Info;
+	my $user_info = new FML::User::Info $curproc;
+	if ($curproc->is_under_mta_process()) {
+	    $user_info->set_header_info($address);
+	    $user_info->set_subscribe_date($address, time);
+	}
+	else {
+	    $user_info->set_subscribe_date($address, time);
+	}
+    };
+    $curproc->logerror($@) if $@;
 }
 
 
