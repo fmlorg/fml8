@@ -33,6 +33,35 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2006/02/18
+
+   FML::User::Control 
+	always update user infomation db.
+	update gecos and action date if operation runs under MTA, but
+	update only date in other cases.
+	
+   FML::User::DB 
+	define add() and set()
+	
+   FML::User::Info 
+	rename method::add(HASH_REF) -> set_header_info($address)
+
+2006/02/15
+
+   FML::Error 
+   FML::Command::Admin::reviveml rmcl rmml 
+   FML::Error::Analyze 
+   FML::Error::Analyze::histgram simple_count 
+   FML::ML::Control 
+   FML::MTA::Control 
+   FML::MTA::Control::Postfix Procmail Qmail Sendmail 
+   FML::Process::Error Kernel Utils 
+   Mail::Message::Utils 
+	fix method name::remove -> delete
+	
+   Mail::Delivery::Queue 
+	define delete() as an alias of remove()
+	
 2006/02/05
 
    FML::Header 
@@ -9262,4 +9291,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.266 2006/01/21 10:31:57 fukachan Exp $
+$FML: CHANGES.txt,v 1.267 2006/02/05 04:41:27 fukachan Exp $
