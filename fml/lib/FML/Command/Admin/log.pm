@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: log.pm,v 1.29 2005/08/17 12:08:43 fukachan Exp $
+# $FML: log.pm,v 1.30 2005/08/19 11:20:23 fukachan Exp $
 #
 
 package FML::Command::Admin::log;
@@ -94,10 +94,92 @@ sub cgi_menu
 sub _show_log
 {
     my ($self, $curproc, $log_file, $sl_args) = @_;
+    my $c_opts = $curproc->command_line_cui_specific_options() || {};
+
+    if (defined $c_opts->{ date }) {
+	if ($c_opts->{ date } eq 'yesterday') {
+	    my $date = time - 24*3600;
+	    $self->_show_log_grep($curproc, $log_file, $sl_args, $date);
+	}
+	else {
+	    my $date = $c_opts->{ date } || '';
+	    $self->_show_log_grep($curproc, $log_file, $sl_args, $date);
+	}
+    }
+    else {
+	$self->_show_log_tail($curproc, $log_file, $sl_args);
+    }
+}
+
+
+# Descriptions: grep log file by date.
+#    Arguments: OBJ($self) 
+#               OBJ($curproc) STR($log_file) HASH_REF($sl_args) NUM($when)
+# Side Effects: none
+# Return Value: none
+sub _show_log_grep
+{
+    my ($self, $curproc, $log_file, $sl_args, $when) = @_;
+    my $regexp  = '';
+    my $is_cgi  = 1 if $sl_args->{ printing_style } eq 'html';
+    my $charset = $curproc->langinfo_get_charset($is_cgi ? "cgi" : "log_file");
+
+    if ($when =~ /^\d+$/) {
+	$regexp = $self->_log_date_string($when) || '';
+    }
+    elsif ($when =~ /^[\d\/]+$/) {
+	$regexp = $when;
+    }
+
+    unless ($regexp) {
+	croak("no regexp");
+    }
+
+    use Mail::Message::Encode;
+    my $encode = new Mail::Message::Encode;
+
+    use FileHandle;
+    my $fh = new FileHandle $log_file;
+    my $wh = \*STDOUT;
+
+    if (defined $fh) {
+	if ($is_cgi) { print $wh "<pre>\n";}
+
+	# show the last $last_n_lines lines by default.
+	my ($buf, $s);
+      LINE:
+	while ($buf = <$fh>) {
+	    $s = $encode->convert( $buf, $charset );
+
+	    if ($s =~ /^\S*$regexp/) {
+		if ($is_cgi) {
+		    print $wh (_html_to_text($s));
+		    print $wh "\n";
+		}
+		else {
+		    print $wh $s;
+		}
+	    }
+	}
+	$fh->close;
+
+	if ($is_cgi) { print $wh "</pre>\n";}
+    }
+}
+
+
+# Descriptions: tail log.
+#    Arguments: OBJ($self) OBJ($curproc) STR($log_file) HASH_REF($sl_args)
+# Side Effects: none
+# Return Value: none
+sub _show_log_tail
+{
+    my ($self, $curproc, $log_file, $sl_args) = @_;
     my $is_cgi     = 1 if $sl_args->{ printing_style } eq 'html';
     my $line_count = 0;
     my $line_max   = 0;
-    my $charset    = $curproc->langinfo_get_charset($is_cgi ? "cgi" : "log_file");
+    my $charset    = 
+	$curproc->langinfo_get_charset($is_cgi ? "cgi" : "log_file");
 
     # run "tail -100 log" by default.
     my $config       = $curproc->config();
@@ -160,6 +242,21 @@ sub _html_to_text
     else {
 	croak($@);
     }
+}
+
+
+# Descriptions: return date string YY/MM/DD.
+#    Arguments: OBJ($self) NUM($when)
+# Side Effects: none
+# Return Value: STR
+sub _log_date_string
+{
+    my ($self, $when) = @_;
+
+    use Mail::Message::Date;
+    my $date     = new Mail::Message::Date;
+    my $log_date = $date->log_file_style($when);
+    return (split(/\s+/, $log_date))[0];
 }
 
 
