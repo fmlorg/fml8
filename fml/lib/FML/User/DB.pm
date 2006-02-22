@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.9 2006/02/18 08:37:43 fukachan Exp $
+# $FML: DB.pm,v 1.10 2006/02/18 09:25:32 fukachan Exp $
 #
 
 package FML::User::DB;
@@ -72,6 +72,8 @@ sub new
 add { $key => $value } info to $primary_user_db_${class}_map.
 
 =head2 get($class, $key)
+
+get value of $key for $class.
 
 =head2 add($class, $key, $value)
 
@@ -152,6 +154,51 @@ sub add
 }
 
 
+=head2 get_key_as_array_ref($class)
+
+get user list as ARRAY_REF.
+
+=cut
+
+
+# Descriptions: get user list as ARRAY_REF.
+#    Arguments: OBJ($self) STR($class)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub get_key_as_array_ref
+{
+    my ($self, $class) = @_;
+    my $curproc = $self->{ _curproc };
+    my $config  = $debug ? $curproc->{ config } : $curproc->config();
+    my $mapname = sprintf("primary_user_db_%s_map", $class);
+    my $map     = $config->{ $mapname };
+
+    if ($map) {
+	if ($debug) { print STDERR "open map=$map\n";}
+
+	use IO::Adapter;
+	my $obj = new IO::Adapter $map;
+	$obj->open();
+	my $buf = undef;
+	my $result = [];
+      ENTRY:
+	while($buf = $obj->get_next_key()) {
+	    $buf =~ s/\s*$//;
+	    if ($buf) {
+		push(@$result, $buf);
+	    }
+	}
+
+	$obj->close();
+
+	return $result;
+    }
+    else {
+	$curproc->logerror("\$map undeflined");
+    }
+}
+
+
 =head2 find($class, $key)
 
 search value for $key in $user_db_${class}_maps.
@@ -219,13 +266,18 @@ if ($0 eq __FILE__) {
 	$debug = 1;
 
 	my $cache_dir = '/tmp';
-	my $class     = 'gecos',
+	my $class     = 'subscribe_date';
 	my $key       = 'rudo@example.com';
-	my $key2      = 'fukachan@example.com';
+	my $key2      = 'kenken@example.com';
+	my $key3      = 'shati@example.co.jp';
 	my $value     = time;
+	my $value2    = time + $$;
+	my $value3    = time + 2*$$;
 	my $curproc   = new FML::Process::Debug;
 	my $config    = new FML::Config;
 	$curproc->{ config } = $config;
+	$config->set("user_db_dir",                  "/tmp");
+	$config->set("cache_dir",                    "/tmp/userdb");
 	$config->set("primary_user_db_${class}_map", "$cache_dir/$class");
 	$config->set("user_db_${class}_maps",        "$cache_dir/$class");
 
@@ -234,15 +286,24 @@ if ($0 eq __FILE__) {
 
 	print STDERR "\n? add { $key => $value }\n";
 	$data->add($class, $key,  $value);
-	$data->add($class, $key2, time + $$);
+
+	print STDERR "\n? add { $key2 => $value2 }\n";
+	$data->add($class, $key2, $value2);
+
+	print STDERR "\n? add { $key3 => $value3 }\n";
+	$data->add($class, $key3, $value3);
 
 	print STDERR "\n? get( $key )\n";
 	my ($r) = $data->get($class, $key);
 	print STDERR "$r\n";
 
-	print STDERR "\n? find( $key )\n";
-	my ($r) = $data->find($class, $key);
+	print STDERR "\n? find( $key2 )\n";
+	my ($r) = $data->find($class, $key2);
 	print STDERR "$r\n";
+
+	print STDERR "\n? list( $class )\n";
+	my ($r) = $data->get_key_as_array_ref($class);
+	print STDERR "(@$r)\n";
     };
     print STDERR $@ if $@;
 }
