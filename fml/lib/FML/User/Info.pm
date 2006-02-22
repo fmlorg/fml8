@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Info.pm,v 1.6 2006/02/18 08:39:20 fukachan Exp $
+# $FML: Info.pm,v 1.7 2006/02/18 09:25:32 fukachan Exp $
 #
 
 package FML::User::Info;
@@ -79,15 +79,13 @@ sub set_header_info
     #   gecos     General information about the user.
 
     # 1. GECOS INFORMATION
-    # XXX-TODO: correct logic if multiple matched ?
     use Mail::Address;
     my (@addr_list) = Mail::Address->parse($from);
     for my $_addr (@addr_list) {
+	my $addr  = $_addr->address();
 	my $gecos = $_addr->comment();
-	if ($gecos) { $self->set_gecos($address, $gecos);}
+	if ($gecos) { $self->set_gecos($addr, $gecos);}
     }
-
-    # 2. 
 }
 
 
