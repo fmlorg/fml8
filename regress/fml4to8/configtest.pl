@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: configtest.pl,v 1.4 2006/01/01 14:06:44 fukachan Exp $
+# $FML: configtest.pl,v 1.5 2006/01/04 07:50:33 fukachan Exp $
 #
 
 use strict;
@@ -8,6 +8,7 @@ use Carp;
 use lib qw(fml/lib cpan/lib gnu/lib img/lib);
 use vars qw(@failed_queue %failed_queue $base_dir);
 
+my $debug    = $ENV{ debug } ? 1 : 0;
 my $base_dir = shift || '/var/spool/ml';
 
 for my $f (sort <$base_dir/*/config.ph>) {
@@ -62,6 +63,16 @@ sub check
     $config_ph->set_default_config_ph($default_config_ph);
 
     my ($config, $diff) = $config_ph->diff($old_config_ph);
+
+    if ($debug) {
+	use FileHandle;
+	my $rh = new FileHandle $old_config_ph;
+	if (defined $rh) {
+	    my $buf;
+	    while ($buf = <$rh>) { if ($buf =~ /^\$/) { print "// $buf";}}
+	    $rh->close();
+	}
+    }
 
     # print out;
     my ($k, $v, $x, $y);

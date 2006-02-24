@@ -1,3 +1,34 @@
+
+		変数一つ一つ変換してみるテスト
+
+これに関係あるファイルは CF configtest.pl conv_manifest.pl test.pl
+
+% make test
+
+変数一つ一つを違う値に変えつつ /var/tmp/fml4to8/XXX/config.ph を生成し
+て、実際に fml4 から fml8 へ変換してみる。
+
+
+	... 略 ...
+
+	// check /var/tmp/fml4to8/004/config.ph
+	// $MAIL_LIST = "elena\@fml.org";
+	// $MESSAGE_LANGUAGE = "English";
+
+	# Q: MESSAGE_LANGUAGE => English
+	# A: OK TRANSLATION FOUND
+	language_preference_order = en ja
+
+	... 略 ...
+
+
+
+-------->8-------->8-------->8-------->8-------->8-------->8-------->8
+
+			ファイル’s
+
+
 list.menu	fml4 の etc/makefml/menu.conf にある変数名一覧。
 		ここに出てくるような変数は自動変換できることが望ましい。
+
 
