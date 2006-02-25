@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: configtest.pl,v 1.5 2006/01/04 07:50:33 fukachan Exp $
+# $FML: configtest.pl,v 1.6 2006/02/24 12:49:13 fukachan Exp $
 #
 
 use strict;
@@ -130,6 +130,10 @@ sub _sort_order
 }
 
 
+# Descriptions: verify if the file (config.ph) not call "exit". 
+#    Arguments: STR($file)
+# Side Effects: none
+# Return Value: NUM
 sub is_ok
 {
     my ($file) = @_;
