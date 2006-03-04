@@ -1,4 +1,4 @@
-		雑多なメモ
+ 		雑多なメモ
 		Last Modified: $Date$
 
 	XXX fml 4.0 と同じディレクトリ名は使わないように
@@ -10,15 +10,7 @@
 [TODO]	command_args をあちこちで生書きしないように
 
 
-[TODO]	config.gw は不要では？
-
-
-[TODO]	remove -> delete 
-
-	メソッドを両方用意できるなら両方がいいだろう。
-
-		sub delete_header
-		sub remove_header == delete_header
+[TODO]	command_args はオブジェクトにするべきでは？
 
 
 [TODO]	config tool
@@ -275,4 +267,4 @@
 	FML::Sys::Alias
 
 ----------
-$FML: 00_MEMO,v 1.122 2006/01/04 08:22:52 fukachan Exp $
+$FML: 00_MEMO,v 1.123 2006/02/07 12:00:22 fukachan Exp $
