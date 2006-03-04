@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.114 2005/08/10 15:03:24 fukachan Exp $
+# $FML: Command.pm,v 1.115 2005/11/30 23:30:38 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -307,10 +307,14 @@ sub _command_process_loop
 	}
 
 	# XXX analyze the input command and set the result into $context.
+	# XXX-TODO: command_context_init() checks irregular condition, 
+	# XXX-TODO: provided by FML::Command::Irregular::* classes, too.
+	# XXX-TODO: hmm, we call irregular checks for each line ???
 	$context = $curproc->command_context_init($orig_command);
 
 	# if $context is empty HASH_REF, no valid command in this line.
-	if (defined $context->{ comname }) {
+	my $cooked_command = $context->get_cooked_command() || undef;
+	if (defined $cooked_command) {
 	    # XXX call command actually.
 	    $curproc->_command_switch($context);
 	}
@@ -349,12 +353,12 @@ sub _command_switch
     my $prompt   = $config->{ command_mail_reply_prompt } || '>>>';
     my $cred     = $curproc->credential(); # user credential
     my $sender   = $cred->sender();
-    my $comname  = $context->{ comname };
-    my $msg_args = $context->{ msg_args } || {};
+    my $comname  = $context->get_cooked_command();
+    my $msg_args = $context->get_msg_args();
 
     if ($debug) {
-	my $fixed_command = $context->{ fixed_command };
-	$curproc->log("command: execute \"$fixed_command\"");
+	my $command = $context->get_cooked_command();
+	$curproc->log("command: execute \"$command\"");
     }
 
     # command restriction rules
@@ -382,7 +386,7 @@ sub _command_switch
     }
 
     if ($match) {
-	my $option  = $context->{ option } || [];
+	my $option  = $context->get_options() || [];
 	my $cont    = $option->[ 1 ] ? "..." : "";
 	my $_prompt = "$prompt $comname $cont";
 
@@ -466,7 +470,7 @@ sub _command_execute
 	# 1) $dispatch = FML::Command NOT FML::Command::$mode::$command
 	# 2) $comname must be valid since $comname is one of defined
 	#    command list in $config (see _command_switch() method).
-	my $comname = $command_args->{ comname };
+	my $comname = $command_args->get_cooked_command();
 	eval q{
 	    $dispatch->$comname($curproc, $command_args);
 	};

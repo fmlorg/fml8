@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: State.pm,v 1.22 2005/08/10 13:58:36 fukachan Exp $
+# $FML: State.pm,v 1.23 2005/08/19 12:17:10 fukachan Exp $
 #
 
 package FML::Process::State;
@@ -215,18 +215,15 @@ it each command mail line.
 #               base information for command processing.
 #    Arguments: OBJ($curproc) STR($orig_command)
 # Side Effects: none
-# Return Value: HASH_REF
+# Return Value: OBJ
 sub command_context_init
 {
     my ($curproc, $orig_command) = @_;
 
     # Example: if orig_command = "# help", comname = "help"
-    my $cleanstr = $curproc->_command_string_cleanup($orig_command);
-    my $context  = $curproc->_build_command_context_template($cleanstr);
-
-    # save original string, set the command mode be "user" by default.
-    $context->{ command_mode }     = "User";
-    $context->{ original_command } = $orig_command;
+    use FML::Context::Command;
+    my $context = new FML::Context::Command $curproc;
+    $context->set_command($orig_command);
 
     # reset error reason
     $curproc->restriction_state_set_deny_reason('');
@@ -237,7 +234,7 @@ sub command_context_init
 
     # check if command is valid.
     my $found = 0;
-    my $name  = $context->{ comname } || '';
+    my $name  = $context->get_cooked_command() || '';
     if ($name) {
 	my $config = $curproc->config();
 
@@ -256,56 +253,11 @@ sub command_context_init
 	return $context;
     }
     else {
-	return {};
+	# return dummy object.
+	use FML::Context::Command;
+	my $context = new FML::Context::Command $curproc;
+	return $context;
     }
-}
-
-
-# Descriptions: parse command buffer to prepare several info
-#               after use. return info as HASH_REF.
-#    Arguments: OBJ($curproc) STR($fixed_command)
-# Side Effects: none
-# Return Value: HASH_REF
-sub _build_command_context_template
-{
-    my ($curproc, $fixed_command) = @_;
-    my $ml_name   = $curproc->ml_name();
-    my $ml_domain = $curproc->ml_domain();
-    my $argv      = $curproc->command_line_argv();
-
-    use FML::Command::DataCheck;
-    my $check = new FML::Command::DataCheck;
-    my ($comname, $comsubname) = $check->parse_command_buffer($fixed_command);
-    my $options = $check->parse_command_arguments($fixed_command, $comname);
-    my $cominfo = {
-	command    => $fixed_command,
-	comname    => $comname,
-	comsubname => $comsubname,
-	options    => $options,
-
-	ml_name    => $ml_name,
-	ml_domain  => $ml_domain,
-	argv       => $argv,
-
-	msg_args   => {},
-    };
-
-    return $cominfo;
-}
-
-
-# Descriptions: remove the superflous string before the actual command.
-#    Arguments: OBJ($curproc) STR($buf)
-# Side Effects: none
-# Return Value: STR
-sub _command_string_cleanup
-{
-    my ($curproc, $buf) = @_;
-    my $config          = $curproc->config();
-    my $confirm_prefix  = $config->{ confirm_command_prefix };
-
-    $buf =~ s/^\W+$confirm_prefix/$confirm_prefix/;
-    return $buf;
 }
 
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.21 2005/12/18 11:53:59 fukachan Exp $
+# $FML: Command.pm,v 1.22 2006/01/09 14:00:55 fukachan Exp $
 #
 
 package FML::Restriction::Command;
@@ -45,16 +45,15 @@ sub new
 
 
 # Descriptions: permit if $sender is an ML member.
-#    Arguments: OBJ($self) STR($rule) STR($sender) HASH_REF($v_args)
+#    Arguments: OBJ($self) STR($rule) STR($sender) OBJ($context)
 # Side Effects: none
 # Return Value: ARRAY(STR, STR)
 sub permit_user_command
 {
-    my ($self, $rule, $sender, $v_args) = @_;
+    my ($self, $rule, $sender, $context) = @_;
     my $curproc  = $self->{ _curproc };
     my $config   = $curproc->config();
-    my $context  = $v_args || {};
-    my $comname  = $context->{ comname } || '';
+    my $comname  = $context->get_cooked_command() || '';
 
     # 1) sender check
     my ($match, $reason) = $self->SUPER::permit_member_maps($rule, $sender);
@@ -89,16 +88,15 @@ sub permit_user_command
 
 # Descriptions: permit specific anonymous command
 #               even if $sender is a stranger.
-#    Arguments: OBJ($self) STR($rule) STR($sender) HASH_REF($v_args)
+#    Arguments: OBJ($self) STR($rule) STR($sender) OBJ($context)
 # Side Effects: none
 # Return Value: ARRAY(STR, STR)
 sub permit_anonymous_command
 {
-    my ($self, $rule, $sender, $v_args) = @_;
+    my ($self, $rule, $sender, $context) = @_;
     my $curproc  = $self->{ _curproc };
     my $config   = $curproc->config();
-    my $context  = $v_args || {};
-    my $comname  = $context->{ comname } || '';
+    my $comname  = $context->get_cooked_command() || '';
 
     # 1) sender: no check.
     # 2) command match anonymous one ?
@@ -144,15 +142,15 @@ sub permit_admin_member_maps
 
 
 # Descriptions: check if admin member passwrod is valid.
-#    Arguments: OBJ($self) STR($rule) STR($sender) HASH_REF($context)
+#    Arguments: OBJ($self) STR($rule) STR($sender) OBJ($context)
 # Side Effects: none
 # Return Value: ARRAY(STR, STR)
 sub check_admin_member_password
 {
     my ($self, $rule, $sender, $context) = @_;
     my $curproc  = $self->{ _curproc };
-    my $opt_args = $context->{ admin_option } || {};
-    my $password = $opt_args->{ password }    || '';
+    my $opt_args = $context->get_admin_options() || {};
+    my $password = $opt_args->{ password }       || '';
 
     use FML::Command::Auth;
     my $auth   = new FML::Command::Auth;
@@ -179,7 +177,7 @@ check PGP signature in message.
 
 
 # Descriptions: check PGP signature in message.
-#    Arguments: OBJ($self) STR($rule) STR($sender) HASH_REF($context)
+#    Arguments: OBJ($self) STR($rule) STR($sender) OBJ($context)
 # Side Effects: none
 # Return Value: NUM
 sub check_pgp_signature
