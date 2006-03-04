@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.26 2004/04/28 04:10:36 fukachan Exp $
+# $FML: chaddr.pm,v 1.27 2004/06/29 10:02:42 fukachan Exp $
 #
 
 package FML::Command::Admin::chaddr;
@@ -27,7 +27,7 @@ change address from old one to new one.
 
 =head1 METHODS
 
-=head2 process($curproc, $command_args)
+=head2 process($curproc, $command_context)
 
 change address from old one to new one.
 
@@ -62,15 +62,15 @@ sub lock_channel { return 'command_serialize';}
 
 
 # Descriptions: verify the syntax command string.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub verify_syntax
 {
-    my ($self, $curproc, $command_args) = @_;
-    my $comname    = $command_args->{ comname }    || '';
-    my $comsubname = $command_args->{ comsubname } || '';
-    my $options    = $command_args->{ options }    || [];
+    my ($self, $curproc, $command_context) = @_;
+    my $comname    = $command_context->get_cooked_command()    || '';
+    my $comsubname = $command_context->get_cooked_subcommand() || '';
+    my $options    = $command_context->get_options()    || [];
     my @test       = ($comname);
     my $command    = $options->[ 0 ] || '';
     my $oldaddr    = $options->[ 1 ] || '';
@@ -99,7 +99,7 @@ sub verify_syntax
 
     use FML::Command;
     $dispatch = new FML::Command;
-    if ($dispatch->safe_regexp_match($curproc, $command_args, \@test)) {
+    if ($dispatch->safe_regexp_match($curproc, $command_context, \@test)) {
 	$ok++;
     }
 
@@ -108,14 +108,14 @@ sub verify_syntax
 
 
 # Descriptions: change address from old one to new one.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $config  = $curproc->config();
-    my $options = $command_args->{ options } || [];
+    my $options = $command_context->get_options() || [];
 
     # XXX We should always add/rewrite only $primary_*_map maps via
     # XXX command mail, CUI and GUI.
@@ -129,8 +129,8 @@ sub process
 
     my $old_address = '';
     my $new_address = '';
-    if (defined $command_args->{ command_data }) {
-	my $x = $command_args->{ command_data };
+    if (defined $command_context->{ command_data }) {
+	my $x = $command_context->{ command_data };
 	($old_address, $new_address) = split(/\s+/, $x);
     }
     else {
@@ -169,7 +169,7 @@ sub process
     eval q{
 	use FML::User::Control;
 	my $obj = new FML::User::Control;
-	$obj->user_chaddr($curproc, $command_args, $uc_args);
+	$obj->user_chaddr($curproc, $command_context, $uc_args);
     };
     if ($r = $@) {
 	croak($r);
@@ -187,7 +187,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

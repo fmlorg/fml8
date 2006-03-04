@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: subscribe.pm,v 1.35 2006/01/07 14:43:25 fukachan Exp $
+# $FML: subscribe.pm,v 1.36 2006/01/08 03:06:59 fukachan Exp $
 #
 
 package FML::Command::User::subscribe;
@@ -28,7 +28,7 @@ After confirmation succeeds, subcribe process proceeds.
 
 =head1 METHODS
 
-=head2 process($curproc, $command_args)
+=head2 process($curproc, $command_context)
 
 =cut
 
@@ -62,13 +62,13 @@ sub lock_channel { return 'command_serialize';}
 
 # Descriptions: subscribe adapter.
 #               we confirm it before real subscribe process.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update database for confirmation.
 #               prepare reply message.
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $config = $curproc->config();
     my $cred   = $curproc->credential();
 
@@ -83,8 +83,8 @@ sub process
     my $recipient_map = $config->{ primary_recipient_map };
     my $cache_dir     = $config->{ db_dir };
     my $keyword       = $config->{ confirm_command_prefix };
-    my $command       = $command_args->{ command };
-    my $options       = $command_args->{ options };
+    my $command       = $command_context->{ command };
+    my $options       = $command_context->get_options();
     my $cui_options   = $curproc->command_line_cui_specific_options() || {};
     my $address       = $cui_options->{ 'send-to' } || $cred->sender();
 
@@ -131,7 +131,7 @@ sub process
 	use FML::Command::Message;
 	my $_msg    = new FML::Command::Message;
 	my $sc_args = { command => "subscribe" };
-	$_msg->send_confirmation($curproc, $command_args, $confirm, $sc_args);
+	$_msg->send_confirmation($curproc, $command_context, $confirm, $sc_args);
     }
 }
 

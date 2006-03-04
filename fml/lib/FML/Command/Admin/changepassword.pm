@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: changepassword.pm,v 1.16 2005/05/27 03:03:34 fukachan Exp $
+# $FML: changepassword.pm,v 1.17 2005/11/30 23:30:38 fukachan Exp $
 #
 
 package FML::Command::Admin::changepassword;
@@ -27,7 +27,7 @@ set password for a new address or change password.
 
 =head1 METHODS
 
-=head2 process($curproc, $command_args)
+=head2 process($curproc, $command_context)
 
 change remote administrator password.
 
@@ -62,15 +62,15 @@ sub lock_channel { return 'command_serialize';}
 
 
 # Descriptions: verify the syntax command string.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub verify_syntax
 {
-    my ($self, $curproc, $command_args) = @_;
-    my $comname    = $command_args->{ comname }    || '';
-    my $comsubname = $command_args->{ comsubname } || '';
-    my $options    = $command_args->{ options }    || [];
+    my ($self, $curproc, $command_context) = @_;
+    my $comname    = $command_context->get_cooked_command()    || '';
+    my $comsubname = $command_context->get_cooked_subcommand() || '';
+    my $options    = $command_context->get_options()    || [];
     my @test       = ($comname);
     my $command    = $options->[ 0 ] || '';
     my $address    = $options->[ 1 ] || '';
@@ -90,20 +90,20 @@ sub verify_syntax
     # 2. check syntax of (only) command name.
     use FML::Command;
     my $dispatch = new FML::Command;
-    return $dispatch->safe_regexp_match($curproc, $command_args, \@test);
+    return $dispatch->safe_regexp_match($curproc, $command_context, \@test);
 }
 
 
 # Descriptions: change the admin password.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update $member_map $recipient_map
 # Return Value: NUM
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $config  = $curproc->config();
     my $myname  = $curproc->myname();
-    my $options = $command_args->{ options };
+    my $options = $command_context->get_options();
 
     # XXX The arguments differ for the cases.
     # 1. command mail: admin changepassword [$USER] $PASSWORD
@@ -141,7 +141,7 @@ sub process
 	my $safe = new FML::Restriction::Base;
 	if ($safe->regexp_match('address', $address)) {
 	    $self->_change_password($curproc,
-				    $command_args,
+				    $command_context,
 				    $address,
 				    $password);
 	}
@@ -158,13 +158,13 @@ sub process
 
 
 # Descriptions: change the remote admin password.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 #               STR($address) STR($password)
 # Side Effects: update *admin_member_password_maps
 # Return Value: NUM
 sub _change_password
 {
-    my ($self, $curproc, $command_args, $address, $password) = @_;
+    my ($self, $curproc, $command_context, $address, $password) = @_;
     my $config = $curproc->config();
     my $cred   = $curproc->credential();
 
@@ -197,7 +197,7 @@ sub _change_password
     eval q{
 	use FML::Command::Auth;
 	my $passwd = new FML::Command::Auth;
-	$passwd->change_password($curproc, $command_args, $up_args);
+	$passwd->change_password($curproc, $command_context, $up_args);
     };
     if ($r = $@) {
 	croak($r);
@@ -206,12 +206,12 @@ sub _change_password
 
 
 # Descriptions: rewrite buffer to hide the password phrase in $rbuf.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args) STR_REF($rbuf)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context) STR_REF($rbuf)
 # Side Effects: none
 # Return Value: none
 sub rewrite_prompt
 {
-    my ($self, $curproc, $command_args, $rbuf) = @_;
+    my ($self, $curproc, $command_context, $rbuf) = @_;
 
     if (defined $rbuf) {
 	$$rbuf =~ s/^(.*(password|pass)\s+\S+).*/$1 ********/;
@@ -232,7 +232,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

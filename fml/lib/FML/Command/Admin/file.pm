@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: file.pm,v 1.17 2004/01/01 23:52:12 fukachan Exp $
+# $FML: file.pm,v 1.18 2004/06/26 11:47:56 fukachan Exp $
 #
 
 package FML::Command::Admin::file;
@@ -25,7 +25,7 @@ See C<FML::Command> for more details.
 
 =head1 METHODS
 
-=head2 process($curproc, $command_args)
+=head2 process($curproc, $command_context)
 
 dispatch functions for file operations.
 
@@ -67,15 +67,15 @@ sub is_subcommand_style { 1;}
 
 
 # Descriptions: dispatcher of file subcommand operations.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: file is created, renamed and removed
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $config   = $curproc->config();
     my $log_file = $config->{ log_file };
-    my $options  = $command_args->{ options } || [];
+    my $options  = $command_context->get_options() || [];
     my $du_args  = {};
     my @argv     = ();
 
@@ -98,7 +98,7 @@ sub process
 
 	use FML::Command::FileUtils;
 	my $obj = new FML::Command::FileUtils;
-	$obj->remove($curproc, $command_args, $du_args);
+	$obj->remove($curproc, $command_context, $du_args);
     }
     else {
 	croak("Admin::file: unknown subcommand");
@@ -107,12 +107,12 @@ sub process
 
 
 # Descriptions: show cgi menu (dummy).
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none
 sub cgi_menu
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
 
     # XXX-TODO: dummy.?
     ;
@@ -129,7 +129,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

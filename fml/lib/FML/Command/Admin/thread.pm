@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: thread.pm,v 1.10 2005/08/17 10:29:33 fukachan Exp $
+# $FML: thread.pm,v 1.11 2005/08/17 12:08:44 fukachan Exp $
 #
 
 package FML::Command::Admin::thread;
@@ -27,7 +27,7 @@ show status article thread or manipulate it.
 
 =head1 METHODS
 
-=head2 process($curproc, $command_args)
+=head2 process($curproc, $command_context)
 
 =cut
 
@@ -60,32 +60,32 @@ sub lock_channel { return 'article_thread';}
 
 
 # Descriptions: thread manipulation interface.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update $recipient_map
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
 
     # attach thread library.
     use Mail::Message::Thread;
     my $thargs = $curproc->article_thread_init();
     my $thread = new Mail::Message::Thread $thargs;
 
-    $self->_new_switch($curproc, $command_args, $thread);
+    $self->_new_switch($curproc, $command_context, $thread);
 }
 
 
 # Descriptions: dispatch thread sub-command.
 #    Arguments: OBJ($self)
-#               OBJ($curproc) HASH_REF($command_args) OBJ($thread)
+#               OBJ($curproc) OBJ($command_context) OBJ($thread)
 # Side Effects: update $recipient_map
 # Return Value: none
 sub _new_switch
 {
-    my ($self, $curproc, $command_args, $thread) = @_;
+    my ($self, $curproc, $command_context, $thread) = @_;
     my $config        = $curproc->config();
-    my $options       = $command_args->{ options } || [];
+    my $options       = $command_context->get_options() || [];
     my $command       = $options->[ 0 ] || 'one_line_summary';
     my $range         = $options->[ 1 ] || '';
     my $default_range = 'last:10';
@@ -135,7 +135,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

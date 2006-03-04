@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.81 2006/02/04 07:59:24 fukachan Exp $
+# $FML: newml.pm,v 1.82 2006/02/04 08:10:08 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -21,7 +21,7 @@ FML::Command::Admin::newml - set up a new mailing list.
 
     use FML::Command::Admin::newml;
     $obj = new FML::Command::Admin::newml;
-    $obj->newml($curproc, $command_args);
+    $obj->newml($curproc, $command_context);
 
 See C<FML::Command> for more details.
 
@@ -33,7 +33,7 @@ install config.cf, include, include-ctl et. al.
 
 =head1 METHODS
 
-=head2 process($curproc, $command_args)
+=head2 process($curproc, $command_context)
 
 =cut
 
@@ -59,17 +59,17 @@ sub need_lock { 0;}
 
 
 # Descriptions: set up a new mailing list.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: create mailing list directory,
 #               install config.cf, include, include-ctl et. al.
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $options        = $curproc->command_line_options();
     my $config         = $curproc->config();
-    my $ml_name        = $command_args->{ ml_name };
-    my $ml_domain      = $command_args->{ ml_domain };
+    my $ml_name        = $command_context->{ ml_name };
+    my $ml_domain      = $command_context->{ ml_domain };
     my $ml_home_prefix = $curproc->ml_home_prefix($ml_domain);
     my $ml_home_dir    = $curproc->ml_home_dir($ml_name, $ml_domain);
     my $owner          = $config->{ newml_command_ml_admin_default_address }||
@@ -108,12 +108,12 @@ sub process
 
     # define _ml_name_xxx variables in $parms for virtual domain
     $control->adjust_params_for_virtual_domain($curproc,
-					       $command_args,
+					       $command_context,
 					       $params);
 
     # "makefml --force newml elena" creates elena ML even if elena
     # already exists.
-    unless ($self->get_force_mode($curproc, $command_args)) {
+    unless ($self->get_force_mode($curproc, $command_context)) {
 	if (-d $ml_home_dir) {
 	    # XXX-TODO: $curproc->logwarn() ?
 	    warn("$ml_name ml_home_dir($ml_home_dir) already exists");
@@ -126,7 +126,7 @@ sub process
     # XXX we assume /etc/passwd exists for backword compatibility
     # XXX on all unix plathomes.
     if ($control->is_mta_alias_maps_has_ml_entry($curproc,$params,$ml_name)) {
-	unless ($self->get_force_mode($curproc, $command_args)) {
+	unless ($self->get_force_mode($curproc, $command_context)) {
 	    # XXX-TODO: $curproc->logwarn() ?
 	    warn("$ml_name already exists (somewhere in MTA aliases)");
 	    return ;
@@ -142,31 +142,31 @@ sub process
     #    prepare thread cgi interface at ?
     #      ~fml/public_html/cgi-bin/fml/$domain/threadview.cgi ?
     # 5. prepare listinfo url
-    $control->init_ml_home_dir($curproc, $command_args, $params);
-    $control->install_template_files($curproc, $command_args, $params);
-    if ($self->is_update_alias($curproc, $command_args)) {
-	$control->update_aliases($curproc, $command_args, $params);
+    $control->init_ml_home_dir($curproc, $command_context, $params);
+    $control->install_template_files($curproc, $command_context, $params);
+    if ($self->is_update_alias($curproc, $command_context)) {
+	$control->update_aliases($curproc, $command_context, $params);
     }
-    $control->setup_mail_archive_dir($curproc, $command_args, $params);
-    $control->setup_cgi_interface($curproc, $command_args, $params);
-    $control->setup_listinfo($curproc, $command_args, $params);
+    $control->setup_mail_archive_dir($curproc, $command_context, $params);
+    $control->setup_cgi_interface($curproc, $command_context, $params);
+    $control->setup_listinfo($curproc, $command_context, $params);
 }
 
 
 # Descriptions: show cgi menu for newml command.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: create home directories, update aliases, ...
 # Return Value: none
 sub cgi_menu
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $r = '';
 
-    # XXX-TODO: $command_args checked ?
+    # XXX-TODO: $command_context checked ?
     eval q{
         use FML::CGI::ML;
         my $obj = new FML::CGI::ML;
-        $obj->cgi_menu($curproc, $command_args);
+        $obj->cgi_menu($curproc, $command_context);
     };
     if ($r = $@) {
         croak($r);
@@ -176,11 +176,11 @@ sub cgi_menu
 
 =head1 UTILITIES
 
-=head2 set_force_mode($curproc, $command_args)
+=head2 set_force_mode($curproc, $command_context)
 
 set force mode.
 
-=head2 get_force_mode($curproc, $command_args)
+=head2 get_force_mode($curproc, $command_context)
 
 return if force mode is enabled or not.
 
@@ -188,23 +188,23 @@ return if force mode is enabled or not.
 
 
 # Descriptions: set force mode.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update $self.
 # Return Value: none
 sub set_force_mode
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     $self->{ _force_mode } = 1;
 }
 
 
 # Descriptions: return if force mode is enabled or not.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: NUM
 sub get_force_mode
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $options = $curproc->command_line_options();
 
     if (defined $self->{ _force_mode }) {
@@ -217,12 +217,12 @@ sub get_force_mode
 
 
 # Descriptions: check if we should update alias files.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: NUM
 sub is_update_alias
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $option = $curproc->command_line_cui_specific_options() || {};
 
     if (defined $option->{ 'update-alias' }) {

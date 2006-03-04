@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: mergeml.pm,v 1.6 2004/11/25 12:07:40 fukachan Exp $
+# $FML: mergeml.pm,v 1.7 2006/01/09 14:00:54 fukachan Exp $
 #
 
 package FML::Command::Admin::mergeml;
@@ -50,15 +50,15 @@ sub need_lock { 0;}
 
 
 # Descriptions: merge other mailing list driver system into fml8.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: create mailing list directory,
 #               install config.cf, include, include-ctl et. al.
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $config  = $curproc->config();
-    my $options = $command_args->{ options } || [];
+    my $options = $command_context->get_options() || [];
     my $src_dir = $options->[ 0 ] || '';
 
     # XXX-TODO: can we here use $curproc->ml_*() ?
@@ -106,18 +106,18 @@ sub process
     # HERE WE GO!
     my $ml_list = "$ml_name\@$ml_domain";
     print STDERR "merge configurations at @$options into $ml_list\n";
-    $self->merge($curproc, $command_args, $params);
+    $self->merge($curproc, $command_context, $params);
 }
 
 
 # Descriptions: merge ML configurations.
 #    Arguments: OBJ($self)
-#               OBJ($curproc) HASH_REF($command_args) HASH_REF($params)
+#               OBJ($curproc) OBJ($command_context) HASH_REF($params)
 # Side Effects: none
 # Return Value: none
 sub merge
 {
-    my ($self, $curproc, $command_args, $params) = @_;
+    my ($self, $curproc, $command_context, $params) = @_;
     my $src_dir = $params->{ src_dir } || undef;
     my $system  = $params->{ target_system } || undef;
 
@@ -135,8 +135,8 @@ sub merge
     # 3. run newml --force.
     use FML::Command::Admin::newml;
     my $ml = new FML::Command::Admin::newml;
-    $ml->set_force_mode($curproc, $command_args);
-    $ml->process($curproc, $command_args);
+    $ml->set_force_mode($curproc, $command_context);
+    $ml->process($curproc, $command_context);
 
     # 4. convert files if needed.
     $merge->convert_list_files();

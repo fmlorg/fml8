@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: confirm.pm,v 1.37 2006/01/08 03:06:59 fukachan Exp $
+# $FML: confirm.pm,v 1.38 2006/01/09 14:00:54 fukachan Exp $
 #
 
 package FML::Command::User::confirm;
@@ -26,7 +26,7 @@ execute the actual corresponding process if the confirmation succeeds.
 
 =head1 METHODS
 
-=head2 process($curproc, $command_args)
+=head2 process($curproc, $command_context)
 
 =cut
 
@@ -59,12 +59,12 @@ sub lock_channel { return 'command_serialize';}
 
 
 # Descriptions: addresses to inform a message copy to.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: ARREY_REF
 sub notice_cc_recipient
 {
-   my ($self, $curproc, $command_args) = @_;
+   my ($self, $curproc, $command_context) = @_;
    my $config     = $curproc->config();
    my $maintainer = $config->{ maintainer };
 
@@ -74,12 +74,12 @@ sub notice_cc_recipient
 
 # Descriptions: execute the actual process if this confirmation succeeds.
 #               run _switch_command() for real process.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $config = $curproc->config();
     my ($class, $id);
 
@@ -95,7 +95,7 @@ sub process
     my $cache_dir     = $config->{ db_dir };
     my $keyword       = $config->{ confirm_command_prefix };
     my $expire_limit  = $config->{ confirm_expire_limit } || 14*24*3600;
-    my $command       = $command_args->{ command };
+    my $command       = $command_context->{ command };
 
 
     # XXX-TODO: sanity
@@ -127,7 +127,7 @@ sub process
 				   $class,
 				   $id,
 				   $curproc,
-				   $command_args);
+				   $command_context);
 	}
 	else { # if requset is expired
 	    $curproc->reply_message_nl('error.expired', "request expired");
@@ -150,12 +150,12 @@ sub process
 #               switch this process to it.
 #               We support only {subscribe,unsubscribe,chaddr} now.
 #    Arguments: OBJ($self) OBJ($confirm) STR($class) STR($id)
-#               OBJ($curproc) HASH_REF($command_args)
+#               OBJ($curproc) OBJ($command_context)
 # Side Effects: module loaded
 # Return Value: none
 sub _switch_process
 {
-    my ($self, $confirm, $class, $id, $curproc, $command_args) = @_;
+    my ($self, $confirm, $class, $id, $curproc, $command_context) = @_;
     my $config  = $curproc->config();
     my $command = $class;
     my $varname = "${command}_command_operation_mode";
@@ -164,29 +164,29 @@ sub _switch_process
     my $request = $confirm->get_request($id);
 
     # pass confirmation id to the command layer.
-    $command_args->{ _confirm_id }      = $id;
-    $command_args->{ _confirm_address } = $address;
-    $command_args->{ _confirm_request } = $request;
+    $command_context->{ _confirm_id }      = $id;
+    $command_context->{ _confirm_address } = $address;
+    $command_context->{ _confirm_request } = $request;
 
     # 1. XXX_command_operation_mode == automatic
     #    fml8 do subscription et.al. automatically.
     if ($mode eq 'automatic') {
-	$self->_switch_command($class, $address, $curproc, $command_args);
+	$self->_switch_command($class, $address, $curproc, $command_context);
     }
     # 2. XXX_command_operation_mode == manual
     #    notify "the request is confirmed" to $maintainer,
     #    who do actual subscription et.al.
     elsif ($mode eq 'manual') {
-	$self->_forward_request($class, $address, $curproc, $command_args);
+	$self->_forward_request($class, $address, $curproc, $command_context);
     }
     else {
 	croak("unknown operation mode");
     }
 
     # clean up.
-    delete $command_args->{ _confirm_id };
-    delete $command_args->{ _confirm_address };
-    delete $command_args->{ _confirm_request };
+    delete $command_context->{ _confirm_id };
+    delete $command_context->{ _confirm_address };
+    delete $command_context->{ _confirm_request };
 }
 
 
@@ -194,12 +194,12 @@ sub _switch_process
 #               switch this process to it.
 #               We support only {subscribe,unsubscribe,chaddr} now.
 #    Arguments: OBJ($self) STR($class) STR($address)
-#               OBJ($curproc) HASH_REF($command_args)
+#               OBJ($curproc) OBJ($command_context)
 # Side Effects: module loaded
 # Return Value: none
 sub _switch_command
 {
-    my ($self, $class, $address, $curproc, $command_args) = @_;
+    my ($self, $class, $address, $curproc, $command_context) = @_;
 
     # lower case
     $class =~ tr/A-Z/a-z/;
@@ -215,10 +215,10 @@ sub _switch_command
 	$class eq 'on'     ||
 	$class eq 'off'    ||
 	$class eq 'moderate') {
-	$command_args->{ command_data } = $address;
-	$command_args->{ command_mode } = 'Admin';
-	$command_args->{ override_need_no_lock } = 1; # already locked
-	$obj->$class($curproc, $command_args);
+	$command_context->{ command_data } = $address;
+	$command_context->{ command_mode } = 'Admin';
+	$command_context->{ override_need_no_lock } = 1; # already locked
+	$obj->$class($curproc, $command_context);
     }
     else {
 	$curproc->logerror("no such confirmation rule for '$class' command");
@@ -241,7 +241,7 @@ sub _switch_command
 	$config->set( 'welcome_file', $file );
 
 	if (-f $file) {
-	    $self->send_user_xxx_message($curproc, $command_args, "welcome");
+	    $self->send_user_xxx_message($curproc, $command_context, "welcome");
 	}
     }
 
@@ -256,18 +256,18 @@ sub _switch_command
 #               switch this process to it.
 #               We support only {subscribe,unsubscribe,chaddr} now.
 #    Arguments: OBJ($self) STR($class) STR($address)
-#               OBJ($curproc) HASH_REF($command_args)
+#               OBJ($curproc) OBJ($command_context)
 # Side Effects: module loaded
 # Return Value: none
 sub _forward_request
 {
-    my ($self, $class, $address, $curproc, $command_args) = @_;
+    my ($self, $class, $address, $curproc, $command_context) = @_;
     my $msg        = $curproc->incoming_message();
     my $config     = $curproc->config();
     my $maintainer = $config->{ maintainer };
     my $action     = "?";
     my $command    = $class;
-    my $request    = $command_args->{ _confirm_request };
+    my $request    = $command_context->{ _confirm_request };
     my (@address)  = split(/\s+/, $address);
     my $user_args  = { recipient => \@address };
     my $rm_args    = {

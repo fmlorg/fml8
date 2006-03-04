@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2005 Ken'ichi Fukamachi
+#  Copyright (C) 2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: moderate.pm,v 1.1 2005/12/18 12:03:17 fukachan Exp $
 #
 
 package FML::Command::Admin::moderate;
@@ -25,7 +25,7 @@ See C<FML::Command> for more details.
 
 =head1 METHODS
 
-=head2 process($curproc, $command_args)
+=head2 process($curproc, $command_context)
 
 =cut
 
@@ -58,26 +58,26 @@ sub lock_channel { return 'command_serialize';}
 
 
 # Descriptions: dummy.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub verify_syntax
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
 }
 
 
 # Descriptions: moderate submmited article.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $config  = $curproc->config();
-    my $options = $command_args->{ options } || [];
-    my $address = $command_args->{ command_data } || $options->[ 0 ];
-    my $confirm_id = $command_args->{ _confirm_id } || undef;
+    my $options = $command_context->get_options() || [];
+    my $address = $command_context->{ command_data } || $options->[ 0 ];
+    my $confirm_id = $command_context->{ _confirm_id } || undef;
 
     use FML::Confirm;
     my $cache_dir = $config->{ db_dir };
@@ -102,12 +102,12 @@ sub process
 
 
 # Descriptions: dummy.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none
 sub cgi_menu
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $r = '';
 }
 
@@ -122,7 +122,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2005 Ken'ichi Fukamachi
+Copyright (C) 2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

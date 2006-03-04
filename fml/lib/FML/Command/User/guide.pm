@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: guide.pm,v 1.16 2004/04/23 04:15:58 fukachan Exp $
+# $FML: guide.pm,v 1.17 2004/06/26 11:47:58 fukachan Exp $
 #
 
 package FML::Command::User::guide;
@@ -30,7 +30,7 @@ See C<FML::Command> for more details.
 
 =head1 METHODS
 
-=head2 process($curproc, $command_args)
+=head2 process($curproc, $command_context)
 
 =cut
 
@@ -56,14 +56,14 @@ sub need_lock { 0;}
 
 
 # Descriptions: send guide message via FML::Command::SendFile.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
 
-    $self->send_user_xxx_message($curproc, $command_args, "guide");
+    $self->send_user_xxx_message($curproc, $command_context, "guide");
 }
 
 
@@ -77,7 +77,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

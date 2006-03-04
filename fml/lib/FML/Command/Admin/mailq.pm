@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: mailq.pm,v 1.11 2004/09/04 03:13:16 fukachan Exp $
+# $FML: mailq.pm,v 1.12 2006/01/09 14:00:54 fukachan Exp $
 #
 
 package FML::Command::Admin::mailq;
@@ -27,7 +27,7 @@ list up outgoing mail queue.
 
 =head1 METHODS
 
-=head2 process($curproc, $command_args)
+=head2 process($curproc, $command_context)
 
 =cut
 
@@ -53,12 +53,12 @@ sub need_lock { 0;}
 
 
 # Descriptions: show outgoing mail queue.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update $recipient_map
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
 
     $self->_list_up_queue($curproc);
 }

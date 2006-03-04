@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: check.pm,v 1.13 2004/04/23 04:10:29 fukachan Exp $
+# $FML: check.pm,v 1.14 2004/06/26 11:47:56 fukachan Exp $
 #
 
 package FML::Command::Admin::check;
@@ -58,15 +58,15 @@ my @rules =  qw(
 
 
 # Descriptions: top level dispatcher.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
 
     for my $rule (@rules) {
-	$self->$rule($curproc, $command_args);
+	$self->$rule($curproc, $command_context);
     }
 }
 
@@ -75,12 +75,12 @@ sub process
 
 
 # Descriptions: check the existence of $ml_home_dir.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: none
 sub check_ml_home_dir
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $ml_name     = $curproc->ml_name();
     my $ml_domain   = $curproc->ml_domain();
     my $ml_home_dir = $curproc->ml_home_dir($ml_name, $ml_domain);
@@ -100,12 +100,12 @@ sub check_ml_home_dir
 
 
 # Descriptions: check spool permission.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: fix permission
 # Return Value: none
 sub check_spool_dir
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $config    = $curproc->config();
     my $spool_dir = $config->{ spool_dir };
 
@@ -133,12 +133,12 @@ sub check_spool_dir
 
 
 # Descriptions: check html_archive permission.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: fix permission
 # Return Value: none
 sub check_html_archive_dir
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $config   = $curproc->config();
     my $html_dir = $config->{ html_archive_dir };
 
@@ -227,7 +227,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.36 2006/01/08 03:06:59 fukachan Exp $
+# $FML: chaddr.pm,v 1.37 2006/01/09 14:00:54 fukachan Exp $
 #
 
 package FML::Command::User::chaddr;
@@ -28,7 +28,7 @@ processed. After confirmation succeeds, chaddr process proceeds.
 
 =head1 METHODS
 
-=head2 process($curproc, $command_args)
+=head2 process($curproc, $command_context)
 
 If either old or new addresses in chaddr arguments is an ML member,
 try to confirm this request. The confirmation is returned to "From:"
@@ -65,14 +65,14 @@ sub lock_channel { return 'command_serialize';}
 
 
 # Descriptions: verify the syntax command string.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub verify_syntax
 {
-    my ($self, $curproc, $command_args) = @_;
-    my $comname    = $command_args->{ comname }    || '';
-    my $options    = $command_args->{ options }    || [];
+    my ($self, $curproc, $command_context) = @_;
+    my $comname    = $command_context->get_cooked_command()    || '';
+    my $options    = $command_context->get_options()    || [];
     my $command    = $comname;
     my $oldaddr    = $options->[ 0 ] || '';
     my $newaddr    = $options->[ 1 ] || '';
@@ -102,7 +102,7 @@ sub verify_syntax
 
     use FML::Command;
     $dispatch = new FML::Command;
-    if ($dispatch->safe_regexp_match($curproc, $command_args, \@test)) {
+    if ($dispatch->safe_regexp_match($curproc, $command_context, \@test)) {
 	$ok++;
     }
 
@@ -111,13 +111,13 @@ sub verify_syntax
 
 
 # Descriptions: chaddr adapter: confirm before real chaddr operation.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update database for confirmation.
 #               prepare reply message.
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $config = $curproc->config();
     my $cred   = $curproc->credential();
 
@@ -132,8 +132,8 @@ sub process
     my $recipient_map = $config->{ primary_recipient_map };
     my $cache_dir     = $config->{ db_dir };
     my $keyword       = $config->{ confirm_command_prefix };
-    my $comname       = $command_args->{ comname };
-    my $command       = $command_args->{ command };
+    my $comname       = $command_context->get_cooked_command();
+    my $command       = $command_context->{ command };
     my $sender        = $cred->sender();
 
     # cheap sanity checks
@@ -146,7 +146,7 @@ sub process
 
     # addresses we check and send back confirmation messages to
     my $optargs = {};
-    my $x = $command_args->{ command };
+    my $x = $command_context->{ command };
     $x =~ s/^.*$comname\s+//;
     my ($old_addr, $new_addr) = split(/\s+/, $x);
     $optargs->{ recipient } = [ $sender, $old_addr, $new_addr ];
@@ -193,7 +193,7 @@ sub process
 	    command => "chaddr",
 	    rm_args => $optargs,
 	};
-	$_msg->send_confirmation($curproc, $command_args, $confirm, $sc_args);
+	$_msg->send_confirmation($curproc, $command_context, $confirm, $sc_args);
     }
     # try confirmation before chaddr.
     else {

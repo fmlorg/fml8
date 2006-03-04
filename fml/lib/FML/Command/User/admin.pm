@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: admin.pm,v 1.14 2005/11/30 23:30:38 fukachan Exp $
+# $FML: admin.pm,v 1.15 2006/03/04 12:56:58 fukachan Exp $
 #
 
 package FML::Command::User::admin;
@@ -41,27 +41,27 @@ sub new
 
 # Descriptions: rewrite command prompt.
 #               Always we need to rewrite command prompt to hide password.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args) STR_REF($rbuf)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context) STR_REF($rbuf)
 # Side Effects: rewrite buffer to hide the password phrase in $rbuf.
 # Return Value: none
 sub rewrite_prompt
 {
-    my ($self, $curproc, $command_args, $rbuf) = @_;
+    my ($self, $curproc, $command_context, $rbuf) = @_;
     my $command = undef;
-    my $comname = $command_args->{ comsubname };
+    my $comname = $command_context->get_cooked_subcommand();
     my $pkg     = "FML::Command::Admin::${comname}";
 
     eval qq{ use $pkg; \$command = new $pkg;};
     unless ($@) {
 	if ($command->can('rewrite_prompt')) {
-	    return $command->rewrite_prompt($curproc, $command_args, $rbuf);
+	    return $command->rewrite_prompt($curproc, $command_context, $rbuf);
 	}
     }
 
     # XXX-TODO: good style? FML::Command::Admin::password->rewrite_prompt() ?
     use FML::Command::Admin::password;
     my $obj = new FML::Command::Admin::password;
-    $obj->rewrite_prompt($curproc, $command_args, $rbuf);
+    $obj->rewrite_prompt($curproc, $command_context, $rbuf);
 }
 
 
@@ -72,7 +72,7 @@ sub rewrite_prompt
 sub need_lock { 0;}
 
 
-=head2 verify_syntax($curproc, $command_args)
+=head2 verify_syntax($curproc, $command_context)
 
 verify the syntax command string.
 return 0 if it looks insecure.
@@ -81,37 +81,37 @@ return 0 if it looks insecure.
 
 
 # Descriptions: verify the syntax command string.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub verify_syntax
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $command = undef;
-    my $comname = $command_args->{ comsubname };
+    my $comname = $command_context->get_cooked_subcommand();
     my $pkg     = "FML::Command::Admin::${comname}";
 
     eval qq{ use $pkg; \$command = new $pkg;};
     unless ($@) {
 	if ($command->can('verify_syntax')) {
-	    return $command->verify_syntax($curproc, $command_args);
+	    return $command->verify_syntax($curproc, $command_context);
 	}
     }
 
     use FML::Command;
     my $dispatch = new FML::Command;
-    return $dispatch->simple_syntax_check($curproc, $command_args);
+    return $dispatch->simple_syntax_check($curproc, $command_context);
 }
 
 
 # Descriptions: interface for priviledged command world.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update authentication state if needed.
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
-    my $command = $command_args->{ original_command };
+    my ($self, $curproc, $command_context) = @_;
+    my $command = $command_context->get_command();
 
     # 1. check already authenticated. if not, try auth.
     #    authentication rules are defined as $admin_command_mail_restrictions.
@@ -119,7 +119,7 @@ sub process
     #              1. password auth (one line).
     #              2. pgp auth      (one file).
     unless ($curproc->command_context_get_admin_auth()) {
-	my $status = $self->_try_admin_auth($curproc, $command_args);
+	my $status = $self->_try_admin_auth($curproc, $command_context);
 	if ($status) {
 	    $curproc->reply_message_nl("command.admin_auth_ok",
 				       "authenticated.");
@@ -130,13 +130,13 @@ sub process
     # 2. run admin command if already authenticated.
     #    if not, fatal error.
     if ($curproc->command_context_get_admin_auth()) {
-	my $class = $command_args->{ comsubname } || '';
-	$self->_execute_admin_command($curproc, $command_args, $class);
+	my $class = $command_context->get_cooked_subcommand() || '';
+	$self->_execute_admin_command($curproc, $command_context, $class);
     }
     else {
-	my $class = $command_args->{ comsubname } || '';
+	my $class = $command_context->get_cooked_subcommand() || '';
 	my $c     = "admin $class ...";
-	my $masked_command = $command_args->{ masked_original_command } || $c;
+	my $masked_command = $command_context->{ masked_original_command } || $c;
 	$curproc->logerror("admin: not auth, cannot run \"$masked_command\"");
 	$curproc->reply_message_nl("command.admin_auth_fail",
 				   "not authenticated.");
@@ -147,27 +147,27 @@ sub process
 
 
 # Descriptions: authenticate the currrent process sender as an admin.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub _try_admin_auth
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $cred     = $curproc->credential();
     my $sender   = $cred->sender();
     my $opt_args = { address => $sender };
-    my $class    = $command_args->{ comsubname } || '';
+    my $class    = $command_context->get_cooked_subcommand() || '';
 
     # XXX-TODO: configurable.
     # prepare() for later use.
     if ($class eq 'pass' || $class eq 'password') {
-	$self->_execute_admin_command($curproc, $command_args, $class);
+	$self->_execute_admin_command($curproc, $command_context, $class);
 	my $p = $curproc->command_context_get_admin_password();
 	$opt_args->{ password } = $p || '';
     }
 
     return $self->_apply_new_admin_command_mail_restrictions($curproc,
-							     $command_args,
+							     $command_context,
 							     $opt_args);
 }
 
@@ -175,12 +175,12 @@ sub _try_admin_auth
 # Descriptions: check if this request is allowed by
 #               $admin_command_mail_restriction.
 #    Arguments: OBJ($self)
-#               OBJ($curproc) HASH_REF($command_args) HASH_REF($opt_args)
+#               OBJ($curproc) OBJ($command_context) HASH_REF($opt_args)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub _apply_old_admin_command_mail_restrictions
 {
-    my ($self, $curproc, $command_args, $opt_args) = @_;
+    my ($self, $curproc, $command_context, $opt_args) = @_;
     my $config  = $curproc->config();
     my $rules   = $config->get_as_array_ref('admin_command_mail_restrictions');
     my $is_auth = 0;
@@ -212,13 +212,13 @@ sub _apply_old_admin_command_mail_restrictions
 # Descriptions: check if this request is allowed by
 #               $admin_command_mail_restriction.
 #    Arguments: OBJ($self)
-#               OBJ($curproc) HASH_REF($command_args) HASH_REF($opt_args)
+#               OBJ($curproc) OBJ($command_context) HASH_REF($opt_args)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub _apply_new_admin_command_mail_restrictions
 {
-    my ($self, $curproc, $command_args, $opt_args) = @_;
-    my $context = $command_args;
+    my ($self, $curproc, $command_context, $opt_args) = @_;
+    my $context = $command_context;
     my $config  = $curproc->config();
     my $sender  = $opt_args->{ address } || '';
 
@@ -279,13 +279,13 @@ sub _apply_new_admin_command_mail_restrictions
 
 
 # Descriptions: execute admin command.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args) STR($class)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context) STR($class)
 # Side Effects: none
 # Return Value: none
 sub _execute_admin_command
 {
-    my ($self, $curproc, $command_args, $class) = @_;
-    my $args = $self->_prepare_command_args($curproc, $command_args);
+    my ($self, $curproc, $command_context, $class) = @_;
+    my $args = $self->_prepare_command_args($curproc, $command_context);
 
     use FML::Command;
     my $dispatch = new FML::Command;
@@ -293,25 +293,25 @@ sub _execute_admin_command
 }
 
 
-# Descriptions: adjust $command_args for admin mode.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Descriptions: adjust $command_context for admin mode.
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: none
 sub _prepare_command_args
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
 
-    # duplicate $command_args HASH_REF.
+    # duplicate $command_context HASH_REF.
     my $args = {};
-    for my $k (keys %$command_args) {
-	$args->{ $k } = $command_args->{ $k };
+    for my $k (keys %$command_context) {
+	$args->{ $k } = $command_context->{ $k };
     }
     $args->{ command_mode } = 'Admin';
 
     # we need to shift "options" by one column in admin command.
     # e.g. for "admin add some thing",
     # options = [ add, some, thing ] => [ some, thing ]
-    my @options = @{ $command_args->{ options } };
+    my @options = @{ $command_context->get_options() };
     shift @options;
     $args->{ options } = \@options;
 
@@ -329,7 +329,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

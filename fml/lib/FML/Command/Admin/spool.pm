@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: spool.pm,v 1.8 2005/08/11 04:07:32 fukachan Exp $
+# $FML: spool.pm,v 1.9 2005/08/17 12:08:42 fukachan Exp $
 #
 
 package FML::Command::Admin::spool;
@@ -27,7 +27,7 @@ show spool status or convert the structure.
 
 =head1 METHODS
 
-=head2 process($curproc, $command_args)
+=head2 process($curproc, $command_context)
 
 =cut
 
@@ -60,15 +60,15 @@ sub lock_channel { return 'article_spool_modify';}
 
 
 # Descriptions: subcommand dispatch table for "spool" command.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update $recipient_map
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $config  = $curproc->config();
     my $c_opts  = $curproc->command_line_cui_specific_options() || {};
-    my $options = $command_args->{ options };
+    my $options = $command_context->get_options();
     my $fp      = $options->[ 0 ] || 'status';
 
     # prepare arguments on $*_dir directory info.
@@ -80,16 +80,16 @@ sub process
     croak("no such directory: $src_dir") unless -d $src_dir;
 
     # prepare command specific parameters
-    $command_args->{ _src_dir } = $src_dir;
-    $command_args->{ _dst_dir } = $dst_dir;
-    $command_args->{ _output_channel } = \*STDOUT; # suppose only makefml.
+    $command_context->{ _src_dir } = $src_dir;
+    $command_context->{ _dst_dir } = $dst_dir;
+    $command_context->{ _output_channel } = \*STDOUT; # suppose only makefml.
 
     # here we go.
     print STDERR "converting $src_dir -> $dst_dir\n";
     use FML::Article::Spool;
     my $spool = new FML::Article::Spool $curproc;
     if ($spool->can($fp)) {
-	$spool->$fp($curproc, $command_args);
+	$spool->$fp($curproc, $command_context);
     }
     else {
 	croak("no such method: $fp");
@@ -107,7 +107,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

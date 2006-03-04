@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.23 2004/06/26 11:47:58 fukachan Exp $
+# $FML: get.pm,v 1.24 2005/05/27 03:03:35 fukachan Exp $
 #
 
 package FML::Command::User::get;
@@ -60,20 +60,20 @@ sub lock_channel { return 'article_spool_modify';}
 
 
 # Descriptions: check the limit specific to this command.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub check_limit
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $config = $curproc->config();
     my $pcb    = $curproc->pcb();
     my $total  = $pcb->get('command', 'get_command_total_num_request') || 0;
 
     # 1. check the number of article in one command.
     my $limit = $config->{ get_command_request_limit } || 10;
-    my $nreq  = $self->num_files_in_send_article_args($curproc, $command_args);
-    my $name  = $command_args->{ comname };
+    my $nreq  = $self->num_files_in_send_article_args($curproc, $command_context);
+    my $name  = $command_context->get_cooked_command();
     my $_args = { _arg_command => $name, };
 
     # 1.1 total number of requested articles.
@@ -107,17 +107,17 @@ sub check_limit
 #               command syntax. $options is raw command as ARRAY_REF such as
 #                  $options = [ 'get:3', 1, 100 ];
 #               send_article() called below can parse MH style argument.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
 
     # call send_article() without checking here but
     # Mail::Message::MH checks and expands the specified targets
     # to HASH_ARRAY of numbers: [ \d+, \d+, ... ].
-    $self->send_article($curproc, $command_args);
+    $self->send_article($curproc, $command_context);
 }
 
 
@@ -131,7 +131,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

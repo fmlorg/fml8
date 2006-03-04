@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2004 Ken'ichi Fukamachi
+#  Copyright (C) 2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: flushq.pm,v 1.1 2004/05/19 13:48:21 fukachan Exp $
+# $FML: flushq.pm,v 1.2 2004/06/26 11:47:56 fukachan Exp $
 #
 
 package FML::Command::Admin::flushq;
@@ -47,12 +47,12 @@ sub need_lock { 0;}
 
 
 # Descriptions: flush outgoing mail queue.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update $recipient_map
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
 
     $curproc->queue_flush();
 }
@@ -68,7 +68,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2004 Ken'ichi Fukamachi
+Copyright (C) 2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

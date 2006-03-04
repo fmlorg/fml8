@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: rmdomain.pm,v 1.6 2004/07/23 13:16:36 fukachan Exp $
+# $FML: rmdomain.pm,v 1.7 2004/07/26 01:10:54 fukachan Exp $
 #
 
 package FML::Command::Admin::rmdomain;
@@ -49,13 +49,13 @@ sub need_lock { 0;}
 
 
 # Descriptions: declare discarding this domain.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: forward request to dir module
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
-    my $canon_argv = $command_args->{ canon_argv };
+    my ($self, $curproc, $command_context) = @_;
+    my $canon_argv = $command_context->{ canon_argv };
     my $domain     = $canon_argv->{ ml_name };
 
     if ($domain) {
@@ -81,7 +81,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

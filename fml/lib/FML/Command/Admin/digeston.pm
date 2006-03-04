@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digeston.pm,v 1.11 2004/04/28 04:10:36 fukachan Exp $
+# $FML: digeston.pm,v 1.12 2004/06/30 03:05:13 fukachan Exp $
 #
 
 package FML::Command::Admin::digeston;
@@ -28,7 +28,7 @@ change delivery mode to this address from real to digest one.
 
 =head1 METHODS
 
-=head2 process($curproc, $command_args)
+=head2 process($curproc, $command_context)
 
 =cut
 
@@ -61,52 +61,52 @@ sub lock_channel { return 'command_serialize';}
 
 
 # Descriptions: verify the syntax command string.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub verify_syntax
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
 
     use FML::Command::Syntax;
     push(@ISA, qw(FML::Command::Syntax));
-    $self->check_syntax_address_handler($curproc, $command_args);
+    $self->check_syntax_address_handler($curproc, $command_context);
 }
 
 
 # Descriptions: digest mode on for the specified user.
 #               change delivery mode to this address from real to digest one.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update $recipient_map,$digest_recipient_maps
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
-    my $options = $command_args->{ options } || [];
-    my $address = $command_args->{ command_data } || $options->[ 0 ] || undef;
+    my ($self, $curproc, $command_context) = @_;
+    my $options = $command_context->get_options() || [];
+    my $address = $command_context->{ command_data } || $options->[ 0 ] || undef;
 
     # mode on
     $options->[ 1 ] = "on";
 
     use FML::Command::Admin::digest;
     my $digest = new FML::Command::Admin::digest;
-    $digest->process($curproc, $command_args);
+    $digest->process($curproc, $command_context);
 }
 
 
 # Descriptions: show cgi menu for digest on.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update $recipient_map
 # Return Value: none
 sub cgi_menu
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $r = '';
 
     eval q{
 	use FML::CGI::User;
 	my $obj = new FML::CGI::User;
-	$obj->cgi_menu($curproc, $command_args);
+	$obj->cgi_menu($curproc, $command_context);
     };
     if ($r = $@) {
 	croak($r);
@@ -124,7 +124,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

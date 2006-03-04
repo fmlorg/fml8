@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004,2005 MURASHITA Takuya
+#  Copyright (C) 2002,2003,2004,2005,2006 MURASHITA Takuya
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digest.pm,v 1.16 2005/11/30 23:34:45 fukachan Exp $
+# $FML: digest.pm,v 1.17 2005/12/16 13:15:23 fukachan Exp $
 #
 
 package FML::Command::User::digest;
@@ -27,7 +27,7 @@ change delivery mode among real time and digest.
 
 =head1 METHODS
 
-=head2 process($curproc, $command_args)
+=head2 process($curproc, $command_context)
 
 =cut
 
@@ -60,13 +60,13 @@ sub lock_channel { return 'command_serialize';}
 
 
 # Descriptions: digest off/on adapter.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update database for confirmation.
 #               prepare reply message.
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $config = $curproc->config();
     my $cred   = $curproc->credential();
 
@@ -81,7 +81,7 @@ sub process
     my $recipient_map = $config->{ primary_recipient_map };
     my $cache_dir     = $config->{ db_dir };
     my $keyword       = $config->{ confirm_command_prefix };
-    my $command       = $command_args->{ command };
+    my $command       = $command_context->{ command };
     my $address       = $cred->sender();
     my $mode          = '';
 
@@ -107,16 +107,16 @@ sub process
 	$curproc->log("digest $mode");
 
 	# emulate options ARRAY_REF.
-	$command_args->{ command_data } = $address;
-	$command_args->{ options }->[0] = $address;
-	$command_args->{ options }->[1] = $mode;
+	$command_context->{ command_data } = $address;
+	$command_context->get_options()->[0] = $address;
+	$command_context->get_options()->[1] = $mode;
 
 	# XXX-TODO: direct call of Admin::digest is correct?
 	# XXX-TODO: confirmation ?
 	use FML::Command::Admin::digest;
 	my $obj = new FML::Command::Admin::digest;
 	if ($mode eq "on" || $mode eq 'off') {
-	    $obj->process($curproc, $command_args);
+	    $obj->process($curproc, $command_context);
 	}
 	else {
 	    my $r = "digest: unknown mode: $mode";
@@ -141,7 +141,7 @@ MURASHITA Takuya
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004,2005 MURASHITA Takuya
+Copyright (C) 2002,2003,2004,2005,2006 MURASHITA Takuya
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

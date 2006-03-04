@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chpass.pm,v 1.2 2004/01/01 08:41:33 fukachan Exp $
+# $FML: chpass.pm,v 1.3 2004/01/01 08:48:39 fukachan Exp $
 #
 
 package FML::Command::Admin::chpass;
@@ -18,13 +18,13 @@ use FML::Command::Admin::changepassword;
 
 
 # Descriptions: change remote administrator password.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: forward request to password module
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
-    $self->SUPER::process($curproc, $command_args);
+    my ($self, $curproc, $command_context) = @_;
+    $self->SUPER::process($curproc, $command_context);
 }
 
 
@@ -51,7 +51,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

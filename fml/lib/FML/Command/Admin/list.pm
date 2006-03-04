@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: list.pm,v 1.25 2004/05/16 02:26:11 fukachan Exp $
+# $FML: list.pm,v 1.26 2004/06/26 11:42:22 fukachan Exp $
 #
 
 package FML::Command::Admin::list;
@@ -49,32 +49,32 @@ sub need_lock { 0;}
 
 
 # Descriptions: show the specified map(s).
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: forward request to dir module
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $options   = [];
-    my $x_options = $command_args->{ options } || [];
+    my $x_options = $command_context->get_options() || [];
 
     # import makefml options
     if (defined $x_options && ref($x_options) eq 'ARRAY') {
 	if (@$x_options) { $options = $x_options;}
     }
 
-    $self->_show_list($curproc, $command_args, $options);
+    $self->_show_list($curproc, $command_context, $options);
 }
 
 
 # Descriptions: show content of the specified map(s).
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 #               HASH_ARRAY($options)
 # Side Effects: none
 # Return Value: none
 sub _show_list
 {
-    my ($self, $curproc, $command_args, $options) = @_;
+    my ($self, $curproc, $command_context, $options) = @_;
     my $config  = $curproc->config();
     my $maplist = $config->get_as_array_ref('list_command_default_maps');
 
@@ -106,7 +106,7 @@ sub _show_list
     eval q{
 	use FML::User::Control;
 	my $obj = new FML::User::Control;
-	$obj->print_userlist($curproc, $command_args, $uc_args);
+	$obj->print_userlist($curproc, $command_context, $uc_args);
     };
     if ($r = $@) {
 	croak($r);
@@ -134,19 +134,19 @@ sub _get_map_candidates_as_array_ref
 
 
 # Descriptions: show cgi menu for list command.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none
 sub cgi_menu
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $r = '';
 
     # navigation bar
     eval q{
 	use FML::CGI::List;
 	my $obj = new FML::CGI::List;
-	$obj->cgi_menu($curproc, $command_args);
+	$obj->cgi_menu($curproc, $command_context);
     };
     if ($r = $@) {
 	print $r;
@@ -160,7 +160,7 @@ sub cgi_menu
     my $map_default = $curproc->safe_param_map() || '';
     my $options     = [ $map_default ];
     eval q{
-	$self->_show_list($curproc, $command_args, $options);
+	$self->_show_list($curproc, $command_context, $options);
     };
     if ($r = $@) {
 	print $r;
@@ -179,7 +179,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

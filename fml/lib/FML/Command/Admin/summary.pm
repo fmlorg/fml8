@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: summary.pm,v 1.9 2005/08/11 04:11:27 fukachan Exp $
+# $FML: summary.pm,v 1.10 2005/08/17 12:08:44 fukachan Exp $
 #
 
 package FML::Command::Admin::summary;
@@ -27,7 +27,7 @@ maintain article summary file.
 
 =head1 METHODS
 
-=head2 process($curproc, $command_args)
+=head2 process($curproc, $command_context)
 
 maintain article summary file.
 
@@ -62,27 +62,27 @@ sub lock_channel { return 'article_spool_modify';}
 
 
 # Descriptions: top level dispatcher to maintain article summary file.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update $recipient_map
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
 
-    $self->_summary($curproc, $command_args);
+    $self->_summary($curproc, $command_context);
 }
 
 
 # Descriptions: fmlsummary top level dispacher.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: load FML::Command::command module and execute it.
 # Return Value: none
 sub _summary
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $config  = $curproc->config();
     my $max_id  = $curproc->article_get_max_id();
-    my $options = $command_args->{ options } || [];
+    my $options = $command_context->get_options() || [];
 
     use FML::Article::Summary;
     my $summary = new FML::Article::Summary $curproc;
@@ -112,7 +112,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

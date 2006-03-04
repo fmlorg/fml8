@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: newcopml.pm,v 1.1 2006/02/04 08:00:09 fukachan Exp $
 #
 
 package FML::Command::Admin::newcopml;
@@ -23,7 +23,7 @@ FML::Command::Admin::newcopml - set up a new create-on-post mailing list.
 
     use FML::Command::Admin::newcopml;
     $obj = new FML::Command::Admin::newcopml;
-    $obj->newcopml($curproc, $command_args);
+    $obj->newcopml($curproc, $command_context);
 
 See C<FML::Command> for more details.
 
@@ -35,7 +35,7 @@ install config.cf, include, include-ctl et. al.
 
 =head1 METHODS
 
-=head2 process($curproc, $command_args)
+=head2 process($curproc, $command_context)
 
 =cut
 
@@ -61,39 +61,39 @@ sub need_lock { 0;}
 
 
 # Descriptions: install create-on-post mailing list configuration.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: create mailing list directory,
 #               install config.cf, include, include-ctl et. al.
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
 
     # 1. run newml.
-    $self->SUPER::process($curproc, $command_args);
+    $self->SUPER::process($curproc, $command_context);
 
     # 2. set up create-on-post configuration.
     use FML::ML::Control;
     my $control = new FML::ML::Control;
     $control->set_mode("create-on-post");
-    $control->install_createonpost($curproc, $command_args);
+    $control->install_createonpost($curproc, $command_context);
 }
 
 
 # Descriptions: show cgi menu for newcopml command.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: create home directories, update aliases, ...
 # Return Value: none
 sub cgi_menu
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $r = '';
 
-    # XXX-TODO: $command_args checked ?
+    # XXX-TODO: $command_context checked ?
     eval q{
         use FML::CGI::ML;
         my $obj = new FML::CGI::ML;
-        $obj->cgi_menu($curproc, $command_args);
+        $obj->cgi_menu($curproc, $command_context);
     };
     if ($r = $@) {
         croak($r);
@@ -103,11 +103,11 @@ sub cgi_menu
 
 =head1 UTILITIES
 
-=head2 set_force_mode($curproc, $command_args)
+=head2 set_force_mode($curproc, $command_context)
 
 set force mode.
 
-=head2 get_force_mode($curproc, $command_args)
+=head2 get_force_mode($curproc, $command_context)
 
 return if force mode is enabled or not.
 
@@ -115,23 +115,23 @@ return if force mode is enabled or not.
 
 
 # Descriptions: set force mode.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update $self.
 # Return Value: none
 sub set_force_mode
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     $self->{ _force_mode } = 1;
 }
 
 
 # Descriptions: return if force mode is enabled or not.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: none
 sub get_force_mode
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $options = $curproc->command_line_options();
 
     if (defined $self->{ _force_mode }) {

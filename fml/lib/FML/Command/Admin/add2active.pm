@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2004 Ken'ichi Fukamachi
+#  Copyright (C) 2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: add.pm,v 1.9 2004/01/02 14:42:42 fukachan Exp $
+# $FML: add2active.pm,v 1.1 2004/05/01 05:02:03 fukachan Exp $
 #
 
 package FML::Command::Admin::add2active;
@@ -18,13 +18,13 @@ use FML::Command::Admin::addrecipient;
 
 
 # Descriptions: add user as only recipient
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: forward request to addrecipient module
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
-    $self->SUPER::process($curproc, $command_args);
+    my ($self, $curproc, $command_context) = @_;
+    $self->SUPER::process($curproc, $command_context);
 }
 
 =head1 NAME
@@ -49,7 +49,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2004 Ken'ichi Fukamachi
+Copyright (C) 2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

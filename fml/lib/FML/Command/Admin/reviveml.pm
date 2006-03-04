@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: reviveml.pm,v 1.2 2006/01/09 14:00:54 fukachan Exp $
+# $FML: reviveml.pm,v 1.3 2006/02/15 13:44:03 fukachan Exp $
 #
 
 package FML::Command::Admin::reviveml;
@@ -24,7 +24,7 @@ FML::Command::Admin::reviveml - set up a new mailing list.
 
     use FML::Command::Admin::reviveml;
     $obj = new FML::Command::Admin::reviveml;
-    $obj->reviveml($curproc, $command_args);
+    $obj->reviveml($curproc, $command_context);
 
 See C<FML::Command> for more details.
 
@@ -36,19 +36,19 @@ install config.cf, include, include-ctl et. al.
 
 =head1 METHODS
 
-=head2 process($curproc, $command_args)
+=head2 process($curproc, $command_context)
 
 =cut
 
 
 # Descriptions: set up a new mailing list.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: create mailing list directory,
 #               install config.cf, include, include-ctl et. al.
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $ml_name   = $curproc->ml_name();
     my $ml_domain = $curproc->ml_domain();
 
@@ -67,8 +67,8 @@ sub process
 	$curproc->log("revived ml_home_dir from $ml_home_dir_prev");
     }
 
-    $self->SUPER::set_force_mode($curproc, $command_args);
-    $self->SUPER::process($curproc, $command_args);
+    $self->SUPER::set_force_mode($curproc, $command_context);
+    $self->SUPER::process($curproc, $command_context);
 }
 
 

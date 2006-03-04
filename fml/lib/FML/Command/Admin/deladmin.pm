@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: deladmin.pm,v 1.20 2005/08/17 10:36:36 fukachan Exp $
+# $FML: deladmin.pm,v 1.21 2005/08/17 12:08:43 fukachan Exp $
 #
 
 package FML::Command::Admin::deladmin;
@@ -27,7 +27,7 @@ remove the specified remote administrator.
 
 =head1 METHODS
 
-=head2 process($curproc, $command_args)
+=head2 process($curproc, $command_context)
 
 =cut
 
@@ -60,26 +60,26 @@ sub lock_channel { return 'command_serialize';}
 
 
 # Descriptions: verify the syntax command string.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub verify_syntax
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
 
     use FML::Command::Syntax;
     push(@ISA, qw(FML::Command::Syntax));
-    $self->check_syntax_address_handler($curproc, $command_args);
+    $self->check_syntax_address_handler($curproc, $command_context);
 }
 
 
 # Descriptions: remove the specified remote administrator.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $config = $curproc->config();
 
     # XXX We should always add/rewrite only $primary_*_map maps via
@@ -91,8 +91,8 @@ sub process
     # XXX    For example, $member_maps contains different classes.
     my $member_map    = $config->{ 'primary_admin_member_map' };
     my $recipient_map = $config->{ 'primary_admin_recipient_map' };
-    my $options       = $command_args->{ options };
-    my $address       = $command_args->{ command_data } || $options->[ 0 ];
+    my $options       = $command_context->get_options();
+    my $address       = $command_context->{ command_data } || $options->[ 0 ];
 
     # fundamental sanity check
     croak("address not undefined")       unless defined $address;
@@ -113,7 +113,7 @@ sub process
     eval q{
 	use FML::User::Control;
 	my $obj = new FML::User::Control;
-	$obj->user_del($curproc, $command_args, $uc_args);
+	$obj->user_del($curproc, $command_context, $uc_args);
     };
     if ($r = $@) {
 	croak($r);
@@ -122,18 +122,18 @@ sub process
 
 
 # Descriptions: show cgi menu to remove the specified remote administrator.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none
 sub cgi_menu
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $r = '';
 
     eval q{
 	use FML::CGI::User;
 	my $obj = new FML::CGI::User;
-	$obj->cgi_menu($curproc, $command_args);
+	$obj->cgi_menu($curproc, $command_context);
     };
     if ($r = $@) {
 	croak($r);
@@ -151,7 +151,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

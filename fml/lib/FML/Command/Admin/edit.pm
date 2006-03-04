@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: edit.pm,v 1.19 2004/06/26 11:39:16 fukachan Exp $
 #
 
 package FML::Command::Admin::edit;
@@ -29,7 +29,7 @@ Tool to edit config.cf.
 
 =head1 METHODS
 
-=head2 process($curproc, $command_args)
+=head2 process($curproc, $command_context)
 
 C<TODO>:
 now we can read and write config.cf, but can not change it.
@@ -60,13 +60,13 @@ sub need_lock { 0;}
 # Descriptions: run "vi" or the specified editor to edit config.cf.
 #               If environmental variable EDITOR is specified,
 #               try to run "$EDITOR config.cf".
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update config.cf
 #               change $ENV{ PATH } withiin running editor.
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $ml_name   = $curproc->ml_name();
     my $ml_domain = $curproc->ml_domain();
     my $config_cf = $curproc->config_cf_filepath($ml_name, $ml_domain);
@@ -97,7 +97,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

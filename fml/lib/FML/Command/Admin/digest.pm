@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004,2005 MURASHITA Takuya
+#  Copyright (C) 2002,2003,2004,2005,2006 MURASHITA Takuya
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digest.pm,v 1.24 2005/08/17 12:08:43 fukachan Exp $
+# $FML: digest.pm,v 1.25 2005/11/30 23:30:38 fukachan Exp $
 #
 
 package FML::Command::Admin::digest;
@@ -32,7 +32,7 @@ change digest mode for the specified address to off/on.
 
 =head1 METHODS
 
-=head2 process($curproc, $command_args)
+=head2 process($curproc, $command_context)
 
 =cut
 
@@ -65,28 +65,28 @@ sub lock_channel { return 'command_serialize';}
 
 
 # Descriptions: verify the syntax command string.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub verify_syntax
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
 
     use FML::Command::Syntax;
     push(@ISA, qw(FML::Command::Syntax));
-    $self->check_syntax_address_handler($curproc, $command_args);
+    $self->check_syntax_address_handler($curproc, $command_context);
 }
 
 
 # Descriptions: toggle delivery mode between real time and digest.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update $recipient_map,$digest_recipient_maps
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $config  = $curproc->config();
-    my $options = $command_args->{ options } || [];
+    my $options = $command_context->get_options() || [];
 
     # XXX We should always add/rewrite only $primary_*_map maps via
     # XXX command mail, CUI and GUI.
@@ -101,7 +101,7 @@ sub process
     my $digest_recipient_maps =
 	$config->get_as_array_ref('digest_recipient_maps');
 
-    my $address = $command_args->{ command_data } || $options->[ 0 ] || undef;
+    my $address = $command_context->{ command_data } || $options->[ 0 ] || undef;
     my $mode    = $options->[ 1 ] || '';
 
     # fundamental check
@@ -134,10 +134,10 @@ sub process
 	$mode =~ tr/A-Z/a-z/;
 
 	if ($mode eq "on") {
-	    $self->_digest_on($curproc, $command_args, $digest_args);
+	    $self->_digest_on($curproc, $command_context, $digest_args);
 	}
 	elsif ($mode eq "off") {
-	    $self->_digest_off($curproc, $command_args, $digest_args);
+	    $self->_digest_off($curproc, $command_context, $digest_args);
 	}
 	else {
 	    croak("unknown mode: mode is off or on");
@@ -151,12 +151,12 @@ sub process
 
 # Descriptions: change delivery mode to real time.
 #    Arguments: OBJ($self)
-#               OBJ($curproc) HASH_REF($command_args) HASH_REF($dargs)
+#               OBJ($curproc) OBJ($command_context) HASH_REF($dargs)
 # Side Effects: update $recipient_map
 # Return Value: none
 sub _digest_on
 {
-    my ($self, $curproc, $command_args, $dargs) = @_;
+    my ($self, $curproc, $command_context, $dargs) = @_;
     my $config               = $curproc->config();
     my $cred                 = $curproc->credential();
     my $address              = $dargs->{ address };
@@ -181,7 +181,7 @@ sub _digest_on
     # 1. remove address from $recipient_map (normal delivery recipients).
     #    we should remove address if $recipient_map conatins it.
     if ($cred->has_address_in_map($recipient_map, $config, $address)) {
-	$self->_user_del($curproc, $command_args, $uc_normal_args);
+	$self->_user_del($curproc, $command_context, $uc_normal_args);
     }
     else {
 	my $r = "no such recipient";
@@ -200,7 +200,7 @@ sub _digest_on
 	croak($r);
     }
     else {
-	$self->_user_add($curproc, $command_args, $uc_digest_args);
+	$self->_user_add($curproc, $command_context, $uc_digest_args);
     }
 
     # XXX-TODO: need transaction ?
@@ -209,12 +209,12 @@ sub _digest_on
 
 # Descriptions: change delivery mode to digest.
 #    Arguments: OBJ($self)
-#               OBJ($curproc) HASH_REF($command_args) HASH_REF($dargs)
+#               OBJ($curproc) OBJ($command_context) HASH_REF($dargs)
 # Side Effects: update $recipient_map
 # Return Value: none
 sub _digest_off
 {
-    my ($self, $curproc, $command_args, $dargs) = @_;
+    my ($self, $curproc, $command_context, $dargs) = @_;
     my $config               = $curproc->config();
     my $cred                 = $curproc->credential();
     my $address              = $dargs->{ address };
@@ -239,7 +239,7 @@ sub _digest_off
     # 1. remove address from digest_recipient_map.
     #    we should remove address if $digest_recipient_map contains it.
     if ($cred->has_address_in_map($digest_recipient_map, $config, $address)) {
-	$self->_user_del($curproc, $command_args, $uc_digest_args);
+	$self->_user_del($curproc, $command_context, $uc_digest_args);
     }
     else {
 	my $r = "no such digest recipient";
@@ -260,7 +260,7 @@ sub _digest_off
 	croak($r);
     }
     else {
-	$self->_user_add($curproc, $command_args, $uc_normal_args);
+	$self->_user_add($curproc, $command_context, $uc_normal_args);
     }
 
     # XXX-TODO: need transaction ?
@@ -269,18 +269,18 @@ sub _digest_off
 
 # Descriptions: add the specified user.
 #    Arguments: OBJ($self)
-#               OBJ($curproc) HASH_REF($command_args) HASH_REF($uc_args)
+#               OBJ($curproc) OBJ($command_context) HASH_REF($uc_args)
 # Side Effects: update address list(s).
 # Return Value: none
 sub _user_add
 {
-    my ($self, $curproc, $command_args, $uc_args) = @_;
+    my ($self, $curproc, $command_context, $uc_args) = @_;
     my $r = '';
 
     eval q{
 	use FML::User::Control;
 	my $obj = new FML::User::Control;
-	$obj->user_add($curproc, $command_args, $uc_args);
+	$obj->user_add($curproc, $command_context, $uc_args);
     };
 
     if ($r = $@) {
@@ -291,18 +291,18 @@ sub _user_add
 
 # Descriptions: remove the specified user.
 #    Arguments: OBJ($self)
-#               OBJ($curproc) HASH_REF($command_args) HASH_REF($uc_args)
+#               OBJ($curproc) OBJ($command_context) HASH_REF($uc_args)
 # Side Effects: update address list(s).
 # Return Value: none
 sub _user_del
 {
-    my ($self, $curproc, $command_args, $uc_args) = @_;
+    my ($self, $curproc, $command_context, $uc_args) = @_;
     my $r = '';
 
     eval q{
 	use FML::User::Control;
 	my $obj = new FML::User::Control;
-	$obj->user_del($curproc, $command_args, $uc_args);
+	$obj->user_del($curproc, $command_context, $uc_args);
     };
 
     if ($r = $@) {
@@ -312,12 +312,12 @@ sub _user_del
 
 
 # Descriptions: show cgi menu.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update $recipient_map
 # Return Value: none
 sub cgi_menu
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $r = '';
 
     #
@@ -328,7 +328,7 @@ sub cgi_menu
     eval q{
 	use FML::CGI::User;
 	my $obj = new FML::CGI::User;
-	$obj->cgi_menu($curproc, $command_args);
+	$obj->cgi_menu($curproc, $command_context);
     };
     if ($r = $@) {
 	croak($r);
@@ -346,7 +346,7 @@ MURASHITA Takuya
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004,2005 MURASHITA Takuya
+Copyright (C) 2002,2003,2004,2005,2006 MURASHITA Takuya
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

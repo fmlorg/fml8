@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.27 2005/08/11 04:07:32 fukachan Exp $
+# $FML: get.pm,v 1.28 2005/08/17 12:08:43 fukachan Exp $
 #
 
 package FML::Command::Admin::get;
@@ -55,21 +55,21 @@ sub need_lock { 0;}
 # Descriptions: send arbitrary file(s) in $ml_home_dir by
 #               FML::Command::SendFile.
 #               XXX we permit arbitrary file for administrator to retrieve.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $config      = $curproc->config();
     my $ml_home_dir = $config->{ ml_home_dir };
-    my $command     = $command_args->{ command };
-    my $options     = $command_args->{ options };
+    my $command     = $command_context->{ command };
+    my $options     = $command_context->get_options();
     my $recipient   = '';
 
     if ($curproc->is_cui_process()) {
 	$recipient = $curproc->command_line_cui_specific_recipient() || '';
-	$command_args->{ _recipient } = $recipient;
+	$command_context->{ _recipient } = $recipient;
     }
 
     # This module is called after
@@ -85,13 +85,13 @@ sub process
 	if (-f $filepath) {
 	    $curproc->log("send back $filename");
 
-	    $command_args->{ _filename_to_send } = $filename;
-	    $command_args->{ _filepath_to_send } = $filepath;
+	    $command_context->{ _filename_to_send } = $filename;
+	    $command_context->{ _filepath_to_send } = $filepath;
 
-	    $self->send_file($curproc, $command_args);
+	    $self->send_file($curproc, $command_context);
 
-	    delete $command_args->{ _filename_to_send };
-	    delete $command_args->{ _filepath_to_send };
+	    delete $command_context->{ _filename_to_send };
+	    delete $command_context->{ _filepath_to_send };
 	}
 	else {
 	    $curproc->log("$filename not found");
@@ -105,8 +105,8 @@ sub process
     }
 
 
-    if (defined $command_args->{ _recipient }) {
-	delete $command_args->{ _recipient };
+    if (defined $command_context->{ _recipient }) {
+	delete $command_context->{ _recipient };
     }
 }
 
@@ -121,7 +121,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

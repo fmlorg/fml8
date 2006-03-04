@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: dir.pm,v 1.20 2005/08/11 04:07:32 fukachan Exp $
+# $FML: dir.pm,v 1.21 2005/08/17 12:08:43 fukachan Exp $
 #
 
 package FML::Command::Admin::dir;
@@ -27,7 +27,7 @@ show "ls -l" results.
 
 =head1 METHODS
 
-=head2 process($curproc, $command_args)
+=head2 process($curproc, $command_context)
 
 =cut
 
@@ -53,14 +53,14 @@ sub need_lock { 0;}
 
 
 # Descriptions: show the result by "ls -l".
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update $member_map and $recipient_map.
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $config    = $curproc->config();
-    my $options   = $command_args->{ options };
+    my $options   = $command_context->get_options();
     my $du_args   = {};
     my @argv      = ();
     my $recipient = '';
@@ -83,7 +83,7 @@ sub process
     if ($curproc->is_cui_process()) {
 	# --send-to option.
 	$recipient = $curproc->command_line_cui_specific_recipient() || '';
-	$command_args->{ _recipient } = $recipient;
+	$command_context->{ _recipient } = $recipient;
     }
 
     if (@argv) {
@@ -97,17 +97,17 @@ sub process
     # XXX-TODO: $dir = new FML::Command::DirUtils $dir_string; $dir->list(). ?
     use FML::Command::DirUtils;
     my $obj = new FML::Command::DirUtils;
-    $obj->dir($curproc, $command_args, $du_args);
+    $obj->dir($curproc, $command_context, $du_args);
 }
 
 
 # Descriptions: cgi menu (dummy).
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none
 sub cgi_menu
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
 
     ;
 }
@@ -123,7 +123,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

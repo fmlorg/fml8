@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: initpass.pm,v 1.2 2004/01/01 08:41:34 fukachan Exp $
+# $FML: initpass.pm,v 1.3 2004/01/01 08:48:39 fukachan Exp $
 #
 
 package FML::Command::Admin::initpass;
@@ -18,13 +18,13 @@ use FML::Command::Admin::changepassword;
 
 
 # Descriptions: initialize remote admin password of a new user.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: forward request to password module
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
-    my $options = $command_args->{ options };
+    my ($self, $curproc, $command_context) = @_;
+    my $options = $command_context->get_options();
 
     if ($options->[ 2 ]) {
 	croak("wrong arguments");
@@ -32,7 +32,7 @@ sub process
     elsif ($options->[ 1 ] && $options->[ 0 ]) {
 	# [0] = username
 	# [1] = password(plaintext)
-	$self->SUPER::process($curproc, $command_args);
+	$self->SUPER::process($curproc, $command_context);
     }
     else {
 	croak("wrong arguments");
@@ -62,7 +62,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

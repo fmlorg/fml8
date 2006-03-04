@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004,2005 MURASHITA Takuya
+#  Copyright (C) 2002,2003,2004,2005,2006 MURASHITA Takuya
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: off.pm,v 1.19 2005/11/30 23:30:38 fukachan Exp $
+# $FML: off.pm,v 1.20 2005/11/30 23:34:45 fukachan Exp $
 #
 
 package FML::Command::User::off;
@@ -28,7 +28,7 @@ succeeds.
 
 =head1 METHODS
 
-=head2 process($curproc, $command_args)
+=head2 process($curproc, $command_context)
 
 =cut
 
@@ -62,13 +62,13 @@ sub lock_channel { return 'command_serialize';}
 
 # Descriptions: change delivery mode from real time to digest
 #               after confirmation succeeds.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update database for confirmation.
 #               prepare reply message.
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $config = $curproc->config();
     my $cred   = $curproc->credential();
 
@@ -83,7 +83,7 @@ sub process
     my $recipient_map = $config->{ primary_recipient_map };
     my $cache_dir     = $config->{ db_dir };
     my $keyword       = $config->{ confirm_command_prefix };
-    my $command       = $command_args->{ command };
+    my $command       = $command_context->{ command };
     my $address       = $cred->sender();
 
     # cheap sanity checks
@@ -133,7 +133,7 @@ MURASHITA Takuya
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004,2005 MURASHITA Takuya
+Copyright (C) 2002,2003,2004,2005,2006 MURASHITA Takuya
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
