@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.1 2006/03/04 12:56:58 fukachan Exp $
+# $FML: Command.pm,v 1.2 2006/03/05 08:08:37 fukachan Exp $
 #
 
 package FML::Context::Command;
@@ -337,6 +337,10 @@ sub is_user_mode
 =cut
 
 
+# Descriptions: set flag if we need to lock or not.
+#    Arguments: OBJ($self) STR($value)
+# Side Effects: update $self
+# Return Value: none
 sub set_need_lock
 {
     my ($self, $value) = @_;
@@ -344,6 +348,10 @@ sub set_need_lock
 }
 
 
+# Descriptions: get if we need to lock or not.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
 sub get_need_lock
 {
     my ($self) = @_;
@@ -353,6 +361,10 @@ sub get_need_lock
 }
 
 
+# Descriptions: get if we need to lock or not.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
 sub is_need_lock
 {
     my ($self) = @_;
@@ -360,6 +372,27 @@ sub is_need_lock
     return $self->get_need_lock();
 }
 
+
+=head1 DUPLICATE OBJECT
+
+=cut
+
+
+# Descriptions: duplicate myself and return a new object.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: OBJ
+sub dup
+{
+    my ($self)  = @_;
+    my $curproc = $self->{ _curproc };
+
+    my $_context = new FML::Context::Command $curproc;
+    for my $k (keys %$self) {
+	$_context->{ $k } = $self->{ $k };
+    }
+    return $_context;
+}
 
 
 =head1 MISC
