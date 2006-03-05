@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: admin.pm,v 1.16 2006/03/04 13:48:29 fukachan Exp $
+# $FML: admin.pm,v 1.17 2006/03/05 08:08:37 fukachan Exp $
 #
 
 package FML::Command::User::admin;
@@ -285,11 +285,11 @@ sub _apply_new_admin_command_mail_restrictions
 sub _execute_admin_command
 {
     my ($self, $curproc, $command_context, $class) = @_;
-    my $args = $self->_prepare_command_context($curproc, $command_context);
+    my $_context = $self->_dup_command_context($curproc, $command_context);
 
     use FML::Command;
     my $dispatch = new FML::Command;
-    $dispatch->$class($curproc, $args);
+    $dispatch->$class($curproc, $_context);
 }
 
 
@@ -297,25 +297,22 @@ sub _execute_admin_command
 #    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: none
-sub _prepare_command_context
+sub _dup_command_context
 {
     my ($self, $curproc, $command_context) = @_;
 
     # duplicate $command_context HASH_REF.
-    my $args = {};
-    for my $k (keys %$command_context) {
-	$args->{ $k } = $command_context->{ $k };
-    }
-    $args->{ command_mode } = 'Admin';
+    my $_context = $command_context->dup();
+    $_context->set_mode("Admin");
 
     # we need to shift "options" by one column in admin command.
     # e.g. for "admin add some thing",
     # options = [ add, some, thing ] => [ some, thing ]
-    my @options = @{ $command_context->get_options() };
+    my (@options) = @{ $command_context->get_options() };
     shift @options;
-    $args->{ options } = \@options;
+    $_context->set_options(\@options);
 
-    return $args;
+    return $_context;
 }
 
 
