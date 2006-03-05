@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.116 2006/03/04 12:56:58 fukachan Exp $
+# $FML: Command.pm,v 1.117 2006/03/04 13:58:21 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -37,7 +37,7 @@ C<FML::Process::Command> is a command wrapper and top level
 dispatcher for commands.
 It kicks off corresponding
 
-   FML::Command->$command($curproc, $command_args)
+   FML::Command->$command($curproc, $command_context)
 
 for the given C<$command>.
 
@@ -418,17 +418,17 @@ sub _command_switch
 
 
 # Descriptions: actually execute command via FML::Command.
-#    Arguments: OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: none
 sub _command_execute
 {
-    my ($curproc, $command_args) = @_;
+    my ($curproc, $command_context) = @_;
     my $config   = $curproc->config();
     my $prompt   = $config->{ command_mail_reply_prompt } || '>>>';
     my $cred     = $curproc->credential();
     my $sender   = $cred->sender();
-    my $msg_args = $command_args->{ msg_args } || {};
+    my $msg_args = $command_context->get_msg_args() || {};
 
     use FML::Command;
     my $dispatch = new FML::Command;
@@ -440,13 +440,14 @@ sub _command_execute
 	}
 
 	# command dependent rewrite prompt e.g. to hide the password
-	my $masked_command = $command_args->{ original_command };
-	$dispatch->rewrite_prompt($curproc, $command_args, \$masked_command);
-        $command_args->{ masked_original_command } = $masked_command;
+	my $masked_command = $command_context->get_command();
+	$dispatch->rewrite_prompt($curproc,$command_context,\$masked_command);
+        $command_context->set_masked_command($masked_command);
+
 
 	# recipients depends on each command. The list is defined in
 	# each command module (e.g. FML::Command::User::*)
-	my $cclist = $dispatch->notice_cc_recipient($curproc, $command_args);
+	my $cclist = $dispatch->notice_cc_recipient($curproc, $command_context);
 	if (defined $cclist && @$cclist) {
 	    my $primary_key = join("-", sort @$cclist); # XXX unique key.
 	    $msg_args->{ recipient }      = $cclist;
@@ -458,7 +459,7 @@ sub _command_execute
 	$curproc->log("command: $masked_command");
 
 	# command dependent syntax checker.
-	unless ($dispatch->verify_syntax($curproc, $command_args)) {
+	unless ($dispatch->verify_syntax($curproc, $command_context)) {
 	    $curproc->reply_message_nl('command.insecure',
 				       "stopped due to insecure syntax.",
 				       $msg_args);
@@ -470,9 +471,9 @@ sub _command_execute
 	# 1) $dispatch = FML::Command NOT FML::Command::$mode::$command
 	# 2) $comname must be valid since $comname is one of defined
 	#    command list in $config (see _command_switch() method).
-	my $comname = $command_args->get_cooked_command();
+	my $comname = $command_context->get_cooked_command();
 	eval q{
-	    $dispatch->$comname($curproc, $command_args);
+	    $dispatch->$comname($curproc, $command_context);
 	};
 	unless ($@) {
 	    $num_processed++;

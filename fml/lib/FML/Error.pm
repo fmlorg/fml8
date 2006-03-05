@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.37 2005/11/30 23:30:39 fukachan Exp $
+# $FML: Error.pm,v 1.38 2006/02/15 13:44:03 fukachan Exp $
 #
 
 package FML::Error;
@@ -405,16 +405,13 @@ sub delete_address
 
     # we call FML::Command::Admin::unsubscribe not FML::User::Control
     # since FML::User::Control is too raw.
-    my $method       = 'unsubscribe';
-    my $command_args = {
-        command_mode => 'admin',
-        comname      => $method,
-        command      => "$method $address",
-        ml_name      => $ml_name,
-        options      => [ $address ],
-        argv         => undef,
-        args         => undef,
-    };
+    my $method          = 'unsubscribe';
+    my $command_context = $curproc->command_context_init("$method $address");
+    $command_context->set_mode("Admin");
+    $command_context->set_cooked_command($method);
+    $command_context->set_clean_command("$method $address");
+    $command_context->set_ml_name($ml_name);
+    $command_context->set_options( [ $address ] );
 
     # here we go
     require FML::Command;
@@ -423,7 +420,7 @@ sub delete_address
     if (defined $obj) {
         # execute command ($comname method) under eval().
         eval q{
-            $obj->$method($curproc, $command_args);
+            $obj->$method($curproc, $command_context);
         };
         unless ($@) {
             ; # log nothing.

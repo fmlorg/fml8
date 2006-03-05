@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.27 2004/06/29 10:02:42 fukachan Exp $
+# $FML: chaddr.pm,v 1.28 2006/03/04 13:48:28 fukachan Exp $
 #
 
 package FML::Command::Admin::chaddr;
@@ -127,11 +127,11 @@ sub process
     my $member_map    = $config->{ 'primary_member_map'    };
     my $recipient_map = $config->{ 'primary_recipient_map' };
 
-    my $old_address = '';
-    my $new_address = '';
-    if (defined $command_context->{ command_data }) {
-	my $x = $command_context->{ command_data };
-	($old_address, $new_address) = split(/\s+/, $x);
+    my $old_address  = '';
+    my $new_address  = '';
+    my $command_data = $command_context->get_data() || '';
+    if ($command_data) {
+	($old_address, $new_address) = split(/\s+/, $command_data);
     }
     else {
 	$old_address = $options->[ 0 ];

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: off.pm,v 1.20 2005/11/30 23:34:45 fukachan Exp $
+# $FML: off.pm,v 1.21 2006/03/04 13:48:29 fukachan Exp $
 #
 
 package FML::Command::User::off;
@@ -83,7 +83,7 @@ sub process
     my $recipient_map = $config->{ primary_recipient_map };
     my $cache_dir     = $config->{ db_dir };
     my $keyword       = $config->{ confirm_command_prefix };
-    my $command       = $command_context->{ command };
+    my $command       = $command_context->get_clean_command();
     my $address       = $cred->sender();
 
     # cheap sanity checks

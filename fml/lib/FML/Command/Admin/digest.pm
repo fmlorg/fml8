@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digest.pm,v 1.25 2005/11/30 23:30:38 fukachan Exp $
+# $FML: digest.pm,v 1.26 2006/03/04 13:48:28 fukachan Exp $
 #
 
 package FML::Command::Admin::digest;
@@ -101,7 +101,7 @@ sub process
     my $digest_recipient_maps =
 	$config->get_as_array_ref('digest_recipient_maps');
 
-    my $address = $command_context->{ command_data } || $options->[ 0 ] || undef;
+    my $address = $command_context->get_data() || $options->[ 0 ] || undef;
     my $mode    = $options->[ 1 ] || '';
 
     # fundamental check

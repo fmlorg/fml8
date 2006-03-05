@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: addrecipient.pm,v 1.6 2005/11/30 23:30:38 fukachan Exp $
+# $FML: addrecipient.pm,v 1.7 2006/03/04 13:48:28 fukachan Exp $
 #
 
 package FML::Command::Admin::addrecipient;
@@ -83,7 +83,7 @@ sub process
     my $config  = $curproc->config();
     my $cred    = $curproc->credential();
     my $options = $command_context->get_options();
-    my $address = $command_context->{ command_data } || $options->[ 0 ];
+    my $address = $command_context->get_data() || $options->[ 0 ];
 
     # XXX We should always add/rewrite only $primary_*_map maps via
     # XXX command mail, CUI and GUI.

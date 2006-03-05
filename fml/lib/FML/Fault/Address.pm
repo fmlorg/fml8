@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.10 2006/01/07 13:16:41 fukachan Exp $
+# $FML: Address.pm,v 1.1 2006/02/04 07:42:24 fukachan Exp $
 #
 
 package FML::Fault::Address;
@@ -91,11 +91,11 @@ sub subscribe
 
     $curproc->log("subscribe $addr");
 
-    my $command_args = $curproc->command_context_init("$method $addr");
-    $command_args->{ command_mode } = "Admin";
-    $command_args->{ comname      } = $method;
-    $command_args->{ command      } = "$method @options";
-    $command_args->{ options      } = \@options;
+    my $command_context = $curproc->command_context_init("$method $addr");
+    $command_context->set_mode("Admin");
+    $command_context->set_cooked_command($method);
+    $command_context->set_clean_command("$method @options");
+    $command_context->set_options(\@options);
 
     require FML::Command;
     my $obj = new FML::Command;
@@ -103,7 +103,7 @@ sub subscribe
     if (defined $obj) {
         # execute command ($comname method) under eval().
         eval q{
-            $obj->$method($curproc, $command_args);
+            $obj->$method($curproc, $command_context);
         };
         unless ($@) {
             ; # not show anything

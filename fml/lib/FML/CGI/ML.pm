@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ML.pm,v 1.10 2005/08/23 09:34:19 fukachan Exp $
+# $FML: ML.pm,v 1.11 2005/08/23 09:56:12 fukachan Exp $
 #
 
 package FML::CGI::ML;
@@ -28,21 +28,21 @@ sub new
 
 
 # Descriptions: show menu for subscribe/unsubscribe commands.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: none
 sub cgi_menu
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $target       = $curproc->cgi_var_frame_target();
     my $action       = $curproc->cgi_var_action();
     my $ml_domain    = $curproc->cgi_var_ml_domain();
     my $ml_list      = $curproc->cgi_var_ml_name_list();
     my $address      = $curproc->safe_param_address() || '';
-    my $comname      = $command_args->{ comname };
+    my $comname      = $command_context->get_cooked_command();
     my $command_list = [ 'newml', 'rmml', 'reviveml' ];
 
-    # XXX-TODO: who verified comname ? ($command_args verified?)
+    # XXX-TODO: who verified comname ? ($command_context verified?)
 
     unless ($curproc->cgi_var_cgi_mode() eq "admin") {
 	# XXX-TODO: nl ?

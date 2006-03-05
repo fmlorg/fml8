@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.40 2005/05/26 09:46:01 fukachan Exp $
+# $FML: Auth.pm,v 1.41 2005/11/30 23:30:38 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -226,7 +226,7 @@ sub check_admin_member_password
 }
 
 
-=head2 change_password($curproc, $command_args, $up_args)
+=head2 change_password($curproc, $command_context, $up_args)
 
     $up_args = {
 	maplist  => $maps,
@@ -239,12 +239,12 @@ sub check_admin_member_password
 
 # Descriptions: change password.
 #    Arguments: OBJ($self)
-#               OBJ($curproc) HASH_REF($command_args) HASH_REF($up_args)
+#               OBJ($curproc) OBJ($command_context) HASH_REF($up_args)
 # Side Effects: admin password modified.
 # Return Value: NUM(1 if success, 0 if fail)
 sub change_password
 {
-    my ($self, $curproc, $command_args, $up_args) = @_;
+    my ($self, $curproc, $command_context, $up_args) = @_;
     my $cred     = $curproc->credential();
     my $map      = $up_args->{ map };
     my $address  = $up_args->{ address  };

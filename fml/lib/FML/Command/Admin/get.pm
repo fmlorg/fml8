@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.28 2005/08/17 12:08:43 fukachan Exp $
+# $FML: get.pm,v 1.29 2006/03/04 13:48:28 fukachan Exp $
 #
 
 package FML::Command::Admin::get;
@@ -63,7 +63,6 @@ sub process
     my ($self, $curproc, $command_context) = @_;
     my $config      = $curproc->config();
     my $ml_home_dir = $config->{ ml_home_dir };
-    my $command     = $command_context->{ command };
     my $options     = $command_context->get_options();
     my $recipient   = '';
 

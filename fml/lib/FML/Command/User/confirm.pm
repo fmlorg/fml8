@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: confirm.pm,v 1.38 2006/01/09 14:00:54 fukachan Exp $
+# $FML: confirm.pm,v 1.39 2006/03/04 13:48:29 fukachan Exp $
 #
 
 package FML::Command::User::confirm;
@@ -95,7 +95,7 @@ sub process
     my $cache_dir     = $config->{ db_dir };
     my $keyword       = $config->{ confirm_command_prefix };
     my $expire_limit  = $config->{ confirm_expire_limit } || 14*24*3600;
-    my $command       = $command_context->{ command };
+    my $command       = $command_context->get_clean_command();
 
 
     # XXX-TODO: sanity
@@ -215,9 +215,9 @@ sub _switch_command
 	$class eq 'on'     ||
 	$class eq 'off'    ||
 	$class eq 'moderate') {
-	$command_context->{ command_data } = $address;
-	$command_context->{ command_mode } = 'Admin';
-	$command_context->{ override_need_no_lock } = 1; # already locked
+	$command_context->set_data($address);
+	$command_context->set_mode("Admin");
+	$command_context->set_need_lock("no");
 	$obj->$class($curproc, $command_context);
     }
     else {

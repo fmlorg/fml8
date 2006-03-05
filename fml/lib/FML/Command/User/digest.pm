@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digest.pm,v 1.17 2005/12/16 13:15:23 fukachan Exp $
+# $FML: digest.pm,v 1.18 2006/03/04 13:48:29 fukachan Exp $
 #
 
 package FML::Command::User::digest;
@@ -81,7 +81,7 @@ sub process
     my $recipient_map = $config->{ primary_recipient_map };
     my $cache_dir     = $config->{ db_dir };
     my $keyword       = $config->{ confirm_command_prefix };
-    my $command       = $command_context->{ command };
+    my $command       = $command_context->get_clean_command();
     my $address       = $cred->sender();
     my $mode          = '';
 
@@ -107,9 +107,8 @@ sub process
 	$curproc->log("digest $mode");
 
 	# emulate options ARRAY_REF.
-	$command_context->{ command_data } = $address;
-	$command_context->get_options()->[0] = $address;
-	$command_context->get_options()->[1] = $mode;
+	$command_context->set_data($address);
+	$command_context->set_options( [ $address, $mode ] );
 
 	# XXX-TODO: direct call of Admin::digest is correct?
 	# XXX-TODO: confirmation ?

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.37 2006/01/09 14:00:54 fukachan Exp $
+# $FML: chaddr.pm,v 1.38 2006/03/04 13:48:29 fukachan Exp $
 #
 
 package FML::Command::User::chaddr;
@@ -133,7 +133,7 @@ sub process
     my $cache_dir     = $config->{ db_dir };
     my $keyword       = $config->{ confirm_command_prefix };
     my $comname       = $command_context->get_cooked_command();
-    my $command       = $command_context->{ command };
+    my $command       = $command_context->get_clean_command();
     my $sender        = $cred->sender();
 
     # cheap sanity checks
@@ -146,7 +146,7 @@ sub process
 
     # addresses we check and send back confirmation messages to
     my $optargs = {};
-    my $x = $command_context->{ command };
+    my $x = $command_context->get_clean_command();
     $x =~ s/^.*$comname\s+//;
     my ($old_addr, $new_addr) = split(/\s+/, $x);
     $optargs->{ recipient } = [ $sender, $old_addr, $new_addr ];

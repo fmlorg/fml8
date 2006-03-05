@@ -3,7 +3,7 @@
 # Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.9 2004/04/23 04:10:26 fukachan Exp $
+# $FML: Spool.pm,v 1.10 2004/07/23 04:13:04 fukachan Exp $
 #
 
 package FML::Article::Spool;
@@ -71,17 +71,17 @@ sub get_lock_channel_name
 
 
 # Descriptions: convert files at src_dir/ into dst_dir/.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_RER($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_RER($command_context)
 # Side Effects: none
 # Return Value: none
 sub convert
 {
-    my ($self, $curproc, $command_args) = @_;
-    my $wh       = $command_args->{ _output_channel } || \*STDOUT;
+    my ($self, $curproc, $command_context) = @_;
+    my $wh       = $command_context->{ _output_channel } || \*STDOUT;
     my $article  = $self->{ _article };
-    my $src_dir  = $command_args->{ _src_dir } || '';
-    my $dst_dir  = $command_args->{ _dst_dir } || '';
-    my $ml_name  = $command_args->{ ml_name };
+    my $src_dir  = $command_context->{ _src_dir } || '';
+    my $dst_dir  = $command_context->{ _dst_dir } || '';
+    my $ml_name  = $command_context->get_ml_name();
     my $channel  = $self->get_lock_channel_name();
     my $use_link = 0;
 
@@ -166,14 +166,14 @@ sub convert
 
 
 # Descriptions: show information on spool and articles.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_RER($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_RER($command_context)
 # Side Effects: none
 # Return Value: none
 sub status
 {
-    my ($self, $curproc, $command_args) = @_;
-    my $wh      = $command_args->{ _output_channel } || \*STDOUT;
-    my $dst_dir = $command_args->{ _dst_dir };
+    my ($self, $curproc, $command_context) = @_;
+    my $wh      = $command_context->{ _output_channel } || \*STDOUT;
+    my $dst_dir = $command_context->{ _dst_dir };
     my $suffix  = '';
 
     my ($num_file, $num_dir) = $self->_scan_dir( $dst_dir );

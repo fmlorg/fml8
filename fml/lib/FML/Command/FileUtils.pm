@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: FileUtils.pm,v 1.17 2004/04/23 04:10:30 fukachan Exp $
+# $FML: FileUtils.pm,v 1.18 2004/07/23 13:16:34 fukachan Exp $
 #
 
 package FML::Command::FileUtils;
@@ -47,11 +47,11 @@ sub new
 }
 
 
-=head2 delete($curproc, $command_args, $du_aregs)
+=head2 delete($curproc, $command_context, $du_aregs)
 
 same as remove() below.
 
-=head2 remove($curproc, $command_args, $du_aregs)
+=head2 remove($curproc, $command_context, $du_aregs)
 
 remove files specified in $du_args->{ options }
 if the file exsits and the file name matches safe file regexp defined
@@ -73,12 +73,12 @@ sub delete
 
 # Descriptions: remove files.
 #    Arguments: OBJ($self)
-#               OBJ($curproc) HASH_REF($command_args) HASH_REF($du_args)
+#               OBJ($curproc) OBJ($command_context) HASH_REF($du_args)
 # Side Effects: none
 # Return Value: none
 sub remove
 {
-    my ($self, $curproc, $command_args, $du_args) = @_;
+    my ($self, $curproc, $command_context, $du_args) = @_;
     my $config   = $curproc->config();
     my $argv     = $du_args->{ options };
     my $is_error = 0;

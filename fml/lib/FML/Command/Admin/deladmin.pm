@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: deladmin.pm,v 1.21 2005/08/17 12:08:43 fukachan Exp $
+# $FML: deladmin.pm,v 1.22 2006/03/04 13:48:28 fukachan Exp $
 #
 
 package FML::Command::Admin::deladmin;
@@ -92,7 +92,7 @@ sub process
     my $member_map    = $config->{ 'primary_admin_member_map' };
     my $recipient_map = $config->{ 'primary_admin_recipient_map' };
     my $options       = $command_context->get_options();
-    my $address       = $command_context->{ command_data } || $options->[ 0 ];
+    my $address       = $command_context->get_data() || $options->[ 0 ];
 
     # fundamental sanity check
     croak("address not undefined")       unless defined $address;

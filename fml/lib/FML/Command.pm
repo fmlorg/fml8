@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.50 2005/12/18 11:37:48 fukachan Exp $
+# $FML: Command.pm,v 1.51 2005/12/18 12:26:30 fukachan Exp $
 #
 
 # XXX
@@ -30,7 +30,7 @@ FML::Command - fml command dispatcher.
 
     use FML::Command;
     my $obj = new FML::Command;
-    $obj->rewrite_prompt($curproc, $command_args, \$orig_command);
+    $obj->rewrite_prompt($curproc, $command_context, \$orig_command);
 
 =head1 DESCRIPTION
 
@@ -69,11 +69,11 @@ sub new
 sub DESTROY { ;}
 
 
-=head2 set_mode($curproc, $command_args)
+=head2 set_mode($curproc, $command_context)
 
 set the current mode, either of "admin" or "user".
 
-=head2 get_mode($curproc, $command_args)
+=head2 get_mode($curproc, $command_context)
 
 return the current mode, either of "admin" or "user".
 
@@ -82,50 +82,38 @@ return the current mode, either of "admin" or "user".
 
 # Descriptions: set the current mode, either of "admin" or "user".
 #               set 'user' mode if invalid mode specified.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args) STR($mode)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context) STR($mode)
 # Side Effects: none
 # Return Value: STR
 sub set_mode
 {
-    my ($self, $curproc, $command_args, $mode) = @_;
+    my ($self, $curproc, $command_context, $mode) = @_;
 
     # always 'user' if invalid mode specified.
     # XXX use capital letter for module name used latter (module loading).
     if ($mode =~ /admin/i) {
-	$command_args->{'command_mode'} = 'Admin';
+	$command_context->set_mode("Admin");
     }
     else {
-	$command_args->{'command_mode'} = 'User';
+	$command_context->set_mode("User");
     }
 }
 
 
 # Descriptions: return the current mode, either of "admin" or "user".
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: STR
 sub get_mode
 {
-    my ($self, $curproc, $command_args) = @_;
-
-    if (defined $command_args->{ command_mode }) {
-	# XXX use capital letter for module name used latter (module loading).
-	if ($command_args->{'command_mode'} =~ /^(Admin)$/i) {
-	    return 'Admin';
-	}
-	else {
-	    return 'User';
-	}
-    }
-    else {
-	return 'User';
-    }
+    my ($self, $curproc, $command_context) = @_;
+    return $command_context->get_mode();
 }
 
 
 =head1 METHODS
 
-=head2 rewrite_prompt($curproc, $command_args, $rbuf)
+=head2 rewrite_prompt($curproc, $command_context, $rbuf)
 
 rewrite the specified buffer $rbuf (STR_REF).
 $rbuf is rewritten as a result.
@@ -140,21 +128,21 @@ how to rewrite by rewrite_prompt() method in it.
 
 # Descriptions: rewrite prompt buffer.
 #    Arguments: OBJ($self)
-#               OBJ($curproc) HASH_REF($command_args) STR_REF($rbuf)
+#               OBJ($curproc) OBJ($command_context) STR_REF($rbuf)
 # Side Effects: none
 # Return Value: none
 sub rewrite_prompt
 {
-    my ($self, $curproc, $command_args, $rbuf) = @_;
+    my ($self, $curproc, $command_context, $rbuf) = @_;
     my $command = undef;
-    my $comname = $command_args->{ comname };
-    my $mode    = $self->get_mode($curproc, $command_args);
+    my $comname = $command_context->get_cooked_command();
+    my $mode    = $self->get_mode($curproc, $command_context);
     my $pkg     = "FML::Command::${mode}::${comname}";
 
     eval qq{ use $pkg; \$command = new $pkg;};
     unless ($@) {
 	if ($command->can('rewrite_prompt')) {
-	    $command->rewrite_prompt($curproc, $command_args, $rbuf);
+	    $command->rewrite_prompt($curproc, $command_context, $rbuf);
 	}
 	else {
 	    $curproc->logerror("$pkg not support rewrite_prompt()") if $debug;
@@ -170,7 +158,7 @@ sub rewrite_prompt
 
 
 
-=head2 notice_cc_recipient($curproc, $command_args, $rbuf)
+=head2 notice_cc_recipient($curproc, $command_context, $rbuf)
 
 return addresses to inform for the command reply.
 
@@ -181,21 +169,21 @@ recipients by notice_cc_recipient() method in it if needed.
 
 
 # Descriptions: return addresses to inform.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: ARRAY_REF
 sub notice_cc_recipient
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $command = undef;
-    my $comname = $command_args->{ comname };
-    my $mode    = $self->get_mode($curproc, $command_args);
+    my $comname = $command_context->get_cooked_command();
+    my $mode    = $self->get_mode($curproc, $command_context);
     my $pkg     = "FML::Command::${mode}::${comname}";
 
     eval qq{ use $pkg; \$command = new $pkg;};
     unless ($@) {
 	if ($command->can('notice_cc_recipient')) {
-	    return $command->notice_cc_recipient($curproc, $command_args);
+	    return $command->notice_cc_recipient($curproc, $command_context);
 	}
     }
 
@@ -203,7 +191,7 @@ sub notice_cc_recipient
 }
 
 
-=head2 verify_syntax($curproc, $command_args)
+=head2 verify_syntax($curproc, $command_context)
 
 verify the syntax command string.
 return 0 if it looks insecure.
@@ -212,55 +200,55 @@ return 0 if it looks insecure.
 
 
 # Descriptions: verify the syntax command string.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub verify_syntax
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $command = undef;
-    my $comname = $command_args->{ comname };
-    my $mode    = $self->get_mode($curproc, $command_args);
+    my $comname = $command_context->get_cooked_command();
+    my $mode    = $self->get_mode($curproc, $command_context);
     my $pkg     = "FML::Command::${mode}::${comname}";
 
     eval qq{ use $pkg; \$command = new $pkg;};
     unless ($@) {
 	if ($command->can('verify_syntax')) {
-	    return $command->verify_syntax($curproc, $command_args);
+	    return $command->verify_syntax($curproc, $command_context);
 	}
     }
 
-    return $self->simple_syntax_check($curproc, $command_args);
+    return $self->simple_syntax_check($curproc, $command_context);
 }
 
 
 # Descriptions: simple syntax checker.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub simple_syntax_check
 {
-    my ($self, $curproc, $command_args) = @_;
-    my $comname    = $command_args->{ comname }    || '';
-    my $comsubname = $command_args->{ comsubname } || '';
-    my $options    = $command_args->{ options }    || [];
+    my ($self, $curproc, $command_context) = @_;
+    my $comname    = $command_context->get_cooked_command()    || '';
+    my $comsubname = $command_context->get_cooked_subcommand() || '';
+    my $options    = $command_context->get_options()    || [];
 
     # test pattern
     my (@test) = @$options;
     unshift(@test, $comsubname);
     unshift(@test, $comname);
-    $self->safe_regexp_match($curproc, $command_args, \@test);
+    $self->safe_regexp_match($curproc, $command_context, \@test);
 }
 
 
 # Descriptions: simple syntax check by FML::Restriction::Command.
 #    Arguments: OBJ($self)
-#               OBJ($curproc) HASH_REF($command_args) ARRAY_REF($testlist)
+#               OBJ($curproc) OBJ($command_context) ARRAY_REF($testlist)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub safe_regexp_match
 {
-    my ($self, $curproc, $command_args, $testlist) = @_;
+    my ($self, $curproc, $command_context, $testlist) = @_;
 
     # simple command syntax check
     use FML::Restriction::Command;
@@ -269,7 +257,7 @@ sub safe_regexp_match
 	return 1;
     }
     else {
-	my $command = $command_args->{ masked_original_command };
+	my $command = $command_context->get_masked_command();
 	$curproc->logerror("insecure command: $command");
 	$curproc->reply_message_nl('command.insecure',
 				   "insecure, so ignored.");
@@ -288,12 +276,12 @@ C<FML::Command::$MODE::$command>.
 
 
 # Descriptions: run FML::Command::MODE::COMMAND().
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: load appropriate module.
 # Return Value: none
 sub AUTOLOAD
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $myname               = $curproc->myname();
     my $default_lock_channel = 'command_serialize';
 
@@ -302,7 +290,7 @@ sub AUTOLOAD
 
     # user mode by default
     # XXX IMPORTANT: user mode if the given mode is invalid.
-    my $mode = $self->get_mode($curproc, $command_args);
+    my $mode = $self->get_mode($curproc, $command_context);
 
     my $comname = $AUTOLOAD;
     $comname =~ s/.*:://;
@@ -318,18 +306,14 @@ sub AUTOLOAD
 
 	# resource limit check.
 	if ($command->can('check_limit')) {
-	    my $n = $command->check_limit($curproc, $command_args);
+	    my $n = $command->check_limit($curproc, $command_context);
 	    if ($n) { croak("exceed limit");}
 	}
 
 	# this command needs lock (currently giant lock) ?
 	if ($command->can('need_lock')) {
 	    $need_lock = $command->need_lock($mode);
-
-	    # override lock()
-	    if (defined $command_args->{ override_need_no_lock }) {
-		$need_lock = 0 if $command_args->{ override_need_no_lock };
-	    }
+	    $need_lock = 0 unless $command_context->is_need_lock();
 	}
 	else {
 	    $curproc->logerror("${pkg} has no need_lock method");
@@ -348,7 +332,7 @@ sub AUTOLOAD
 	if ($command->can('process')) {
 	    $curproc->logdebug("$pkg lock")   if $need_lock;
 	    $curproc->lock($lock_channel)     if $need_lock;
-	    $command->process($curproc, $command_args);
+	    $command->process($curproc, $command_context);
 	    $curproc->logdebug("$pkg unlock") if $need_lock;
 	    $curproc->unlock($lock_channel)   if $need_lock;
 	}

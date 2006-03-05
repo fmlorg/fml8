@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.1 2006/01/07 14:43:25 fukachan Exp $
+# $FML: Message.pm,v 1.2 2006/01/09 14:00:53 fukachan Exp $
 #
 
 package FML::Command::Message;
@@ -42,7 +42,7 @@ sub new
 }
 
 
-=head2 send_confirmation($curproc, $command_args, $confirm, $sc_args)
+=head2 send_confirmation($curproc, $command_context, $confirm, $sc_args)
 
 send back confirmation message.
 
@@ -57,13 +57,13 @@ send back confirmation message.
 
 
 # Descriptions: send back confirmation message.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 #               OBJ($confirm) HASH_REF($sc_args)
 # Side Effects: messages sent.
 # Return Value: none
 sub send_confirmation
 {
-    my ($self, $curproc, $command_args, $confirm, $sc_args) = @_;
+    my ($self, $curproc, $command_context, $confirm, $sc_args) = @_;
     my $config  = $curproc->config();
     my $id      = $confirm->assign_id;
     my $command = $sc_args->{ command } || "";

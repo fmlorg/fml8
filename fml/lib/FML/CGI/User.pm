@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: User.pm,v 1.13 2005/06/04 08:51:28 fukachan Exp $
+# $FML: User.pm,v 1.14 2005/06/26 00:44:32 fukachan Exp $
 #
 
 package FML::CGI::User;
@@ -29,25 +29,25 @@ sub new
 
 # Descriptions: show menu for user control commands such as
 #               subscribe, unsubscribe, addadmin, byeadmin, ...
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: none
 sub cgi_menu
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $target       = $curproc->cgi_var_frame_target();
     my $action       = $curproc->cgi_var_action();
     my $ml_list      = $curproc->cgi_var_ml_name_list();
     my $address      = $curproc->safe_param_address() || '';
-    my $ml_name      = $command_args->{ ml_name };
-    my $comname      = $command_args->{ comname };
+    my $ml_name      = $command_context->get_ml_name();
+    my $comname      = $command_context->get_cooked_command();
     my $address_list = [];
     my $selected_key = '';
 
     #
     # XXX $comman_args are checked already.
-    #     $command_args are passed in the following way:
-    #       FML::CGI::Menu::run_cgi_main et.al. builds/checks $command_args.
+    #     $command_context are passed in the following way:
+    #       FML::CGI::Menu::run_cgi_main et.al. builds/checks $command_context.
     #       FML::CGI::Menu -(via PCB)-> cgi_execute_cgi_menu() -> cgi_menu().
     #
 

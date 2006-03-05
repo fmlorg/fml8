@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: subscribe.pm,v 1.36 2006/01/08 03:06:59 fukachan Exp $
+# $FML: subscribe.pm,v 1.37 2006/03/04 13:48:29 fukachan Exp $
 #
 
 package FML::Command::User::subscribe;
@@ -83,7 +83,7 @@ sub process
     my $recipient_map = $config->{ primary_recipient_map };
     my $cache_dir     = $config->{ db_dir };
     my $keyword       = $config->{ confirm_command_prefix };
-    my $command       = $command_context->{ command };
+    my $command       = $command_context->get_clean_command();
     my $options       = $command_context->get_options();
     my $cui_options   = $curproc->command_line_cui_specific_options() || {};
     my $address       = $cui_options->{ 'send-to' } || $cred->sender();

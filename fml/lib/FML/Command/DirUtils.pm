@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DirUtils.pm,v 1.20 2004/07/23 15:59:03 fukachan Exp $
+# $FML: DirUtils.pm,v 1.21 2005/05/26 09:55:36 fukachan Exp $
 #
 
 package FML::Command::DirUtils;
@@ -52,12 +52,12 @@ sub new
 
 # Descriptions: show the result by executing "ls".
 #    Arguments: OBJ($self)
-#               OBJ($curproc) HASH_REF($command_args) HASH_REF($du_args)
+#               OBJ($curproc) OBJ($command_context) HASH_REF($du_args)
 # Side Effects: none
 # Return Value: none
 sub dir
 {
-    my ($self, $curproc, $command_args, $du_args) = @_;
+    my ($self, $curproc, $command_context, $du_args) = @_;
     my $config  = $curproc->config();
     my $path_ls = $config->{ path_ls };
     my $argv    = $du_args->{ argv };
@@ -65,7 +65,7 @@ sub dir
     my $rm_args = {};
 
     # inherit reply_message information.
-    my $recipient = $command_args->{ recipient } || '';
+    my $recipient = $command_context->{ recipient } || '';
     if ($recipient) { $rm_args->{ recipient } = $recipient;}
 
     # option: permit "ls [-A-Za-z]" syntax

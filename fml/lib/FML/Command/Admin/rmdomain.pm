@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: rmdomain.pm,v 1.7 2004/07/26 01:10:54 fukachan Exp $
+# $FML: rmdomain.pm,v 1.8 2006/03/04 13:48:29 fukachan Exp $
 #
 
 package FML::Command::Admin::rmdomain;
@@ -55,7 +55,7 @@ sub need_lock { 0;}
 sub process
 {
     my ($self, $curproc, $command_context) = @_;
-    my $canon_argv = $command_context->{ canon_argv };
+    my $canon_argv = $command_context->get_canon_argv();
     my $domain     = $canon_argv->{ ml_name };
 
     if ($domain) {

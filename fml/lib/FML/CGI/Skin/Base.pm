@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Base.pm,v 1.2 2005/08/17 10:33:16 fukachan Exp $
+# $FML: Base.pm,v 1.3 2005/08/17 12:08:42 fukachan Exp $
 #
 
 package FML::CGI::Skin::Base;
@@ -137,7 +137,7 @@ sub run_cgi_main
     if (($command eq 'newml' && $ml_name) ||
 	($command eq 'rmml'  && $ml_name)) {
 	print "<br>* case 1 <br>\n" if $debug;
-	my $command_args = {
+	my $command_context = {
 	    command_mode => $mode,
 	    comname      => $command,
 	    command      => $command,
@@ -147,13 +147,13 @@ sub run_cgi_main
 	    args         => undef,
 	};
 
-	$pcb->set('cgi', 'command_args', $command_args);
-	$curproc->cgi_execute_command($command_args);
+	$pcb->set('cgi', 'command_context', $command_context);
+	$curproc->cgi_execute_command($command_context);
     }
     elsif ($command && $address) {
 	print "<br>* case 2 <br>\n" if $debug;
 
-	my $command_args = {
+	my $command_context = {
 	    command_mode => $mode,
 	    comname      => $command,
 	    command      => $command,
@@ -163,13 +163,13 @@ sub run_cgi_main
 	    args         => undef,
 	};
 
-	$pcb->set('cgi', 'command_args', $command_args);
-	$curproc->cgi_execute_command($command_args);
+	$pcb->set('cgi', 'command_context', $command_context);
+	$curproc->cgi_execute_command($command_context);
     }
     elsif ($navi_command) {
 	print "<br>* case 3 <br>\n" if $debug;
 
-	my $command_args = {
+	my $command_context = {
 	    command_mode => $mode,
 	    comname      => $navi_command,
 	    command      => $navi_command,
@@ -179,12 +179,12 @@ sub run_cgi_main
 	    args         => undef,
 	};
 
-	$pcb->set('cgi', 'command_args', $command_args);
+	$pcb->set('cgi', 'command_context', $command_context);
     }
     elsif ($command) {
 	print "<br>* case 4 <br>\n" if $debug;
 
-	my $command_args = {
+	my $command_context = {
 	    command_mode => $mode,
 	    comname      => $command,
 	    command      => $command,
@@ -194,12 +194,12 @@ sub run_cgi_main
 	    args         => undef,
 	};
 
-	$pcb->set('cgi', 'command_args', $command_args);
+	$pcb->set('cgi', 'command_context', $command_context);
     }
     else {
 	print "<br>* case 5 <br>\n" if $debug;
 
-	$pcb->set('cgi', 'command_args', undef);
+	$pcb->set('cgi', 'command_context', undef);
     }
 }
 

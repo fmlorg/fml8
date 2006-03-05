@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.71 2006/01/09 14:00:54 fukachan Exp $
+# $FML: Configure.pm,v 1.72 2006/02/04 07:49:56 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -267,7 +267,7 @@ C<@$argv> ( $argv = $args->{ ARGV } ).
 
 C<Caution:>
 C<$args> is passed from parrent libexec/loader.
-We construct a new struct C<$command_args> here to pass parameters
+We construct a new struct C<$command_context> here to pass parameters
 to the child objects.
 C<FML::Command::$command> object takes them as arguments not pure
 C<$args>. It is a little mess. Pay attention.
@@ -304,23 +304,26 @@ sub _makefml
     # XXX-TODO: command = [ $method, @options ]; ? (no, used only for message?)
     my $option       = $curproc->command_line_options();
     my $command_mode = $curproc->__get_command_mode($option);
-    my $command_args = {
-	command_mode => $command_mode,
-	comname      => $method,
-	command      => "$method @options",
-	ml_name      => $ml_name,
-	ml_domain    => $ml_domain,
-	options      => \@options,
-	argv         => $argv,
 
-	# save raw argv for {new,rm}domain commands, which need
-	# for some programs to interprete $ml_name as ml_domain.
-	canon_argv   => {
-	    ml_name  => $argv_ml_name,
-	    method   => $method,
-	    options  => \@options,
-	},
+    # save raw argv for {new,rm}domain commands, which need
+    # for some programs to interprete $ml_name as ml_domain.
+    my $canon_argv = {
+	ml_name  => $argv_ml_name,
+	method   => $method,
+	options  => \@options,
     };
+
+    # prepare context.
+    use FML::Context::Command;
+    my $command_context = new FML::Context::Command $curproc;
+    $command_context->set_mode($command_mode);
+    $command_context->set_cooked_command($method);
+    $command_context->set_clean_command("$method @options");
+    $command_context->set_ml_name($ml_name);
+    $command_context->set_ml_domain($ml_domain);
+    $command_context->set_options(\@options);
+    $command_context->set_argv($argv);
+    $command_context->set_canon_argv($canon_argv);
 
     my $eval = $config->get_hook( 'makefml_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
@@ -332,7 +335,7 @@ sub _makefml
     if (defined $obj) {
 	# execute command ($comname method) under eval().
 	eval q{
-	    $obj->$method($curproc, $command_args);
+	    $obj->$method($curproc, $command_context);
 	};
 	unless ($@) {
 	    ; # not show anything

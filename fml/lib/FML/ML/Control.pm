@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.12 2006/02/04 07:52:30 fukachan Exp $
+# $FML: Control.pm,v 1.13 2006/02/15 13:44:04 fukachan Exp $
 #
 
 package FML::ML::Control;
@@ -50,12 +50,12 @@ sub new
 
 # Descriptions: generate _ml_name_xxx in $params.
 #    Arguments: OBJ($self)
-#               OBJ($curproc) HASH_REF($command_args) HASH_REF($params)
+#               OBJ($curproc) OBJ($command_context) HASH_REF($params)
 # Side Effects: update $params
 # Return Value: none
 sub adjust_params_for_virtual_domain
 {
-    my ($self, $curproc, $command_args, $params) = @_;
+    my ($self, $curproc, $command_context, $params) = @_;
     my ($ml_name_admin, $ml_name_ctl, $ml_name_error,
 	$ml_name_post,$ml_name_request);
     my $ml_name   = $params->{ _ml_name };
@@ -100,13 +100,13 @@ sub adjust_params_for_virtual_domain
 # Descriptions: create $ml_home_dir if needed.
 #    Arguments: OBJ($self)
 #               OBJ($curproc)
-#               HASH_REF($command_args)
+#               OBJ($command_context)
 #               HASH_REF($params)
 # Side Effects: create $ml_home_dir dirctory if needed
 # Return Value: none
 sub init_ml_home_dir
 {
-    my ($self, $curproc, $command_args, $params) = @_;
+    my ($self, $curproc, $command_context, $params) = @_;
     my $config      = $curproc->config();
     my $ml_home_dir = $config->{ ml_home_dir };
 
@@ -138,13 +138,13 @@ sub init_ml_home_dir
 # Descriptions: install config.cf, include, include-ctl et. al.
 #    Arguments: OBJ($self)
 #               OBJ($curproc)
-#               HASH_REF($command_args)
+#               OBJ($command_context)
 #               HASH_REF($params)
 # Side Effects: install config.cf, include, include-ctl et. al.
 # Return Value: none
 sub install_template_files
 {
-    my ($self, $curproc, $command_args, $params) = @_;
+    my ($self, $curproc, $command_context, $params) = @_;
     my $config       = $curproc->config();
     my $mode         = $self->get_mode() || 'newml';
     my $template_dir = $curproc->newml_command_template_files_dir();
@@ -180,13 +180,13 @@ sub install_template_files
 # Descriptions: install ONLY config.cf file.
 #    Arguments: OBJ($self)
 #               OBJ($curproc)
-#               HASH_REF($command_args)
+#               OBJ($command_context)
 #               HASH_REF($params)
 # Side Effects: config.cf created if needed.
 # Return Value: none
 sub install_config_cf
 {
-    my ($self, $curproc, $command_args, $params) = @_;
+    my ($self, $curproc, $command_context, $params) = @_;
     my $config       = $curproc->config();
     my $template_dir = $curproc->newml_command_template_files_dir();
     my $ml_home_dir  = $params->{ ml_home_dir };
@@ -205,13 +205,13 @@ sub install_config_cf
 # Descriptions: update alias entries.
 #    Arguments: OBJ($self)
 #               OBJ($curproc)
-#               HASH_REF($command_args)
+#               OBJ($command_context)
 #               HASH_REF($params)
 # Side Effects: update aliases entry
 # Return Value: none
 sub update_aliases
 {
-    my ($self, $curproc, $command_args, $params) = @_;
+    my ($self, $curproc, $command_context, $params) = @_;
     my $config    = $curproc->config();
     my $ml_name   = $config->{ ml_name };
     my $ml_domain = $config->{ ml_domain };
@@ -315,13 +315,13 @@ sub is_mta_alias_maps_has_ml_entry
 # Descriptions: set up ~fml/public_html/ for this mailing list.
 #    Arguments: OBJ($self)
 #               OBJ($curproc)
-#               HASH_REF($command_args)
+#               OBJ($command_context)
 #               HASH_REF($params)
 # Side Effects: create directories for html articles
 # Return Value: none
 sub setup_mail_archive_dir
 {
-    my ($self, $curproc, $command_args, $params) = @_;
+    my ($self, $curproc, $command_context, $params) = @_;
     my $config = $curproc->config();
     my $dir    = $config->{ html_archive_dir };
 
@@ -336,13 +336,13 @@ sub setup_mail_archive_dir
 #               disable it by default.
 #    Arguments: OBJ($self)
 #               OBJ($curproc)
-#               HASH_REF($command_args)
+#               OBJ($command_context)
 #               HASH_REF($params)
 # Side Effects: create directories and install cgi scripts
 # Return Value: none
 sub setup_cgi_interface
 {
-    my ($self, $curproc, $command_args, $params) = @_;
+    my ($self, $curproc, $command_context, $params) = @_;
     my $template_dir = $curproc->newml_command_template_files_dir();
     my $config       = $curproc->config();
 
@@ -457,13 +457,13 @@ sub _install
 # Descriptions: set up information for this mailing list.
 #    Arguments: OBJ($self)
 #               OBJ($curproc)
-#               HASH_REF($command_args)
+#               OBJ($command_context)
 #               HASH_REF($params)
 # Side Effects: create directories
 # Return Value: none
 sub setup_listinfo
 {
-    my ($self, $curproc, $command_args, $params) = @_;
+    my ($self, $curproc, $command_context, $params) = @_;
     my $config       = $curproc->config();
     my $template_dir = $config->{ listinfo_template_dir };
     my $listinfo_dir = $config->{ listinfo_dir };
@@ -501,13 +501,13 @@ sub setup_listinfo
 # Descriptions: set up or fix create-on-post environment.
 #    Arguments: OBJ($self)
 #               OBJ($curproc)
-#               HASH_REF($command_args)
+#               OBJ($command_context)
 #               HASH_REF($params)
 # Side Effects: fix include, virtual files.
 # Return Value: none
 sub install_createonpost
 {
-    my ($self, $curproc, $command_args, $params) = @_;
+    my ($self, $curproc, $command_context, $params) = @_;
     my $config    = $curproc->config(); 
     my $ml_name   = $curproc->ml_name();
     my $ml_domain = $curproc->ml_domain();
@@ -554,13 +554,13 @@ sub install_createonpost
 # Descriptions: disable create-on-post environment.
 #    Arguments: OBJ($self)
 #               OBJ($curproc)
-#               HASH_REF($command_args)
+#               OBJ($command_context)
 #               HASH_REF($params)
 # Side Effects: fix include, virtual files.
 # Return Value: none
 sub delete_createonpost
 {
-    my ($self, $curproc, $command_args, $params) = @_;
+    my ($self, $curproc, $command_context, $params) = @_;
     my $config  = $curproc->config(); 
     my $ml_name = $config->{ ml_name };
     my $list    = $config->get_as_array_ref('newml_command_mta_config_list');
@@ -591,13 +591,13 @@ sub delete_createonpost
 # Descriptions: remove $ml_home_dir and update aliases if needed.
 #    Arguments: OBJ($self)
 #               OBJ($curproc)
-#               HASH_REF($command_args)
+#               OBJ($command_context)
 #               HASH_REF($params)
 # Side Effects: remove ml_home_dir, update aliases entry
 # Return Value: none
 sub delete_ml_home_dir
 {
-    my ($self, $curproc, $command_args, $params) = @_;
+    my ($self, $curproc, $command_context, $params) = @_;
     my $ml_name        = $params->{ ml_name };
     my $ml_domain      = $params->{ ml_domain };
     my $ml_home_prefix = $params->{ ml_home_prefix };
@@ -623,13 +623,13 @@ sub delete_ml_home_dir
 # Descriptions: remove aliases entry.
 #    Arguments: OBJ($self)
 #               OBJ($curproc)
-#               HASH_REF($command_args)
+#               OBJ($command_context)
 #               HASH_REF($params)
 # Side Effects: update aliases entry
 # Return Value: none
 sub delete_aliases
 {
-    my ($self, $curproc, $command_args, $params) = @_;
+    my ($self, $curproc, $command_context, $params) = @_;
     my $config  = $curproc->config();
     my $ml_name = $params->{ ml_name };
     my $list    = $config->get_as_array_ref('newml_command_mta_config_list');

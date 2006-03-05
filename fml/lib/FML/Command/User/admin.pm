@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: admin.pm,v 1.15 2006/03/04 12:56:58 fukachan Exp $
+# $FML: admin.pm,v 1.16 2006/03/04 13:48:29 fukachan Exp $
 #
 
 package FML::Command::User::admin;
@@ -136,7 +136,7 @@ sub process
     else {
 	my $class = $command_context->get_cooked_subcommand() || '';
 	my $c     = "admin $class ...";
-	my $masked_command = $command_context->{ masked_original_command } || $c;
+	my $masked_command = $command_context->get_masked_command() || $c;
 	$curproc->logerror("admin: not auth, cannot run \"$masked_command\"");
 	$curproc->reply_message_nl("command.admin_auth_fail",
 				   "not authenticated.");
@@ -285,7 +285,7 @@ sub _apply_new_admin_command_mail_restrictions
 sub _execute_admin_command
 {
     my ($self, $curproc, $command_context, $class) = @_;
-    my $args = $self->_prepare_command_args($curproc, $command_context);
+    my $args = $self->_prepare_command_context($curproc, $command_context);
 
     use FML::Command;
     my $dispatch = new FML::Command;
@@ -297,7 +297,7 @@ sub _execute_admin_command
 #    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: none
-sub _prepare_command_args
+sub _prepare_command_context
 {
     my ($self, $curproc, $command_context) = @_;
 

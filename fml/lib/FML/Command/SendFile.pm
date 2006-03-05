@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.45 2005/08/11 04:11:27 fukachan Exp $
+# $FML: SendFile.pm,v 1.46 2005/08/17 10:33:17 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -27,8 +27,8 @@ L<FML::Command::Admin::get> on the usage detail.
 
    sub process
    {
-       my ($self, $curproc, $command_args) = @_;
-       $self->send_article($curproc, $command_args);
+       my ($self, $curproc, $command_context) = @_;
+       $self->send_article($curproc, $command_context);
    }
 
 =head1 DESCRIPTION
@@ -38,7 +38,7 @@ and file(s) in C<$ml_home_dir>.
 
 =head1 METHODS
 
-=head2 send_article($curproc, $command_args)
+=head2 send_article($curproc, $command_context)
 
 send back articles where C<article> is a file named as /^\d+$/ in the
 ml spool $spool_dir.  This is used in C<FML::Command::User> and
@@ -47,14 +47,14 @@ C<FML::Command::Admin> modules.
 =cut
 
 
-# Descriptions: return the number of files specified in $command_args.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Descriptions: return the number of files specified in $command_context.
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: NUM
 sub num_files_in_send_article_args
 {
-    my ($self, $curproc, $command_args) = @_;
-    my $command = $command_args->{ command };
+    my ($self, $curproc, $command_context) = @_;
+    my $command = $command_context->get_clean_command();
     my $count   = 0;
 
     # command buffer = get 1
@@ -74,14 +74,14 @@ sub num_files_in_send_article_args
 
 
 # Descriptions: send back articles.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: none
 sub send_article
 {
-    my ($self, $curproc, $command_args) = @_;
-    my $command   = $command_args->{ command };
-    my $recipient = $command_args->{ _recipient } || '';
+    my ($self, $curproc, $command_context) = @_;
+    my $command   = $command_context->get_clean_command();
+    my $recipient = $command_context->{ _recipient } || '';
     my $config    = $curproc->config();
     my $ml_name   = $config->{ ml_name };
     my $spool_dir = $config->{ spool_dir };
@@ -160,24 +160,24 @@ sub _get_valid_article_list
 }
 
 
-=head2 send_file($curproc, $command_args)
+=head2 send_file($curproc, $command_context)
 
-send back file specified as C<$command_args->{ _filepath_to_send }>.
+send back file specified as C<$command_context->{ _filepath_to_send }>.
 
 =cut
 
 
 # Descriptions: send arbitrary file in $ml_home_dir.
 #               XXX we permit arbitrary file for admin to get.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: none
 sub send_file
 {
-    my ($self, $curproc, $command_args) = @_;
-    my $filename  = $command_args->{ _filename_to_send };
-    my $filepath  = $command_args->{ _filepath_to_send };
-    my $recipient = $command_args->{ _recipient } || '';
+    my ($self, $curproc, $command_context) = @_;
+    my $filename  = $command_context->{ _filename_to_send };
+    my $filepath  = $command_context->{ _filepath_to_send };
+    my $recipient = $command_context->{ _recipient } || '';
     my $config    = $curproc->config();
 
     # XXX langinfo_get_charset() take Accpet-Language: header field into account.
@@ -212,7 +212,7 @@ sub send_file
 }
 
 
-=head2 send_user_xxx_message($curproc, $command_args, $type)
+=head2 send_user_xxx_message($curproc, $command_context, $type)
 
 Send back a help file if "help" is found in $ml_home_dir
 (e.g. /var/spool/ml/elena) for backward compatibility.
@@ -223,12 +223,12 @@ Sebd back the default help message if not found.
 
 # Descriptions: send back file file in $ml_home_dir if found.
 #               return the default message if not found.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args) STR($type)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context) STR($type)
 # Side Effects: put the message into the mail queue
 # Return Value: none
 sub send_user_xxx_message
 {
-    my ($self, $curproc, $command_args, $type) = @_;
+    my ($self, $curproc, $command_context, $type) = @_;
     my $config = $curproc->config();
 
     # XXX-TODO: care for non Japanese
@@ -236,9 +236,9 @@ sub send_user_xxx_message
     # if "help" is found in $ml_home_dir (e.g. /var/spool/ml/elena),
     # send it.
     if (-f $config->{ "${type}_file" }) {
-	$command_args->{ _filepath_to_send } = $config->{ "${type}_file" };
-	$command_args->{ _filename_to_send } = $type;
-	$self->send_file($curproc, $command_args);
+	$command_context->{ _filepath_to_send } = $config->{ "${type}_file" };
+	$command_context->{ _filename_to_send } = $type;
+	$self->send_file($curproc, $command_context);
     }
     # if "help" is not found, use the default help message.
     else {

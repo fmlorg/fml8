@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.89 2005/08/19 11:23:03 fukachan Exp $
+# $FML: Kernel.pm,v 1.90 2006/01/09 14:00:55 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -410,7 +410,7 @@ sub _drive_cgi_by_table
 }
 
 
-=head2 cgi_execute_command($command_args)
+=head2 cgi_execute_command($command_context)
 
 execute specified command given as FML::Command::*
 
@@ -418,18 +418,18 @@ execute specified command given as FML::Command::*
 
 
 # Descriptions: execute FML::Command.
-#    Arguments: OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($curproc) OBJ($command_context)
 # Side Effects: load module
 # Return Value: none
 sub cgi_execute_command
 {
-    my ($curproc, $command_args) = @_;
+    my ($curproc, $command_context) = @_;
 
     # XXX Only FML::CGI::Skin::Base calls cgi_execute_command() now.
     # XXX comname are the result returned by $curproc->safe_param_command().
     # XXX command_mode is hard-coded in FML::CGI::Skin::Base.
-    my $commode = $command_args->{ command_mode };
-    my $comname = $command_args->{ comname };
+    my $commode = $command_context->get_mode();
+    my $comname = $command_context->get_cooked_command();
     my $config  = $curproc->config();
 
     # XXX $comname is one of strings defined in the config file,
@@ -451,7 +451,7 @@ sub cgi_execute_command
     my $obj = new FML::Command;
     if (defined $obj) {
 	eval q{
-	    $obj->$comname($curproc, $command_args);
+	    $obj->$comname($curproc, $command_context);
 	};
 	unless ($@) {
 	    # XXX-TODO: NL
@@ -632,14 +632,14 @@ sub cgi_execute_cgi_menu
 {
     my ($curproc)    = @_;
     my $pcb          = $curproc->pcb();
-    my $command_args = $pcb->get('cgi', 'command_args');
+    my $command_context = $pcb->get('cgi', 'command_context');
 
     # navigation to top menu.
     $curproc->cgi_menu_back_to_top();
 
-    if (defined $command_args) {
+    if (defined $command_context) {
 	# XXX-TODO: who validate $comname (in FML::CGI::Skin) ?
-	my $comname = $command_args->{ comname };
+	my $comname = $command_context->get_cooked_command();
 	my $cmd     = "FML::Command::Admin::$comname";
 	my $obj     = undef;
 	eval qq{
@@ -648,7 +648,7 @@ sub cgi_execute_cgi_menu
 	};
 
 	if (defined $obj) {
-	    $obj->cgi_menu($curproc, $command_args);
+	    $obj->cgi_menu($curproc, $command_context);
 	}
     }
     else {

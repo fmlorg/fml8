@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.20 2006/01/08 03:06:59 fukachan Exp $
+# $FML: Control.pm,v 1.21 2006/02/18 08:36:49 fukachan Exp $
 #
 
 package FML::User::Control;
@@ -56,12 +56,12 @@ sub new
 
 # Descriptions: add user.
 #    Arguments: OBJ($self)
-#               OBJ($curproc) HASH_REF($command_args) HASH_REF($uc_args)
+#               OBJ($curproc) OBJ($command_context) HASH_REF($uc_args)
 # Side Effects: update maps, croak() if crical error.
 # Return Value: none
 sub user_add
 {
-    my ($self, $curproc, $command_args, $uc_args) = @_;
+    my ($self, $curproc, $command_context, $uc_args) = @_;
     my $config   = $curproc->config();
     my $address  = $uc_args->{ address };
     my $maplist  = $uc_args->{ maplist };
@@ -76,7 +76,7 @@ sub user_add
     }
 
     # pass info into reply_message().
-    my $msg_args = $command_args->{ msg_args };
+    my $msg_args = $command_context->get_msg_args();
     $msg_args->{ _arg_address } = $address;
 
     # for convenience.
@@ -161,12 +161,12 @@ sub user_add
 
 # Descriptions: remove user.
 #    Arguments: OBJ($self)
-#               OBJ($curproc) HASH_REF($command_args) HASH_REF($uc_args)
+#               OBJ($curproc) OBJ($command_context) HASH_REF($uc_args)
 # Side Effects: update maps
 # Return Value: none
 sub user_del
 {
-    my ($self, $curproc, $command_args, $uc_args) = @_;
+    my ($self, $curproc, $command_context, $uc_args) = @_;
     my $config   = $curproc->config();
     my $address  = $uc_args->{ address };
     my $maplist  = $uc_args->{ maplist };
@@ -180,7 +180,7 @@ sub user_del
     }
 
     # pass info to reply_message()
-    my $msg_args = $command_args->{ msg_args };
+    my $msg_args = $command_context->get_msg_args();
     $msg_args->{ _arg_address } = $address;
 
     # for convenience.
@@ -256,12 +256,12 @@ sub user_del
 
 # Descriptions: dispatch chaddr operation.
 #    Arguments: OBJ($self)
-#               OBJ($curproc) HASH_REF($command_args) HASH_REF($uc_args)
+#               OBJ($curproc) OBJ($command_context) HASH_REF($uc_args)
 # Side Effects: none
 # Return Value: none
 sub user_chaddr
 {
-    my ($self, $curproc, $command_args, $uc_args) = @_;
+    my ($self, $curproc, $command_context, $uc_args) = @_;
     my $cred    = new FML::Credential $curproc;
     my $level   = $cred->get_compare_level();
     my $maplist = $uc_args->{ maplist };
@@ -272,7 +272,7 @@ sub user_chaddr
     $curproc->lock($lock_channel);
 
     for my $map (@$maplist) {
-	$self->_try_chaddr_in_map($curproc, $command_args, $uc_args,
+	$self->_try_chaddr_in_map($curproc, $command_context, $uc_args,
 				   $cred, $map);
     }
 
@@ -285,13 +285,13 @@ sub user_chaddr
 
 # Descriptions: real chaddr routine.
 #    Arguments: OBJ($self)
-#               OBJ($curproc) HASH_REF($command_args) HASH_REF($uc_args)
+#               OBJ($curproc) OBJ($command_context) HASH_REF($uc_args)
 #               OBJ($cred) STR($map)
 # Side Effects: update member list
 # Return Value: none
 sub _try_chaddr_in_map
 {
-    my ($self, $curproc, $command_args, $uc_args, $cred, $map) = @_;
+    my ($self, $curproc, $command_context, $uc_args, $cred, $map) = @_;
     my $config      = $curproc->config();
     my $old_address = $uc_args->{ old_address };
     my $new_address = $uc_args->{ new_address };
@@ -420,18 +420,18 @@ sub _try_chaddr_in_map
 
 # Descriptions: show list.
 #    Arguments: OBJ($self)
-#               OBJ($curproc) HASH_REF($command_args) HASH_REF($uc_args)
+#               OBJ($curproc) OBJ($command_context) HASH_REF($uc_args)
 # Side Effects: none
 # Return Value: none
 sub print_userlist
 {
-    my ($self, $curproc, $command_args, $uc_args) = @_;
+    my ($self, $curproc, $command_context, $uc_args) = @_;
     my $config   = $curproc->config();
     my $maplist  = $uc_args->{ maplist } || [];
     my $wh       = $uc_args->{ wh }      || undef;
     my $style    = $curproc->output_get_print_style()      || '';
     my $is_mta   = $curproc->is_under_mta_process() || 0;
-    my $msg_args = $command_args->{ msg_args };
+    my $msg_args = $command_context->get_msg_args();
 
     $curproc->lock($lock_channel);
 

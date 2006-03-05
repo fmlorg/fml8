@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: List.pm,v 1.13 2004/07/23 13:16:33 fukachan Exp $
+# $FML: List.pm,v 1.14 2005/05/27 03:03:33 fukachan Exp $
 #
 
 package FML::CGI::List;
@@ -28,18 +28,18 @@ sub new
 
 
 # Descriptions: show address list.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: none
 sub cgi_menu
 {
-    my ($self, $curproc, $command_args) = @_;
+    my ($self, $curproc, $command_context) = @_;
     my $config      = $curproc->config();
     my $target      = $curproc->cgi_var_frame_target();
     my $action      = $curproc->cgi_var_action();
     my $map_default = $curproc->cgi_var_address_map();
     my $map_list    = $curproc->cgi_var_address_map_list();
-    my $ml_name     = $command_args->{ ml_name };
+    my $ml_name     = $command_context->get_ml_name();
 
     use FML::Restriction::Base;
     my $safe = new FML::Restriction::Base;
