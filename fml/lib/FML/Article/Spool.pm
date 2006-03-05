@@ -3,7 +3,7 @@
 # Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.11 2006/03/05 08:08:36 fukachan Exp $
+# $FML: Spool.pm,v 1.12 2006/03/05 09:50:42 fukachan Exp $
 #
 
 package FML::Article::Spool;
@@ -71,7 +71,7 @@ sub get_lock_channel_name
 
 
 # Descriptions: convert files at src_dir/ into dst_dir/.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_RER($command_context)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: none
 sub convert
@@ -166,7 +166,7 @@ sub convert
 
 
 # Descriptions: show information on spool and articles.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_RER($command_context)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: none
 # Return Value: none
 sub status
