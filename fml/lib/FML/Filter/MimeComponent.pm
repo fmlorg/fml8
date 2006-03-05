@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent.pm,v 1.15 2005/08/10 12:55:33 fukachan Exp $
+# $FML: MimeComponent.pm,v 1.16 2005/08/20 01:25:14 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -228,7 +228,7 @@ sub mime_component_check
 	$curproc->log("mime_component_filter: $decision ($_reason)");
     }
 
-    __dprint("\n   our desicion($recursive_level): $decision ($_reason)");
+    __dprint("\n   our decision($recursive_level): $decision ($_reason)");
 
     if ($decision eq 'reject') {
 	$self->error_set($_reason);
@@ -625,7 +625,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
