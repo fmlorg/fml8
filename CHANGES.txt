@@ -33,6 +33,40 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2006/03/05
+
+   refactoring: use of command context object based.
+
+   FML::Command::User::admin 
+   FML::Process::Command State 
+   FML::Restriction::Command 
+   FML::Context::Command 
+	command context information switched to use of
+	FML::Context::Command object. 
+
+   FML::Command::Admin::*
+   FML::Command::User::*
+   FML::Command Error 
+   FML::Article::Spool 
+   FML::CGI::List ML User 
+   FML::CGI::Skin::Base 
+   FML::Command::Auth DirUtils FileUtils Message SendFile Syntax 
+   FML::Context::Command 
+   FML::Fault::Address 
+   FML::ML::Control 
+   FML::Process::Command Configure 
+   FML::Process::CGI::Kernel 
+   FML::User::Control 
+	$command_args -> $command_context (OBJ), method style
+	changed to command_context object based.
+	
+   FML::Command::User::admin 
+	duplicate FML::Context::Command object by object dup method
+	not by myself. 
+	
+   FML::Context::Command 
+	implement dup() method.
+	
 2006/02/18
 
    FML::User::Control 
@@ -9291,4 +9325,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.267 2006/02/05 04:41:27 fukachan Exp $
+$FML: CHANGES.txt,v 1.268 2006/02/19 15:44:31 fukachan Exp $
