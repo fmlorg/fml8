@@ -11,6 +11,13 @@
 use_command_mail_function = ${use_command_mail_program:-yes}
 
 
+# Descriptions: admin コマンドメールを使うか？
+#      History: $REMOTE_ADMINISTRATION
+#        Value: YES_OR_NO
+#     Examples: yes / no
+use_admin_command_mail_fucntion = no
+
+
 # Descriptions: コマンドメールの返事の先頭に
 #		「こちらは fml8 です…」と自己紹介するか否か？
 #      History: none

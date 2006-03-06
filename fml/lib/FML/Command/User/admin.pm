@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: admin.pm,v 1.17 2006/03/05 08:08:37 fukachan Exp $
+# $FML: admin.pm,v 1.18 2006/03/05 09:41:48 fukachan Exp $
 #
 
 package FML::Command::User::admin;
@@ -221,6 +221,11 @@ sub _apply_new_admin_command_mail_restrictions
     my $context = $command_context;
     my $config  = $curproc->config();
     my $sender  = $opt_args->{ address } || '';
+
+    unless ($config->yes('use_admin_command_mail_fucntion')) {
+	$curproc->logerror("admin command prohibited.");
+	return 0;
+    }
 
     # initialize admin command specific area to pass it to sub layer.
     $curproc->command_context_set_try_admin_auth_request();
