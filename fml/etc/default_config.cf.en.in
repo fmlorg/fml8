@@ -1875,6 +1875,13 @@ article_post_encrypt_gpg_config_dir	= $etc_dir/gpg-article-post-encrypt
 use_command_mail_function = ${use_command_mail_program:-yes}
 
 
+# Descriptions: use admin command mail ?
+#      History: $REMOTE_ADMINISTRATION
+#        Value: YES_OR_NO
+#     Examples: yes / no
+use_admin_command_mail_fucntion = no
+
+
 # Descriptions: add self introduction into the preamble of command mail reply. 
 #      History: none
 #        Value: YES_OR_NO
