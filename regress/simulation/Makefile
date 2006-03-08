@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.81 2005/11/21 03:29:46 fukachan Exp $
+# $FML: Makefile,v 1.82 2006/01/19 11:46:22 fukachan Exp $
 #
 
 TMPFILE	=	/tmp/log.fml-devel.test
@@ -105,10 +105,12 @@ test:
 	@ rm -f $(TMPFILE)
 
 _test:
-	@ echo "* IO::* class test"
-	@ apply perl IO/t/*pl
+	@ echo "* IO::Adapter module test"
+	@ for x in IO/t/*pl; do perl -I ../lib -I . $$x; done
+	@ echo "* base"
 	@ test -d /tmp/fml5 || mkdir /tmp/fml5
 	@ make -f ../base/Makefile
+	@ echo "* cf"
 	@ (cd ../cf; make test)
 	@ echo "* errormails"
 	@ (cd ../errormails; make check)
