@@ -13,10 +13,12 @@
 	行ごとに解析する現在のコードには、うまくのらない。
 
 
-[TODO]	command_args をあちこちで生書きしないように
+[TODO]	"IS-A FML::Command::Syntax" wrong
 
 
-[TODO]	command_args はオブジェクトにするべきでは？
+[TODO]	command_args をあちこちで生書きしない。オブジェクトにする
+
+	cvs diff -ub -D 2006-03-01
 
 
 [TODO]	config tool
@@ -273,4 +275,4 @@
 	FML::Sys::Alias
 
 ----------
-$FML: 00_MEMO,v 1.124 2006/03/04 15:00:15 fukachan Exp $
+$FML: 00_MEMO,v 1.125 2006/03/08 13:27:27 fukachan Exp $
