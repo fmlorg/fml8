@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: gen_rules.pl,v 1.6 2006/01/04 07:13:37 fukachan Exp $
+# $FML: gen_rules.pl,v 1.7 2006/01/04 07:50:02 fukachan Exp $
 #
 
 use strict;
@@ -235,7 +235,7 @@ sub _print_translated_rules
 	    }
 	    else {
 		$found = 1;
-		_print("\$s .= \"$rule\";");
+		_print("\$s .= sprintf(\"$rule\", \$value);");
 	    }
 
 	    while ($if_stack > 0) {
