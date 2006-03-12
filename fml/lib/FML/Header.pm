@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.88 2006/02/03 11:06:50 fukachan Exp $
+# $FML: Header.pm,v 1.89 2006/02/05 01:01:55 fukachan Exp $
 #
 
 package FML::Header;
@@ -301,6 +301,24 @@ sub add_software_info
 }
 
 
+# Descriptions: return header type.
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
+# Side Effects: none
+# Return Value: STR
+sub _get_header_type
+{
+    my ($header, $config, $rw_args) = @_;
+    my $mode = $rw_args->{ mode } || 'default';
+
+    if ($mode eq 'distribute') {
+	return 'article_header';
+    }
+    else {
+	return 'mail_header_default';
+    }
+}
+
+
 # Descriptions: add List-* to header.
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
@@ -308,9 +326,18 @@ sub add_software_info
 sub add_rfc2369
 {
     my ($header, $config, $rw_args) = @_;
-    my $object_type = defined $rw_args->{ type } ? $rw_args->{ type } : '';
+    my $object_type = $rw_args->{ type } || '';
 
-    # addresses
+    # configuration
+    my $hdrtype           = $header->_get_header_type($config, $rw_args);
+    my $_list_id          = $config->{ "${hdrtype}_list_id" };
+    my $_list_owner       = $config->{ "${hdrtype}_list_owner" };
+    my $_list_post        = $config->{ "${hdrtype}_list_post" };
+    my $_list_help        = $config->{ "${hdrtype}_list_help" };
+    my $_list_subscribe   = $config->{ "${hdrtype}_list_subscribe" };
+    my $_list_unsubscribe = $config->{ "${hdrtype}_list_unsubscribe" };
+
+    # mode switch
     my $use_command_mail_function = $config->yes('use_command_mail_function');
     my $command      = $config->{ command_mail_address } || '';
     my $use_command  = 0;
@@ -319,18 +346,18 @@ sub add_rfc2369
     }
 
     # information for list-*
-    my $ml_name     = $config->{ ml_name };
-    my $maintainer  = $config->{ maintainer } || '';
-    my $default     =
-	$maintainer ? "contact maintainer <$maintainer>" : 'unavailable';
-    my $post        = $config->{ article_post_address } || '';
-    my $base_url    = "mailto:${command}?body=";
-    my $list_id     = "$ml_name mailing list <$post>"; $list_id =~ s/\@/./g;
-    my $list_owner  = $maintainer ? "<mailto:${maintainer}>" : 'maintainer';
-    my $list_post   = $post ? "<mailto:${post}>" : 'unavailable';
-    my $list_help   = $use_command ? "<${base_url}help>"        : $default;
-    my $list_subs   = $use_command ? "<${base_url}subscribe>"   : $default;
-    my $list_unsub  = $use_command ? "<${base_url}unsubscribe>" : $default;
+    my $maintainer = $config->{ maintainer } || '';
+    my $ml_name    = $config->{ ml_name }    || '';
+    my $ml_domain  = $config->{ ml_domain }  || '';
+    my $post       = $config->{ article_post_address } || '';
+    my $_contact   = "contact maintainer <$maintainer>"; 
+    my $default    = $maintainer  ? $_contact          : 'unavailable';
+    my $list_id    = $_list_id || "$ml_name ML <$ml_name.$ml_domain>";
+    my $list_owner = $maintainer  ? $_list_owner       : 'maintainer';
+    my $list_post  = $post        ? $_list_post        : 'unavailable';
+    my $list_help  = $use_command ? $_list_help        : $default;
+    my $list_subs  = $use_command ? $_list_subscribe   : $default;
+    my $list_unsub = $use_command ? $_list_unsubscribe : $default;
 
     # See RFC2369 for more details
     if ($object_type eq 'MIME::Lite') {
