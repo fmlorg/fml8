@@ -9,6 +9,13 @@
 maintainer	=
 
 
+# Descriptions: ＭＬの管理者のシグニチャア (つかってない)
+#      History: $MAITAINER_SIGNATURE
+#        Value: STR
+#     Examples: Elena Lolabrigita
+maintainer_signature	=
+
+
 =head2	default umask
 
 
