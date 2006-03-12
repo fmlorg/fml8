@@ -33,6 +33,33 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2006/03/12
+
+   variables
+	define $maintainer_signature (not used now).
+	define $article_header_* and $mail_header_default_* variables.
+	rewritten to use $mail_header_default_* for outgoing_*.
+
+   FML::Process::Kernel 
+	pass {mode => default} parameters to FML::Header object by default.
+	
+   FML::Header 
+	rewrite logic to generate list-* header field to sync w:::new variable
+	definitions::article_header_list* et.al.
+	
+   FML::Merge::FML4::Makefile 
+	define printok::print_ok rules
+
+   FML::Merge::FML4::config_ph 
+	save default value for later use in evaluating default_config.ph.
+	overhaul algorithm to fix path.
+	changed to use _fix_path() if needed.
+
+2006/03/06
+
+   variables
+	define $use_admin_command_mail_fucntion ("no" by default).
+
 2006/03/05
 
    refactoring: use of command context object based.
@@ -9325,4 +9352,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.268 2006/02/19 15:44:31 fukachan Exp $
+$FML: CHANGES.txt,v 1.269 2006/03/05 12:09:59 fukachan Exp $
