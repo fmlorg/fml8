@@ -4,14 +4,14 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: config_ph.pm,v 1.20 2006/01/08 12:32:51 fukachan Exp $
+# $FML: config_ph.pm,v 1.21 2006/01/09 14:00:54 fukachan Exp $
 #
 
 package FML::Merge::FML4::config_ph;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
 	    $count $default_config_ph
-	    $result %diff_result %config_result);
+	    $result %diff_result %config_result %config_default);
 use Carp;
 
 my $debug = 0;
@@ -178,13 +178,14 @@ sub dump_variable
 	if (defined $val) {
 	    $val =~ s/$ml_name/\$ml_name/g;
 	    $val =~ s/$ml_domain/\$ml_domain/g;
-	    if ($val && ($val ne $def)) {
+	    if ($val ne $def) {
 		$rbuf .= "# $key => $val\n";
-		$diff_result{ $key } = $val;
+		$diff_result{ $key } = $val || "___nil___";
 	    }
 
 	    # save all values.
-	    $config_result{ $key } = $val;
+	    $config_default{ $key } = $def;
+	    $config_result{ $key }  = $val;
 
 	    if ($debug) {
 		print "CONFIG: $key => $val\n";
@@ -408,42 +409,34 @@ sub translate_xxx
 	my $port = $diff->{ 'PORT' } || 25;
 	return "smtp_servers = $host:$port";
     }
-    elsif ($key eq 'SPOOL_DIR') {
-	my $v = $self->_fix_dir($config, $diff, $key, $value, "spool");
+    elsif ($key eq 'SPOOL_DIR' || $key eq 'TMP_DIR') {
+	my $v = $self->_fix_path($config, $diff, $key, $value);
 	if ($v) {
-	    return "spool_dir = $v";
-	}
-	else {
-	    return "";
-	}
-    }
-    elsif ($key eq 'TMP_DIR') {
-	my $v = $self->_fix_dir($config, $diff, $key, $value, "tmp");
-	if ($v) {
-	    return "tmp_dir = $v";
+	    $key =~ tr/A-Z/a-z/;
+	    return "$key = $v";
 	}
 	else {
 	    return "";
 	}
     }
     elsif ($key eq 'ADMIN_MEMBER_LIST') {
-	$value = $self->_fix_map($config, $diff, $key, $value);
+	$value = $self->_fix_path($config, $diff, $key, $value);
 	return "primary_admin_member_map = $value";
     }
     elsif ($key eq 'MEMBER_LIST') {
-	$value = $self->_fix_map($config, $diff, $key, $value);
+	$value = $self->_fix_path($config, $diff, $key, $value);
 	return "primary_member_map = $value";
     }
     elsif ($key eq 'ACTIVE_LIST') {
-	$value = $self->_fix_map($config, $diff, $key, $value);
+	$value = $self->_fix_path($config, $diff, $key, $value);
 	return "primary_recipient_map = $value";
     }
     elsif ($key eq 'MODERATOR_MEMBER_LIST') {
-	$value = $self->_fix_map($config, $diff, $key, $value);
+	$value = $self->_fix_path($config, $diff, $key, $value);
 	return "primary_moderator_member_map = $value";
     }
     elsif ($key eq 'PASSWD_FILE') {
-	$value = $self->_fix_map($config, $diff, $key, $value);
+	$value = $self->_fix_path($config, $diff, $key, $value);
 	return "primary_admin_member_password_map = $value";
     }
     elsif ($key eq 'LOGFILE') {
@@ -465,14 +458,11 @@ sub translate_xxx
 	return $self->_fix_skip_fields($config, $diff, $key, $value);
     }
     elsif ($key eq 'FILE_TO_REGIST') {
-	$value = $self->_fix_map($config, $diff, $key, $value);
+	$value = $self->_fix_path($config, $diff, $key, $value);
 	my $s = '';
 	$s .= "primary_member_map      = $value\n";
 	$s .= "primary_recipient_map   = $value\n";
 	return $s;
-    }
-    elsif ($key eq 'NUM_LOG_MAIL') {
-	return "incoming_mail_cache_size = $value\n";
     }
     elsif ($key eq 'ML_MEMBER_CHECK') {
 	return $self->_fix_acl_policy($config, $diff, $key, $value);
@@ -483,10 +473,6 @@ sub translate_xxx
     elsif ($key eq 'TZone') {
 	return $self->_fix_time_zone($config, $diff, $key, $value);
     }
-    elsif ($key eq 'ADMIN_LOG_DEFAULT_LINE_LIMIT') {
-	return "log_command_tail_starting_location = $value\n";
-    }
-
 
     return '# ***ERROR*** UNKNOWN TRANSLATION RULE';
 }
@@ -614,40 +600,95 @@ sub _fix_restrictions
 #               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR
-sub _fix_map
+sub _fix_path
 {
     my ($self, $config, $diff, $key, $value) = @_;
 
-    $value =~ s@\$DIR/@\$ml_home_dir/@g;
-    return $value;
+    # 1. $value is either of ^$DIR or ^./ directory.
+    if ($self->_is_relative_to_fml4_home_dir($value)) {
+	my $relative_path = $self->_cutoff_fml4_home_dir_prefix($value);
+	return $self->_fml8_absolete_path($relative_path);
+    }
+    # 2. $value is absolute path.
+    elsif ($self->_is_absolute_path($value)) {
+	return $value;
+    }
+    # 3. $value is a file name only (must be relative to $DIR or ./ directory).
+    else {
+	return $self->_fml8_absolete_path($value);
+    }
 }
 
 
-# Descriptions: handle directory info.
-#    Arguments: OBJ($self)
-#               HASH_REF($config) HASH_REF($diff)
-#               STR($key) STR($value) STR($match)
+# Descriptions: check if $path is relative to fml4 $DIR.
+#    Arguments: OBJ($self) STR($path)
 # Side Effects: none
-# Return Value: STR
-sub _fix_dir
+# Return Value: NUM
+sub _is_relative_to_fml4_home_dir
 {
-    my ($self, $config, $diff, $key, $value, $match) = @_;
-    my $x = $value;
-    my $i = 16;
+    my ($self, $path) = @_;
 
-    $x =~ s@\$DIR/@@;
-    $x =~ s@\./@@;
-    while ($i-- > 0) { $x =~ s@^/@@;}
-
-    print "# CHECK key=<$key> value=<$value> x=<$x>\n";
-    if ($value eq $x) {
-	return "";
+    if ($path =~ /^\$DIR/ || $path =~ /^\.\//) {
+	return 1;
     }
     else {
-	$value =~ s@\$DIR/@\$ml_home_dir/@;
-	$value =~ s@\./@\$ml_home_dir/@;
-	return $value;
+	return 0;
     }
+}
+
+
+# Descriptions: check if $path is absolute.
+#    Arguments: OBJ($self) STR($path)
+# Side Effects: none
+# Return Value: NUM
+sub _is_absolute_path
+{
+    my ($self, $path) = @_;
+
+    use File::Spec;
+    return File::Spec->file_name_is_absolute($path);
+}
+
+
+# Descriptions: check if $path is relative to fml4 $DIR.
+#    Arguments: OBJ($self) STR($path)
+# Side Effects: none
+# Return Value: NUM
+sub _cutoff_fml4_home_dir_prefix
+{
+    my ($self, $path) = @_;
+
+    $path =~ s/^\$DIR//;
+    $path =~ s/^\.//;
+    $path =~ s/^\///;
+    return $path;
+}
+
+
+# Descriptions: relative path-ify.
+#    Arguments: OBJ($self) STR($path)
+# Side Effects: none
+# Return Value: STR
+sub _split_path
+{
+    my ($self, $path) = @_;
+
+    use File::Spec;
+    my ($volume, $directories, $file) = File::Spec->splitpath( $path );
+    return $file;
+}
+
+
+# Descriptions: be absolete path.
+#    Arguments: OBJ($self) STR($x)
+# Side Effects: none
+# Return Value: STR
+sub _fml8_absolete_path
+{
+    my ($self, $x) = @_;
+
+    use File::Spec;
+    return File::Spec->catfile('$ml_home_dir', $x);
 }
 
 
