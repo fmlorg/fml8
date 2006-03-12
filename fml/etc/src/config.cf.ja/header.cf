@@ -28,6 +28,8 @@ incoming_mail_header_loop_check_rules		=	check_message_id
 message_id_cache_dir		=	$db_dir/message_id
 
 
+=head2 ARTICLE
+
 # Descriptions: 記事としてスプールに格納されたメールの 
 #               Message-ID のキャッシュを格納するディレクトリ
 #      History: なし
@@ -105,26 +107,135 @@ unsafe_header_fields		=	Return-Receipt-To
 article_subject_tag			=	[$ml_name:%05d]
 
 
+# Descriptions: list-help of article header.
+#      History: LIST_HELP
+#        Value: STR
+#     Examples: <mailto:${command_mail_address}?body=help>
+article_header_list_help	= $mail_header_default_list_help
+
+
+# Descriptions: list-id of article header.
+#      History: LIST_HELP
+#        Value: STR
+#     Examples: $ml_name ML <$ml_name.$ml_domain>
+article_header_list_id		= $mail_header_default_list_id
+
+
+# Descriptions: list-owner of article header.
+#      History: none
+#        Value: STR
+#     Examples: <mailto:${maintainer}>
+article_header_list_owner	= $mail_header_default_list_owner
+
+
+# Descriptions: list-post of article header.
+#      History: LIST_POST
+#        Value: STR
+#     Examples: <mailto:${article_post_address}>
+article_header_list_post	= $mail_header_default_list_post
+
+
+# Descriptions: list-subscribe of article header.
+#      History: LIST_SUBSCRIBE
+#        Value: STR
+#     Examples: <mailto:${command_mail_address}?body=subscribe>
+article_header_list_subscribe	= $mail_header_default_list_subscribe
+
+
+# Descriptions: list-unsubscribe of article header.
+#      History: LIST_UNSUBSCRIBE
+#        Value: STR
+#     Examples: <mailto:${command_mail_address}?body=unsubscribe>
+article_header_list_unsubscribe	= $mail_header_default_list_unsubscribe
+
+
+=head2 OUTGOING MAIL 
+
 # Descriptions: X-ML-Name: および X-Sequence にあらわれる ML 名
 #               XXX そこだけ変えたい場合があるかもしれないので、
 #               XXX 一応 $ml_name とは分けておく。
 #      History:
 #        Value: ML_NAME
 #     Examples: elena
-outgoing_mail_header_x_ml_name		=	$ml_name
+outgoing_mail_header_x_ml_name	=	${mail_header_default_x_ml_name}
 
 
 # Descriptions: Errors-To: フィールド
 #      History: fml 4.0 の $ERRORS_TO
 #        Value: RFC822_ADDRESS
 #     Examples: elena-admin@fml.org
-outgoing_mail_header_errors_to		=	$maintainer
+outgoing_mail_header_errors_to	=	${mail_header_default_errors_to}
 
 
 # Descriptions: Precedence: field
 #      History: $PRECEDENCE in fml 4.0
 #        Value: STR
 #     Examples: bulk
-outgoing_mail_header_precedence		=	bulk
+outgoing_mail_header_precedence	=	${mail_header_default_precedence}
 
+
+=head2 GENERAL MAIL HEADER DEFINITIONS
+
+
+# Descriptions: デフォルトの Precedence: ヘッダフィールド
+#      History: PRECEDENCE
+#        Value: STR
+#     Examples: bulk
+mail_header_default_precedence		= bulk
+
+
+# Descriptions: デフォルトの Errors-To: ヘッダフィールド
+#      History: ERRORS_TO
+#        Value: STR
+#     Examples: $maintainer
+mail_header_default_errors_to		= $maintainer
+
+
+# Descriptions: デフォルトの X-ML-Name: ヘッダフィールド
+#      History: ERRORS_TO
+#        Value: STR
+#     Examples: $ml_name
+mail_header_default_x_ml_name		= $ml_name
+
+
+# Descriptions: デフォルトの list-id ヘッダフィールド
+#      History: LIST_HELP
+#        Value: STR
+#     Examples: $ml_name ML <$ml_name.$ml_domain>
+mail_header_default_list_id		= $ml_name ML <$ml_name.$ml_domain>
+
+
+# Descriptions: デフォルトの list-owner ヘッダフィールド
+#      History: none
+#        Value: STR
+#     Examples: <mailto:${maintainer}>
+mail_header_default_list_owner		= <mailto:${maintainer}>
+
+
+# Descriptions: デフォルトの list-post ヘッダフィールド
+#      History: LIST_POST
+#        Value: STR
+#     Examples: <mailto:${article_post_address}>
+mail_header_default_list_post		= <mailto:${article_post_address}>
+
+
+# Descriptions: デフォルトの list-help ヘッダフィールド
+#      History: LIST_HELP
+#        Value: STR
+#     Examples: <mailto:${command_mail_address}?body=help>
+mail_header_default_list_help		= <mailto:${command_mail_address}?body=help>
+
+
+# Descriptions: デフォルトの list-subscribe ヘッダフィールド
+#      History: LIST_SUBSCRIBE
+#        Value: STR
+#     Examples: <mailto:${command_mail_address}?body=subscribe>
+mail_header_default_list_subscribe	= <mailto:${command_mail_address}?body=subscribe>
+
+
+# Descriptions: デフォルトの list-unsubscribe ヘッダフィールド
+#      History: LIST_UNSUBSCRIBE
+#        Value: STR
+#     Examples: <mailto:${command_mail_address}?body=unsubscribe>
+mail_header_default_list_unsubscribe	= <mailto:${command_mail_address}?body=unsubscribe>
 
