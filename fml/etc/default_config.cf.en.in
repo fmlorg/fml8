@@ -83,6 +83,13 @@ use_debug	=	no
 maintainer	=
 
 
+# Descriptions: signature of ML maintainer (not used).
+#      History: $MAITAINER_SIGNATURE
+#        Value: STR
+#     Examples: Elena Lolabrigita
+maintainer_signature	=
+
+
 =head2	default umask
 
 
@@ -874,6 +881,9 @@ incoming_mail_header_loop_check_rules		=	check_message_id
 message_id_cache_dir		=	$db_dir/message_id
 
 
+=head2 ARTICLE
+
+
 # Descriptions: article Message-ID cache directory
 #      History:
 #        Value: DIR
@@ -949,26 +959,136 @@ unsafe_header_fields		=	Return-Receipt-To
 article_subject_tag			=	[$ml_name:%05d]
 
 
+# Descriptions: list-help of article header.
+#      History: LIST_HELP
+#        Value: STR
+#     Examples: <mailto:${command_mail_address}?body=help>
+article_header_list_help	= $mail_header_default_list_help
+
+
+# Descriptions: list-id of article header.
+#      History: LIST_HELP
+#        Value: STR
+#     Examples: $ml_name ML <$ml_name.$ml_domain>
+article_header_list_id		= $mail_header_default_list_id
+
+
+# Descriptions: list-owner of article header.
+#      History: none
+#        Value: STR
+#     Examples: <mailto:${maintainer}>
+article_header_list_owner	= $mail_header_default_list_owner
+
+
+# Descriptions: list-post of article header.
+#      History: LIST_POST
+#        Value: STR
+#     Examples: <mailto:${article_post_address}>
+article_header_list_post	= $mail_header_default_list_post
+
+
+# Descriptions: list-subscribe of article header.
+#      History: LIST_SUBSCRIBE
+#        Value: STR
+#     Examples: <mailto:${command_mail_address}?body=subscribe>
+article_header_list_subscribe	= $mail_header_default_list_subscribe
+
+
+# Descriptions: list-unsubscribe of article header.
+#      History: LIST_UNSUBSCRIBE
+#        Value: STR
+#     Examples: <mailto:${command_mail_address}?body=unsubscribe>
+article_header_list_unsubscribe	= $mail_header_default_list_unsubscribe
+
+
+=head2 OUTGOING MAIL
+
+
 # Descriptions: ml name in both X-ML-Name: and X-Sequence header fields.
 #      History:
 #        Value: ML_NAME
 #     Examples: elena
-outgoing_mail_header_x_ml_name		=	$ml_name
+outgoing_mail_header_x_ml_name	=	${mail_header_default_x_ml_name}
 
 
 # Descriptions: Errors-To: field
 #      History: fml 4.0 's $ERRORS_TO
 #        Value: RFC822_ADDRESS
 #     Examples: elena-admin@fml.org
-outgoing_mail_header_errors_to		=	$maintainer
+outgoing_mail_header_errors_to	=	${mail_header_default_errors_to}
 
 
 # Descriptions: Precedence: field
 #      History: $PRECEDENCE in fml 4.0
 #        Value: STR
 #     Examples: bulk
-outgoing_mail_header_precedence		=	bulk
+outgoing_mail_header_precedence	=	${mail_header_default_precedence}
 
+
+=head2 GENERAL MAIL HEADER DEFINITIONS
+
+
+# Descriptions: default Precedence: field.
+#      History: PRECEDENCE
+#        Value: STR
+#     Examples: bulk
+mail_header_default_precedence		= bulk
+
+
+# Descriptions: default Errors-To: field.
+#      History: ERRORS_TO
+#        Value: STR
+#     Examples: $maintainer
+mail_header_default_errors_to		= $maintainer
+
+
+# Descriptions: default X-ML-Name: field.
+#      History: ERRORS_TO
+#        Value: STR
+#     Examples: $ml_name
+mail_header_default_x_ml_name		= $ml_name
+
+
+# Descriptions: default list-id header field.
+#      History: LIST_HELP
+#        Value: STR
+#     Examples: $ml_name ML <$ml_name.$ml_domain>
+mail_header_default_list_id		= $ml_name ML <$ml_name.$ml_domain>
+
+
+# Descriptions: default list-owner header field.
+#      History: none
+#        Value: STR
+#     Examples: <mailto:${maintainer}>
+mail_header_default_list_owner		= <mailto:${maintainer}>
+
+
+# Descriptions: default list-post header field.
+#      History: LIST_POST
+#        Value: STR
+#     Examples: <mailto:${article_post_address}>
+mail_header_default_list_post		= <mailto:${article_post_address}>
+
+
+# Descriptions: default list-help header field.
+#      History: LIST_HELP
+#        Value: STR
+#     Examples: <mailto:${command_mail_address}?body=help>
+mail_header_default_list_help		= <mailto:${command_mail_address}?body=help>
+
+
+# Descriptions: default list-subscribe header field.
+#      History: LIST_SUBSCRIBE
+#        Value: STR
+#     Examples: <mailto:${command_mail_address}?body=subscribe>
+mail_header_default_list_subscribe	= <mailto:${command_mail_address}?body=subscribe>
+
+
+# Descriptions: default list-unsubscribe header field.
+#      History: LIST_UNSUBSCRIBE
+#        Value: STR
+#     Examples: <mailto:${command_mail_address}?body=unsubscribe>
+mail_header_default_list_unsubscribe	= <mailto:${command_mail_address}?body=unsubscribe>
 
 
 =head1	mail body
