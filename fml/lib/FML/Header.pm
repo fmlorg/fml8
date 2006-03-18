@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.89 2006/02/05 01:01:55 fukachan Exp $
+# $FML: Header.pm,v 1.90 2006/03/12 11:54:42 fukachan Exp $
 #
 
 package FML::Header;
@@ -276,31 +276,6 @@ add Message-Id field.
 =cut
 
 
-# Descriptions: add "X-ML-Server: fml .." and "List-Software: fml .."
-#               to header.
-#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
-# Side Effects: update $header
-# Return Value: none
-sub add_software_info
-{
-    my ($header, $config, $rw_args) = @_;
-    my $fml_version = $config->{ fml_version } || '';
-    my $object_type = defined $rw_args->{ type } ? $rw_args->{ type } : '';
-
-    if ($fml_version) {
-	if ($object_type eq 'MIME::Lite') {
-	    my $msg = $rw_args->{ message };
-	    $msg->attr('X-MLServer'    => $fml_version);
-	    $msg->attr('List-Software' => $fml_version);
-	}
-	else {
-	    $header->add('X-MLServer',    $fml_version);
-	    $header->add('List-Software', $fml_version);
-	}
-    }
-}
-
-
 # Descriptions: return header type.
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: none
@@ -315,6 +290,32 @@ sub _get_header_type
     }
     else {
 	return 'mail_header_default';
+    }
+}
+
+
+# Descriptions: add "X-ML-Server: fml .." and "List-Software: fml .."
+#               to header.
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
+# Side Effects: update $header
+# Return Value: none
+sub add_software_info
+{
+    my ($header, $config, $rw_args) = @_;
+    my $hdrtype     = $header->_get_header_type($config, $rw_args);
+    my $software    = $config->{ "${hdrtype}_list_software" } || '';
+    my $object_type = $rw_args->{ type } || '';
+
+    if ($software) {
+	if ($object_type eq 'MIME::Lite') {
+	    my $msg = $rw_args->{ message };
+	    $msg->attr('X-MLServer'    => $software);
+	    $msg->attr('List-Software' => $software);
+	}
+	else {
+	    $header->add('X-MLServer',    $software);
+	    $header->add('List-Software', $software);
+	}
     }
 }
 
