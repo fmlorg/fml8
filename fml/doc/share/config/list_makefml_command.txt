@@ -49,6 +49,7 @@ mget
 moderate
 moderatoradd
 moderatordel
+newcopml
 newdomain
 newml
 off
@@ -59,6 +60,7 @@ password
 remove
 resign
 reviveml
+rmcopml
 rmdomain
 rmml
 signoff
