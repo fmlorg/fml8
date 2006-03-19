@@ -155,6 +155,69 @@ check_message_id
 </row>
 <row>
 <entry>
+article_header_list_help</entry>
+<entry>
+ list-help of article header.</entry>
+<entry>
+$mail_header_default_list_help
+   </entry>
+</row>
+<row>
+<entry>
+article_header_list_id</entry>
+<entry>
+ list-id of article header.</entry>
+<entry>
+$mail_header_default_list_id
+   </entry>
+</row>
+<row>
+<entry>
+article_header_list_owner</entry>
+<entry>
+ list-owner of article header.</entry>
+<entry>
+$mail_header_default_list_owner
+   </entry>
+</row>
+<row>
+<entry>
+article_header_list_post</entry>
+<entry>
+ list-post of article header.</entry>
+<entry>
+$mail_header_default_list_post
+   </entry>
+</row>
+<row>
+<entry>
+article_header_list_software</entry>
+<entry>
+ default list-software header field.</entry>
+<entry>
+$mail_header_default_list_software
+   </entry>
+</row>
+<row>
+<entry>
+article_header_list_subscribe</entry>
+<entry>
+ list-subscribe of article header.</entry>
+<entry>
+$mail_header_default_list_subscribe
+   </entry>
+</row>
+<row>
+<entry>
+article_header_list_unsubscribe</entry>
+<entry>
+ list-unsubscribe of article header.</entry>
+<entry>
+$mail_header_default_list_unsubscribe
+   </entry>
+</row>
+<row>
+<entry>
 article_header_rewrite_rules</entry>
 <entry>
  header rewriting rules</entry>
@@ -1412,6 +1475,96 @@ $domain_mail_config_dir/aliases
 </row>
 <row>
 <entry>
+mail_header_default_errors_to</entry>
+<entry>
+ default Errors-To: field.</entry>
+<entry>
+$maintainer
+   </entry>
+</row>
+<row>
+<entry>
+mail_header_default_list_help</entry>
+<entry>
+ default list-help header field.</entry>
+<entry>
+&lt;mailto:${command_mail_address}?body=help&gt;
+   </entry>
+</row>
+<row>
+<entry>
+mail_header_default_list_id</entry>
+<entry>
+ default list-id header field.</entry>
+<entry>
+$ml_name ML &lt;$ml_name.$ml_domain&gt;
+   </entry>
+</row>
+<row>
+<entry>
+mail_header_default_list_owner</entry>
+<entry>
+ default list-owner header field.</entry>
+<entry>
+&lt;mailto:${maintainer}&gt;
+   </entry>
+</row>
+<row>
+<entry>
+mail_header_default_list_post</entry>
+<entry>
+ default list-post header field.</entry>
+<entry>
+&lt;mailto:${article_post_address}&gt;
+   </entry>
+</row>
+<row>
+<entry>
+mail_header_default_list_software</entry>
+<entry>
+ default list-software header field.</entry>
+<entry>
+$fml_version
+   </entry>
+</row>
+<row>
+<entry>
+mail_header_default_list_subscribe</entry>
+<entry>
+ default list-subscribe header field.</entry>
+<entry>
+&lt;mailto:${command_mail_address}?body=subscribe&gt;
+   </entry>
+</row>
+<row>
+<entry>
+mail_header_default_list_unsubscribe</entry>
+<entry>
+ default list-unsubscribe header field.</entry>
+<entry>
+&lt;mailto:${command_mail_address}?body=unsubscribe&gt;
+   </entry>
+</row>
+<row>
+<entry>
+mail_header_default_precedence</entry>
+<entry>
+ default Precedence: field.</entry>
+<entry>
+bulk
+   </entry>
+</row>
+<row>
+<entry>
+mail_header_default_x_ml_name</entry>
+<entry>
+ default X-ML-Name: field.</entry>
+<entry>
+$ml_name
+   </entry>
+</row>
+<row>
+<entry>
 mail_queue_dir</entry>
 <entry>
  mail queue directory</entry>
@@ -1630,7 +1783,7 @@ outgoing_mail_header_errors_to</entry>
 <entry>
  Errors-To: field</entry>
 <entry>
-$maintainer
+${mail_header_default_errors_to}
    </entry>
 </row>
 <row>
@@ -1639,7 +1792,7 @@ outgoing_mail_header_precedence</entry>
 <entry>
  Precedence: field</entry>
 <entry>
-bulk
+${mail_header_default_precedence}
    </entry>
 </row>
 <row>
@@ -1648,7 +1801,7 @@ outgoing_mail_header_x_ml_name</entry>
 <entry>
  ml name in both X-ML-Name: and X-Sequence header fields.</entry>
 <entry>
-$ml_name
+${mail_header_default_x_ml_name}
    </entry>
 </row>
 <row>
@@ -2116,6 +2269,15 @@ yes
 </row>
 <row>
 <entry>
+use_admin_command_mail_fucntion</entry>
+<entry>
+ use admin command mail ?</entry>
+<entry>
+no
+   </entry>
+</row>
+<row>
+<entry>
 use_article_delivery</entry>
 <entry>
  user article delivery function ?</entry>
@@ -2436,6 +2598,15 @@ use_outgoing_mail_cache</entry>
  cache outgoing mail cache ?</entry>
 <entry>
 yes
+   </entry>
+</row>
+<row>
+<entry>
+use_smtp_log</entry>
+<entry>
+ log smtp transaction ?</entry>
+<entry>
+yes      
    </entry>
 </row>
 <row>
