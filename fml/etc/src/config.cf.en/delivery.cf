@@ -35,6 +35,16 @@ mail_queue_dir	= $var_dir/mail/queue
 
 =head2	debug of smtp
 
+=head3	smtp logging
+
+
+# Descriptions: log smtp transaction ?
+#      History: $USE_SMTP_LOG
+#        Value: YES_OR_NO
+#     Examples: yes
+use_smtp_log	=	yes	 
+
+
 =head3	input mail cache
 
 
