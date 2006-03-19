@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.168 2006/01/09 14:00:54 fukachan Exp $
+# $FML: Distribute.pm,v 1.169 2006/02/04 07:42:24 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -603,10 +603,15 @@ sub _deliver_article
     my $handle = undef;
 
     # overload $sfp log function pointer.
-    my $wh = $curproc->outgoing_message_cache_open();
-    if (defined $wh) {
-	$sfp    = sub { print $wh @_;};
-	$handle = undef; # $wh;
+    if ($config->yes('use_smtp_log')) {
+	my $wh = $curproc->outgoing_message_cache_open();
+	if (defined $wh) {
+	    $sfp    = sub { print $wh @_;};
+	    $handle = undef; # $wh;
+	}
+    }
+    else {
+	$sfp = sub {};
     }
 
     # delay loading of module
