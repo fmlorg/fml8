@@ -686,7 +686,7 @@ smtp_servers		=	[::1]:25
 smtp_sender		=	$maintainer
 
 
-=head2 mail queue
+=head2	mail queue
 
 # Descriptions: mail queue のディレクトリ
 #      History: 似たような目的に tmp/ が使われていたが、
@@ -697,6 +697,16 @@ mail_queue_dir	= $var_dir/mail/queue
 
 
 =head2	デバッグに役立つ機能
+
+=head3	SMTP ログ
+
+
+# Descriptions: SMTP の様子をログにとるか？
+#      History: $USE_SMTP_LOG
+#        Value: YES_OR_NO
+#     Examples: yes
+use_smtp_log	=	yes	 
+
 
 =head3	入力データのキャッシュ
 
