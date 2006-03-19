@@ -33,6 +33,26 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2006/03/19
+
+   fml 4 から fml 8 への変換
+	56.5 % 確認
+
+   variables
+	define $article_header_list_software
+	define $mail_header_default_list_software
+	$default_umask -> $system_default_umask
+	
+   FML::Header 
+	List-Software: and X-MLServer: is set as 
+	${mail_header_default_list_software} or
+	${article_header_list_software} by definition.
+
+	sort definition order: _get_header_type(), ...
+
+   FML::Process::Distribute 
+	$use_smtp_log enable/disable smtp transaction logging.
+
 2006/03/12
 
    variables
@@ -9352,4 +9372,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.269 2006/03/05 12:09:59 fukachan Exp $
+$FML: CHANGES.txt,v 1.270 2006/03/12 14:16:24 fukachan Exp $
