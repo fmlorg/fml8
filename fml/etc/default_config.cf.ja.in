@@ -94,7 +94,7 @@ maintainer_signature	=
 #      History:
 #        Value: UMASK
 #     Examples:
-default_umask		=	077
+system_default_umask	=	077
 
 
 =head2 TIME ZONE
@@ -991,6 +991,13 @@ unsafe_header_fields		=	Return-Receipt-To
 article_subject_tag			=	[$ml_name:%05d]
 
 
+# Descriptions: default list-software header field.
+#      History: LIST_SOFTWARE
+#        Value: STR
+#     Examples: $fml_version
+article_header_list_software	= $mail_header_default_list_software
+
+
 # Descriptions: list-help of article header.
 #      History: LIST_HELP
 #        Value: STR
@@ -1123,6 +1130,12 @@ mail_header_default_list_subscribe	= <mailto:${command_mail_address}?body=subscr
 #     Examples: <mailto:${command_mail_address}?body=unsubscribe>
 mail_header_default_list_unsubscribe	= <mailto:${command_mail_address}?body=unsubscribe>
 
+
+# Descriptions: default list-software header field.
+#      History: LIST_SOFTWARE
+#        Value: STR
+#     Examples: $fml_version
+mail_header_default_list_software	= $fml_version
 
 =head1	メール本文(ボディ)への操作
 
