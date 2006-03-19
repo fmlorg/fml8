@@ -23,7 +23,7 @@ maintainer_signature	=
 #      History:
 #        Value: UMASK
 #     Examples:
-default_umask		=	077
+system_default_umask	=	077
 
 
 =head2 TIME ZONE
