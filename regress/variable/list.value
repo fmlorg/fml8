@@ -55,7 +55,7 @@ _prompt$		PROMPT
 
 cgi.*color		HTML_COLOR
 
-default_umask   	UMASK
+system_default_umask   	UMASK
 
 directory_default_mode  FILE_MODE
 directory_private_mode  FILE_MODE
