@@ -8,7 +8,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Rules.pm,v 1.9 2006/01/04 07:48:01 fukachan Exp $
+# $FML$
 #
 
 package FML::Merge::FML4::Rules;
@@ -37,61 +37,61 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'debug' && $diff->{ debug })) {
         if ($config->{ debug } >= 1) {
-            $s .= "use_debug = yes";
+            $s .= sprintf("use_debug = yes", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'debug' && $diff->{ debug })) {
         if ($config->{ debug } == 0) {
-            $s .= "use_debug = no";
+            $s .= sprintf("use_debug = no", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LANGUAGE' && $diff->{ LANGUAGE })) {
         if ($config->{ LANGUAGE } eq 'Japanese') {
-            $s .= "language_preference_order = ja en";
+            $s .= sprintf("language_preference_order = ja en", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LANGUAGE' && $diff->{ LANGUAGE })) {
         if ($config->{ LANGUAGE } eq 'English') {
-            $s .= "language_preference_order = en ja";
+            $s .= sprintf("language_preference_order = en ja", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MESSAGE_LANGUAGE' && $diff->{ MESSAGE_LANGUAGE })) {
         if ($config->{ MESSAGE_LANGUAGE } eq 'Japanese') {
-            $s .= "language_preference_order = ja en";
+            $s .= sprintf("language_preference_order = ja en", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MESSAGE_LANGUAGE' && $diff->{ MESSAGE_LANGUAGE })) {
         if ($config->{ MESSAGE_LANGUAGE } eq 'English') {
-            $s .= "language_preference_order = en ja";
+            $s .= sprintf("language_preference_order = en ja", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'DOMAINNAME' && $diff->{ DOMAINNAME })) {
@@ -100,7 +100,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'FQDN' && $diff->{ FQDN })) {
@@ -109,7 +109,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MAIL_LIST' && $diff->{ MAIL_LIST })) {
@@ -118,82 +118,25 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'PERMIT_POST_FROM' && $diff->{ PERMIT_POST_FROM })) {
-        if ($config->{ PERMIT_POST_FROM } eq 'anyone') {
-            $s .= "article_post_restrictions = reject_system_special_accounts permit_anyone";
+        if ($config->{ PERMIT_POST_FROM }) {
+            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
-    if (($key eq 'PERMIT_POST_FROM' && $diff->{ PERMIT_POST_FROM }) || ($key eq 'REJECT_POST_HANDLER' && $diff->{ REJECT_POST_HANDLER })) {
-        if ($config->{ PERMIT_POST_FROM } eq 'members_only') {
-            if ($config->{ REJECT_POST_HANDLER } eq 'reject') {
-                $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
-            }
+    if (($key eq 'REJECT_POST_HANDLER' && $diff->{ REJECT_POST_HANDLER })) {
+        if ($config->{ REJECT_POST_HANDLER }) {
+            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
-
-    $s = undef;
-    if (($key eq 'PERMIT_POST_FROM' && $diff->{ PERMIT_POST_FROM }) || ($key eq 'REJECT_POST_HANDLER' && $diff->{ REJECT_POST_HANDLER })) {
-        if ($config->{ PERMIT_POST_FROM } eq 'members_only') {
-            if ($config->{ REJECT_POST_HANDLER } eq 'auto_subscribe') {
-                $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
-            }
-        }
-    }
-    return $s if defined $s;
-
-
-    $s = undef;
-    if (($key eq 'PERMIT_POST_FROM' && $diff->{ PERMIT_POST_FROM }) || ($key eq 'REJECT_POST_HANDLER' && $diff->{ REJECT_POST_HANDLER })) {
-        if ($config->{ PERMIT_POST_FROM } eq 'members_only') {
-            if ($config->{ REJECT_POST_HANDLER } eq 'ignore') {
-                $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
-            }
-        }
-    }
-    return $s if defined $s;
-
-
-    $s = undef;
-    if (($key eq 'PERMIT_POST_FROM' && $diff->{ PERMIT_POST_FROM }) || ($key eq 'MODERATOR_FORWARD_TYPE' && $diff->{ MODERATOR_FORWARD_TYPE })) {
-        if ($config->{ PERMIT_POST_FROM } eq 'moderator') {
-            if ($config->{ MODERATOR_FORWARD_TYPE } == 1) {
-                $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
-            }
-        }
-    }
-    return $s if defined $s;
-
-
-    $s = undef;
-    if (($key eq 'PERMIT_POST_FROM' && $diff->{ PERMIT_POST_FROM }) || ($key eq 'MODERATOR_FORWARD_TYPE' && $diff->{ MODERATOR_FORWARD_TYPE })) {
-        if ($config->{ PERMIT_POST_FROM } eq 'moderator') {
-            if ($config->{ MODERATOR_FORWARD_TYPE } == 2) {
-                $s .= "article_post_restrictions = reject_system_special_accounts permit_forward_to_moderator";
-            }
-        }
-    }
-    return $s if defined $s;
-
-
-    $s = undef;
-    if (($key eq 'PERMIT_POST_FROM' && $diff->{ PERMIT_POST_FROM }) || ($key eq 'MODERATOR_FORWARD_TYPE' && $diff->{ MODERATOR_FORWARD_TYPE })) {
-        if ($config->{ PERMIT_POST_FROM } eq 'moderator') {
-            if ($config->{ MODERATOR_FORWARD_TYPE } == 3) {
-                $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
-            }
-        }
-    }
-    return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CONTROL_ADDRESS' && $diff->{ CONTROL_ADDRESS })) {
@@ -202,58 +145,25 @@ sub translate
         }
     }
     return $s if defined $s;
-
-
-    $s = undef;
-    if (($key eq 'PERMIT_COMMAND_FROM' && $diff->{ PERMIT_COMMAND_FROM })) {
-        if ($config->{ PERMIT_COMMAND_FROM } eq 'anyone') {
-            $s .= "command_mail_restrictions = reject_system_special_accounts permit_anyone";
-        }
-    }
-    return $s if defined $s;
-
-
-    $s = undef;
-    if (($key eq 'PERMIT_COMMAND_FROM' && $diff->{ PERMIT_COMMAND_FROM }) || ($key eq 'REJECT_COMMAND_HANDLER' && $diff->{ REJECT_COMMAND_HANDLER })) {
-        if ($config->{ PERMIT_COMMAND_FROM } eq 'members_only') {
-            if ($config->{ REJECT_COMMAND_HANDLER } eq 'reject') {
-                $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
-            }
-        }
-    }
-    return $s if defined $s;
-
-
-    $s = undef;
-    if (($key eq 'PERMIT_COMMAND_FROM' && $diff->{ PERMIT_COMMAND_FROM }) || ($key eq 'REJECT_COMMAND_HANDLER' && $diff->{ REJECT_COMMAND_HANDLER })) {
-        if ($config->{ PERMIT_COMMAND_FROM } eq 'members_only') {
-            if ($config->{ REJECT_COMMAND_HANDLER } eq 'auto_subscribe') {
-                $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
-            }
-        }
-    }
-    return $s if defined $s;
-
-
-    $s = undef;
-    if (($key eq 'PERMIT_COMMAND_FROM' && $diff->{ PERMIT_COMMAND_FROM }) || ($key eq 'REJECT_COMMAND_HANDLER' && $diff->{ REJECT_COMMAND_HANDLER })) {
-        if ($config->{ PERMIT_COMMAND_FROM } eq 'members_only') {
-            if ($config->{ REJECT_COMMAND_HANDLER } eq 'ignore') {
-                $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
-            }
-        }
-    }
-    return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'PERMIT_COMMAND_FROM' && $diff->{ PERMIT_COMMAND_FROM })) {
-        if ($config->{ PERMIT_COMMAND_FROM } eq 'moderator') {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+        if ($config->{ PERMIT_COMMAND_FROM }) {
+            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
+    
 
+    $s = undef;
+    if (($key eq 'REJECT_COMMAND_HANDLER' && $diff->{ REJECT_COMMAND_HANDLER })) {
+        if ($config->{ REJECT_COMMAND_HANDLER }) {
+            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
+        }
+    }
+    return $s if defined $s;
+    
 
     $s = undef;
     if (($key eq 'MAIL_LIST_ACCEPT_COMMAND' && $diff->{ MAIL_LIST_ACCEPT_COMMAND })) {
@@ -262,7 +172,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MAINTAINER' && $diff->{ MAINTAINER })) {
@@ -271,16 +181,16 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MAINTAINER_SIGNATURE' && $diff->{ MAINTAINER_SIGNATURE })) {
         if ($config->{ MAINTAINER_SIGNATURE }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= sprintf("maintainer_signature = %s", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'ML_FN' && $diff->{ ML_FN })) {
@@ -289,7 +199,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'SPOOL_DIR' && $diff->{ SPOOL_DIR })) {
@@ -298,7 +208,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'TMP_DIR' && $diff->{ TMP_DIR })) {
@@ -307,70 +217,70 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'VAR_DIR' && $diff->{ VAR_DIR })) {
-        if ($config->{ VAR_DIR } eq 'var') {
+        if ($config->{ VAR_DIR }) {
             $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'VARLOG_DIR' && $diff->{ VARLOG_DIR })) {
-        if ($config->{ VARLOG_DIR } eq 'var/log') {
+        if ($config->{ VARLOG_DIR }) {
             $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'VARRUN_DIR' && $diff->{ VARRUN_DIR })) {
-        if ($config->{ VARRUN_DIR } eq 'var/run') {
+        if ($config->{ VARRUN_DIR }) {
             $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'VARDB_DIR' && $diff->{ VARDB_DIR })) {
-        if ($config->{ VARDB_DIR } eq 'var/db') {
+        if ($config->{ VARDB_DIR }) {
             $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MANUAL_REGISTRATION_TYPE' && $diff->{ MANUAL_REGISTRATION_TYPE })) {
         if ($config->{ MANUAL_REGISTRATION_TYPE } eq 'confirmation') {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= sprintf("subscribe_command_auth_type = confirmation", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MANUAL_REGISTRATION_TYPE' && $diff->{ MANUAL_REGISTRATION_TYPE })) {
         if ($config->{ MANUAL_REGISTRATION_TYPE } eq 'forward_to_admin') {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= sprintf("subscribe_command_auth_type = manual", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MANUAL_REGISTRATION_CONFIRMATION_FILE' && $diff->{ MANUAL_REGISTRATION_CONFIRMATION_FILE })) {
-        if ($config->{ MANUAL_REGISTRATION_CONFIRMATION_FILE } eq '$DIR/confirm.msub') {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+        if ($config->{ MANUAL_REGISTRATION_CONFIRMATION_FILE }) {
+            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'AUTO_REGISTRATION_TYPE' && $diff->{ AUTO_REGISTRATION_TYPE })) {
@@ -379,34 +289,34 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'AUTO_REGISTRATION_TYPE' && $diff->{ AUTO_REGISTRATION_TYPE })) {
         if ($config->{ AUTO_REGISTRATION_TYPE } eq 'subject') {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'AUTO_REGISTRATION_TYPE' && $diff->{ AUTO_REGISTRATION_TYPE })) {
         if ($config->{ AUTO_REGISTRATION_TYPE } eq 'body') {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'AUTO_REGISTRATION_TYPE' && $diff->{ AUTO_REGISTRATION_TYPE })) {
         if ($config->{ AUTO_REGISTRATION_TYPE } eq 'no-keyword') {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'AUTO_REGISTRATION_KEYWORD' && $diff->{ AUTO_REGISTRATION_KEYWORD })) {
@@ -415,7 +325,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'AUTO_REGISTRATION_KEYWORD' && $diff->{ AUTO_REGISTRATION_KEYWORD })) {
@@ -424,7 +334,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'AUTO_REGISTRATION_DEFAULT_MODE' && $diff->{ AUTO_REGISTRATION_DEFAULT_MODE })) {
@@ -433,7 +343,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CONFIRMATION_ADDRESS' && $diff->{ CONFIRMATION_ADDRESS })) {
@@ -442,7 +352,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CONFIRMATION_ADDRESS' && $diff->{ CONFIRMATION_ADDRESS })) {
@@ -451,7 +361,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CONFIRMATION_SUBSCRIBE' && $diff->{ CONFIRMATION_SUBSCRIBE })) {
@@ -460,7 +370,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CONFIRMATION_SUBSCRIBE' && $diff->{ CONFIRMATION_SUBSCRIBE })) {
@@ -469,7 +379,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CONFIRMATION_KEYWORD' && $diff->{ CONFIRMATION_KEYWORD })) {
@@ -478,7 +388,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CONFIRMATION_KEYWORD' && $diff->{ CONFIRMATION_KEYWORD })) {
@@ -487,7 +397,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CONFIRMATION_WELCOME_STATEMENT' && $diff->{ CONFIRMATION_WELCOME_STATEMENT })) {
@@ -496,25 +406,34 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CONFIRMATION_SUBSCRIBE_NEED_YOUR_NAME' && $diff->{ CONFIRMATION_SUBSCRIBE_NEED_YOUR_NAME })) {
-        if ($config->{ CONFIRMATION_SUBSCRIBE_NEED_YOUR_NAME }) {
+        if ($config->{ CONFIRMATION_SUBSCRIBE_NEED_YOUR_NAME } == 1) {
             $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
+    
 
+    $s = undef;
+    if (($key eq 'CONFIRMATION_SUBSCRIBE_NEED_YOUR_NAME' && $diff->{ CONFIRMATION_SUBSCRIBE_NEED_YOUR_NAME })) {
+        if ($config->{ CONFIRMATION_SUBSCRIBE_NEED_YOUR_NAME } == 0) {
+            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
+        }
+    }
+    return $s if defined $s;
+    
 
     $s = undef;
     if (($key eq 'CONFIRMATION_FILE' && $diff->{ CONFIRMATION_FILE })) {
         if ($config->{ CONFIRMATION_FILE }) {
-            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CONFIRMATION_EXPIRE' && $diff->{ CONFIRMATION_EXPIRE })) {
@@ -523,7 +442,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CONFIRMATION_LIST' && $diff->{ CONFIRMATION_LIST })) {
@@ -532,7 +451,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'DEFAULT_SUBSCRIBE' && $diff->{ DEFAULT_SUBSCRIBE })) {
@@ -541,7 +460,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'DEFAULT_SUBSCRIBE' && $diff->{ DEFAULT_SUBSCRIBE })) {
@@ -550,7 +469,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'WELCOME_FILE' && $diff->{ WELCOME_FILE })) {
@@ -559,7 +478,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'WELCOME_STATEMENT' && $diff->{ WELCOME_STATEMENT })) {
@@ -568,7 +487,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'FILE_TO_REGIST' && $diff->{ FILE_TO_REGIST })) {
@@ -577,7 +496,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'AUTO_REGISTERED_UNDELIVER_P' && $diff->{ AUTO_REGISTERED_UNDELIVER_P })) {
@@ -586,7 +505,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'AUTO_REGISTERED_UNDELIVER_P' && $diff->{ AUTO_REGISTERED_UNDELIVER_P })) {
@@ -595,16 +514,16 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'AUTO_REGISTERD_UNDELIVER_P' && $diff->{ AUTO_REGISTERD_UNDELIVER_P })) {
         if ($config->{ AUTO_REGISTERD_UNDELIVER_P } == 1) {
-            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'AUTO_REGISTRATION_LINES_LIMIT' && $diff->{ AUTO_REGISTRATION_LINES_LIMIT })) {
@@ -613,7 +532,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'AUTO_REGISTRATION_LINES_LIMIT' && $diff->{ AUTO_REGISTRATION_LINES_LIMIT })) {
@@ -622,7 +541,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CONFIRMD_ACK_REQ_FILE' && $diff->{ CONFIRMD_ACK_REQ_FILE })) {
@@ -631,7 +550,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CONFIRMD_ACK_LOGFILE' && $diff->{ CONFIRMD_ACK_LOGFILE })) {
@@ -640,7 +559,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CONFIRMD_ACK_EXPIRE_UNIT' && $diff->{ CONFIRMD_ACK_EXPIRE_UNIT })) {
@@ -649,7 +568,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CONFIRMD_ACK_WAIT_UNIT' && $diff->{ CONFIRMD_ACK_WAIT_UNIT })) {
@@ -658,97 +577,106 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'REMOTE_ADMINISTRATION' && $diff->{ REMOTE_ADMINISTRATION })) {
         if ($config->{ REMOTE_ADMINISTRATION } == 0) {
-            $s .= "use_admin_command_mail_fucntion = no";
+            $s .= sprintf("use_admin_command_mail_fucntion = no", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'REMOTE_ADMINISTRATION' && $diff->{ REMOTE_ADMINISTRATION })) {
         if ($config->{ REMOTE_ADMINISTRATION } == 1) {
-            $s .= "use_admin_command_mail_fucntion = yes";
+            $s .= sprintf("use_admin_command_mail_fucntion = yes", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'REMOTE_ADMINISTRATION_REQUIRE_PASSWORD' && $diff->{ REMOTE_ADMINISTRATION_REQUIRE_PASSWORD })) {
         if ($config->{ REMOTE_ADMINISTRATION_REQUIRE_PASSWORD } == 1) {
-            $s .= "admin_command_mail_restrictions = reject_system_special_accounts check_admin_member_password reject";
+            $s .= sprintf("admin_command_mail_restrictions = reject_system_special_accounts check_admin_member_password reject", $value);
         }
     }
     return $s if defined $s;
+    
 
+    $s = undef;
+    if (($key eq 'REMOTE_ADMINISTRATION_REQUIRE_PASSWORD' && $diff->{ REMOTE_ADMINISTRATION_REQUIRE_PASSWORD })) {
+        if ($config->{ REMOTE_ADMINISTRATION_REQUIRE_PASSWORD } == 0) {
+            $s .= sprintf("admin_command_mail_restrictions = reject_system_special_accounts permit_admin_member_maps reject", $value);
+        }
+    }
+    return $s if defined $s;
+    
 
     $s = undef;
     if (($key eq 'REMOTE_ADMINISTRATION_AUTH_TYPE' && $diff->{ REMOTE_ADMINISTRATION_AUTH_TYPE })) {
         if ($config->{ REMOTE_ADMINISTRATION_AUTH_TYPE } eq 'crypt') {
-            $s .= "admin_command_mail_restrictions = reject_system_special_accounts check_admin_member_password reject";
+            $s .= sprintf("admin_command_mail_restrictions = reject_system_special_accounts check_admin_member_password reject", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'REMOTE_ADMINISTRATION_AUTH_TYPE' && $diff->{ REMOTE_ADMINISTRATION_AUTH_TYPE })) {
         if ($config->{ REMOTE_ADMINISTRATION_AUTH_TYPE } eq 'address') {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= sprintf("admin_command_mail_restrictions = reject_system_special_accounts permit_admin_member_maps reject", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'REMOTE_ADMINISTRATION_AUTH_TYPE' && $diff->{ REMOTE_ADMINISTRATION_AUTH_TYPE })) {
         if ($config->{ REMOTE_ADMINISTRATION_AUTH_TYPE } eq 'md5') {
-            $s .= "admin_command_mail_restrictions = reject_system_special_accounts check_admin_member_password reject";
+            $s .= sprintf("admin_command_mail_restrictions = reject_system_special_accounts check_admin_member_password reject", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'REMOTE_ADMINISTRATION_AUTH_TYPE' && $diff->{ REMOTE_ADMINISTRATION_AUTH_TYPE })) {
         if ($config->{ REMOTE_ADMINISTRATION_AUTH_TYPE } eq 'pgp') {
-            $s .= "admin_command_mail_restrictions = reject_system_special_accounts check_pgp_signature reject";
+            $s .= sprintf("admin_command_mail_restrictions = reject_system_special_accounts check_pgp_signature reject", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'REMOTE_ADMINISTRATION_AUTH_TYPE' && $diff->{ REMOTE_ADMINISTRATION_AUTH_TYPE })) {
         if ($config->{ REMOTE_ADMINISTRATION_AUTH_TYPE } eq 'pgp2') {
-            $s .= "admin_command_mail_restrictions = reject_system_special_accounts check_pgp_signature reject";
+            $s .= sprintf("admin_command_mail_restrictions = reject_system_special_accounts check_pgp_signature reject", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'REMOTE_ADMINISTRATION_AUTH_TYPE' && $diff->{ REMOTE_ADMINISTRATION_AUTH_TYPE })) {
         if ($config->{ REMOTE_ADMINISTRATION_AUTH_TYPE } eq 'pgp5') {
-            $s .= "admin_command_mail_restrictions = reject_system_special_accounts check_pgp_signature reject";
+            $s .= sprintf("admin_command_mail_restrictions = reject_system_special_accounts check_pgp_signature reject", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'REMOTE_ADMINISTRATION_AUTH_TYPE' && $diff->{ REMOTE_ADMINISTRATION_AUTH_TYPE })) {
         if ($config->{ REMOTE_ADMINISTRATION_AUTH_TYPE } eq 'gpg') {
-            $s .= "admin_command_mail_restrictions = reject_system_special_accounts check_pgp_signature reject";
+            $s .= sprintf("admin_command_mail_restrictions = reject_system_special_accounts check_pgp_signature reject", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'ADMIN_MEMBER_LIST' && $diff->{ ADMIN_MEMBER_LIST })) {
@@ -757,7 +685,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'ADMIN_HELP_FILE' && $diff->{ ADMIN_HELP_FILE })) {
@@ -766,7 +694,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'PASSWD_FILE' && $diff->{ PASSWD_FILE })) {
@@ -775,7 +703,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'ADMIN_ADD_SEND_WELCOME_FILE' && $diff->{ ADMIN_ADD_SEND_WELCOME_FILE })) {
@@ -784,7 +712,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'ADMIN_ADD_SEND_WELCOME_FILE' && $diff->{ ADMIN_ADD_SEND_WELCOME_FILE })) {
@@ -793,16 +721,16 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'ADMIN_LOG_DEFAULT_LINE_LIMIT' && $diff->{ ADMIN_LOG_DEFAULT_LINE_LIMIT })) {
         if ($config->{ ADMIN_LOG_DEFAULT_LINE_LIMIT }) {
-            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
+            $s .= sprintf("log_command_tail_starting_location = %s", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'PGP_PATH' && $diff->{ PGP_PATH })) {
@@ -811,7 +739,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_FML40_PGP_PATH' && $diff->{ USE_FML40_PGP_PATH })) {
@@ -820,7 +748,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'DIST_AUTH_KEYRING_DIR' && $diff->{ DIST_AUTH_KEYRING_DIR })) {
@@ -829,7 +757,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'DIST_ENCRYPT_KEYRING_DIR' && $diff->{ DIST_ENCRYPT_KEYRING_DIR })) {
@@ -838,7 +766,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'ADMIN_AUTH_KEYRING_DIR' && $diff->{ ADMIN_AUTH_KEYRING_DIR })) {
@@ -847,7 +775,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'ADMIN_ENCRYPT_KEYRING_DIR' && $diff->{ ADMIN_ENCRYPT_KEYRING_DIR })) {
@@ -856,7 +784,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MODERATOR_MEMBER_LIST' && $diff->{ MODERATOR_MEMBER_LIST })) {
@@ -865,7 +793,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MODERATOR_EXPIRE_LIMIT' && $diff->{ MODERATOR_EXPIRE_LIMIT })) {
@@ -874,7 +802,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'REJECT_ADDR' && $diff->{ REJECT_ADDR })) {
@@ -883,7 +811,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'REJECT_ADDR_LIST' && $diff->{ REJECT_ADDR_LIST })) {
@@ -892,7 +820,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'NOT_USE_UNIX_FROM_LOOP_CHECK' && $diff->{ NOT_USE_UNIX_FROM_LOOP_CHECK })) {
@@ -901,7 +829,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'NOT_USE_UNIX_FROM_LOOP_CHECK' && $diff->{ NOT_USE_UNIX_FROM_LOOP_CHECK })) {
@@ -910,7 +838,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CHECK_MESSAGE_ID' && $diff->{ CHECK_MESSAGE_ID })) {
@@ -919,16 +847,16 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CHECK_MESSAGE_ID' && $diff->{ CHECK_MESSAGE_ID })) {
         if ($config->{ CHECK_MESSAGE_ID } == 0) {
-            $s .= "incoming_mail_header_loop_check_rules -= check_message_id";
+            $s .= sprintf("incoming_mail_header_loop_check_rules -= check_message_id", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CHECK_MAILBODY_CKSUM' && $diff->{ CHECK_MAILBODY_CKSUM })) {
@@ -937,7 +865,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LOG_CONNECTION' && $diff->{ LOG_CONNECTION })) {
@@ -946,25 +874,16 @@ sub translate
         }
     }
     return $s if defined $s;
-
-
-    $s = undef;
-    if (($key eq 'ADDR_CHECK_MAX' && $diff->{ ADDR_CHECK_MAX })) {
-        if ($config->{ ADDR_CHECK_MAX } == 3) {
-            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
-        }
-    }
-    return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'ADDR_CHECK_MAX' && $diff->{ ADDR_CHECK_MAX })) {
-        if ($config->{ ADDR_CHECK_MAX } != 3) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+        if ($config->{ ADDR_CHECK_MAX }) {
+            $s .= sprintf("address_compare_function_domain_matching_level = %s", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'INCOMING_MAIL_SIZE_LIMIT' && $diff->{ INCOMING_MAIL_SIZE_LIMIT })) {
@@ -973,25 +892,25 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'INCOMING_MAIL_SIZE_LIMIT' && $diff->{ INCOMING_MAIL_SIZE_LIMIT })) {
         if ($config->{ INCOMING_MAIL_SIZE_LIMIT } != 0) {
-            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'NOTIFY_MAIL_SIZE_OVERFLOW' && $diff->{ NOTIFY_MAIL_SIZE_OVERFLOW })) {
         if ($config->{ NOTIFY_MAIL_SIZE_OVERFLOW } == 1) {
-            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'NOTIFY_MAIL_SIZE_OVERFLOW' && $diff->{ NOTIFY_MAIL_SIZE_OVERFLOW })) {
@@ -1000,7 +919,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'ANNOUNCE_MAIL_SIZE_OVERFLOW' && $diff->{ ANNOUNCE_MAIL_SIZE_OVERFLOW })) {
@@ -1009,7 +928,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'ANNOUNCE_MAIL_SIZE_OVERFLOW' && $diff->{ ANNOUNCE_MAIL_SIZE_OVERFLOW })) {
@@ -1018,7 +937,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MAX_MEMBER_LIMIT' && $diff->{ MAX_MEMBER_LIMIT })) {
@@ -1027,25 +946,25 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_DISTRIBUTE_FILTER' && $diff->{ USE_DISTRIBUTE_FILTER })) {
         if ($config->{ USE_DISTRIBUTE_FILTER } == 1) {
-            $s .= "use_article_filter = yes";
+            $s .= sprintf("use_article_filter = yes", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_DISTRIBUTE_FILTER' && $diff->{ USE_DISTRIBUTE_FILTER })) {
         if ($config->{ USE_DISTRIBUTE_FILTER } == 0) {
-            $s .= "use_article_filter = no";
+            $s .= sprintf("use_article_filter = no", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'DISTRIBUTE_FILTER_HOOK' && $diff->{ DISTRIBUTE_FILTER_HOOK })) {
@@ -1054,151 +973,151 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'FILTER_NOTIFY_REJECTION' && $diff->{ FILTER_NOTIFY_REJECTION })) {
         if ($config->{ FILTER_NOTIFY_REJECTION } == 1) {
-            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
+            $s .= sprintf("use_article_filter_reject_notice = yes", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'FILTER_NOTIFY_REJECTION' && $diff->{ FILTER_NOTIFY_REJECTION })) {
         if ($config->{ FILTER_NOTIFY_REJECTION } == 0) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= sprintf("use_article_filter_reject_notice = no", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'FILTER_ATTR_REJECT_NULL_BODY' && $diff->{ FILTER_ATTR_REJECT_NULL_BODY })) {
         if ($config->{ FILTER_ATTR_REJECT_NULL_BODY } == 1) {
-            $s .= "article_text_plain_filter_rules += reject_null_mail_body";
+            $s .= sprintf("article_text_plain_filter_rules += reject_null_mail_body", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'FILTER_ATTR_REJECT_NULL_BODY' && $diff->{ FILTER_ATTR_REJECT_NULL_BODY })) {
         if ($config->{ FILTER_ATTR_REJECT_NULL_BODY } == 0) {
-            $s .= "article_text_plain_filter_rules -= reject_null_mail_body";
+            $s .= sprintf("article_text_plain_filter_rules -= reject_null_mail_body", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'FILTER_ATTR_REJECT_COMMAND' && $diff->{ FILTER_ATTR_REJECT_COMMAND })) {
         if ($config->{ FILTER_ATTR_REJECT_COMMAND } == 1) {
-            $s .= "article_text_plain_filter_rules += reject_old_fml_command_syntax";
+            $s .= sprintf("article_text_plain_filter_rules += reject_old_fml_command_syntax", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'FILTER_ATTR_REJECT_COMMAND' && $diff->{ FILTER_ATTR_REJECT_COMMAND })) {
         if ($config->{ FILTER_ATTR_REJECT_COMMAND } == 0) {
-            $s .= "article_text_plain_filter_rules -= reject_old_fml_command_syntax";
+            $s .= sprintf("article_text_plain_filter_rules -= reject_old_fml_command_syntax", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'FILTER_ATTR_REJECT_2BYTES_COMMAND' && $diff->{ FILTER_ATTR_REJECT_2BYTES_COMMAND })) {
         if ($config->{ FILTER_ATTR_REJECT_2BYTES_COMMAND } == 1) {
-            $s .= "article_text_plain_filter_rules += reject_japanese_command_syntax";
+            $s .= sprintf("article_text_plain_filter_rules += reject_japanese_command_syntax", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'FILTER_ATTR_REJECT_2BYTES_COMMAND' && $diff->{ FILTER_ATTR_REJECT_2BYTES_COMMAND })) {
         if ($config->{ FILTER_ATTR_REJECT_2BYTES_COMMAND } == 0) {
-            $s .= "article_text_plain_filter_rules -= reject_japanese_command_syntax";
+            $s .= sprintf("article_text_plain_filter_rules -= reject_japanese_command_syntax", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'FILTER_ATTR_REJECT_INVALID_COMMAND' && $diff->{ FILTER_ATTR_REJECT_INVALID_COMMAND })) {
         if ($config->{ FILTER_ATTR_REJECT_INVALID_COMMAND } == 1) {
-            $s .= "article_text_plain_filter_rules += reject_invalid_fml_command_syntax";
+            $s .= sprintf("article_text_plain_filter_rules += reject_invalid_fml_command_syntax", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'FILTER_ATTR_REJECT_INVALID_COMMAND' && $diff->{ FILTER_ATTR_REJECT_INVALID_COMMAND })) {
         if ($config->{ FILTER_ATTR_REJECT_INVALID_COMMAND } == 0) {
-            $s .= "article_text_plain_filter_rules -= reject_invalid_fml_command_syntax";
+            $s .= sprintf("article_text_plain_filter_rules -= reject_invalid_fml_command_syntax", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'FILTER_ATTR_REJECT_ONE_LINE_BODY' && $diff->{ FILTER_ATTR_REJECT_ONE_LINE_BODY })) {
         if ($config->{ FILTER_ATTR_REJECT_ONE_LINE_BODY } == 1) {
-            $s .= "article_text_plain_filter_rules += reject_one_line_message";
+            $s .= sprintf("article_text_plain_filter_rules += reject_one_line_message", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'FILTER_ATTR_REJECT_ONE_LINE_BODY' && $diff->{ FILTER_ATTR_REJECT_ONE_LINE_BODY })) {
         if ($config->{ FILTER_ATTR_REJECT_ONE_LINE_BODY } == 0) {
-            $s .= "article_text_plain_filter_rules -= reject_one_line_message";
+            $s .= sprintf("article_text_plain_filter_rules -= reject_one_line_message", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'FILTER_ATTR_REJECT_MS_GUID' && $diff->{ FILTER_ATTR_REJECT_MS_GUID })) {
         if ($config->{ FILTER_ATTR_REJECT_MS_GUID } == 1) {
-            $s .= "article_text_plain_filter_rules += reject_ms_guid";
+            $s .= sprintf("article_text_plain_filter_rules += reject_ms_guid", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'FILTER_ATTR_REJECT_MS_GUID' && $diff->{ FILTER_ATTR_REJECT_MS_GUID })) {
         if ($config->{ FILTER_ATTR_REJECT_MS_GUID } == 0) {
-            $s .= "article_text_plain_filter_rules -= reject_ms_guid";
+            $s .= sprintf("article_text_plain_filter_rules -= reject_ms_guid", $value);
         }
     }
     return $s if defined $s;
-
-
-    $s = undef;
-    if (($key eq 'FILTER_ATTR_REJECT_INVALID_JAPANESE' && $diff->{ FILTER_ATTR_REJECT_INVALID_JAPANESE })) {
-        if ($config->{ FILTER_ATTR_REJECT_INVALID_JAPANESE } == 0) {
-            $s .= "article_text_plain_filter_rules -= reject_not_iso2022jp_japanese_string";
-        }
-    }
-    return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'FILTER_ATTR_REJECT_INVALID_JAPANESE' && $diff->{ FILTER_ATTR_REJECT_INVALID_JAPANESE })) {
         if ($config->{ FILTER_ATTR_REJECT_INVALID_JAPANESE } == 1) {
-            $s .= "article_text_plain_filter_rules += reject_not_iso2022jp_japanese_string";
+            $s .= sprintf("article_text_plain_filter_rules += reject_not_iso2022jp_japanese_string", $value);
         }
     }
     return $s if defined $s;
+    
 
+    $s = undef;
+    if (($key eq 'FILTER_ATTR_REJECT_INVALID_JAPANESE' && $diff->{ FILTER_ATTR_REJECT_INVALID_JAPANESE })) {
+        if ($config->{ FILTER_ATTR_REJECT_INVALID_JAPANESE } == 0) {
+            $s .= sprintf("article_text_plain_filter_rules -= reject_not_iso2022jp_japanese_string", $value);
+        }
+    }
+    return $s if defined $s;
+    
 
     $s = undef;
     if (($key eq 'CONTENT_HANDLER_CUTOFF_EMPTY_MESSAGE' && $diff->{ CONTENT_HANDLER_CUTOFF_EMPTY_MESSAGE })) {
@@ -1207,7 +1126,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CONTENT_HANDLER_REJECT_EMPTY_MESSAGE' && $diff->{ CONTENT_HANDLER_REJECT_EMPTY_MESSAGE })) {
@@ -1216,7 +1135,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_HANKAKU_CONVERTER' && $diff->{ USE_HANKAKU_CONVERTER })) {
@@ -1225,7 +1144,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_HANKAKU_CONVERTER' && $diff->{ USE_HANKAKU_CONVERTER })) {
@@ -1234,7 +1153,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HTML_MAIL_DEFAULT_HANDLER' && $diff->{ HTML_MAIL_DEFAULT_HANDLER })) {
@@ -1243,7 +1162,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_MTI' && $diff->{ USE_MTI })) {
@@ -1252,7 +1171,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MTI_WARN_INTERVAL' && $diff->{ MTI_WARN_INTERVAL })) {
@@ -1261,7 +1180,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MTI_WARN_LASTLOG' && $diff->{ MTI_WARN_LASTLOG })) {
@@ -1270,7 +1189,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MTI_EXPIRE_UNIT' && $diff->{ MTI_EXPIRE_UNIT }) || ($key eq 'MTI_BURST_SOFT_LIMIT' && $diff->{ MTI_BURST_SOFT_LIMIT })) {
@@ -1281,7 +1200,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MTI_BURST_HARD_LIMIT' && $diff->{ MTI_BURST_HARD_LIMIT })) {
@@ -1290,7 +1209,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MTI_COST_EVAL_FUNCTION' && $diff->{ MTI_COST_EVAL_FUNCTION })) {
@@ -1299,7 +1218,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MTI_MAIL_FROM_HINT_LIST' && $diff->{ MTI_MAIL_FROM_HINT_LIST })) {
@@ -1308,7 +1227,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'SUBSCRIBE_ANNOUNCE_FORWARD_TYPE' && $diff->{ SUBSCRIBE_ANNOUNCE_FORWARD_TYPE })) {
@@ -1317,7 +1236,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'SUBSCRIBE_ANNOUNCE_FORWARD_TYPE' && $diff->{ SUBSCRIBE_ANNOUNCE_FORWARD_TYPE })) {
@@ -1326,61 +1245,61 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'UNSUBSCRIBE_AUTH_TYPE' && $diff->{ UNSUBSCRIBE_AUTH_TYPE })) {
         if ($config->{ UNSUBSCRIBE_AUTH_TYPE } eq 'confirmation') {
-            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
+            $s .= sprintf("unsubscribe_command_auth_type = confirmation", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'UNSUBSCRIBE_AUTH_TYPE' && $diff->{ UNSUBSCRIBE_AUTH_TYPE })) {
         if ($config->{ UNSUBSCRIBE_AUTH_TYPE } ne 'confirmation') {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= sprintf("unsubscribe_command_auth_type = confirmation", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CHADDR_AUTH_TYPE' && $diff->{ CHADDR_AUTH_TYPE })) {
         if ($config->{ CHADDR_AUTH_TYPE } eq 'confirmation') {
-            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
+            $s .= sprintf("chaddr_command_auth_type = confirmation", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CHADDR_AUTH_TYPE' && $diff->{ CHADDR_AUTH_TYPE })) {
         if ($config->{ CHADDR_AUTH_TYPE } ne 'confirmation') {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= sprintf("unsubscribe_command_auth_type = confirmation", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_LOG_MAIL' && $diff->{ USE_LOG_MAIL })) {
         if ($config->{ USE_LOG_MAIL } == 0) {
-            $s .= "use_incoming_mail_cache = no";
+            $s .= sprintf("use_incoming_mail_cache = no", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_LOG_MAIL' && $diff->{ USE_LOG_MAIL })) {
         if ($config->{ USE_LOG_MAIL } == 1) {
-            $s .= "use_incoming_mail_cache = yes";
+            $s .= sprintf("use_incoming_mail_cache = yes", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LOG_MAIL_DIR' && $diff->{ LOG_MAIL_DIR })) {
@@ -1389,7 +1308,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LOG_MAIL_SEQ' && $diff->{ LOG_MAIL_SEQ })) {
@@ -1398,25 +1317,25 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'NUM_LOG_MAIL' && $diff->{ NUM_LOG_MAIL })) {
         if ($config->{ NUM_LOG_MAIL }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= sprintf("incoming_mail_cache_size = %s", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LOG_MAIL_FILE_SIZE_MAX' && $diff->{ LOG_MAIL_FILE_SIZE_MAX })) {
         if ($config->{ LOG_MAIL_FILE_SIZE_MAX }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_ENCRYPTED_DISTRIBUTION' && $diff->{ USE_ENCRYPTED_DISTRIBUTION })) {
@@ -1425,7 +1344,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'ENCRYPTED_DISTRIBUTION_TYPE' && $diff->{ ENCRYPTED_DISTRIBUTION_TYPE })) {
@@ -1434,7 +1353,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'DATE_TYPE' && $diff->{ DATE_TYPE })) {
@@ -1443,7 +1362,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'DATE_TYPE' && $diff->{ DATE_TYPE })) {
@@ -1452,7 +1371,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'XMLNAME' && $diff->{ XMLNAME })) {
@@ -1461,16 +1380,16 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'XMLCOUNT' && $diff->{ XMLCOUNT })) {
         if ($config->{ XMLCOUNT } eq 'X-Mail-Count') {
-            $s .= "article_header_rewrite_rules += add_fml_traditional_article_id";
+            $s .= sprintf("article_header_rewrite_rules += add_fml_traditional_article_id", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'XMLCOUNT' && $diff->{ XMLCOUNT })) {
@@ -1479,7 +1398,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'SUBJECT_TAG_TYPE' && $diff->{ SUBJECT_TAG_TYPE })) {
@@ -1488,7 +1407,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'BRACKET' && $diff->{ BRACKET })) {
@@ -1497,7 +1416,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'STRIP_BRACKETS' && $diff->{ STRIP_BRACKETS })) {
@@ -1506,7 +1425,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'BRACKET_SEPARATOR' && $diff->{ BRACKET_SEPARATOR })) {
@@ -1515,7 +1434,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'SUBJECT_FREE_FORM' && $diff->{ SUBJECT_FREE_FORM })) {
@@ -1524,7 +1443,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'SUBJECT_FREE_FORM_REGEXP' && $diff->{ SUBJECT_FREE_FORM_REGEXP })) {
@@ -1533,7 +1452,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'SUBJECT_FORM_LONG_ID' && $diff->{ SUBJECT_FORM_LONG_ID })) {
@@ -1542,34 +1461,34 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_ERRORS_TO' && $diff->{ USE_ERRORS_TO })) {
         if ($config->{ USE_ERRORS_TO } == 1) {
-            $s .= "article_header_rewrite_rules += rewrite_errors_to";
+            $s .= sprintf("article_header_rewrite_rules += rewrite_errors_to", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_ERRORS_TO' && $diff->{ USE_ERRORS_TO })) {
         if ($config->{ USE_ERRORS_TO } == 0) {
-            $s .= "article_header_rewrite_rules -= rewrite_errors_to";
+            $s .= sprintf("article_header_rewrite_rules -= rewrite_errors_to", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'ERRORS_TO' && $diff->{ ERRORS_TO })) {
         if ($config->{ ERRORS_TO }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_ORIGINAL_MESSAGE_ID' && $diff->{ USE_ORIGINAL_MESSAGE_ID })) {
@@ -1578,7 +1497,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_ORIGINAL_MESSAGE_ID' && $diff->{ USE_ORIGINAL_MESSAGE_ID })) {
@@ -1587,124 +1506,115 @@ sub translate
         }
     }
     return $s if defined $s;
-
-
-    $s = undef;
-    if (($key eq 'PRECEDENCE' && $diff->{ PRECEDENCE })) {
-        if ($config->{ PRECEDENCE } eq 'bulk') {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
-        }
-    }
-    return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'PRECEDENCE' && $diff->{ PRECEDENCE })) {
-        if ($config->{ PRECEDENCE } ne 'bulk') {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+        if ($config->{ PRECEDENCE }) {
+            $s .= sprintf("mail_header_default_precedence = %s", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'APPEND_STARDATE' && $diff->{ APPEND_STARDATE })) {
         if ($config->{ APPEND_STARDATE } == 1) {
-            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
+            $s .= sprintf("article_header_rewrite_rules += rewrite_stardate", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'APPEND_STARDATE' && $diff->{ APPEND_STARDATE })) {
         if ($config->{ APPEND_STARDATE } == 0) {
-            $s .= "article_header_rewrite_rules -= rewrite_stardate";
+            $s .= sprintf("article_header_rewrite_rules -= rewrite_stardate", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_RFC2369' && $diff->{ USE_RFC2369 })) {
         if ($config->{ USE_RFC2369 } == 1) {
-            $s .= "article_header_rewrite_rules += add_rfc2369";
+            $s .= sprintf("article_header_rewrite_rules += add_rfc2369", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_RFC2369' && $diff->{ USE_RFC2369 })) {
         if ($config->{ USE_RFC2369 } == 0) {
-            $s .= "article_header_rewrite_rules -= add_rfc2369";
+            $s .= sprintf("article_header_rewrite_rules -= add_rfc2369", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LIST_SOFTWARE' && $diff->{ LIST_SOFTWARE })) {
         if ($config->{ LIST_SOFTWARE }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LIST_POST' && $diff->{ LIST_POST })) {
         if ($config->{ LIST_POST }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LIST_OWNER' && $diff->{ LIST_OWNER })) {
         if ($config->{ LIST_OWNER }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LIST_HELP' && $diff->{ LIST_HELP })) {
         if ($config->{ LIST_HELP }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LIST_SUBSCRIBE' && $diff->{ LIST_SUBSCRIBE })) {
         if ($config->{ LIST_SUBSCRIBE }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LIST_UNSUBSCRIBE' && $diff->{ LIST_UNSUBSCRIBE })) {
         if ($config->{ LIST_UNSUBSCRIBE }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LIST_ID' && $diff->{ LIST_ID })) {
         if ($config->{ LIST_ID }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'REWRITE_TO' && $diff->{ REWRITE_TO })) {
@@ -1713,7 +1623,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'REWRITE_TO' && $diff->{ REWRITE_TO })) {
@@ -1722,7 +1632,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'REWRITE_TO' && $diff->{ REWRITE_TO })) {
@@ -1731,7 +1641,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'Subject' && $diff->{ Subject })) {
@@ -1740,61 +1650,52 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'From_address' && $diff->{ From_address })) {
-        if ($config->{ From_address } eq 'not.found') {
+        if ($config->{ From_address }) {
             $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'User' && $diff->{ User })) {
-        if ($config->{ User } eq 'not.found') {
+        if ($config->{ User }) {
             $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'Date' && $diff->{ Date })) {
-        if ($config->{ Date } eq 'not.found') {
+        if ($config->{ Date }) {
             $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
-
-    $s = undef;
-    if (($key eq 'TZone' && $diff->{ TZone })) {
-        if ($config->{ TZone } eq '+0900') {
-            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
-        }
-    }
-    return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'TZone' && $diff->{ TZone })) {
-        if ($config->{ TZone } ne '+0900') {
+        if ($config->{ TZone }) {
             $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'TZONE_DST' && $diff->{ TZONE_DST })) {
         if ($config->{ TZONE_DST }) {
-            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'PASS_ALL_FIELDS_IN_HEADER' && $diff->{ PASS_ALL_FIELDS_IN_HEADER })) {
@@ -1803,7 +1704,16 @@ sub translate
         }
     }
     return $s if defined $s;
+    
 
+    $s = undef;
+    if (($key eq 'PASS_ALL_FIELDS_IN_HEADER' && $diff->{ PASS_ALL_FIELDS_IN_HEADER })) {
+        if ($config->{ PASS_ALL_FIELDS_IN_HEADER } == 0) {
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
+        }
+    }
+    return $s if defined $s;
+    
 
     $s = undef;
     if (($key eq 'SUPERFLUOUS_HEADERS' && $diff->{ SUPERFLUOUS_HEADERS })) {
@@ -1812,16 +1722,25 @@ sub translate
         }
     }
     return $s if defined $s;
+    
 
+    $s = undef;
+    if (($key eq 'SUPERFLUOUS_HEADERS' && $diff->{ SUPERFLUOUS_HEADERS })) {
+        if ($config->{ SUPERFLUOUS_HEADERS } == 0) {
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
+        }
+    }
+    return $s if defined $s;
+    
 
     $s = undef;
     if (($key eq 'SKIP_FIELDS' && $diff->{ SKIP_FIELDS })) {
-        if ($config->{ SKIP_FIELDS } eq 'Return-Receipt-To') {
+        if ($config->{ SKIP_FIELDS }) {
             $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'ALLOW_WRONG_LINES_IN_HEADER' && $diff->{ ALLOW_WRONG_LINES_IN_HEADER })) {
@@ -1830,25 +1749,25 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'COMMAND_SYNTAX_EXTENSION' && $diff->{ COMMAND_SYNTAX_EXTENSION })) {
         if ($config->{ COMMAND_SYNTAX_EXTENSION } == 1) {
-            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_SUBJECT_AS_COMMANDS' && $diff->{ USE_SUBJECT_AS_COMMANDS })) {
-        if ($config->{ USE_SUBJECT_AS_COMMANDS } == 0) {
+        if ($config->{ USE_SUBJECT_AS_COMMANDS }) {
             $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_WARNING' && $diff->{ USE_WARNING })) {
@@ -1857,7 +1776,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_WARNING' && $diff->{ USE_WARNING })) {
@@ -1866,7 +1785,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'COMMAND_ONLY_SERVER' && $diff->{ COMMAND_ONLY_SERVER })) {
@@ -1875,7 +1794,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'COMMAND_CHECK_LIMIT' && $diff->{ COMMAND_CHECK_LIMIT })) {
@@ -1884,7 +1803,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'GUIDE_CHECK_LIMIT' && $diff->{ GUIDE_CHECK_LIMIT })) {
@@ -1893,7 +1812,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'GUIDE_KEYWORD' && $diff->{ GUIDE_KEYWORD })) {
@@ -1902,25 +1821,25 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MAXLEN_COMMAND_INPUT' && $diff->{ MAXLEN_COMMAND_INPUT })) {
         if ($config->{ MAXLEN_COMMAND_INPUT } == 128) {
-            $s .= "command_mail_line_length_limit = MAXLEN_COMMAND_INPUT";
+            $s .= sprintf("command_mail_line_length_limit = %s", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MAXNUM_COMMAND_INPUT' && $diff->{ MAXNUM_COMMAND_INPUT })) {
         if ($config->{ MAXNUM_COMMAND_INPUT }) {
-            $s .= "command_mail_valid_command_limit = MAXNUM_COMMAND_INPUT";
+            $s .= sprintf("command_mail_valid_command_limit = %s", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CHADDR_KEYWORD' && $diff->{ CHADDR_KEYWORD })) {
@@ -1929,7 +1848,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CHADDR_REPLY_TO' && $diff->{ CHADDR_REPLY_TO })) {
@@ -1938,7 +1857,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'ADMIN_CHADDR_REPLY_TO' && $diff->{ ADMIN_CHADDR_REPLY_TO })) {
@@ -1947,7 +1866,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MGET_MODE_DEFAULT' && $diff->{ MGET_MODE_DEFAULT })) {
@@ -1956,7 +1875,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MGET_TEXT_MODE_DEFAULT' && $diff->{ MGET_TEXT_MODE_DEFAULT })) {
@@ -1965,7 +1884,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MAIL_LENGTH_LIMIT' && $diff->{ MAIL_LENGTH_LIMIT })) {
@@ -1974,7 +1893,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'SLEEPTIME' && $diff->{ SLEEPTIME })) {
@@ -1983,7 +1902,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MIME_VERSION' && $diff->{ MIME_VERSION })) {
@@ -1992,7 +1911,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MIME_CONTENT_TYPE' && $diff->{ MIME_CONTENT_TYPE })) {
@@ -2001,7 +1920,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MIME_MULTIPART_BOUNDARY' && $diff->{ MIME_MULTIPART_BOUNDARY })) {
@@ -2010,7 +1929,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MIME_MULTIPART_CLOSE_DELIMITER' && $diff->{ MIME_MULTIPART_CLOSE_DELIMITER })) {
@@ -2019,7 +1938,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MIME_MULTIPART_DELIMITER' && $diff->{ MIME_MULTIPART_DELIMITER })) {
@@ -2028,7 +1947,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MIME_MULTIPART_PREAMBLE' && $diff->{ MIME_MULTIPART_PREAMBLE })) {
@@ -2037,7 +1956,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MIME_MULTIPART_TRAILER' && $diff->{ MIME_MULTIPART_TRAILER })) {
@@ -2046,7 +1965,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_SJIS_IN_ISH' && $diff->{ USE_SJIS_IN_ISH })) {
@@ -2055,7 +1974,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'RFC1153_ISSUE' && $diff->{ RFC1153_ISSUE })) {
@@ -2064,7 +1983,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'RFC1153_VOL' && $diff->{ RFC1153_VOL })) {
@@ -2073,7 +1992,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'RFC1153_SEQUENCE_FILE' && $diff->{ RFC1153_SEQUENCE_FILE })) {
@@ -2082,7 +2001,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_DOT_QMAIL_EXT' && $diff->{ USE_DOT_QMAIL_EXT })) {
@@ -2091,7 +2010,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'FORCE_COMMAND_REPLY_TO' && $diff->{ FORCE_COMMAND_REPLY_TO })) {
@@ -2100,7 +2019,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MGET_SUBJECT_TEMPLATE' && $diff->{ MGET_SUBJECT_TEMPLATE })) {
@@ -2109,7 +2028,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MESSAGE_RETURN_ADDR_POLICY' && $diff->{ MESSAGE_RETURN_ADDR_POLICY })) {
@@ -2118,7 +2037,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MSEND_SUBJECT_TEMPLATE' && $diff->{ MSEND_SUBJECT_TEMPLATE })) {
@@ -2127,7 +2046,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MSEND_RC' && $diff->{ MSEND_RC })) {
@@ -2136,7 +2055,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MSEND_MODE_DEFAULT' && $diff->{ MSEND_MODE_DEFAULT })) {
@@ -2145,7 +2064,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MSEND_DEFAULT_SUBJECT' && $diff->{ MSEND_DEFAULT_SUBJECT })) {
@@ -2154,7 +2073,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MSEND_NOTIFICATION' && $diff->{ MSEND_NOTIFICATION })) {
@@ -2163,7 +2082,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MSEND_NOTIFICATION_SUBJECT' && $diff->{ MSEND_NOTIFICATION_SUBJECT })) {
@@ -2172,7 +2091,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MSEND_NOT_USE_X_ML_INFO' && $diff->{ MSEND_NOT_USE_X_ML_INFO })) {
@@ -2181,7 +2100,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MSEND_NOT_USE_NEWSYSLOG' && $diff->{ MSEND_NOT_USE_NEWSYSLOG })) {
@@ -2190,7 +2109,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LOG_MESSAGE_ID' && $diff->{ LOG_MESSAGE_ID })) {
@@ -2199,7 +2118,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MESSAGE_ID_CACHE_BUFSIZE' && $diff->{ MESSAGE_ID_CACHE_BUFSIZE })) {
@@ -2208,7 +2127,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LOG_MAILBODY_CKSUM' && $diff->{ LOG_MAILBODY_CKSUM })) {
@@ -2217,7 +2136,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MEMBER_LIST' && $diff->{ MEMBER_LIST })) {
@@ -2226,7 +2145,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'ACTIVE_LIST' && $diff->{ ACTIVE_LIST })) {
@@ -2235,7 +2154,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'GUIDE_FILE' && $diff->{ GUIDE_FILE })) {
@@ -2244,7 +2163,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'OBJECTIVE_FILE' && $diff->{ OBJECTIVE_FILE })) {
@@ -2253,7 +2172,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HELP_FILE' && $diff->{ HELP_FILE })) {
@@ -2262,7 +2181,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'DENY_FILE' && $diff->{ DENY_FILE })) {
@@ -2271,7 +2190,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LOGFILE' && $diff->{ LOGFILE })) {
@@ -2280,7 +2199,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MGET_LOGFILE' && $diff->{ MGET_LOGFILE })) {
@@ -2289,7 +2208,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LOGFILE_SUFFIX' && $diff->{ LOGFILE_SUFFIX })) {
@@ -2298,7 +2217,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'DEBUG_LOGFILE' && $diff->{ DEBUG_LOGFILE })) {
@@ -2307,7 +2226,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'SUMMARY_FILE' && $diff->{ SUMMARY_FILE })) {
@@ -2316,7 +2235,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'SEQUENCE_FILE' && $diff->{ SEQUENCE_FILE })) {
@@ -2325,7 +2244,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LOCK_FILE' && $diff->{ LOCK_FILE })) {
@@ -2334,7 +2253,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LOCK_DIR' && $diff->{ LOCK_DIR })) {
@@ -2343,7 +2262,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LOCKDIR' && $diff->{ LOCKDIR })) {
@@ -2352,7 +2271,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LOCKFILE' && $diff->{ LOCKFILE })) {
@@ -2361,7 +2280,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_INET6' && $diff->{ USE_INET6 })) {
@@ -2370,7 +2289,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_INET6' && $diff->{ USE_INET6 })) {
@@ -2379,25 +2298,25 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HOST' && $diff->{ HOST })) {
-        if ($config->{ HOST } ne 'localhost') {
+        if ($config->{ HOST }) {
             $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'PORT' && $diff->{ PORT })) {
-        if ($config->{ PORT } != 25) {
+        if ($config->{ PORT }) {
             $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'SMTP_SENDER' && $diff->{ SMTP_SENDER })) {
@@ -2406,16 +2325,16 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'SMTP_LOG' && $diff->{ SMTP_LOG })) {
-        if ($config->{ SMTP_LOG } eq '$VARLOG_DIR/_smtplog') {
+        if ($config->{ SMTP_LOG }) {
             $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_SMTP_LOG_ROTATE' && $diff->{ USE_SMTP_LOG_ROTATE })) {
@@ -2424,52 +2343,79 @@ sub translate
         }
     }
     return $s if defined $s;
-
-
-    $s = undef;
-    if (($key eq 'SMTP_LOG_ROTATE_EXPIRE_LIMIT' && $diff->{ SMTP_LOG_ROTATE_EXPIRE_LIMIT })) {
-        if ($config->{ SMTP_LOG_ROTATE_EXPIRE_LIMIT } == 90) {
-            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
-        }
-    }
-    return $s if defined $s;
-
+    
 
     $s = undef;
-    if (($key eq 'NUM_SMTP_LOG_ROTATE' && $diff->{ NUM_SMTP_LOG_ROTATE })) {
-        if ($config->{ NUM_SMTP_LOG_ROTATE } == 8) {
-            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
-        }
-    }
-    return $s if defined $s;
-
-
-    $s = undef;
-    if (($key eq 'SMTP_LOG_ROTATE_TYPE' && $diff->{ SMTP_LOG_ROTATE_TYPE })) {
-        if ($config->{ SMTP_LOG_ROTATE_TYPE } eq 'number') {
-            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
-        }
-    }
-    return $s if defined $s;
-
-
-    $s = undef;
-    if (($key eq 'NOT_TRACE_SMTP' && $diff->{ NOT_TRACE_SMTP })) {
-        if ($config->{ NOT_TRACE_SMTP } == 0) {
-            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
-        }
-    }
-    return $s if defined $s;
-
-
-    $s = undef;
-    if (($key eq 'NOT_TRACE_SMTP' && $diff->{ NOT_TRACE_SMTP })) {
-        if ($config->{ NOT_TRACE_SMTP } == 1) {
+    if (($key eq 'USE_SMTP_LOG_ROTATE' && $diff->{ USE_SMTP_LOG_ROTATE })) {
+        if ($config->{ USE_SMTP_LOG_ROTATE } == 0) {
             $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
+    
 
+    $s = undef;
+    if (($key eq 'SMTP_LOG_ROTATE_EXPIRE_LIMIT' && $diff->{ SMTP_LOG_ROTATE_EXPIRE_LIMIT })) {
+        if ($config->{ SMTP_LOG_ROTATE_EXPIRE_LIMIT } == 90) {
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
+        }
+    }
+    return $s if defined $s;
+    
+
+    $s = undef;
+    if (($key eq 'SMTP_LOG_ROTATE_EXPIRE_LIMIT' && $diff->{ SMTP_LOG_ROTATE_EXPIRE_LIMIT })) {
+        if ($config->{ SMTP_LOG_ROTATE_EXPIRE_LIMIT } != 90) {
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
+        }
+    }
+    return $s if defined $s;
+    
+
+    $s = undef;
+    if (($key eq 'NUM_SMTP_LOG_ROTATE' && $diff->{ NUM_SMTP_LOG_ROTATE })) {
+        if ($config->{ NUM_SMTP_LOG_ROTATE }) {
+            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
+        }
+    }
+    return $s if defined $s;
+    
+
+    $s = undef;
+    if (($key eq 'SMTP_LOG_ROTATE_TYPE' && $diff->{ SMTP_LOG_ROTATE_TYPE })) {
+        if ($config->{ SMTP_LOG_ROTATE_TYPE } eq 'day') {
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
+        }
+    }
+    return $s if defined $s;
+    
+
+    $s = undef;
+    if (($key eq 'SMTP_LOG_ROTATE_TYPE' && $diff->{ SMTP_LOG_ROTATE_TYPE })) {
+        if ($config->{ SMTP_LOG_ROTATE_TYPE }) {
+            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
+        }
+    }
+    return $s if defined $s;
+    
+
+    $s = undef;
+    if (($key eq 'NOT_TRACE_SMTP' && $diff->{ NOT_TRACE_SMTP })) {
+        if ($config->{ NOT_TRACE_SMTP } == 0) {
+            $s .= sprintf("use_smtp_log = yes", $value);
+        }
+    }
+    return $s if defined $s;
+    
+
+    $s = undef;
+    if (($key eq 'NOT_TRACE_SMTP' && $diff->{ NOT_TRACE_SMTP })) {
+        if ($config->{ NOT_TRACE_SMTP } == 1) {
+            $s .= sprintf("use_smtp_log = no", $value);
+        }
+    }
+    return $s if defined $s;
+    
 
     $s = undef;
     if (($key eq 'TRACE_SMTP_DELAY' && $diff->{ TRACE_SMTP_DELAY })) {
@@ -2478,25 +2424,25 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_SMTP_PROFILE' && $diff->{ USE_SMTP_PROFILE })) {
-        if ($config->{ USE_SMTP_PROFILE } == 0) {
+        if ($config->{ USE_SMTP_PROFILE }) {
             $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MCI_SMTP_HOSTS' && $diff->{ MCI_SMTP_HOSTS })) {
         if ($config->{ MCI_SMTP_HOSTS }) {
-            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'DEFAULT_RELAY_SERVER' && $diff->{ DEFAULT_RELAY_SERVER })) {
@@ -2505,7 +2451,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'RELAY_HACK' && $diff->{ RELAY_HACK })) {
@@ -2514,7 +2460,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CF_DEF' && $diff->{ CF_DEF })) {
@@ -2523,7 +2469,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_OUTGOING_ADDRESS' && $diff->{ USE_OUTGOING_ADDRESS })) {
@@ -2532,16 +2478,16 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'OUTGOING_ADDRESS' && $diff->{ OUTGOING_ADDRESS })) {
         if ($config->{ OUTGOING_ADDRESS }) {
-            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_VERP' && $diff->{ USE_VERP })) {
@@ -2550,16 +2496,16 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'POSTFIX_VERP_DELIMITERS' && $diff->{ POSTFIX_VERP_DELIMITERS })) {
-        if ($config->{ POSTFIX_VERP_DELIMITERS } eq '+=') {
-            $s .= "postfix_verp_delimiters = POSTFIX_VERP_DELIMITERS";
+        if ($config->{ POSTFIX_VERP_DELIMITERS }) {
+            $s .= sprintf("postfix_verp_delimiters = %s", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'TRY_VERP_PER_DAY' && $diff->{ TRY_VERP_PER_DAY })) {
@@ -2568,7 +2514,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'NOT_USE_ESMTP_PIPELINING' && $diff->{ NOT_USE_ESMTP_PIPELINING })) {
@@ -2577,7 +2523,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_SMTPFEED_F_OPTION' && $diff->{ USE_SMTPFEED_F_OPTION })) {
@@ -2586,7 +2532,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_MIME' && $diff->{ USE_MIME })) {
@@ -2595,7 +2541,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_MIME' && $diff->{ USE_MIME })) {
@@ -2604,16 +2550,16 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MIME_BROKEN_ENCODING_FIXUP' && $diff->{ MIME_BROKEN_ENCODING_FIXUP })) {
         if ($config->{ MIME_BROKEN_ENCODING_FIXUP } == 0) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MIME_DECODED_ARTICLE' && $diff->{ MIME_DECODED_ARTICLE })) {
@@ -2622,7 +2568,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'PREAMBLE_MAILBODY' && $diff->{ PREAMBLE_MAILBODY })) {
@@ -2631,7 +2577,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'TRAILER_MAILBODY' && $diff->{ TRAILER_MAILBODY })) {
@@ -2640,7 +2586,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'GOOD_BYE_PHRASE' && $diff->{ GOOD_BYE_PHRASE })) {
@@ -2649,7 +2595,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'FACE_MARK' && $diff->{ FACE_MARK })) {
@@ -2658,7 +2604,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'PROC_GEN_INFO' && $diff->{ PROC_GEN_INFO })) {
@@ -2667,7 +2613,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_FLOCK' && $diff->{ USE_FLOCK })) {
@@ -2676,7 +2622,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_FLOCK' && $diff->{ USE_FLOCK })) {
@@ -2685,7 +2631,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MAX_TIMEOUT' && $diff->{ MAX_TIMEOUT })) {
@@ -2694,25 +2640,25 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'NOT_USE_SPOOL' && $diff->{ NOT_USE_SPOOL })) {
         if ($config->{ NOT_USE_SPOOL } == 1) {
-            $s .= "use_spool = no";
+            $s .= sprintf("use_article_spool = no", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'NOT_USE_SPOOL' && $diff->{ NOT_USE_SPOOL })) {
         if ($config->{ NOT_USE_SPOOL } == 0) {
-            $s .= "use_spool = yes";
+            $s .= sprintf("use_article_spool = yes", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'COMPAT_FML15' && $diff->{ COMPAT_FML15 })) {
@@ -2721,7 +2667,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'NEWSYSLOG_MAX' && $diff->{ NEWSYSLOG_MAX })) {
@@ -2730,7 +2676,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CRONTAB' && $diff->{ CRONTAB })) {
@@ -2739,7 +2685,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CRON_PIDFILE' && $diff->{ CRON_PIDFILE })) {
@@ -2748,7 +2694,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CRON_NOTIFY' && $diff->{ CRON_NOTIFY })) {
@@ -2757,7 +2703,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_CROSSPOST' && $diff->{ USE_CROSSPOST })) {
@@ -2766,7 +2712,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_MEMBER_NAME' && $diff->{ USE_MEMBER_NAME })) {
@@ -2775,7 +2721,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_EXPIRE' && $diff->{ USE_EXPIRE })) {
@@ -2784,7 +2730,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'EXPIRE_SUMMARY' && $diff->{ EXPIRE_SUMMARY })) {
@@ -2793,7 +2739,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'EXPIRE_LIMIT' && $diff->{ EXPIRE_LIMIT })) {
@@ -2802,7 +2748,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_ARCHIVE' && $diff->{ USE_ARCHIVE })) {
@@ -2811,7 +2757,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'ARCHIVE_UNIT' && $diff->{ ARCHIVE_UNIT })) {
@@ -2820,7 +2766,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'DEFAULT_ARCHIVE_UNIT' && $diff->{ DEFAULT_ARCHIVE_UNIT })) {
@@ -2829,7 +2775,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'ARCHIVE_DIR' && $diff->{ ARCHIVE_DIR })) {
@@ -2838,7 +2784,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'INDEX_FILE' && $diff->{ INDEX_FILE })) {
@@ -2847,7 +2793,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'INDEX_SHOW_DIRNAME' && $diff->{ INDEX_SHOW_DIRNAME })) {
@@ -2856,7 +2802,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LIBRARY_DIR' && $diff->{ LIBRARY_DIR })) {
@@ -2865,7 +2811,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LIBRARY_ARCHIVE_DIR' && $diff->{ LIBRARY_ARCHIVE_DIR })) {
@@ -2874,7 +2820,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LOGFILE_NEWSYSLOG_LIMIT' && $diff->{ LOGFILE_NEWSYSLOG_LIMIT })) {
@@ -2883,7 +2829,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'AMLIST_NEWSYSLOG_LIMIT' && $diff->{ AMLIST_NEWSYSLOG_LIMIT })) {
@@ -2892,43 +2838,43 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'AUTO_HTML_GEN' && $diff->{ AUTO_HTML_GEN })) {
         if ($config->{ AUTO_HTML_GEN } == 1) {
-            $s .= "use_html_archive = yes";
+            $s .= sprintf("use_html_archive = yes", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'AUTO_HTML_GEN' && $diff->{ AUTO_HTML_GEN })) {
         if ($config->{ AUTO_HTML_GEN } == 0) {
-            $s .= "use_html_archive = no";
+            $s .= sprintf("use_html_archive = no", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_NEW_HTML_GEN' && $diff->{ USE_NEW_HTML_GEN })) {
         if ($config->{ USE_NEW_HTML_GEN } == 1) {
-            $s .= "use_html_archive = yes";
+            $s .= sprintf("use_html_archive = yes", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_NEW_HTML_GEN' && $diff->{ USE_NEW_HTML_GEN })) {
         if ($config->{ USE_NEW_HTML_GEN } == 0) {
-            $s .= "use_html_archive = no";
+            $s .= sprintf("use_html_archive = no", $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HTML_THREAD' && $diff->{ HTML_THREAD })) {
@@ -2937,7 +2883,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HTML_THREAD' && $diff->{ HTML_THREAD })) {
@@ -2946,7 +2892,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HTML_INDEX_REVERSE_ORDER' && $diff->{ HTML_INDEX_REVERSE_ORDER })) {
@@ -2955,7 +2901,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HTML_INDEX_REVERSE_ORDER' && $diff->{ HTML_INDEX_REVERSE_ORDER })) {
@@ -2964,7 +2910,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HTML_DIR' && $diff->{ HTML_DIR })) {
@@ -2973,7 +2919,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HTML_EXPIRE_LIMIT' && $diff->{ HTML_EXPIRE_LIMIT })) {
@@ -2982,7 +2928,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HTML_INDEX_TITLE' && $diff->{ HTML_INDEX_TITLE })) {
@@ -2991,7 +2937,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HTML_DATA_CACHE' && $diff->{ HTML_DATA_CACHE })) {
@@ -3000,7 +2946,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HTML_DATA_THREAD' && $diff->{ HTML_DATA_THREAD })) {
@@ -3009,7 +2955,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HTML_OUTPUT_FILTER' && $diff->{ HTML_OUTPUT_FILTER })) {
@@ -3018,7 +2964,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HTML_STYLESHEET_BASENAME' && $diff->{ HTML_STYLESHEET_BASENAME })) {
@@ -3027,7 +2973,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HTML_THREAD_REF_TYPE' && $diff->{ HTML_THREAD_REF_TYPE })) {
@@ -3036,7 +2982,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HTML_THREAD_REF_TYPE' && $diff->{ HTML_THREAD_REF_TYPE })) {
@@ -3045,7 +2991,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HTML_THREAD_SORT_TYPE' && $diff->{ HTML_THREAD_SORT_TYPE })) {
@@ -3054,7 +3000,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HTML_THREAD_SORT_TYPE' && $diff->{ HTML_THREAD_SORT_TYPE })) {
@@ -3063,7 +3009,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HTML_INDEX_UNIT' && $diff->{ HTML_INDEX_UNIT })) {
@@ -3072,7 +3018,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HTML_INDENT_STYLE' && $diff->{ HTML_INDENT_STYLE })) {
@@ -3081,7 +3027,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HTML_MULTIPART_IMAGE_REF_TYPE' && $diff->{ HTML_MULTIPART_IMAGE_REF_TYPE })) {
@@ -3090,7 +3036,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HTML_DEFAULT_UMASK' && $diff->{ HTML_DEFAULT_UMASK })) {
@@ -3099,7 +3045,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HTML_WRITE_UMASK' && $diff->{ HTML_WRITE_UMASK })) {
@@ -3108,16 +3054,16 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_DATABASE' && $diff->{ USE_DATABASE })) {
         if ($config->{ USE_DATABASE }) {
-            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'DATABASE_METHOD' && $diff->{ DATABASE_METHOD })) {
@@ -3126,7 +3072,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'DATABASE_CACHE_FILE_SUFFIX' && $diff->{ DATABASE_CACHE_FILE_SUFFIX })) {
@@ -3135,7 +3081,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'DATABASE_DRIVER' && $diff->{ DATABASE_DRIVER })) {
@@ -3144,7 +3090,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'DATABASE_DRIVER_ATTRIBUTES' && $diff->{ DATABASE_DRIVER_ATTRIBUTES })) {
@@ -3153,7 +3099,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'SQL_SERVER_HOST' && $diff->{ SQL_SERVER_HOST })) {
@@ -3162,7 +3108,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'SQL_SERVER_PORT' && $diff->{ SQL_SERVER_PORT })) {
@@ -3171,7 +3117,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'SQL_SERVER_USER' && $diff->{ SQL_SERVER_USER })) {
@@ -3180,7 +3126,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'SQL_DATABASE_NAME' && $diff->{ SQL_DATABASE_NAME })) {
@@ -3189,7 +3135,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'SQL_SERVER_PASSWORD' && $diff->{ SQL_SERVER_PASSWORD })) {
@@ -3198,7 +3144,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'SQL_DATABASE_NAME' && $diff->{ SQL_DATABASE_NAME })) {
@@ -3207,7 +3153,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LDAP_SERVER_HOST' && $diff->{ LDAP_SERVER_HOST })) {
@@ -3216,7 +3162,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LDAP_SERVER_PASSWORD' && $diff->{ LDAP_SERVER_PASSWORD })) {
@@ -3225,7 +3171,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LDAP_SEARCH_BASE' && $diff->{ LDAP_SEARCH_BASE })) {
@@ -3234,7 +3180,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LDAP_SERVER_BIND' && $diff->{ LDAP_SERVER_BIND })) {
@@ -3243,7 +3189,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LDAP_QUERY_FILTER' && $diff->{ LDAP_QUERY_FILTER })) {
@@ -3252,7 +3198,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_WHOIS' && $diff->{ USE_WHOIS })) {
@@ -3261,7 +3207,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'DEFAULT_WHOIS_SERVER' && $diff->{ DEFAULT_WHOIS_SERVER })) {
@@ -3270,7 +3216,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'WHOIS_DB' && $diff->{ WHOIS_DB })) {
@@ -3279,7 +3225,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'WHOIS_HELP_FILE' && $diff->{ WHOIS_HELP_FILE })) {
@@ -3288,7 +3234,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'WHOIS_JCODE_P' && $diff->{ WHOIS_JCODE_P })) {
@@ -3297,7 +3243,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CPU_TYPE_MANUFACTURER_OS' && $diff->{ CPU_TYPE_MANUFACTURER_OS })) {
@@ -3306,7 +3252,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'STRUCT_SOCKADDR' && $diff->{ STRUCT_SOCKADDR })) {
@@ -3315,7 +3261,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LOCK_SH' && $diff->{ LOCK_SH })) {
@@ -3324,7 +3270,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LOCK_EX' && $diff->{ LOCK_EX })) {
@@ -3333,7 +3279,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LOCK_NB' && $diff->{ LOCK_NB })) {
@@ -3342,7 +3288,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LOCK_UN' && $diff->{ LOCK_UN })) {
@@ -3351,7 +3297,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'COMPAT_SOLARIS2' && $diff->{ COMPAT_SOLARIS2 })) {
@@ -3360,7 +3306,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'NOT_USE_TIOCNOTTY' && $diff->{ NOT_USE_TIOCNOTTY })) {
@@ -3369,7 +3315,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HAS_GETPWUID' && $diff->{ HAS_GETPWUID })) {
@@ -3378,7 +3324,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HAS_GETPWGID' && $diff->{ HAS_GETPWGID })) {
@@ -3387,7 +3333,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HAS_ALARM' && $diff->{ HAS_ALARM })) {
@@ -3396,7 +3342,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'UNISTD' && $diff->{ UNISTD })) {
@@ -3405,7 +3351,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'SENDMAIL' && $diff->{ SENDMAIL })) {
@@ -3414,7 +3360,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'TAR' && $diff->{ TAR })) {
@@ -3423,7 +3369,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'UUENCODE' && $diff->{ UUENCODE })) {
@@ -3432,7 +3378,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'COMPRESS' && $diff->{ COMPRESS })) {
@@ -3441,7 +3387,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'ZCAT' && $diff->{ ZCAT })) {
@@ -3450,7 +3396,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LHA' && $diff->{ LHA })) {
@@ -3459,7 +3405,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'ISH' && $diff->{ ISH })) {
@@ -3468,7 +3414,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'ZIP' && $diff->{ ZIP })) {
@@ -3477,7 +3423,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'BZIP2' && $diff->{ BZIP2 })) {
@@ -3486,7 +3432,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'PGP' && $diff->{ PGP })) {
@@ -3495,7 +3441,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'PGP5' && $diff->{ PGP5 })) {
@@ -3504,7 +3450,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'PGPE' && $diff->{ PGPE })) {
@@ -3513,7 +3459,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'PGPK' && $diff->{ PGPK })) {
@@ -3522,7 +3468,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'PGPS' && $diff->{ PGPS })) {
@@ -3531,7 +3477,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'PGPV' && $diff->{ PGPV })) {
@@ -3540,7 +3486,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'GPG' && $diff->{ GPG })) {
@@ -3549,7 +3495,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'RCS' && $diff->{ RCS })) {
@@ -3558,7 +3504,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CI' && $diff->{ CI })) {
@@ -3567,7 +3513,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'BASE64_DECODE' && $diff->{ BASE64_DECODE })) {
@@ -3576,7 +3522,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'BASE64_ENCODE' && $diff->{ BASE64_ENCODE })) {
@@ -3585,7 +3531,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'MD5' && $diff->{ MD5 })) {
@@ -3594,7 +3540,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'SMTPLOG' && $diff->{ SMTPLOG })) {
@@ -3603,25 +3549,16 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'PROHIBIT_COMMAND_FOR_STRANGER' && $diff->{ PROHIBIT_COMMAND_FOR_STRANGER })) {
-        if ($config->{ PROHIBIT_COMMAND_FOR_STRANGER } == 1) {
+        if ($config->{ PROHIBIT_COMMAND_FOR_STRANGER }) {
             $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
-
-    $s = undef;
-    if (($key eq 'PROHIBIT_COMMAND_FOR_STRANGER' && $diff->{ PROHIBIT_COMMAND_FOR_STRANGER })) {
-        if ($config->{ PROHIBIT_COMMAND_FOR_STRANGER } == 0) {
-            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
-        }
-    }
-    return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_LIBMIME' && $diff->{ USE_LIBMIME })) {
@@ -3630,7 +3567,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'USE_LIBMIME' && $diff->{ USE_LIBMIME })) {
@@ -3639,7 +3576,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LIBMIMEDIR' && $diff->{ LIBMIMEDIR })) {
@@ -3648,7 +3585,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'RPG_ML_FORM_FLAG' && $diff->{ RPG_ML_FORM_FLAG })) {
@@ -3657,7 +3594,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'RPG_ML_FORM_FLAG' && $diff->{ RPG_ML_FORM_FLAG })) {
@@ -3666,7 +3603,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'SUN_OS_413' && $diff->{ SUN_OS_413 })) {
@@ -3675,7 +3612,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'SUN_OS_413' && $diff->{ SUN_OS_413 })) {
@@ -3684,7 +3621,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'SUBJECT_HML_FORM' && $diff->{ SUBJECT_HML_FORM })) {
@@ -3693,7 +3630,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'HML_FORM_LONG_ID' && $diff->{ HML_FORM_LONG_ID })) {
@@ -3702,7 +3639,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'ML_MEMBER_CHECK' && $diff->{ ML_MEMBER_CHECK })) {
@@ -3711,7 +3648,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'DEFAULT_HTTP_PORT' && $diff->{ DEFAULT_HTTP_PORT })) {
@@ -3720,7 +3657,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'DEFAULT_GOPHER_PORT' && $diff->{ DEFAULT_GOPHER_PORT })) {
@@ -3729,7 +3666,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'DEFAULT_HTML_FIELD' && $diff->{ DEFAULT_HTML_FIELD })) {
@@ -3738,7 +3675,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'CP' && $diff->{ CP })) {
@@ -3747,7 +3684,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'RM' && $diff->{ RM })) {
@@ -3756,7 +3693,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'FML' && $diff->{ FML })) {
@@ -3765,16 +3702,16 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'LOAD_LIBRARY' && $diff->{ LOAD_LIBRARY })) {
         if ($config->{ LOAD_LIBRARY }) {
-            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'STORED_BOUNDARY' && $diff->{ STORED_BOUNDARY })) {
@@ -3783,7 +3720,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq 'AGAINST_NIFTY' && $diff->{ AGAINST_NIFTY })) {
@@ -3792,7 +3729,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq '_Ds' && $diff->{ _Ds })) {
@@ -3801,7 +3738,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
     $s = undef;
     if (($key eq '_Dm' && $diff->{ _Dm })) {
@@ -3810,7 +3747,7 @@ sub translate
         }
     }
     return $s if defined $s;
-
+    
 
 
    return '';
