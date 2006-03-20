@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: config_ph.pm,v 1.21 2006/01/09 14:00:54 fukachan Exp $
+# $FML: config_ph.pm,v 1.22 2006/03/12 11:01:34 fukachan Exp $
 #
 
 package FML::Merge::FML4::config_ph;
@@ -168,7 +168,7 @@ sub dump_variable
 
     while (($key, $val) = each(%$stab)) {
 	next if $key =~
-	    /^(STRUCT_SOCKADDR|CFVersion|CPU_TYPE_MANUFACTURER_OS|HTML_THREAD_REF_TYPE|FQDN|REJECT_ADDR|SKIP_FIELDS)/;
+	    /^(STRUCT_SOCKADDR|CFVersion|CPU_TYPE_MANUFACTURER_OS|HTML_THREAD_REF_TYPE|FQDN)/;
 
 	eval "\$val = \$${package}::$key;\n";
 	eval "\$def = \$default::$key;\n";
@@ -386,27 +386,49 @@ sub translate_xxx
 	return $self->_fix_restrictions($config, $diff, $key, $value);
     }
     elsif ($key eq 'MAINTAINER') {
+	my $value = $self->_fix_address($config, $diff, $key, $value);
 	return "maintainer = $value";
     }
     elsif ($key eq 'MAIL_LIST') {
+	my $value = $self->_fix_address($config, $diff, $key, $value);
 	return "article_post_address = $value";
     }
     elsif ($key eq 'CONTROL_ADDRESS') {
+	my $value = $self->_fix_address($config, $diff, $key, $value);
 	return "command_mail_address = $value";
     }
     elsif ($key eq 'OUTGOING_ADDRESS') {
+	my $value = $self->_fix_address($config, $diff, $key, $value);
 	return "";
 	return "# WARNING outgoing_address = $value";
     }
     elsif ($key eq 'SMTP_SENDER') {
+	my $value = $self->_fix_address($config, $diff, $key, $value);
 	return "smtp_sender = $value";
     }
+    elsif ($key eq 'ERRORS_TO') {
+	my $value = $self->_fix_address($config, $diff, $key, $value);
+	return "mail_header_default_errors_to = $value";
+    }
+    elsif ($key eq 'LIST_POST'        ||
+	   $key eq 'LIST_OWNER'       ||
+	   $key eq 'LIST_HELP'        ||
+	   $key eq 'LIST_SUBSCRIBE'   ||
+	   $key eq 'LIST_UNSUBSCRIBE' ||
+	   $key eq 'LIST_ID'          ) {
+	my $value    = $self->_fix_address($config, $diff, $key, $value);
+	my $var_name = sprintf("mail_header_default_%s", lc($key));
+	return "$var_name = $value";
+    }
     elsif ($key eq 'REJECT_ADDR') {
-	return "system_special_accounts = $value";
+	my ($list) = join(" ", split(/\|/, $value));
+	return "system_special_accounts = $list";
     }
     elsif ($key eq 'HOST' || $key eq 'PORT') {
 	my $host = $diff->{ 'HOST' } || '127.0.0.1';
 	my $port = $diff->{ 'PORT' } || 25;
+	$host = $host eq '___nil___' ? '127.00.1' : $host;
+	$port = $port eq '___nil___' ? 25 : $port; 
 	return "smtp_servers = $host:$port";
     }
     elsif ($key eq 'SPOOL_DIR' || $key eq 'TMP_DIR') {
@@ -433,25 +455,32 @@ sub translate_xxx
     }
     elsif ($key eq 'MODERATOR_MEMBER_LIST') {
 	$value = $self->_fix_path($config, $diff, $key, $value);
-	return "primary_moderator_member_map = $value";
+	my $r1 = "primary_moderator_member_map = $value";
+	my $r2 = "primary_moderator_recipient_map = $value";
+	return "$r1\n\n$r2";
     }
     elsif ($key eq 'PASSWD_FILE') {
 	$value = $self->_fix_path($config, $diff, $key, $value);
 	return "primary_admin_member_password_map = $value";
     }
     elsif ($key eq 'LOGFILE') {
+	$value = $self->_fix_path($config, $diff, $key, $value);
 	return "log_file = $value";
     }
     elsif ($key eq 'GUIDE_FILE') {
+	$value = $self->_fix_path($config, $diff, $key, $value);
 	return "guide_file = $value";
     }
     elsif ($key eq 'OBJECTIVE_FILE') {
+	$value = $self->_fix_path($config, $diff, $key, $value);
 	return "objective_file = $value";
     }
     elsif ($key eq 'SEQUENCE_FILE') {
+	$value = $self->_fix_path($config, $diff, $key, $value);
 	return "article_sequence_file = $value";
     }
     elsif ($key eq 'SUMMARY_FILE') {
+	$value = $self->_fix_path($config, $diff, $key, $value);
 	return "summary_file = $value";
     }
     elsif ($key eq 'SKIP_FIELDS') {
@@ -472,6 +501,15 @@ sub translate_xxx
     }
     elsif ($key eq 'TZone') {
 	return $self->_fix_time_zone($config, $diff, $key, $value);
+    }
+    elsif ($key eq 'INCOMING_MAIL_SIZE_LIMIT') {
+	my ($s, $v);
+
+	$v = $self->_fix_atoi($config, $diff, $key, $value);
+
+	$s .= sprintf("incoming_article_body_size_limit = %d\n\n", $v);
+	$s .= sprintf("incoming_command_mail_body_size_limit = %d\n\n", $v);
+	return $s;
     }
 
     return '# ***ERROR*** UNKNOWN TRANSLATION RULE';
@@ -592,6 +630,25 @@ sub _fix_restrictions
     else {
 	return "# OK (already translated)\n";
     }
+}
+
+
+# Descriptions: convert address related parameters.
+#    Arguments: OBJ($self)
+#               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
+# Side Effects: none
+# Return Value: STR
+sub _fix_address
+{
+    my ($self, $config, $diff, $key, $value) = @_;
+    my $address = $value;
+    my $fqdn = `hostname`;
+    $fqdn =~ s/\s*$//;
+
+    $address =~ s/\$DOMAINNAME/\$ml_domain/g;
+    $address =~ s/\$FQDN/$fqdn/g;
+
+    return $address;
 }
 
 
@@ -832,6 +889,30 @@ sub _fix_subject_tag
     }
 
     return $s;
+}
+
+
+# Descriptions: convert from ascii to number.
+#    Arguments: OBJ($self)
+#               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
+# Side Effects: none
+# Return Value: STR
+sub _fix_atoi
+{
+    my ($self, $config, $diff, $key, $value) = @_;
+    my $x = $value;
+
+    if ($x =~ /^(\d+)$/) {
+	;
+    }
+    elsif ($x =~ /^(\d+)K$/i) {
+	$x *= 1024;
+    }
+    elsif ($x =~ /^(\d+)M$/i) {
+	$x *= 1024*1024;
+    }
+
+    return $x;
 }
 
 
