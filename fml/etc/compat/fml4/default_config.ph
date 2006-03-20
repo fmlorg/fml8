@@ -86,8 +86,10 @@ $FQDN                          = "elena.home.fml.org";
 #
 # value: string
 $MAIL_LIST                     = "";
-$PERMIT_POST_FROM              = "members_only";
-$REJECT_POST_HANDLER           = "reject";
+# $PERMIT_POST_FROM              = "members_only";
+# $REJECT_POST_HANDLER           = "reject";
+$PERMIT_POST_FROM              = "___NULL___";
+$REJECT_POST_HANDLER           = "___NULL___";
 
 # $CONTROL_ADDRESS is the address you send a command request to.
 #    For example 'elena-ctl@fml.org'.
@@ -112,8 +114,10 @@ $REJECT_POST_HANDLER           = "reject";
 #
 # value: string
 $CONTROL_ADDRESS               = "";
-$PERMIT_COMMAND_FROM           = "members_only";
-$REJECT_COMMAND_HANDLER        = "reject";
+# $PERMIT_COMMAND_FROM           = "members_only";
+# $REJECT_COMMAND_HANDLER        = "reject";
+$PERMIT_COMMAND_FROM           = "___NULL___";
+$REJECT_COMMAND_HANDLER        = "___NULL___";
 
 # obsolete (though you can use it)
 # When $MAIL_LIST_ACCEPT_COMMAND = 1, 
@@ -283,6 +287,9 @@ $CONFIRMD_ACK_WAIT_UNIT        = "2weeks";
 # value: 1/0
 $REMOTE_ADMINISTRATION         = 0;
 
+# COMPAT CF2
+$REMOTE_ADMINISTRATION_REQUIRE_PASSWORD = "___NULL___";
+
 # Of course, the remote control requires some kind of authentication.
 # The choice of authentication is $REMOTE_ADMINISTRATION_AUTH_TYPE,
 # which is one of 
@@ -443,7 +450,7 @@ $MAX_MEMBER_LIMIT              = "";
 # &EnvelopeFilter is called in the top of &Distribute if you set
 # $USE_DISTRIBUTE_FILTER = 1;
 # value: 1/0
-$USE_DISTRIBUTE_FILTER         = "";
+$USE_DISTRIBUTE_FILTER         = "___NULL___";
 
 # Filter of posted article.
 # You can use $DISTRIBUTE_FILTER_HOOK for advanced customizes.
@@ -453,7 +460,7 @@ $DISTRIBUTE_FILTER_HOOK        = "";
 # $FILTER_NOTIFY_REJECTION enables fml.pl notifies the rejection to
 # the sender.
 # value: 1/0
-$FILTER_NOTIFY_REJECTION       = "";
+$FILTER_NOTIFY_REJECTION       = "___NULL___";
 
 # Attribute of filter of posted article
 # value: 1/0
@@ -463,12 +470,12 @@ $FILTER_ATTR_REJECT_NULL_BODY  = 1;
 # When $FILTER_ATTR_REJECT_COMMAND is 1 under distribution mode, 
 # rejects "# command" syntax just before distribution (&Distribute;)
 # value: 1/0
-$FILTER_ATTR_REJECT_COMMAND    = "";
+$FILTER_ATTR_REJECT_COMMAND    = "___NULL___";
 
 # Attribute of filter of posted article
 # reject Japanese "2byes English words"
 # value: 1/0
-$FILTER_ATTR_REJECT_2BYTES_COMMAND = "";
+$FILTER_ATTR_REJECT_2BYTES_COMMAND = "___NULL___";
 
 # Attribute of filter of posted article
 # reject command mail sent to the address for posting.
@@ -492,7 +499,7 @@ $FILTER_ATTR_REJECT_MS_GUID    = 1;
 
 # reject not ascii nor ISO-2022-JP
 # value: 1/0
-$FILTER_ATTR_REJECT_INVALID_JAPANESE = 0;
+$FILTER_ATTR_REJECT_INVALID_JAPANESE = "___NULL___";
 
 # cutoff empty message. 
 # value: 1/0
@@ -657,7 +664,7 @@ $SUBJECT_FORM_LONG_ID          = "";
 
 # obsolete based on RFC1123
 # value: 1/0
-$USE_ERRORS_TO                 = "";
+$USE_ERRORS_TO                 = "___NULL___";
 
 # obsolete based on RFC1123
 # value: string
@@ -677,7 +684,7 @@ $PRECEDENCE                    = "bulk";
 # Stardate calculation algorithm is ambiguous.
 # X-Stardate: field
 # value: 1/0
-$APPEND_STARDATE               = "";
+$APPEND_STARDATE               = "___NULL___";
 
 # RFC2369 e.g. list-post: ..
 # value: 1/0
@@ -1298,11 +1305,11 @@ $AMLIST_NEWSYSLOG_LIMIT        = "150K";
 # AUTO_HTML_GEN == AUTOmatic HTML GENeration
 # if $AUTO_HTML_GEN, we generate html'ed articles in $DIR/$HTML_DIR
 # value: 1/0
-$AUTO_HTML_GEN                 = "";
+$AUTO_HTML_GEN                 = "___NULL__";
 
 # use Mail::HTML::Lite in fml-devel (fml next generation).
 # value: 1/0
-$USE_NEW_HTML_GEN              = "";
+$USE_NEW_HTML_GEN              = "___NULL___";
 
 $HTML_THREAD                   = 1; # value: 1/0
 
