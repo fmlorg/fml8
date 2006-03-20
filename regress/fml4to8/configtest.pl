@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: configtest.pl,v 1.6 2006/02/24 12:49:13 fukachan Exp $
+# $FML: configtest.pl,v 1.7 2006/02/25 13:49:27 fukachan Exp $
 #
 
 use strict;
@@ -13,7 +13,7 @@ my $base_dir = shift || '/var/spool/ml';
 
 for my $f (sort <$base_dir/*/config.ph>) {
     if (-f $f && is_ok($f)) {
-	print "\n// check $f\n";
+	print "\n===> $f\n";
 	eval q{ check($f); };
 	croak($@) if $@;
 	print $@ if $@;
@@ -22,7 +22,7 @@ for my $f (sort <$base_dir/*/config.ph>) {
 
 for my $f (sort <$base_dir/*/.fml4rc/config.ph>) {
     if (-f $f && is_ok($f)) {
-	print "\n// check $f\n";
+	print "\n===> $f\n";
 	eval q{ check($f); };
 	croak($@) if $@;
 	print $@ if $@;
@@ -87,7 +87,7 @@ sub check
 
         if ($x = $config_ph->translate($config, $diff, $k, $v)) {
 	    if ($x =~ /IGNORED (since .*)/) {
-		print "# A: OK (IGNORED $1)\n";
+		print "# A: IGNORED: $1\n";
 	    }
 	    elsif ($x =~ /ERROR/) {
 		push(@failed_queue, $query);
