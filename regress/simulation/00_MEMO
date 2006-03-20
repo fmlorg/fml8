@@ -6,6 +6,15 @@
 	XXX このファイルは、なる早で解決する/bug fix するべきもの
         XXX 遠大なビジョンやとりあえず後まわしでよいものは STATUS.txt へ
 
+[TODO] 添付ファイルをサイズでチェック
+
+	# allow only text/plain messages.
+	text/plain	*		permit
+	text/html	*		reject
+	multipart/*	*;size<=1M	permit		<- ?
+	multipart/*	!text/plain	reject
+
+
 [TODO] fml 4 to 8: $AUTO_REGISTRATION_TYPE
 
 	subject body no-keyword 
@@ -275,4 +284,4 @@
 	FML::Sys::Alias
 
 ----------
-$FML: 00_MEMO,v 1.125 2006/03/08 13:27:27 fukachan Exp $
+$FML: 00_MEMO,v 1.126 2006/03/08 13:28:14 fukachan Exp $
