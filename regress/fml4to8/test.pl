@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: test.pl,v 1.1 2006/02/24 12:49:13 fukachan Exp $
+# $FML: test.pl,v 1.2 2006/02/24 13:53:51 fukachan Exp $
 #
 
 use strict;
@@ -99,7 +99,8 @@ sub expand
 		}
 	    }
 
-	    $v =~ s/\s*//g;
+	    $v =~ s/^\s*//g;
+	    $v =~ s/\s*$//g;
 	    if ($v =~ /^\d+$/) {
 		print $wh "\$${name} = $v;\n\n";
 	    }
