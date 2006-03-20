@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: gen_rules.pl,v 1.7 2006/01/04 07:50:02 fukachan Exp $
+# $FML: gen_rules.pl,v 1.8 2006/03/08 13:35:27 fukachan Exp $
 #
 
 use strict;
@@ -53,6 +53,9 @@ sub _parse_rule_file
 	while ($buf = <$rh>) {
 	    next LINE if $buf =~ /^\s*$/o;
 	    next LINE if $buf =~ /^\#/o;
+
+	    # o.k.
+	    next LINE if $buf =~ /^\.ok/o;
 
 	    if ($buf =~ /^\.if\s+(\S+)/o) {
 		$var_name = sprintf("%s_%s", $var_count++, $1);
