@@ -1,5 +1,5 @@
 <!--
- $FML: recipes.header.sgml,v 1.3 2006/01/14 06:04:48 fukachan Exp $
+ $FML: recipes.header.sgml,v 1.4 2006/01/19 03:59:51 fukachan Exp $
 -->
 
 <qandaset>
@@ -113,6 +113,34 @@ article_subject_tag = [\L$ml_name\E:%05d]
 On unix, you must use lowercase by default. 
 So the ml_name must be in lower case.
 You need not use this setting in almost cases.
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+add subject tag like [YYYYMMDD] string.
+</para>
+</question>
+
+<answer>
+<para>
+To add a subject tag like YYYYMMDD (20060101), date format, 
+you can use the following hook.
+<screen>
+$distribute_verify_request_start_hook = q{
+
+        use POSIX; 
+        my $yyyymmdd = strftime("[%Y%m%d]", localtime);
+        $config->set('article_subject_tag', $yyyymmdd);
+
+};
+</screen>
+You can use several format by editing strftime(3) part.
 </para>
 </answer>
 

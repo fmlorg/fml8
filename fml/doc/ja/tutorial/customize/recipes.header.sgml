@@ -1,5 +1,5 @@
 <!--
- $FML: recipes.header.sgml,v 1.4 2006/01/14 06:04:48 fukachan Exp $
+ $FML: recipes.header.sgml,v 1.5 2006/01/19 03:59:51 fukachan Exp $
 -->
 
 <qandaset>
@@ -113,6 +113,34 @@ Unix 上では、たいてい小文字を使うので、ＭＬ名前も小文字でしょう。
 article_subject_tag = [\L$ml_name\E:%05d]
 </screen>
 (注意: この機能を使う場合には 2002/10/29 以降の snapshot を使ってください)。 
+</para>
+</answer>
+
+</qandaentry>
+
+
+<qandaentry>
+
+<question>
+<para>
+Subject に [日付] というタグをつけたい。
+</para>
+</question>
+
+<answer>
+<para>
+YYYYMMDD (20060101) のような日付をつけたいなら、以下のようにして下さい。
+<screen>
+$distribute_verify_request_start_hook = q{
+
+        use POSIX; 
+        my $yyyymmdd = strftime("[%Y%m%d]", localtime);
+        $config->set('article_subject_tag', $yyyymmdd);
+
+};
+</screen>
+なお strftime(3) を使うところを編集すればフォーマットはいろいろかえる
+ことができます。
 </para>
 </answer>
 
