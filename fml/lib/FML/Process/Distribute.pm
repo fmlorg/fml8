@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.169 2006/02/04 07:42:24 fukachan Exp $
+# $FML: Distribute.pm,v 1.170 2006/03/19 08:06:05 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -609,10 +609,21 @@ sub _deliver_article
 	    $sfp    = sub { print $wh @_;};
 	    $handle = undef; # $wh;
 	}
+	else {
+	    $curproc->logerror("cannot open outgoing_message_cache");
+	}
     }
     else {
 	$sfp = sub {};
     }
+
+    # address validater
+    my $validater = sub {
+	my ($address) = @_; 
+	use FML::Restriction::Base;
+	my $restriction = new FML::Restriction::Base;
+	return $restriction->regexp_match( 'address', $address );
+    };
 
     # delay loading of module
     my $service = {};
@@ -622,6 +633,7 @@ sub _deliver_article
 	    log_function      => $fp,
 	    smtp_log_function => $sfp,
 	    smtp_log_handle   => $handle,
+	    address_validate_function => $validater,
 	};
     };
     croak($@) if $@;

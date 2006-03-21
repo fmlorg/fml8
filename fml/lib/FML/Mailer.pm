@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Mailer.pm,v 1.31 2005/06/04 08:49:05 fukachan Exp $
+# $FML: Mailer.pm,v 1.32 2005/06/04 08:51:30 fukachan Exp $
 #
 
 package FML::Mailer;
@@ -193,6 +193,13 @@ sub send
 	return 0;
     }
 
+    # address validater
+    my $validater = sub {
+	my ($address) = @_; 
+	use FML::Restriction::Base;
+	my $restriction = new FML::Restriction::Base;
+	return $restriction->regexp_match( 'address', $address );
+    };
 
     #
     # main
@@ -203,6 +210,7 @@ sub send
 	log_function       => $fp,
 	smtp_log_function  => $sfp,
 	smtp_log_handle    => $handle,
+	address_validate_function => $validater,
     };
     if ($service->error) { $curproc->logerror($service->error); return 0;}
 

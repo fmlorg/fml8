@@ -4,13 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.33 2004/08/14 08:35:52 fukachan Exp $
+# $FML: SMTP.pm,v 1.34 2004/08/15 11:59:05 fukachan Exp $
 #
 
 
 package Mail::Delivery::SMTP;
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
+use vars qw(@ISA @EXPORT @EXPORT_OK $fp_address_validate);
 use Carp;
 use IO::Socket;
 use Mail::Delivery::Utils;
@@ -147,6 +147,7 @@ sub new
     # define package global pointer to the log() function
     $LogFunctionPointer     = $args->{log_function}      || undef;
     $SmtpLogFunctionPointer = $args->{smtp_log_function} || undef;
+    $fp_address_validate    = $args->{address_validate_function} || undef;
 
     bless $me, $type;
 
@@ -873,7 +874,24 @@ sub _send_recipient_list_by_recipient_map
 	# XXX $obj->get_recipient returns a mail address.
       RCPT_INPUT:
 	while (defined ($rcpt = $obj->get_next_key)) {
+	    # firstly, validate the format of the specified address $rcpt.
+	    if (defined $fp_address_validate) {
+		my $r = 0;
+		eval q{ $r = &$fp_address_validate($rcpt);};
+		unless ($@) {
+		    unless ($r) {
+			$self->smtplog("===> ignore <$rcpt>");
+			Log("ignore <$rcpt>");
+			next RCPT_INPUT;
+		    }
+		}
+		else {
+		    Log("\$fp_address_validate failes");
+		}
+	    }
+
 	    $num_recipients++;
+
 	    $self->_send_command("RCPT TO:<$rcpt>");
 	    $self->_read_reply;
 
