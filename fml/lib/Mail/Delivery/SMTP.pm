@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.34 2004/08/15 11:59:05 fukachan Exp $
+# $FML: SMTP.pm,v 1.35 2006/03/21 07:04:07 fukachan Exp $
 #
 
 
@@ -613,8 +613,8 @@ sub _fallback_into_queue
     my ($self, $args, $map, $status) = @_;
 
     # log current status.
-    my $n = $self->get_map_position($map) || 0;
-    Log("map=$map pos=$n status=\"$status\"");
+    my $pos = $self->get_map_position($map) || 0;
+    Log("map=$map pos=$pos status=\"$status\"");
 
     # dump into queue.
     if (defined $args->{ use_queue_dir } && $args->{ use_queue_dir }) {
@@ -633,6 +633,10 @@ sub _fallback_into_queue
 		    Log("fatal: delivery fallback failed.");
 		    return;
 		};
+
+		if ($pos) {
+		    $obj->setpos($pos);
+		}
 
 		my $rcpt;
 		while (defined ($rcpt = $obj->get_next_key)) {
