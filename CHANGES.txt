@@ -3,9 +3,11 @@
 
   [最近のまとめ]
 
-  FML_CURRENT_VERSION=7.98.7
+  FML_CURRENT_VERSION=7.98.8
 
   8.0 PRE_ALPHA
+	7.98.8	correct context switch.
+		address validation in smtp transaction.
 	7.98.7	confirmation + manual subscribe/chaddr/unsubscribe
 		manual subscribe/chaddr/unsubscribe
 	7.98.6	fundamentals of moderator mode implemented.
@@ -32,6 +34,36 @@
 
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
+
+2006/03/20
+
+   FML::Merge::FML4::RULES.txt 
+	56.5 % verified. status and rules updated.
+	
+   FML::Merge::FML4::config_ph 
+	fix conversion for address variables.
+	add conversion of REJECT_ADDR and SKIP_FIELDS.
+	fix HOST and PORT handling.
+	apply _fix_path() for *_FILE variables.
+	add conversion of INCOMING_MAIL_SIZE_LIMIT with ATOI suport.
+	
+    etc/compat/fml4/default_config.ph 
+	
+	by default, define ___NULL___ for the following variables:
+	$PERMIT_POST_FROM
+	$REJECT_POST_HANDLER
+	$PERMIT_COMMAND_FROM
+	$REJECT_COMMAND_HANDLER
+	$REMOTE_ADMINISTRATION_REQUIRE_PASSWORD
+	$USE_DISTRIBUTE_FILTER
+	$FILTER_NOTIFY_REJECTION
+	$FILTER_ATTR_REJECT_COMMAND
+	$FILTER_ATTR_REJECT_2BYTES_COMMAND
+	$FILTER_ATTR_REJECT_INVALID_JAPANESE
+	$USE_ERRORS_TO
+	$APPEND_STARDATE
+	$AUTO_HTML_GEN
+	$USE_NEW_HTML_GEN
 
 2006/03/19
 
@@ -9372,4 +9404,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.270 2006/03/12 14:16:24 fukachan Exp $
+$FML: CHANGES.txt,v 1.271 2006/03/19 14:50:20 fukachan Exp $
