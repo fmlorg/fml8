@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ErrorStatus.pm,v 1.8 2004/01/24 09:00:55 fukachan Exp $
+# $FML: ErrorStatus.pm,v 1.9 2004/06/29 10:05:29 fukachan Exp $
 #
 
 package Mail::Delivery::ErrorStatus;
@@ -15,7 +15,8 @@ use Carp;
 
 require Exporter;
 @ISA       = qw(Exporter);
-@EXPORT_OK = qw(errstr error error_set error_clear);
+@EXPORT_OK = qw(errstr error error_set error_clear
+		get_error set_error);
 
 =head1 NAME
 
@@ -46,6 +47,39 @@ You use C<Something> module like this.
 simple utility functions to manipulate error messages.
 
 =head1 METHODS
+
+=head2 set_error($msg)
+
+set the error message.
+
+=head2 get_error()
+
+get the error message.
+
+=cut
+
+
+# Descriptions: set the error message.
+#    Arguments: OBJ($self) STR($mesg)
+# Side Effects: update OBJ
+# Return Value: STR
+sub set_error
+{
+    my ($self, $mesg) = @_;
+    $self->error_set($mesg);
+}
+
+
+# Descriptions: get the error message.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub get_error
+{
+    my ($self) = @_;
+    $self->error();
+}
+
 
 =head2 error_set($message)
 
@@ -115,7 +149,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
