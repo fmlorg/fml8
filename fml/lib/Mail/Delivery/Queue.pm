@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.56 2006/01/09 14:00:55 fukachan Exp $
+# $FML: Queue.pm,v 1.57 2006/02/15 13:52:49 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -159,7 +159,7 @@ sub _new_queue_id
 	($seconds, $microseconds) = gettimeofday;
     };
     if ($@) {
-	my ($second, $microseconds) = (time, 0);
+	my ($seconds, $microseconds) = (time, 0);
 	$id = sprintf("%d.%06d.%d.%d", $seconds, $microseconds, $$, $Counter);
     }
     else {
