@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.35 2006/03/21 07:04:07 fukachan Exp $
+# $FML: SMTP.pm,v 1.36 2006/03/21 13:01:43 fukachan Exp $
 #
 
 
@@ -748,7 +748,18 @@ sub _deliver
     #    IF_ERROR_FOUND: do nothing and return as soon as possible
     $self->_send_command("EHLO $myhostname");
     $self->_read_reply;
-    if ($self->error) { $self->_reset_smtp_transaction($args);	return;}
+    if ($self->get_error) {
+	$self->clear_error;
+	$self->_reset_smtp_transaction($args);
+
+	# if EHLO fails, try HELO.
+	$self->_send_command("HELO $myhostname");
+	$self->_read_reply;
+	if ($self->get_error) {
+	    $self->_reset_smtp_transaction($args);
+	    return;
+	}
+    }
 
     # 3. MAIL FROM;
     #    IF_ERROR_FOUND: do nothing and return as soon as possible
