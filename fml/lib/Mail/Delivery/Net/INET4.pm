@@ -1,17 +1,16 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: INET4.pm,v 1.10 2004/06/29 10:05:29 fukachan Exp $
+# $FML: INET4.pm,v 1.11 2005/05/27 01:22:27 fukachan Exp $
 #
 
 package Mail::Delivery::Net::INET4;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
-use Mail::Delivery::Utils;
 
 require Exporter;
 @ISA    = qw(Exporter);
@@ -25,33 +24,45 @@ require Exporter;
 sub connect4
 {
     my ($self, $args) = @_;
-    my $mta    = $args->{ _mta };
+    my $mta    = $args->{ mta };
     my $socket = undef;
+
+    # ASSERT
+    unless (defined $mta) {
+	$self->logerror("connect4: mta undefined");
+	return undef;
+    }
+    unless ($mta) {
+	$self->logerror("connect4: mta undefined");
+	return undef;
+    }
 
     # XXX we should avoid croak() in IO::Socket module;
     # XXX-TODO: timeout must be customizable.
     eval {
-	local($SIG{ALRM}) = sub { Log("Error: timeout to connect $mta");};
+	local($SIG{ALRM}) = sub { 
+	    $self->logerror("timeout to connect $mta");
+	};
 	use IO::Socket;
 	$socket = new IO::Socket::INET(PeerAddr => $mta,
 				       Timeout  => 120,
 				       );
     };
     if ($@) {
-	Log("Error: cannot create socket for $mta");
-	$self->error_set("cannot create socket: $@");
+	$self->logerror("cannot create socket for $mta");
+	$self->set_error("cannot create socket: $@");
 	return undef;
     }
 
     if (defined $socket) {
-	Log("(debug) o.k. connected to $mta");
-	$self->{'_socket'} = $socket;
+	$self->logdebug("o.k. connected to $mta");
+	$self->set_socket($socket);
 	$socket->autoflush(1);
 	return $socket;
     }
     else {
-	Log("(debug) error. fail to connect $mta");
-	$self->error_set("cannot open socket: $!");
+	$self->logdebug("cannot open socket ($!) mta=$mta");
+	$self->set_error("cannot open socket: $!");
 	return undef;
     }
 }
@@ -66,7 +77,7 @@ Mail::Delivery::Net::INET4 - establish tcp connection over IPv4.
    use Mail::Delivery::Net::INET4;
 
    $mta = '127.0.0.1:25';
-   $self->connect4( { _mta => $mta });
+   $self->connect4( { mta => $mta });
 
 =head1 DESCRIPTION
 
@@ -75,15 +86,17 @@ IPv4. This is a typical socket program.
 
 =head1 METHODS
 
-=item C<connect4()>
+=head2 connect4()
 
 try L<connect(2)>.
-If it succeeds, returned file handle and set the value at $self->{ _socket }.
-If failed, $self->{ _socket } is undef.
+If it succeeds, return a file handle. 
+return undef if failes.
+
+Also, save the socket handle via set_socket() access method.
 
 Avaialble arguments follows:
 
-    connect4( { _mta => $mta } );
+    connect4( { mta => $mta } );
 
 $mta is a hostname or [raw_ipv4_addr]:port form, for example,
 127.0.0.1:25.
@@ -92,8 +105,7 @@ $mta is a hostname or [raw_ipv4_addr]:port form, for example,
 
 L<Mail::Delivery::SMTP>,
 L<Socket>,
-L<IO::Socket>,
-L<Mail::Delivery::Utils>
+L<IO::Socket>
 
 =head1 CODING STYLE
 
@@ -105,7 +117,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
