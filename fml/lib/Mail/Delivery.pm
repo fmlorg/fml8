@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Delivery.pm,v 1.12 2004/06/29 10:05:28 fukachan Exp $
+# $FML: Delivery.pm,v 1.13 2005/05/26 13:03:13 fukachan Exp $
 #
 
 package Mail::Delivery;
@@ -17,7 +17,7 @@ use IO::Socket;
 
 =head1 NAME
 
-Mail::Delivery - mail delivery system interface.
+Mail::Delivery - top level mail delivery system interface.
 
 =head1 SYNOPSIS
 
@@ -26,7 +26,7 @@ Mail::Delivery - mail delivery system interface.
 	protocol           => 'SMTP',
 	default_io_timeout => 10,
     };
-    if ($service->error) { Log($service->error); return;}
+    if ($service->error) { $curproc->logerror($service->error); return;}
 
     # specify IO::Adapter parameters if needed.
     $map_params = {
@@ -49,7 +49,7 @@ Mail::Delivery - mail delivery system interface.
 
                           message         => $message,
                       });
-    if ($service->error) { Log($service->error); return;}
+    if ($service->error) { $curproc->logerror($service->error); return;}
 
 This class provides the entrance for sub classes.
 Actually implementation of this class is
@@ -139,7 +139,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
