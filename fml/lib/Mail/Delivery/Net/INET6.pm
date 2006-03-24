@@ -1,28 +1,35 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: INET6.pm,v 1.15 2004/06/29 10:05:29 fukachan Exp $
+# $FML: INET6.pm,v 1.16 2005/05/27 03:03:41 fukachan Exp $
 #
 
 package Mail::Delivery::Net::INET6;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
-use Mail::Delivery::Utils;
 
 require Exporter;
 @ISA    = qw(Exporter);
-@EXPORT = qw(is_ipv6_ready is_ipv6_mta_syntax connect6);
+@EXPORT = qw(is_ipv6_ready 
+	     set_ipv6_ready 
+	     get_ipv6_ready 
+
+	     check_ipv6_module_available
+
+	     is_ipv6_mta_syntax
+
+	     connect6);
 
 
 # Descriptions: we have Socket6.pm or not ?
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
-sub _we_can_use_Socket6
+sub check_ipv6_module_available
 {
     my ($self, $args) = @_;
 
@@ -32,11 +39,11 @@ sub _we_can_use_Socket6
     };
 
     if ($@ =~ /Can\'t locate Socket6.pm/o) {
-	$self->{_ipv6_ready} = 'no';
+	$self->set_ipv6_ready("no");
     }
     else {
-	Log("IPv6 ready");
-	$self->{_ipv6_ready} = 'yes';
+	$self->logdebug("IPv6 ready");
+	$self->set_ipv6_ready("yes");
     }
 }
 
@@ -44,17 +51,46 @@ sub _we_can_use_Socket6
 # Descriptions: This host supports IPv6 ?
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
-# Return Value: 1 or 0
+# Return Value: NUM (1 or 0)
 sub is_ipv6_ready
 {
     my ($self, $args) = @_;
 
     # probe the IPv6 availability for the first time
-    unless ($self->{_ipv6_ready}) {
-	_we_can_use_Socket6($self, $args);
+    unless ($self->get_ipv6_ready()) {
+	$self->check_ipv6_module_available($args);
     };
 
-    return ($self->{_ipv6_ready} eq 'yes' ? 1 : 0);
+    my $status = $self->get_ipv6_ready() || 'no';
+    return ($status eq 'yes' ? 1 : 0);
+}
+
+
+# Descriptions: set that this system is ipv6 ready.
+#    Arguments: OBJ($self) STR($value)
+# Side Effects: update $self.
+# Return Value: none
+sub set_ipv6_ready
+{
+    my ($self, $value) = @_;
+
+    if ($value eq 'yes' || $value eq 'no') {
+	$self->{_ipv6_ready} = $value;
+    }
+    else {
+	$self->{_ipv6_ready} = undef;
+    }
+}
+
+
+# Descriptions: get if this system is ipv6 ready.
+#    Arguments: OBJ($self) STR($value)
+# Side Effects: none
+# Return Value: STR
+sub get_ipv6_ready
+{
+    my ($self) = @_;
+    return( $self->{_ipv6_ready} || undef );
 }
 
 
@@ -66,15 +102,31 @@ sub is_ipv6_ready
 sub is_ipv6_mta_syntax
 {
     my ($self, $host) = @_;
-    my ($x_host, $x_port);
 
     # check the mta syntax whether it is ipv6 form or not.
     if ($host =~ /\[([\d:]+)\]:(\d+)/) {
-	($x_host, $x_port) = ($1, $2);
+	my ($x_host, $x_port) = ($1, $2);
 	return ($x_host, $x_port);
     }
     else {
 	return wantarray ? () : undef;
+    }
+}
+
+
+# Descriptions: parse host:port style syntax to (host, port).
+#    Arguments: OBJ($self) STR($mta)
+# Side Effects: none
+# Return Value: ARRAY(STR, STR)
+sub _parse_mta
+{
+    my ($self, $mta) = @_;
+
+    if ($mta =~ /(\S+):(\S+)/) {
+	return($1, $2);
+    }
+    else {
+	return(undef, undef);
     }
 }
 
@@ -86,23 +138,21 @@ sub is_ipv6_mta_syntax
 sub connect6
 {
     my ($self, $args) = @_;
-    my $mta = $args->{ _mta };
+    my $mta = $args->{ mta };
 
     # check the mta syntax is $ipv6_addr:$port or not.
-    my ($host, $port) = $self->is_ipv6_mta_syntax( $args->{ _mta } );
+    my ($host, $port) = $self->is_ipv6_mta_syntax($mta);
 
     # if mta is ipv6 raw address syntax,
     # try to parse $mta to $host:$port style.
     unless ($host) {
-	if ($mta =~ /(\S+):(\S+)/) {
-	    ($host, $port) = ($1, $2);
-	}
+	($host, $port) = $self->_parse_mta($mta);
     }
 
-    # Error: hmm, invalid MTA
+    # ASSEART: hmm, invalid MTA
     unless ($host && $port) {
-	Log("connect6: cannot find mta=$mta");
-	$self->{_socket} = undef;
+	$self->logerror("connect6: cannot find mta=$mta");
+	$self->set_socket(undef);
 	return undef;
     }
 
@@ -119,8 +169,10 @@ sub connect6
 	$family = -1;
 
 	# reset.
-	delete $self->{_socket} if defined $self->{_socket};
-
+	if (defined $self->get_socket()) {
+	    $self->set_socket(undef);
+	}
+ 
       ADDR_ENTRY:
 	while (scalar(@res) >= 5) {
 	    ($family, $type, $proto, $saddr, $canonname, @res) = @res;
@@ -135,17 +187,17 @@ sub connect6
 	    $fh = new IO::Socket;
 	    socket($fh, $family, $type, $proto) || do {
 		# XXX-TODO: need error_clear() some where ???
-		Log("Error: cannot create IPv6 socket");
-		$self->error_set("cannot create IPv6 socket");
+		$self->logerror("cannot create IPv6 socket");
+		$self->set_error("cannot create IPv6 socket");
 		next ADDR_ENTRY;
 	    };
 	    if (connect($fh, $saddr)) {
-		Log("(debug6) o.k. connect [$host]:$port");
+		$self->logdebug("o.k. connect [$host]:$port");
 		last ADDR_ENTRY;
 	    }
 	    else {
-		Log("Error: cannot connect [$host]:$port via IPv6");
-		$self->error_set("cannot [$host]:$port via IPv6");
+		$self->logerror("cannot connect [$host]:$port via IPv6");
+		$self->set_error("cannot connect [$host]:$port via IPv6");
 	    }
 
 	    $family = -1;
@@ -156,21 +208,21 @@ sub connect6
 	# XXX IO::Socket of old perl have no such method.
 	if (($family != -1) && defined($fh)) {
 	    if ($family == AF_INET6) {
-		$self->{_socket} = $fh;
-		Log("connected to $host:$port by IPv6");
+		$self->set_socket($fh);
+		$self->logdebug("connected to $host:$port by IPv6");
 	    }
 	    else { # cheap diagnostic
-		delete $self->{_socket};
-		Log("connected to $host:$port by ? (AF=$family)");
+		$self->set_socket(undef);
+		$self->logdebug("connected to $host:$port by ? (AF=$family)");
 	    }
 	} else {
-	    delete $self->{_socket};
-	    Log("(debug6) fail to connect [$host]:$port by IPv6");
-	    $self->error_set("cannot [$host]:$port via IPv6");
+	    $self->set_socket(undef);
+	    $self->logerror("cannot connect [$host]:$port by IPv6");
+	    $self->set_error("cannot connect [$host]:$port via IPv6");
 	}
     };
 
-    Log($@) if $@;
+    $self->logerror("connect6: $@") if $@;
 }
 
 
@@ -187,24 +239,25 @@ Mail::Delivery::Net::INET6 - establish tcp connection over IPv6.
 =head1 DESCRIPTION
 
 This module tries to create a socket and establish a tcp connection
-over IPv6. It is used within C<Mail::Delivery::SMTP> module.
+over IPv6. It is used within L<Mail::Delivery::SMTP> module.
 
 =head1 METHODS
 
-=item C<is_ipv6_ready()>
+=head2 is_ipv6_ready()
 
 It checks whether your environment has Socket6.pm or not?
 If Socket6 module exists, we assume your operating system is IPv6 ready!
 
-=item C<connect6()>
+=head2 connect6()
 
 try L<connect(2)>.
-If it succeeds, returned socket and set the value at $self->{ _socket }.
-If failed, $self->{ _socket } is undef.
+If it succeeds, returned socket or undef.
+
+Also, save socket via set_socket() access method.
 
 Avaialble arguments follows:
 
-    connect6( { _mta => $mta } );
+    connect6( { mta => $mta } );
 
 $mta is a hostname or [raw_ipv6_addr]:port form, for example,
 [::1]:25.
@@ -215,8 +268,7 @@ L<Mail::Delivery::SMTP>,
 L<Socket6>,
 L<Socket>,
 L<IO::Handle>,
-L<IO::Socket>,
-L<Mail::Delivery::Utils>
+L<IO::Socket>
 
 =head1 CODING STYLE
 
@@ -228,7 +280,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
