@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: Base.pm,v 1.1 2006/03/24 14:18:21 fukachan Exp $
 #
 
 package Mail::Delivery::Base;
@@ -88,7 +88,7 @@ $socket has peer or not by C<getpeername()>.
 # Descriptions: this socket is connected or not.
 #    Arguments: OBJ($self) HANDLE($socket)
 # Side Effects: none
-# Return Value: 1 or 0
+# Return Value: NUM(1 or 0)
 sub is_socket_connected
 {
     my ($self, $socket) = @_;
@@ -222,7 +222,7 @@ set log function (defined for compatibility).
 =cut
 
 
-# Descriptions: set log function pointer (defined for compatibility).
+# Descriptions: get log function pointer (defined for compatibility).
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: CODE
@@ -233,10 +233,10 @@ sub get_log_function
 }
 
 
-# Descriptions: return log function pointer (defined for compatibility).
+# Descriptions: set log function pointer (defined for compatibility).
 #    Arguments: OBJ($self) CODE($fp)
 # Side Effects: update $self.
-# Return Value: CODE
+# Return Value: none
 sub set_log_function
 {
     my ($self, $fp) = @_;
@@ -267,10 +267,10 @@ sub get_log_info_function
 }
 
 
-# Descriptions: return log function pointer.
+# Descriptions: set log function pointer.
 #    Arguments: OBJ($self) CODE($fp)
 # Side Effects: update $self.
-# Return Value: CODE
+# Return Value: none
 sub set_log_info_function
 {
     my ($self, $fp) = @_;
@@ -302,10 +302,10 @@ sub get_log_error_function
 }
 
 
-# Descriptions: return log function pointer.
+# Descriptions: set log function pointer.
 #    Arguments: OBJ($self) CODE($fp)
 # Side Effects: update $self.
-# Return Value: CODE
+# Return Value: none
 sub set_log_error_function
 {
     my ($self, $fp) = @_;
@@ -337,10 +337,10 @@ sub get_log_debug_function
 }
 
 
-# Descriptions: return log function pointer.
+# Descriptions: set log function pointer.
 #    Arguments: OBJ($self) CODE($fp)
 # Side Effects: update $self.
-# Return Value: CODE
+# Return Value: none
 sub set_log_debug_function
 {
     my ($self, $fp) = @_;
@@ -403,10 +403,10 @@ sub get_smtp_log_function
 }
 
 
-# Descriptions: return smtp log function pointer.
+# Descriptions: set smtp log function pointer.
 #    Arguments: OBJ($self) CODE($fp)
 # Side Effects: update $self.
-# Return Value: CODE
+# Return Value: none
 sub set_smtp_log_function
 {
     my ($self, $fp) = @_;
@@ -426,10 +426,10 @@ set smtp log handle.
 =cut
 
 
-# Descriptions: return smtp log handle pointer.
+# Descriptions: return smtp log handle.
 #    Arguments: OBJ($self)
 # Side Effects: none
-# Return Value: CODE
+# Return Value: HANDLE
 sub get_smtp_log_handle
 {
     my ($self) = @_;
@@ -438,10 +438,10 @@ sub get_smtp_log_handle
 }
 
 
-# Descriptions: return smtp log handle pointer.
+# Descriptions: set smtp log handle.
 #    Arguments: OBJ($self) HANDLE($fp)
 # Side Effects: update $self.
-# Return Value: HANDLE
+# Return Value: none
 sub set_smtp_log_handle
 {
     my ($self, $fp) = @_;
@@ -469,7 +469,7 @@ clear the error message.
 
 # Descriptions: set the error message.
 #    Arguments: OBJ($self) STR($mesg)
-# Side Effects: update OBJ
+# Side Effects: update $self
 # Return Value: STR
 sub set_error
 {
@@ -558,7 +558,7 @@ sub set_smtp_sender
 # Descriptions: get smtp sender info.
 #    Arguments: OBJ($self)
 # Side Effects: none
-# Return Value: none
+# Return Value: STR
 sub get_smtp_sender
 {
     my ($self) = @_;
@@ -586,7 +586,7 @@ sub set_smtp_recipient_limit
 # Descriptions: get smtp_recipient_limit.
 #    Arguments: OBJ($self)
 # Side Effects: none
-# Return Value: none
+# Return Value: NUM
 sub get_smtp_recipient_limit
 {
     my ($self) = @_;
@@ -610,7 +610,7 @@ sub set_smtp_default_timeout
 # Descriptions: get smtp_default_timeout.
 #    Arguments: OBJ($self)
 # Side Effects: none
-# Return Value: none
+# Return Value: NUM
 sub get_smtp_default_timeout
 {
     my ($self) = @_;
@@ -633,8 +633,8 @@ sub set_last_command
 
 # Descriptions: get last command info.
 #    Arguments: OBJ($self)
-# Side Effects: update $self
-# Return Value: none
+# Side Effects: none
+# Return Value: STR
 sub get_last_command
 {
     my ($self) = @_;
@@ -657,8 +657,8 @@ sub set_send_command_status
 
 # Descriptions: get send command info.
 #    Arguments: OBJ($self)
-# Side Effects: update $self
-# Return Value: none
+# Side Effects: none
+# Return Value: STR
 sub get_send_command_status
 {
     my ($self) = @_;
@@ -703,7 +703,7 @@ sub get_status_code
 # Descriptions: set current status code.
 #    Arguments: OBJ($self) STR($value)
 # Side Effects: update object
-# Return Value: STR
+# Return Value: none
 sub set_status_code
 {
     my ($self, $value) = @_;
@@ -736,8 +736,8 @@ where C<map> is a name usable at C<recipient_maps>
 
 # Descriptions: set target map.
 #    Arguments: OBJ($self) STR($map)
-# Side Effects: update object
-# Return Value: STR
+# Side Effects: update $self
+# Return Value: none
 sub set_target_map
 {
     my ($self, $map) = @_;
@@ -774,8 +774,8 @@ get the current C<$status> for C<$map> IO.
 
 # Descriptions: set map status.
 #    Arguments: OBJ($self) STR($map) STR($status)
-# Side Effects: update object
-# Return Value: STR
+# Side Effects: update $self
+# Return Value: none
 sub set_map_status
 {
     my ($self, $map, $status) = @_;
@@ -787,7 +787,7 @@ sub set_map_status
 
 # Descriptions: get map status.
 #    Arguments: OBJ($self) STR($map)
-# Side Effects: update object
+# Side Effects: none
 # Return Value: STR
 sub get_map_status
 {
@@ -812,8 +812,8 @@ get the current C<$status> for C<$mta>.
 
 # Descriptions: set mta status.
 #    Arguments: OBJ($self) STR($mta) STR($status)
-# Side Effects: update object
-# Return Value: STR
+# Side Effects: update $self
+# Return Value: none
 sub set_mta_status
 {
     my ($self, $mta, $status) = @_;
@@ -825,7 +825,7 @@ sub set_mta_status
 
 # Descriptions: get mta status.
 #    Arguments: OBJ($self) STR($mta)
-# Side Effects: update object
+# Side Effects: none
 # Return Value: STR
 sub get_mta_status
 {
@@ -849,9 +849,9 @@ get the current C<$position> for C<$map> IO.
 
 
 # Descriptions: set map position.
-#    Arguments: OBJ($self) STR($map) STR($position)
+#    Arguments: OBJ($self) STR($map) NUM($position)
 # Side Effects: update object
-# Return Value: STR
+# Return Value: none
 sub set_map_position
 {
     my ($self, $map, $position) = @_;
@@ -886,7 +886,7 @@ current IO for C<$map> begins.
 
 # Descriptions: rollback IO for current map back to the starting position.
 #    Arguments: OBJ($self)
-# Side Effects: none
+# Side Effects: roll back the position in the current map.
 # Return Value: none
 sub rollback_map_position
 {
@@ -895,7 +895,7 @@ sub rollback_map_position
 
     # count the number of rollback to avoid infinite loop
     if (($self->{ _map_rollback_info }->{ $map }->{ count } || 0) > 2) {
-	$self->log("Error: not rollback $map to avoid infinite loop");
+	$self->logerror("not rollback $map to avoid infinite loop");
 	return ;
     }
     else {
@@ -905,12 +905,12 @@ sub rollback_map_position
     my $prev_pos = $self->{ _mapinfo }->{ $map }->{prev_position};
     my $pos      = $self->{ _mapinfo }->{ $map }->{position};
     $self->set_map_position($map, $prev_pos);
-    $self->log("Info: rollback $map from $pos to $prev_pos");
+    $self->logdebug("rollback $map from $pos to $prev_pos");
 
     my $prev_status = $self->{ _mapinfo }->{ $map }->{prev_status};
     my $status      = $self->{ _mapinfo }->{ $map }->{status};
     $self->set_map_status($map, $prev_status);
-    $self->log("Info: rollback status of $map to '$prev_status'");
+    $self->logdebug("rollback status of $map to '$prev_status'");
 }
 
 
