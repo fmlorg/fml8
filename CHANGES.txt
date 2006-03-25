@@ -35,6 +35,51 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2006/03/24
+
+   Mail::Delivery overhaul (1).
+
+   Mail::Delivery 
+	fix comments.
+	
+   Mail::Delivery::Net::INET6 
+	overhaul.
+	+ more use of access methods.
+	+ change method name to more proper one.
+	
+   Mail::Delivery::Net::INET4 
+	overhaul.
+	use $self->log*() instead of Mail::Delivery::Utils.
+	
+   Mail::Delivery::Queue SMTP 
+	overhaul.
+	more access method based.
+	
+   FML::Mailer 
+   FML::Process::Distribute QueueManager 
+	rewritten to use access methods to sync w:::Mail::Delivery overhaul.
+
+2006/03/23
+
+   Mail::Delivery::SMTP 
+	if EHLO fails, try HELO.
+
+2006/03/21
+
+   FML::Mailer 
+   FML::Process::Distribute 
+   Mail::Delivery::SMTP 
+	validate format of recipient within smtp transaction.
+	
+   Mail::Delivery::ErrorStatus 
+	define {set,get}_error()
+	
+   Mail::Delivery::Queue 
+	fix type in queue_id generator
+	
+   Mail::Delivery::SMTP 
+	bug fix starting position in fallback process.
+
 2006/03/20
 
    FML::Merge::FML4::RULES.txt 
@@ -9404,4 +9449,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.271 2006/03/19 14:50:20 fukachan Exp $
+$FML: CHANGES.txt,v 1.272 2006/03/21 08:48:09 fukachan Exp $
