@@ -4,15 +4,17 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.57 2006/02/15 13:52:49 fukachan Exp $
+# $FML: Queue.pm,v 1.58 2006/03/21 12:58:13 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
 use strict;
 use Carp;
-use vars qw($Counter @class_list @local_class_list $counter);
+use vars qw(@ISA $Counter @class_list @local_class_list $counter);
 use File::Spec;
-use Mail::Delivery::ErrorStatus qw(error_set error error_clear);
+
+use Mail::Delivery::Base;
+@ISA = qw(Mail::Delivery::Base);
 
 
 =head1 NAME
@@ -79,8 +81,15 @@ my $default_policy = "oldest";
 my $dir_mode = 0755;
 
 @class_list = qw(lock
-		 new deferred active incoming info sender recipients
-		 transport strategy
+		 new
+		 deferred
+		 active
+		 incoming
+		 info
+		 sender
+		 recipients
+		 transport
+		 strategy
 		 );
 
 # Descriptions: constructor.
@@ -118,10 +127,7 @@ sub new
 
     # hold information for delivery
     my $qf_new = $me->new_file_path($id);
-    my $files  = [];
-    push(@$files, $qf_new);
-    $me->{ _cleanup_files } = $files;
-
+    $me->{ _cleanup_files } = [ $qf_new ];
 
     return bless $me, $type;
 }
@@ -170,6 +176,23 @@ sub _new_queue_id
 }
 
 
+# Descriptions: clear this queue file.
+#    Arguments: OBJ($self)
+# Side Effects: unlink this queue
+# Return Value: NUM
+sub DESTROY
+{
+    my ($self) = @_;
+    my $files  = $self->{ _cleanup_files } || [];
+
+    for my $file (@$files) {
+	unlink $file if -f $file;
+    }
+}
+
+
+=head1 INFORMATION
+
 =head2 id()
 
 return the queue id assigned to this object C<$self>.
@@ -185,6 +208,71 @@ sub id
 {
     my ($self) = @_;
     $self->{ _id };
+}
+
+
+=head2 getidinfo($id)
+
+return information related with the queue id C<$id>.
+The returned information is
+
+	id         => $id,
+	path       => "$dir/active/$id",
+	sender     => $sender,
+	recipients => \@recipients,
+
+=cut
+
+
+# Descriptions: get information of queue for this object.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: HASH_REF
+sub getidinfo
+{
+    my ($self, $id) = @_;
+
+    $id ||= $self->id();
+
+    my $sender = $self->get_sender($id);
+    my $rcpts  = $self->get_recipient_as_array_ref($id);
+    return {
+	id         => $id,
+	path       => $self->active_file_path($id),
+	sender     => $sender || '',
+	recipients => $rcpts  || [],
+    };
+}
+
+
+# Descriptions: when last modified.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: NUM(oldest unix time)
+sub last_modified_time
+{
+    my ($self, $id) = @_;
+    my $min_mtime = time;
+
+    # queue id.
+    $id ||= $self->id();
+
+    use File::stat;
+    for my $class (@class_list, @local_class_list) {
+        my $fp    = sprintf("%s_file_path", $class);
+        my $file  = $self->can($fp) ? $self->$fp($id) :
+	    $self->local_file_path($class, $id);
+
+	if (-f $file) {
+	    my $st    = stat($file);
+	    my $mtime = $st->mtime();
+
+	    # find oldest file info.
+	    $min_mtime = $min_mtime < $mtime ? $min_mtime : $mtime;
+	}
+    }
+
+    return $min_mtime;
 }
 
 
@@ -251,11 +339,12 @@ sub list_all
 	push(@r, @$ra);
     }
 
-    for my $q (sort @r) {
+    # generate unique array by removing duplication.
+    for my $q (@r) {
 	$r{ $q } = 1;
     }
-
     @r = keys %r;
+
     return \@r;
 }
 
@@ -390,6 +479,11 @@ sub _queue_streategy_newest
 }
 
 
+=head1 SCHEDULE MANAGEMENT
+
+=cut
+
+
 # Descriptions: update queue info for queue management policy.
 #    Arguments: OBJ($self) HASH_REF($policy_args)
 # Side Effects: update $self.
@@ -401,7 +495,7 @@ sub update_schedule
     my $qf_deferred = $self->deferred_file_path($id);
 
     # get hints.
-    my $hints = $self->_update_schedule_info($id);
+    my $hints = $self->_update_schedule_strategy($id);
     my $sleep = $hints->{ sleep } || 300;
     my $time  = time + $sleep;
 
@@ -414,7 +508,7 @@ sub update_schedule
 #    Arguments: OBJ($self) STR($id)
 # Side Effects: none
 # Return Value: none
-sub _update_schedule_info
+sub _update_schedule_strategy
 {
     my ($self, $id) = @_;
     my $info = {};
@@ -486,14 +580,14 @@ sub _change_queue_mode
 		rename($qf_deferred, $qf_active);
 		$self->touch($qf_active);
 		if (-f $qf_active) {
-		    $self->log("qid=$id activated.");
+		    $self->_log("qid=$id activated.");
 		}
 		else {
-		    $self->log("error: qid=$id operation failed.");
+		    $self->_log("error: qid=$id operation failed.");
 		}
 	    }
 	    else {
-		$self->log("no such deferred queue qid=$id");
+		$self->_log("no such deferred queue qid=$id");
 	    }
 	}
 	elsif ($to_mode eq 'deferred' || $to_mode eq 'defer') {
@@ -503,24 +597,24 @@ sub _change_queue_mode
 		$self->update_schedule($qstr_args);
 
 		if (-f $qf_deferred) {
-		    $self->log("qid=$id deferred");
+		    $self->_log("qid=$id deferred");
 		}
 		else {
-		    $self->log("error: qid=$id operation failed.");
+		    $self->_log("error: qid=$id operation failed.");
 		}
 	    }
 	    else {
-		$self->log("no such active queue qid=$id");
+		$self->_log("no such active queue qid=$id");
 	    }
 	}
 	else {
-	    $self->log("invalid mode");
+	    $self->_log("invalid mode");
 	}
 
 	$self->unlock();
     }
     else {
-	$self->log("qid=$id lock failed.");
+	$self->_log("qid=$id lock failed.");
     }
 }
 
@@ -553,102 +647,12 @@ sub reschedule
     }
 
     if ($count) {
-	$self->log("activate $count queue(s)");
-	$self->log("$early queue(s) sleeping") if $early;
+	$self->_log("activate $count queue(s)");
+	$self->_log("$early queue(s) sleeping") if $early;
     }
     else {
-	$self->log("$early queue(s) sleeping");
+	$self->_log("$early queue(s) sleeping");
     }
-}
-
-
-=head1 METHODS TO MANIPULATE INFORMATION
-
-=head2 getidinfo($id)
-
-return information related with the queue id C<$id>.
-The returned information is
-
-	id         => $id,
-	path       => "$dir/active/$id",
-	sender     => $sender,
-	recipients => \@recipients,
-
-=cut
-
-
-# Descriptions: get information of queue for this object.
-#    Arguments: OBJ($self) STR($id)
-# Side Effects: none
-# Return Value: HASH_REF
-sub getidinfo
-{
-    my ($self, $id) = @_;
-    my $dir = $self->{ _directory };
-    my ($fh, $sender, @recipients);
-
-    # validate if the queue id is given
-    $id ||= $self->id();
-
-    # sender
-    use FileHandle;
-    $fh = new FileHandle $self->sender_file_path($id);
-    if (defined $fh) {
-	$sender = $fh->getline;
-	$sender =~ s/[\n\s]*$//o;
-	$fh->close;
-    }
-
-    # recipient array
-    $fh = new FileHandle $self->recipients_file_path($id);
-    if (defined $fh) {
-	my $buf;
-
-      ENTRY:
-	while (defined($buf = $fh->getline)) {
-	    $buf =~ s/[\n\s]*$//o;
-	    push(@recipients, $buf);
-	}
-	$fh->close;
-    }
-
-    return {
-	id         => $id,
-	path       => $self->active_file_path($id),
-	sender     => $sender      || '',
-	recipients => \@recipients || [],
-    };
-}
-
-
-# Descriptions: when last modified.
-#    Arguments: OBJ($self) STR($id)
-# Side Effects: none
-# Return Value: NUM(oldest unix time)
-sub last_modified_time
-{
-    my ($self, $id) = @_;
-    my $min_mtime = time;
-
-    # queue id.
-    $id ||= $self->id();
-
-    use File::stat;
-    for my $class (@class_list, @local_class_list) {
-        my $fp    = sprintf("%s_file_path", $class);
-        my $file  = $self->can($fp) ? $self->$fp($id) :
-	    $self->local_file_path($class, $id);
-
-	if (-f $file) {
-	    my $st    = stat($file);
-	    my $mtime = $st->mtime();
-
-	    # find oldest file info.
-	    $min_mtime = $min_mtime < $mtime ? $min_mtime : $mtime;
-	}
-    }
-
-    return $min_mtime;
 }
 
 
@@ -708,6 +712,67 @@ sub unlock
 }
 
 
+=head1 IO
+
+=head2 open($class, $args)
+
+open incoming queue of this queue id with mode $mode and return the
+file handle.
+
+=head2 close($class)
+
+close.
+
+=cut
+
+
+# Descriptions: open incoming queue of this object with mode $mode
+#               and return the file handle.
+#    Arguments: OBJ($self) STR($class) HASH_REF($op_args)
+# Side Effects: file handle opened.
+# Return Value: HANDLE
+sub open
+{
+    my ($self, $class, $op_args) = @_;
+    my $id = $self->id();
+    my $fp = sprintf("%s_file_path", $class);
+    my $qf = $self->can($fp) ? $self->$fp($id) :
+	$self->local_file_path($class, $id);
+
+    if (defined $op_args->{ in_channel }) {
+	my $channel = $op_args->{ in_channel };
+	open($channel, $qf);
+    }
+    else {
+	use FileHandle;
+	my $mode = $op_args->{ mode } || "r";
+	my $fh   = new FileHandle $qf, $mode;
+	if (defined $fh) {
+	    $self->{ "_${class}_channel" } = $fh;
+	    return $fh;
+	}
+	else {
+	    return undef;
+	}
+    }
+}
+
+
+# Descriptions: close the incoming channel of this object.
+#    Arguments: OBJ($self) STR($class)
+# Side Effects: file handle closed.
+# Return Value: none
+sub close
+{
+    my ($self, $class) = @_;
+    my $channel = $self->{ "_${class}_channel" } || undef;
+
+    if (defined $channel) {
+	close($channel);
+    }
+}
+
+
 =head2 in($msg)
 
 C<in()> creates a queue file in C<new/> directory
@@ -747,12 +812,13 @@ sub in
 	$fh->clearerr();
 	$msg->print($fh);
 	if ($fh->error()) {
-	    $self->error_set("write error");
+	    $self->set_error("write error");
 	}
 	$fh->close;
 
 	if ($msg->can('write_count')) {
-	    my $write_count = $self->{ _write_count } = $msg->write_count();
+	    my $write_count = $msg->write_count();
+	    $self->set_write_count($write_count);
 
 	    use File::stat;
 	    my $try_count = 3;
@@ -768,7 +834,7 @@ sub in
 	    }
 
 	    unless ($ok) {
-		$self->error_set("write error: size mismatch");
+		$self->set_error("write error: size mismatch");
 	    }
 	}
     }
@@ -778,182 +844,20 @@ sub in
 }
 
 
-# Descriptions: return num of bytes written successfully.
-#    Arguments: OBJ($self)
+# Descriptions: create a new queue file.
+#    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: none
-# Return Value: NUM
-sub write_count
+# Return Value: 1 or 0
+sub add
 {
-    my ($self) = @_;
-
-    return( $self->{ _write_count } || 0 );
+    my ($self, $msg) = @_;
+    $self->in($msg);
 }
 
 
-=head2 set($key, $args)
+=head2 add ($msg)
 
-   $queue->set('sender', $sender);
-   $queue->set('recipients', [ $recipient0, $recipient1 ] );
-
-It sets up delivery information in C<info/sender/> and
-C<info/recipients/> directories.
-
-=cut
-
-
-# Descriptions: set value for key.
-#    Arguments: OBJ($self) STR($key) STR($value)
-# Side Effects: none
-# Return Value: same as close()
-sub set
-{
-    my ($self, $key, $value) = @_;
-    my $id            = $self->id();
-    my $qf_sender     = $self->sender_file_path($id);
-    my $qf_recipients = $self->recipients_file_path($id);
-    my $qf_transport  = $self->transport_file_path($id);
-
-    use FileHandle;
-
-    if ($key eq 'sender') {
-	my $fh = new FileHandle "> $qf_sender";
-	if (defined $fh) {
-	    $fh->clearerr();
-	    print $fh $value, "\n";
-	    if ($fh->error()) {
-		$self->error_set("write error");
-	    }
-	    $fh->close;
-	}
-    }
-    elsif ($key eq 'recipients') {
-	my $fh = new FileHandle ">> $qf_recipients";
-	if (defined $fh) {
-	    $fh->clearerr();
-	    if (ref($value) eq 'ARRAY') {
-		for my $rcpt (@$value) { print $fh $rcpt, "\n";}
-	    }
-	    if ($fh->error()) {
-		$self->error_set("write error");
-	    }
-	    $fh->close;
-	}
-    }
-    elsif ($key eq 'recipient_maps') {
-	my $fh = new FileHandle ">> $qf_recipients";
-	if (defined $fh) {
-	    $fh->clearerr();
-
-	    if (ref($value) eq 'ARRAY') {
-		for my $map (@$value) {
-		    use IO::Adapter;
-		    my $obj = new IO::Adapter $map;
-		    if (defined $obj) {
-			$obj->open();
-
-			my $buf;
-			while ($buf = $obj->get_next_key()) {
-			    print $fh $buf, "\n";
-			}
-			$obj->close();
-		    }
-		}
-	    }
-
-	    if ($fh->error()) {
-		$self->error_set("write error");
-	    }
-	    $fh->close;
-	}
-    }
-    elsif ($key eq 'transport') {
-	my $fh = new FileHandle "> $qf_transport";
-	if (defined $fh) {
-	    $fh->clearerr();
-	    print $fh $value, "\n";
-	    if ($fh->error()) {
-		$self->error_set("write error");
-	    }
-	    $fh->close;
-	}
-    }
-}
-
-
-=head2 setrunnable()
-
-set the status of the queue assigned to this object C<$self>
-deliverable.
-This file is scheduled to be delivered.
-
-In fact, setrunnable() C<rename>s the queue id file from C<new/>
-directory to C<active/> directory like C<postfix> queue strategy.
-
-=cut
-
-
-# Descriptions: enable this object queue to be deliverable.
-#    Arguments: OBJ($self)
-# Side Effects: move $queue_id file from new/ to active/
-# Return Value: NUM( 1 (success) or 0 (fail) )
-sub setrunnable
-{
-    my ($self)        = @_;
-    my $id            = $self->id();
-    my $qf_new        = $self->new_file_path($id);
-    my $qf_active     = $self->active_file_path($id);
-    my $qf_sender     = $self->sender_file_path($id);
-    my $qf_recipients = $self->recipients_file_path($id);
-
-    # something error.
-    if ($self->error()) {
-	warn( $self->error() );
-	return 0;
-    }
-
-    # There must be a set of these three files.
-    # 1. exisntence
-    unless (-f $qf_new && -f $qf_sender && -f $qf_recipients) {
-	return 0;
-    }
-    # 2. non-zero size.
-    unless (-s $qf_new && -s $qf_sender && -s $qf_recipients) {
-	return 0;
-    }
-
-    # move new/$id to active/$id
-    if (rename($qf_new, $qf_active)) {
-	return 1;
-    }
-
-    return 0;
-}
-
-
-=head2 touch($file)
-
-=cut
-
-
-# Descriptions: touch file.
-#    Arguments: OBJ($self) STR($file)
-# Side Effects: create $file.
-# Return Value: none
-sub touch
-{
-    my ($self, $file) = @_;
-
-    use FileHandle;
-    my $fh = new FileHandle;
-    if (defined $fh) {
-        $fh->open($file, "a");
-        $fh->close();
-
-	my $now = time;
-	utime $now, $now, $file;
-    }
-}
-
+same as in().
 
 =head2 delete()
 
@@ -1007,13 +911,321 @@ sub remove
 
     if ($count > 0) {
 	if ($count == $removed) {
-	    $self->log("qid=$id removed");
+	    $self->_log("qid=$id removed");
 	}
 	else {
-	    $self->log("qid=$id remove failed");
+	    $self->_log("qid=$id remove failed");
 	}
     }
 }
+
+
+# Descriptions: return num of bytes written successfully.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
+sub write_count
+{
+    my ($self) = @_;
+    $self->get_write_count();
+}
+
+
+# Descriptions: return num of bytes written successfully.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
+sub get_write_count
+{
+    my ($self) = @_;
+
+    return( $self->{ _write_count } || 0 );
+}
+
+
+# Descriptions: save num of bytes written successfully.
+#    Arguments: OBJ($self) NUM($count)
+# Side Effects: none
+# Return Value: NUM
+sub set_write_count
+{
+    my ($self, $count) = @_;
+
+    $self->{ _write_count } = $count || 0;
+}
+
+
+=head2 setrunnable()
+
+set the status of the queue assigned to this object C<$self>
+deliverable.
+This file is scheduled to be delivered.
+
+In fact, setrunnable() C<rename>s the queue id file from C<new/>
+directory to C<active/> directory like C<postfix> queue strategy.
+
+=cut
+
+
+# Descriptions: enable this object queue to be deliverable.
+#    Arguments: OBJ($self)
+# Side Effects: move $queue_id file from new/ to active/
+# Return Value: NUM( 1 (success) or 0 (fail) )
+sub setrunnable
+{
+    my ($self)        = @_;
+    my $id            = $self->id();
+    my $qf_new        = $self->new_file_path($id);
+    my $qf_active     = $self->active_file_path($id);
+    my $qf_sender     = $self->sender_file_path($id);
+    my $qf_recipients = $self->recipients_file_path($id);
+
+    # something error.
+    if ($self->get_error()) {
+	warn( $self->get_error() );
+	return 0;
+    }
+
+    # There must be a set of these three files.
+    # 1. exisntence
+    unless (-f $qf_new && -f $qf_sender && -f $qf_recipients) {
+	return 0;
+    }
+    # 2. non-zero size.
+    unless (-s $qf_new && -s $qf_sender && -s $qf_recipients) {
+	return 0;
+    }
+
+    # move new/$id to active/$id
+    if (rename($qf_new, $qf_active)) {
+	return 1;
+    }
+
+    return 0;
+}
+
+
+=head2 touch($file)
+
+=cut
+
+
+# Descriptions: touch file.
+#    Arguments: OBJ($self) STR($file)
+# Side Effects: create $file.
+# Return Value: none
+sub touch
+{
+    my ($self, $file) = @_;
+
+    use FileHandle;
+    my $fh = new FileHandle;
+    if (defined $fh) {
+        $fh->open($file, "a");
+        $fh->close();
+
+	my $now = time;
+	utime $now, $now, $file;
+    }
+}
+
+
+=head1 ACCESS METHOD
+
+=head2 set($key, $args)
+
+defined for compatibility.
+
+   $queue->set('sender', $sender);
+   $queue->set('recipients', [ $recipient0, $recipient1 ] );
+
+It sets up delivery information in C<info/sender/> and
+C<info/recipients/> directories.
+
+=cut
+
+
+# Descriptions: set value for key.
+#    Arguments: OBJ($self) STR($key) STR($value)
+# Side Effects: none
+# Return Value: same as close()
+sub set
+{
+    my ($self, $key, $value) = @_;
+    my $id = $self->id();
+
+    if ($key eq 'sender') {
+	$self->set_sender($id, $value);
+    }
+    elsif ($key eq 'recipients') {
+	$self->set_recipient_as_array_ref($id, $value);
+    }
+    elsif ($key eq 'recipient_maps') {
+	$self->set_recipient_maps($id, $value);
+    }
+    elsif ($key eq 'transport') {
+	$self->set_transport($id, $value);
+    }
+}
+
+
+# Descriptions: set sender for queue $id.
+#    Arguments: OBJ($self) STR($id) STR($value)
+# Side Effects: create queue file.
+# Return Value: none
+sub set_sender
+{
+    my ($self, $id, $value) = @_;
+    my $qf_sender = $self->sender_file_path($id);
+
+    use FileHandle;
+    my $fh = new FileHandle "> $qf_sender";
+    if (defined $fh) {
+	$fh->clearerr();
+	print $fh $value, "\n";
+	if ($fh->error()) {
+	    $self->set_error("write error");
+	}
+	$fh->close;
+    }
+    else {
+	$self->set_error("cannot open $qf_sender");	
+    }
+}
+
+
+# Descriptions: get sender for queue $id.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: create queue file.
+# Return Value: STR
+sub get_sender
+{
+    my ($self, $id) = @_;
+    my $qf_sender = $self->sender_file_path($id);
+    my $sender = '';
+
+    use FileHandle;
+    my $fh = new FileHandle $qf_sender;
+    if (defined $fh) {
+	$sender = $fh->getline;
+	$sender =~ s/[\n\s]*$//o;
+	$fh->close;
+    }
+    else {
+	$self->set_error("cannot open $qf_sender");	
+    }
+
+    return $sender;
+}
+
+
+sub set_recipient_as_array_ref
+{
+    my ($self, $id, $value)  = @_;
+    my $qf_recipients = $self->recipients_file_path($id);
+
+    use FileHandle;
+    my $fh = new FileHandle ">> $qf_recipients";
+    if (defined $fh) {
+	$fh->clearerr();
+	if (ref($value) eq 'ARRAY') {
+	    for my $rcpt (@$value) { print $fh $rcpt, "\n";}
+	}
+	if ($fh->error()) {
+	    $self->set_error("write error");
+	}
+	$fh->close;
+    }
+    else {
+        $self->set_error("cannot open $qf_recipients");
+    }
+}
+
+
+sub get_recipient_as_array_ref
+{
+    my ($self, $id)   = @_;
+    my (@recipients)  = ();
+    my $qf_recipients = $self->recipients_file_path($id);
+
+    use FileHandle;
+    my $fh = new FileHandle $qf_recipients ;
+    if (defined $fh) {
+	my $buf;
+
+      ENTRY:
+	while (defined($buf = $fh->getline)) {
+	    $buf =~ s/[\n\s]*$//o;
+	    push(@recipients, $buf);
+	}
+	$fh->close;
+    }
+    else {
+        $self->set_error("cannot open $qf_recipients ");
+    }
+
+    return \@recipients;
+}
+
+
+sub set_recipient_maps
+{
+    my ($self, $id, $value)  = @_;
+    my $qf_recipients  = $self->recipients_file_path($id);
+
+    use FileHandle;
+    my $fh = new FileHandle ">> $qf_recipients";
+    if (defined $fh) {
+	$fh->clearerr();
+
+	if (ref($value) eq 'ARRAY') {
+	    for my $map (@$value) {
+		use IO::Adapter;
+		my $io = new IO::Adapter $map;
+		if (defined $io) {
+		    $io->open();
+
+		    my $buf;
+		    while ($buf = $io->get_next_key()) {
+			print $fh $buf, "\n";
+		    }
+		    $io->close();
+		}
+	    }
+	}
+
+	if ($fh->error()) {
+	    $self->set_error("write error");
+	}
+	$fh->close;
+    }
+}
+
+
+sub set_transport
+{
+    my ($self, $id, $value) = @_;
+    my $qf_transport = $self->transport_file_path($id);
+
+    use FileHandle;
+    my $fh = new FileHandle "> $qf_transport";
+    if (defined $fh) {
+	$fh->clearerr();
+	print $fh $value, "\n";
+	if ($fh->error()) {
+	    $self->set_error("write error");
+	}
+	$fh->close;
+    }
+    else {
+	$self->set_error("cannot open $qf_transport");
+    }
+}
+
+
+=head1 UTILITIES
+
+=cut
 
 
 # Descriptions: this object (queue) is sane as active queue?
@@ -1072,24 +1284,7 @@ sub is_valid_queue
 }
 
 
-# Descriptions: clear this queue file.
-#    Arguments: OBJ($self)
-# Side Effects: unlink this queue
-# Return Value: NUM
-sub DESTROY
-{
-    my ($self) = @_;
-    my $files  = $self->{ _cleanup_files } || [];
-
-    for my $file (@$files) {
-	unlink $file if -f $file;
-    }
-}
-
-
-=head1 UTILITIES
-
-=head2 dup_content($class)
+=head2 dup_content($old_class, $new_class)
 
 duplicate content at a class $class other than incoming.
 
@@ -1110,67 +1305,6 @@ sub dup_content
     my $new_qf     = $self->local_file_path($new_class, $new_id);
 
     return( link($queue_file, $new_qf) ? $new_id : undef );
-}
-
-
-=head1 IO Interface
-
-=head2 open($class, $args)
-
-open incoming queue of this queue id with mode $mode and return the
-file handle.
-
-=head2 close($class)
-
-close.
-
-=cut
-
-
-# Descriptions: open incoming queue of this object with mode $mode
-#               and return the file handle.
-#    Arguments: OBJ($self) STR($class) HASH_REF($op_args)
-# Side Effects: file handle opened.
-# Return Value: HANDLE
-sub open
-{
-    my ($self, $class, $op_args) = @_;
-    my $id = $self->id();
-    my $fp = sprintf("%s_file_path", $class);
-    my $qf = $self->can($fp) ? $self->$fp($id) :
-	$self->local_file_path($class, $id);
-
-    if (defined $op_args->{ in_channel }) {
-	my $channel = $op_args->{ in_channel };
-	open($channel, $qf);
-    }
-    else {
-	use FileHandle;
-	my $mode = $op_args->{ mode } || "r";
-	my $fh   = new FileHandle $qf, $mode;
-	if (defined $fh) {
-	    $self->{ "_${class}_channel" } = $fh;
-	    return $fh;
-	}
-	else {
-	    return undef;
-	}
-    }
-}
-
-
-# Descriptions: close the incoming channel of this object.
-#    Arguments: OBJ($self) STR($class)
-# Side Effects: file handle closed.
-# Return Value: none
-sub close
-{
-    my ($self, $class) = @_;
-    my $channel = $self->{ "_${class}_channel" } || undef;
-
-    if (defined $channel) {
-	close($channel);
-    }
 }
 
 
@@ -1476,57 +1610,19 @@ sub local_file_path
 }
 
 
-=head1 LOG
-
-=head2 log()
-
-=head2 get_log_function()
-
-=head2 set_log_function($fp)
+=head1 LOGGING INTERFACE
 
 =cut
 
 
 # Descriptions: log interface.
-#    Arguments: OBJ($self) STR($s)
+#    Arguments: OBJ($self) STR($buf)
 # Side Effects: none
 # Return Value: none
-sub log
+sub _log
 {
-    my ($self, $s) = @_;
-    my $fp = $self->get_log_function();
-
-    my $buf = "qmgr: $s";
-    if (defined $fp) {
-	eval q{ &$fp($buf);};
-	if ($@) {
-	    carp($@);
-	}
-    }
-}
-
-
-# Descriptions: return log function pointer.
-#    Arguments: OBJ($self)
-# Side Effects: none
-# Return Value: CODE
-sub get_log_function
-{
-    my ($self) = @_;
-
-    return( $self->{ _log_function } || undef );
-}
-
-
-# Descriptions: return log function pointer.
-#    Arguments: OBJ($self) CODE($fp)
-# Side Effects: update $self.
-# Return Value: CODE
-sub set_log_function
-{
-    my ($self, $fp) = @_;
-
-    $self->{ _log_function } = $fp || undef;
+    my ($self, $buf) = @_;
+    $self->log("qmgr: $buf");
 }
 
 
@@ -1551,7 +1647,7 @@ sub cleanup
 
     use DirHandle;
     use File::stat;
-    my $incoming_queue_dir = File::Spec->catfile($dir, "incoming");
+    my $incoming_queue_dir = $self->incoming_dir_path();
     my $dh = new DirHandle $incoming_queue_dir;
     if (defined $dh) {
 	my ($file, $entry, $stat);
@@ -1561,10 +1657,10 @@ sub cleanup
 	while ($entry = $dh->read()) {
 	    next ENTRY if $entry =~ /^\./o;
 
-	    $file = File::Spec->catfile($dir, "incoming", $entry);
+	    $file = $self->incoming_file_path($entry);
 	    $stat = stat($file);
 	    if ($stat->mtime < $day_limit) {
-		$self->log("remove too old incoming queue: qid=$entry");
+		$self->_log("remove too old incoming queue: qid=$entry");
 		unlink $file;
 	    }
 	}

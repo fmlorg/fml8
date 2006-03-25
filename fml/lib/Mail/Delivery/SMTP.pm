@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2000,2001,2002,2003,2004,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.36 2006/03/21 13:01:43 fukachan Exp $
+# $FML: SMTP.pm,v 1.37 2006/03/23 15:33:09 fukachan Exp $
 #
 
 
@@ -13,10 +13,10 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $fp_address_validate);
 use Carp;
 use IO::Socket;
-use Mail::Delivery::Utils;
-use Mail::Delivery::Net::INET4;
-use Mail::Delivery::Net::INET6;
 
+# Mail::Delivery::SMTP IS-A Mail::Delivery::Protocol.
+use Mail::Delivery::Protocol;
+@ISA = qw(Mail::Delivery::Protocol);
 
 BEGIN {}
 END   {}
@@ -33,6 +33,7 @@ my $MTA_ERR_TIMEOUT = 'TIMEOUT';
 # SMTP STATUS
 my $SMTP_OK         = 'OK';
 my $SMTP_ERR_RETRY  = 'SMTP RETRY';
+my $SMTP_ERR_FATAL  = 'SMTP FATAL ERROR';
 
 
 =head1 NAME
@@ -48,14 +49,14 @@ To initialize,
       ... make $message (Mail::Message object) ...
 
     use Mail::Delivery::SMTP;
-    my $fp  = sub { Log(@_);}; # pointer to the log function
+    my $fp  = sub { $curproc->log(@_);}; # pointer to the log function
     my $sfp = sub { my ($s) = @_; print $s; print "\n" if $s !~ /\n$/o;};
     my $service = new Mail::Delivery::SMTP {
         log_function       => $fp,
         smtp_log_function  => $sfp,
         default_io_timeout => 10,
     };
-    if ($service->error) { Log($service->error); return;}
+    if ($service->error) { $curproc->logerror($service->error); return;}
 
 To start delivery, use deliver() method in this way.
 
@@ -134,24 +135,22 @@ sub new
     my ($type) = ref($self) || $self;
     my $me     = {}; # malloc new SMTP session struct
 
-    #     _recipient_limit: maximum recipients in one smtp session.
-    #  _default_io_timeout: basic timeout parameter for smtp session
-    #        _log_function: pointer to the log() function
-    $me->{ _recipient_limit }    = $args->{recipient_limit}    || 1000;
-    $me->{ _default_io_timeout } = $args->{default_io_timeout} || 10;
-    $me->{ _log_function }       = $args->{log_function}       || undef;
-    $me->{ _smtp_log_function }  = $args->{smtp_log_function}  || undef;
-    $me->{ _smtp_log_handle }    = $args->{smtp_log_handle}    || undef;
-    $me->{ _num_recipients }     = 0;
+    $me->{ _num_recipients } = 0;
 
     # define package global pointer to the log() function
-    $LogFunctionPointer     = $args->{log_function}      || undef;
-    $SmtpLogFunctionPointer = $args->{smtp_log_function} || undef;
-    $fp_address_validate    = $args->{address_validate_function} || undef;
+    $fp_address_validate = $args->{address_validate_function} || undef;
 
     bless $me, $type;
 
+    # smtp_recipient_limit: maximum recipients in one smtp session.
+    #      default_timeout: basic timeout parameter for smtp session
+    $me->set_smtp_recipient_limit($args->{ recipient_limit }    || 1000);
+    $me->set_smtp_default_timeout($args->{ default_io_timeout } || 10);
+
     _initialize_delivery_session($me, $args);
+
+    # new style (2006/03)
+    $me->_initialize_logging($args);
 
     return bless $me, $type;
 }
@@ -165,7 +164,7 @@ sub new
 sub _send_command
 {
     my ($self, $command) = @_;
-    my $socket = $self->{'_socket'} || undef;
+    my $socket = $self->get_socket() || undef;
 
     $self->set_last_command($command);
     $self->set_send_command_status('');
@@ -175,7 +174,7 @@ sub _send_command
 	$socket->print($command, "\r\n");
     }
     else {
-	Log("Error: _send_command: undefined socket");
+	$self->logerror("_send_command: undefined socket");
     }
 }
 
@@ -187,7 +186,7 @@ sub _send_command
 sub _read_reply
 {
     my ($self) = @_;
-    my $socket = $self->{'_socket'};
+    my $socket = $self->get_socket() || undef;
 
     # unique identifier to clarify the trapped error message
     my $id = $$;
@@ -204,7 +203,7 @@ sub _read_reply
     #     See books on Perl for more details on my() and local() difference.
     eval {
 	local($SIG{ALRM}) = sub { croak("$id socket timeout");};
-	alarm( $self->{_default_io_timeout} );
+	alarm( $self->get_smtp_default_timeout() );
 	my $buf = '';
 
 	croak("socket is not connected") unless
@@ -233,8 +232,10 @@ sub _read_reply
 
 	    # check status code
 	    if ($buf =~ /^[45]\d{2}\s/) {
-		Log($buf);
-		die("$id retry");
+		my $command = $self->get_last_command();
+		$self->logerror(sprintf("%s ... %s", $command, $buf));
+		die("$id temprary failure") if $buf =~ /^4/;
+		die("$id fatal") if $buf =~ /^5/;
 	    }
 
 	    # end of reply e.g. "250 ..."
@@ -242,68 +243,26 @@ sub _read_reply
 	}
     };
 
-    if ($@ =~ /$id retry/) {
+    if ($@ =~ /$id temprary failure/) {
 	$self->set_send_command_status($SMTP_ERR_RETRY);
-	Log("need smtp retry");
-	$self->error_set("need smtp retry");
+	$self->logerror("temporary failure, retry");
+	$self->set_error("temporary failure, retry");
+    }
+
+    if ($@ =~ /$id fatal/) {
+	$self->set_send_command_status($SMTP_ERR_FATAL);
+	$self->logerror("fatal error");
+	$self->set_error("fatal error");
     }
 
     if ($@ =~ /$id socket timeout/) {
-	my $x = $self->get_last_command();
-	Log("Error: smtp reply for \"$x\" is timeout");
-	$self->error_set("Error: smtp reply for \"$x\" is timeout");
+	my $command = $self->get_last_command();
+	$self->logerror("smtp reply for \"$command\" is timeout");
+	$self->set_error("smtp reply for \"$command\" is timeout");
     }
 
     # reset latest alarm() setting
     alarm(0);
-}
-
-
-# Descriptions: save last command info.
-#    Arguments: OBJ($self) STR($command)
-# Side Effects: update $self
-# Return Value: none
-sub set_last_command
-{
-    my ($self, $command) = @_;
-
-    $self->{ _last_command } = $command;
-}
-
-
-# Descriptions: get last command info.
-#    Arguments: OBJ($self)
-# Side Effects: update $self
-# Return Value: none
-sub get_last_command
-{
-    my ($self) = @_;
-
-    return( $self->{ _last_command } || '' );
-}
-
-
-# Descriptions: save send command info.
-#    Arguments: OBJ($self) STR($command)
-# Side Effects: update $self
-# Return Value: none
-sub set_send_command_status
-{
-    my ($self, $command) = @_;
-
-    $self->{ _send_command_status } = $command;
-}
-
-
-# Descriptions: get send command info.
-#    Arguments: OBJ($self)
-# Side Effects: update $self
-# Return Value: none
-sub get_send_command_status
-{
-    my ($self) = @_;
-
-    return( $self->{ _send_command_status } || '' );
 }
 
 
@@ -317,85 +276,45 @@ sub get_send_command_status
 sub _connect
 {
     my ($self, $args) = @_;
-    my $mta = $args->{'_mta'} || '127.0.0.1:25';
-    my $socket;
 
-    $self->error_clear;
+    $self->clear_error;
 
-    # 1. try to connect(2) $args->{ _mta } by IPv6 if we can use Socket6.
+    # 1. try to connect(2) $args->{ mta } by IPv6 if we can use Socket6.
     if ($self->is_ipv6_ready($args)) {
-	Log("debug: try mta=$args->{_mta} by IPv6");
+	$self->logdebug("try mta=$args->{ mta } by IPv6");
 	$self->connect6($args);
-	my $socket = $self->{_socket};
-	return $socket if defined $socket;
+	my $socket = $self->get_socket() || undef;
+	if (defined $socket) {
+	    return $socket;
+	}
+	else {
+	    $self->logerror("cannot connect $args->{ mta }");
+	}
     }
     else {
-	Log("IPv6 is not ready");
+	$self->logdebug("IPv6 is not ready");
     }
 
-    $self->error_clear;
+    $self->clear_error;
 
-    # 2. try to connect(2) $args->{ _mta } by IPv4.
-    #    XXX check the _mta syntax.
-    #    XXX if $args->{ _mta } looks [$ipv6_addr]:$port style,
+    # 2. try to connect(2) $args->{ mta } by IPv4.
+    #    XXX check the mta syntax.
+    #    XXX if $args->{ mta } looks [$ipv6_addr]:$port style,
     #    XXX we do not try to connect the host by IPv4.
-    if ( $self->is_ipv6_mta_syntax($mta) ) {
-	Log("debug: not try MTA $args->{_mta}");
+    my $mta = $args->{ mta } || '127.0.0.1:25';
+    if ($self->is_ipv6_mta_syntax($mta)) {
+	$self->logdebug("not try MTA $args->{ mta }");
 	return undef;
     }
     else {
-	Log("debug: try mta=$args->{_mta} by IPv4");
-	return $self->connect4($args);
-    }
-}
-
-
-=head2 is_socket_connected($socket)
-
-$socket has peer or not by C<getpeername()>.
-
-   XXX sub $socket->connected { getpeername($self);}
-   XXX IO::Socket of old perl have no such method.
-
-=cut
-
-
-# Descriptions: this socket is connected or not.
-#    Arguments: OBJ($self) HANDLE($socket)
-# Side Effects: none
-# Return Value: 1 or 0
-sub is_socket_connected
-{
-    my ($self, $socket) = @_;
-
-    if (defined $socket) {
-	return( getpeername($socket) );
-    }
-
-    return 0;
-}
-
-
-=head2 close()
-
-close BSD socket
-
-=cut
-
-# Descriptions: close BSD socket.
-#    Arguments: OBJ($self)
-# Side Effects: none
-# Return Value: same as close()
-sub close
-{
-    my ($self) = @_;
-    my $socket = $self->{'_socket'};
-
-    if (defined $socket) {
-	$socket->close;
-    }
-    else {
-	Log("Error: try to close invalid socket");
+	$self->logdebug("try mta=$args->{ mta } by IPv4");
+	my $socket = $self->connect4($args);
+	if (defined $socket) {
+	    return $socket;
+	}
+	else {
+	    $self->logerror("cannot connect $args->{ mta }");
+	}
     }
 }
 
@@ -472,12 +391,10 @@ sub deliver
 {
     my ($self, $args) = @_;
 
-    # recipient limit
-    $self->{_recipient_limit} = $args->{recipient_limit} || 1000;
-
-    if ($self->{_recipient_limit} != 1000) {
-	Log("debug: recipient_limit = $self->{_recipient_limit}");
-    }
+    # smtp_recipient_limit: maximum recipients in one smtp session.
+    #      default_timeout: basic timeout parameter for smtp session
+    $self->set_smtp_recipient_limit($args->{ recipient_limit }    || 1000);
+    $self->set_smtp_default_timeout($args->{ default_io_timeout } || 10);
 
     # temporary hash to check whether the map/mta is used already.
     my %used_mta = ();
@@ -512,7 +429,7 @@ sub deliver
 	};
 	if ($@) {
 	    $self->set_map_status($map, $MAP_ERR_OPEN);
-	    Log("Error: cannot open and ignore $map");
+	    $self->logerror("cannot open and ignore $map");
 	    next MAP;
 	}
 
@@ -532,8 +449,8 @@ sub deliver
 
 	    # check infinite loop
 	    if ($loop_count++ > $max_loop_count) {
-		my $r = "too many smtp retry, give up map=$map";
-		$self->error_set($r);
+		$self->logdebug("too many smtp retry, give up map=$map");
+		$self->set_error("too many smtp retry, give up");
 		last MTA_RETRY_LOOP;
 	    }
 
@@ -551,12 +468,12 @@ sub deliver
 		$n_mta++;
 
 		# o.k. try to deliver mail by using $mta.
-		Log("debug: use $mta for map=$map");
-		$args->{ _mta } = $mta;
+		$self->logdebug("use $mta for map=$map");
+		$args->{ mta } = $mta;
 		$self->_deliver($args);
 
 		# remove error messages for the next _deliver() session.
-		$self->error_clear;
+		$self->clear_error;
 
 		# we read the whole $map now.
 		if ($self->get_map_status($map) eq $MAP_DONE) {
@@ -572,9 +489,9 @@ sub deliver
 	    # NO effective mta in this inter loop. It impiles that
 	    # we used all MTA candidates. We reuse @mta again.
 	    if ($n_mta == 0) {
-		Log("debug: we used all MTA candidates. reuse \$mta");
+		$self->logdebug("we used all MTA candidates. reuse \$mta");
 		my (@c) = keys %used_mta;
-		Log("debug: candidates = (@c)");
+		$self->logdebug("candidates = (@c)");
 		undef %used_mta;
 		next MTA_RETRY_LOOP;
 	    }
@@ -594,11 +511,11 @@ sub deliver
 
     # clean up recipient_map information after "all delivery".
     # CAUTION: this mapinfo tracks the delivery status.
-    $self->reset_mapinfo;
+    $self->clear_mapinfo;
 
     if ( $self->{ _num_recipients } ) {
 	my $n = $self->{ _num_recipients };
-	Log("sent total=$n");
+	$self->log("sent total=$n");
     }
 }
 
@@ -614,7 +531,7 @@ sub _fallback_into_queue
 
     # log current status.
     my $pos = $self->get_map_position($map) || 0;
-    Log("map=$map pos=$pos status=\"$status\"");
+    $self->logdebug("map=$map pos=$pos status=\"$status\"");
 
     # dump into queue.
     if (defined $args->{ use_queue_dir } && $args->{ use_queue_dir }) {
@@ -629,8 +546,8 @@ sub _fallback_into_queue
             my $obj = new IO::Adapter $map, $args->{ map_params };
             if (defined $obj) {
                 $obj->open || do {
-		    Log("cannot open $map");
-		    Log("fatal: delivery fallback failed.");
+		    $self->logerror("cannot open $map");
+		    $self->logerror("fatal: delivery fallback failed.");
 		    return;
 		};
 
@@ -665,9 +582,9 @@ sub _fallback_into_queue
 		$queue->in( $msg ) || croak("fail to queue in");
 		{
 		    my $error;
-		    if ($error = $queue->error()) { Log("fallback: $error");}
+		    if ($error = $queue->error()) { $self->logerror("fallback: $error");}
 		    my $n = $queue->write_count();
-		    Log("queue: size=$n written");
+		    $self->logdebug("queue: size=$n written");
 		}
 		$msg->set_print_mode($cur_print_mode);
 
@@ -681,11 +598,11 @@ sub _fallback_into_queue
 		$queue->sleep_queue();
 	    };
 	    unless ($@) {
-		Log("fallback: total=$num_rcpt qid=$qid");
+		$self->logdebug("fallback: total=$num_rcpt qid=$qid");
 	    }
 	    else {
-		Log("fallback error: $@");
-		Log("fatal: delivery fallback failed.");
+		$self->logerror("fallback error: $@");
+		$self->logerror("fatal: delivery fallback failed.");
 	    }
 	}
     }
@@ -725,13 +642,13 @@ sub _deliver
     my $socket       = $self->_connect($args);
     my $is_connected = $self->is_socket_connected($socket);
     unless (defined($socket) && $is_connected) {
-	my $mta = $args->{_mta} || 'unknown';
-	Log("cannot connected to $mta");
+	my $mta = $args->{mta} || 'unknown';
+	$self->logdebug("cannot connect to $mta");
 	return undef;
     }
     else {
-	my $mta = $args->{_mta} || 'unknown';
-	Log("connected to $mta");
+	my $mta = $args->{mta} || 'unknown';
+	$self->logdebug("connected to $mta");
     }
 
     # 1. receive the first "220 .." message
@@ -739,7 +656,7 @@ sub _deliver
     #    since smtp connection has not established yet.
     #    IF_ERROR_FOUND: do nothing and return as soon as possible
     $self->_read_reply;
-    if ($self->error) {
+    if ($self->get_error) {
 	$self->_set_mta_as_ignored($args);
 	return;
     }
@@ -764,12 +681,12 @@ sub _deliver
     # 3. MAIL FROM;
     #    IF_ERROR_FOUND: do nothing and return as soon as possible
     $self->_send_mail_from($args);
-    if ($self->error) { $self->_reset_smtp_transaction($args); return;}
+    if ($self->get_error) { $self->_reset_smtp_transaction($args); return;}
 
     # 4. RCPT TO; ... send list of recipients
     #    IF_ERROR_FOUND: roll back the process to the state before this
     $self->_send_recipient_list($args);
-    if ($self->error) {
+    if ($self->get_error) {
 	$self->rollback_map_position;
 	$self->_reset_smtp_transaction($args);
 	return;
@@ -779,7 +696,7 @@ sub _deliver
     #    IF_ERROR_FOUND: handled in _send_data_to_mta(), so
     #                    return as soon as possible from here.
     $self->_send_data_to_mta($args);
-    if ($self->error) {
+    if ($self->get_error) {
 	$self->rollback_map_position;
 	$self->_reset_smtp_transaction($args);
 	return;
@@ -789,13 +706,13 @@ sub _deliver
     #    IF_ERROR_FOUND: do nothing ?
     $self->_send_command("QUIT");
     $self->_read_reply;
-    if ($self->error) { $self->_reset_smtp_transaction; return;}
+    if ($self->get_error) { $self->_reset_smtp_transaction; return;}
 
     # o.k. succeded to deliver.
     my $n = $self->{ _num_recipients_in_this_transaction } || 0;
     if ($n) {
-	my $mta = $args->{ _mta } || 'unknown';
-	Log("sent num=$n mta=$mta");
+	my $mta = $args->{ mta } || 'unknown';
+	$self->log("sent num=$n mta=$mta");
 	$self->{ _num_recipients } += $n;
     }
 }
@@ -812,6 +729,35 @@ sub _initialize_delivery_session
 
     $self->set_last_command('');
     $self->set_status_code('');
+}
+
+
+# Descriptions: initialize logging interface.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
+sub _initialize_logging
+{
+    my ($self, $args) = @_;
+
+    # default logging interface (infomational).
+    my ($fp_log_info) = $args->{ log_info_function } || undef;
+    if (defined $fp_log_info) { $self->set_log_info_function($fp_log_info);}
+
+    # error level log.
+    my ($fp_log_error) = $args->{ log_error_function } || undef;
+    if (defined $fp_log_error) { $self->set_log_error_function($fp_log_error);}
+
+    # debug level log.
+    my ($fp_log_debug) = $args->{ log_debug_function } || undef;
+    if (defined $fp_log_debug) { $self->set_log_debug_function($fp_log_debug);}
+
+    # smtp transaction logging interface.
+    my ($fp_smtp_log) = $args->{ smtp_log_function } || undef;
+    if (defined $fp_smtp_log) { $self->set_smtp_log_function($fp_smtp_log);}
+
+    my ($handle) = $args->{smtp_log_handle} || undef;
+    if (defined $handle) { $self->set_smtp_log_handle($handle);}
 }
 
 
@@ -866,18 +812,18 @@ sub _send_recipient_list_by_recipient_map
     # $map syntax is "type:parameter", e.g.,
     # file:$filename mysql:$schema_name
     use IO::Adapter;
-    my $obj = new IO::Adapter  $map, $args->{ map_params };
+    my $obj = new IO::Adapter $map, $args->{ map_params };
 
     unless (defined $obj) {
-	Log("Error: fail to create map=$map object.");
+	$self->logerror("fail to create map=$map object.");
     }
     else { # $obj is good.
 	my $rcpt;
 	my $num_recipients = 0;
-	my $recipient_limit = $self->{_recipient_limit};
+	my $recipient_limit = $self->get_smtp_recipient_limit();
 
 	$obj->open || do {
-	    $self->error_set( $obj->error );
+	    $self->set_error( $obj->error );
 	    return undef;
 	};
 
@@ -896,12 +842,12 @@ sub _send_recipient_list_by_recipient_map
 		unless ($@) {
 		    unless ($r) {
 			$self->smtplog("===> ignore <$rcpt>");
-			Log("ignore <$rcpt>");
+			$self->logdebug("ignore <$rcpt>");
 			next RCPT_INPUT;
 		    }
 		}
 		else {
-		    Log("\$fp_address_validate failes");
+		    $self->logerror("cannot call address validate function");
 		}
 	    }
 
@@ -934,7 +880,7 @@ sub _send_recipient_list_by_recipient_map
 	$self->{ _num_recipients_in_this_transaction } = $num_recipients;
 
 	unless ($num_recipients) {
-	    Log("Error: no recipients for $map");
+	    $self->logerror("no recipient for $map");
 	    $self->_send_command("RSET");
 	    $self->_read_reply;
 	}
@@ -988,12 +934,14 @@ sub _send_body_to_mta
     my ($self, $socket, $msg) = @_;
 
     # XXX $msg is Mail::Message object.
-    $msg->set_log_function($SmtpLogFunctionPointer, $SmtpLogFunctionPointer);
+    my $fp = $self->get_smtp_log_function();
+    $msg->set_log_function($fp, $fp);
     $msg->set_print_mode('smtp');
     $msg->print($socket);
 
-    if (defined $self->{ _smtp_log_handle }) {
-	$msg->print( $self->{ _smtp_log_handle });
+    my $wh = $self->get_smtp_log_handle();
+    if (defined $wh) {
+	$msg->print( $wh );
     }
 
     $msg->unset_log_function();
@@ -1011,15 +959,15 @@ sub _send_data_to_mta
     # prepare smtp information
     my $header = $args->{ message }->whole_message_header;
     my $body   = $args->{ message }->whole_message_body;
-    my $socket = $self->{'_socket'};
+    my $socket = $self->get_socket() || undef;
 
     if (defined $body) {
 	$self->_send_command("DATA");
 	$self->_read_reply;
 
 	# XXX if "DATA" transaction cannot start, retry ?
-	if ($self->get_status_code != '354' || $self->error) {
-	    Log($self->error);
+	if ($self->get_status_code != '354' || $self->get_error) {
+	    $self->logerror($self->get_error);
 	    return undef;
 	}
 
@@ -1060,7 +1008,7 @@ sub _reset_smtp_transaction
     # reset SMTP transaction.
     $self->_send_command("RSET");
     $self->_read_reply;
-    Log("reset smtp transcation");
+    $self->log("reset smtp transcation");
 }
 
 
@@ -1073,7 +1021,7 @@ sub _set_mta_as_ignored
     my ($self, $args) = @_;
 
     # mark this mta is invalid.
-    my $mta = $args->{ _mta } || '';
+    my $mta = $args->{ mta } || '';
     if ($mta) {
 	$self->set_mta_status($mta, $MTA_ERR_TIMEOUT);
     }
@@ -1102,7 +1050,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003,2004,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
