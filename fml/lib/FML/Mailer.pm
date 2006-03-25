@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Mailer.pm,v 1.32 2005/06/04 08:51:30 fukachan Exp $
+# $FML: Mailer.pm,v 1.33 2006/03/21 07:04:07 fukachan Exp $
 #
 
 package FML::Mailer;
@@ -94,11 +94,12 @@ $send_args (HASH_REF) can take the following arguments:
 sub send
 {
     my ($self, $send_args) = @_;
-    my $handle     = undef;
-    my $fp         = undef;
-    my $sfp        = undef;
-    my $maintainer = undef;
-    my $curproc    = $self->{ _curproc };
+    my $handle       = undef;
+    my $fp_log_info  = undef;
+    my $fp_log_error = undef;
+    my $fp_smtplog   = undef;
+    my $maintainer   = undef;
+    my $curproc      = $self->{ _curproc };
 
     # 0. fundamental environment
     #    $curproc is given in usual fml processes.
@@ -108,15 +109,18 @@ sub send
 	$maintainer = $config->{ maintainer } if defined $config;
 
 	# default log functions
-	$fp  = sub { $curproc->logdebug(@_);}; # pointer to the log function
-	$sfp = sub { my ($s) = @_; print $s; print "\n" if $s !~ /\n$/o;};
+	$fp_log_info  = sub { $curproc->logdebug(@_);};
+	$fp_log_error = sub { $curproc->logerror(@_);};
+	$fp_smtplog   = sub { 
+	    my ($s) = @_; print $s; print "\n" if $s !~ /\n$/o;
+	};
 
 	# overwrite smtp log channel
 	$handle = \*STDOUT;
 	my $wh  = $curproc->outgoing_message_cache_open();
 	if (defined $wh) {
-	    $sfp    = sub { print $wh @_;};
-	    $handle = undef ; # $wh; # to avoid log duplication.
+	    $fp_smtplog = sub { print $wh @_;};
+	    $handle     = undef ; # $wh; # to avoid log duplication.
 	}
     }
     else {
@@ -207,8 +211,9 @@ sub send
     my $config = $curproc->config();
     use Mail::Delivery;
     my $service = new Mail::Delivery {
-	log_function       => $fp,
-	smtp_log_function  => $sfp,
+	log_info_function  => $fp_log_info,
+	log_error_function => $fp_log_error,
+	smtp_log_function  => $fp_smtplog,
 	smtp_log_handle    => $handle,
 	address_validate_function => $validater,
     };

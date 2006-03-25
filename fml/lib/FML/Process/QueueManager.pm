@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.36 2005/06/04 01:35:25 fukachan Exp $
+# $FML: QueueManager.pm,v 1.37 2005/11/30 23:30:38 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -90,7 +90,7 @@ sub send
     my $queue = new Mail::Delivery::Queue { directory => $queue_dir };
     my $ra    = [];
 
-    $queue->set_log_function($fp);
+    $queue->set_log_debug_function($fp);
 
     if (defined $id) {
 	$ra = [ $id ];
@@ -114,7 +114,7 @@ sub send
 	    id        => $qid,
 	    directory => $queue_dir,
 	};
-	$q->set_log_function($fp);
+	$q->set_log_debug_function($fp);
 
 	if ( $q->lock() ) {
 	    my $is_locked = 1;
@@ -223,7 +223,7 @@ sub cleanup
 
     use Mail::Delivery::Queue;
     my $queue = new Mail::Delivery::Queue { directory => $queue_dir };
-    $queue->set_log_function($fp);
+    $queue->set_log_debug_function($fp);
 
     # XXX-TODO: customizable. $mail_queue_max_lifetime = 5d ?
     my $list  = $queue->list_all() || [];
@@ -235,7 +235,7 @@ sub cleanup
 	    id        => $qid,
 	    directory => $queue_dir,
 	};
-	$q->set_log_function($fp);
+	$q->set_log_debug_function($fp);
 
 	unless ( $q->is_valid_active_queue() ) {
 	    my $mtime = $q->last_modified_time();

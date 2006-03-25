@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.170 2006/03/19 08:06:05 fukachan Exp $
+# $FML: Distribute.pm,v 1.171 2006/03/21 07:04:07 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -360,7 +360,7 @@ sub finish
 	$curproc->queue_flush();
     }
     else {
-	$curproc->logwarn("not queue flush due to MTA fatal error.");
+	$curproc->logwarn("queue remains due to MTA fatal error.");
     }
 
     $eval  = $config->get_hook( 'distribute_finish_end_hook' );
@@ -598,15 +598,18 @@ sub _deliver_article
     }
 
     # 2. distribute article
-    my $fp  = sub { $curproc->logdebug(@_);}; # pointer to the log function
-    my $sfp = sub { my ($s) = @_; print $s; print "\n" if $s !~ /\n$/o;};
+    my $fp_log_info  = sub { $curproc->logdebug(@_);};
+    my $fp_log_error = sub { $curproc->logerror(@_);};
+    my $fp_smtplog   = sub { 
+	my ($s) = @_; print $s; print "\n" if $s !~ /\n$/o;
+    };
     my $handle = undef;
 
-    # overload $sfp log function pointer.
+    # overload $fp_smtplog log function pointer.
     if ($config->yes('use_smtp_log')) {
 	my $wh = $curproc->outgoing_message_cache_open();
 	if (defined $wh) {
-	    $sfp    = sub { print $wh @_;};
+	    $fp_smtplog = sub { print $wh @_;};
 	    $handle = undef; # $wh;
 	}
 	else {
@@ -614,7 +617,7 @@ sub _deliver_article
 	}
     }
     else {
-	$sfp = sub {};
+	$fp_smtplog = sub {};
     }
 
     # address validater
@@ -630,9 +633,10 @@ sub _deliver_article
     eval q{
 	use Mail::Delivery;
 	$service = new Mail::Delivery {
-	    log_function      => $fp,
-	    smtp_log_function => $sfp,
-	    smtp_log_handle   => $handle,
+	    log_info_function  => $fp_log_info,
+	    log_error_function => $fp_log_error,
+	    smtp_log_function  => $fp_smtplog,
+	    smtp_log_handle    => $handle,
 	    address_validate_function => $validater,
 	};
     };
