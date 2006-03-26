@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Base.pm,v 1.1 2006/03/24 14:18:21 fukachan Exp $
+# $FML: Base.pm,v 1.2 2006/03/25 11:28:22 fukachan Exp $
 #
 
 package Mail::Delivery::Base;
@@ -346,6 +346,41 @@ sub set_log_debug_function
     my ($self, $fp) = @_;
 
     $self->{ _log_debug_function } = $fp || undef;
+}
+
+
+=head2 set_address_validate_function($fp)
+
+set address validate function.
+
+=head2 get_address_validate_function()
+
+get address validate function.
+
+=cut
+
+
+# Descriptions: set log function pointer.
+#    Arguments: OBJ($self) CODE($fp)
+# Side Effects: update $self.
+# Return Value: none
+sub set_address_validate_function
+{
+    my ($self, $fp) = @_;
+
+    $self->{ _address_validate_function } = $fp || undef;
+}
+
+
+# Descriptions: return log function pointer.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: CODE
+sub get_address_validate_function
+{
+    my ($self) = @_;
+
+    return( $self->{ _address_validate_function } || undef );
 }
 
 
