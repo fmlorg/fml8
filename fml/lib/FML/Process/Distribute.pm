@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.171 2006/03/21 07:04:07 fukachan Exp $
+# $FML: Distribute.pm,v 1.172 2006/03/25 04:07:26 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -598,8 +598,9 @@ sub _deliver_article
     }
 
     # 2. distribute article
-    my $fp_log_info  = sub { $curproc->logdebug(@_);};
+    my $fp_log_info  = sub { $curproc->log(@_);};
     my $fp_log_error = sub { $curproc->logerror(@_);};
+    my $fp_log_debug = sub { $curproc->logdebug(@_);};
     my $fp_smtplog   = sub { 
 	my ($s) = @_; print $s; print "\n" if $s !~ /\n$/o;
     };
@@ -635,6 +636,7 @@ sub _deliver_article
 	$service = new Mail::Delivery {
 	    log_info_function  => $fp_log_info,
 	    log_error_function => $fp_log_error,
+	    log_debug_function => $fp_log_debug,
 	    smtp_log_function  => $fp_smtplog,
 	    smtp_log_handle    => $handle,
 	    address_validate_function => $validater,

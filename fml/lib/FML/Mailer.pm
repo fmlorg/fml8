@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Mailer.pm,v 1.33 2006/03/21 07:04:07 fukachan Exp $
+# $FML: Mailer.pm,v 1.34 2006/03/25 04:07:26 fukachan Exp $
 #
 
 package FML::Mailer;
@@ -97,6 +97,7 @@ sub send
     my $handle       = undef;
     my $fp_log_info  = undef;
     my $fp_log_error = undef;
+    my $fp_log_debug = undef;
     my $fp_smtplog   = undef;
     my $maintainer   = undef;
     my $curproc      = $self->{ _curproc };
@@ -109,8 +110,9 @@ sub send
 	$maintainer = $config->{ maintainer } if defined $config;
 
 	# default log functions
-	$fp_log_info  = sub { $curproc->logdebug(@_);};
+	$fp_log_info  = sub { $curproc->log(@_);};
 	$fp_log_error = sub { $curproc->logerror(@_);};
+	$fp_log_debug = sub { $curproc->logdebug(@_);};
 	$fp_smtplog   = sub { 
 	    my ($s) = @_; print $s; print "\n" if $s !~ /\n$/o;
 	};
@@ -213,6 +215,7 @@ sub send
     my $service = new Mail::Delivery {
 	log_info_function  => $fp_log_info,
 	log_error_function => $fp_log_error,
+	log_debug_function => $fp_log_debug,
 	smtp_log_function  => $fp_smtplog,
 	smtp_log_handle    => $handle,
 	address_validate_function => $validater,
