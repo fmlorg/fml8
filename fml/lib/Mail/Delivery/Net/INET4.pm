@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: INET4.pm,v 1.11 2005/05/27 01:22:27 fukachan Exp $
+# $FML: INET4.pm,v 1.12 2006/03/24 14:16:38 fukachan Exp $
 #
 
 package Mail::Delivery::Net::INET4;
@@ -18,13 +18,12 @@ require Exporter;
 
 
 # Descriptions: try connect(2) by IPv4.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) STR($mta)
 # Side Effects: create ipv4 smtp connection
 # Return Value: HANDLE
 sub connect4
 {
-    my ($self, $args) = @_;
-    my $mta    = $args->{ mta };
+    my ($self, $mta) = @_;
     my $socket = undef;
 
     # ASSERT

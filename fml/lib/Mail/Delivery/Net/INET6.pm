@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: INET6.pm,v 1.16 2005/05/27 03:03:41 fukachan Exp $
+# $FML: INET6.pm,v 1.17 2006/03/24 14:09:58 fukachan Exp $
 #
 
 package Mail::Delivery::Net::INET6;
@@ -26,12 +26,12 @@ require Exporter;
 
 
 # Descriptions: we have Socket6.pm or not ?
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: none
 sub check_ipv6_module_available
 {
-    my ($self, $args) = @_;
+    my ($self) = @_;
 
     eval q{
 	use Socket;
@@ -49,16 +49,16 @@ sub check_ipv6_module_available
 
 
 # Descriptions: This host supports IPv6 ?
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: NUM (1 or 0)
 sub is_ipv6_ready
 {
-    my ($self, $args) = @_;
+    my ($self) = @_;
 
     # probe the IPv6 availability for the first time
     unless ($self->get_ipv6_ready()) {
-	$self->check_ipv6_module_available($args);
+	$self->check_ipv6_module_available();
     };
 
     my $status = $self->get_ipv6_ready() || 'no';
@@ -94,19 +94,19 @@ sub get_ipv6_ready
 }
 
 
-# Descriptions: $host is IPv6 syntax ?
-#               return (host, port) if IPv6 native format
-#    Arguments: OBJ($self) STR($host)
+# Descriptions: check if $mta is IPv6 syntax ?
+#               return (host, port) if $mta is a IPv6 native format.
+#    Arguments: OBJ($self) STR($mta)
 # Side Effects: none
 # Return Value: ARRAY(host, port)
 sub is_ipv6_mta_syntax
 {
-    my ($self, $host) = @_;
+    my ($self, $mta) = @_;
 
     # check the mta syntax whether it is ipv6 form or not.
-    if ($host =~ /\[([\d:]+)\]:(\d+)/) {
-	my ($x_host, $x_port) = ($1, $2);
-	return ($x_host, $x_port);
+    if ($mta =~ /\[([\d:]+)\]:(\d+)/) {
+	my ($host, $port) = ($1, $2);
+	return ($host, $port);
     }
     else {
 	return wantarray ? () : undef;
@@ -132,13 +132,12 @@ sub _parse_mta
 
 
 # Descriptions: try connect(2) by IPv6.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) STR($mta)
 # Side Effects: create IPv6 smtp connection
 # Return Value: none
 sub connect6
 {
-    my ($self, $args) = @_;
-    my $mta = $args->{ mta };
+    my ($self, $mta) = @_;
 
     # check the mta syntax is $ipv6_addr:$port or not.
     my ($host, $port) = $self->is_ipv6_mta_syntax($mta);
