@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.37 2005/11/30 23:30:38 fukachan Exp $
+# $FML: QueueManager.pm,v 1.38 2006/03/25 04:07:26 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -260,7 +260,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

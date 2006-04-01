@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Mailer.pm,v 1.34 2006/03/25 04:07:26 fukachan Exp $
+# $FML: Mailer.pm,v 1.35 2006/03/26 14:56:17 fukachan Exp $
 #
 
 package FML::Mailer;
@@ -250,7 +250,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
