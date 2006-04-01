@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: INET6.pm,v 1.17 2006/03/24 14:09:58 fukachan Exp $
+# $FML: INET6.pm,v 1.18 2006/03/26 14:58:08 fukachan Exp $
 #
 
 package Mail::Delivery::Net::INET6;
@@ -84,7 +84,7 @@ sub set_ipv6_ready
 
 
 # Descriptions: get if this system is ipv6 ready.
-#    Arguments: OBJ($self) STR($value)
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
 sub get_ipv6_ready
