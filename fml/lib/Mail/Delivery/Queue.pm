@@ -4,22 +4,23 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.58 2006/03/21 12:58:13 fukachan Exp $
+# $FML: Queue.pm,v 1.59 2006/03/25 03:50:07 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
 use strict;
 use Carp;
-use vars qw(@ISA $Counter @class_list @local_class_list $counter);
+use vars qw(@ISA $Counter $RandCounter @class_list @local_class_list);
 use File::Spec;
 
+# Mail::Delivery::Queue IS-A Mail::Delivery::Base.
 use Mail::Delivery::Base;
 @ISA = qw(Mail::Delivery::Base);
 
 
 =head1 NAME
 
-Mail::Delivery::Queue - handle queue directory.
+Mail::Delivery::Queue - handle mail queue system.
 
 =head1 SYNOPSIS
 
@@ -36,16 +37,13 @@ Mail::Delivery::Queue - handle queue directory.
     # ok to deliver this message !
     $queue->setrunnable() || croak("fail to set queue deliverable");
 
-    # get the filename of this $queue object
-    my $filename = $queue->filename();
-
 =head1 DESCRIPTION
 
 C<Mail::Delivery::Queue> provides basic manipulation of mail queue.
 
 =head1 DIRECTORY STRUCTURE
 
-C<new()> method assigns a new queue id C<$qid> and filename C<$qf> but
+C<new()> method assigns a new queue id C<$qid> but
 not do actual works.
 
 C<in()> method creates a new queue file C<$qf>. So, C<$qf> follows:
@@ -76,9 +74,9 @@ C<new()> assigns them but do no actual works.
 
 =cut
 
-my $default_policy = "oldest";
+my $default_policy   = "oldest";
 
-my $dir_mode = 0755;
+my $default_dir_mode = 0755;
 
 @class_list = qw(lock
 		 new
@@ -100,19 +98,17 @@ sub new
 {
     my ($self, $args) = @_;
     my ($type)        = ref($self) || $self;
-    my $dir           = $args->{ directory }   || croak("specify directory");
-    my $id            = $args->{ id }          || _new_queue_id();
-    my $local_class   = $args->{ local_class } || [];
-    my $me            = {
-	_directory    => $dir,
-	_id           => $id,
-    };
+    my $dir           = $args->{ directory }      ||croak("specify directory");
+    my $id            = $args->{ id }             || _new_queue_id();
+    my $local_class   = $args->{ local_class }    || [];
+    my $dir_mode      = $args->{ directory_mode } || $default_dir_mode;
+    my $me            = {};
 
-    # bless !
     bless $me, $type;
 
-    # update queue directory mode
-    $dir_mode = $args->{ directory_mode } || $dir_mode;
+    $me->set_queue_directory($dir);
+    $me->set_queue_id($id);
+    $me->set_directory_mode($dir_mode);
 
     # update optional local class list.
     for my $c (@$local_class) { push(@local_class_list, $c);}
@@ -125,9 +121,9 @@ sub new
 	-d $_dir || $me->_mkdirhier($_dir);
     }
 
-    # hold information for delivery
+    # prepare garbage collection.
     my $qf_new = $me->new_file_path($id);
-    $me->{ _cleanup_files } = [ $qf_new ];
+    $me->set_garbage_list($qf_new);
 
     return bless $me, $type;
 }
@@ -135,17 +131,18 @@ sub new
 
 # Descriptions: mkdir recursively.
 #    Arguments: OBJ($self) STR($dir)
-# Side Effects: none
-# Return Value: ARRAY or UNDEF
+# Side Effects: create directory.
+# Return Value: none
 sub _mkdirhier
 {
     my ($self, $dir) = @_;
+    my $dir_mode     = $self->get_directory_mode();
 
     eval q{
 	use File::Path;
 	mkpath( [ $dir ], 0, $dir_mode);
     };
-    warn($@) if $@;
+    $self->_logerror($@) if $@;
 }
 
 
@@ -156,12 +153,12 @@ sub _mkdirhier
 sub _new_queue_id
 {
     my ($seconds, $microseconds) = (0, 0);
+    my $id;
 
     $Counter++;
-    my $id = sprintf("%d.%d.%d", time, $$, $Counter);
 
     eval q{
-	use Time::HiRes qw(usleep gettimeofday);
+	use Time::HiRes qw(gettimeofday);
 	($seconds, $microseconds) = gettimeofday;
     };
     if ($@) {
@@ -183,7 +180,7 @@ sub _new_queue_id
 sub DESTROY
 {
     my ($self) = @_;
-    my $files  = $self->{ _cleanup_files } || [];
+    my $files  = $self->get_garbage_list() || [];
 
     for my $file (@$files) {
 	unlink $file if -f $file;
@@ -194,6 +191,15 @@ sub DESTROY
 =head1 INFORMATION
 
 =head2 id()
+
+same as get_queue_id().
+return the queue id assigned to this object C<$self>.
+
+=head2 set_queue_id($id)
+
+save the queue id.
+
+=head2 get_queue_id()
 
 return the queue id assigned to this object C<$self>.
 
@@ -207,7 +213,29 @@ return the queue id assigned to this object C<$self>.
 sub id
 {
     my ($self) = @_;
-    $self->{ _id };
+    $self->get_queue_id();
+}
+
+
+# Descriptions: save object identifier (queue id).
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: update $self
+# Return Value: none
+sub set_queue_id
+{
+    my ($self, $id) = @_;
+    $self->{ _id } = $id || undef;
+}
+
+
+# Descriptions: return object identifier (queue id).
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub get_queue_id
+{
+    my ($self) = @_;
+    return( $self->{ _id } || undef );
 }
 
 
@@ -222,6 +250,9 @@ The returned information is
 	recipients => \@recipients,
 
 =cut
+
+
+# XXX-TODO: remove getidinfo() (use each access method).
 
 
 # Descriptions: get information of queue for this object.
@@ -302,6 +333,10 @@ return all queue list in all classes.
 sub list
 {
     my ($self, $class, $policy) = @_;
+
+    $class  ||= "active";
+    $policy ||= $default_policy;
+
     my $fp  = $class ? "${class}_dir_path" : "active_dir_path";
     my $dir = $self->can($fp) ? $self->$fp() : $self->local_dir_path($class);
 
@@ -332,7 +367,6 @@ sub list_all
 {
     my ($self) = @_;
     my (@r)    = ();
-    my (%r)    = ();
 
     for my $class (@class_list) {
 	my $ra = $self->list($class, "default");
@@ -340,6 +374,7 @@ sub list_all
     }
 
     # generate unique array by removing duplication.
+    my (%r) = ();
     for my $q (@r) {
 	$r{ $q } = 1;
     }
@@ -375,12 +410,12 @@ sub set_policy
 
 
 # Descriptions: get queue management policy.
-#    Arguments: OBJ($self) STR($policy)
-# Side Effects: update $self.
-# Return Value: none
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
 sub get_policy
 {
-    my ($self, $policy) = @_;
+    my ($self) = @_;
 
     return( $self->{ _policy } || $default_policy );
 }
@@ -404,23 +439,22 @@ sub _list_ordered_by_policy
 	return \@r;
     }
     elsif ($policy eq 'fair_queue' || $policy eq 'fair-queue') {
-	my ($queue_hash, $qlist, @qlist);
+	my ($queue_hash) = {};
 
 	# create hash { TIME_SLICE => [ qid1,  qid2,  ... ] }
-	$queue_hash = {};
 	for my $q (@$list) {
 	    if ($q =~ /^(\d+)/o) {
-		my $t = int( $1 / 87400 );
-		$qlist = $queue_hash->{ $t } || [];
+		my $hash_key = int( $1 / 87400 );
+		my $qlist = $queue_hash->{ $hash_key } || [];
 		push(@$qlist, $q);
-		$queue_hash->{ $t } = $qlist;
+		$queue_hash->{ $hash_key } = $qlist;
 	    }
 	}
 
 	# randomized queue.
 	my @p = ();
 	srand(time | $$);
-	$counter = rand( time );
+	$RandCounter = rand( time );
 	for my $i (sort _rand keys %$queue_hash) {
 	    my $qlist = $queue_hash->{ $i } || [];
 	    push(@p, sort _rand @$qlist);
@@ -428,7 +462,7 @@ sub _list_ordered_by_policy
 	return \@p;
     }
     else {
-	for my $q (@$list) { ;}
+	;
     }
 
     return $list;
@@ -436,13 +470,13 @@ sub _list_ordered_by_policy
 
 
 # Descriptions: randomize (for sort routine).
-#    Arguments: none
+#    Arguments: IMPLICIT
 # Side Effects: none
 # Return Value: NUM
 sub _rand
 {
-    my $x = rand(time + $counter++);
-    my $y = rand(time + $counter++);
+    my $x = rand(time + $RandCounter++);
+    my $y = rand(time + $RandCounter++);
     $x <=> $y;
 }
 
@@ -481,18 +515,22 @@ sub _queue_streategy_newest
 
 =head1 SCHEDULE MANAGEMENT
 
+=head2 update_schedule($id)
+
+update scheduling for this queue (id = $id).
+
 =cut
 
 
 # Descriptions: update queue info for queue management policy.
-#    Arguments: OBJ($self) HASH_REF($policy_args)
-# Side Effects: update $self.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: update queue file.
 # Return Value: none
 sub update_schedule
 {
-    my ($self, $policy_args) = @_;
-    my $id          = $policy_args->{ queue_id } || $self->id();
-    my $qf_deferred = $self->deferred_file_path($id);
+    my ($self, $id) = @_;
+
+    $id ||= $self->id();
 
     # get hints.
     my $hints = $self->_update_schedule_strategy($id);
@@ -500,6 +538,7 @@ sub update_schedule
     my $time  = time + $sleep;
 
     # set expired time.
+    my $qf_deferred = $self->deferred_file_path($id);
     utime $time, $time, $qf_deferred;
 }
 
@@ -507,7 +546,7 @@ sub update_schedule
 # Descriptions: get hints for this queue id.
 #    Arguments: OBJ($self) STR($id)
 # Side Effects: none
-# Return Value: none
+# Return Value: HASH_REF
 sub _update_schedule_strategy
 {
     my ($self, $id) = @_;
@@ -571,9 +610,6 @@ sub _change_queue_mode
     if ($self->lock()) {
 	my $qf_deferred = $self->deferred_file_path($id);
 	my $qf_active   = $self->active_file_path($id);
-	my $qstr_args   = {
-	    queue_id    => $id,
-	};
 
 	if ($to_mode eq 'active') {
 	    if (-f $qf_deferred) {
@@ -594,7 +630,7 @@ sub _change_queue_mode
 	    if (-f $qf_active) {
 		rename($qf_active, $qf_deferred);
 		$self->touch($qf_deferred);
-		$self->update_schedule($qstr_args);
+		$self->update_schedule($id);
 
 		if (-f $qf_deferred) {
 		    $self->_log("qid=$id deferred");
@@ -619,6 +655,13 @@ sub _change_queue_mode
 }
 
 
+=head2 reschedule()
+
+reschedule queues. wake up queue if needed.
+
+=cut
+
+
 # Descriptions: reschedule queues. wake up queue if needed.
 #    Arguments: OBJ($self)
 # Side Effects: wake up queue if needed.
@@ -626,17 +669,19 @@ sub _change_queue_mode
 sub reschedule
 {
     my ($self) = @_;
-    my $q_list = $self->list("deferred");
     my $count  = 0;
     my $early  = 0;
     my $total  = 0;
 
     use File::stat;
+    my $q_list = $self->list("deferred");
     for my $qid (@$q_list) {
 	my $qf = $self->deferred_file_path($qid);
 	my $st = stat($qf);
 
 	$total++;
+
+	# wake up too old queue.
 	if ($st->mtime < time) {
 	    $self->wakeup_queue($qid);
 	    $count++;
@@ -685,15 +730,16 @@ sub lock
     my $lckfile = $is_prep ? $qf_new : (-f $qf_lock ? $qf_lock : $qf_act);
     my $fh      = new FileHandle $lckfile;
 
-    eval {
-	local($SIG{ALRM}) = sub { croak("lock timeout");};
-        alarm( $wait );
-	flock($fh, &LOCK_EX);
-	$self->{ _lock }->{ _fh } = $fh;
-    };
-    alarm(0);
-
-    ($@ =~ /lock timeout/o) ? 0 : 1;
+    use IO::Adapter;
+    my $io = new IO::Adapter $lckfile;
+    if (defined $io) {
+	my $r  = $io->lock();
+	$self->{ _lock }->{ $id } = $io;
+	return $r;
+    }
+    else {
+	$self->_logerror("cannot lock: qid=$id");
+    }
 }
 
 
@@ -704,10 +750,14 @@ sub lock
 sub unlock
 {
     my ($self) = @_;
-    my $fh = $self->{ _lock }->{ _fh } || undef;
 
-    if (defined $fh) {
-	flock($fh, &LOCK_UN);
+    my $id = $self->id();
+    my $io = $self->{ _lock }->{ $id };
+    if (defined $io) {
+	$io->unlock();
+    }
+    else {
+	$self->_logerror("not locked: qid=$id");
     }
 }
 
@@ -741,7 +791,9 @@ sub open
 
     if (defined $op_args->{ in_channel }) {
 	my $channel = $op_args->{ in_channel };
-	open($channel, $qf);
+	my $mode    = $op_args->{ mode } || "r";
+	open($channel, $mode, $qf);
+	return $channel;
     }
     else {
 	use FileHandle;
@@ -792,7 +844,7 @@ C<DESTRUCTOR>.
 # Descriptions: create a new queue file.
 #    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: none
-# Return Value: 1 or 0
+# Return Value: NUM(1 or 0)
 sub in
 {
     my ($self, $msg) = @_;
@@ -800,6 +852,12 @@ sub in
     my $qf_qstr      = $self->strategy_file_path($id);
     my $qf_lock      = $self->lock_file_path($id);
     my $qf_new       = $self->new_file_path($id);
+
+    # ASSERT
+    unless (defined $msg) {
+	$self->_logerror("in: undefined message");
+	return 0;
+    }
 
     $self->touch($qf_lock) unless -f $qf_lock;
     $self->touch($qf_qstr) unless -f $qf_qstr;
@@ -838,6 +896,9 @@ sub in
 	    }
 	}
     }
+    else {
+	$self->_logerror("cannot open new queue file.");
+    }
 
     # check the existence and the size > 0.
     return( (-e $qf_new && -s $qf_new) ? 1 : 0 );
@@ -847,7 +908,7 @@ sub in
 # Descriptions: create a new queue file.
 #    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: none
-# Return Value: 1 or 0
+# Return Value: NUM(1 or 0)
 sub add
 {
     my ($self, $msg) = @_;
@@ -861,11 +922,11 @@ same as in().
 
 =head2 delete()
 
-remove all queue assigned to this object C<$self>.
+remove all files assigned to this queue C<$self>.
 
 =head2 remove()
 
-remove all queue assigned to this object C<$self>.
+same as delete().
 
 =head2 valid()
 
@@ -959,7 +1020,7 @@ sub set_write_count
 
 set the status of the queue assigned to this object C<$self>
 deliverable.
-This file is scheduled to be delivered.
+This queue is scheduled to be delivered.
 
 In fact, setrunnable() C<rename>s the queue id file from C<new/>
 directory to C<active/> directory like C<postfix> queue strategy.
@@ -982,23 +1043,28 @@ sub setrunnable
 
     # something error.
     if ($self->get_error()) {
-	warn( $self->get_error() );
+	$self->_logerror( $self->get_error() );
 	return 0;
     }
 
     # There must be a set of these three files.
     # 1. exisntence
     unless (-f $qf_new && -f $qf_sender && -f $qf_recipients) {
+	$self->_logerror("setrunnable: some queue not exists");
 	return 0;
     }
     # 2. non-zero size.
     unless (-s $qf_new && -s $qf_sender && -s $qf_recipients) {
+	$self->_logerror("setrunnable: some queue empty");
 	return 0;
     }
 
     # move new/$id to active/$id
     if (rename($qf_new, $qf_active)) {
 	return 1;
+    }
+    else {
+	$self->_logerror("setrunnable: cannot rename"):
     }
 
     return 0;
@@ -1066,6 +1132,9 @@ sub set
     elsif ($key eq 'transport') {
 	$self->set_transport($id, $value);
     }
+    else {
+	$self->_logerror("set: unknown type");
+    }
 }
 
 
@@ -1089,7 +1158,7 @@ sub set_sender
 	$fh->close;
     }
     else {
-	$self->set_error("cannot open $qf_sender");	
+	$self->set_error("cannot open $qf_sender");
     }
 }
 
@@ -1112,13 +1181,17 @@ sub get_sender
 	$fh->close;
     }
     else {
-	$self->set_error("cannot open $qf_sender");	
+	$self->set_error("cannot open $qf_sender");
     }
 
     return $sender;
 }
 
 
+# Descriptions: set recipient list for queue $id.
+#    Arguments: OBJ($self) STR($id) ARRAY_REF($value)
+# Side Effects: create queue file.
+# Return Value: none
 sub set_recipient_as_array_ref
 {
     my ($self, $id, $value)  = @_;
@@ -1131,6 +1204,9 @@ sub set_recipient_as_array_ref
 	if (ref($value) eq 'ARRAY') {
 	    for my $rcpt (@$value) { print $fh $rcpt, "\n";}
 	}
+	else {
+	    $self->_logerror("set_recipient_as_array_ref: invalid input");
+	}
 	if ($fh->error()) {
 	    $self->set_error("write error");
 	}
@@ -1142,6 +1218,10 @@ sub set_recipient_as_array_ref
 }
 
 
+# Descriptions: get recipient list for queue $id.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: ARRAY_REF
 sub get_recipient_as_array_ref
 {
     my ($self, $id)   = @_;
@@ -1168,6 +1248,10 @@ sub get_recipient_as_array_ref
 }
 
 
+# Descriptions: set recipient list for queue $id.
+#    Arguments: OBJ($self) STR($id) ARRAY_REF($value)
+# Side Effects: create queue file.
+# Return Value: none
 sub set_recipient_maps
 {
     my ($self, $id, $value)  = @_;
@@ -1193,6 +1277,9 @@ sub set_recipient_maps
 		}
 	    }
 	}
+	else {
+	    $self->_logerror("set_recipient_maps: invalid input");
+	}
 
 	if ($fh->error()) {
 	    $self->set_error("write error");
@@ -1202,6 +1289,10 @@ sub set_recipient_maps
 }
 
 
+# Descriptions: set transport for queue $id.
+#    Arguments: OBJ($self) STR($id) STR($value)
+# Side Effects: create queue file.
+# Return Value: none
 sub set_transport
 {
     my ($self, $id, $value) = @_;
@@ -1223,12 +1314,86 @@ sub set_transport
 }
 
 
+# Descriptions: set queue directory.
+#    Arguments: OBJ($self) STR($dir)
+# Side Effects: create queue file.
+# Return Value: none
+sub set_queue_directory
+{
+    my ($self, $dir) = @_;
+    $self->{ _directory } = $dir;
+}
+
+
+# Descriptions: get queue directory.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub get_queue_directory
+{
+    my ($self) = @_;
+    return $self->{ _directory };
+}
+
+
+# Descriptions: set directory mode.
+#    Arguments: OBJ($self) NUM($mode)
+# Side Effects: update $self.
+# Return Value: none
+sub set_directory_mode
+{
+    my ($self, $mode) = @_;
+    $self->{ _directory_mode } = $mode;
+}
+
+
+# Descriptions: get directory mode.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
+sub get_directory_mode
+{
+    my ($self) = @_;
+    return( $self->{ _directory_mode } || $default_dir_mode );
+}
+
+
+# Descriptions: set garbage collection list.
+#    Arguments: OBJ($self) STR($file)
+# Side Effects: update $self
+# Return Value: none
+sub set_garbage_list
+{
+    my ($self, $file) = @_;
+
+    my $list = $self->{ _cleanup_files } || [];
+    push(@$list, $file);
+    $self->{ _cleanup_files } = $list;
+}
+
+
+# Descriptions: get garbage collection list.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub get_garbage_list
+{
+    my ($self) = @_;
+
+    return( $self->{ _cleanup_files } || [] );
+}
+
+
 =head1 UTILITIES
+
+=head2 is_valid_active_queue()
+
+check if this object (queue) is sane as active queue?
 
 =cut
 
 
-# Descriptions: this object (queue) is sane as active queue?
+# Descriptions: check if this object (queue) is sane as active queue?
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: 1 or 0
@@ -1251,7 +1416,14 @@ sub is_valid_active_queue
 }
 
 
-# Descriptions: this object (queue) is sane as active queue?
+=head2 is_valid_queue()
+
+check if this object (queue) is sane as active queue?
+
+=cut
+
+
+# Descriptions: check if this object (queue) is sane as active queue?
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: 1 or 0
@@ -1286,7 +1458,7 @@ sub is_valid_queue
 
 =head2 dup_content($old_class, $new_class)
 
-duplicate content at a class $class other than incoming.
+duplicate $old_class content at a class $new_class.
 
 =cut
 
@@ -1320,7 +1492,7 @@ sub dup_content
 sub lock_dir_path
 {
     my ($self) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
+    my $dir = $self->get_queue_directory() || croak("directory undefined");
 
     return File::Spec->catfile($dir, "lock");
 }
@@ -1333,7 +1505,7 @@ sub lock_dir_path
 sub lock_file_path
 {
     my ($self, $id) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
+    my $dir = $self->get_queue_directory() || croak("directory undefined");
 
     return File::Spec->catfile($dir, "lock", $id);
 }
@@ -1346,7 +1518,7 @@ sub lock_file_path
 sub incoming_dir_path
 {
     my ($self) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
+    my $dir = $self->get_queue_directory() || croak("directory undefined");
 
     return File::Spec->catfile($dir, "incoming");
 }
@@ -1359,7 +1531,7 @@ sub incoming_dir_path
 sub incoming_file_path
 {
     my ($self, $id) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
+    my $dir = $self->get_queue_directory() || croak("directory undefined");
 
     return File::Spec->catfile($dir, "incoming", $id);
 }
@@ -1372,7 +1544,7 @@ sub incoming_file_path
 sub new_dir_path
 {
     my ($self) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
+    my $dir = $self->get_queue_directory() || croak("directory undefined");
 
     return File::Spec->catfile($dir, "new");
 }
@@ -1385,7 +1557,7 @@ sub new_dir_path
 sub new_file_path
 {
     my ($self, $id) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
+    my $dir = $self->get_queue_directory() || croak("directory undefined");
 
     return File::Spec->catfile($dir, "new", $id);
 }
@@ -1398,7 +1570,7 @@ sub new_file_path
 sub active_dir_path
 {
     my ($self) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
+    my $dir = $self->get_queue_directory() || croak("directory undefined");
 
     return File::Spec->catfile($dir, "active");
 }
@@ -1411,7 +1583,7 @@ sub active_dir_path
 sub active_file_path
 {
     my ($self, $id) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
+    my $dir = $self->get_queue_directory() || croak("directory undefined");
 
     return File::Spec->catfile($dir, "active", $id);
 }
@@ -1424,7 +1596,7 @@ sub active_file_path
 sub deferred_dir_path
 {
     my ($self) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
+    my $dir = $self->get_queue_directory() || croak("directory undefined");
 
     return File::Spec->catfile($dir, "deferred");
 }
@@ -1437,7 +1609,7 @@ sub deferred_dir_path
 sub deferred_file_path
 {
     my ($self, $id) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
+    my $dir = $self->get_queue_directory() || croak("directory undefined");
 
     return File::Spec->catfile($dir, "deferred", $id);
 }
@@ -1450,7 +1622,7 @@ sub deferred_file_path
 sub info_dir_path
 {
     my ($self) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
+    my $dir = $self->get_queue_directory() || croak("directory undefined");
 
     return File::Spec->catfile($dir, "info");
 }
@@ -1463,7 +1635,7 @@ sub info_dir_path
 sub info_file_path
 {
     my ($self, $id) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
+    my $dir = $self->get_queue_directory() || croak("directory undefined");
 
     return File::Spec->catfile($dir, "info", $id);
 }
@@ -1477,7 +1649,7 @@ sub info_file_path
 sub sender_dir_path
 {
     my ($self) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
+    my $dir = $self->get_queue_directory() || croak("directory undefined");
 
     return File::Spec->catfile($dir, "info", "sender");
 }
@@ -1490,7 +1662,7 @@ sub sender_dir_path
 sub sender_file_path
 {
     my ($self, $id) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
+    my $dir = $self->get_queue_directory() || croak("directory undefined");
 
     return File::Spec->catfile($dir, "info", "sender", $id);
 }
@@ -1503,7 +1675,7 @@ sub sender_file_path
 sub recipients_dir_path
 {
     my ($self) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
+    my $dir = $self->get_queue_directory() || croak("directory undefined");
 
     return File::Spec->catfile($dir, "info", "recipients");
 }
@@ -1516,7 +1688,7 @@ sub recipients_dir_path
 sub recipients_file_path
 {
     my ($self, $id) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
+    my $dir = $self->get_queue_directory() || croak("directory undefined");
 
     return File::Spec->catfile($dir, "info", "recipients", $id);
 }
@@ -1529,7 +1701,7 @@ sub recipients_file_path
 sub transport_dir_path
 {
     my ($self) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
+    my $dir = $self->get_queue_directory() || croak("directory undefined");
 
     return File::Spec->catfile($dir, "info", "transport");
 }
@@ -1542,7 +1714,7 @@ sub transport_dir_path
 sub transport_file_path
 {
     my ($self, $id) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
+    my $dir = $self->get_queue_directory() || croak("directory undefined");
 
     return File::Spec->catfile($dir, "info", "transport", $id);
 }
@@ -1555,7 +1727,7 @@ sub transport_file_path
 sub strategy_dir_path
 {
     my ($self) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
+    my $dir = $self->get_queue_directory() || croak("directory undefined");
 
     return File::Spec->catfile($dir, "info", "strategy");
 }
@@ -1568,7 +1740,7 @@ sub strategy_dir_path
 sub strategy_file_path
 {
     my ($self, $id) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
+    my $dir = $self->get_queue_directory() || croak("directory undefined");
 
     return File::Spec->catfile($dir, "info", "strategy", $id);
 }
@@ -1581,7 +1753,7 @@ sub strategy_file_path
 sub local_dir_path
 {
     my ($self, $class) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
+    my $dir = $self->get_queue_directory() || croak("directory undefined");
 
     if (defined $dir && defined $class) {
 	return File::Spec->catfile($dir, $class);
@@ -1599,7 +1771,7 @@ sub local_dir_path
 sub local_file_path
 {
     my ($self, $class, $id) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
+    my $dir = $self->get_queue_directory() || croak("directory undefined");
 
     if (defined $dir && defined $class && defined $id) {
 	return File::Spec->catfile($dir, $class, $id);
@@ -1626,6 +1798,28 @@ sub _log
 }
 
 
+# Descriptions: log interface.
+#    Arguments: OBJ($self) STR($buf)
+# Side Effects: none
+# Return Value: none
+sub _logerror
+{
+    my ($self, $buf) = @_;
+    $self->logerror("qmgr: $buf");
+}
+
+
+# Descriptions: log interface.
+#    Arguments: OBJ($self) STR($buf)
+# Side Effects: none
+# Return Value: none
+sub _logdebug
+{
+    my ($self, $buf) = @_;
+    $self->logdebug("qmgr: $buf");
+}
+
+
 =head1 CLEAN UP GARBAGES
 
 =head2 cleanup()
@@ -1641,9 +1835,9 @@ remove too old incoming queue files.
 # Return Value: none
 sub cleanup
 {
-    my ($self) = @_;
-    my $dir    = $self->{ _directory } || croak("directory undefined");
-    my $limit  = 14*24*3600;
+    my ($self)  = @_;
+    my $dir     = $self->get_queue_directory() || croak("directory undefined");
+    my $one_day = 14*24*3600;
 
     use DirHandle;
     use File::stat;
@@ -1651,7 +1845,7 @@ sub cleanup
     my $dh = new DirHandle $incoming_queue_dir;
     if (defined $dh) {
 	my ($file, $entry, $stat);
-	my $day_limit = time - $limit;
+	my $limit = time - $one_day;
 
       ENTRY:
 	while ($entry = $dh->read()) {
@@ -1659,7 +1853,7 @@ sub cleanup
 
 	    $file = $self->incoming_file_path($entry);
 	    $stat = stat($file);
-	    if ($stat->mtime < $day_limit) {
+	    if ($stat->mtime < $limit) {
 		$self->_log("remove too old incoming queue: qid=$entry");
 		unlink $file;
 	    }
