@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.38 2006/03/25 03:50:07 fukachan Exp $
+# $FML: SMTP.pm,v 1.39 2006/04/02 06:28:28 fukachan Exp $
 #
 
 
@@ -259,7 +259,7 @@ sub _read_reply
 	$self->logerror("smtp reply for \"$command\" is timeout");
 	$self->set_error("smtp reply for \"$command\" is timeout");
     }
-    else {
+    elsif ($@) {
 	$self->logerror($@);
 	$self->set_error($@);
     }
