@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #
-# $FML: Log.pm,v 1.31 2005/08/15 12:23:13 fukachan Exp $
+# $FML: Log.pm,v 1.32 2005/08/23 08:28:20 fukachan Exp $
 #
 
 package FML::Log;
@@ -85,6 +85,9 @@ sub Log
     my $facility = '';
     my $level    = '';
     my $rdate    = '';
+
+    # clean up
+    $mesg =~ s/[\s\r\n]*$//;
 
     # simple check: null $mesg string is invalid.
     return undef unless defined $mesg;
