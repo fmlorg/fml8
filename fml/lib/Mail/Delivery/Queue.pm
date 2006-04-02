@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.59 2006/03/25 03:50:07 fukachan Exp $
+# $FML: Queue.pm,v 1.60 2006/04/01 08:07:49 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -734,7 +734,12 @@ sub lock
     my $io = new IO::Adapter $lckfile;
     if (defined $io) {
 	my $r  = $io->lock();
-	$self->{ _lock }->{ $id } = $io;
+	if ($r) {
+	    $self->{ _lock }->{ $id } = $io;
+	}
+	else {
+	    $self->_logerror("cannot lock: qid=$id");
+	}
 	return $r;
     }
     else {
@@ -1064,7 +1069,7 @@ sub setrunnable
 	return 1;
     }
     else {
-	$self->_logerror("setrunnable: cannot rename"):
+	$self->_logerror("setrunnable: cannot rename");
     }
 
     return 0;
