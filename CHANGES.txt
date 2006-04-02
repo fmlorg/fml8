@@ -35,6 +35,57 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+
+2006/04/02
+
+   Mail::Delivery::SMTP 
+	overhaul.
+	o subroutine-ify.
+	o more error check and assertion.
+	o fix comments. et.al.
+	fix error handling (do not trap normal condition)
+	
+   Mail::Delivery::Queue 
+	fix typo.
+	check lock status.
+	
+   FML::Log 
+	clean up input buffer (nuke \s+$)
+
+2006/04/01
+
+   Mail::Delivery::Queue 
+	overhaul
+
+2006/03/29
+
+   Mail::Message::ToHTML 
+	change monthly_index.html's table output in 
+	_update_id_montly_index_master().
+	see also fml-devel 798.
+	
+2006/03/26
+	
+   Mail::Delivery::Base 
+	define [sg]et_address_validate_function()
+	
+   FML::Mailer 
+   FML::Process::Distribute 
+	use $curproc->log() as log_info and $curproc->logdebug() as log_debug
+	in Mail::Delivery, by passing log_debug function pointer to
+	Mail::Delivery class.
+	
+   Mail::Delivery::Net::INET4 INET6 
+	fix arguments:
+	+ connect{4,6}() accepts $mta.
+	+ remove not used arguments.
+
+2006/03/25
+
+   Mail::Delivery::Base 
+	fix comments.
+	fix usage of ->log*()
+
 2006/03/24
 
    Mail::Delivery overhaul (1).
@@ -9449,4 +9500,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.272 2006/03/21 08:48:09 fukachan Exp $
+$FML: CHANGES.txt,v 1.273 2006/03/25 04:46:24 fukachan Exp $
