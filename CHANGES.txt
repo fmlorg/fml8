@@ -3,9 +3,10 @@
 
   [最近のまとめ]
 
-  FML_CURRENT_VERSION=7.98.8
+  FML_CURRENT_VERSION=7.98.9
 
   8.0 PRE_ALPHA
+	7.98.9	delivery system overhaul
 	7.98.8	correct context switch.
 		address validation in smtp transaction.
 	7.98.7	confirmation + manual subscribe/chaddr/unsubscribe
@@ -35,6 +36,24 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+
+2006/04/03
+
+   Mail::Delivery::SMTP 
+	check the number of effective MTA.
+	tune retry max limit (XXX a lot of todo around this).
+	fix retry handling (now we use cost penalty by rollback).
+	style::not use $_xxx in loop
+	
+   Mail::Delivery::Queue 
+	ensure lock::unlock return value
+	bug fixed to lock new or lock queue file, not active queue.
+	
+   IO::Adapter 
+	consider context switch
+	
+   FML::Mailer 
+	enable fallback
 
 2006/04/02
 
@@ -9500,4 +9519,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.273 2006/03/25 04:46:24 fukachan Exp $
+$FML: CHANGES.txt,v 1.274 2006/04/02 15:21:16 fukachan Exp $
