@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Mailer.pm,v 1.35 2006/03/26 14:56:17 fukachan Exp $
+# $FML: Mailer.pm,v 1.36 2006/04/01 02:17:05 fukachan Exp $
 #
 
 package FML::Mailer;
@@ -211,6 +211,8 @@ sub send
     # main
     #
     my $config = $curproc->config();
+    my $queue_dir = $config->{ mail_queue_dir };
+
     use Mail::Delivery;
     my $service = new Mail::Delivery {
 	log_info_function  => $fp_log_info,
@@ -232,7 +234,9 @@ sub send
 	'message'         => $message,
 	map_params        => $config,
 
-	# XXX do not fallback here.
+	# XXX do not need fallback here ?
+        use_queue_dir     => 1,
+        queue_dir         => $queue_dir,
     });
     if ($service->error) { $curproc->logerror($service->error); return 0;}
 
