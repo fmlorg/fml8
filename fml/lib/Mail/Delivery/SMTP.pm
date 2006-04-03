@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.40 2006/04/02 06:55:44 fukachan Exp $
+# $FML: SMTP.pm,v 1.41 2006/04/03 03:16:17 fukachan Exp $
 #
 
 
@@ -439,15 +439,15 @@ sub deliver
 
 	# To avoid infinite loop, we enforce some artificial limit.
 	my $loop_count     = 0;
-	my $max_retry      = 128 * ($#$mta + 1) * ($#$maps + 1);
+	my $max_retry      = 1024 * 1024 * 512 * ($#$mta + 1);
 	my $max_loop_count = $args->{ mta_max_retry } || $max_retry;
 
       MTA_RETRY_LOOP:
 	while (1) {
 	    my $n_mta = 0;
 
-	    # check infinite loop
-	    if ($loop_count++ > $max_loop_count) {
+	    # avoid infinite loop
+	    if ($self->_is_stop_loop($loop_count, $max_loop_count)) {
 		$self->logdebug("too many smtp retry, give up map=$map");
 		$self->set_error("too many smtp retry, give up");
 		last MTA_RETRY_LOOP;
@@ -545,6 +545,29 @@ sub deliver
     if ( $self->{ _num_recipients } ) {
 	my $n = $self->{ _num_recipients };
 	$self->log("sent total=$n");
+
+	use File::Basename;
+	my (@m) = ();
+	for my $_m (@$maps) { push(@m, basename($_m));}
+	$self->logdebug("sent total=$n maps=(@m)");
+    }
+}
+
+
+# Descriptions: check if this loop should stop or not.
+#    Arguments: OBJ($self) NUM($count) NUM($limit)
+# Side Effects: none
+# Return Value: none
+sub _is_stop_loop
+{
+    my ($self, $count, $limit) = @_;
+
+    my $penalty_cost = $self->_get_retry_penalty();
+    if ($count > int( $limit / $penalty_cost )) {
+	return 1;
+    }
+    else {
+	return 0;
     }
 }
 
@@ -732,6 +755,7 @@ sub _deliver
     $self->_send_recipient_list($args);
     if ($self->get_error) {
 	$self->rollback_map_position;
+	$self->_set_retry_penalty(); # XXX rollback gains penalty.
 	$self->_reset_smtp_transaction($args);
 	$self->_set_mta_as_fatal($args);
 	return;
@@ -1176,6 +1200,31 @@ sub _get_attribute
 {
 	my ($self, $key, $value) = @_;
 	return ( $self->{ _attr }->{ $key } || undef );
+}
+
+
+# Descriptions: set retry penalty cost.
+#    Arguments: OBJ($self)
+# Side Effects: update $self
+# Return Value: none
+sub _set_retry_penalty
+{
+    my ($self) = @_;
+
+    my $penalty = $self->{ _retry_penalty } || 1;
+    $self->{ _retry_penalty } = 2 * $penalty;
+}
+
+
+# Descriptions: get retry penalty cost.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
+sub _get_retry_penalty
+{
+    my ($self) = @_;
+
+    return ($self->{ _retry_penalty } || 1);
 }
 
 
