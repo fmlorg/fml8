@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.41 2006/04/03 03:16:17 fukachan Exp $
+# $FML: SMTP.pm,v 1.42 2006/04/03 09:59:56 fukachan Exp $
 #
 
 
@@ -548,7 +548,7 @@ sub deliver
 
 	use File::Basename;
 	my (@m) = ();
-	for my $_m (@$maps) { push(@m, basename($_m));}
+	for my $m (@$maps) { push(@m, basename($m));}
 	$self->logdebug("sent total=$n maps=(@m)");
     }
 }
