@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.39 2005/12/08 10:05:57 fukachan Exp $
+# $FML: Adapter.pm,v 1.40 2005/12/10 11:11:15 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -216,6 +216,7 @@ sub new
     # save @ISA for further use, re-evaluate @ISA
     @ORIG_ISA = @ISA unless $FirstTime++;
     @ISA      = ($pkg, @pkg, @ORIG_ISA);
+    _save_context($me);
 
     if ($debug) {
 	printf STDERR "%-20s %s\n", "IO::Adapter::ISA:", "@ISA";
@@ -256,6 +257,8 @@ sub open
     my ($self, $flag) = @_;
     my $type = $self->{ _type };
 
+    $self->_resume_context();
+
     # default flag is "r" == "read open"
     $flag ||= 'r';
 
@@ -292,6 +295,8 @@ sub touch
     my ($self) = @_;
     my $type   = $self->{ _type };
 
+    $self->_resume_context();
+
     if ($type eq 'file') {
 	$self->SUPER::touch( { file => $self->{_file} } );
     }
@@ -312,30 +317,38 @@ unlock. currently, only supported for file map.
 # Descriptions: lock. currently, only supported for file map.
 #    Arguments: OBJ($self)
 # Side Effects: create $map if needed or possible
-# Return Value: none
+# Return Value: NUM
 sub lock
 {
     my ($self) = @_;
     my $type   = $self->{ _type };
 
+    $self->_resume_context();
+
     if ($type eq 'file') {
-	$self->SUPER::lock( { file => $self->{_file} } );
+	return $self->SUPER::lock( { file => $self->{_file} } );
     }
+
+    return 0;
 }
 
 
 # Descriptions: unlock. currently, only supported for file map.
 #    Arguments: OBJ($self)
 # Side Effects: create $map if needed or possible
-# Return Value: none
+# Return Value: NUM
 sub unlock
 {
     my ($self) = @_;
     my $type   = $self->{ _type };
 
+    $self->_resume_context();
+
     if ($type eq 'file') {
-	$self->SUPER::unlock( { file => $self->{_file} } );
+	return $self->SUPER::unlock( { file => $self->{_file} } );
     }
+
+    return 0;
 }
 
 
@@ -375,6 +388,8 @@ sub add
 {
     my ($self, $address, $argv) = @_;
 
+    $self->_resume_context();
+
     if ($self->{ _hints }->{ read_only }) {
 	my $map = $self->{ _map };
 	croak("this map $map is read only.");
@@ -397,6 +412,8 @@ sub add
 sub delete
 {
     my ($self, $regexp) = @_;
+
+    $self->_resume_context();
 
     if ($self->{ _hints }->{ read_only }) {
 	my $map = $self->{ _map };
@@ -455,6 +472,8 @@ sub find
     my $case_sensitive = $args->{ case_sensitive } ? 1 : 0;
     my $show_all       = $args->{ all } ? 1 : 0;
     my $want           = 'key,value';
+
+    $self->_resume_context();
 
     # forward the request to SUPER class (md = map dependent)
     if ($self->SUPER::can('md_find')) {
@@ -540,6 +559,8 @@ sub sequence_increment
     my ($self) = @_;
     my $type   = $self->{ _type };
 
+    $self->_resume_context();
+
     if ($type eq 'file') {
 	my $r = $self->SUPER::sequence_increment( { file => $self->{_file} } );
 	return $r;
@@ -558,6 +579,8 @@ sub sequence_replace
 {
     my ($self, $seq) = @_;
     my $type = $self->{ _type };
+
+    $self->_resume_context();
 
     if ($type eq 'file') {
 	my $r = $self->SUPER::sequence_replace( {
@@ -580,6 +603,35 @@ sub sequence_replace
 
 return the most recent error message if exists.
 
+=cut
+
+
+# Descriptions: save context.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: none
+sub _save_context
+{
+    my ($self) = @_;
+
+    my (@isa) = ();
+    for my $e (@ISA) { push(@isa, $e);}
+    $self->{ _isa } = \@isa;
+}
+
+
+# Descriptions: resume context.
+#    Arguments: OBJ($self)
+# Side Effects: resume @ISA
+# Return Value: none
+sub _resume_context
+{
+    my ($self) = @_;
+
+    my $isa = $self->{ _isa };
+    @ISA = @$isa;
+}
+
 
 =head1 DESTRUCTOR
 
@@ -595,6 +647,9 @@ return the most recent error message if exists.
 sub DESTROY
 {
     my ($self) = @_;
+
+    $self->_resume_context();
+
     $self->close;
     undef $self;
 }
@@ -610,7 +665,7 @@ Ken'ichi Fukamchi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamchi
+Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamchi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
