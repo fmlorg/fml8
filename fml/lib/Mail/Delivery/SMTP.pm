@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.39 2006/04/02 06:28:28 fukachan Exp $
+# $FML: SMTP.pm,v 1.40 2006/04/02 06:55:44 fukachan Exp $
 #
 
 
@@ -439,7 +439,8 @@ sub deliver
 
 	# To avoid infinite loop, we enforce some artificial limit.
 	my $loop_count     = 0;
-	my $max_loop_count = $args->{ mta_max_retry } || 128 * ($#$mta + 1);
+	my $max_retry      = 128 * ($#$mta + 1) * ($#$maps + 1);
+	my $max_loop_count = $args->{ mta_max_retry } || $max_retry;
 
       MTA_RETRY_LOOP:
 	while (1) {
@@ -450,6 +451,22 @@ sub deliver
 		$self->logdebug("too many smtp retry, give up map=$map");
 		$self->set_error("too many smtp retry, give up");
 		last MTA_RETRY_LOOP;
+	    }
+
+	    # check the number of effective MTA's.
+	    {
+		my $is_valid_mta = 0;
+	      MTA:
+		for my $mta (@$mta) {
+		    unless ($self->get_mta_status($mta) eq $MTA_ERR_TIMEOUT ||
+			    $self->get_mta_status($mta) eq $MTA_ERR_FATAL   ) {
+			$is_valid_mta++;
+		    }
+		}
+		unless ($is_valid_mta) {
+		    $self->log("no valid MTA");
+		    last MTA_RETRY_LOOP;
+		}
 	    }
 
 	  MTA:
