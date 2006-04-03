@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.61 2006/04/02 06:56:08 fukachan Exp $
+# $FML: Queue.pm,v 1.62 2006/04/03 03:16:48 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -727,11 +727,12 @@ sub lock
     my $qf_new  = $self->new_file_path($id);
     my $qf_lock = $self->lock_file_path($id);
     my $qf_act  = $self->active_file_path($id);
-    my $lckfile = $is_prep ? $qf_new : (-f $qf_lock ? $qf_lock : $qf_act);
-    my $fh      = new FileHandle $lckfile;
+
+    $self->touch($qf_lock);
+    my $lockfile = $is_prep ? $qf_new : (-f $qf_lock ? $qf_lock : $qf_act);
 
     use IO::Adapter;
-    my $io = new IO::Adapter $lckfile;
+    my $io = new IO::Adapter $lockfile;
     if (defined $io) {
 	my $r  = $io->lock();
 	if ($r) {
