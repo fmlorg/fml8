@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.38 2006/03/25 04:07:26 fukachan Exp $
+# $FML: QueueManager.pm,v 1.39 2006/04/01 02:17:05 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -116,7 +116,12 @@ sub send
 	};
 	$q->set_log_debug_function($fp);
 
-	if ( $q->lock() ) {
+	# check before try lock (XXX not enough check)
+	unless ($q->is_valid_active_queue()) {
+	    next QUEUE;
+	}
+
+	if ( $q->lock() && $q->is_valid_active_queue() ) {
 	    my $is_locked = 1;
 
 	    if ( $q->is_valid_active_queue() ) {
@@ -142,7 +147,7 @@ sub send
 	    $q->unlock() if $is_locked;
 	}
 	else {
-	    $curproc->logwarn("qmgr: qid=$qid is locked. retry");
+	    $curproc->logdebug("qmgr: qid=$qid is locked or invalid. retry");
 	}
 
 	# upper limit of processing done on one process.
