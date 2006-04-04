@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.62 2006/04/03 03:16:48 fukachan Exp $
+# $FML: Queue.pm,v 1.63 2006/04/03 09:55:01 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -551,24 +551,18 @@ sub _update_schedule_strategy
 {
     my ($self, $id) = @_;
     my $info = {};
-    my $file = $self->strategy_file_path($id);
 
-    use IO::Adapter;
-    my $hint = new IO::Adapter $file;
-    $hint->touch();
-    $hint->open();
-
-    # sleep time
-    my $cur_sleep = $hint->find("SLEEP") || 300;
-    $cur_sleep =~ s/^.*SLEEP\s+//;
-    $cur_sleep =~ s/\s*$//;
+    # update sleep time.
+    my $cur_sleep = $self->get_sleep_count || 300;
     my $new_sleep = int( ($cur_sleep || 300 ) * (1 + rand(1)) );
     $new_sleep = $new_sleep < 4000 ? $new_sleep : 4000;
-    $hint->delete("SLEEP");
-    $hint->add("SLEEP", [ $new_sleep ]);
+    $self->set_sleep_count($new_sleep);
     $info->{ sleep } = $new_sleep;
 
-    $hint->close();
+    # increment retry count
+    my $retry_count = $self->get_retry_count();
+    $retry_count++;
+    $self->set_retry_count($retry_count);
 
     return $info;
 }
@@ -1788,6 +1782,98 @@ sub local_file_path
     }
     else {
 	return undef;
+    }
+}
+
+
+# Descriptions: save sleep parameter in strategy file.
+#    Arguments: OBJ($self) NUM($sleep_count)
+# Side Effects: update strategy file.
+# Return Value: none
+sub set_sleep_count
+{
+    my ($self, $sleep_count) = @_;
+    my $id = $self->id();
+    my $strategy_file = $self->strategy_file_path($id);
+
+    use IO::Adapter;
+    my $io = new IO::Adapter $strategy_file;
+    $io->touch();
+    $io->open();
+    $io->delete("SLEEP");
+    $io->add("SLEEP", [ $sleep_count ]);
+    $io->close();
+}
+
+
+# Descriptions: get sleep parameter from strategy file.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
+sub get_sleep_count
+{
+    my ($self) = @_;
+    my $id     = $self->id();
+    my $strategy_file = $self->strategy_file_path($id);
+
+    if (-f $strategy_file) {
+	use IO::Adapter;
+	my $io = new IO::Adapter $strategy_file;
+	$io->open();
+	my $sleep_count = $io->find("SLEEP") || 0;
+	$sleep_count =~ s/^.*SLEEP\s+//;
+	$sleep_count =~ s/\s*$//;
+	$io->close();
+	return $sleep_count;
+    }
+    else {
+	return 0;
+    }
+}
+
+
+# Descriptions: save retry parameter in strategy file.
+#    Arguments: OBJ($self) NUM($retry_count)
+# Side Effects: update strategy file.
+# Return Value: none
+sub set_retry_count
+{
+    my ($self, $retry_count) = @_;
+    my $id = $self->id();
+    my $strategy_file = $self->strategy_file_path($id);
+
+    use IO::Adapter;
+    my $io = new IO::Adapter $strategy_file;
+    $io->touch();
+    $io->open();
+    $io->delete("RETRY");
+    $io->add("RETRY", [ $retry_count ]);
+    $io->close();
+}
+
+
+# Descriptions: get retry parameter from strategy file.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
+sub get_retry_count
+{
+    my ($self) = @_;
+    my $id     = $self->id();
+    my $strategy_file = $self->strategy_file_path($id);
+
+    if (-f $strategy_file) {
+	use IO::Adapter;
+	my $io = new IO::Adapter $strategy_file;
+	$io->open();
+	my $retry_count = $io->find("RETRY") || 0;
+	$retry_count =~ s/^.*RETRY\s+//;
+	$retry_count =~ s/\s*$//;
+	$io->close();
+	return $retry_count;
+    }
+    else {
+	return 0;
     }
 }
 
