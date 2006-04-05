@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.172 2006/03/25 04:07:26 fukachan Exp $
+# $FML: Distribute.pm,v 1.173 2006/03/26 14:56:17 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -563,7 +563,15 @@ sub _deliver_article
     my $queue     = new Mail::Delivery::Queue { directory => $queue_dir };
     my $qid       = $queue->id();
     my $fatal     = 0;
+
+    my $fp_log      = sub { $curproc->log(@_);};
+    my $fp_logdebug = sub { $curproc->logdebug(@_);};
+    $queue->set_log_function($fp_log);
+    $queue->set_log_debug_function($fp_logdebug);
+
     if (defined $queue) {
+	$queue->lock( { lock_before_runnable => "yes" } );
+
 	$curproc->lock($lock_channel);
 
 	$curproc->logdebug("article: qid=$qid");
@@ -582,7 +590,6 @@ sub _deliver_article
 	    $fatal = 1;
 	}
 
-	$queue->lock( { lock_before_runnable => "yes" } );
 	unless ($queue->setrunnable()) {
 	    $curproc->logerror("queue: cannot setrunnable");
 	    $curproc->logwarn("try to deliver on the fly");
@@ -675,6 +682,8 @@ sub _deliver_article
 
 			  map_params        => $config,
 
+			  queue             => $queue, 
+
 			  # fallback
 			  use_queue_dir     => 1,
 			  queue_dir         => $queue_dir,
@@ -684,6 +693,11 @@ sub _deliver_article
     if ($service->error) {
 	$curproc->logerror($service->error);
 	$curproc->smtp_server_state_set_error();
+    }
+
+    # delivery not completes.
+    if ($service->get_not_done()) { 
+	$curproc->logdebug("delivery not done but must fallback, ok");
     }
 
     # XXX [queue-based-distrbute] HACK ###
