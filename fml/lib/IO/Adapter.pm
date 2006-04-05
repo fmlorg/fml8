@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.40 2005/12/10 11:11:15 fukachan Exp $
+# $FML: Adapter.pm,v 1.41 2006/04/03 03:17:48 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -315,18 +315,19 @@ unlock. currently, only supported for file map.
 
 
 # Descriptions: lock. currently, only supported for file map.
-#    Arguments: OBJ($self)
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: create $map if needed or possible
 # Return Value: NUM
 sub lock
 {
-    my ($self) = @_;
-    my $type   = $self->{ _type };
+    my ($self, $args) = @_;
+    my $type = $self->{ _type };
+    my $wait = $args->{ wait } || 0;
 
     $self->_resume_context();
 
     if ($type eq 'file') {
-	return $self->SUPER::lock( { file => $self->{_file} } );
+	return $self->SUPER::lock( { file => $self->{_file}, wait => $wait } );
     }
 
     return 0;

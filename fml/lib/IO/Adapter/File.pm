@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.61 2005/05/27 03:03:40 fukachan Exp $
+# $FML: File.pm,v 1.62 2006/01/09 14:00:55 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -494,8 +494,9 @@ sub lock
 {
     my ($self, $args) = @_;
     my $file = $args->{ file };
+    my $wait = $args->{ wait } || 0;
 
-    $self->_simple_flock($file);
+    $self->_simple_flock($file, $wait);
 }
 
 
@@ -513,12 +514,12 @@ sub unlock
 
 
 # Descriptions: try flock(2) for $file.
-#    Arguments: OBJ($self) STR($file)
+#    Arguments: OBJ($self) STR($file) NUM($wait)
 # Side Effects: flock for $file
 # Return Value: 1 or 0
 sub _simple_flock
 {
-    my ($self, $file) = @_;
+    my ($self, $file, $wait) = @_;
 
     use FileHandle;
     my $fh = new FileHandle ">> $file";
@@ -528,12 +529,26 @@ sub _simple_flock
 
 	$LockedFileHandle{ $file } = $fh;
 
-	my $r = 0; # return value
+	my $r  = 0; # return value
+	my $id = sprintf("%s-%s", time, $$);
 	eval q{
+	    local($SIG{ALRM}) = sub { croak("$id lock timeout");};
+	    alarm($wait);
+
 	    use Fcntl qw(:DEFAULT :flock);
 	    $r = flock($fh, &LOCK_EX);
+
+	    alarm(0);
 	};
-	$self->error_set($@) if $@;
+	if ($@) {
+	    if ($@ =~ /$id lock timeout/) {
+		$self->error_set("lock timeout");
+	    }
+	    else {
+		$self->error_set($@);
+	    }
+	    return 0;
+	}
 
 	if ($r) {
 	    print STDERR "\tdebug[$$]: $file LOCKED\n" if $debug;
