@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.275 2006/02/15 13:44:04 fukachan Exp $
+# $FML: Kernel.pm,v 1.276 2006/03/12 12:43:17 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -2955,7 +2955,7 @@ sub _add_info_on_header
 }
 
 
-=head2 queue_flush($queue)
+=head2 queue_flush()
 
 flush all queue.
 
@@ -2966,12 +2966,12 @@ C<TODO:>
 
 
 # Descriptions: flush all queue.
-#    Arguments: OBJ($curproc) OBJ($queue)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub queue_flush
 {
-    my ($curproc, $queue) = @_;
+    my ($curproc) = @_;
     my $config    = $curproc->config();
     my $queue_dir = $config->{ mail_queue_dir };
     my $qmgr_args = { directory => $queue_dir };
