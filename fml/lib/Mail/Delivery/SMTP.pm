@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.42 2006/04/03 09:59:56 fukachan Exp $
+# $FML: SMTP.pm,v 1.43 2006/04/03 10:10:12 fukachan Exp $
 #
 
 
@@ -142,6 +142,7 @@ sub new
 
     $me->set_smtp_recipient_limit($args->{ recipient_limit }    || 1000);
     $me->set_smtp_default_timeout($args->{ default_io_timeout } || 10);
+    $me->_set_queue_directory($args->{ queue_dir } || '');
 
     my $fp_address_validate = $args->{address_validate_function} || undef;
     $me->set_address_validate_function($fp_address_validate);
@@ -401,6 +402,7 @@ sub deliver
     #      default_timeout: basic timeout parameter for smtp session
     $self->set_smtp_recipient_limit($args->{ recipient_limit }    || 1000);
     $self->set_smtp_default_timeout($args->{ default_io_timeout } || 10);
+    $self->_set_queue_directory($args->{ queue_dir } || '');
 
     # temporary hash to check whether the map/mta is used already.
     my %used_mta   = ();
@@ -447,7 +449,7 @@ sub deliver
 	    my $n_mta = 0;
 
 	    # avoid infinite loop
-	    if ($self->_is_stop_loop($loop_count, $max_loop_count)) {
+	    if ($self->_is_stop_loop($loop_count++, $max_loop_count)) {
 		$self->logdebug("too many smtp retry, give up map=$map");
 		$self->set_error("too many smtp retry, give up");
 		last MTA_RETRY_LOOP;
@@ -572,6 +574,24 @@ sub _is_stop_loop
 }
 
 
+# Descriptions: check if the specified map exists within queue or not.
+#    Arguments: OBJ($self) STR($map)
+# Side Effects: none
+# Return Value: NUM
+sub _is_map_in_queue
+{
+    my ($self, $map) = @_;
+    my $queue_dir = $self->_get_queue_directory() || '';
+
+    if ($queue_dir && $map && $map =~ /$queue_dir/) {
+        return 1;
+    }
+    else {
+        return 0;
+    }
+}
+
+
 # Descriptions: delivery fallback due to something error.
 #               add this transaction into mail queue for later delivery.
 #    Arguments: OBJ($self) HASH_REF($args) STR($map) STR($status)
@@ -580,6 +600,22 @@ sub _is_stop_loop
 sub _fallback_into_queue
 {
     my ($self, $args, $map, $status) = @_;
+    my $queue = $args->{ queue } || undef;
+
+    # ASSERT
+    my $retry_count  = $queue->get_retry_count()     || 0;
+    my $in_queue_dir = $self->_is_map_in_queue($map) || 0;
+    my $map_position = $self->get_map_position($map) || 0;
+    if ($in_queue_dir && $retry_count > 0 && $map_position == 0) {
+	# XXX we should hold this old queue as it is.
+	$self->log("not need fallback, retry=$retry_count pos=0");
+	$self->set_not_done();
+	return;
+    }
+    else {
+	my $msg = "in=$in_queue_dir retry=$retry_count pos=$map_position";
+	$self->log("fallback (debug) $msg");
+    }
 
     # log current status.
     my $pos = $self->get_map_position($map) || 0;
@@ -1225,6 +1261,50 @@ sub _get_retry_penalty
     my ($self) = @_;
 
     return ($self->{ _retry_penalty } || 1);
+}
+
+
+# Descriptions: save queue_directory.
+#    Arguments: OBJ($self) STR($queue_dir)
+# Side Effects: update $self
+# Return Value: none
+sub _set_queue_directory
+{
+    my ($self, $queue_dir) = @_;
+    $self->{ _queue_directory } = $queue_dir || '';
+}
+
+# Descriptions: return queue_directory.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub _get_queue_directory
+{
+    my ($self) = @_;
+
+    return( $self->{ _queue_directory } || '' );
+}
+
+
+# Descriptions: set NOT DONE flag.
+#    Arguments: OBJ($self)
+# Side Effects: update $self
+# Return Value: none
+sub set_not_done
+{
+    my ($self) = @_;
+    $self->{ _not_done } = 1;
+}
+
+
+# Descriptions: check NOT DONE flag.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
+sub get_not_done
+{
+    my ($self) = @_;
+    return( $self->{ _not_done } || 0 );
 }
 
 
