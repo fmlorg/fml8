@@ -3,9 +3,10 @@
 
   [最近のまとめ]
 
-  FML_CURRENT_VERSION=7.98.9
+  FML_CURRENT_VERSION=7.98.10
 
   8.0 PRE_ALPHA
+	7.98.10	delivery system overhaul sequal
 	7.98.9	delivery system overhaul
 	7.98.8	correct context switch.
 		address validation in smtp transaction.
@@ -36,6 +37,58 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2006/04/05
+
+   IO::Adapter 
+   IO::Adapter::File 
+	trylock() (lock( { wait => TIME }) implemented
+	
+   Mail::Delivery::Queue 
+	fix usage of logging.
+	trylock() is available, too.
+	validate stat() object before using it.
+	mask some debug messages
+	
+   Mail::Delivery::SMTP 
+	fix fallback algorithm::we need not do fallback for the queue already
+	on the queue.
+	
+	bug fix loop check counting.
+	bug fix queue_directry info handling.
+	
+	prepare several acess methods::_is_map_in_queue(),
+	_set_queue_directory(), _get_queue_directory(), set_not_done(),
+	get_not_done().
+	
+   FML::Mailer 
+	modifieid to sync w:::Mail::Delivery::Queue changes.
+	+ use recipient_maps as an argument to Mail::Delivery system.
+	+ pass queue object to Mail::Delivery system.
+	+ check if delivery is DONE or not by get_not_done().
+	
+   FML::Process::Kernel 
+	queue_flush() takes no argument
+
+   FML::Process::Distribute 
+	modifieid to sync w:::Mail::Delivery::Queue changes.
+	+ more fast lock
+	+ pass log function pointers.
+	+ pass queue object to Mail::Delivery system.
+	+ check if delivery is DONE or not by get_not_done().
+
+   FML::Process::QueueManager 
+	modifieid to sync w:::Mail::Delivery::Queue changes.
+	pass log function pointer to Mail::Delivery system.
+	
+2006/04/04
+
+   Mail::Delivery::Queue 
+	define set_sleep_count, get_sleep_count, set_retry_count and
+	get_retry_count.
+	rewritten by using them.
+	
+   FML::Process::QueueManager 
+	queue validation logic modified.
 
 2006/04/03
 
@@ -9519,4 +9572,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.274 2006/04/02 15:21:16 fukachan Exp $
+$FML: CHANGES.txt,v 1.275 2006/04/03 11:06:12 fukachan Exp $
