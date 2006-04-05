@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.63 2006/04/03 09:55:01 fukachan Exp $
+# $FML: Queue.pm,v 1.64 2006/04/04 12:58:49 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -295,11 +295,13 @@ sub last_modified_time
 	    $self->local_file_path($class, $id);
 
 	if (-f $file) {
-	    my $st    = stat($file);
-	    my $mtime = $st->mtime();
+	    my $st = stat($file);
+	    if (defined $st) {
+		my $mtime = $st->mtime();
 
-	    # find oldest file info.
-	    $min_mtime = $min_mtime < $mtime ? $min_mtime : $mtime;
+		# find oldest file info.
+		$min_mtime = $min_mtime < $mtime ? $min_mtime : $mtime;
+	    }
 	}
     }
 
@@ -610,14 +612,14 @@ sub _change_queue_mode
 		rename($qf_deferred, $qf_active);
 		$self->touch($qf_active);
 		if (-f $qf_active) {
-		    $self->_log("qid=$id activated.");
+		    $self->_logdebug("qid=$id activated.");
 		}
 		else {
-		    $self->_log("error: qid=$id operation failed.");
+		    $self->_logerror("qid=$id operation failed.");
 		}
 	    }
 	    else {
-		$self->_log("no such deferred queue qid=$id");
+		$self->_logerror("no such deferred queue qid=$id");
 	    }
 	}
 	elsif ($to_mode eq 'deferred' || $to_mode eq 'defer') {
@@ -627,24 +629,24 @@ sub _change_queue_mode
 		$self->update_schedule($id);
 
 		if (-f $qf_deferred) {
-		    $self->_log("qid=$id deferred");
+		    $self->_logdebug("qid=$id deferred");
 		}
 		else {
-		    $self->_log("error: qid=$id operation failed.");
+		    $self->_logerror("qid=$id operation failed.");
 		}
 	    }
 	    else {
-		$self->_log("no such active queue qid=$id");
+		$self->_logerror("no such active queue qid=$id");
 	    }
 	}
 	else {
-	    $self->_log("invalid mode");
+	    $self->_logerror("invalid queue mode");
 	}
 
 	$self->unlock();
     }
     else {
-	$self->_log("qid=$id lock failed.");
+	$self->_logerror("qid=$id lock failed.");
     }
 }
 
@@ -676,21 +678,23 @@ sub reschedule
 	$total++;
 
 	# wake up too old queue.
-	if ($st->mtime < time) {
-	    $self->wakeup_queue($qid);
-	    $count++;
-	}
-	else {
-	    $early++;
+	if (defined $st) {
+	    if ($st->mtime < time) {
+		$self->wakeup_queue($qid);
+		$count++;
+	    }
+	    else {
+		$early++;
+	    }
 	}
     }
 
     if ($count) {
-	$self->_log("activate $count queue(s)");
-	$self->_log("$early queue(s) sleeping") if $early;
+	$self->_logdebug("activate $count queue(s)");
+	$self->_logdebug("$early queue(s) sleeping") if $early;
     }
     else {
-	$self->_log("$early queue(s) sleeping");
+	$self->_logdebug("$early queue(s) sleeping") if $early;
     }
 }
 
@@ -723,13 +727,15 @@ sub lock
     my $qf_act  = $self->active_file_path($id);
 
     $self->touch($qf_lock);
-    my $lockfile = $is_prep ? $qf_new : (-f $qf_lock ? $qf_lock : $qf_act);
+    # my $lockfile = $is_prep ? $qf_new : (-f $qf_lock ? $qf_lock : $qf_act);
+    my $lockfile = $qf_lock;
 
     use IO::Adapter;
     my $io = new IO::Adapter $lockfile;
     if (defined $io) {
-	my $r  = $io->lock();
+	my $r  = $io->lock( { wait => $wait } );
 	if ($r) {
+	    $self->_log("debug: got lock qid=$id");
 	    $self->{ _lock }->{ $id } = $io;
 	}
 	else {
@@ -755,8 +761,11 @@ sub unlock
 
     my $id = $self->id();
     my $io = $self->{ _lock }->{ $id } || undef;
+
     if (defined $io) {
-	return $io->unlock();
+	my $r = $io->unlock();
+	$self->_log("debug: got unlock qid=$id");
+	return $r;
     }
     else {
 	$self->_logerror("not locked: qid=$id");
@@ -976,10 +985,10 @@ sub remove
 
     if ($count > 0) {
 	if ($count == $removed) {
-	    $self->_log("qid=$id removed");
+	    $self->_logdebug("qid=$id removed");
 	}
 	else {
-	    $self->_log("qid=$id remove failed");
+	    $self->_logerror("qid=$id remove failed");
 	}
     }
 }
