@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Mailer.pm,v 1.36 2006/04/01 02:17:05 fukachan Exp $
+# $FML: Mailer.pm,v 1.37 2006/04/03 09:53:29 fukachan Exp $
 #
 
 package FML::Mailer;
@@ -88,12 +88,12 @@ $send_args (HASH_REF) can take the following arguments:
 
 
 # Descriptions: send messages in the queue (queue flush).
-#    Arguments: OBJ($self) HASH_REF($send_args)
+#    Arguments: OBJ($self) OBJ($queue) HASH_REF($send_args)
 # Side Effects: queue changed
-# Return Value: 1 or 0
+# Return Value: NUM(1 or 0)
 sub send
 {
-    my ($self, $send_args) = @_;
+    my ($self, $queue, $send_args) = @_;
     my $handle       = undef;
     my $fp_log_info  = undef;
     my $fp_log_error = undef;
@@ -138,32 +138,8 @@ sub send
     }
 
     # 2. recipient(s)
-    my $recipients = [];
-    if (defined $send_args->{ recipients }) {    # ARRAY_REF
-	if (ref($send_args->{ recipients }) eq 'ARRAY') {
-	    $recipients = $send_args->{ recipients };
-	}
-	else {
-	    $curproc->logerror("FML::Mailer: invalid type: recipients");
-	    $recipients = [];
-	}
-    }
-    elsif (defined $send_args->{ recipient }) {  # STR
-	unless (ref($send_args->{ recipient })) {
-	    my $recipient = $send_args->{ recipient };
-	    $recipients = [ $recipient ];
-	}
-	else {
-	    $curproc->logerror("FML::Mailer: invalid type: recipient");
-	    $recipients = [];
-	}
-    }
-    else {
-	$curproc->logerror("FML::Mailer: no recipient(s)");
-	return 0;
-    }
-
-    unless (@$recipients) {
+    my $maps = $send_args->{ recipient_maps } || undef;
+    unless ($maps) {
 	$curproc->logerror("FML::Mailer: no recipient(s)");
 	return 0;
     }
@@ -228,17 +204,25 @@ sub send
 	'smtp_servers'    => $config->{'smtp_servers'},
 
 	'smtp_sender'     => $sender,
-	'recipient_array' => $recipients,
+	'recipient_maps'  => $maps,
 	'recipient_limit' => $config->{smtp_recipient_limit},
 
 	'message'         => $message,
 	map_params        => $config,
+
+	queue             => $queue,
 
 	# XXX do not need fallback here ?
         use_queue_dir     => 1,
         queue_dir         => $queue_dir,
     });
     if ($service->error) { $curproc->logerror($service->error); return 0;}
+
+    # delivery not completes.
+    if ($service->get_not_done()) { 
+	$curproc->logdebug("delivery not done");
+	return 0;
+    }
 
     return 1;
 }
