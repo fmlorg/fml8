@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.64 2006/04/04 12:58:49 fukachan Exp $
+# $FML: Queue.pm,v 1.65 2006/04/05 08:36:28 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -735,7 +735,7 @@ sub lock
     if (defined $io) {
 	my $r  = $io->lock( { wait => $wait } );
 	if ($r) {
-	    $self->_log("debug: got lock qid=$id");
+	    $self->_logdebug("got lock qid=$id");
 	    $self->{ _lock }->{ $id } = $io;
 	}
 	else {
@@ -764,7 +764,7 @@ sub unlock
 
     if (defined $io) {
 	my $r = $io->unlock();
-	$self->_log("debug: got unlock qid=$id");
+	$self->_logdebug("got unlock qid=$id");
 	return $r;
     }
     else {
