@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.39 2006/04/01 02:17:05 fukachan Exp $
+# $FML: QueueManager.pm,v 1.40 2006/04/04 13:00:33 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -84,14 +84,17 @@ sub send
     my $count_ok    = 0;
     my $count_err   = 0;
     my $channel     = 'qmgr_reschedule';
-    my $fp          = sub { $curproc->logdebug(@_);};
+    my $fp_log      = sub { $curproc->log(@_);};
+    my $fp_logerror = sub { $curproc->logerror(@_);};
+    my $fp_logdebug = sub { $curproc->logdebug(@_);};
 
     use Mail::Delivery::Queue;
     my $queue = new Mail::Delivery::Queue { directory => $queue_dir };
+    $queue->set_log_function($fp_log);
+    $queue->set_log_error_function($fp_logerror);
+    $queue->set_log_debug_function($fp_logdebug);
+
     my $ra    = [];
-
-    $queue->set_log_debug_function($fp);
-
     if (defined $id) {
 	$ra = [ $id ];
     }
@@ -114,18 +117,22 @@ sub send
 	    id        => $qid,
 	    directory => $queue_dir,
 	};
-	$q->set_log_debug_function($fp);
+	$q->set_log_info_function($fp_log);
+	$q->set_log_error_function($fp_logerror);
+	$q->set_log_debug_function($fp_logdebug);
 
 	# check before try lock (XXX not enough check)
 	unless ($q->is_valid_active_queue()) {
 	    next QUEUE;
 	}
 
-	if ( $q->lock() && $q->is_valid_active_queue() ) {
+	if ( $q->lock( { wait => 10 } ) && $q->is_valid_active_queue() ) {
+	    $curproc->logdebug("qmgr: got lock qid=$qid");
+
 	    my $is_locked = 1;
 
 	    if ( $q->is_valid_active_queue() ) {
-		my $r = $self->_send($curproc, $q);
+		my $r = $self->_send($q);
 		if ($r) {
 		    $q->remove();
 		    $count_ok++;
@@ -155,7 +162,7 @@ sub send
     }
 
     if ($count) {
-	$curproc->logdebug("qmgr: $count requests processed: ok=$count_ok/$count");
+	$curproc->logdebug("qmgr: total=$count ok=$count_ok error=$count_err");
     }
 
     if ($curproc->is_event_timeout($channel)) {
@@ -163,36 +170,36 @@ sub send
 	    $curproc->logdebug("qmgr: re-schedule");
 	    $queue->reschedule();
 	}
+	# XXX-TODO: customizable
 	$curproc->event_set_timeout($channel, time + 300);
     }
 }
 
 
 # Descriptions: send message object $q.
-#    Arguments: OBJ($self) OBJ($curproc) OBJ($q)
+#    Arguments: OBJ($self) OBJ($q)
 # Side Effects: queue flush-ed
 # Return Value: STR
 sub _send
 {
-    my ($self, $curproc, $q) = @_;
-    my $cred  = $curproc->credential();
-    my $info  = $q->getidinfo();
-    my $qfile = $info->{ 'path' };
-    my $qid   = $info->{ 'id' };
+    my ($self, $q)    = @_;
+    my $curproc       = $self->{ _curproc };
+    my $qid           = $q->id();
+    my $qf_act        = $q->active_file_path($qid);
+    my $recipient_map = $q->recipients_file_path($qid);
+    my $sender        = $q->get_sender($qid);
 
     use Mail::Message;
-    my $msg = Mail::Message->parse( { file => $qfile } );
-
-    use FML::Mailer;
-    my $obj = new FML::Mailer $curproc;
+    my $msg = Mail::Message->parse( { file => $qf_act } );
 
     # XXX lock for recipient maps is NOT needed since already a copy.
     # XXX queue is already locked and need no lock for recipient maps here.
-    my $r   = $obj->send({
-	sender     => $info->{ sender },
-	recipients => $info->{ recipients },
-	message    => $msg,
-	curproc    => $curproc,
+    use FML::Mailer;
+    my $mailwrapper = new FML::Mailer $curproc;
+    my $r = $mailwrapper->send($q, {
+	sender         => $sender,
+	recipient_maps => $recipient_map,
+	message        => $msg,
     });
 
     if ($r) {
@@ -221,14 +228,19 @@ clean up queue directory.
 # Return Value: none
 sub cleanup
 {
-    my ($self)    = @_;
-    my $curproc   = $self->{ _curproc };
-    my $queue_dir = $self->{ _directory };
-    my $fp        = sub { $curproc->logdebug(@_);};
+    my ($self)      = @_;
+    my $curproc     = $self->{ _curproc };
+    my $queue_dir   = $self->{ _directory };
+    my $fp_log      = sub { $curproc->log(@_);};
+    my $fp_logerror = sub { $curproc->logerror(@_);};
+    my $fp_logdebug = sub { $curproc->logdebug(@_);};
+
 
     use Mail::Delivery::Queue;
     my $queue = new Mail::Delivery::Queue { directory => $queue_dir };
-    $queue->set_log_debug_function($fp);
+    $queue->set_log_function($fp_log);
+    $queue->set_log_error_function($fp_logerror);
+    $queue->set_log_debug_function($fp_logdebug);
 
     # XXX-TODO: customizable. $mail_queue_max_lifetime = 5d ?
     my $list  = $queue->list_all() || [];
@@ -240,7 +252,9 @@ sub cleanup
 	    id        => $qid,
 	    directory => $queue_dir,
 	};
-	$q->set_log_debug_function($fp);
+	$q->set_log_function($fp_log);
+	$q->set_log_error_function($fp_logerror);
+	$q->set_log_debug_function($fp_logdebug);
 
 	unless ( $q->is_valid_active_queue() ) {
 	    my $mtime = $q->last_modified_time();
