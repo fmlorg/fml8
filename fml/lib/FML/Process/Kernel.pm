@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.276 2006/03/12 12:43:17 fukachan Exp $
+# $FML: Kernel.pm,v 1.277 2006/04/05 03:23:47 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -2191,6 +2191,53 @@ sub __import_message_from_file
     }
 
     return $buf;
+}
+
+
+=head2 reply_message_delete
+
+delete message queue matched by the specified condition.
+
+=cut
+
+
+# Descriptions: delete message queue matched by the specified condition.
+#    Arguments: OBJ($curproc) HASH_REF($condition)
+# Side Effects: none
+# Return Value: none
+sub reply_message_delete
+{
+    my ($curproc, $condition) = @_;
+    my $pcb      = $curproc->pcb();
+    my $category = 'reply_message';
+    my $class    = 'queue';
+    my $queue    = $pcb->get($category, $class) || [];
+
+    unless (defined $condition) {
+	$pcb->set($category, $class, []);
+	return;
+    }
+
+    my $queue_fixed = [];
+  QUEUE:
+    for my $q (@$queue) {
+	if (defined $condition->{ smtp_sender }) {
+	    if ($q->{ smtp_sender } eq $condition->{ smtp_sender }) {
+		$curproc->log("debug: reply_message_delete: $q");
+		next QUEUE;
+	    }
+	}
+	if (defined $condition->{ recipient }) {
+	    if ($q->{ recipient } eq $condition->{ recipient }) {
+		$curproc->log("debug: reply_message_delete: $q");
+		next QUEUE;
+	    }
+	}
+
+	push(@$queue_fixed, $q);
+    }
+    
+    $pcb->set($category, $class, $queue_fixed);
 }
 
 
