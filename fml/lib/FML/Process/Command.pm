@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.117 2006/03/04 13:58:21 fukachan Exp $
+# $FML: Command.pm,v 1.118 2006/03/05 08:08:37 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -205,6 +205,7 @@ sub run
     unless ($curproc->is_refused()) {
 	$curproc->_command_process_loop();
 	$curproc->_add_reply_message_trailor();
+	$curproc->_check_effective_command_contained();
     }
     else {
 	$curproc->logerror("ignore this request.");
@@ -319,6 +320,7 @@ sub _command_process_loop
 	    $curproc->_command_switch($context);
 	}
 	else {
+	    $curproc->_eval_command_mail_restrictions($context);
 	    $num_ignored++;
 	}
 
@@ -341,20 +343,16 @@ sub _command_process_loop
 }
 
 
-# Descriptions: check configuration. if ok, call each command
-#               via _command_execute().
+# Descriptions: apply $command_mail_restrictions to context.
 #    Arguments: OBJ($curproc) HASH_REF($context)
 # Side Effects: none
-# Return Value: none
-sub _command_switch
+# Return Value: ARRAY(STR, STR)
+sub _eval_command_mail_restrictions
 {
     my ($curproc, $context) = @_;
     my $config   = $curproc->config();
-    my $prompt   = $config->{ command_mail_reply_prompt } || '>>>';
     my $cred     = $curproc->credential(); # user credential
     my $sender   = $cred->sender();
-    my $comname  = $context->get_cooked_command();
-    my $msg_args = $context->get_msg_args();
 
     if ($debug) {
 	my $command = $context->get_cooked_command();
@@ -385,6 +383,27 @@ sub _command_switch
 	}
     }
 
+    return ($match, $result);
+}
+
+
+# Descriptions: check configuration. if ok, call each command
+#               via _command_execute().
+#    Arguments: OBJ($curproc) HASH_REF($context)
+# Side Effects: none
+# Return Value: none
+sub _command_switch
+{
+    my ($curproc, $context) = @_;
+    my $config   = $curproc->config();
+    my $prompt   = $config->{ command_mail_reply_prompt } || '>>>';
+    my $cred     = $curproc->credential(); # user credential
+    my $sender   = $cred->sender();
+    my $comname  = $context->get_cooked_command();
+    my $msg_args = $context->get_msg_args();
+
+    # apply $command_mail_restrictions to context.
+    my ($match, $result) = $curproc->_eval_command_mail_restrictions($context);
     if ($match) {
 	my $option  = $context->get_options() || [];
 	my $cont    = $option->[ 1 ] ? "..." : "";
@@ -399,6 +418,10 @@ sub _command_switch
 	    $curproc->reply_message("\n$_prompt");
 	    $curproc->restriction_state_reply_reason('command_mail',
 						     $msg_args);
+	}
+	elsif ($result eq "ignore") {
+	    $num_ignored++;
+	    $curproc->logdebug("command mail should be ignored");
 	}
 	else {
 	    $num_ignored++;
@@ -529,6 +552,29 @@ sub _add_reply_message_trailor
 	    my $ra_addr = $cc_recipient{ $k };
 	    $curproc->log("msg.cc: [ @$ra_addr ]");
 	    $curproc->reply_message( $msg , { recipient => $ra_addr });
+	}
+    }
+}
+
+
+# Descriptions: check if at least one request is effective.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: none
+sub _check_effective_command_contained
+{
+    my ($curproc) = @_;
+
+    # if no effective command, 
+    # ignore or reply warning determined by matched rule.
+    unless ($num_processed) {
+	my $rule = $curproc->restriction_state_get_ignore_reason() || '';
+	if ($rule eq 'ignore_invalid_request' || $rule eq 'ignore') {
+	    $curproc->log("no effective command, ignore reply");
+	    $curproc->reply_message_delete();
+	}
+	else {
+	    $curproc->log("no effective command, send warning");
 	}
     }
 }
