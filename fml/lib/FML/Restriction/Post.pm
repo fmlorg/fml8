@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.24 2005/12/19 11:29:40 fukachan Exp $
+# $FML: Post.pm,v 1.25 2006/01/09 14:00:55 fukachan Exp $
 #
 
 package FML::Restriction::Post;
@@ -142,6 +142,48 @@ sub reject
 	$curproc->restriction_state_set_deny_reason($rule);
     }
     return("matched", "deny");
+}
+
+
+=head1 EXTENSION: IGNORE CASE
+
+=head2 ignore
+
+ignore irrespective of other conditions.
+
+=head2 ignore_invalid_request
+
+ignore request if the content is invalid.
+
+=cut
+
+
+# Descriptions: ignore irrespective of other conditions.
+#    Arguments: OBJ($self) STR($rule) STR($sender)
+# Side Effects: none
+# Return Value: ARRAY(STR, STR)
+sub ignore
+{
+    my ($self, $rule, $sender) = @_;
+    my $curproc = $self->{ _curproc };
+
+    # XXX the deny reason is first match.
+    unless ($curproc->restriction_state_get_ignore_reason()) {
+	$curproc->restriction_state_set_ignore_reason($rule);
+    }
+    return("matched", "ignore");
+}
+
+
+# Descriptions: ignore request if the content is invalid.
+#               same as ignore() in this module.
+#    Arguments: OBJ($self) STR($rule) STR($sender)
+# Side Effects: none
+# Return Value: ARRAY(STR, STR)
+sub ignore_invalid_request
+{
+    my ($self, $rule, $sender) = @_;
+    $self->ignore();
 }
 
 
