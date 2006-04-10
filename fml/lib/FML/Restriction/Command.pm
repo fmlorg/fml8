@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.22 2006/01/09 14:00:55 fukachan Exp $
+# $FML: Command.pm,v 1.23 2006/03/04 12:56:58 fukachan Exp $
 #
 
 package FML::Restriction::Command;
@@ -55,6 +55,11 @@ sub permit_user_command
     my $config   = $curproc->config();
     my $comname  = $context->get_cooked_command() || '';
 
+    # ASSERT
+    unless ($comname) {
+	return(0, undef);
+    }
+
     # 1) sender check
     my ($match, $reason) = $self->SUPER::permit_member_maps($rule, $sender);
 
@@ -98,6 +103,11 @@ sub permit_anonymous_command
     my $config   = $curproc->config();
     my $comname  = $context->get_cooked_command() || '';
 
+    # ASSERT
+    unless ($comname) {
+	return(0, undef);
+    }
+
     # 1) sender: no check.
     # 2) command match anonymous one ?
     if ($config->has_attribute('anonymous_command_mail_allowed_commands',
@@ -121,16 +131,23 @@ permit if admin_member_maps includes the sender in it.
 
 
 # Descriptions: permit if admin_member_maps includes the sender in it.
-#    Arguments: OBJ($self) STR($rule) STR($sender)
+#    Arguments: OBJ($self) STR($rule) STR($sender) OBJ($context)
 # Side Effects: none
 # Return Value: ARRAY(STR, STR)
 sub permit_admin_member_maps
 {
-    my ($self, $rule, $sender) = @_;
+    my ($self, $rule, $sender, $context) = @_;
     my $curproc = $self->{ _curproc };
-    my $cred    = $curproc->credential();
-    my $match   = $cred->is_privileged_member($sender);
 
+    # ASSERT
+    my $comname = $context->get_cooked_command() || '';
+    unless ($comname) {
+	$curproc->logdebug("assert: no comname") if 0;
+	return(0, undef);
+    }
+
+    my $cred  = $curproc->credential();
+    my $match = $cred->is_privileged_member($sender);
     if ($match) {
 	$curproc->logdebug("found in admin_member_maps");
 	return("matched", "permit");
@@ -148,13 +165,18 @@ sub permit_admin_member_maps
 sub check_admin_member_password
 {
     my ($self, $rule, $sender, $context) = @_;
-    my $curproc  = $self->{ _curproc };
-    my $opt_args = $context->get_admin_options() || {};
-    my $password = $opt_args->{ password }       || '';
+    my $curproc = $self->{ _curproc };
+
+    # ASSERT
+    my $comname = $context->get_cooked_command() || '';
+    unless ($comname) {
+	return(0, undef);
+    }
 
     use FML::Command::Auth;
-    my $auth   = new FML::Command::Auth;
-    my $status = $auth->check_admin_member_password($curproc, $opt_args);
+    my $auth     = new FML::Command::Auth;
+    my $opt_args = $context->get_admin_options() || {};
+    my $status   = $auth->check_admin_member_password($curproc, $opt_args);
     if ($status) {
 	$curproc->log("admin password: auth ok");
 	return("matched", "permit");
@@ -164,6 +186,53 @@ sub check_admin_member_password
 	$curproc->logerror("admin password: auth fail");
 	return(0, undef);
     }
+}
+
+
+=head1 EXTENSION: IGNORE CASE
+
+=head2 ignore
+
+ignore irrespective of other conditions.
+
+=head2 ignore_invalid_request
+
+ignore request if the content is invalid.
+
+=cut
+
+
+# Descriptions: ignore irrespective of other conditions.
+#    Arguments: OBJ($self) STR($rule) STR($sender)
+# Side Effects: none
+# Return Value: ARRAY(STR, STR)
+sub ignore
+{
+    my ($self, $rule, $sender) = @_;
+    my $curproc = $self->{ _curproc };
+
+    # XXX the deny reason is first match.
+    unless ($curproc->restriction_state_get_ignore_reason()) {
+	$curproc->restriction_state_set_ignore_reason($rule);
+    }
+    return("matched", "ignore");
+}
+
+
+# Descriptions: ignore request if the content is invalid.
+#    Arguments: OBJ($self) STR($rule) STR($sender)
+# Side Effects: none
+# Return Value: ARRAY(STR, STR)
+sub ignore_invalid_request
+{
+    my ($self, $rule, $sender) = @_;
+    my $curproc = $self->{ _curproc };
+
+    # XXX the deny reason is first match.
+    unless ($curproc->restriction_state_get_ignore_reason()) {
+	$curproc->restriction_state_set_ignore_reason($rule);
+    }
+    return("matched", "ignore");
 }
 
 
@@ -184,13 +253,17 @@ sub check_pgp_signature
 {
     my ($self, $rule, $sender, $context) = @_;
     my $curproc  = $self->{ _curproc };
-    my $config   = $curproc->config();
-    my $in_admin = $curproc->command_context_get_try_admin_auth_request();
-    my $mode     = $in_admin ? "admin" : "user";
-    my $file     = $curproc->incoming_message_get_cache_file_path();
     my $match    = 0;
     my $pgp      = undef;
 
+    # ASSERT
+    my $comname = $context->get_cooked_command() || '';
+    unless ($comname) {
+	return(0, undef);
+    }
+
+    my $in_admin = $curproc->command_context_get_try_admin_auth_request();
+    my $mode     = $in_admin ? "admin" : "user";
     if ($mode eq 'admin') {
 	$self->_setup_pgp_environment("admin_command_mail_auth");
     }
@@ -209,7 +282,8 @@ sub check_pgp_signature
 	return(0, undef);
     }
 
-    my $ret = $pgp->verify(SigFile => $file);
+    my $file = $curproc->incoming_message_get_cache_file_path();
+    my $ret  = $pgp->verify(SigFile => $file);
     unless ($pgp->errstr) {
 	if ($ret) {
 	    $curproc->log("pgp signature found: $ret");
@@ -280,13 +354,19 @@ forward the incoming message to moderators.
 
 
 # Descriptions: forward the incoming message to moderators.
-#    Arguments: OBJ($self) STR($rule) STR($sender)
+#    Arguments: OBJ($self) STR($rule) STR($sender) OBJ($context)
 # Side Effects: none
 # Return Value: NUM
 sub permit_forward_to_moderator
 {
-    my ($self, $rule, $sender) = @_;
+    my ($self, $rule, $sender, $context) = @_;
     my $curproc = $self->{ _curproc };
+    my $comname = $context->get_cooked_command() || '';
+
+    # ASSERT
+    unless ($comname) {
+	return(0, undef);
+    }
 
     eval q{
 	use FML::Moderate;
