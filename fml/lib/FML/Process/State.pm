@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: State.pm,v 1.24 2006/03/04 12:56:58 fukachan Exp $
+# $FML: State.pm,v 1.25 2006/03/04 13:58:21 fukachan Exp $
 #
 
 package FML::Process::State;
@@ -109,6 +109,35 @@ sub restriction_state_get_deny_reason
     my $pcb = $curproc->pcb();
 
     return $pcb->get("check_restrictions", "deny_reason");
+}
+
+
+# Descriptions: save reason on ignore.
+#    Arguments: OBJ($curproc) STR($reason)
+# Side Effects: none
+# Return Value: none
+sub restriction_state_set_ignore_reason
+{
+    my ($curproc, $reason) = @_;
+    my $pcb = $curproc->pcb();
+    $pcb->set("check_restrictions", "ignore_reason", $reason);
+
+    if ($debug) {
+	$curproc->logdebug("restriction_state_set_ignore_reason: $reason");
+    }
+}
+
+
+# Descriptions: return the latest reason on ignore.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: none
+sub restriction_state_get_ignore_reason
+{
+    my ($curproc) = @_;
+    my $pcb = $curproc->pcb();
+
+    return $pcb->get("check_restrictions", "ignore_reason");
 }
 
 
