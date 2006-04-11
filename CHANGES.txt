@@ -3,10 +3,11 @@
 
   [最近のまとめ]
 
-  FML_CURRENT_VERSION=7.98.10
+  FML_CURRENT_VERSION=7.98.11
 
   8.0 PRE_ALPHA
-	7.98.10	delivery system overhaul sequal
+	7.98.11 ignore in restrictions supported.
+	7.98.10	delivery system overhaul sequal.
 	7.98.9	delivery system overhaul
 	7.98.8	correct context switch.
 		address validation in smtp transaction.
@@ -36,6 +37,54 @@
 
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
+
+2006/04/11
+
+   投稿時もしくはコマンドメールの処理で不正なリクエストを無視するディ
+   レクティブを書けるようにした。主に SPAM を無視するため。微修正。
+
+   variables
+	${article_post,command_mail}_restrictions support
+	{ignore,ignore_invalid_request}.
+	
+   FML::Process::Distribute 
+	apply filter system to avoid useless work if distribution is
+	allowed. 
+	
+	temporarily disable logging system before calling
+	is_permit_post() at filter check.
+
+   FML::Process::Kernel 
+	define log_{enable,disable}() to enable::disable logging
+	system. 
+
+2006/04/10
+
+   投稿時もしくはコマンドメールの処理で不正なリクエストを無視するディ
+   レクティブを書けるようにした。主に SPAM を無視するため
+
+	例: 有効なコマンドでないなら無視。
+	    メール全体で一つも有効なメールがない場合は返事も返さない。
+	command_mail_restrictions	=	reject_system_special_accounts
+						permit_anonymous_command
+						permit_user_command
+						ignore_invalid_request
+						reject
+
+   FML::Restriction::Post 
+	define ignore() and ignore_invalid_request() methods.
+	
+   FML::Restriction::Command 
+	define ignore() and ignore_invalid_request() methods.
+	assert
+	
+   FML::Process::State 
+	define restriction_state_set_ignore_reason() and
+	restriction_state_get_ignore_reason() methods.
+	
+   FML::Process::Command 
+	enhance restriction checks for invalid contents to determine the
+	action against such content.
 
 2006/04/05
 
@@ -9572,4 +9621,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.275 2006/04/03 11:06:12 fukachan Exp $
+$FML: CHANGES.txt,v 1.276 2006/04/05 13:24:12 fukachan Exp $
