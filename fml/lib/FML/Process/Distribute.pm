@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.174 2006/04/05 11:39:49 fukachan Exp $
+# $FML: Distribute.pm,v 1.175 2006/04/11 12:08:20 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -130,7 +130,9 @@ sub verify_request
     }
 
     unless ($curproc->is_refused()) {
+	$curproc->log_disable();
 	my $action = $curproc->is_permit_post();
+	$curproc->log_enable();
 	if ($action eq 'permit') {
 	    $curproc->_check_filter();
 	}
