@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.277 2006/04/05 03:23:47 fukachan Exp $
+# $FML: Kernel.pm,v 1.278 2006/04/09 15:16:54 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1436,6 +1436,8 @@ sub log_message_init
     else {
 	$curproc->logerror("fail to create log_computer_output_engine object");
     }
+
+    $curproc->log_enable();
 }
 
 
@@ -1475,6 +1477,38 @@ sub _log_message_print
 }
 
 
+=head2 log_enable
+
+=head2 log_disable
+
+=cut
+
+
+# Descriptions: enable logging system
+#    Arguments: OBJ($curproc)
+# Side Effects: update $curproc
+# Return Value: none
+sub log_enable
+{
+    my ($curproc) = @_;
+    my $pcb = $curproc->pcb();
+    $pcb->set("log", "enabled", "yes");
+}
+
+
+# Descriptions: disable logging system
+#    Arguments: OBJ($curproc)
+# Side Effects: update $curproc
+# Return Value: none
+sub log_disable
+{
+    my ($curproc) = @_;
+    my $pcb = $curproc->pcb();
+    $pcb->set("log", "enabled", "no");
+}
+
+
+
 =head2 log_message($msg, $msg_args)
 
 ?
@@ -1503,6 +1537,13 @@ sub log_message
     my $at_package  = $msg_args->{ caller }->[ 0 ];
     my $at_function = $msg_args->{ caller }->[ 1 ];
     my $at_line     = $msg_args->{ caller }->[ 2 ];
+
+    # logging system enabled or disabled.
+    my $pcb = $curproc->pcb();
+    my $is_log_system_runnig = $pcb->get("log", "enabled");
+    if ($is_log_system_runnig eq 'no') {
+	return;
+    }
 
     if ($level eq 'info') {
 	Log($msg);
