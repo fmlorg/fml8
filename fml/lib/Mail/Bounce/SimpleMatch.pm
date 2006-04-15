@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SimpleMatch.pm,v 1.43 2005/08/19 12:17:11 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.44 2005/08/19 12:18:12 fukachan Exp $
 #
 
 
@@ -205,11 +205,11 @@ sub analyze
     $m = $m->find( { data_type_regexp => 'text' } );
 
     if (defined $m) {
-	my $n = $m->num_paragraph;
-	if ($debug) { print STDERR "   num_paragraph: $n\n";}
+	my $total = $m->paragraph_total;
+	if ($debug) { print STDERR "   paragraph_total: $total\n";}
 
       PARAGRAPH:
-	for (my $i = 0; $i < $n; $i++) {
+	for (my $i = 0; $i < $total; $i++) {
 	    my $buf = $m->nth_paragraph($i + 1); # 1 not 0 for 1st paragraph
 	    $args->{ buf } = \$buf;
 
@@ -337,7 +337,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

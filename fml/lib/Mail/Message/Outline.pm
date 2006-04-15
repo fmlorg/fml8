@@ -1,8 +1,8 @@
 #-*- perl -*-
 #
-# Copyright (C) 2005 Ken'ichi Fukamachi
+# Copyright (C) 2005,2006 Ken'ichi Fukamachi
 #
-# $FML$
+# $FML: Outline.pm,v 1.1 2005/09/11 13:12:46 fukachan Exp $
 #
 
 package Mail::Message::Outline;
@@ -57,10 +57,10 @@ sub outline
 	my $prgbuf = '';
 	my $found  = 0;
 	my $max    = $params->{ summary_max_lines } || 3;
-	my $np     = $msg->num_paragraph();
+	my $total  = $msg->paragraph_total();
 
       PARAGRAPH:
-	for my $i (1 .. $np) {
+	for my $i (1 .. $total) {
 	    $prgbuf = $msg->nth_paragraph($i);
 
 	  LINE:
@@ -173,7 +173,7 @@ sub has_closing_phrase
     if (defined($msg) && $regexp) {
 	my ($buf, $string);
 
-	my $num_prg = $msg->num_paragraph();
+	my $num_prg = $msg->paragraph_total();
 	for (my $i = 1; $i <= $num_prg; $i++) {
 	    $buf = $msg->nth_paragraph($i);
 	    $buf =~ s/^[\s\n]*//o;
@@ -229,7 +229,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2005 Ken'ichi Fukamachi
+Copyright (C) 2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

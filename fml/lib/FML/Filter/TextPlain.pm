@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: TextPlain.pm,v 1.15 2005/08/27 14:49:33 fukachan Exp $
+# $FML: TextPlain.pm,v 1.16 2005/09/16 11:11:33 fukachan Exp $
 #
 
 package FML::Filter::TextPlain;
@@ -137,7 +137,7 @@ sub body_check
     #     XXX for small enough buffer. The information comes from @pmap, but
     #     XXX we should implement methods for them within $m message object.
     # get useful information for the message object.
-    # my $num_paragraph       = $m->num_paragraph();
+    # my $paragraph_total       = $m->paragraph_total();
     # my $need_one_line_check = $self->need_one_line_check($m);
 
     ## 5. preparation for main rules.
@@ -392,19 +392,19 @@ sub reject_japanese_command_syntax
 sub need_one_line_check
 {
     my ($self, $m) = @_;
-    my $np = $m->num_paragraph;
+    my $total = $m->paragraph_total;
 
-    if ($np == 1) {
+    if ($total == 1) {
 	return 1;
     }
-    elsif ($np == 2) {
+    elsif ($total == 2) {
 	# if the seconda paragraph looks signature,
 	# this message has only one effective message (paragraph).
 	if ($self->is_signature($m->nth_paragraph(2))) {
 	    return 1;
 	}
     }
-    elsif ($np == 3) {
+    elsif ($total == 3) {
 	# case 1: data + citation + signature
 	# case 2: citation + data + signature
 	if ($self->is_signature($m->nth_paragraph(3))) {
@@ -540,7 +540,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

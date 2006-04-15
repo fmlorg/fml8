@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.103 2005/09/11 13:12:45 fukachan Exp $
+# $FML: Message.pm,v 1.104 2006/01/09 14:00:55 fukachan Exp $
 #
 
 package Mail::Message;
@@ -2383,7 +2383,11 @@ sub data_type
 }
 
 
-=head2 num_paragraph()
+=head2 num_paragraphs()
+
+same as paragraph_total().
+
+=head2 paragraph_total()
 
 return the number of paragraphs in the message ($self).
 
@@ -2400,7 +2404,18 @@ The syntax is usual not C language flabour.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: NUM
-sub num_paragraph
+sub num_paragraphs
+{
+    my ($self) = @_;
+    $self->paragraph_total();
+}
+
+
+# Descriptions: return number of paragraphs in this object
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
+sub paragraph_total
 {
     my ($self) = @_;
 

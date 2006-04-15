@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix19991231.pm,v 1.25 2005/08/19 12:17:11 fukachan Exp $
+# $FML: Postfix19991231.pm,v 1.26 2005/08/19 12:18:12 fukachan Exp $
 #
 
 
@@ -89,8 +89,8 @@ sub _analyze_plaintext
     my $m = $msg->{ next };
     do {
 	if (defined $m) {
-	    my $num = $m->num_paragraph;
-	    for ( my $i = 0; $i < $num ; $i++ ) {
+	    my $total = $m->paragraph_total;
+	    for ( my $i = 0; $i < $total ; $i++ ) {
 		my $data = $m->nth_paragraph( $i + 1 );
 
 		# debug
@@ -125,8 +125,8 @@ sub _analyze_broken_dsn
     my $m = $msg->find( { data_type => 'text/plain' } );
 
     if (defined $m) {
-	my $num  = $m->num_paragraph;
-	for ( my $i = 0; $i < $num ; $i++ ) {
+	my $total = $m->paragraph_total;
+	for ( my $i = 0; $i < $total ; $i++ ) {
 	    my $data = $m->nth_paragraph( $i + 1 );
 
 	    # debug
@@ -171,7 +171,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

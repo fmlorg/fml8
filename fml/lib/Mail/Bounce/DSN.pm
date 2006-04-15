@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DSN.pm,v 1.25 2005/08/19 12:17:11 fukachan Exp $
+# $FML: DSN.pm,v 1.26 2005/08/19 12:18:12 fukachan Exp $
 #
 
 
@@ -91,10 +91,10 @@ sub analyze
 
     if (defined $m) {
 	# data in the part
-	my $data = $m->message_text;
-	my $n    = $m->num_paragraph;
+	my $data  = $m->message_text;
+	my $total = $m->paragraph_total;
 
-	for (my $i = 0; $i < $n; $i++) {
+	for (my $i = 0; $i < $total; $i++) {
 	    my $buf = $m->nth_paragraph($i + 1); # 1 not 0 for 1st paragraph
 	    if ($buf =~ /Recipient/) {
 		$self->_parse_dsn_format($buf, $result);
@@ -171,7 +171,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

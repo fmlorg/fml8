@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.80 2006/03/29 10:49:54 tmu Exp $
+# $FML: ToHTML.pm,v 1.81 2006/04/01 02:17:05 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.80 2006/03/29 10:49:54 tmu Exp $;
+my $version = q$FML: ToHTML.pm,v 1.81 2006/04/01 02:17:05 fukachan Exp $;
 my $versionid = 0;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $versionid = "$1";
@@ -815,16 +815,15 @@ return $str;
 sub _text_plain_part_safe_print
 {
     my ($self, $wh, $m) = @_;
-    my $i = 0;
-    my $n = $m->num_paragraph();
+    my $total = $m->paragraph_total();
 
     # print each paragraph.
-    for ($i = 1; $i <= $n ; $i++) {
+    for (my $i = 1; $i <= $total ; $i++) {
 	my $buf = $m->nth_paragraph($i);
 
 	# try to hide domain since the last paragraph must be signature.
 	if ($self->{ _use_address_mask } eq 'yes') {
-	    if ($i == $n) {
+	    if ($i == $total) {
 		$buf =~ s/(\w+\@[\w\.]+)/$self->_address_to_gecos($1)/ge;
 	    }
 	}
