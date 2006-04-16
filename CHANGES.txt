@@ -38,6 +38,32 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2006/04/16
+
+   変数名を分かりやすくするなど、クリーニング
+
+   FML::Filter::TextPlain 
+   Mail::Bounce::DSN Postfix19991231 Qmail SimpleMatch 
+   Mail::Message 
+   Mail::Message::ToHTML Outline 
+	nuke ambiguous method and variable name.
+	num_paragraph() -> paragraph_total() (XXX see "Code Complete").
+	each variable holding this return value is fixed to $total.
+	
+   FML::Command::User::get 
+	clean up variable name style.
+	
+   Mail::Message::ToHTML 
+	fix variable name syntax::_num_attachment ->  _num_attachments
+	
+   Mail::Delivery::SMTP 
+	fix variable name::num_rcpt -> rcpt_total
+	
+   FML::Article::Spool 
+	fix variable names:
+	num_file -> num_files
+	num_dir  -> num_dirs
+	
 2006/04/11
 
    投稿時もしくはコマンドメールの処理で不正なリクエストを無視するディ
@@ -9621,4 +9647,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.276 2006/04/05 13:24:12 fukachan Exp $
+$FML: CHANGES.txt,v 1.277 2006/04/11 13:46:53 fukachan Exp $
