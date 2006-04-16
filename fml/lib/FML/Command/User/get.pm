@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.24 2005/05/27 03:03:35 fukachan Exp $
+# $FML: get.pm,v 1.25 2006/03/04 13:48:29 fukachan Exp $
 #
 
 package FML::Command::User::get;
@@ -68,30 +68,29 @@ sub check_limit
     my ($self, $curproc, $command_context) = @_;
     my $config = $curproc->config();
     my $pcb    = $curproc->pcb();
-    my $total  = $pcb->get('command', 'get_command_total_num_request') || 0;
 
     # 1. check the number of article in one command.
-    my $limit = $config->{ get_command_request_limit } || 10;
-    my $nreq  = $self->num_files_in_send_article_args($curproc, $command_context);
-    my $name  = $command_context->get_cooked_command();
-    my $_args = { _arg_command => $name, };
-
-    # 1.1 total number of requested articles.
-    my $total_num_req = $total + $nreq;
-    $pcb->set('command', 'get_command_total_num_request', $total_num_req);
+    my $total = $pcb->get('command', 'get_command_request_total') || 0;
+    my $nreq  = $self->num_files_in_send_article_args($curproc, 
+						      $command_context);
+    my $request_total = $total + $nreq;
+    $pcb->set('command', 'get_command_request_total', $request_total);
 
     # XXX-TODO: same limit value ?
-    if ($total_num_req > $limit) {
+    my $limit   = $config->{ get_command_request_limit } || 10;
+    my $comname = $command_context->get_cooked_command();
+    my $rm_args = { _arg_command => $comname, };
+    if ($request_total > $limit) {
 	$curproc->reply_message_nl('command.exceed_total_request_limit',
 				   'total requests exceed limit',
-				   $_args);
-	$curproc->logerror("get command limit: total=$total_num_req > $limit");
+				   $rm_args);
+	$curproc->logerror("get command limit: total=$request_total > $limit");
 	return $nreq;
     }
     elsif ($nreq > $limit) {
 	$curproc->reply_message_nl('command.exceed_request_limit',
 				   'requests exceed limit',
-				   $_args);
+				   $rm_args);
 	$curproc->logerror("get command limit: $nreq > $limit");
 	return $nreq;
     }
