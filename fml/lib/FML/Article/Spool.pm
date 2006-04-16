@@ -3,7 +3,7 @@
 # Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.12 2006/03/05 09:50:42 fukachan Exp $
+# $FML: Spool.pm,v 1.13 2006/03/05 10:02:41 fukachan Exp $
 #
 
 package FML::Article::Spool;
@@ -176,15 +176,15 @@ sub status
     my $dst_dir = $command_context->{ _dst_dir };
     my $suffix  = '';
 
-    my ($num_file, $num_dir) = $self->_scan_dir( $dst_dir );
+    my ($num_files, $num_dirs) = $self->_scan_dir( $dst_dir );
 
     print $wh "spool directory = $dst_dir\n";
 
-    $suffix = $num_file > 1 ? 's' : '';
-    printf $wh "%20d %s\n", $num_file, "file$suffix";
+    $suffix = $num_files > 1 ? 's' : '';
+    printf $wh "%20d %s\n", $num_files, "file$suffix";
 
-    $suffix = $num_dir > 1 ? 's' : '';
-    printf $wh "%20d %s\n", $num_dir, "subdir$suffix";
+    $suffix = $num_dirs > 1 ? 's' : '';
+    printf $wh "%20d %s\n", $num_dirs, "subdir$suffix";
 }
 
 
@@ -195,8 +195,8 @@ sub status
 sub _scan_dir
 {
     my ($self, $dir) = @_;
-    my $num_dir  = 0;
-    my $num_file = 0;
+    my $num_dirs  = 0;
+    my $num_files = 0;
 
     use File::Spec;
     use DirHandle;
@@ -210,18 +210,18 @@ sub _scan_dir
 
 	    $file = File::Spec->catfile($dir, $entry);
 	    if (-f $file) {
-		$num_file++;
+		$num_files++;
 	    }
 	    elsif (-d $file) {
-		$num_dir++;
-		my ($x_num_file, $x_num_dir) = $self->_scan_dir( $file );
-		$num_file += $x_num_file;
-		$num_dir  += $x_num_dir;
+		$num_dirs++;
+		my ($x_num_files, $x_num_dirs) = $self->_scan_dir( $file );
+		$num_files += $x_num_files;
+		$num_dirs  += $x_num_dirs;
 	    }
 	}
     }
 
-    return ($num_file, $num_dir);
+    return ($num_files, $num_dirs);
 }
 
 
