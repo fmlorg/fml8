@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.81 2006/04/01 02:17:05 fukachan Exp $
+# $FML: ToHTML.pm,v 1.82 2006/04/15 06:33:01 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.81 2006/04/01 02:17:05 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.82 2006/04/15 06:33:01 fukachan Exp $;
 my $versionid = 0;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $versionid = "$1";
@@ -104,7 +104,7 @@ sub new
     $me->{ _db_base_dir }         = $args->{ db_base_dir };
     $me->{ _is_attachment }       = defined($args->{ attachment }) ? 1 : 0;
     $me->{ _args }                = $args;
-    $me->{ _num_attachment }      = 0; # for child process
+    $me->{ _num_attachments }     = 0; # for child process
     $me->{ _use_subdir }          = 'yes';
     $me->{ _subdir_style }        = 'yyyymm';
     $me->{ _html_id_order }       = $args->{ index_order }  || 'normal';
@@ -468,8 +468,8 @@ sub _init_htmlify_rfc822_message
     }
     # this object is an attachment if parent_id is specified.
     elsif (defined $args->{ parent_id }) {
-	$self->{ _num_attachment }++;
-	$id  = $args->{ parent_id } .'.'. $self->{ _num_attachment };
+	$self->{ _num_attachments }++;
+	$id  = $args->{ parent_id } .'.'. $self->{ _num_attachments };
 	$dst = $args->{ dst };
     }
     # last resort: give unique identifier
