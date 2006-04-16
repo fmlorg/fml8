@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.43 2006/04/03 10:10:12 fukachan Exp $
+# $FML: SMTP.pm,v 1.44 2006/04/05 08:40:20 fukachan Exp $
 #
 
 
@@ -625,10 +625,10 @@ sub _fallback_into_queue
     if (defined $args->{ use_queue_dir } && $args->{ use_queue_dir }) {
 	my $queue_dir = $args->{ queue_dir } || '';
 	if ($queue_dir && -d $queue_dir) {
-	    my $msg      = $args->{ message }     || undef;
-	    my $sender   = $args->{ smtp_sender } || '';
-	    my $ra_rcpt  = [];
-	    my $num_rcpt = 0;
+	    my $msg        = $args->{ message }     || undef;
+	    my $sender     = $args->{ smtp_sender } || '';
+	    my $ra_rcpt    = [];
+	    my $rcpt_total = 0;
 
             use IO::Adapter;
             my $obj = new IO::Adapter $map, $args->{ map_params };
@@ -645,7 +645,7 @@ sub _fallback_into_queue
 
 		my $rcpt;
 		while (defined ($rcpt = $obj->get_next_key)) {
-		    $num_rcpt++;
+		    $rcpt_total++;
 		    push(@$ra_rcpt, $rcpt);
 		}
             }
@@ -688,7 +688,7 @@ sub _fallback_into_queue
 		$queue->sleep_queue();
 	    };
 	    unless ($@) {
-		$self->log("fallback: total=$num_rcpt qid=$qid");
+		$self->log("fallback: total=$rcpt_total qid=$qid");
 	    }
 	    else {
 		$self->logerror("fallback error: $@");
