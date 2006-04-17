@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.278 2006/04/09 15:16:54 fukachan Exp $
+# $FML: Kernel.pm,v 1.279 2006/04/11 12:30:45 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1540,7 +1540,7 @@ sub log_message
 
     # logging system enabled or disabled.
     my $pcb = $curproc->pcb();
-    my $is_log_system_runnig = $pcb->get("log", "enabled");
+    my $is_log_system_runnig = $pcb->get("log", "enabled") || "yes";
     if ($is_log_system_runnig eq 'no') {
 	return;
     }
