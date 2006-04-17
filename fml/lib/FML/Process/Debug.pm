@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Debug.pm,v 1.9 2004/04/27 12:54:50 fukachan Exp $
+# $FML: Debug.pm,v 1.10 2004/07/11 15:43:39 fukachan Exp $
 #
 
 package FML::Process::Debug;
@@ -89,6 +89,8 @@ simplified version of FML::Process::* only used for debug.
 
 =head2 logerror
 
+=head2 logdebug
+
 =cut
 
 
@@ -135,6 +137,17 @@ sub logerror
 {
     my ($self, $msg, $msg_args) = @_;
     print STDERR "error: $msg\n";
+}
+
+
+# Descriptions: log message at level as debug.
+#    Arguments: OBJ($self) STR($msg) HASH_REF($msg_args)
+# Side Effects: none
+# Return Value: none
+sub logdebug
+{
+    my ($self, $msg, $msg_args) = @_;
+    print STDERR "debug: $msg\n";
 }
 
 
