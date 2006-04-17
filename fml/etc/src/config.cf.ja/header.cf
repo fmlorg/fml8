@@ -55,6 +55,7 @@ use_article_header_rewrite		=	yes
 #			rewrite_reply_to
 #			rewrite_reply_to_enforce_article_post_address
 #			rewrite_errors_to
+#			rewrite_message_id
 #			add_software_info
 #			add_fml_ml_name
 #			add_fml_traditional_article_id
@@ -69,6 +70,7 @@ article_header_rewrite_rules	=	delete_unsafe_header_fields
 					rewrite_errors_to
 					rewrite_stardate
 					rewrite_precedence
+					rewrite_message_id
 					add_software_info
 					add_fml_ml_name
 					add_fml_traditional_article_id

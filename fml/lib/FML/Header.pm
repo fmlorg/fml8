@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.90 2006/03/12 11:54:42 fukachan Exp $
+# $FML: Header.pm,v 1.91 2006/03/18 02:28:33 fukachan Exp $
 #
 
 package FML::Header;
@@ -667,6 +667,18 @@ sub rewrite_received
 	$header->add($new, $data);
     }
     $header->delete($org);
+}
+
+
+# Descriptions: rewrite Message-ID: if needed. do nothing by default.
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
+# Side Effects: update $header
+# Return Value: none
+sub rewrite_message_id
+{
+    my ($header, $config, $rw_args) = @_;
+
+    # not rewrite by default.
 }
 
 
