@@ -4,12 +4,12 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MessageID.pm,v 1.23 2004/07/23 12:43:55 fukachan Exp $
+# $FML: MessageID.pm,v 1.24 2005/05/26 10:20:05 fukachan Exp $
 #
 
 package FML::Header::MessageID;
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD $Counter);
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD $global_counter);
 use Carp;
 
 =head1 NAME
@@ -169,13 +169,12 @@ generate and return a new message-id.
 sub gen_id
 {
     my ($self, $config) = @_;
-    my $addr = $config->{ article_post_address };
+    my $post_addr  = $config->{ article_post_address };
+    my $maintainer = $config->{ maintainer };
+    my $addr = $post_addr || $maintainer;
 
-    # XXX-TODO: if $config->{ article_post_address } undefined ?
-    $Counter++;
-
-    # "<".time.".$$.$Counter." . $config->{ article_post_address } . ">";
-    return sprintf("<%d.%d.%s.%s>", time, $$, $Counter, $addr);
+    $global_counter++;
+    return sprintf("<%d.%d.%s.%s>", time, $$, $global_counter, $addr);
 }
 
 
