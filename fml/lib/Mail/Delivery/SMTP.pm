@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.45 2006/04/16 06:56:53 fukachan Exp $
+# $FML: SMTP.pm,v 1.46 2006/04/20 04:02:30 fukachan Exp $
 #
 
 
@@ -506,9 +506,6 @@ sub deliver
 		    next MAP;
 		}
 
-		# remove error messages for the next _deliver() session.
-		$self->clear_error;
-
 		# we read the whole $map now.
 		if ($self->get_map_status($map) eq $MAP_DONE) {
 		    last MTA;
@@ -547,8 +544,15 @@ sub deliver
     $self->clear_mapinfo;
 
     if ( $self->{ _num_recipients } ) {
-	my $n = $self->{ _num_recipients };
-	$self->log("sent total=$n");
+	my $n     = $self->{ _num_recipients };
+	my $queue = $args->{ queue } || undef;
+	my $qid   = defined($queue) ? $queue->id() : '';
+	if ($qid) {
+	    $self->log("sent total=$n qid=$qid");
+	}
+	else {
+	    $self->log("sent total=$n");
+	}
 
 	use File::Basename;
 	my (@m) = ();
@@ -619,7 +623,7 @@ sub _fallback_into_queue
     }
     else {
 	my $msg = "in=$in_queue_dir retry=$retry_count pos=$map_position";
-	$self->log("fallback (debug) $msg");
+	$self->log("fallback: (debug) $msg");
     }
 
     # log current status.
@@ -732,6 +736,9 @@ sub _fallback_into_queue
 sub _deliver
 {
     my ($self, $args) = @_;
+
+    # reset error messages.
+    $self->clear_error;
 
     $self->_init_delivery_transaction($args);
 
