@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.40 2006/04/04 13:00:33 fukachan Exp $
+# $FML: QueueManager.pm,v 1.41 2006/04/05 12:54:26 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -208,7 +208,7 @@ sub _send
 	$curproc->log("qmgr: qid=$qid status=sent delay=$delay");
     }
     else {
-	$curproc->logerror("qmgr: qid=$qid status=fail");
+	$curproc->logerror("qmgr: qid=$qid status=deferred");
     }
 
     return $r;
