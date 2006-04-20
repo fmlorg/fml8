@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: INET6.pm,v 1.18 2006/03/26 14:58:08 fukachan Exp $
+# $FML: INET6.pm,v 1.19 2006/04/01 02:21:29 fukachan Exp $
 #
 
 package Mail::Delivery::Net::INET6;
@@ -18,8 +18,11 @@ require Exporter;
 	     set_ipv6_ready 
 	     get_ipv6_ready 
 
+	     parse_mta6
+
 	     check_ipv6_module_available
 
+	     is_pure_ipv4_syntax
 	     is_ipv6_mta_syntax
 
 	     connect6);
@@ -114,11 +117,29 @@ sub is_ipv6_mta_syntax
 }
 
 
+# Descriptions: check if $mta is IPv4 syntax ?
+#    Arguments: OBJ($self) STR($mta)
+# Side Effects: none
+# Return Value: NUM
+sub is_pure_ipv4_syntax
+{
+    my ($self, $mta) = @_;
+
+    # e.g. 127.0.0.1:25
+    if ($mta =~ /^\d+\.\d+\.\d+\.\d+:\d+$/) {
+	return 1;
+    }
+    else {
+	return 0;
+    }
+}
+
+
 # Descriptions: parse host:port style syntax to (host, port).
 #    Arguments: OBJ($self) STR($mta)
 # Side Effects: none
 # Return Value: ARRAY(STR, STR)
-sub _parse_mta
+sub parse_mta6
 {
     my ($self, $mta) = @_;
 
@@ -145,7 +166,7 @@ sub connect6
     # if mta is ipv6 raw address syntax,
     # try to parse $mta to $host:$port style.
     unless ($host) {
-	($host, $port) = $self->_parse_mta($mta);
+	($host, $port) = $self->parse_mta6($mta);
     }
 
     # ASSEART: hmm, invalid MTA

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.44 2006/04/05 08:40:20 fukachan Exp $
+# $FML: SMTP.pm,v 1.45 2006/04/16 06:56:53 fukachan Exp $
 #
 
 
@@ -284,8 +284,10 @@ sub _connect
 
     $self->clear_error;
 
-    # 1. try to connect(2) $mta by IPv6 if we can use Socket6.
-    if ($self->is_ipv6_ready()) {
+    # 1. try to connect(2) $mta by IPv6 if 
+    #    (1) we can use Socket6.
+    #    (2) mta is not pure IPv4 syntax (Iv6 syntax or hostname).
+    if ($self->is_ipv6_ready() && (! $self->is_pure_ipv4_syntax($mta))) {
 	$self->logdebug("try mta=$mta by IPv6");
 	$self->connect6($mta);
 	my $socket = $self->get_socket() || undef;
@@ -564,8 +566,11 @@ sub _is_stop_loop
 {
     my ($self, $count, $limit) = @_;
 
-    my $penalty_cost = $self->_get_retry_penalty();
-    if ($count > int( $limit / $penalty_cost )) {
+    my $penalty_cost = $self->_get_retry_penalty() || 1;
+    my $max_count    = int( $limit / $penalty_cost );
+    $self->logdebug("stop? $count > $max_count");
+    if ($count > $max_count) {
+	$self->logerror("too many error! $count > $max_count");
 	return 1;
     }
     else {
