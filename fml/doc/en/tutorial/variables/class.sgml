@@ -566,10 +566,10 @@ log {
    }
 
    log_rotate { 
+    ?     $log_rotate_archive_file_total
     ?     $log_rotate_interval
-    ?     $log_rotate_num_backlog
     ?     $log_rotate_policy
-    ?     $log_rotate_size
+          $log_rotate_size_limit
           $use_log_rotate
    }
 }

@@ -228,6 +228,7 @@ delete_unsafe_header_fields
    rewrite_errors_to
    rewrite_stardate
    rewrite_precedence
+   rewrite_message_id
    add_software_info
    add_fml_ml_name
    add_fml_traditional_article_id
@@ -1377,20 +1378,20 @@ process[pid]
 </row>
 <row>
 <entry>
+log_rotate_archive_file_total</entry>
+<entry>
+ log.0 log.1 などの .数字 部分は最大いくつ？</entry>
+<entry>
+7
+   </entry>
+</row>
+<row>
+<entry>
 log_rotate_interval</entry>
 <entry>
  ログファイルローテーションを行なう間隔。</entry>
 <entry>
 86400
-   </entry>
-</row>
-<row>
-<entry>
-log_rotate_num_backlog</entry>
-<entry>
- log.0 log.1 などの .数字 部分は最大いくつ？</entry>
-<entry>
-4
    </entry>
 </row>
 <row>
@@ -1404,7 +1405,7 @@ size
 </row>
 <row>
 <entry>
-log_rotate_size</entry>
+log_rotate_size_limit</entry>
 <entry>
  ログファイルのサイズが、</entry>
 <entry>

@@ -43,7 +43,7 @@ log_rotate_policy	=	size
 #      History: $LOGFILE_NEWSYSLOG_LIMIT の値
 #        Value: NUM
 #     Examples: 300000 (300K bytes)
-log_rotate_size		=	300000
+log_rotate_size_limit	=	300000
 
 
 # Descriptions: 投稿された記事のヘッダの上限値
