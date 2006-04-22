@@ -3,9 +3,10 @@
 
   [最近のまとめ]
 
-  FML_CURRENT_VERSION=7.98.11
+  FML_CURRENT_VERSION=7.98.12
 
   8.0 PRE_ALPHA
+	7.98.12 delivery system error handling fixed.
 	7.98.11 ignore in restrictions supported.
 	7.98.10	delivery system overhaul sequal.
 	7.98.9	delivery system overhaul
@@ -37,6 +38,50 @@
 
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
+
+2006/04/21
+
+   Mail::Delivery::SMTP 
+	fix error reset timing.
+	show more useful info in log message.
+	
+   FML::Process::QueueManager 
+	log as status=deferred not status=fail when the delivery fails.
+
+2006/04/20
+
+   Mail::Delivery::SMTP 
+   Mail::Delivery::Net::INET6 
+	try to connect(2) $mta by IPv6 if (1) we can use Socket6 and (2) mta
+	is not pure IPv4 syntax (Iv6 syntax or hostname).
+	
+	IPv6 module, which should be fully rewritten in the future, exports
+	parse_mta6() and is_pure_ipv4_syntax().  rewritten to use them.
+	
+2006/04/18
+
+   FML::Header::MessageID 
+	$Counter -> $global_counter, easily identified as a global
+	variable.
+	base address is ( $article_post_address || $maintainer ).
+	fix style.
+	
+   FML::Process::Kernel 
+	logging system enabled by default
+	
+2006/04/17
+
+   ダミーの rewrite_message_id メソッドを実装した。
+	TODO: 将来、ＭＬオリジナルの Message-Id: をつけられるようにする。
+
+   FML::Header 
+   variables
+	define dummy rewrite_message_id() method and the rewrite rule. 
+	this method does nothing by default (pass the original message
+	id as itself).
+	
+   FML::Process::Debug 
+	define logdebug()
 
 2006/04/16
 
@@ -9647,4 +9692,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.277 2006/04/11 13:46:53 fukachan Exp $
+$FML: CHANGES.txt,v 1.278 2006/04/16 11:37:39 fukachan Exp $
