@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.279 2006/04/11 12:30:45 fukachan Exp $
+# $FML: Kernel.pm,v 1.280 2006/04/17 23:59:28 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -2847,6 +2847,26 @@ sub _generate_message_id
 
     # return generated message-id.
     return $mid;
+}
+
+
+# Descriptions: log rotation and compression (not supported now).
+#               this function runs under MTA processes
+#               since it may comsume long time.
+#    Arguments: OBJ($curproc)
+# Side Effects: log files rearranged.
+# Return Value: none
+sub log_file_cleanup
+{
+    my ($curproc) = @_;
+
+    if ($curproc->is_under_mta_process()) {
+        my $event_channel = "log_file_cleanup";
+        if ($curproc->is_event_timeout($event_channel)) {
+	    $curproc->log_rorate();
+            $curproc->event_set_timeout($event_channel, time + 3600);
+        }
+    }
 }
 
 

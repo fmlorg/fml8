@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Flow.pm,v 1.30 2005/08/10 12:55:33 fukachan Exp $
+# $FML: Flow.pm,v 1.31 2005/08/10 13:09:46 fukachan Exp $
 #
 
 package FML::Process::Flow;
@@ -103,6 +103,9 @@ sub ProcessStart
 
     # flush stderr channel log.
     $process->sysflow_finalize_stderr_channel($args);
+
+    # log file rotation et.al.
+    $process->log_file_cleanup();
 
     # clean up temporary files
     $process->tmp_file_cleanup();
