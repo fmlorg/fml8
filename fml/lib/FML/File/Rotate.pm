@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Rotate.pm,v 1.5 2004/07/23 15:59:05 fukachan Exp $
+# $FML: Rotate.pm,v 1.6 2005/05/27 03:03:35 fukachan Exp $
 #
 
 package FML::File::Rotate;
@@ -21,16 +21,16 @@ FML::File::Rotate - file rotatation utilities.
 
 =head1 SYNOPSIS
 
-    my $logrotate = new FML::File::Rotate $curproc;
-    if ($logrotate->is_time_to_rotate($file)) {
-	$logrotate->rotate($file);
+    my $log = new FML::File::Rotate $curproc;
+    if ($log->is_time_to_rotate($file)) {
+	$log->rotate($file);
     }
 
 =head1 DESCRIPTION
 
-Utility functions for file rotate operations.
+Utility functions for file rotatation.
 It turns over the given C<file> by some condition.
-Typical condition is given as the number of files or how old they are.
+Typical condition is given as the number of files, size or how old they are.
 
 C<rotation> renames and rearranges files like this:
 
@@ -44,6 +44,7 @@ C<rotation> renames and rearranges files like this:
 In old age, a shell script does this but
 in modern unix,
 some programs such as /usr/bin/newsyslog (MIT athena project) do it.
+See newsyslog(8) for more details.
 
 =head1 METHODS
 
@@ -69,21 +70,24 @@ sub new
 
 =head1 PARAMETERS
 
-=head2 set_max_size($size)
+=head2 set_size_limit($size)
 
-set the maximum size.
+set the maximum size limit.
 
-=head2 get_max_size()
+When the size of the log file reaches this limit, the log file will be
+turned over.
 
-get the maximum size.
+=head2 get_size_limit()
 
-=head2 set_num_backlog($num)
+get the maximum size limit.
 
-set the number of backlog files.
+=head2 set_archive_file_total($num)
 
-=head2 get_num_backlog()
+set the number of archive log files to be kept besides the log file itself.
 
-get the number of backlog files.
+=head2 get_archive_file_total()
+
+get the number of archive log files to be kept besides the log file itself.
 
 =cut
 
@@ -92,7 +96,7 @@ get the number of backlog files.
 #    Arguments: OBJ($self) NUM($size)
 # Side Effects: update $self.
 # Return Value: none
-sub set_max_size
+sub set_size_limit
 {
     my ($self, $size) = @_;
     my $curproc = $self->{ _curproc };
@@ -101,7 +105,7 @@ sub set_max_size
 	$self->{ _max_size } = $size;
     }
     else {
-	$curproc->logerror("set_max_size: invalid data: $size");
+	$curproc->logerror("set_size_limit: invalid data: $size");
     }
 }
 
@@ -110,7 +114,7 @@ sub set_max_size
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: NUM
-sub get_max_size
+sub get_size_limit
 {
     my ($self) = @_;
 
@@ -122,16 +126,16 @@ sub get_max_size
 #    Arguments: OBJ($self) NUM($num)
 # Side Effects: update $self
 # Return Value: none
-sub set_num_backlog
+sub set_archive_file_total
 {
     my ($self, $num) = @_;
     my $curproc = $self->{ _curproc };
 
     if (defined $num && $num =~ /^\d+$/o) {
-	$self->{ _num_backlog } = $num || 4;
+	$self->{ _archive_log_total } = $num || 4;
     }
     else {
-	$curproc->logerror("set_num_backlog: invalid data: $num");
+	$curproc->logerror("set_archive_file_total: invalid data: $num");
     }
 }
 
@@ -140,11 +144,11 @@ sub set_num_backlog
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: NUM
-sub get_num_backlog
+sub get_archive_file_total
 {
     my ($self) = @_;
 
-    return( $self->{ _num_backlog } || 4 );
+    return( $self->{ _archive_log_total } || 4 );
 }
 
 
@@ -163,12 +167,22 @@ determine whether the time to rotate comes or not.
 sub is_time_to_rotate
 {
     my ($self, $file) = @_;
-    my $size = $self->get_max_size();
+    my $size_limit = $self->get_size_limit();
 
     use File::stat;
     my $st = stat($file);
-
-    return 1 if $st->size > $size;
+    if (defined $st) {
+	if ($st->size > $size_limit) {
+	    return 1;
+	}
+	else {
+	    my $curproc = $self->{ _curproc } || undef;
+	    if (defined $curproc) {
+		$curproc->logdebug("not turn over $file: size < $size_limit");
+	    }
+	}
+    }
+ 
     return 0;
 }
 
@@ -194,14 +208,13 @@ rename files to rotate.
 sub rotate
 {
     my ($self, $file) = @_;
-    my $size = $self->get_max_size();
-    my $max  = $self->get_num_backlog();
 
-    # remove oldest file
+    # 1. remove the oldest file if it exists.
+    my $max     = $self->get_archive_file_total();
     my $maxfile = sprintf("%s.%s", $file, $max);
     if (-f $maxfile) { unlink $maxfile;}
 
-    # mv var/log/file.3 -> var/log/file.4 ...;
+    # 2. turn over: e.g. mv var/log/file.3 -> var/log/file.4 ...;
     do {
 	my $old = sprintf("%s.%s", $file, ($max - 1 > 0 ? $max - 1 : 0));
 	my $new = sprintf("%s.%s", $file, $max);
@@ -214,9 +227,33 @@ sub rotate
 }
 
 
+#
+# DEBUG
+#
+if ($0 eq __FILE__) {
+    system "touch /tmp/log /tmp/log.0 /tmp/log.1 /tmp/log.2";
+
+    use FML::Process::Debug;
+    my $curproc = new FML::Process::Debug;
+
+    my $log = new FML::File::Rotate $curproc;
+    $log->set_size_limit(10000);
+    $log->set_archive_file_total(3);
+
+    my $file = "/tmp/log";
+    if ($log->is_time_to_rotate($file)) {
+	$log->rotate($file);
+    }
+}
+
+
 =head1 CODING STYLE
 
 See C<http://www.fml.org/software/FNF/> on fml coding style guide.
+
+=head1 SEE ALSO
+
+newsyslog(8).
 
 =head1 AUTHOR
 
@@ -224,7 +261,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
