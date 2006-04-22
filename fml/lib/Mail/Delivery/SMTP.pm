@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.46 2006/04/20 04:02:30 fukachan Exp $
+# $FML: SMTP.pm,v 1.47 2006/04/20 23:55:02 fukachan Exp $
 #
 
 
@@ -548,16 +548,16 @@ sub deliver
 	my $queue = $args->{ queue } || undef;
 	my $qid   = defined($queue) ? $queue->id() : '';
 	if ($qid) {
-	    $self->log("sent total=$n qid=$qid");
+	    $self->log("status=sent total=$n qid=$qid");
 	}
 	else {
-	    $self->log("sent total=$n");
+	    $self->log("status=sent total=$n");
 	}
 
 	use File::Basename;
 	my (@m) = ();
 	for my $m (@$maps) { push(@m, basename($m));}
-	$self->logdebug("sent total=$n maps=(@m)");
+	$self->logdebug("status=sent total=$n maps=(@m)");
     }
 }
 
@@ -834,7 +834,7 @@ sub _deliver
     my $n = $self->{ _num_recipients_in_this_transaction } || 0;
     if ($n) {
 	my $mta = $args->{ mta } || 'unknown';
-	$self->logdebug("sent num=$n mta=$mta");
+	$self->logdebug("status=sent total=$n mta=$mta");
 	$self->{ _num_recipients } += $n;
     }
 }
