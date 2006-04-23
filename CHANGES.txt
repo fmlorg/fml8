@@ -39,11 +39,31 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
-2006/04/21
 
-   配送システムの見直し(1)
+	
+2006/04/22
+
+   配送システムの見直し(1) 2006/04/22 - 2006/04/20
 	エラーリセットのタイミングを変更
 	IPv6 対応部分のエラーを修正
+
+   FML::Process::Utils 
+   FML::File::Rotate 
+	FML::File::Rotate overhaul-ed. access method changed.
+	
+   variables
+	variable name changed due tu overhaul of FML::File::Rotate.
+	$log_rotate_size_limit
+	$log_rotate_archive_file_total
+	
+   FML::Process::QueueManager 
+   Mail::Delivery::SMTP 
+	message modified (unified among modules)
+	
+   FML::Process::Flow Kernel 
+	runs operation on log files (currently log rotation).
+	
+2006/04/21
 
    Mail::Delivery::SMTP 
 	fix error reset timing.
@@ -9696,4 +9716,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.279 2006/04/22 04:04:14 fukachan Exp $
+$FML: CHANGES.txt,v 1.280 2006/04/23 08:01:26 fukachan Exp $
