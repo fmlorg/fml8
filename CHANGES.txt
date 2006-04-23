@@ -41,6 +41,10 @@
 
 2006/04/21
 
+   配送システムの見直し(1)
+	エラーリセットのタイミングを変更
+	IPv6 対応部分のエラーを修正
+
    Mail::Delivery::SMTP 
 	fix error reset timing.
 	show more useful info in log message.
@@ -9692,4 +9696,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.278 2006/04/16 11:37:39 fukachan Exp $
+$FML: CHANGES.txt,v 1.279 2006/04/22 04:04:14 fukachan Exp $
