@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.66 2006/04/05 13:13:52 fukachan Exp $
+# $FML: Queue.pm,v 1.67 2006/04/09 15:15:10 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -809,7 +809,7 @@ sub open
 
     if (defined $op_args->{ in_channel }) {
 	my $channel = $op_args->{ in_channel };
-	my $mode    = $op_args->{ mode } || "r";
+	my $mode    = $op_args->{ mode } || "<";
 	open($channel, $mode, $qf);
 	return $channel;
     }
