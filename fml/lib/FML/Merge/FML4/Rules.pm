@@ -195,7 +195,7 @@ sub translate
     $s = undef;
     if (($key eq 'ML_FN' && $diff->{ ML_FN })) {
         if ($config->{ ML_FN }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -906,7 +906,7 @@ sub translate
     $s = undef;
     if (($key eq 'NOTIFY_MAIL_SIZE_OVERFLOW' && $diff->{ NOTIFY_MAIL_SIZE_OVERFLOW })) {
         if ($config->{ NOTIFY_MAIL_SIZE_OVERFLOW } == 1) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -1014,7 +1014,7 @@ sub translate
     $s = undef;
     if (($key eq 'FILTER_ATTR_REJECT_COMMAND' && $diff->{ FILTER_ATTR_REJECT_COMMAND })) {
         if ($config->{ FILTER_ATTR_REJECT_COMMAND } == 1) {
-            $s .= sprintf("article_text_plain_filter_rules += reject_old_fml_command_syntax", $value);
+            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -1032,7 +1032,7 @@ sub translate
     $s = undef;
     if (($key eq 'FILTER_ATTR_REJECT_2BYTES_COMMAND' && $diff->{ FILTER_ATTR_REJECT_2BYTES_COMMAND })) {
         if ($config->{ FILTER_ATTR_REJECT_2BYTES_COMMAND } == 1) {
-            $s .= sprintf("article_text_plain_filter_rules += reject_japanese_command_syntax", $value);
+            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -1104,7 +1104,7 @@ sub translate
     $s = undef;
     if (($key eq 'FILTER_ATTR_REJECT_INVALID_JAPANESE' && $diff->{ FILTER_ATTR_REJECT_INVALID_JAPANESE })) {
         if ($config->{ FILTER_ATTR_REJECT_INVALID_JAPANESE } == 1) {
-            $s .= sprintf("article_text_plain_filter_rules += reject_not_iso2022jp_japanese_string", $value);
+            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -1383,6 +1383,15 @@ sub translate
     
 
     $s = undef;
+    if (($key eq 'XMLNAME' && $diff->{ XMLNAME })) {
+        if ($config->{ XMLNAME } ne 'X-ML-Name:') {
+            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
+        }
+    }
+    return $s if defined $s;
+    
+
+    $s = undef;
     if (($key eq 'XMLCOUNT' && $diff->{ XMLCOUNT })) {
         if ($config->{ XMLCOUNT } eq 'X-Mail-Count') {
             $s .= sprintf("article_header_rewrite_rules += add_fml_traditional_article_id", $value);
@@ -1394,7 +1403,7 @@ sub translate
     $s = undef;
     if (($key eq 'XMLCOUNT' && $diff->{ XMLCOUNT })) {
         if ($config->{ XMLCOUNT } ne 'X-Mail-Count') {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -1682,7 +1691,7 @@ sub translate
     $s = undef;
     if (($key eq 'TZone' && $diff->{ TZone })) {
         if ($config->{ TZone }) {
-            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -1691,7 +1700,7 @@ sub translate
     $s = undef;
     if (($key eq 'TZONE_DST' && $diff->{ TZONE_DST })) {
         if ($config->{ TZONE_DST }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -1824,9 +1833,11 @@ sub translate
     
 
     $s = undef;
-    if (($key eq 'MAXLEN_COMMAND_INPUT' && $diff->{ MAXLEN_COMMAND_INPUT })) {
-        if ($config->{ MAXLEN_COMMAND_INPUT } == 128) {
-            $s .= sprintf("command_mail_line_length_limit = %s", $value);
+    if (($key eq 'MAXLEN_COMMAND_INPUT' && $diff->{ MAXLEN_COMMAND_INPUT }) || ($key eq 'MAXLEN_COMMAND_INPUT' && $diff->{ MAXLEN_COMMAND_INPUT })) {
+        if ($config->{ MAXLEN_COMMAND_INPUT } > 0) {
+            if ($config->{ MAXLEN_COMMAND_INPUT } != 128) {
+                $s .= sprintf("command_mail_line_length_limit = %s", $value);
+            }
         }
     }
     return $s if defined $s;
@@ -1834,7 +1845,7 @@ sub translate
 
     $s = undef;
     if (($key eq 'MAXNUM_COMMAND_INPUT' && $diff->{ MAXNUM_COMMAND_INPUT })) {
-        if ($config->{ MAXNUM_COMMAND_INPUT }) {
+        if ($config->{ MAXNUM_COMMAND_INPUT } > 0) {
             $s .= sprintf("command_mail_valid_command_limit = %s", $value);
         }
     }
@@ -1889,7 +1900,7 @@ sub translate
     $s = undef;
     if (($key eq 'MAIL_LENGTH_LIMIT' && $diff->{ MAIL_LENGTH_LIMIT })) {
         if ($config->{ MAIL_LENGTH_LIMIT } == 1000) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2051,7 +2062,7 @@ sub translate
     $s = undef;
     if (($key eq 'MSEND_RC' && $diff->{ MSEND_RC })) {
         if ($config->{ MSEND_RC }) {
-            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2078,7 +2089,7 @@ sub translate
     $s = undef;
     if (($key eq 'MSEND_NOTIFICATION' && $diff->{ MSEND_NOTIFICATION })) {
         if ($config->{ MSEND_NOTIFICATION }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2087,7 +2098,7 @@ sub translate
     $s = undef;
     if (($key eq 'MSEND_NOTIFICATION_SUBJECT' && $diff->{ MSEND_NOTIFICATION_SUBJECT })) {
         if ($config->{ MSEND_NOTIFICATION_SUBJECT }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2095,8 +2106,17 @@ sub translate
 
     $s = undef;
     if (($key eq 'MSEND_NOT_USE_X_ML_INFO' && $diff->{ MSEND_NOT_USE_X_ML_INFO })) {
-        if ($config->{ MSEND_NOT_USE_X_ML_INFO }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+        if ($config->{ MSEND_NOT_USE_X_ML_INFO } == 0) {
+            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
+        }
+    }
+    return $s if defined $s;
+    
+
+    $s = undef;
+    if (($key eq 'MSEND_NOT_USE_X_ML_INFO' && $diff->{ MSEND_NOT_USE_X_ML_INFO })) {
+        if ($config->{ MSEND_NOT_USE_X_ML_INFO } == 1) {
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2104,8 +2124,8 @@ sub translate
 
     $s = undef;
     if (($key eq 'MSEND_NOT_USE_NEWSYSLOG' && $diff->{ MSEND_NOT_USE_NEWSYSLOG })) {
-        if ($config->{ MSEND_NOT_USE_NEWSYSLOG }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+        if ($config->{ MSEND_NOT_USE_NEWSYSLOG } == 0) {
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2492,7 +2512,7 @@ sub translate
     $s = undef;
     if (($key eq 'USE_VERP' && $diff->{ USE_VERP })) {
         if ($config->{ USE_VERP }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2510,7 +2530,7 @@ sub translate
     $s = undef;
     if (($key eq 'TRY_VERP_PER_DAY' && $diff->{ TRY_VERP_PER_DAY })) {
         if ($config->{ TRY_VERP_PER_DAY }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2519,7 +2539,7 @@ sub translate
     $s = undef;
     if (($key eq 'NOT_USE_ESMTP_PIPELINING' && $diff->{ NOT_USE_ESMTP_PIPELINING })) {
         if ($config->{ NOT_USE_ESMTP_PIPELINING } == 0) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2528,7 +2548,7 @@ sub translate
     $s = undef;
     if (($key eq 'USE_SMTPFEED_F_OPTION' && $diff->{ USE_SMTPFEED_F_OPTION })) {
         if ($config->{ USE_SMTPFEED_F_OPTION }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2789,7 +2809,7 @@ sub translate
     $s = undef;
     if (($key eq 'INDEX_FILE' && $diff->{ INDEX_FILE })) {
         if ($config->{ INDEX_FILE } eq '$DIR/index') {
-            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2798,7 +2818,7 @@ sub translate
     $s = undef;
     if (($key eq 'INDEX_SHOW_DIRNAME' && $diff->{ INDEX_SHOW_DIRNAME })) {
         if ($config->{ INDEX_SHOW_DIRNAME } == 0) {
-            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2825,7 +2845,7 @@ sub translate
     $s = undef;
     if (($key eq 'LOGFILE_NEWSYSLOG_LIMIT' && $diff->{ LOGFILE_NEWSYSLOG_LIMIT })) {
         if ($config->{ LOGFILE_NEWSYSLOG_LIMIT }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2888,7 +2908,7 @@ sub translate
     $s = undef;
     if (($key eq 'HTML_THREAD' && $diff->{ HTML_THREAD })) {
         if ($config->{ HTML_THREAD } == 0) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2906,7 +2926,7 @@ sub translate
     $s = undef;
     if (($key eq 'HTML_INDEX_REVERSE_ORDER' && $diff->{ HTML_INDEX_REVERSE_ORDER })) {
         if ($config->{ HTML_INDEX_REVERSE_ORDER } == 0) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2915,7 +2935,7 @@ sub translate
     $s = undef;
     if (($key eq 'HTML_DIR' && $diff->{ HTML_DIR })) {
         if ($config->{ HTML_DIR } eq 'htdocs') {
-            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2924,7 +2944,7 @@ sub translate
     $s = undef;
     if (($key eq 'HTML_EXPIRE_LIMIT' && $diff->{ HTML_EXPIRE_LIMIT })) {
         if ($config->{ HTML_EXPIRE_LIMIT }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2933,7 +2953,7 @@ sub translate
     $s = undef;
     if (($key eq 'HTML_INDEX_TITLE' && $diff->{ HTML_INDEX_TITLE })) {
         if ($config->{ HTML_INDEX_TITLE }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2942,7 +2962,7 @@ sub translate
     $s = undef;
     if (($key eq 'HTML_DATA_CACHE' && $diff->{ HTML_DATA_CACHE })) {
         if ($config->{ HTML_DATA_CACHE }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2951,7 +2971,7 @@ sub translate
     $s = undef;
     if (($key eq 'HTML_DATA_THREAD' && $diff->{ HTML_DATA_THREAD })) {
         if ($config->{ HTML_DATA_THREAD }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2960,7 +2980,7 @@ sub translate
     $s = undef;
     if (($key eq 'HTML_OUTPUT_FILTER' && $diff->{ HTML_OUTPUT_FILTER })) {
         if ($config->{ HTML_OUTPUT_FILTER }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2969,7 +2989,7 @@ sub translate
     $s = undef;
     if (($key eq 'HTML_STYLESHEET_BASENAME' && $diff->{ HTML_STYLESHEET_BASENAME })) {
         if ($config->{ HTML_STYLESHEET_BASENAME }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2987,7 +3007,7 @@ sub translate
     $s = undef;
     if (($key eq 'HTML_THREAD_REF_TYPE' && $diff->{ HTML_THREAD_REF_TYPE })) {
         if ($config->{ HTML_THREAD_REF_TYPE } eq 'default') {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2996,7 +3016,7 @@ sub translate
     $s = undef;
     if (($key eq 'HTML_THREAD_SORT_TYPE' && $diff->{ HTML_THREAD_SORT_TYPE })) {
         if ($config->{ HTML_THREAD_SORT_TYPE } eq 'reverse-number') {
-            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
+            $s .= sprintf("html_archive_index_order_type = reverse", $value);
         }
     }
     return $s if defined $s;
@@ -3005,7 +3025,7 @@ sub translate
     $s = undef;
     if (($key eq 'HTML_THREAD_SORT_TYPE' && $diff->{ HTML_THREAD_SORT_TYPE })) {
         if ($config->{ HTML_THREAD_SORT_TYPE } eq 'NULL') {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= sprintf("html_archive_index_order_type = normal", $value);
         }
     }
     return $s if defined $s;
@@ -3014,7 +3034,7 @@ sub translate
     $s = undef;
     if (($key eq 'HTML_INDEX_UNIT' && $diff->{ HTML_INDEX_UNIT })) {
         if ($config->{ HTML_INDEX_UNIT }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -3023,7 +3043,7 @@ sub translate
     $s = undef;
     if (($key eq 'HTML_INDENT_STYLE' && $diff->{ HTML_INDENT_STYLE })) {
         if ($config->{ HTML_INDENT_STYLE }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -3032,7 +3052,7 @@ sub translate
     $s = undef;
     if (($key eq 'HTML_MULTIPART_IMAGE_REF_TYPE' && $diff->{ HTML_MULTIPART_IMAGE_REF_TYPE })) {
         if ($config->{ HTML_MULTIPART_IMAGE_REF_TYPE }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -3041,7 +3061,7 @@ sub translate
     $s = undef;
     if (($key eq 'HTML_DEFAULT_UMASK' && $diff->{ HTML_DEFAULT_UMASK })) {
         if ($config->{ HTML_DEFAULT_UMASK }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -3050,7 +3070,7 @@ sub translate
     $s = undef;
     if (($key eq 'HTML_WRITE_UMASK' && $diff->{ HTML_WRITE_UMASK })) {
         if ($config->{ HTML_WRITE_UMASK }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
