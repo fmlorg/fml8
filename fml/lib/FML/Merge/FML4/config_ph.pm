@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: config_ph.pm,v 1.22 2006/03/12 11:01:34 fukachan Exp $
+# $FML: config_ph.pm,v 1.23 2006/03/20 05:59:01 fukachan Exp $
 #
 
 package FML::Merge::FML4::config_ph;
@@ -510,6 +510,24 @@ sub translate_xxx
 	$s .= sprintf("incoming_article_body_size_limit = %d\n\n", $v);
 	$s .= sprintf("incoming_command_mail_body_size_limit = %d\n\n", $v);
 	return $s;
+    }
+    elsif ($key eq 'LOGFILE_NEWSYSLOG_LIMIT') {
+	my ($s, $v);
+
+	$v = $self->_fix_atoi($config, $diff, $key, $value);
+
+	$s .= sprintf("use_log_rotate = yes\n\n");
+	$s .= sprintf("log_rotate_size_limit = %d\n\n", $v);
+	return $s;
+    }
+    elsif ($key eq 'XMLNAME') {
+	my ($s, $v);
+
+	$v = $value;
+	$v =~ s/X-ML-Name:\s+//g;
+
+	$s .= sprintf("outgoing_mail_header_x_ml_name = %s\n\n", $v);
+	return $s;	
     }
 
     return '# ***ERROR*** UNKNOWN TRANSLATION RULE';
