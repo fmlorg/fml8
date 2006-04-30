@@ -1,5 +1,5 @@
 #
-# $FML: RULES.txt,v 1.9 2006/01/02 01:17:57 fukachan Exp $
+# $FML: RULES.txt,v 1.10 2006/03/20 05:53:25 fukachan Exp $
 #     BASED ON fml/cf/MANIFEST 1.104
 #
 #	.convert		よろしく変換して頑張る
@@ -195,8 +195,9 @@
 # #
 # # value: string
 # ML_FN:
+.ok
 .if ML_FN
-	.not_yet_implemented
+	.not_support
 
 
 
@@ -300,12 +301,15 @@
 .if AUTO_REGISTRATION_TYPE == confirmation
 	.use_fml8_value
 
+.ok
 .if AUTO_REGISTRATION_TYPE == subject
 	.not_support
 
+.ok
 .if AUTO_REGISTRATION_TYPE == body
 	.not_support
 
+.ok
 .if AUTO_REGISTRATION_TYPE == no-keyword
 	.not_support
 
@@ -328,6 +332,7 @@
 # # Please see "file operation" in doc/tutorial for more details.
 # # value: string
 # AUTO_REGISTRATION_DEFAULT_MODE:
+.ok
 .if AUTO_REGISTRATION_DEFAULT_MODE
 	.not_support
 
@@ -336,30 +341,37 @@
 # # please see doc/tutorial for the detail of "confirmation"
 # # value: string
 # CONFIRMATION_ADDRESS:
+.ok
 .if CONFIRMATION_ADDRESS == CONTROL_ADDRESS
 	.use_fml8_value
 
+.ok
 .if CONFIRMATION_ADDRESS != CONTROL_ADDRESS
 	.not_support
 
 
 # CONFIRMATION_SUBSCRIBE:		subscribe
+.ok
 .if CONFIRMATION_SUBSCRIBE == subscribe
 	.use_fml8_value
 
+.ok
 .if CONFIRMATION_SUBSCRIBE != subscribe
 	.not_support
 
 
 # CONFIRMATION_KEYWORD:		confirm
+.ok
 .if CONFIRMATION_KEYWORD == confirm
 	.use_fml8_value
 
+.ok
 .if CONFIRMATION_KEYWORD != confirm
 	.not_support
 
 
 # CONFIRMATION_WELCOME_STATEMENT:
+.ok
 .if CONFIRMATION_WELCOME_STATEMENT
 	.not_support
 
@@ -367,9 +379,11 @@
 # # "subscribe" needs no YOUR NAME.
 # # value: 1/0
 # CONFIRMATION_SUBSCRIBE_NEED_YOUR_NAME: 1
+.ok
 .if CONFIRMATION_SUBSCRIBE_NEED_YOUR_NAME == 1
 	.not_support
 
+.ok
 .if CONFIRMATION_SUBSCRIBE_NEED_YOUR_NAME == 0
 	.use_fml8_value
 
@@ -401,9 +415,11 @@
 # # default keyword for trap
 # # value: string
 # DEFAULT_SUBSCRIBE:  subscribe
+.ok
 .if DEFAULT_SUBSCRIBE == subscribe
 	.use_fml8_value
 
+.ok
 .if DEFAULT_SUBSCRIBE != subscribe
 	.not_support
 
@@ -626,6 +642,7 @@
 # # PGP directory path (obsolete in fml 4.0)
 # # value: filename string
 # PGP_PATH:		$DIR/etc/pgp
+.ok
 .if PGP_PATH == $DIR/etc/pgp
 	.use_fml8_value
 
@@ -634,6 +651,7 @@
 # # set this variable on.
 # # value: 1/0
 # USE_FML40_PGP_PATH:	1
+.ok
 .if USE_FML40_PGP_PATH == 1
 	.use_fml8_value
 
@@ -641,21 +659,25 @@
 # # fml 4.0
 # # value: directory string
 # DIST_AUTH_KEYRING_DIR:		$DIR/etc/dist-auth
+.ok
 .if DIST_AUTH_KEYRING_DIR == $DIR/etc/dist-auth
 	.use_fml8_value
 
 
 # DIST_ENCRYPT_KEYRING_DIR:	$DIR/etc/dist-encrypt
+.ok
 .if DIST_ENCRYPT_KEYRING_DIR == $DIR/etc/dist-encrypt
 	.use_fml8_value
 
 
 # ADMIN_AUTH_KEYRING_DIR:		$DIR/etc/admin-auth
+.ok
 .if ADMIN_AUTH_KEYRING_DIR == $DIR/etc/admin-auth
 	.use_fml8_value
 
 
 # ADMIN_ENCRYPT_KEYRING_DIR:	$DIR/etc/admin-encrypt
+.ok
 .if ADMIN_ENCRYPT_KEYRING_DIR == $DIR/etc/admin-encrypt
 	.use_fml8_value
 
@@ -803,8 +825,9 @@
 # # if $NOTIFY_MAIL_SIZE_OVERFLOW is set, notify the rejection to the sender.
 # # value: 1/0
 # NOTIFY_MAIL_SIZE_OVERFLOW:	1
+.ok
 .if NOTIFY_MAIL_SIZE_OVERFLOW == 1
-	.not_yet_implemented
+	.use_fml8_value
 
 
 .if NOTIFY_MAIL_SIZE_OVERFLOW == 0
@@ -899,9 +922,9 @@
 # # value: 1/0
 # FILTER_ATTR_REJECT_COMMAND:
 # XXX fml8 += operation meas append (but we need prepend here)
+.ok
 .if FILTER_ATTR_REJECT_COMMAND == 1
-
-	article_text_plain_filter_rules += reject_old_fml_command_syntax
+	.use_fml8_value
 
 .ok
 .if FILTER_ATTR_REJECT_COMMAND == 0
@@ -915,9 +938,9 @@
 # # value: 1/0
 # FILTER_ATTR_REJECT_2BYTES_COMMAND:
 # XXX fml8 += operation meas append (but we need prepend here)
+.ok
 .if FILTER_ATTR_REJECT_2BYTES_COMMAND == 1
-
-	article_text_plain_filter_rules += reject_japanese_command_syntax
+	.use_fml8_value
 
 .ok
 .if FILTER_ATTR_REJECT_2BYTES_COMMAND == 0
@@ -982,9 +1005,9 @@
 # # value: 1/0
 # FILTER_ATTR_REJECT_INVALID_JAPANESE: 0
 # XXX fml8 += operation meas append (but we need prepend here)
+.ok
 .if FILTER_ATTR_REJECT_INVALID_JAPANESE == 1
-
-	article_text_plain_filter_rules += reject_not_iso2022jp_japanese_string
+	.use_fml8_value
 
 .ok
 .if FILTER_ATTR_REJECT_INVALID_JAPANESE == 0
@@ -1168,6 +1191,7 @@
 
 
 # LOG_MAIL_FILE_SIZE_MAX:	2048
+.ok
 .if LOG_MAIL_FILE_SIZE_MAX
 	.use_fml8_value
 
@@ -1215,9 +1239,11 @@
 # #	 /distribute-date+x-original-date/received-date+posted
 # #	 /received-date+x-posted/received-date+x-original-date
 # DATE_TYPE:	original-date
+.ok
 .if DATE_TYPE == original-date
 	.use_fml8_value
 
+.ok
 .if DATE_TYPE != original-date
 	.not_support
 
@@ -1233,16 +1259,23 @@
 # #
 # # value: string
 # XMLNAME:	 X-ML-Name: Elena
+.ok
 .if XMLNAME == X-ML-Name: Elena
 	.convert
 
+.ok
+.if XMLNAME != X-ML-Name: Elena
+	.convert
+
 # XMLCOUNT:	 X-Mail-Count
+.ok
 .if XMLCOUNT == X-Mail-Count
 
 	article_header_rewrite_rules += add_fml_traditional_article_id
 
+.ok
 .if XMLCOUNT != X-Mail-Count
-	.not_yet_implemented
+	.not_support
 
 
 # # In default subject tag does not exist to show more and more effective
@@ -1422,12 +1455,15 @@
 # # REWRITE_TO = 1 if NOT_REWRITE_TO == 0 (2.1 Release)
 # # value: 0/1/2
 # REWRITE_TO:
+.ok
 .if REWRITE_TO == 2
 	.not_support
 
+.ok
 .if REWRITE_TO == 1
 	.not_support
 
+.ok
 .if REWRITE_TO == 0
 	.use_fml8_value
 
@@ -1458,15 +1494,17 @@
 # # TIME ZONE;  +0900 is RFC822 syntax (I like JST but ... ;-)
 # # value: +\d{4} / -\d{4}
 # TZone:		 +0900
+.ok
 .if TZone
-	.convert
+	.not_support
 
 
 # # time zone within summer time if you use summer time.
 # # thank HIROSHIMA Naoki <naoki@bcrossing.com> on this idea
 # TZONE_DST:
+.ok
 .if TZONE_DST
-	.not_yet_implemented
+	.not_support
 
 
 # # ## Sub Section: Pass All Header ? ##
@@ -1477,15 +1515,19 @@
 # # The old variable name is $SUPERFLUOUS_HEADERS.
 # # value: 1/0
 # PASS_ALL_FIELDS_IN_HEADER: 1
+.ok
 .if PASS_ALL_FIELDS_IN_HEADER == 1
 	.use_fml8_value
 
+.ok
 .if PASS_ALL_FIELDS_IN_HEADER == 0
 	.not_support
 
+.ok
 .if SUPERFLUOUS_HEADERS == 1
 	.use_fml8_value
 
+.ok
 .if SUPERFLUOUS_HEADERS == 0
 	.not_support
 
@@ -1538,6 +1580,7 @@
 .if USE_WARNING == 0
 	.use_fml8_value
 
+.ok
 .if USE_WARNING == 1
 	.not_support
 
@@ -1562,6 +1605,7 @@
 # # $GUIDE_KEYWORD determines "guide" of "$ guide" trap.
 # # value: number
 # COMMAND_CHECK_LIMIT:  	3
+.ok
 .if COMMAND_CHECK_LIMIT == 3
 	.not_support
 
@@ -1569,6 +1613,7 @@
 # # obsolete
 # # value: number
 # GUIDE_CHECK_LIMIT:	3
+.ok
 .if GUIDE_CHECK_LIMIT == 3
 	.not_support
 
@@ -1576,6 +1621,7 @@
 # # obsolete
 # # value: string
 # GUIDE_KEYWORD:	guide
+.ok
 .if GUIDE_KEYWORD == guide
 	.not_support
 
@@ -1584,7 +1630,9 @@
 # # The maximum length for each command. 128 bytes by default.
 # # value: number
 # MAXLEN_COMMAND_INPUT: 128
-.if MAXLEN_COMMAND_INPUT == 128
+.ok
+.if MAXLEN_COMMAND_INPUT > 0
+	.if MAXLEN_COMMAND_INPUT != 128
 
 	command_mail_line_length_limit = %s
 
@@ -1595,7 +1643,8 @@
 # # 0 or NULL implies infinite (default).
 # # value: number
 # MAXNUM_COMMAND_INPUT:
-.if MAXNUM_COMMAND_INPUT
+.ok
+.if MAXNUM_COMMAND_INPUT > 0
 
 	command_mail_valid_command_limit = %s
 
@@ -1603,6 +1652,7 @@
 # # "# chaddr" command name aliases
 # # value: regexp string
 # CHADDR_KEYWORD:	 chaddr|change\-address|change
+.ok
 .if CHADDR_KEYWORD == chaddr|change\-address|change
 	.use_fml8_value
 
@@ -1626,11 +1676,13 @@
 # # $MGET_TEXT_MODE_DEFAULT is used by &SendFileBySplit
 # # value: mode string
 # MGET_MODE_DEFAULT:
+.ok
 .if MGET_MODE_DEFAULT
 	.not_support
 
 
 # MGET_TEXT_MODE_DEFAULT:
+.ok
 .if MGET_TEXT_MODE_DEFAULT
 	.not_support
 
@@ -1639,11 +1691,13 @@
 # # by the unit $MAIL_LENGTH_LIMIT lines once at $SLEEPTIME secs..
 # # value: number
 # MAIL_LENGTH_LIMIT:	1000
+.ok
 .if MAIL_LENGTH_LIMIT == 1000
-	.not_yet_implemented
+	.not_support
 
 
 # SLEEPTIME:		60
+.ok
 .if SLEEPTIME
 	.not_support
 
@@ -1753,6 +1807,7 @@
 # #
 # # value: string
 # MGET_SUBJECT_TEMPLATE:	result for mget _DOC_MODE_ _PART_ _ML_FN_
+.ok
 .if MGET_SUBJECT_TEMPLATE == result for mget _DOC_MODE_ _PART_ _ML_FN_
 	.not_support
 
@@ -1763,6 +1818,7 @@
 # # it implies we prefer Reply-To: (by default).
 # # value: from / reply-to
 # MESSAGE_RETURN_ADDR_POLICY: reply-to
+.ok
 .if MESSAGE_RETURN_ADDR_POLICY == reply-to
 	.not_support
 
@@ -1787,6 +1843,7 @@
 # #
 # # value: string
 # MSEND_SUBJECT_TEMPLATE:	Digest _ARTICLE_RANGE_ _PART_ _ML_FN_
+.ok
 .if MSEND_SUBJECT_TEMPLATE
 	.not_support
 
@@ -1794,13 +1851,15 @@
 # # Digest/Matome Okuri rc file
 # # value: filename string
 # MSEND_RC:	 $VARLOG_DIR/msendrc
+.ok
 .if MSEND_RC
-	.convert
+	.not_support
 
 # # rfc1153 or rfc934
 # # obsoletes $USE_RFC1153, $USE_RFC1153_DIGEST, $USE_RFC934
 # # value: mode string
 # MSEND_MODE_DEFAULT:
+.ok
 .if MSEND_MODE_DEFAULT
 	.not_support
 
@@ -1808,6 +1867,7 @@
 # # Subject:
 # # value: string
 # MSEND_DEFAULT_SUBJECT:
+.ok
 .if MSEND_DEFAULT_SUBJECT
 	.not_support
 
@@ -1816,29 +1876,36 @@
 # # with the subject $MSEND_NOTIFICATION_SUBJECT if $MSEND_NOTIFICATION is set.
 # # value: 1/0
 # MSEND_NOTIFICATION:
+.ok
 .if MSEND_NOTIFICATION
-	.not_yet_implemented
+	.not_support
 
 
 # # value: string
 # MSEND_NOTIFICATION_SUBJECT:
+.ok
 .if MSEND_NOTIFICATION_SUBJECT
-	.not_yet_implemented
+	.not_support
 
 
 # # not require X-ML-Info: in the "mget";
 # # value: 1/0
 # MSEND_NOT_USE_X_ML_INFO:
-.if MSEND_NOT_USE_X_ML_INFO
-	.not_yet_implemented
+.ok
+.if MSEND_NOT_USE_X_ML_INFO == 0
+	.use_fml8_value
+
+.ok
+.if MSEND_NOT_USE_X_ML_INFO == 1
+	.not_support
 
 
 # # not do newsyslog in the Sundays morning. $NOT_USE_NEWSYSLOG (CFVersion 2)
 # # value: 1/0
 # MSEND_NOT_USE_NEWSYSLOG:
-.if MSEND_NOT_USE_NEWSYSLOG
-	.not_yet_implemented
-
+.ok
+.if MSEND_NOT_USE_NEWSYSLOG == 0
+	.not_support
 
 
 #########################################################################
@@ -1847,6 +1914,7 @@
 # # cache file of Message-ID: loop check
 # # value: filename string
 # LOG_MESSAGE_ID:	$VARRUN_DIR/msgidcache
+.ok
 .if LOG_MESSAGE_ID == $VARRUN_DIR/msgidcache
 	.use_fml8_value
 
@@ -1854,6 +1922,7 @@
 # # cache size of Message-ID: negative cache
 # # value: number
 # MESSAGE_ID_CACHE_BUFSIZE:	6000
+.ok
 .if MESSAGE_ID_CACHE_BUFSIZE == 6000
 	.use_fml8_value
 
@@ -1869,11 +1938,13 @@
 # # $ACTIVE_LIST 	delivery list
 # # value: filename string
 # MEMBER_LIST: 	 $DIR/members
+.ok
 .if MEMBER_LIST != $DIR/members
 	.convert
 
 
 # ACTIVE_LIST: 	 $DIR/actives
+.ok
 .if ACTIVE_LIST != $DIR/actives
 	.convert
 
@@ -1886,16 +1957,19 @@
 # # $HELP_FILE 		sent by "# help" command
 # # value: filename string
 # GUIDE_FILE:	 $DIR/guide
+.ok
 .if GUIDE_FILE != $DIR/guide
 	.convert
 
 
 # OBJECTIVE_FILE:	 $DIR/objective
+.ok
 .if OBJECTIVE_FILE != $DIR/objective
 	.convert
 
 
 # HELP_FILE:	 $DIR/help
+.ok
 .if HELP_FILE
 	.use_fml8_value
 
@@ -2175,8 +2249,9 @@
 # #
 # # value: 1/0
 # USE_VERP:
+.ok
 .if USE_VERP
-	.not_yet_implemented
+	.not_support
 
 
 # # postfix $verp_delimiters
@@ -2190,22 +2265,25 @@
 # # try VERPs once a day for efficient delivery.
 # # value: 1/0
 # TRY_VERP_PER_DAY:
+.ok
 .if TRY_VERP_PER_DAY
-	.not_yet_implemented
+	.not_support
 
 
 # # we use ESMTP pipelining mechanism by default.
 # # value: 1/0
 # NOT_USE_ESMTP_PIPELINING: 0
+.ok
 .if NOT_USE_ESMTP_PIPELINING == 0
-	.not_yet_implemented
+	.not_support
 
 
 # # smtpfeed special option which provides VERPs like error track trick.
 # # value: 1/0
 # USE_SMTPFEED_F_OPTION:
+.ok
 .if USE_SMTPFEED_F_OPTION
-	.not_yet_implemented
+	.not_support
 
 
 #########################################################################
@@ -2264,10 +2342,12 @@
 # #
 # # value: string
 # PREAMBLE_MAILBODY:
+.ok
 .if PREAMBLE_MAILBODY
 	.not_support
 
 # TRAILER_MAILBODY:
+.ok
 .if TRAILER_MAILBODY
 	.not_support
 
@@ -2285,16 +2365,19 @@
 # #
 # # value: string
 # GOOD_BYE_PHRASE:
+.ok
 .if GOOD_BYE_PHRASE
 	.not_support
 
 # FACE_MARK:
+.ok
 .if FACE_MARK
 	.not_support
 
 
 # # value: function name string
 # PROC_GEN_INFO:		GenInfo
+.ok
 .if PROC_GEN_INFO
 	.not_support
 
@@ -2363,10 +2446,12 @@
 # # $CRON_PIDFILE	pid file
 # # value: filename string
 # CRONTAB:			etc/crontab
+.ok
 .if CRONTAB == etc/crontab
 	.not_support
 
 # CRON_PIDFILE:			var/run/cron.pid
+.ok
 .if CRON_PIDFILE == var/run/cron.pid
 	.not_support
 
@@ -2375,6 +2460,7 @@
 # # cron notifies what is done to $MAINTAINER.
 # # value: 1/0
 # CRON_NOTIFY:			1
+.ok
 .if CRON_NOTIFY == 1
 	.not_support
 
@@ -2382,6 +2468,7 @@
 # # cross operations
 # # value: 1/0
 # USE_CROSSPOST:
+.ok
 .if USE_CROSSPOST
 	.not_support
 
@@ -2439,6 +2526,7 @@
 # #
 # # value: 1/0
 # USE_ARCHIVE:			0
+.ok
 .if USE_ARCHIVE == 0
 	.not_support
 
@@ -2447,11 +2535,13 @@
 # # by the unit $ARCHIVE_UNIT.
 # # value: number
 # ARCHIVE_UNIT:			100
+.ok
 .if ARCHIVE_UNIT == 100
 	.not_support
 
 
 # DEFAULT_ARCHIVE_UNIT:		100
+.ok
 .if DEFAULT_ARCHIVE_UNIT == 100
 	.not_support
 
@@ -2459,6 +2549,7 @@
 # # spool/articles is aggregated to "$ARCHIVE_DIR/100.tar.gz"
 # # value: directory string
 # ARCHIVE_DIR:			var/archive
+.ok
 .if ARCHIVE_DIR == var/archive
 	.not_support
 
@@ -2468,15 +2559,17 @@
 # # send back $INDEX_FILE if $INDEX_FILE exists.
 # # value: filename string
 # INDEX_FILE:			$DIR/index
+.ok
 .if INDEX_FILE == $DIR/index
-	.not_support
+        .not_yet_implemented
 
 
 # # show directory name in "index" command result? default is "no".
 # # value: 1/0
 # INDEX_SHOW_DIRNAME:		0
+.ok
 .if INDEX_SHOW_DIRNAME == 0
-	.not_support
+        .not_yet_implemented
 
 
 
@@ -2506,14 +2599,16 @@
 # # to turn over \$DIR/log
 # # value: number
 # LOGFILE_NEWSYSLOG_LIMIT:
+.ok
 .if LOGFILE_NEWSYSLOG_LIMIT
-	.not_yet_implemented
+	.convert
 
 
 # # to turn over $ACTIVE_LIST and $MEMBER_LIST if the file size over this value,
 # # default 150K = 30*5000
 # # value: number / (number + K/M)
 # AMLIST_NEWSYSLOG_LIMIT:	150K
+.ok
 .if AMLIST_NEWSYSLOG_LIMIT == 150K
 	.not_support
 
@@ -2553,27 +2648,32 @@
 
 # # value: 1/0
 # HTML_THREAD:			1
+.ok
 .if HTML_THREAD == 1
 	.use_fml8_value
 
+.ok
 .if HTML_THREAD == 0
-	.not_yet_implemented
+	.not_support
 
 
 # # value: 1/0
 # HTML_INDEX_REVERSE_ORDER:	1
+.ok
 .if HTML_INDEX_REVERSE_ORDER == 1
 	.use_fml8_value
 
+.ok
 .if HTML_INDEX_REVERSE_ORDER == 0
-	.not_yet_implemented
+	.not_support
 
 
 # # generate html articles under htdocs/
 # # value: directory string
 # HTML_DIR:			htdocs
+.ok
 .if HTML_DIR == htdocs
-	.not_support
+	.use_fml8_value
 
 
 # # expire old html articles if non-zero value is defined.
@@ -2581,52 +2681,60 @@
 # # options: Please see doc/tutorial for the details.
 # # value: number
 # HTML_EXPIRE_LIMIT:
+.ok
 .if HTML_EXPIRE_LIMIT
-	.not_yet_implemented
+	.not_support
 
 
 # # title of index.html
 # # value: string
 # HTML_INDEX_TITLE:
+.ok
 .if HTML_INDEX_TITLE
-	.not_yet_implemented
+	.not_support
 
 
 # # cache file
 # # value: filename string
 # HTML_DATA_CACHE:
+.ok
 .if HTML_DATA_CACHE
-	.not_yet_implemented
+	.use_fml8_value
 
 
 # HTML_DATA_THREAD:
+.ok
 .if HTML_DATA_THREAD
-	.not_yet_implemented
+	.use_fml8_value
 
 
 # # filter in generate html file
 # # value: filename string
 # HTML_OUTPUT_FILTER:
+.ok
 .if HTML_OUTPUT_FILTER
-	.not_yet_implemented
+	.not_support
 
 
 # # stylesheet file name (see HTML 4.0)
 # # "fml.css" is default.
 # # value: filename string
 # HTML_STYLESHEET_BASENAME:	
+.ok
 .if HTML_STYLESHEET_BASENAME
-	.not_yet_implemented
+	.not_support
 
 
 # # threading algorithm type
 # # value: default / prefer-in-reply-to
 # HTML_THREAD_REF_TYPE:		prefer-in-reply-to
+.ok
 .if HTML_THREAD_REF_TYPE == prefer-in-reply-to
 	.use_fml8_value
 
+.ok
 .if HTML_THREAD_REF_TYPE == default
-	.not_yet_implemented
+	.not_support
 
 
 # # sort type for entries of thread.html
@@ -2634,44 +2742,53 @@
 # # "reverse-number" is from latest to past.
 # # value: "" / reverse-number
 # HTML_THREAD_SORT_TYPE:
+.ok
 .if HTML_THREAD_SORT_TYPE == reverse-number
-	.use_fml8_value
 
+	html_archive_index_order_type = reverse
+
+.ok
 .if HTML_THREAD_SORT_TYPE == NULL
-	.not_yet_implemented
+
+	html_archive_index_order_type = normal
 
 
 # # $subdir type of htdocs/$subdir/
 # # value: number / day / week / month / infinite
 # HTML_INDEX_UNIT:		day
+.ok
 .if HTML_INDEX_UNIT
-	.not_yet_implemented
+	.not_support
 
 
 # # threading type
 # # value: "" / UL
 # HTML_INDENT_STYLE:		UL
+.ok
 .if HTML_INDENT_STYLE
-	.not_yet_implemented
+	.not_support
 
 
 # # image file embedding style
 # # value: A / IMAGE
 # HTML_MULTIPART_IMAGE_REF_TYPE:
+.ok
 .if HTML_MULTIPART_IMAGE_REF_TYPE
-	.not_yet_implemented
+	.not_support
 
 
 # # html file umask
 # # value: "" / umask
 # HTML_DEFAULT_UMASK:
+.ok
 .if HTML_DEFAULT_UMASK
-	.not_yet_implemented
+	.not_support
 
 
 # HTML_WRITE_UMASK:
+.ok
 .if HTML_WRITE_UMASK
-	.not_yet_implemented
+	.not_support
 
 
 
@@ -3121,6 +3238,7 @@
 .if DEFAULT_GOPHER_PORT
 	.not_support
 
+.ok
 .if DEFAULT_HTML_FIELD
 	.not_support
 
