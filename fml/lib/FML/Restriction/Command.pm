@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.23 2006/03/04 12:56:58 fukachan Exp $
+# $FML: Command.pm,v 1.24 2006/04/10 13:09:14 fukachan Exp $
 #
 
 package FML::Restriction::Command;
@@ -376,7 +376,7 @@ sub permit_forward_to_moderator
     if ($@) { $curproc->logerror($@);}
 
     # always OK.
-    return("matched", "permit");
+    return("matched", "ignore");
 }
 
 
