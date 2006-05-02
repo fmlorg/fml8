@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: confirm.pm,v 1.39 2006/03/04 13:48:29 fukachan Exp $
+# $FML: confirm.pm,v 1.40 2006/03/05 08:08:37 fukachan Exp $
 #
 
 package FML::Command::User::confirm;
@@ -94,7 +94,8 @@ sub process
     my $recipient_map = $config->{ primary_recipient_map };
     my $cache_dir     = $config->{ db_dir };
     my $keyword       = $config->{ confirm_command_prefix };
-    my $expire_limit  = $config->{ confirm_expire_limit } || 14*24*3600;
+    my $_expire_limit = $config->as_second('confirm_command_expire_limit');
+    my $expire_limit  = $_expire_limit || 14 * 24 * 3600; # 14 days.
     my $command       = $command_context->get_clean_command();
 
 
