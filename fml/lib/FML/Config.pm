@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.103 2006/02/03 08:43:21 fukachan Exp $
+# $FML: Config.pm,v 1.104 2006/02/03 11:06:03 fukachan Exp $
 #
 
 package FML::Config;
@@ -974,6 +974,46 @@ sub has_attribute
 }
 
 
+=head2 as_second($key)
+
+return the value as seconds such as 86400 for '1d'.
+
+=cut
+
+
+# Descriptions: return the value as seconds such as 86400 for '1d'.
+#    Arguments: OBJ($self) STR($key)
+# Side Effects: none
+# Return Value: NUM
+sub as_second
+{
+    my ($self, $key) = @_;
+    my $value = $self->get($key);
+
+    # unit: m, h, d, w
+    my $min   = 60;
+    my $hour  = 60 * $min;
+    my $day   = 24 * $hour;
+    my $week  = 7  * $day;
+    my $table = {
+	'm' => $min,
+	'h' => $hour,
+	'd' => $day,
+	'w' => $week,
+    };
+
+    if ($value =~ /^(\d+)([mhdw])$/) {
+	my ($number, $unit) = ($1, $2);
+	return int($number * $table->{ $unit });
+    }
+    elsif ($value =~ /^\d+$/) {
+	return $value;
+    }
+    else {
+	croak("invalid value: $value");
+    }
+}
+
 =head2 dump_variables($cfargs)
 
 show all {key => value} for debug.
@@ -1401,6 +1441,14 @@ if ($0 eq __FILE__) {
 	for my $k (keys %db) {
 	    printf "%30s => %s\n", $k, $db{ $k };
 	}
+    }
+
+    print "\n3.1 as_second()\n";
+    for my $limit (qw(3m 4h 5d 2w)) {
+	print "$limit\t=>\t";
+	$config->set('limit', $limit);
+	print $config->as_second("limit");
+	print "\n";
     }
 }
 
