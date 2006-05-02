@@ -2377,6 +2377,14 @@ commands_for_ml_admin_cgi	=	adduser
 confirm_command_prefix		=	confirm
 
 
+# Descriptions: confirmation が有効な期間。
+#		m(min), h(hour), d(day), w(week) などの表記を使っても良い。 
+#      History: $CONFIRMATION_EXPIRE
+#        Value: TIME
+#     Examples: 14d
+confirm_command_expire_limit	=	14d
+
+
 # Descriptions: 管理用のコマンドを表す特別なコマンド
 #        Value: FML_COMMAND
 #     Examples:

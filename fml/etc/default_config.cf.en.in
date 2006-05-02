@@ -2323,6 +2323,15 @@ commands_for_ml_admin_cgi	=	adduser
 confirm_command_prefix		=	confirm
 
 
+# Descriptions: how long confirmation is effective ?
+#		special words such as 
+#               m(min), h(hour), d(day), w(week) are avialable.
+#      History: $CONFIRMATION_EXPIRE
+#        Value: TIME
+#     Examples: 14d
+confirm_command_expire_limit	=	14d
+
+
 # Descriptions: special command name used as admin command mail
 #        Value: FML_COMMAND
 #     Examples:

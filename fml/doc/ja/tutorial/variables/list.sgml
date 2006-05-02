@@ -713,6 +713,15 @@ command_mail_valid_command_limit</entry>
 </row>
 <row>
 <entry>
+confirm_command_expire_limit</entry>
+<entry>
+ confirmation が有効な期間。</entry>
+<entry>
+14d
+   </entry>
+</row>
+<row>
+<entry>
 confirm_command_prefix</entry>
 <entry>
  confirmation の返事を表す特別なコマンド</entry>

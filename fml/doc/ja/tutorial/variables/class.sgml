@@ -247,6 +247,7 @@ chaddr_command {
 confirm_command {
 
    confirm_command { 
+          $confirm_command_expire_limit
     ?     $confirm_command_prefix
    }
 }
