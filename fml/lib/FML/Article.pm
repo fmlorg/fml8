@@ -4,13 +4,14 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.75 2005/09/11 13:09:39 fukachan Exp $
+# $FML: Article.pm,v 1.76 2005/09/14 00:02:36 fukachan Exp $
 #
 
 package FML::Article;
 
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
+use vars qw(@ISA @EXPORT @EXPORT_OK
+	    $global_threshold_mtime @global_too_old_article_list);
 use Carp;
 
 use FML::Article::Sequence;
@@ -295,6 +296,101 @@ sub add_outline
 }
 
 
+=head1 EXPIRE ARTICLES
+
+=head2 expire()
+
+expire too old articles.
+
+=cut
+
+
+# Descriptions: expire too old articles.
+#    Arguments: OBJ($self)
+# Side Effects: too old article are removed.
+# Return Value: none
+sub expire
+{
+    my ($self)  = @_;
+    my $curproc = $self->{ _curproc };
+    my $config  = $curproc->config();
+
+    unless ($config->yes('use_article_expire')) {
+	$curproc->logdebug("article expiration disabled");
+	return;
+    }
+
+    # 1. find too old articles by checking mtime of each article.
+    my $spool_dir     = $config->{ spool_dir };
+    my $how_old       = $config->as_second("article_expire_limit");
+    my $threshold     = time - $how_old;
+    my $too_old_files = $self->_find_too_old_articles($spool_dir, $threshold);
+
+    # 2. expire them.
+    for my $article (@$too_old_files) {
+	if (-f $article) {
+	    unlink($article);
+	    unless (-f $article) {
+		$curproc->log("expire: $article removed");
+	    }
+	    else {
+		$curproc->logerror("expire: removal of $article fail");
+	    }
+	}
+    }
+}
+
+
+# Descriptions: find too old articles in $spool_dir,
+#               which mtime < $threshold_mtime.
+#    Arguments: OBJ($self) STR($spool_dir) NUM($threshold_mtime)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub _find_too_old_articles
+{
+    my ($self, $spool_dir, $threshold_mtime) = @_;
+    my $curproc = $self->{ _curproc };
+
+    # ASSERT
+    unless ($threshold_mtime > 0) {
+	$curproc->logerror("article expire: $threshold_mtime <= 0");
+	return;
+    }
+    unless($threshold_mtime < time) {
+	$curproc->logerror("article expire: $threshold_mtime >= now");
+	return;
+    }
+
+    # set up global variables to pass to __check_mtime().
+    $global_threshold_mtime = $threshold_mtime;
+
+    use File::Find;
+    find(\&__check_mtime, $spool_dir);
+
+    # XXX @global_too_old_article_list set up by __check_mtime().
+    return \@global_too_old_article_list;
+}
+
+
+# Descriptions: store too old articles in @global_too_old_article_list.
+#    Arguments: none
+# Side Effects: store too old file list into @global_too_old_article_list.
+# Return Value: none
+sub __check_mtime
+{
+    my $limit = $global_threshold_mtime;
+
+    use File::stat;
+    my $file = $File::Find::name;
+    my $st   = stat($file);
+    if (defined $st) {
+	if ($st->mtime < $limit) {
+	    push(@global_too_old_article_list, $file);
+	}
+    }
+}
+
+
 =head1 UTILITY
 
 =head2 filepath($id)
@@ -357,6 +453,23 @@ sub _filepath
     my $dir  = $spool->dirpath($mms_args); # spool/ or spool/$subdir/
 
     return ($file, $dir);
+}
+
+
+#
+# DEBUG
+#
+if ($0 eq __FILE__) {
+    use FML::Process::Debug;
+    my $curproc = new FML::Process::Debug;
+    my $article = new FML::Article $curproc;
+
+    my $spool_dir = "/var/spool/ml/elena/spool";
+    my $threshold = time - 14 * 24 * 3600;
+    my $list = $article->_find_too_old_articles($spool_dir, $threshold);
+    for my $file (@$list) {
+	print STDERR "TOO OLD: $file\n";
+    }
 }
 
 
