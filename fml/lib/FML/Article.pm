@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.76 2005/09/14 00:02:36 fukachan Exp $
+# $FML: Article.pm,v 1.77 2006/05/03 06:58:22 fukachan Exp $
 #
 
 package FML::Article;
@@ -327,14 +327,17 @@ sub expire
     my $too_old_files = $self->_find_too_old_articles($spool_dir, $threshold);
 
     # 2. expire them.
+    use File::Basename;
     for my $article (@$too_old_files) {
 	if (-f $article) {
 	    unlink($article);
+
+	    my $id = basename($article);
 	    unless (-f $article) {
-		$curproc->log("expire: $article removed");
+		$curproc->log("expire: article $id removed");
 	    }
 	    else {
-		$curproc->logerror("expire: removal of $article fail");
+		$curproc->logerror("expire: removal of article $id fail");
 	    }
 	}
     }
