@@ -16,3 +16,11 @@ use_moderate_function	=	yes
 moderate_queue_dir = $var_dir/mail/queue-moderate
 
 
+
+# Descriptions: expire submitted queue after $moderate_expire_limit.
+#      History: $MODERATOR_EXPIRE_LIMIT
+#        Value: TIME
+#     Examples: 14d
+moderate_queue_expire_limit	=	14d
+
+
