@@ -374,3 +374,21 @@ article_thread_outline_greeting_ja	=	[本スレッドのあらすじ]
 #     Examples: [outline of this thread]
 article_thread_outline_greeting_en	=	[outline of this thread]
 
+
+=head2 古い記事の自動消去
+
+
+# Descriptions: 古い記事を自動消去するか否か？
+#      History: $USE_EXPIRE
+#        Value: YES_OR_NO
+#     Examples: no
+use_article_expire			=	no
+
+
+# Descriptions: どのくらい古い記事を消すか？
+#      History: $EXPIRE_LIMIT
+#        Value: TIME
+#     Examples: 90d
+article_expire_limit			=	90d
+
+

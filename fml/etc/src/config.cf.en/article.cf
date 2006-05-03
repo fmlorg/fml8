@@ -375,3 +375,21 @@ article_thread_outline_greeting_ja	=	[本スレッドのあらすじ]
 #     Examples: [outline of this thread]
 article_thread_outline_greeting_en	=	[outline of this thread]
 
+
+=head2 EXPIRE
+
+
+# Descriptions: expire too old article or not ?
+#      History: $USE_EXPIRE
+#        Value: YES_OR_NO
+#     Examples: no
+use_article_expire			=	no
+
+
+# Descriptions: how old article to be removed
+#      History: $EXPIRE_LIMIT
+#        Value: TIME
+#     Examples: 90d
+article_expire_limit			=	90d
+
+
