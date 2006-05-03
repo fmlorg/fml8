@@ -19,3 +19,16 @@ article_summary_file_format_style	=	fml4_compatible
 #        Value: NUM
 #     Examples: 15
 article_summary_file_format_address_length	=	15
+
+
+=head2	記事の自動消去に追従
+
+
+# Descriptions: 記事の自動消去($use_article_expire)に追従して
+#               サマリも作りなおす(存在しない記事部分を削除) 
+#      History: $EXPIRE_SUMMARY
+#        Value: YES_OR_NO
+#     Examples: no
+use_article_summary_file_expire		=	no
+
+
