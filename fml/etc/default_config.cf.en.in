@@ -1728,6 +1728,24 @@ article_thread_outline_greeting_ja	=	[本スレッドのあらすじ]
 article_thread_outline_greeting_en	=	[outline of this thread]
 
 
+=head2 EXPIRE
+
+
+# Descriptions: expire too old article or not ?
+#      History: $USE_EXPIRE
+#        Value: YES_OR_NO
+#     Examples: no
+use_article_expire			=	no
+
+
+# Descriptions: how old article to be removed
+#      History: $EXPIRE_LIMIT
+#        Value: TIME
+#     Examples: 90d
+article_expire_limit			=	90d
+
+
+
 =head2	ARTICLE SPAM FILTER CONFIGURATIONS
 
 
@@ -1865,6 +1883,18 @@ article_summary_file_format_style	=	fml4_compatible
 #        Value:  NUM
 #     Examples: 15
 article_summary_file_format_address_length	=	15
+
+
+=head2	expire
+
+
+# Descriptions: remove content correspoding with article expiration.
+#      History: $EXPIRE_SUMMARY
+#        Value: YES_OR_NO
+#     Examples: no
+use_article_summary_file_expire		=	no
+
+
 
 =head1	convert article to html format.
 
