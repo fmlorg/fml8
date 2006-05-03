@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.175 2006/04/11 12:08:20 fukachan Exp $
+# $FML: Distribute.pm,v 1.176 2006/04/11 12:31:43 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -367,6 +367,8 @@ sub finish
     else {
 	$curproc->logwarn("queue remains due to MTA fatal error.");
     }
+
+    $curproc->_expire_article();
 
     $eval  = $config->get_hook( 'distribute_finish_end_hook' );
     $eval .= $config->get_hook( 'article_post_finish_end_hook' );
@@ -813,6 +815,25 @@ sub _htmlify
     }
 
     $curproc->umask_reset();
+}
+
+
+# Descriptions: try to expire articles.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: none
+sub _expire_article
+{
+    my ($curproc) = @_;
+
+    my $event_channel = "article_expire";
+    if ($curproc->is_event_timeout($event_channel)) {
+	$curproc->logdebug("try to expire articles");
+
+	my $article = new FML::Article $curproc;
+	$article->expire();
+	$curproc->event_set_timeout($event_channel, time + 24*3600);
+    }
 }
 
 
