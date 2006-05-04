@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.176 2006/04/11 12:31:43 fukachan Exp $
+# $FML: Distribute.pm,v 1.177 2006/05/03 07:42:37 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -826,12 +826,19 @@ sub _expire_article
 {
     my ($curproc) = @_;
 
+    # XXX_LOCK_CHANNEL: article_spool_modify
+    # exclusive lock for both sequence updating and spool writing
+    my $lock_channel = "article_spool_modify";
+
     my $event_channel = "article_expire";
     if ($curproc->is_event_timeout($event_channel)) {
 	$curproc->logdebug("try to expire articles");
 
+	$curproc->lock($lock_channel);
 	my $article = new FML::Article $curproc;
 	$article->expire();
+	$curproc->unlock($lock_channel);
+
 	$curproc->event_set_timeout($event_channel, time + 24*3600);
     }
 }
