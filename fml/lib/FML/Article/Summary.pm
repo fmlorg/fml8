@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Summary.pm,v 1.24 2005/08/11 04:11:25 fukachan Exp $
+# $FML: Summary.pm,v 1.25 2005/08/19 12:17:06 fukachan Exp $
 #
 
 package FML::Article::Summary;
@@ -12,6 +12,7 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use Mail::Message::Date;
+
 
 =head1 NAME
 
@@ -87,7 +88,7 @@ sub _prepare_info
     }
     else {
 	# XXX we need article object to use $article->filepath() method.
-	use FML::Article;
+	eval q{ use FML::Article;};
 	$article = new FML::Article $curproc;
     }
 
@@ -281,6 +282,78 @@ sub dump
 	    my $buf;
 	    while ($buf = <$rh>) { print $wh $buf;}
 	    $rh->close();
+	}
+    }
+}
+
+
+# Descriptions: remove content corresponding with expired articles.
+#    Arguments: OBJ($self) NUM($first_seq) NUM($last_seq)
+# Side Effects: summary rebuilt.
+# Return Value: none
+sub expire
+{
+    my ($self, $first_seq, $last_seq)  = @_;
+    my $curproc = $self->{ _curproc };
+    my $config  = $curproc->config();
+
+    my $summary_style = $config->{ article_summary_file_format_style };
+    if ($summary_style eq 'fml4_compatible') {
+        $self->_expire_fml4_compatible_style_summary($first_seq, $last_seq);
+    }
+    else {
+	my $errmsg = "unknown \$article_summary_file_style: $summary_style";
+        $curproc->logerror($errmsg);
+    }
+
+}
+
+
+# Descriptions: remove content corresponding with expired articles.
+#    Arguments: OBJ($self) NUM($first_seq) NUM($last_seq)
+# Side Effects: summary rebuilt.
+# Return Value: none
+sub _expire_fml4_compatible_style_summary
+{
+    my ($self, $first_seq, $last_seq)  = @_;
+    my $curproc = $self->{ _curproc };
+    my $config  = $curproc->config();
+
+    # 06/05/03 16:31:16 [1268:fukachan@home.f] SUMMARY
+    my $summary_file = $config->{ article_summary_file };
+    my $tmp_file     = $curproc->tmp_file_path();
+    if (-f $summary_file) {
+	use FileHandle;
+	my $rh = new FileHandle $summary_file;
+	my $wh = new FileHandle "> $tmp_file";
+	if (defined $rh && defined $wh) {
+	    my $buf;
+	  LINE:
+	    while ($buf = <$rh>) {
+		if ($buf =~ /\[(\d+):/) {
+		    my $seq = $1;
+		    next LINE if $seq <= $last_seq;
+		}
+		print $wh $buf;
+	    }
+	    $wh->close();
+	    $rh->close();
+	}
+	else {
+	    $curproc->logerror("cannot open summary file") unless defined $rh;
+	    $curproc->logerror("cannot open tmp file")     unless defined $wh;
+	}
+
+	unless (-s $tmp_file) {
+	    $curproc->logerror("expire: tmporary file creation fail");
+	    return;
+	}
+
+	if (rename($tmp_file, $summary_file)) {
+	    $curproc->logdebug("expire: summary file rebuilt");
+	}
+	else {
+	    $curproc->logerror("expire: summary file rebuilding fail");
 	}
     }
 }

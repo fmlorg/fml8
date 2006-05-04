@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.77 2006/05/03 06:58:22 fukachan Exp $
+# $FML: Article.pm,v 1.78 2006/05/03 07:39:25 fukachan Exp $
 #
 
 package FML::Article;
@@ -326,7 +326,7 @@ sub expire
     my $threshold     = time - $how_old;
     my $too_old_files = $self->_find_too_old_articles($spool_dir, $threshold);
 
-    # 2. expire them.
+    # 2. expire old articles.
     use File::Basename;
     for my $article (@$too_old_files) {
 	if (-f $article) {
@@ -338,6 +338,25 @@ sub expire
 	    }
 	    else {
 		$curproc->logerror("expire: removal of article $id fail");
+	    }
+	}
+    }
+
+    # 3. expire article summary.
+    if ($config->yes('use_article_summary_file_expire')) {
+	my $id = $#$too_old_files || -1;
+	if ($id >= 0) {
+	    my $first_article_seq = 1;
+	    my $last_article_seq  = basename($too_old_files->[ $id ]);
+
+	    use FML::Article::Summary;
+	    my $summary = new FML::Article::Summary $curproc;
+	    if ($first_article_seq <= $last_article_seq) {
+		$summary->expire($first_article_seq, $last_article_seq);
+	    }
+	    else {
+		my $msg = "$first_article_seq > $last_article_seq";
+		$curproc->logdebug("expire: invalid condition $msg"); 
 	    }
 	}
     }
@@ -491,7 +510,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
