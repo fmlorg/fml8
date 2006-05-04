@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.67 2006/04/09 15:15:10 fukachan Exp $
+# $FML: Queue.pm,v 1.68 2006/04/28 13:18:57 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -102,6 +102,7 @@ sub new
     my $id            = $args->{ id }             || _new_queue_id();
     my $local_class   = $args->{ local_class }    || [];
     my $dir_mode      = $args->{ directory_mode } || $default_dir_mode;
+    my $expire_limit  = $args->{ expire_limit }   || 14 * 24 * 3600;
     my $me            = {};
 
     bless $me, $type;
@@ -109,6 +110,7 @@ sub new
     $me->set_queue_directory($dir);
     $me->set_queue_id($id);
     $me->set_directory_mode($dir_mode);
+    $me->set_expire_limit($expire_limit);
 
     # update optional local class list.
     for my $c (@$local_class) { push(@local_class_list, $c);}
@@ -955,24 +957,24 @@ return 1 (valid) or 0 (broken).
 
 
 # Descriptions: remove queue files for this object (queue).
-#    Arguments: OBJ($self)
+#    Arguments: OBJ($self) STR($qid)
 # Side Effects: remove queue file(s)
 # Return Value: none
 sub delete
 {
-    my ($self) = @_;
-    $self->remove();
+    my ($self, $qid) = @_;
+    $self->remove($qid);
 }
 
 
 # Descriptions: remove queue files for this object (queue).
-#    Arguments: OBJ($self)
+#    Arguments: OBJ($self) STR($qid)
 # Side Effects: remove queue file(s)
 # Return Value: none
 sub remove
 {
-    my ($self) = @_;
-    my $id     = $self->id();
+    my ($self, $qid) = @_;
+    my $id = $qid || $self->id();
 
     my $count   = 0;
     my $removed = 0;
@@ -1932,11 +1934,36 @@ sub _logdebug
 
 =head1 CLEAN UP GARBAGES
 
+=head2 expire($class)
+
+remove too old queue files in the specified queue.
+expire all queue if $class unspecified.
+
 =head2 cleanup()
 
 remove too old incoming queue files.
 
 =cut
+
+
+# Descriptions: remove too old queue files in the $class queue.
+#    Arguments: OBJ($self) STR($class)
+# Side Effects: remove too old incoming queue files.
+# Return Value: none
+sub expire
+{
+    my ($self, $class) = @_;
+
+    if ($class) {
+	$self->_cleanup($class);
+    }
+    else {
+	for my $class (@class_list, @local_class_list) {
+	    $self->_cleanup($class);
+	}
+    }
+}
+
 
 
 # Descriptions: remove too old incoming queue files.
@@ -1945,31 +1972,79 @@ remove too old incoming queue files.
 # Return Value: none
 sub cleanup
 {
-    my ($self)  = @_;
-    my $dir     = $self->get_queue_directory() || croak("directory undefined");
-    my $one_day = 14*24*3600;
+    my ($self) = @_;
+    $self->_cleanup("incoming");
+}
+
+
+# Descriptions: remove too old queue files in $class queue.
+#    Arguments: OBJ($self) STR($class)
+# Side Effects: remove too old incoming queue files.
+# Return Value: none
+sub _cleanup
+{
+    my ($self, $class) = @_;
+    my $how_old = $self->get_expire_limit();
 
     use DirHandle;
     use File::stat;
-    my $incoming_queue_dir = $self->incoming_dir_path();
-    my $dh = new DirHandle $incoming_queue_dir;
+
+    my $fp = sprintf("%s_dir_path", $class);
+    my $queue_dir = 
+	$self->can($fp) ? $self->$fp() : $self->local_dir_path($class);
+    my $dh = new DirHandle $queue_dir;
     if (defined $dh) {
-	my ($file, $entry, $stat);
-	my $limit = time - $one_day;
+	my ($fp, $file, $entry, $stat);
+	my $limit = time - $how_old;
 
       ENTRY:
 	while ($entry = $dh->read()) {
 	    next ENTRY if $entry =~ /^\./o;
 
-	    $file = $self->incoming_file_path($entry);
+	    $fp   = sprintf("%s_file_path", $class);
+	    $file = $self->can($fp) ? $self->$fp($entry) : 
+		$self->local_file_path($class, $entry);
+	    next ENTRY unless -f $file;
+
 	    $stat = stat($file);
-	    if ($stat->mtime < $limit) {
-		$self->_log("remove too old incoming queue: qid=$entry");
+	    if (defined $stat && $stat->mtime < $limit) {
+		$self->_logdebug("remove too old queue: qid=$entry");
+
+		$self->remove($entry); # remove all files in all queue.
+
 		unlink $file;
+		unless (-f $file) {
+		    $self->_log("old $class queue removed qid=$entry");
+		}
+		else {
+		    $self->_logerror("cannot remove $class queue qid=$entry");
+		}
 	    }
 	}
 	$dh->close();
     }
+}
+
+
+# Descriptions: set expire_limit.
+#    Arguments: OBJ($self) NUM($limit)
+# Side Effects: update $self.
+# Return Value: none
+sub set_expire_limit
+{
+    my ($self, $limit) = @_;
+    $self->{ _expire_limit } = $limit || 14*24*3600;
+}
+
+
+# Descriptions: get expire_limit.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
+sub get_expire_limit
+{
+    my ($self) = @_;
+    return( $self->{ _expire_limit } || 14*24*3600 );
 }
 
 
@@ -1987,25 +2062,41 @@ if ($0 eq __FILE__) {
     $queue->set_log_function($fp);
 
     print "\n1. queue_id = ", $queue->id(), "\n";
+    use Mail::Message;
+    my $msg = Mail::Message->parse({ file => "../testmails/text=plain" });
+    $queue->add($msg);
 
     my $ra = $queue->list_all() || [];
     for my $qid (@$ra) {
 	$queue->log("wakeup_queue($qid)");
 	$queue->wakeup_queue($qid);
     }
+    print "\n\n";
 
     print "\n2. list up active queue in $queue_dir\n";
     $ra = $queue->list() || [];
     for my $q (@$ra) {
 	print "\t", $q, "\n";
     }
+    print "\n\n";
 
     print "\n3. list up all queue in $queue_dir\n";
     $ra = $queue->list_all() || [];
     for my $q (@$ra) {
 	print "\t", $q, "\n";
     }
+    print "\n\n";
 
+    print "\n4. expire\n";
+    print "4.1 expire()\n";
+    $queue->expire();
+
+    print "4.2 expire(CLASS)\n";
+  CLASS:
+    for my $class (@class_list, "submitted") {
+	next CLASS if $class eq 'lock';
+	$queue->expire($class);
+    }
     print "\n\n";
 }
 
