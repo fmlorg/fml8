@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.47 2006/03/05 08:08:36 fukachan Exp $
+# $FML: SendFile.pm,v 1.48 2006/03/05 09:50:42 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -180,7 +180,7 @@ sub send_file
     my $recipient = $command_context->{ _recipient } || '';
     my $config    = $curproc->config();
 
-    # XXX langinfo_get_charset() take Accpet-Language: header field into account.
+    # XXX langinfo_get_charset() take Accpet-Language: field into account.
     my $charset   = $curproc->langinfo_get_charset("reply_message");
 
     # XXX-TODO: who validate $filename and $filepath ?
@@ -229,12 +229,12 @@ Sebd back the default help message if not found.
 sub send_user_xxx_message
 {
     my ($self, $curproc, $command_context, $type) = @_;
-    my $config = $curproc->config();
 
     # XXX-TODO: care for non Japanese
     # XXX-TODO: hmm, we can handle file.ja file.ja.euc file.en file.ru ?
     # if "help" is found in $ml_home_dir (e.g. /var/spool/ml/elena),
     # send it.
+    my $config = $curproc->config();
     if (-f $config->{ "${type}_file" }) {
 	$command_context->{ _filepath_to_send } = $config->{ "${type}_file" };
 	$command_context->{ _filename_to_send } = $type;
@@ -242,8 +242,13 @@ sub send_user_xxx_message
     }
     # if "help" is not found, use the default help message.
     else {
+	my $rm_args = {};
+	my $recipient = $command_context->{ _recipient } || '';
+	if ($recipient) { $rm_args->{ recipient } = $recipient;}
+
 	$curproc->reply_message_nl("user.${type}",
-				   "${type} unavailable (error).");
+				   "${type} unavailable (error).",
+				   $rm_args);
     }
 }
 
