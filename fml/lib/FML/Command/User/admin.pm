@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: admin.pm,v 1.18 2006/03/05 09:41:48 fukachan Exp $
+# $FML: admin.pm,v 1.19 2006/03/06 12:11:59 fukachan Exp $
 #
 
 package FML::Command::User::admin;
@@ -222,7 +222,7 @@ sub _apply_new_admin_command_mail_restrictions
     my $config  = $curproc->config();
     my $sender  = $opt_args->{ address } || '';
 
-    unless ($config->yes('use_admin_command_mail_fucntion')) {
+    unless ($config->yes('use_admin_command_mail_function')) {
 	$curproc->logerror("admin command prohibited.");
 	return 0;
     }
