@@ -8,8 +8,10 @@
 #     Examples:
 use_log		=	yes
 
-# Descriptions: ML 固有のログファイル
-#      History: fml 4.0 の $LOGFILE
+# Descriptions: ML 固有のログファイル。
+#               strftime(3) で使用可能な文字列を使うことも可能
+#               (例: log.%C%y%m%d)。
+#      History: fml 4.0 の $LOGFILE と $LOGFILE_SUFFIX
 #        Value: FILE
 #     Examples:
 log_file	=	$ml_home_dir/log

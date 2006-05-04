@@ -6,7 +6,9 @@
 #     Examples:
 use_log		=	yes
 
-# Descriptions: log file
+# Descriptions: log file.
+#               You can use % format strftime(3) can recognize
+#               (e.g. log.%C%y%m%d).
 #      History: $LOGFILE
 #        Value: FILE
 #     Examples:
