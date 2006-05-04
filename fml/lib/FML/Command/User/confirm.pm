@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: confirm.pm,v 1.40 2006/03/05 08:08:37 fukachan Exp $
+# $FML: confirm.pm,v 1.41 2006/05/02 11:23:55 fukachan Exp $
 #
 
 package FML::Command::User::confirm;
@@ -227,23 +227,6 @@ sub _switch_command
 				   "no such confirmation for command $class",
 				   { _arg_command => $class });
 	croak("no such rule");
-    }
-
-    # XXX-TODO: send back welcome file.
-    # XXX-TODO: temporary solution, please clean up in near future!
-    if ($class eq 'subscribe') {
-	use File::Spec;
-	use FML::Command::SendFile;
-	push(@ISA, qw(FML::Command::SendFile));
-
-	my $config      = $curproc->config();
-	my $ml_home_dir = $config->{ ml_home_dir };
-	my $file        = File::Spec->catfile($ml_home_dir, "welcome");
-	$config->set( 'welcome_file', $file );
-
-	if (-f $file) {
-	    $self->send_user_xxx_message($curproc, $command_context, "welcome");
-	}
     }
 
     if ($class eq 'unsubscribe') {
