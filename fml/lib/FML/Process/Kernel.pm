@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.280 2006/04/17 23:59:28 fukachan Exp $
+# $FML: Kernel.pm,v 1.281 2006/04/22 13:06:19 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -2494,8 +2494,9 @@ sub queue_in
     my $config       = $curproc->config();
     my $sender       = $config->{ maintainer };
     my $charset      = $curproc->langinfo_get_charset($category);
+    my $ml_name      = $curproc->ml_name();
     my $myname       = $curproc->myname();
-    my $_defsubj     = "message from fml8 $myname system";
+    my $_defsubj     = "message from $ml_name ML $myname system";
     my $subject      = $config->{ "${category}_subject" } || $_defsubj;
     my $_rpto        = $config->{ command_mail_address };
     my $reply_to     = $config->{ outgoing_mail_header_reply_to }   || $_rpto;
@@ -2928,7 +2929,7 @@ sub incoming_message_cleanup_queue
 		directory => $queue_dir,
 	    };
 	    $queue->set_log_function($fp);
-	    $queue->cleanup();
+	    $queue->expire();
 	    $curproc->event_set_timeout($channel, time + 24*3600);
 	}
     }
