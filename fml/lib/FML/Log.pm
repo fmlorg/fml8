@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #
-# $FML: Log.pm,v 1.33 2006/04/02 06:29:22 fukachan Exp $
+# $FML: Log.pm,v 1.34 2006/04/02 06:34:48 fukachan Exp $
 #
 
 package FML::Log;
@@ -15,6 +15,7 @@ use strict;
 use Carp;
 use FML::Config;
 use FML::Credential;
+use POSIX qw(strftime);
 
 =head1 NAME
 
@@ -137,6 +138,11 @@ sub Log
     my $file   = $log_file || $config->{ log_file } || undef;
     my $fh     = undef;
     my $sender = FML::Credential->sender;
+
+    # expand % in log file name by POSIX::strftime(). 
+    if ($file =~ /\%/o) {
+	$file = strftime($file, localtime);
+    }
 
     if (defined $file) {
 	my $old_mask = umask(077);
