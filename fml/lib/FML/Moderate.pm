@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Moderate.pm,v 1.3 2005/12/19 03:06:32 fukachan Exp $
+# $FML: Moderate.pm,v 1.4 2006/01/09 14:00:53 fukachan Exp $
 #
 
 package FML::Moderate;
@@ -72,6 +72,9 @@ sub forward_to_moderator
 
     # 3. forward incoming message.
     $curproc->reply_message($msg, $rm_args);
+
+    # 4. expire
+    $queue->expire($moderation_queue);
 }
 
 
@@ -124,22 +127,25 @@ sub _send_confirmation
 sub _queue_init
 {
     my ($self, $qid) = @_;
-    my $curproc   = $self->{ _curproc };
-    my $config    = $curproc->config();
-    my $queue_dir = $config->{ moderate_queue_dir };
+    my $curproc      = $self->{ _curproc };
+    my $config       = $curproc->config();
+    my $queue_dir    = $config->{ moderate_queue_dir };
+    my $expire_limit = $config->as_second('moderate_queue_expire_limit');
 
     use Mail::Delivery::Queue;
     if ($qid) {
 	return new Mail::Delivery::Queue {
-	    directory   => $queue_dir,
-	    local_class => [ $moderation_queue ],
-	    id          => $qid,
+	    directory    => $queue_dir,
+	    local_class  => [ $moderation_queue ],
+	    id           => $qid,
+	    expire_limit => $expire_limit,
 	};
     }
     else {
 	return new Mail::Delivery::Queue {
-	    directory   => $queue_dir,
-	    local_class => [ $moderation_queue ],
+	    directory    => $queue_dir,
+	    local_class  => [ $moderation_queue ],
+	    expire_limit => $expire_limit,
 	};
     }
 }
@@ -208,6 +214,9 @@ sub distribute_article
 	if ($@) {
 	    $curproc->logerror($@);
 	}
+
+	# expire
+	$queue->expire($moderation_queue);
     }
     else {
 	$curproc->logerror("moderate: queue undefined.");
