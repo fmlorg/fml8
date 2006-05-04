@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: subscribe.pm,v 1.35 2006/03/04 13:48:29 fukachan Exp $
+# $FML: subscribe.pm,v 1.36 2006/03/05 08:08:37 fukachan Exp $
 #
 
 package FML::Command::Admin::subscribe;
@@ -123,6 +123,15 @@ sub process
     };
     if ($r = $@) {
 	croak($r);
+    }
+
+    # send back a file.
+    if ($curproc->is_cgi_process() || $curproc->is_under_mta_process()) {
+	use FML::Command::SendFile;
+	push(@ISA, qw(FML::Command::SendFile));
+	$command_context->{ _recipient } = $address;
+	$self->send_user_xxx_message($curproc, $command_context, "welcome");
+	delete $command_context->{ _recipient };
     }
 }
 
