@@ -849,22 +849,40 @@ ml_local_message_template_dir	= $ml_local_share_dir/message
 
 
 # Descriptions: help file
-#      History:
+#      History: $HELP_FILE
 #        Value: FILE
-#     Examples:
+#     Examples: /var/spool/ml/elena/help
 help_file		=	$ml_home_dir/help
 
-# Descriptions: guilde file
-#      History:
+
+# Descriptions: guide file
+#      History: $GUIDE_FILE
 #        Value: FILE
-#     Examples:
+#     Examples: /var/spool/ml/elena/guide
 guide_file		=	$ml_home_dir/guide
 
+
 # Descriptions: objective file
-#      History:
+#      History: $OBJECTIVE_FILE
 #        Value: FILE
-#     Examples:
+#     Examples: /var/spool/ml/elena/objective
 objective_file		=	$ml_home_dir/objective
+
+
+# Descriptions: welcome file
+#      History: $WELCOME_FILE
+#        Value: FILE
+#     Examples: /var/spool/ml/elena/welcome
+welcome_file		=	$ml_home_dir/welcome
+
+
+# Descriptions: deny file
+#      History: $DENY_FILE
+#        Value: FILE
+#     Examples: /var/spool/ml/elena/deny
+deny_file		=	$ml_home_dir/deny
+
+
 
 =head1	header manipulation
 
@@ -1177,7 +1195,9 @@ lock_type	= flock
 #     Examples:
 use_log		=	yes
 
-# Descriptions: log file
+# Descriptions: log file.
+#               You can use % format strftime(3) can recognize
+#               (e.g. log.%C%y%m%d).
 #      History: $LOGFILE
 #        Value: FILE
 #     Examples:
@@ -2976,6 +2996,13 @@ use_moderate_function	=	yes
 #        Value: DIR
 #     Examples: /var/spool/ml/elena/var/mail/queue-moderate
 moderate_queue_dir = $var_dir/mail/queue-moderate
+
+
+# Descriptions: expire submitted queue after $moderate_expire_limit.
+#      History: $MODERATOR_EXPIRE_LIMIT
+#        Value: TIME
+#     Examples: 14d
+moderate_queue_expire_limit	=	14d
 
 
 

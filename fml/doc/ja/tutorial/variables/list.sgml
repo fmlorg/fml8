@@ -125,6 +125,15 @@ smtp
 </row>
 <row>
 <entry>
+article_expire_limit</entry>
+<entry>
+ どのくらい古い記事を消すか？</entry>
+<entry>
+90d
+   </entry>
+</row>
+<row>
+<entry>
 article_filter_reject_notice_data_type</entry>
 <entry>
  弾いたメールをどのようにフォワードするか？</entry>
@@ -776,6 +785,15 @@ default_mail_header_size_limit</entry>
 </row>
 <row>
 <entry>
+deny_file</entry>
+<entry>
+ deny ファイル</entry>
+<entry>
+$ml_home_dir/deny
+   </entry>
+</row>
+<row>
+<entry>
 digest_header_rewrite_rules</entry>
 <entry>
  記事のまとめおくりのヘッダを書き換えるルール群</entry>
@@ -1104,7 +1122,7 @@ get_command_request_limit</entry>
 <entry>
 guide_file</entry>
 <entry>
- ヘルプファイル</entry>
+ GUIDE ファイル</entry>
 <entry>
 $ml_home_dir/guide
    </entry>
@@ -1371,7 +1389,7 @@ $var_dir/log
 <entry>
 log_file</entry>
 <entry>
- ML 固有のログファイル</entry>
+ ML 固有のログファイル。</entry>
 <entry>
 $ml_home_dir/log
    </entry>
@@ -1658,6 +1676,15 @@ $var_dir/mail/queue-moderate
 </row>
 <row>
 <entry>
+moderate_queue_expire_limit</entry>
+<entry>
+ expire submitted queue after $moderate_expire_limit.</entry>
+<entry>
+14d
+   </entry>
+</row>
+<row>
+<entry>
 moderator_member_maps</entry>
 <entry>
  メンバーかどうか認証する際に検索するすべてのメンバーリスト</entry>
@@ -1720,7 +1747,7 @@ config.cf
 <entry>
 objective_file</entry>
 <entry>
- ヘルプファイル</entry>
+ objective ファイル</entry>
 <entry>
 $ml_home_dir/objective
    </entry>
@@ -2309,7 +2336,7 @@ yes
 </row>
 <row>
 <entry>
-use_admin_command_mail_fucntion</entry>
+use_admin_command_mail_function</entry>
 <entry>
  admin コマンドメールを使うか？</entry>
 <entry>
@@ -2323,6 +2350,15 @@ use_article_delivery</entry>
  記事を配送する機能を使うか否か？</entry>
 <entry>
 yes
+   </entry>
+</row>
+<row>
+<entry>
+use_article_expire</entry>
+<entry>
+ 古い記事を自動消去するか否か？</entry>
+<entry>
+no
    </entry>
 </row>
 <row>
@@ -2404,6 +2440,15 @@ use_article_spool</entry>
  記事をスプールディレクトリに保存する</entry>
 <entry>
 ${use_spool:-yes}
+   </entry>
+</row>
+<row>
+<entry>
+use_article_summary_file_expire</entry>
+<entry>
+ 記事の自動消去($use_article_expire)に追従して</entry>
+<entry>
+no
    </entry>
 </row>
 <row>
@@ -2741,6 +2786,15 @@ var_dir</entry>
  さまざまな目的につかう</entry>
 <entry>
 $ml_home_dir/var
+   </entry>
+</row>
+<row>
+<entry>
+welcome_file</entry>
+<entry>
+ welcome ファイル</entry>
+<entry>
+$ml_home_dir/welcome
    </entry>
 </row>
 </tbody>

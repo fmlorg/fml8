@@ -125,6 +125,15 @@ smtp
 </row>
 <row>
 <entry>
+article_expire_limit</entry>
+<entry>
+ how old article to be removed</entry>
+<entry>
+90d
+   </entry>
+</row>
+<row>
+<entry>
 article_filter_reject_notice_data_type</entry>
 <entry>
  how fml refer the rejeced message.</entry>
@@ -793,6 +802,15 @@ default_mail_header_size_limit</entry>
 </row>
 <row>
 <entry>
+deny_file</entry>
+<entry>
+ deny file</entry>
+<entry>
+$ml_home_dir/deny
+   </entry>
+</row>
+<row>
+<entry>
 digest_header_rewrite_rules</entry>
 <entry>
  digest article header rewrite rules</entry>
@@ -1121,7 +1139,7 @@ get_command_request_limit</entry>
 <entry>
 guide_file</entry>
 <entry>
- guilde file</entry>
+ guide file</entry>
 <entry>
 $ml_home_dir/guide
    </entry>
@@ -1379,7 +1397,7 @@ $var_dir/log
 <entry>
 log_file</entry>
 <entry>
- log file</entry>
+ log file.</entry>
 <entry>
 $ml_home_dir/log
    </entry>
@@ -1662,6 +1680,15 @@ moderate_queue_dir</entry>
  queue_dir moderate uses as temporary incoming queue </entry>
 <entry>
 $var_dir/mail/queue-moderate
+   </entry>
+</row>
+<row>
+<entry>
+moderate_queue_expire_limit</entry>
+<entry>
+ expire submitted queue after $moderate_expire_limit.</entry>
+<entry>
+14d
    </entry>
 </row>
 <row>
@@ -2297,6 +2324,15 @@ yes
 </row>
 <row>
 <entry>
+use_article_expire</entry>
+<entry>
+ expire too old article or not ?</entry>
+<entry>
+no
+   </entry>
+</row>
+<row>
+<entry>
 use_article_filter_reject_notice</entry>
 <entry>
  infor the filter rejection ?</entry>
@@ -2374,6 +2410,15 @@ use_article_spool</entry>
  store article into spool directory ?</entry>
 <entry>
 ${ues_spool:-yes}
+   </entry>
+</row>
+<row>
+<entry>
+use_article_summary_file_expire</entry>
+<entry>
+ remove content correspoding with article expiration.</entry>
+<entry>
+no
    </entry>
 </row>
 <row>
@@ -2711,6 +2756,15 @@ var_dir</entry>
  directory hoding</entry>
 <entry>
 $ml_home_dir/var
+   </entry>
+</row>
+<row>
+<entry>
+welcome_file</entry>
+<entry>
+ welcome file</entry>
+<entry>
+$ml_home_dir/welcome
    </entry>
 </row>
 </tbody>

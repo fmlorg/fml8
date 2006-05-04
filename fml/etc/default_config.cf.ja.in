@@ -879,22 +879,40 @@ ml_local_message_template_dir	= $ml_local_share_dir/message
 
 
 # Descriptions: ヘルプファイル
-#      History:
+#      History: $HELP_FILE
 #        Value: FILE
-#     Examples:
+#     Examples: /var/spool/ml/elena/help
 help_file		=	$ml_home_dir/help
 
-# Descriptions: ヘルプファイル
-#      History:
+
+# Descriptions: GUIDE ファイル
+#      History: $GUIDE_FILE
 #        Value: FILE
-#     Examples:
+#     Examples: /var/spool/ml/elena/guide
 guide_file		=	$ml_home_dir/guide
 
-# Descriptions: ヘルプファイル
-#      History:
+
+# Descriptions: objective ファイル
+#      History: $OBJECTIVE_FILE
 #        Value: FILE
-#     Examples:
+#     Examples: /var/spool/ml/elena/objective
 objective_file		=	$ml_home_dir/objective
+
+
+# Descriptions: welcome ファイル
+#      History: $WELCOME_FILE
+#        Value: FILE
+#     Examples: /var/spool/ml/elena/welcome
+welcome_file		=	$ml_home_dir/welcome
+
+
+# Descriptions: deny ファイル
+#      History: $DENY_FILE
+#        Value: FILE
+#     Examples: /var/spool/ml/elena/deny
+deny_file		=	$ml_home_dir/deny
+
+
 
 =head1	ヘッダの操作
 
@@ -1212,8 +1230,10 @@ lock_type	= flock
 #     Examples:
 use_log		=	yes
 
-# Descriptions: ML 固有のログファイル
-#      History: fml 4.0 の $LOGFILE
+# Descriptions: ML 固有のログファイル。
+#               strftime(3) で使用可能な文字列を使うことも可能
+#               (例: log.%C%y%m%d)。
+#      History: fml 4.0 の $LOGFILE と $LOGFILE_SUFFIX
 #        Value: FILE
 #     Examples:
 log_file	=	$ml_home_dir/log
@@ -2100,7 +2120,7 @@ use_command_mail_function = ${use_command_mail_program:-yes}
 #      History: $REMOTE_ADMINISTRATION
 #        Value: YES_OR_NO
 #     Examples: yes / no
-use_admin_command_mail_fucntion = no
+use_admin_command_mail_function = no
 
 
 # Descriptions: コマンドメールの返事の先頭に
@@ -3056,6 +3076,14 @@ use_moderate_function	=	yes
 #        Value: DIR
 #     Examples: /var/spool/ml/elena/var/mail/queue-moderate
 moderate_queue_dir = $var_dir/mail/queue-moderate
+
+
+
+# Descriptions: expire submitted queue after $moderate_expire_limit.
+#      History: $MODERATOR_EXPIRE_LIMIT
+#        Value: TIME
+#     Examples: 14d
+moderate_queue_expire_limit	=	14d
 
 
 

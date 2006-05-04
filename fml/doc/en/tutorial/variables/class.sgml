@@ -60,6 +60,11 @@ article {
           $use_article_digest_function
    }
 
+   article_expire { 
+          $article_expire_limit
+          $use_article_expire
+   }
+
    article_filter { 
           $article_filter_functions
           $use_article_filter
@@ -120,6 +125,10 @@ article {
 
    article_spool { 
           $use_article_spool
+   }
+
+   article_summary_file_expire { 
+          $use_article_summary_file_expire
    }
 
    article_text_plain_filter { 
@@ -636,6 +645,7 @@ moderate {
 
    moderate { 
           $moderate_queue_dir
+          $moderate_queue_expire_limit
           $use_moderate_function
    }
 }
@@ -899,10 +909,12 @@ x {
 
 _file$ {
           $compat_old_fml_default_config_ph_file
+          $deny_file
           $guide_file
           $help_file
           $objective_file
           $sequence_file
+          $welcome_file
 }
 
 _dir$ {
