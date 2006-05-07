@@ -40,7 +40,96 @@
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
 
+2006/05/04
+
+   いろいろな機能の expire を整備しました。
+
+   variables
+	define $welcome_file and $deny_file.
+	% format of strftime(3) is available for $log_file
 	
+   FML::Log 
+	expand % format in $log_file by strftime(3).
+	ログファイルに log.%C%y%m%d などといった日付がつけられるように
+	なりました。
+	
+   FML::Process::Debug 
+	define incoming_message(), which returns undef as a dummy.
+	
+   FML::Process::Distribute 
+	expire article under locked
+	
+   FML::Process::Kernel 
+	change default message subject to "message from $ml_name ML
+	$myname system". 
+	call $queue->expire() in incoming_message_cleanup_queue().
+	
+   FML::Article 
+   FML::Article::Summary 
+	expire article summary (remove content, corresponding with expired
+	articles, in summary).
+	
+   FML::Moderate 
+	expire too old submitted queue after $moderate_queue_expire_limit.
+	
+   FML::Command::Admin::subscribe 
+	send back welcome file in subscription when running under
+	CGI/MTA process. 
+	
+   FML::Command::User::confirm 
+	move "send welcome message" code to
+	FML::Command::Admin::subscribe class. 
+	
+   FML::Command::SendFile 
+	bug fix::pass recipient information to reply_message_nl().
+	
+   FML::Command::User::admin 
+	fix typo::$use_admin_command_mail_fucntion
+	
+   Mail::Delivery::Queue 
+	constuctor imports $expire_limit in the argument.
+	
+	delete() and remove() can accept queue id if specified.
+	
+	define expire() which removes too old queue files in the specified
+	queue. It expires all queue if $class unspecified.
+	
+	expire()::cleanup() is overhauled. queue removing is done by remove().
+	
+	define {set,get}_expire_limit() access methods.
+	
+2006/05/03
+
+   variables
+	define $use_article_summary_file_expire
+	define $use_article_expire and $article_expire_limit
+	define $moderate_queue_expire_limit
+	fix typo: $use_admin_command_mail_function
+
+   FML::Article 
+	implement expire(), which function expires too old articles.
+	modify log messages
+	
+   FML::Process::Distribute 
+	try to expire articles once per day if enabled.
+
+2006/05/02
+
+   variables
+	define $confirm_command_expire_limit (= 14d by default).
+	
+   FML::Config 
+	implement as_second($key), which returns the value as seconds
+	such as	86400 for '1d'.
+	
+   FML::Command::User::confirm 
+	modified to use $confirm_command_expire_limit which value is
+	converted to the integer by as_second() method of FML::Config.
+	
+   FML::Restriction::Command 
+	changed that permit_forward_to_moderator() returns 
+	("matched","ignore").
+
 2006/04/30
 
    FML::Merge::FML4::RULES.txt 
@@ -55,6 +144,8 @@
 	fix open() mode::r -> <
 
 2006/04/22
+
+   7.98.12 released.
 
    配送システムの見直し(1) 2006/04/22 - 2006/04/20
 	エラーリセットのタイミングを変更
@@ -9729,4 +9820,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.281 2006/04/23 08:05:36 fukachan Exp $
+$FML: CHANGES.txt,v 1.282 2006/04/30 14:45:59 fukachan Exp $
