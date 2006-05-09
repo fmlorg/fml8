@@ -9,6 +9,7 @@ size.cf
 delivery.cf
 digest.cf
 messages.cf
+envelope.cf
 header.cf
 body.cf
 lock.cf
