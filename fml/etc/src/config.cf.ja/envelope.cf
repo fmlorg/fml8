@@ -1,0 +1,19 @@
+=head1 Envelope 情報に基づく操作
+
+
+# Descriptions: Envelope 情報を根拠にしたループチェックをするか？
+#      History:
+#        Value: YES_OR_NO
+#     Examples:
+use_incoming_mail_envelope_loop_check		=	yes
+
+
+# Descriptions: Envelope に対するループチェックのルール群
+#      History:
+#        Value: MIX (
+#			check_envelope_sender
+#		)
+#     Examples: check_envelope_sender
+incoming_mail_envelope_loop_check_rules		=	check_envelope_sender
+
+

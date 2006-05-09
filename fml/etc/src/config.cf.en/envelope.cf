@@ -1,0 +1,19 @@
+=head1 Envelope based action
+
+
+# Descriptions: enable envelope based loop check or not ?
+#      History:
+#        Value: YES_OR_NO
+#     Examples:
+use_incoming_mail_envelope_loop_check		=	yes
+
+
+# Descriptions: envelope based loop check rules
+#      History:
+#        Value: MIX (
+#			check_envelope_sender
+#		)
+#     Examples: check_envelope_sender
+incoming_mail_envelope_loop_check_rules		=	check_envelope_sender
+
+
