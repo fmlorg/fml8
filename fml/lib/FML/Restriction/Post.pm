@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.25 2006/01/09 14:00:55 fukachan Exp $
+# $FML: Post.pm,v 1.26 2006/04/10 13:08:52 fukachan Exp $
 #
 
 package FML::Restriction::Post;
@@ -73,6 +73,29 @@ sub reject_system_accounts
 {
     my ($self, $rule, $sender) = @_;
     $self->reject_system_special_accounts($rule, $sender);
+}
+
+
+# Descriptions: reject if $sender matches a spammer.
+#    Arguments: OBJ($self) STR($rule) STR($sender)
+# Side Effects: none
+# Return Value: ARRAY(STR, STR)
+sub reject_spammer_maps
+{
+    my ($self, $rule, $sender) = @_;
+    my $curproc = $self->{ _curproc };
+    my $cred    = $curproc->credential();
+    my $match   = $cred->is_spammer($sender);
+
+    if ($match) {
+	$curproc->log("${rule}: $match matches sender address");
+	unless ($curproc->restriction_state_get_deny_reason()) {
+	    $curproc->restriction_state_set_deny_reason($rule);
+	}
+	return("matched", "deny");
+    }
+
+    return(0, undef);
 }
 
 
