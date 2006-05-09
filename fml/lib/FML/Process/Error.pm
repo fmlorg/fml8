@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.55 2005/11/30 23:50:19 fukachan Exp $
+# $FML: Error.pm,v 1.56 2006/02/15 13:44:04 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -158,6 +158,12 @@ sub run
     my $eval = $config->get_hook( 'error_mail_analyzer_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
+    if ($curproc->_is_qmail_extension_command()) {
+	$curproc->_execute_qmail_extension_command();
+	$pcb->set("qmail-ext", "found", 1);
+	goto END; # no more normal error handling process.
+    }
+
     $curproc->_forward_error_message();
 
     unless ($curproc->is_refused()) {
@@ -199,6 +205,7 @@ sub run
 	}
     }
 
+  END:
     $eval = $config->get_hook( 'error_mail_analyzer_run_end_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
@@ -283,6 +290,9 @@ sub finish
     if ($pcb->get("error", "found")) {
 	$curproc->log("error message found");
     }
+    elsif ($pcb->get("qmail-ext", "found")) {
+	$curproc->logdebug("qmail-ext found");
+    }
     else {
 	$curproc->logwarn("error message not found");
     }
@@ -332,6 +342,49 @@ sub _forward_error_message
 	};
 	$curproc->reply_message($msg, $msg_args);
     }
+}
+
+
+=head1 QMAIL EXTENSION COMMAND TRAP
+
+In qmail environment, you can use the following address as a command:
+<elena-subscribe@domain> for subscribe request for elena@domain ML.
+
+To emulate this special command mail request, libexec/error need to
+check EXT environment variable and pass the control to
+FML::Process::Command if needed.
+
+=cut
+
+
+# Descriptions: we receive qmail extension command or not ?
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: NUM
+sub _is_qmail_extension_command
+{
+    my ($curproc) = @_;
+
+    # environment variable EXT holds extention information.
+    # for example, a mail to ML-subscribe@VIRTUAL.DOMAIN is recognized as
+    # extension with "VIRTUAL.DOMAIN-ML-subscribe" in EXT variable.
+    use FML::Command::QmailExt;
+    my $extension = new FML::Command::QmailExt $curproc;
+    return $extension->match($ENV{EXT});
+}
+
+
+# Descriptions: execute qmail extension command emulation.
+#    Arguments: OBJ($curproc)
+# Side Effects: emulate command process if needed.
+# Return Value: none
+sub _execute_qmail_extension_command
+{
+    my ($curproc) = @_;
+
+    use FML::Command::QmailExt;
+    my $extension = new FML::Command::QmailExt $curproc;
+    $extension->execute($ENV{EXT});
 }
 
 
