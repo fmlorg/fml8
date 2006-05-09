@@ -41,6 +41,7 @@ address_compare_function_domain_matching_level	=	3
 #			check_pgp_signature
 #			permit_forward_to_moderator
 #			reject_system_special_accounts
+#			reject_spammer_maps
 #			reject
 #			ignore_invalid_request
 #			ignore	
@@ -59,6 +60,7 @@ article_post_restrictions	=	reject_system_special_accounts
 #			permit_user_command
 #			check_pgp_signature
 #			reject_system_special_accounts
+#			reject_spammer_maps
 #			reject
 #			ignore_invalid_request
 #			ignore	
@@ -78,6 +80,7 @@ command_mail_restrictions	=	reject_system_special_accounts
 #			check_admin_member_password
 #			check_pgp_signature
 #			reject_system_special_accounts
+#			reject_spammer_maps
 #			reject
 #		)
 #     Examples:
@@ -272,7 +275,25 @@ system_special_accounts		=	root
 					\S+\-unsubscribe
 
 
+=head2 特定のアドレスを拒否する
+
+
+# Descriptions: スパマーというか拒否したいアドレスのリスト
+#      History: $REJECT_ADDR_LIST
+#        Value: MAP
+#     Examples: pcre:/var/spool/ml/elena/spammer.pcre
+primary_spammer_map	=
+
+
+# Descriptions: スパマーというか拒否したいアドレスのリスト
+#      History: $REJECT_ADDR_LIST
+#        Value: MAP_LIST
+#     Examples: pcre:/var/spool/ml/elena/spammer.pcre
+spammer_maps		=	$primary_spammer_map
+
+
 =head2 LIST ADDRESSES
+
 
 # Descriptions: ＭＬが使うアドレス: 例: elena, elena-ctl
 #               たとえば、libexec/error は、これらのアドレスを
