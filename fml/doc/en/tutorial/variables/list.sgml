@@ -1236,6 +1236,15 @@ incoming_mail_cache_size</entry>
 </row>
 <row>
 <entry>
+incoming_mail_envelope_loop_check_rules</entry>
+<entry>
+ envelope based loop check rules</entry>
+<entry>
+check_envelope_sender
+   </entry>
+</row>
+<row>
+<entry>
 incoming_mail_header_loop_check_rules</entry>
 <entry>
  loop check rules</entry>
@@ -2070,6 +2079,15 @@ smtp_servers</entry>
 </row>
 <row>
 <entry>
+spammer_maps</entry>
+<entry>
+ list of spammers or addresses to reject.</entry>
+<entry>
+$primary_spammer_map
+   </entry>
+</row>
+<row>
+<entry>
 spool_dir</entry>
 <entry>
  spool directory</entry>
@@ -2588,6 +2606,15 @@ yes
 use_incoming_mail_cache</entry>
 <entry>
  cache incoing mail ?</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_incoming_mail_envelope_loop_check</entry>
+<entry>
+ enable envelope based loop check or not ?</entry>
 <entry>
 yes
    </entry>

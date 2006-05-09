@@ -1219,6 +1219,15 @@ incoming_mail_cache_size</entry>
 </row>
 <row>
 <entry>
+incoming_mail_envelope_loop_check_rules</entry>
+<entry>
+ Envelope に対するループチェックのルール群</entry>
+<entry>
+check_envelope_sender
+   </entry>
+</row>
+<row>
+<entry>
 incoming_mail_header_loop_check_rules</entry>
 <entry>
  ヘッダに対するループチェックのルール群</entry>
@@ -2062,6 +2071,15 @@ smtp_servers</entry>
 </row>
 <row>
 <entry>
+spammer_maps</entry>
+<entry>
+ スパマーというか拒否したいアドレスのリスト</entry>
+<entry>
+$primary_spammer_map
+   </entry>
+</row>
+<row>
+<entry>
 spool_dir</entry>
 <entry>
  記事を保存するディレクトリ</entry>
@@ -2618,6 +2636,15 @@ yes
 use_incoming_mail_cache</entry>
 <entry>
  入力されるメールをキャッシュするか？</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_incoming_mail_envelope_loop_check</entry>
+<entry>
+ Envelope 情報を根拠にしたループチェックをするか？</entry>
 <entry>
 yes
    </entry>

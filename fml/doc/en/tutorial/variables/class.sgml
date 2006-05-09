@@ -496,6 +496,11 @@ incoming {
           $use_incoming_mail_cache
    }
 
+   incoming_mail_envelope_loop_check { 
+          $incoming_mail_envelope_loop_check_rules
+          $use_incoming_mail_envelope_loop_check
+   }
+
    incoming_mail_header_loop_check { 
           $incoming_mail_header_loop_check_rules
           $use_incoming_mail_header_loop_check
@@ -807,6 +812,14 @@ smtp {
    smtp_* {
     ?     $smtp_sender
     ?     $smtp_servers
+   }
+}
+
+spammer {
+
+   spammer { 
+          $primary_spammer_map
+          $spammer_maps
    }
 }
 

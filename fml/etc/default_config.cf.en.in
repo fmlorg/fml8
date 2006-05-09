@@ -339,6 +339,7 @@ address_compare_function_domain_matching_level	=	3
 #			check_pgp_signature
 #			permit_forward_to_moderator
 #			reject_system_special_accounts
+#			reject_spammer_maps
 #			reject
 #			ignore_invalid_request
 #			ignore
@@ -357,6 +358,7 @@ article_post_restrictions	=	reject_system_special_accounts
 #			permit_user_command
 #			check_pgp_signature
 #			reject_system_special_accounts
+#			reject_spammer_maps
 #			reject
 #			ignore_invalid_request
 #			ignore
@@ -376,6 +378,7 @@ command_mail_restrictions	=	reject_system_special_accounts
 #			check_admin_member_password
 #			check_pgp_signature
 #			reject_system_special_accounts
+#			reject_spammer_maps
 #			reject
 #		)
 #     Examples:
@@ -571,6 +574,25 @@ system_special_accounts		=	root
 				\S+\-subscribe
 				\S+\-unsubscribe
 
+
+=head2 reject specific addresses
+
+
+# Descriptions: list of spammers or addresses to reject.
+#      History: $REJECT_ADDR_LIST
+#        Value: MAP
+#     Examples: pcre:/var/spool/ml/elena/spammer.pcre
+primary_spammer_map	=
+
+
+# Descriptions: list of spammers or addresses to reject.
+#      History: $REJECT_ADDR_LIST
+#        Value: MAP_LIST
+#     Examples: pcre:/var/spool/ml/elena/spammer.pcre
+spammer_maps		=	$primary_spammer_map
+
+
+=head2 LIST ADDRESSES
 
 
 # Descriptions: addresses fml uses: e.g. elena, elena-ctl
@@ -881,6 +903,26 @@ welcome_file		=	$ml_home_dir/welcome
 #        Value: FILE
 #     Examples: /var/spool/ml/elena/deny
 deny_file		=	$ml_home_dir/deny
+
+
+
+=head1 Envelope based action
+
+
+# Descriptions: enable envelope based loop check or not ?
+#      History:
+#        Value: YES_OR_NO
+#     Examples:
+use_incoming_mail_envelope_loop_check		=	yes
+
+
+# Descriptions: envelope based loop check rules
+#      History:
+#        Value: MIX (
+#			check_envelope_sender
+#		)
+#     Examples: check_envelope_sender
+incoming_mail_envelope_loop_check_rules		=	check_envelope_sender
 
 
 
