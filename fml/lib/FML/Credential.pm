@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.66 2005/12/19 11:29:26 fukachan Exp $
+# $FML: Credential.pm,v 1.67 2006/01/09 14:00:53 fukachan Exp $
 #
 
 package FML::Credential;
@@ -370,6 +370,24 @@ sub is_moderator_member
     $self->_is_member({
 	address     => $address,
 	member_maps => $member_maps,
+    });
+}
+
+
+# Descriptions: sender of the current process is a spammer or not.
+#    Arguments: OBJ($self) STR($address)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub is_spammer
+{
+    my ($self, $address) = @_;
+    my $curproc      = $self->{ _curproc };
+    my $config       = $curproc->config();
+    my $spammer_maps = $config->get_as_array_ref('spammer_maps');
+
+    $self->_is_member({
+	address     => $address,
+	member_maps => $spammer_maps,
     });
 }
 
