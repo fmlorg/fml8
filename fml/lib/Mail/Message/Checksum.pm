@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Checksum.pm,v 1.12 2004/07/23 13:16:44 fukachan Exp $
+# $FML: Checksum.pm,v 1.13 2005/05/27 03:03:41 fukachan Exp $
 #
 
 package Mail::Message::Checksum;
@@ -43,14 +43,16 @@ sub new
     my ($type) = ref($self) || $self;
     my $me     = {};
 
-    _init($me, $args);
+    bless $me, $type;
+    $me->set_mode("unknown");
+    $me->_init($args);
 
     return bless $me, $type;
 }
 
 
 # Descriptions: initialization routine called at new().
-#               search a md5 module or program.
+#               load class or search a md5 module or program.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -58,16 +60,33 @@ sub _init
 {
     my ($self, $args) = @_;
 
-    if (defined $args->{ program }) {
-	$self->{ _program } = $args->{ program };
+    # 1. try internal module loading.
+    my $is_loaded = $self->_load_class('Digest::MD5');
+    unless ($is_loaded) {
+	$is_loaded = $self->_load_class('MD5');
     }
 
-    # XXX-TODO: Digest::MD5
-    my $pkg = 'MD5';
-    eval qq{ require $pkg; $pkg->import();};
+    # 2. try external programs.
+    unless ($is_loaded) {
+	$self->_init_external($args);
+    }
+}
 
-    unless ($@) {
-	$self->{ _type } = 'native';
+
+# Descriptions: initialization routine called at new().
+#               search a md5 module or program.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: update $self
+# Return Value: none
+sub _init_external
+{
+    my ($self, $args) = @_;
+
+    return if defined $self->{ _program };
+
+    if (defined $args->{ program }) {
+	$self->{ _program } = $args->{ program };
+	$self->set_mode("external");
     }
     else {
 	# XXX-TODO: method-ify
@@ -75,17 +94,47 @@ sub _init
 	    use Mail::Message::Utils;
 	    my $prog = Mail::Message::Utils::search_program('md5') ||
 	      Mail::Message::Utils::search_program('md5sum');
-
+	    
 	    if (defined $prog) {
 		$self->{ _program } = $prog;
+		$self->set_mode("external");
+	    }
+	    else {
+		croak("external program md5/md5sum not found");
 	    }
 	};
-	carp($@) if $@;
+	croak($@) if $@;
+    }
+}
+
+
+# Descriptions: load $class object.
+#    Arguments: OBJ($self) STR($class)
+# Side Effects: load $class module.
+# Return Value: NUM
+sub _load_class
+{
+    my ($self, $class) = @_;
+
+    my $obj = undef;
+    eval qq{ require $class; $class->import(); \$obj = new $class; };
+    unless ($@) {
+	$self->set_mode("internal");
+	$self->{ _class } = $class;
+	$self->{ _obj   } = $obj;
+	return 1;
+    }
+    else {
+	return 0;
     }
 }
 
 
 =head2 md5(\$string)
+
+same as md5_str_ref().
+
+=head2 md5_str_ref(\$string)
 
 return the md5 checksum of the given string C<$string>.
 
@@ -99,14 +148,26 @@ return the md5 checksum of the given string C<$string>.
 sub md5
 {
     my ($self, $r_data) = @_;
+    $self->md5_str_ref($r_data);
+}
 
-    if (defined($self->{ _type }) && ($self->{ _type } eq 'native')) {
-	$self->_md5_native($r_data);
+
+# Descriptions: dispatcher to calculate the md5 checksum.
+#    Arguments: OBJ($self) STR_REF($r_data)
+# Side Effects: none
+# Return Value: STR(md5 sum)
+sub md5_str_ref
+{
+    my ($self, $r_data) = @_;
+    my $type = $self->get_mode() || 'unknown';
+
+    if ($type eq 'internal' || $type eq 'external') {
+	my $fp = sprintf("_%s_%s", $type, "md5_str_ref");
+	$self->$fp($r_data);
     }
     else {
-	$self->_md5_by_program($r_data);
+	croak("no md5 definition");
     }
-
 }
 
 
@@ -114,18 +175,16 @@ sub md5
 #    Arguments: OBJ($self) STR_REF($r_data)
 # Side Effects: none
 # Return Value: STR(md5 sum)
-sub _md5_native
+sub _internal_md5_str_ref
 {
     my ($self, $r_data) = @_;
-    my ($buf, $p, $pe);
 
-    $pe = length($$r_data);
+    my $md5 = $self->{ _obj };
+    croak("no md5 object") unless defined $md5;
 
-    my $md5;
-    eval q{ $md5 = new MD5;};
-    $md5->reset();
-
-    $p = 0;
+    my $buf;
+    my $p  = 0;
+    my $pe = length($$r_data);
   BUF:
     while (1) {
 	last BUF if $p > $pe;
@@ -143,10 +202,11 @@ sub _md5_native
 #    Arguments: OBJ($self) STR_REF($r_data)
 # Side Effects: none
 # Return Value: STR(md5 sum)
-sub _md5_by_program
+sub _external_md5_str_ref
 {
     my ($self, $r_data) = @_;
 
+    $self->_init_external();
     if (defined $self->{ _program }) {
 	my $program = $self->{ _program };
 
@@ -257,6 +317,65 @@ by G(x) using mod 2 division, producing a remainder R(x) of degree
 The coefficients of R(x) are considered to be a 32-bit sequence.
 
 The bit sequence is complemented and the result is the CRC.
+
+
+=head1 ACCESS METHODS
+
+=head2 set_mode($mode)
+
+set mode.
+
+=head2 get_mode()
+
+get current mode. return unknown if not set.
+
+=cut
+
+
+# Descriptions: set mode.
+#    Arguments: OBJ($self) STR($mode)
+# Side Effects: update $self
+# Return Value: none
+sub set_mode
+{
+    my ($self, $mode) = @_;
+    $self->{ _mode } = $mode || 'unknown';
+}
+
+
+# Descriptions: get current mode.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub get_mode
+{
+    my ($self) = @_;
+    return( $self->{ _mode } || 'unknown' );
+}
+
+
+
+#
+# DEBUG
+#
+if ($0 eq __FILE__) {
+   my $cksum = new Mail::Message::Checksum;
+
+   # 1. call with string reference.
+   for my $mode (qw(internal external)) {
+       print STDERR "1. STR REF ($mode) ... ";
+       $cksum->set_mode($mode);
+       my $sys_md5 = `head -1 /etc/passwd | md5`;
+       my $string  = `head -1 /etc/passwd`;
+       my $our_md5 = $cksum->md5( \$string );
+       $sys_md5 =~ s/\s*$//;
+       $our_md5 =~ s/\s*$//;
+       print STDERR (($sys_md5 eq $our_md5) ? "ok\n" : "fail\n");
+   }
+
+   # 2. file or stream.
+}
+
 
 =head1 CODING STYLE
 
