@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Checksum.pm,v 1.13 2005/05/27 03:03:41 fukachan Exp $
+# $FML: Checksum.pm,v 1.14 2006/05/11 14:27:03 fukachan Exp $
 #
 
 package Mail::Message::Checksum;
@@ -136,12 +136,12 @@ same as md5_str_ref().
 
 =head2 md5_str_ref(\$string)
 
-return the md5 checksum of the given string C<$string>.
+return the md5 checksum of the specified string C<$string>.
 
 =cut
 
 
-# Descriptions: dispatcher to calculate the md5 checksum.
+# Descriptions: return the md5 checksum of the specified STR_REF.
 #    Arguments: OBJ($self) STR_REF($r_data)
 # Side Effects: none
 # Return Value: STR(md5 sum)
@@ -152,7 +152,7 @@ sub md5
 }
 
 
-# Descriptions: dispatcher to calculate the md5 checksum.
+# Descriptions: return the md5 checksum of the specified STR_REF.
 #    Arguments: OBJ($self) STR_REF($r_data)
 # Side Effects: none
 # Return Value: STR(md5 sum)
@@ -220,16 +220,141 @@ sub _external_md5_str_ref
 	    print $wh $$r_data;
 	    close($wh);
 
-	    my $cksum = 0;
-	    sysread($rh, $cksum, 1024);
-	    $cksum =~ s/[\s\n]*$//o;
-	    if ($cksum =~ /^(\S+)/) { $cksum = $1;}
+	    my $cksum = $self->_read_cksum_from_handle($rh);
 	    close($rh);
+
 	    return $cksum if $cksum;
 	}
     }
 
     return undef;
+}
+
+
+# Descriptions: read checksum from the specified handle. 
+#    Arguments: OBJ($self) HANDLE($rh)
+# Side Effects: none
+# Return Value: STR
+sub _read_cksum_from_handle
+{
+    my ($self, $rh) = @_;
+    my $cksum = 0;
+
+    sysread($rh, $cksum, 1024);
+    $cksum =~ s/[\s\n]*$//o;
+    if ($cksum =~ /^(\S+)/) { $cksum = $1;}
+
+    return $cksum;
+}
+
+
+=head2 md5_file($file)
+
+return the md5 checksum of the specified file.
+
+=cut
+
+
+# Descriptions: return the md5 checksum of the specified file.
+#    Arguments: OBJ($self) STR_REF($file)
+# Side Effects: none
+# Return Value: STR(md5 sum)
+sub md5_file
+{
+    my ($self, $file) = @_;
+    my $type = $self->get_mode() || 'unknown';
+
+    if ($type eq 'internal' || $type eq 'external') {
+	my $fp = sprintf("_%s_%s", $type, "md5_file");
+	$self->$fp($file);
+    }
+    else {
+	croak("no md5 definition");
+    }
+}
+
+
+# Descriptions: calculate the md5 checksum by MD5 module.
+#    Arguments: OBJ($self) STR_REF($file)
+# Side Effects: none
+# Return Value: STR(md5 sum)
+sub _internal_md5_file
+{
+    my ($self, $file) = @_;
+
+    my $md5 = $self->{ _obj };
+    croak("no md5 object") unless defined $md5;
+
+    use FileHandle;
+    my $rh = new FileHandle $file;
+    if (defined $rh) {
+	my $buf;
+      BUF:
+	while (sysread($rh, $buf, 8192)) {
+	    $md5->add($buf);
+	}
+    }
+    else {
+	croak("cannot open $file");
+    }
+
+    $md5->hexdigest();
+}
+
+
+# Descriptions: calculate the md5 checksum by md5 (external) program.
+#    Arguments: OBJ($self) STR_REF($file)
+# Side Effects: none
+# Return Value: STR(md5 sum)
+sub _external_md5_file
+{
+    my ($self, $file) = @_;
+
+    $self->_init_external();
+    if (defined $self->{ _program }) {
+	my $program = $self->{ _program };
+
+	use FileHandle;
+	my ($rh, $wh) = FileHandle::pipe;
+
+	# XXX UNIX only o.k. MD5 and Digest::MD5 are available on M$.
+	eval qq{ require IPC::Open2; IPC::Open2->import();};
+	my $pid = open2($rh, $wh, $self->{ _program });
+	if (defined $pid) {
+	    $self->_external_md5_file_inject_data($file, $wh);
+	    close($wh);
+
+	    my $cksum = $self->_read_cksum_from_handle($rh);
+	    close($rh);
+
+	    return $cksum if $cksum;
+	}
+    }
+
+    return undef;
+}
+
+
+# Descriptions: inject $file into $wh handle.
+#    Arguments: OBJ($self) STR($file) HANDLE($wh)
+# Side Effects: none
+# Return Value: none
+sub _external_md5_file_inject_data
+{
+    my ($self, $file, $wh) = @_;
+
+    use FileHandle;
+    my $rh = new FileHandle $file;
+    if (defined $rh) {
+	my $buf;
+      BUF:
+	while (sysread($rh, $buf, 8192)) {
+	    print $wh $buf;
+	}
+    }
+    else {
+	croak("cannot open $file");
+    }
 }
 
 
@@ -359,10 +484,9 @@ sub get_mode
 # DEBUG
 #
 if ($0 eq __FILE__) {
-   my $cksum = new Mail::Message::Checksum;
-
    # 1. call with string reference.
    for my $mode (qw(internal external)) {
+       my $cksum = new Mail::Message::Checksum;
        print STDERR "1. STR REF ($mode) ... ";
        $cksum->set_mode($mode);
        my $sys_md5 = `head -1 /etc/passwd | md5`;
@@ -374,6 +498,17 @@ if ($0 eq __FILE__) {
    }
 
    # 2. file or stream.
+   for my $mode (qw(internal external)) {
+       my $cksum = new Mail::Message::Checksum;
+       print STDERR "2. FILE    ($mode) ... ";
+       $cksum->set_mode($mode);
+       my $sys_md5 = `cat /etc/passwd | md5`;
+       my $our_md5 = $cksum->md5_file("/etc/passwd");
+       $sys_md5 =~ s/\s*$//;
+       $our_md5 =~ s/\s*$//;
+       print STDERR (($sys_md5 eq $our_md5) ? "ok\n" : "fail\n");
+   }
+
 }
 
 
@@ -387,7 +522,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
