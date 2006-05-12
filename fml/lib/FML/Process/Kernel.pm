@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.281 2006/04/22 13:06:19 fukachan Exp $
+# $FML: Kernel.pm,v 1.282 2006/05/04 05:21:29 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -663,17 +663,72 @@ See C<FML::Header> object for more details.
 sub simple_loop_check
 {
     my ($curproc) = @_;
+
+    my $match = $curproc->_envelope_based_loop_check();
+    unless ($match) {
+	$match = $curproc->_header_based_loop_check();
+    }
+
+    # $match contains the first matched rule name (== reason).
+    if ($match) {
+	# we should stop this process ASAP.
+	$curproc->stop_this_process();
+	$curproc->logerror("mail loop detected for $match");
+    }
+}
+
+
+# Descriptions: envelop based loop check.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub _envelope_based_loop_check
+{
+    my ($curproc) = @_;
     my $config    = $curproc->config();
-    my $header    = $curproc->incoming_message_header();
-    my $rules     =
-	$config->get_as_array_ref( 'incoming_mail_header_loop_check_rules' );
-    my $match     = 0;
+    my $match     = undef;
+    my $var_rules = 'incoming_mail_envelope_loop_check_rules';
+
+    if ($config->yes('use_incoming_mail_envelope_loop_check')) {
+	use FML::Envelope;
+	my $envelope = new FML::Envelope $curproc;
+
+	my $rules = $config->get_as_array_ref($var_rules);
+      RULE:
+	for my $rule (@$rules) {
+	    if ($envelope->can($rule)) {
+		$match = $envelope->$rule($config) ? $rule : undef;
+	    }
+	    else {
+		$curproc->logwarn("envelope->${rule}() is undefined");
+ 	    }
+	    last RULE if $match;
+	}
+    }
+
+    return $match;
+}
+
+
+# Descriptions: header based loop check.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub _header_based_loop_check
+{
+    my ($curproc) = @_;
+    my $config    = $curproc->config();
+    my $match     = undef;
+    my $var_rules = 'incoming_mail_header_loop_check_rules';
 
     if ($config->yes('use_incoming_mail_header_loop_check')) {
+	my $header = $curproc->incoming_message_header();
+
+	my $rules = $config->get_as_array_ref($var_rules);
       RULE:
 	for my $rule (@$rules) {
 	    if ($header->can($rule)) {
-		$match = $header->$rule($config) ? $rule : 0;
+		$match = $header->$rule($config) ? $rule : undef;
 	    }
 	    else {
 		$curproc->logwarn("header->${rule}() is undefined");
@@ -683,12 +738,7 @@ sub simple_loop_check
 	}
     }
 
-    # This $match contains the first matched rule name (== reason).
-    if ($match) {
-	# we should stop this process ASAP.
-	$curproc->stop_this_process();
-	$curproc->logerror("mail loop detected for $match");
-    }
+    return $match;
 }
 
 
