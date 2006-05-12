@@ -10,13 +10,15 @@ use_incoming_mail_body_loop_check		=	yes
 
 # Descriptions: body loop check rules
 #      History:
-#        Value: MIX ( check_body_cksum )
+#        Value: MIX ( check_body_checksum )
 #     Examples:
-incoming_mail_body_loop_check_rules		=	check_body_cksum
+incoming_mail_body_loop_check_rules		=	check_body_checksum
 
 
 # Descriptions: Message-ID cache directory
 #      History:
 #        Value: DIR
 #     Examples:
-incoming_mail_body_cksum_cache_dir		=	$db_dir/body_cksum
+incoming_mail_body_checksum_cache_dir		=	$db_dir/body_checksum
+
+
