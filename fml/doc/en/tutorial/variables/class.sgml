@@ -507,7 +507,7 @@ incoming {
    }
 
    incoming_* {
-          $incoming_mail_body_cksum_cache_dir
+          $incoming_mail_body_checksum_cache_dir
    }
 }
 

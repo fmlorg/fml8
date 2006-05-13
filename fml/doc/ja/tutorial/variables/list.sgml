@@ -1183,11 +1183,11 @@ $default_mail_header_size_limit
 </row>
 <row>
 <entry>
-incoming_mail_body_cksum_cache_dir</entry>
+incoming_mail_body_checksum_cache_dir</entry>
 <entry>
  Message-ID のキャッシュを格納するディレクトリ</entry>
 <entry>
-$db_dir/body_cksum
+$db_dir/body_checksum
    </entry>
 </row>
 <row>
@@ -1196,7 +1196,7 @@ incoming_mail_body_loop_check_rules</entry>
 <entry>
  ヘッダに対するループチェックのルール群</entry>
 <entry>
-check_body_cksum
+check_body_checksum
    </entry>
 </row>
 <row>
