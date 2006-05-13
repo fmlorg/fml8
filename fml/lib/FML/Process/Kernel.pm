@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.282 2006/05/04 05:21:29 fukachan Exp $
+# $FML: Kernel.pm,v 1.283 2006/05/12 13:50:11 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -668,6 +668,9 @@ sub simple_loop_check
     unless ($match) {
 	$match = $curproc->_header_based_loop_check();
     }
+    unless ($match) {
+	$match = $curproc->_body_based_loop_check();
+    }
 
     # $match contains the first matched rule name (== reason).
     if ($match) {
@@ -734,6 +737,38 @@ sub _header_based_loop_check
 		$curproc->logwarn("header->${rule}() is undefined");
 	    }
 
+	    last RULE if $match;
+	}
+    }
+
+    return $match;
+}
+
+
+# Descriptions: body based loop check.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub _body_based_loop_check
+{
+    my ($curproc) = @_;
+    my $config    = $curproc->config();
+    my $match     = undef;
+    my $var_rules = 'incoming_mail_body_loop_check_rules';
+
+    if ($config->yes('use_incoming_mail_body_loop_check')) {
+	use FML::Body;
+	my $body = new FML::Body $curproc;
+
+	my $rules = $config->get_as_array_ref($var_rules);
+      RULE:
+	for my $rule (@$rules) {
+	    if ($body->can($rule)) {
+		$match = $body->$rule($config) ? $rule : undef;
+	    }
+	    else {
+		$curproc->logwarn("body->${rule}() is undefined");
+ 	    }
 	    last RULE if $match;
 	}
     }

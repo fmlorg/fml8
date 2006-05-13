@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.148 2006/02/15 13:44:04 fukachan Exp $
+# $FML: Utils.pm,v 1.149 2006/04/22 08:29:23 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -325,6 +325,64 @@ sub incoming_message_remove_queue
 	    $curproc->logdebug("remove qid=$qid");
 	    $q->remove();
 	}
+    }
+}
+
+
+=head2 incoming_message_print_body_as_file()
+
+dupliate the body part into a temporary file.
+return a newly created temporary file path.
+
+=cut
+
+
+# Descriptions: dupliate the body part into a temporary file.
+#    Arguments: OBJ($curproc) OBJ($queue)
+# Side Effects: create a temporary file.
+# Return Value: STR
+sub incoming_message_print_body_as_file
+{
+    my ($curproc, $queue) = @_;
+    my $cache_file = $curproc->incoming_message_get_cache_file_path();
+    my $tmp_file   = $curproc->tmp_file_path();
+
+    if (-f $cache_file) {
+	my $rh = new FileHandle $cache_file;
+	my $wh = new FileHandle "> $tmp_file";
+	if (defined $rh && defined $wh) {
+	    my $found = 0;
+	    my $buf;
+	  LINE:
+	    while ($buf = <$rh>) {
+		unless ($found) {
+		    if ($buf =~ /^$/o) {
+			$found = 1;
+		    }
+		    next LINE;
+		}
+		print $wh $buf;
+	    }
+	    $wh->close();
+	    $rh->close();
+
+	    return $tmp_file;
+	}
+	else {
+	    my $myname = "incoming_message_dup_body";
+	    unless (defined $rh) {
+		$curproc->logerror("$myname: cannot open $cache_file");
+	    }
+	    unless (defined $wh) {
+		$curproc->logerror("$myname: cannot open $tmp_file");
+	    }
+
+	    return undef;
+	}
+    }
+    else {
+	$curproc->logerror("incoming_message_dup_body: no cache");
+	return undef;
     }
 }
 
