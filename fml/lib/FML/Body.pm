@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.10 2006/01/07 13:16:41 fukachan Exp $
+# $FML: Body.pm,v 1.3 2006/05/13 11:45:40 fukachan Exp $
 #
 
 package FML::Body;
@@ -121,6 +121,10 @@ sub db_open
 }
 
 
+# Descriptions: dummy.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: none
 sub db_close
 {
     ;
