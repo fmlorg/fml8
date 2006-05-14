@@ -40,6 +40,51 @@
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
 
+2006/05/14
+
+   FML::Envelope 
+	envelop based loop check
+
+2006/05/13
+
+   variables	
+	cksum -> checksum
+
+   FML::Process::Kernel Utils 
+   FML::Body 
+	enable body based loop check
+	
+2006/05/11
+
+   Mail::Message::Checksum 
+	restructured.
+	define md5_str_ref() too, same as md5().
+	implement md5_file()
+	
+2006/05/09
+
+   variables
+	reject_spammer_maps directive available now.
+	define dummy $primary_spammer_map and $spammer_maps.
+
+	add envelope loop checks
+
+   FML::Restriction::Post 
+	implement reject_spammer_maps()
+	
+   FML::Credential 
+	define is_spammer()
+	
+   FML::Process::Error 
+	restructure qmail-ext command emulation.
+	
+	currently libexec::error traps the request and switch the
+	context to command process. FML::Process::QMail no more used. 
+	FML::Command::QmailExt provides qmail-ext emulation functions.
+
+   etc/dot-qmail-admin 
+	bug fix: add missing calling of libexec::error process.
+	
 2006/05/04
 
    いろいろな機能の expire を整備しました。
@@ -9820,4 +9865,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.282 2006/04/30 14:45:59 fukachan Exp $
+$FML: CHANGES.txt,v 1.283 2006/05/07 13:09:29 fukachan Exp $
