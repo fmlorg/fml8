@@ -16,16 +16,16 @@ address {
 admin {
 
    admin_command { 
+   }
+
+   admin_command_mail { 
     ?     $admin_command_mail_allowed_commands
           $admin_command_mail_auth_gpg_config_dir
     ?     $admin_command_mail_auth_gpg_config_dir_alias
           $admin_command_mail_auth_pgp_config_dir
     ?     $admin_command_mail_auth_pgp_config_dir_alias
           $admin_command_mail_restrictions
-   }
-
-   admin_command_mail_fucntion { 
-          $use_admin_command_mail_fucntion
+          $use_admin_command_mail_function
    }
 
    admin_member { 
@@ -234,7 +234,7 @@ admin_command {
    admin_command { 
    }
 
-   admin_command_mail_fucntion { 
+   admin_command_mail { 
    }
 }
 
