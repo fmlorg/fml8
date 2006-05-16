@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.21 2006/02/18 08:36:49 fukachan Exp $
+# $FML: Control.pm,v 1.22 2006/03/05 08:08:37 fukachan Exp $
 #
 
 package FML::User::Control;
@@ -474,18 +474,18 @@ sub print_userlist
 
 
 # Descriptions: return address list as ARRAY_REF.
-#    Arguments: OBJ($self) OBJ($curproc) ARRAY_REF($list)
+#    Arguments: OBJ($self) OBJ($curproc) ARRAY_REF($maps)
 # Side Effects: none
 # Return Value: ARRAY_REF
 sub get_user_list
 {
-    my ($self, $curproc, $list) = @_;
+    my ($self, $curproc, $maps) = @_;
     my $config = $curproc->config();
     my $r      = [];
 
     $curproc->lock($lock_channel);
 
-    for my $map (@$list) {
+    for my $map (@$maps) {
 	my $io  = new IO::Adapter $map, $config;
 	my $key = '';
 	if (defined $io) {
@@ -500,6 +500,36 @@ sub get_user_list
     $curproc->unlock($lock_channel);
 
     return $r;
+}
+
+
+# Descriptions: return the total number of addresses in list.
+#    Arguments: OBJ($self) OBJ($curproc) ARRAY_REF($maps)
+# Side Effects: none
+# Return Value: NUM
+sub get_user_total
+{
+    my ($self, $curproc, $maps) = @_;
+    my $config = $curproc->config();
+    my $total  = 0;
+
+    $curproc->lock($lock_channel);
+
+    for my $map (@$maps) {
+	my $io  = new IO::Adapter $map, $config;
+	my $key = '';
+	if (defined $io) {
+	    $io->open();
+	    while (defined($key = $io->get_next_key())) {
+		$total++;
+	    }
+	    $io->close();
+	}
+    }
+
+    $curproc->unlock($lock_channel);
+
+    return $total;
 }
 
 
