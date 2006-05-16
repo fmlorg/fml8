@@ -2123,7 +2123,7 @@ use_command_mail_function = ${use_command_mail_program:-yes}
 #      History: $REMOTE_ADMINISTRATION
 #        Value: YES_OR_NO
 #     Examples: yes / no
-use_admin_command_mail_fucntion = no
+use_admin_command_mail_function = no
 
 
 # Descriptions: add self introduction into the preamble of command mail reply. 
