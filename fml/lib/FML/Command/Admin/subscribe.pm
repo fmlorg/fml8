@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: subscribe.pm,v 1.36 2006/03/05 08:08:37 fukachan Exp $
+# $FML: subscribe.pm,v 1.37 2006/05/04 06:45:58 fukachan Exp $
 #
 
 package FML::Command::Admin::subscribe;
@@ -102,6 +102,17 @@ sub process
     croak("\$member_map is not specified")    unless $member_map;
     croak("\$recipient_map is not specified") unless $recipient_map;
 
+    # check if member/recipient total exceeds the limit.
+    if ($self->_is_member_total_exceed_limit($curproc, $command_context)) {
+	my $key            = "limit.exceed_user_total";
+	my $default_msg    = "exceed the user total limit.";
+	my $maintainer     = $config->{ maintainer };
+	my $recipient_list = [ $maintainer, $address ];
+	my $rm_args        = { recipient => $recipient_list };
+	$curproc->reply_message_nl($key, $default_msg, $rm_args);
+	croak("total number of subscribers exceeds the limit.");
+    }
+
     use FML::Restriction::Base;
     my $safe = new FML::Restriction::Base;
     unless ($safe->regexp_match('address', $address)) {
@@ -154,6 +165,58 @@ sub cgi_menu
     if ($r = $@) {
 	croak($r);
     }
+}
+
+
+# Descriptions: check the total of members/recipients exceeds the limit.
+#               return 1 if exceeded.
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
+# Side Effects: none
+# Return Value: NUM
+sub _is_member_total_exceed_limit
+{
+    my ($self, $curproc, $command_context) = @_;
+    my $match = 0;
+
+  TYPE:
+    for my $type (qw(recipient member)) {
+	my $r = $self->_check_total_limit($curproc, $command_context, $type);
+	$match = $r;
+	last TYPE if $r;
+    }
+
+    return $match;
+}
+
+
+# Descriptions: check the number of users in ${map_name}_maps 
+#               exceeds the limit or not.
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
+# Side Effects: none
+# Return Value: NUM
+sub _check_total_limit
+{
+    my ($self, $curproc, $command_context, $map_name) = @_;
+
+    # 1. count up the total number of recipients.
+    use FML::User::Control;
+    my $control    = new FML::User::Control;
+    my $var_maps   = sprintf("%s_maps", $map_name);
+    my $config     = $curproc->config();
+    my $maplist    = $config->get_as_array_ref($var_maps); 
+    my $user_total = $control->get_user_total($curproc, $maplist);
+
+    # 2. compare. return 1 if the total exceeds the limit.
+    my $var_yesno_name = sprintf("use_%s_total_limit", $map_name);
+    if ($config->yes($var_yesno_name)) {
+	my $var_limit_name = sprintf("%s_total_limit", $map_name);
+	my $user_limit = $config->{ $var_limit_name } || 0;
+	if ($user_limit) {
+	    return ($user_total > $user_limit) ? 1 : 0;
+	}
+    }
+
+    return 0;
 }
 
 
