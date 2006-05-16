@@ -628,8 +628,40 @@ command_mail_address	=	$address_for_command
 
 
 
-=head1	ユーザ情報
+=head1	ユーザ数制限
 
+
+# Descriptions: ユーザ数(正確には受信者数)の上限を設けるか？
+#		デフォルトは設けない
+#      History: $MAX_MEMBER_LIMIT
+#        Value: YES_OR_NO
+#     Examples: no
+use_recipient_total_limit	=	no
+
+
+# Descriptions: ユーザ数(正確には受信者数)の上限
+#      History: $MAX_MEMBER_LIMIT
+#        Value: NUM
+#     Examples: 3000
+recipient_total_limit		=	3000
+
+
+# Descriptions: ユーザ数(正確には投稿可能数)の上限を設けるか？
+#		デフォルトは設けない
+#      History: $MAX_MEMBER_LIMIT
+#        Value: YES_OR_NO
+#     Examples: no
+use_member_total_limit		=	no
+
+
+# Descriptions: ユーザ数(正確には投稿可能数)の上限
+#      History: $MAX_MEMBER_LIMIT
+#        Value: NUM
+#     Examples: 3000
+member_total_limit		=	3000
+
+
+=head1	ユーザ情報
 
 =head2	データベース
 

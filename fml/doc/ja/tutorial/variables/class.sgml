@@ -625,6 +625,11 @@ member {
           $member_maps
           $primary_member_map
    }
+
+   member_total_limit { 
+          $member_total_limit
+          $use_member_total_limit
+   }
 }
 
 message {
@@ -780,6 +785,11 @@ recipient {
           $primary_recipient_map
           $recipient_maps
           $smtp_recipient_limit
+   }
+
+   recipient_total_limit { 
+          $recipient_total_limit
+          $use_recipient_total_limit
    }
 }
 

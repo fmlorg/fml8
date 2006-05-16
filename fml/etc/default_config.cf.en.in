@@ -617,6 +617,37 @@ article_post_address	=	$address_for_post
 #     Examples:
 command_mail_address	=	$address_for_command
 
+=head1	limitation for number of users
+
+
+# Descriptions: upper limit of recipients. no limitation by default.
+#      History: $MAX_MEMBER_LIMIT
+#        Value: YES_OR_NO
+#     Examples: no
+use_recipient_total_limit	=	no
+
+
+# Descriptions: upper limit of recipients.
+#      History: $MAX_MEMBER_LIMIT
+#        Value: NUM
+#     Examples: 3000
+recipient_total_limit		=	3000
+
+
+# Descriptions: upper limit of posters. no limitation by default.
+#      History: $MAX_MEMBER_LIMIT
+#        Value: YES_OR_NO
+#     Examples: no
+use_member_total_limit		=	no
+
+
+# Descriptions: upper limit of posters.
+#      History: $MAX_MEMBER_LIMIT
+#        Value: NUM
+#     Examples: 3000
+member_total_limit		=	3000
+
+
 =head1	User Information
 
 # Descriptions: user database directory.

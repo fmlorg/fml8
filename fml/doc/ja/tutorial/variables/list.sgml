@@ -1613,6 +1613,15 @@ $primary_member_map
 </row>
 <row>
 <entry>
+member_total_limit</entry>
+<entry>
+ ユーザ数(正確には投稿可能数)の上限</entry>
+<entry>
+3000
+   </entry>
+</row>
+<row>
+<entry>
 message_id_cache_dir</entry>
 <entry>
  すべての Message-ID のキャッシュを格納するディレクトリ</entry>
@@ -2012,6 +2021,15 @@ recipient_maps</entry>
 <entry>
 $primary_recipient_map
    file:$ml_home_dir/actives
+   </entry>
+</row>
+<row>
+<entry>
+recipient_total_limit</entry>
+<entry>
+ ユーザ数(正確には受信者数)の上限</entry>
+<entry>
+3000
    </entry>
 </row>
 <row>
@@ -2696,6 +2714,15 @@ no
 </row>
 <row>
 <entry>
+use_member_total_limit</entry>
+<entry>
+ ユーザ数(正確には投稿可能数)の上限を設けるか？</entry>
+<entry>
+no
+   </entry>
+</row>
+<row>
+<entry>
 use_moderate_function</entry>
 <entry>
  use moderate function or not.</entry>
@@ -2710,6 +2737,15 @@ use_outgoing_mail_cache</entry>
  出力(配送)されるメールをキャッシュするか？</entry>
 <entry>
 yes
+   </entry>
+</row>
+<row>
+<entry>
+use_recipient_total_limit</entry>
+<entry>
+ ユーザ数(正確には受信者数)の上限を設けるか？</entry>
+<entry>
+no
    </entry>
 </row>
 <row>
