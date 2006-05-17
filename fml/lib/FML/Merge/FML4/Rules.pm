@@ -438,7 +438,7 @@ sub translate
     $s = undef;
     if (($key eq 'CONFIRMATION_EXPIRE' && $diff->{ CONFIRMATION_EXPIRE })) {
         if ($config->{ CONFIRMATION_EXPIRE } == 168) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -474,7 +474,7 @@ sub translate
     $s = undef;
     if (($key eq 'WELCOME_FILE' && $diff->{ WELCOME_FILE })) {
         if ($config->{ WELCOME_FILE }) {
-            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -582,7 +582,7 @@ sub translate
     $s = undef;
     if (($key eq 'REMOTE_ADMINISTRATION' && $diff->{ REMOTE_ADMINISTRATION })) {
         if ($config->{ REMOTE_ADMINISTRATION } == 0) {
-            $s .= sprintf("use_admin_command_mail_fucntion = no", $value);
+            $s .= sprintf("use_admin_command_mail_function = no", $value);
         }
     }
     return $s if defined $s;
@@ -591,7 +591,7 @@ sub translate
     $s = undef;
     if (($key eq 'REMOTE_ADMINISTRATION' && $diff->{ REMOTE_ADMINISTRATION })) {
         if ($config->{ REMOTE_ADMINISTRATION } == 1) {
-            $s .= sprintf("use_admin_command_mail_fucntion = yes", $value);
+            $s .= sprintf("use_admin_command_mail_function = yes", $value);
         }
     }
     return $s if defined $s;
@@ -708,7 +708,7 @@ sub translate
     $s = undef;
     if (($key eq 'ADMIN_ADD_SEND_WELCOME_FILE' && $diff->{ ADMIN_ADD_SEND_WELCOME_FILE })) {
         if ($config->{ ADMIN_ADD_SEND_WELCOME_FILE } == 0) {
-            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -717,7 +717,7 @@ sub translate
     $s = undef;
     if (($key eq 'ADMIN_ADD_SEND_WELCOME_FILE' && $diff->{ ADMIN_ADD_SEND_WELCOME_FILE })) {
         if ($config->{ ADMIN_ADD_SEND_WELCOME_FILE } == 1) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -798,7 +798,7 @@ sub translate
     $s = undef;
     if (($key eq 'MODERATOR_EXPIRE_LIMIT' && $diff->{ MODERATOR_EXPIRE_LIMIT })) {
         if ($config->{ MODERATOR_EXPIRE_LIMIT } == 14) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -816,7 +816,7 @@ sub translate
     $s = undef;
     if (($key eq 'REJECT_ADDR_LIST' && $diff->{ REJECT_ADDR_LIST })) {
         if ($config->{ REJECT_ADDR_LIST }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -825,7 +825,7 @@ sub translate
     $s = undef;
     if (($key eq 'NOT_USE_UNIX_FROM_LOOP_CHECK' && $diff->{ NOT_USE_UNIX_FROM_LOOP_CHECK })) {
         if ($config->{ NOT_USE_UNIX_FROM_LOOP_CHECK } == 0) {
-            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -834,7 +834,7 @@ sub translate
     $s = undef;
     if (($key eq 'NOT_USE_UNIX_FROM_LOOP_CHECK' && $diff->{ NOT_USE_UNIX_FROM_LOOP_CHECK })) {
         if ($config->{ NOT_USE_UNIX_FROM_LOOP_CHECK } == 1) {
-            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
+            $s .= sprintf("incoming_mail_envelope_loop_check_rules -= check_envelope_sender", $value);
         }
     }
     return $s if defined $s;
@@ -860,8 +860,17 @@ sub translate
 
     $s = undef;
     if (($key eq 'CHECK_MAILBODY_CKSUM' && $diff->{ CHECK_MAILBODY_CKSUM })) {
-        if ($config->{ CHECK_MAILBODY_CKSUM }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+        if ($config->{ CHECK_MAILBODY_CKSUM } == 1) {
+            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
+        }
+    }
+    return $s if defined $s;
+    
+
+    $s = undef;
+    if (($key eq 'CHECK_MAILBODY_CKSUM' && $diff->{ CHECK_MAILBODY_CKSUM })) {
+        if ($config->{ CHECK_MAILBODY_CKSUM } == 0) {
+            $s .= sprintf("incoming_mail_body_loop_check_rules -= check_body_checksum", $value);
         }
     }
     return $s if defined $s;
@@ -942,7 +951,7 @@ sub translate
     $s = undef;
     if (($key eq 'MAX_MEMBER_LIMIT' && $diff->{ MAX_MEMBER_LIMIT })) {
         if ($config->{ MAX_MEMBER_LIMIT }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -1122,7 +1131,7 @@ sub translate
     $s = undef;
     if (($key eq 'CONTENT_HANDLER_CUTOFF_EMPTY_MESSAGE' && $diff->{ CONTENT_HANDLER_CUTOFF_EMPTY_MESSAGE })) {
         if ($config->{ CONTENT_HANDLER_CUTOFF_EMPTY_MESSAGE }) {
-            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -1131,7 +1140,7 @@ sub translate
     $s = undef;
     if (($key eq 'CONTENT_HANDLER_REJECT_EMPTY_MESSAGE' && $diff->{ CONTENT_HANDLER_REJECT_EMPTY_MESSAGE })) {
         if ($config->{ CONTENT_HANDLER_REJECT_EMPTY_MESSAGE }) {
-            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -1158,7 +1167,7 @@ sub translate
     $s = undef;
     if (($key eq 'HTML_MAIL_DEFAULT_HANDLER' && $diff->{ HTML_MAIL_DEFAULT_HANDLER })) {
         if ($config->{ HTML_MAIL_DEFAULT_HANDLER }) {
-            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -1232,7 +1241,7 @@ sub translate
     $s = undef;
     if (($key eq 'SUBSCRIBE_ANNOUNCE_FORWARD_TYPE' && $diff->{ SUBSCRIBE_ANNOUNCE_FORWARD_TYPE })) {
         if ($config->{ SUBSCRIBE_ANNOUNCE_FORWARD_TYPE } eq 'prepend_info') {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -1241,7 +1250,7 @@ sub translate
     $s = undef;
     if (($key eq 'SUBSCRIBE_ANNOUNCE_FORWARD_TYPE' && $diff->{ SUBSCRIBE_ANNOUNCE_FORWARD_TYPE })) {
         if ($config->{ SUBSCRIBE_ANNOUNCE_FORWARD_TYPE } eq 'raw') {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -1339,7 +1348,25 @@ sub translate
 
     $s = undef;
     if (($key eq 'USE_ENCRYPTED_DISTRIBUTION' && $diff->{ USE_ENCRYPTED_DISTRIBUTION })) {
-        if ($config->{ USE_ENCRYPTED_DISTRIBUTION }) {
+        if ($config->{ USE_ENCRYPTED_DISTRIBUTION } == 1) {
+            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+        }
+    }
+    return $s if defined $s;
+    
+
+    $s = undef;
+    if (($key eq 'USE_ENCRYPTED_DISTRIBUTION' && $diff->{ USE_ENCRYPTED_DISTRIBUTION })) {
+        if ($config->{ USE_ENCRYPTED_DISTRIBUTION } == 0) {
+            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+        }
+    }
+    return $s if defined $s;
+    
+
+    $s = undef;
+    if (($key eq 'ENCRYPTED_DISTRIBUTION_TYPE' && $diff->{ ENCRYPTED_DISTRIBUTION_TYPE })) {
+        if ($config->{ ENCRYPTED_DISTRIBUTION_TYPE } eq 'pgp') {
             $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
         }
     }
@@ -1349,6 +1376,24 @@ sub translate
     $s = undef;
     if (($key eq 'ENCRYPTED_DISTRIBUTION_TYPE' && $diff->{ ENCRYPTED_DISTRIBUTION_TYPE })) {
         if ($config->{ ENCRYPTED_DISTRIBUTION_TYPE } eq 'pgp2') {
+            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+        }
+    }
+    return $s if defined $s;
+    
+
+    $s = undef;
+    if (($key eq 'ENCRYPTED_DISTRIBUTION_TYPE' && $diff->{ ENCRYPTED_DISTRIBUTION_TYPE })) {
+        if ($config->{ ENCRYPTED_DISTRIBUTION_TYPE } eq 'pgp5') {
+            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+        }
+    }
+    return $s if defined $s;
+    
+
+    $s = undef;
+    if (($key eq 'ENCRYPTED_DISTRIBUTION_TYPE' && $diff->{ ENCRYPTED_DISTRIBUTION_TYPE })) {
+        if ($config->{ ENCRYPTED_DISTRIBUTION_TYPE } eq 'gpg') {
             $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
         }
     }
@@ -1421,7 +1466,7 @@ sub translate
     $s = undef;
     if (($key eq 'BRACKET' && $diff->{ BRACKET })) {
         if ($config->{ BRACKET } eq 'Elena') {
-            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -1439,7 +1484,7 @@ sub translate
     $s = undef;
     if (($key eq 'BRACKET_SEPARATOR' && $diff->{ BRACKET_SEPARATOR })) {
         if ($config->{ BRACKET_SEPARATOR }) {
-            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -1448,7 +1493,7 @@ sub translate
     $s = undef;
     if (($key eq 'SUBJECT_FREE_FORM' && $diff->{ SUBJECT_FREE_FORM })) {
         if ($config->{ SUBJECT_FREE_FORM }) {
-            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -1457,7 +1502,7 @@ sub translate
     $s = undef;
     if (($key eq 'SUBJECT_FREE_FORM_REGEXP' && $diff->{ SUBJECT_FREE_FORM_REGEXP })) {
         if ($config->{ SUBJECT_FREE_FORM_REGEXP }) {
-            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2017,7 +2062,7 @@ sub translate
     $s = undef;
     if (($key eq 'USE_DOT_QMAIL_EXT' && $diff->{ USE_DOT_QMAIL_EXT })) {
         if ($config->{ USE_DOT_QMAIL_EXT } == 0) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2151,7 +2196,7 @@ sub translate
 
     $s = undef;
     if (($key eq 'LOG_MAILBODY_CKSUM' && $diff->{ LOG_MAILBODY_CKSUM })) {
-        if ($config->{ LOG_MAILBODY_CKSUM } eq '$VARRUN_DIR/bodycksumcache') {
+        if ($config->{ LOG_MAILBODY_CKSUM } ne '$VARRUN_DIR/bodycksumcache') {
             $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
         }
     }
@@ -2206,7 +2251,7 @@ sub translate
     $s = undef;
     if (($key eq 'DENY_FILE' && $diff->{ DENY_FILE })) {
         if ($config->{ DENY_FILE } ne '$DIR/deny') {
-            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2503,7 +2548,7 @@ sub translate
     $s = undef;
     if (($key eq 'OUTGOING_ADDRESS' && $diff->{ OUTGOING_ADDRESS })) {
         if ($config->{ OUTGOING_ADDRESS }) {
-            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2692,7 +2737,7 @@ sub translate
     $s = undef;
     if (($key eq 'NEWSYSLOG_MAX' && $diff->{ NEWSYSLOG_MAX })) {
         if ($config->{ NEWSYSLOG_MAX } == 4) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2737,7 +2782,7 @@ sub translate
     $s = undef;
     if (($key eq 'USE_MEMBER_NAME' && $diff->{ USE_MEMBER_NAME })) {
         if ($config->{ USE_MEMBER_NAME }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -2746,7 +2791,16 @@ sub translate
     $s = undef;
     if (($key eq 'USE_EXPIRE' && $diff->{ USE_EXPIRE })) {
         if ($config->{ USE_EXPIRE } == 0) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= sprintf("use_article_expire = no", $value);
+        }
+    }
+    return $s if defined $s;
+    
+
+    $s = undef;
+    if (($key eq 'USE_EXPIRE' && $diff->{ USE_EXPIRE })) {
+        if ($config->{ USE_EXPIRE } == 1) {
+            $s .= sprintf("use_article_expire = yes", $value);
         }
     }
     return $s if defined $s;
@@ -2754,8 +2808,17 @@ sub translate
 
     $s = undef;
     if (($key eq 'EXPIRE_SUMMARY' && $diff->{ EXPIRE_SUMMARY })) {
-        if ($config->{ EXPIRE_SUMMARY }) {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+        if ($config->{ EXPIRE_SUMMARY } == 0) {
+            $s .= sprintf("use_article_summary_file_expire = no", $value);
+        }
+    }
+    return $s if defined $s;
+    
+
+    $s = undef;
+    if (($key eq 'EXPIRE_SUMMARY' && $diff->{ EXPIRE_SUMMARY })) {
+        if ($config->{ EXPIRE_SUMMARY } == 1) {
+            $s .= sprintf("use_article_summary_file_expire = yes", $value);
         }
     }
     return $s if defined $s;
@@ -2764,7 +2827,7 @@ sub translate
     $s = undef;
     if (($key eq 'EXPIRE_LIMIT' && $diff->{ EXPIRE_LIMIT })) {
         if ($config->{ EXPIRE_LIMIT } eq '7days') {
-            $s .= &$fp_rule_not_yet_implemented($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_prefer_fml8_value($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;
@@ -3664,7 +3727,7 @@ sub translate
     $s = undef;
     if (($key eq 'ML_MEMBER_CHECK' && $diff->{ ML_MEMBER_CHECK })) {
         if ($config->{ ML_MEMBER_CHECK }) {
-            $s .= &$fp_rule_convert($self, $config, $diff, $key, $value);
+            $s .= &$fp_rule_ignore($self, $config, $diff, $key, $value);
         }
     }
     return $s if defined $s;

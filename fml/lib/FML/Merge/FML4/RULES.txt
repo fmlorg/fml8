@@ -1,5 +1,5 @@
 #
-# $FML: RULES.txt,v 1.10 2006/03/20 05:53:25 fukachan Exp $
+# $FML: RULES.txt,v 1.11 2006/04/30 07:01:33 fukachan Exp $
 #     BASED ON fml/cf/MANIFEST 1.104
 #
 #	.convert		よろしく変換して頑張る
@@ -153,9 +153,11 @@
 .if CONTROL_ADDRESS
 	.convert
 
+.ok
 .if PERMIT_COMMAND_FROM
 	.convert
 
+.ok
 .if REJECT_COMMAND_HANDLER
 	.convert
 
@@ -273,10 +275,12 @@
 # #
 # # value: confirmation/forward_to_admin
 # MANUAL_REGISTRATION_TYPE:	confirmation
+.ok
 .if MANUAL_REGISTRATION_TYPE == confirmation
 
 	subscribe_command_auth_type = confirmation
 
+.ok
 .if MANUAL_REGISTRATION_TYPE == forward_to_admin
 
 	subscribe_command_auth_type = manual
@@ -284,6 +288,7 @@
 
 # # value: directory string
 # MANUAL_REGISTRATION_CONFIRMATION_FILE:	$DIR/confirm.msub
+.ok
 .if MANUAL_REGISTRATION_CONFIRMATION_FILE
 	.use_fml8_value
 
@@ -400,13 +405,15 @@
 # # Expire of request queue. The unit is "hour". (default, 168 == 7*24)
 # # value: number
 # CONFIRMATION_EXPIRE:		168
+.ok
 .if CONFIRMATION_EXPIRE == 168
-	.not_yet_implemented
+	.use_fml8_value
 
 
 # # confirmation request queue (you should not manually edit it)
 # # value: filename string
 # CONFIRMATION_LIST:		
+.ok
 .if CONFIRMATION_LIST
 	.use_fml8_value
 
@@ -429,13 +436,15 @@
 # # This function works in automatic registration.
 # # value: filename string
 # WELCOME_FILE:	 $DIR/welcome
+.ok
 .if WELCOME_FILE
-	.not_support
+	.convert
 
 
 # # subject of mail ($WELCOME_FILE) sent to a new member
 # # value: string
 # WELCOME_STATEMENT:Welcome to our $ML_FN\n         You are added automatically
+.ok
 .if WELCOME_STATEMENT == Welcome to our $ML_FN\n         You are added automatically
 	.not_support
 
@@ -456,22 +465,27 @@
 # # we ALWAYS DO NOT Forward it to $MAIL_LIST.
 # # value: 1/0
 # AUTO_REGISTERED_UNDELIVER_P:  1
+.ok
 .if AUTO_REGISTERED_UNDELIVER_P == 1
 	.use_fml8_value
 
+.ok
 .if AUTO_REGISTERED_UNDELIVER_P == 0
 	.not_support
 
 # TYPO
+.ok
 .if AUTO_REGISTERD_UNDELIVER_P == 1
 	.not_support
 
 
 
 # AUTO_REGISTRATION_LINES_LIMIT:  0
+.ok
 .if AUTO_REGISTRATION_LINES_LIMIT == 0
 	.not_support
 
+.ok
 .if AUTO_REGISTRATION_LINES_LIMIT > 0
 	.not_support
 
@@ -516,12 +530,12 @@
 .ok
 .if REMOTE_ADMINISTRATION == 0
 
-	use_admin_command_mail_fucntion = no
+	use_admin_command_mail_function = no
 
 .ok
 .if REMOTE_ADMINISTRATION == 1
 
-	use_admin_command_mail_fucntion = yes
+	use_admin_command_mail_function = yes
 
 
 # COMPAT_CF_2
@@ -623,11 +637,13 @@
 # # and guide to the new member.
 # # value: 1/0
 # ADMIN_ADD_SEND_WELCOME_FILE:	0
+.ok
 .if ADMIN_ADD_SEND_WELCOME_FILE == 0
-	.use_fml8_value
+	.not_support
 
+.ok
 .if ADMIN_ADD_SEND_WELCOME_FILE == 1
-	.not_yet_implemented
+	.use_fml8_value
 
 
 # # N, the number of lines, of "tail -N $LOGFILE".
@@ -713,8 +729,9 @@
 # # default: 2 weeks
 # # value: number
 # MODERATOR_EXPIRE_LIMIT:	14
+.ok
 .if MODERATOR_EXPIRE_LIMIT == 14
-	.not_yet_implemented
+	.use_fml8_value
 
 
 
@@ -741,19 +758,22 @@
 # # it may be ineffective since SMTP has no general authentication method.
 # # value: filename string
 # REJECT_ADDR_LIST:	$DIR/spamlist
+.ok
 .if REJECT_ADDR_LIST
-	.not_yet_implemented
+	.convert
 
 
 # # check UNIX from to avoid mail loop. check in default.
 # # value: 1/0
 # NOT_USE_UNIX_FROM_LOOP_CHECK:  0
+.ok
 .if NOT_USE_UNIX_FROM_LOOP_CHECK == 0
-	.not_support
+	.use_fml8_value
 
-
+.ok
 .if NOT_USE_UNIX_FROM_LOOP_CHECK == 1
-	.not_support
+
+	incoming_mail_envelope_loop_check_rules -= check_envelope_sender
 
 
 # # check Message-Id: duplication to avoid mail loop
@@ -773,9 +793,14 @@
 # # do not check it in default.
 # # value: 1/0
 # CHECK_MAILBODY_CKSUM:	0
-.if CHECK_MAILBODY_CKSUM
-	.not_yet_implemented
+.ok
+.if CHECK_MAILBODY_CKSUM == 1
+	.use_fml8_value
 
+.ok
+.if CHECK_MAILBODY_CKSUM == 0
+
+	incoming_mail_body_loop_check_rules -= check_body_checksum
 
 # # obsolete today
 # # Logs the getpeername()
@@ -830,6 +855,7 @@
 	.use_fml8_value
 
 
+.ok
 .if NOTIFY_MAIL_SIZE_OVERFLOW == 0
 	.not_yet_implemented
 
@@ -840,9 +866,11 @@
 # # to mailing list (SARASHIMONO:-).
 # # value: 1/0
 # ANNOUNCE_MAIL_SIZE_OVERFLOW:	0
+.ok
 .if ANNOUNCE_MAIL_SIZE_OVERFLOW == 0
 	.not_yet_implemented
 
+.ok
 .if ANNOUNCE_MAIL_SIZE_OVERFLOW == 1
 	.not_yet_implemented
 
@@ -856,9 +884,9 @@
 # # We check @ACTIVE_LIST effective members, not @MEMBER_LIST.
 # # value: number
 # MAX_MEMBER_LIMIT:
+.ok
 .if MAX_MEMBER_LIMIT
-	.not_yet_implemented
-
+	.convert
 
 # # Filter of posted article.
 # # &EnvelopeFilter is called in the top of &Distribute if you set
@@ -1018,23 +1046,27 @@
 # # cutoff empty message.
 # # value: 1/0
 # CONTENT_HANDLER_CUTOFF_EMPTY_MESSAGE:	0
+.ok
 .if CONTENT_HANDLER_CUTOFF_EMPTY_MESSAGE
-	.convert
+	.not_support
 
 
 # # reject empty message after cut off process.
 # # value: 1/0
 # CONTENT_HANDLER_REJECT_EMPTY_MESSAGE:	0
+.ok
 .if CONTENT_HANDLER_REJECT_EMPTY_MESSAGE
-	.convert
+	.not_support
 
 
 # # try to convert Japanese HANKAKU chars in the mail body to ZENAKKU
 # # value: 1/0
 # USE_HANKAKU_CONVERTER:	0
+.ok
 .if USE_HANKAKU_CONVERTER == 0
 	.not_yet_implemented
 
+.ok
 .if USE_HANKAKU_CONVERTER == 1
 	.not_yet_implemented
 
@@ -1045,8 +1077,9 @@
 # # NULL (default) is "pass through a html mail".
 # # value: "strip" / "reject" / ""
 # HTML_MAIL_DEFAULT_HANDLER:
+.ok
 .if HTML_MAIL_DEFAULT_HANDLER
-	.convert
+	.not_support
 
 
 # # Traffic Monitoring Mechanism within fml
@@ -1110,11 +1143,13 @@
 # # how to announce the new comer if $AUTO_REGISTERED_UNDELIVER_P is 0.
 # # value: raw / prepend_info
 # SUBSCRIBE_ANNOUNCE_FORWARD_TYPE: prepend_info
+.ok
 .if SUBSCRIBE_ANNOUNCE_FORWARD_TYPE == prepend_info
-	.not_yet_implemented
+	.not_support
 
+.ok
 .if SUBSCRIBE_ANNOUNCE_FORWARD_TYPE == raw
-	.not_yet_implemented
+	.not_support
 
 
 
@@ -1199,13 +1234,31 @@
 # # PGP Encrypted ML
 # # value: 1/0
 # USE_ENCRYPTED_DISTRIBUTION:
-.if USE_ENCRYPTED_DISTRIBUTION
+.ok
+.if USE_ENCRYPTED_DISTRIBUTION == 1
+	.not_yet_implemented
+
+.ok
+.if USE_ENCRYPTED_DISTRIBUTION == 0
 	.not_yet_implemented
 
 
-# # value: pgp / pgp2 / pgp5 / gpgp
+# # value: pgp / pgp2 / pgp5 / gpg
 # ENCRYPTED_DISTRIBUTION_TYPE:	pgp2
+.ok
+.if ENCRYPTED_DISTRIBUTION_TYPE == pgp
+	.not_yet_implemented
+
+.ok
 .if ENCRYPTED_DISTRIBUTION_TYPE == pgp2
+	.not_yet_implemented
+
+.ok
+.if ENCRYPTED_DISTRIBUTION_TYPE == pgp5
+	.not_yet_implemented
+
+.ok
+.if ENCRYPTED_DISTRIBUTION_TYPE == gpg
 	.not_yet_implemented
 
 
@@ -1296,8 +1349,9 @@
 # # BRACKET of "Subject: [BRACKET:ID] ..." form
 # # value: string
 # BRACKET:	 Elena
+.ok
 .if BRACKET == Elena
-	.convert
+	.not_support
 
 
 # # obsolete
@@ -1305,6 +1359,7 @@
 # # but this operations depends on special forms, so not functional.
 # # You do not expect a lot on this option.
 # STRIP_BRACKETS:  0
+.ok
 .if STRIP_BRACKETS == 0
 	.not_support
 
@@ -1313,21 +1368,25 @@
 # # See doc/tutorial and libtagdef.pl on examples.
 # # value: regexp string
 # BRACKET_SEPARATOR:
+.ok
 .if BRACKET_SEPARATOR
-	.convert
+	.not_support
 
 
 # SUBJECT_FREE_FORM:
+.ok
 .if SUBJECT_FREE_FORM
-	.convert
+	.not_support
 
 
 # SUBJECT_FREE_FORM_REGEXP:
+.ok
 .if SUBJECT_FREE_FORM_REGEXP
-	.convert
+	.not_support
 
 
 # SUBJECT_FORM_LONG_ID:
+.ok
 .if SUBJECT_FORM_LONG_ID
 	.convert
 
@@ -1660,6 +1719,7 @@
 # # choise of addresses to return for "chaddr" command reply
 # # value: newaddr curaddr maintainer
 # CHADDR_REPLY_TO: newaddr curaddr
+.ok
 .if CHADDR_REPLY_TO == newaddr curaddr
 	.not_yet_implemented
 
@@ -1667,6 +1727,7 @@
 # # choise of addresses to return for "admin chaddr" command reply
 # # value: newaddr curaddr maintainer
 # ADMIN_CHADDR_REPLY_TO: newaddr curaddr
+.ok
 .if ADMIN_CHADDR_REPLY_TO == newaddr curaddr
 	.not_yet_implemented
 
@@ -1781,8 +1842,9 @@
 # # send anything to ml-get-1@domain if this variable is defined.
 # # value: 1/0
 # USE_DOT_QMAIL_EXT:	0
+.ok
 .if USE_DOT_QMAIL_EXT == 0
-	.not_yet_implemented
+	.use_fml8_value
 
 
 # # ## Sub Section: Headers of reply from FML ##
@@ -1791,6 +1853,7 @@
 # # we force Reply-To: $FORCE_COMMAND_REPLY_TO ?(default is $CONTROL_ADDRESS)
 # # value: string
 # FORCE_COMMAND_REPLY_TO:
+.ok
 .if FORCE_COMMAND_REPLY_TO
 	.not_yet_implemented
 
@@ -1930,7 +1993,8 @@
 # # cache file of mailbody cksum mail loop check
 # # value: filename string
 # LOG_MAILBODY_CKSUM:	$VARRUN_DIR/bodycksumcache
-.if LOG_MAILBODY_CKSUM == $VARRUN_DIR/bodycksumcache
+.ok
+.if LOG_MAILBODY_CKSUM != $VARRUN_DIR/bodycksumcache
 	.use_fml8_value
 
 
@@ -1977,8 +2041,9 @@
 # # When fml rejects mail from someone, fml sends back this file to the sender.
 # # value: filename string
 # DENY_FILE:	 $DIR/deny
+.ok
 .if DENY_FILE != $DIR/deny
-	.not_support
+	.convert
 
 
 # # $LOGFILE		log file
@@ -2001,6 +2066,7 @@
 # # See UNIX manual "strftime(3)" for more details on format.
 # # value: srtings
 # LOGFILE_SUFFIX:
+.ok
 .if LOGFILE_SUFFIX
 	.convert
 
@@ -2226,6 +2292,7 @@
 # #
 # # value: 1/0
 # USE_OUTGOING_ADDRESS:
+.ok
 .if USE_OUTGOING_ADDRESS
 	.not_yet_implemented
 
@@ -2240,8 +2307,9 @@
 # #
 # # value: string
 # OUTGOING_ADDRESS:
+.ok
 .if OUTGOING_ADDRESS
-	.not_support
+	.not_yet_implemented
 
 
 # # VERPs: Variable Envelope Return Paths. See qmail documents for more details.
@@ -2437,8 +2505,9 @@
 # # log.3 -> log.4, log.2 -> log.3, log.1 -> log.2, log.0 -> log.1, log -> log.0
 # # value: number
 # NEWSYSLOG_MAX:		4
+.ok
 .if NEWSYSLOG_MAX == 4
-	.not_yet_implemented
+	.not_support
 
 
 # # not used generally. This is "cron of fml package" configuration.
@@ -2479,8 +2548,9 @@
 # # Author: Masayuki FUKUI <fukui@sonic.nm.fujitsu.co.jp>
 # # value: 1/0
 # USE_MEMBER_NAME:
+.ok
 .if USE_MEMBER_NAME
-	.not_yet_implemented
+	.not_support
 
 
 
@@ -2496,22 +2566,37 @@
 # #
 # # value: 1/0
 # USE_EXPIRE:			0
+.ok
 .if USE_EXPIRE == 0
-	.not_yet_implemented
+
+	use_article_expire = no
+
+.ok
+.if USE_EXPIRE == 1
+
+	use_article_expire = yes
 
 
 # # expire summary file when $USE_EXPIRE is enabled.
 # # value: 1/0
 # EXPIRE_SUMMARY:
-.if EXPIRE_SUMMARY
-	.not_yet_implemented
+.ok
+.if EXPIRE_SUMMARY == 0
+
+	use_article_summary_file_expire = no
+
+.ok
+.if EXPIRE_SUMMARY == 1
+
+	use_article_summary_file_expire = yes
 
 
 # # expire how old articles
 # # value: number / ( number + day/week/month )
 # EXPIRE_LIMIT:			7days
+.ok
 .if EXPIRE_LIMIT == 7days
-	.not_yet_implemented
+	.use_fml8_value
 
 
 # # If $USE_ARCHIVE is on, we do automatically archive, which is
@@ -3221,14 +3306,17 @@
 .if SUN_OS_413 == 0
 	.not_support
 
+.ok
 .if SUBJECT_HML_FORM
 	.convert
 
+.ok
 .if HML_FORM_LONG_ID
 	.convert
 
+.ok
 .if ML_MEMBER_CHECK
-	.convert
+	.not_support
 
 .ok
 .if DEFAULT_HTTP_PORT

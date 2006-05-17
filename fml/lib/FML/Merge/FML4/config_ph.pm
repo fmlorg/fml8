@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: config_ph.pm,v 1.23 2006/03/20 05:59:01 fukachan Exp $
+# $FML: config_ph.pm,v 1.24 2006/04/30 07:02:25 fukachan Exp $
 #
 
 package FML::Merge::FML4::config_ph;
@@ -370,11 +370,6 @@ sub translate_xxx
     my ($self, $config, $diff, $key, $value) = @_;
 
     if ($key eq 'SUBJECT_TAG_TYPE'         ||
-	$key eq 'BRACKET'                  ||
-	$key eq 'BRACKET_SEPARATOR'        ||
-	$key eq 'SUBJECT_FREE_FORM'        ||
-	$key eq 'SUBJECT_FREE_FORM_REGEXP' ||
-	$key eq 'SUBJECT_FORM_LONG_ID'     ||
 	$key eq 'SUBJECT_HML_FORM'         ||
 	$key eq 'HML_FORM_LONG_ID') {
 	return $self->_fix_subject_tag($config, $diff, $key, $value);
@@ -475,6 +470,14 @@ sub translate_xxx
 	$value = $self->_fix_path($config, $diff, $key, $value);
 	return "objective_file = $value";
     }
+    elsif ($key eq 'WELCOME_FILE') {
+	$value = $self->_fix_path($config, $diff, $key, $value);
+	return "welcome_file = $value";
+    }
+    elsif ($key eq 'DENY_FILE') {
+	$value = $self->_fix_path($config, $diff, $key, $value);
+	return "deny_file = $value";
+    }
     elsif ($key eq 'SEQUENCE_FILE') {
 	$value = $self->_fix_path($config, $diff, $key, $value);
 	return "article_sequence_file = $value";
@@ -482,6 +485,10 @@ sub translate_xxx
     elsif ($key eq 'SUMMARY_FILE') {
 	$value = $self->_fix_path($config, $diff, $key, $value);
 	return "summary_file = $value";
+    }
+    elsif ($key eq 'REJECT_ADDR_LIST') {
+	$value = $self->_fix_path($config, $diff, $key, $value);
+	return "primary_spammer_map = $value";
     }
     elsif ($key eq 'SKIP_FIELDS') {
 	return $self->_fix_skip_fields($config, $diff, $key, $value);
@@ -529,6 +536,24 @@ sub translate_xxx
 	$s .= sprintf("outgoing_mail_header_x_ml_name = %s\n\n", $v);
 	return $s;	
     }
+    elsif ($key eq 'LOGFILE_SUFFIX') {
+	if ($diff->{ LOGFILE }) {
+	    my $old = $config->{ LOGFILE };
+	    my $log = $self->_fix_path($config, $diff, "LOGFILE", $old);
+	    my $s = sprintf("log_file = %s%s\n\n", $log, $value);
+	    return $s;	
+	}
+	else {
+	    my $s = sprintf("log_file = \$ml_home_dir/log%s\n\n", $value);
+	    return $s;	
+	}
+    }
+    elsif ($key eq 'MAX_MEMBER_LIMIT') {
+	my $s = '';
+	$s .= sprintf("use_recipient_total_limit = yes\n\n");
+	$s .= sprintf("recipient_total_limit = %d\n\n", $value);
+	return $s;	
+    }
 
     return '# ***ERROR*** UNKNOWN TRANSLATION RULE';
 }
@@ -561,15 +586,21 @@ sub _fix_restrictions
 	if ($permit_post_from eq 'anyone') {
 	    $p_result .= "article_post_restrictions = ";
 	    $p_result .= "reject_system_special_accounts ";
+	    $p_result .= "reject_spammer_maps ";
 	    $p_result .= "permit_anyone ";
 	    $p_result .= "reject\n";
 	}
 	elsif ($permit_post_from eq 'members_only') { # fml8 default
-	    ;
+	    $p_result .= "article_post_restrictions = ";
+	    $p_result .= "reject_system_special_accounts ";
+	    $p_result .= "reject_spammer_maps ";
+	    $p_result .= "permit_member_maps ";
+	    $p_result .= "reject\n";	    ;
 	}
 	elsif ($permit_post_from eq 'moderator') {
 	    $p_result .= "article_post_restrictions = ";
 	    $p_result .= "reject_system_special_accounts ";
+	    $p_result .= "reject_spammer_maps ";
 	    $p_result .= "permit_forward_to_moderator ";
 	    $p_result .= "reject\n";
 	}
@@ -601,6 +632,33 @@ sub _fix_restrictions
 
 	}
 
+
+	#
+	# permit_*_from based
+	#
+	if ($permit_command_from eq 'anyone') {
+	    $c_result .= "command_mail_restrictions = ";
+	    $c_result .= "reject_system_special_accounts ";
+	    $c_result .= "reject_spammer_maps ";
+	    $c_result .= "permit_anyone ";
+	    $c_result .= "reject\n";
+	}
+	elsif ($permit_command_from eq 'members_only') { # fml8 default
+	    $c_result .= "command_mail_restrictions = ";
+	    $c_result .= "reject_system_special_accounts ";
+	    $c_result .= "reject_spammer_maps ";
+	    $c_result .= "permit_anonymous_command ";
+	    $c_result .= "permit_user_command ";
+	    $c_result .= "reject\n";
+	}
+	elsif ($permit_command_from eq 'moderator') {
+	    $c_result .= "command_mail_restrictions = ";
+	    $c_result .= "reject_system_special_accounts ";
+	    $c_result .= "reject_spammer_maps ";
+	    $c_result .= "permit_forward_to_moderator ";
+	    $c_result .= "reject\n";
+	}
+
 	if ($reject_command_handler eq 'ignore') {
 	    if ($c_result =~ /command_mail_restrictions/) {
 		$c_result =~ s/\s+reject\s*$/ ignore/g;
@@ -609,6 +667,7 @@ sub _fix_restrictions
 		$c_result .= "\n";
 		$c_result .= "command_mail_restrictions = ";
 		$c_result .= "reject_system_special_accounts ";
+		$c_result .= "reject_spammer_maps ";
 		$c_result .= "permit_anonymous_command ";
 		$c_result .= "permit_user_command ";
 		$c_result .= "ignore\n";
@@ -840,6 +899,34 @@ sub _fix_skip_fields
 }
 
 
+#
+# FYI: [fml4 conversion logic]
+#
+# if ($SUBJECT_HML_FORM) {
+#     if ($HML_FORM_LONG_ID || $SUBJECT_FORM_LONG_ID) {
+#	     LONG ID
+#     }
+#    "[BRACKET:ID]";
+# }
+# elsif ($SUBJECT_FREE_FORM) {
+#    if ($SUBJECT_FORM_LONG_ID) {
+#	    LONG ID
+#    }
+#
+#    if ($BRACKET_SEPARATOR ne '') {
+#        $BEGIN_BRACKET.$BRACKET.$BRACKET_SEPARATOR.$id.$END_BRACKET;
+#    }
+#    else {
+#        if ($BRACKET) {
+#            $BEGIN_BRACKET.$BRACKET.$END_BRACKET;
+#        }
+#        else {
+#            $BEGIN_BRACKET.$id.$END_BRACKET;
+#        }
+#   }
+# }
+
+
 # Descriptions: handle subject tag related conversion.
 #    Arguments: OBJ($self)
 #               HASH_REF($config) HASH_REF($diff) STR($key) STR($value)
@@ -898,6 +985,9 @@ sub _fix_subject_tag
 	$s .= "article_subject_tag = (\%05d)\n";
     }
     elsif ($type eq '[ID]') {
+	$s .= "article_subject_tag = [\%05d]\n";
+    }
+    else {
 	$s .= "article_subject_tag = [\%05d]\n";
     }
 
