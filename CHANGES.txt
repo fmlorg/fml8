@@ -40,6 +40,27 @@
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
 
+2006/05/17
+
+   fml4 to fml8 変換 97 % 終了
+
+2006/05/16
+
+   登録可能なユーザ数の制限をかけられるようにしました。
+	fml4 の $MAX_MEMBER_LIMIT にあたるものです。
+	＃って、そんな機能欲しいのは ISP くらいかも :-)
+
+   variables
+	define $*_total_limit
+	
+   FML::User::Control 
+	define get_user_total(), return the total number of addresses
+	in list. 
+	
+   FML::Command::Admin::subscribe 
+	check the number of users in {member,recipient}_maps exceeds
+	the limit. 
+	
 2006/05/14
 
    FML::Envelope 
@@ -9865,4 +9886,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.283 2006/05/07 13:09:29 fukachan Exp $
+$FML: CHANGES.txt,v 1.284 2006/05/14 15:26:09 fukachan Exp $
