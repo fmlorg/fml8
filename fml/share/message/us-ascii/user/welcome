@@ -1,0 +1,16 @@
+You are registered in $article_post_address mailing list.
+
+**********************************************************************
+
+	Welcome to $article_post_address mailing list
+
+Please send your message to $article_post_address for posting.
+
+This mailing list provides command mail interface. Please send a mail
+with commands in the message body to $command_mail_address.
+
+Send a line "help" to this address to get help message.
+
+If you have some questions, send it to $maintainer. 
+
+**********************************************************************
