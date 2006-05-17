@@ -384,7 +384,7 @@ $REJECT_ADDR                   = "root|postmaster|MAILER-DAEMON|msgs|nobody|news
 # list of addresses fml should reject. fml checks From: field for this but
 # it may be ineffective since SMTP has no general authentication method.
 # value: filename string
-$REJECT_ADDR_LIST              = "$DIR/spamlist";
+$REJECT_ADDR_LIST              = "___NULL___"; # "$DIR/spamlist";
 
 # check UNIX from to avoid mail loop. check in default.
 # value: 1/0
@@ -397,7 +397,7 @@ $CHECK_MESSAGE_ID              = 1;
 # check mail body content md5 checksum to avoid mail loop
 # do not check it in default. 
 # value: 1/0
-$CHECK_MAILBODY_CKSUM          = 0;
+$CHECK_MAILBODY_CKSUM          = "___NULL___";
 
 # obsolete today
 # Logs the getpeername()
