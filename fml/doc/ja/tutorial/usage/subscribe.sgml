@@ -1,5 +1,5 @@
 <!--
-   $FML: subscribe.sgml,v 1.2 2004/10/06 09:07:44 fukachan Exp $
+   $FML: subscribe.sgml,v 1.3 2005/06/25 15:11:39 fukachan Exp $
 -->
 
 
@@ -12,12 +12,24 @@
 elena@fml.org の場合、
 本文に 
 <screen>
+
 subscribe 名前
+
+例
+
+subscribe Teresa Testarossa
+
 </screen>
 と書いたメールを
 elena-ctl@fml.org  に送って下さい。
-confirmation が返送されます。
-その confirmation に返答すると登録されます。
+メールで confirmation が返送されます。
+その confirmation メールに返答すると登録されます。
+</para>
+
+<para>
+なお &fml4; では subscribe に続いて名前らしきものを書かなければいけな
+いことになっていましたが、&fml8; では不要です。
+書いてもらったとしても、今の &fml8; ではこの部分を何にも使ってません。
 </para>
 
 </sect1>
