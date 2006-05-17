@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: subscribe.pm,v 1.37 2006/05/04 06:45:58 fukachan Exp $
+# $FML: subscribe.pm,v 1.38 2006/05/16 14:36:30 fukachan Exp $
 #
 
 package FML::Command::Admin::subscribe;
@@ -191,7 +191,7 @@ sub _is_member_total_exceed_limit
 
 # Descriptions: check the number of users in ${map_name}_maps 
 #               exceeds the limit or not.
-#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context) STR($map_name)
 # Side Effects: none
 # Return Value: NUM
 sub _check_total_limit
