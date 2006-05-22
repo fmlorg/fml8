@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.82 2006/04/15 06:33:01 fukachan Exp $
+# $FML: ToHTML.pm,v 1.83 2006/04/16 06:34:54 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.82 2006/04/15 06:33:01 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.83 2006/04/16 06:34:54 fukachan Exp $;
 my $versionid = 0;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $versionid = "$1";
@@ -1864,29 +1864,29 @@ sub _update_montly_thread_index_master
     my (@list)  = sort __sort_yyyymm keys %$mlist;
     my ($years) = _yyyy_range(\@list);
 
-    _print_raw_str($wh, "<TABLE>", $code);
+    _print_raw_str($wh, "<table border='1'>", $code);
 
     for my $year (sort {$b <=> $a} @$years) {
 	_print_raw_str($wh, "<TR>", $code);
+	_print_raw_str($wh, "<th> $year </th>", $code);
 
 	for my $month (1 .. 12) {
-	    _print_raw_str($wh, "<TR>", $code) if $month == 7;
-
-	    my $id = sprintf("%04d/%02d", $year, $month); # YYYY/MM
 	    my $xx = sprintf("%04d%02d",  $year, $month); # YYYYMM
 	    my $fn = "thread.$xx.html";
 
 	    use File::Spec;
 	    my $file = File::Spec->catfile($html_base_dir, $fn);
 	    if (-f $file) {
-		_print_raw_str($wh, "<TD><A HREF=\"$fn\"> $id </A>", $code);
+		_print_raw_str($wh, "<td><a href=\"$fn\"> $month </A>", $code);
 	    }
 	    else {
-		_print_raw_str($wh, "<TD>", $code);
+		_print_raw_str($wh, "<td>", $code);
 	    }
+	    _print_raw_str($wh, "</td>", $code);
 	}
+	_print_raw_str($wh, "</tr>", $code);
     }
-    _print_raw_str($wh, "</TABLE>", $code);
+    _print_raw_str($wh, "</table>", $code);
 
     $self->_print_index_end( $htmlinfo );
 }
