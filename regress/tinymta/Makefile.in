@@ -1,0 +1,32 @@
+#
+# $FML$
+#
+
+LIBS            =       @LIBS@
+
+CC              =       @CC@
+CFLAGS          =       @CFLAGS@
+LDFLAGS         =       @LDFLAGS@
+
+INSTALLCMD      =       @INSTALL@
+
+prefix          =       @prefix@
+exec_prefix     =       @exec_prefix@
+bindir          =       @bindir@
+mandir          =       @mandir@
+config_dir      =       @fmlconfdir@
+libexec_dir     =       @libexecdir@/fml
+
+
+install:
+	test -f $(config_dir)/tinymta.cf ||\
+		$(INSTALLCMD) -c -m 0644 tinymta.cf $(config_dir)
+	$(INSTALLCMD) -c -m 0755 tmdrop $(libexec_dir)
+	$(INSTALLCMD) -c -m 0755 tmsmtp $(libexec_dir)
+
+clean:
+	rm -f *~
+	rm -f Makefile
+	rm -f loader tmdrop tmsmtp
+	rm -f tinymta.cf
+
