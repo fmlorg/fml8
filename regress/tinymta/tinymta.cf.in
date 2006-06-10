@@ -1,0 +1,11 @@
+#
+# $FML$
+#
+
+
+queue_dir		=	/var/tmp/tinymta
+
+smtp_servers		=	127.0.0.1:25
+
+smtp_recipient_limit	=	1000
+

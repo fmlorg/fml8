@@ -1,0 +1,299 @@
+#! @PERL@ -w
+#-*- perl -*-
+#
+# Copyright (C) 2000-2002,2004,2006 Ken'ichi Fukamachi
+#          All rights reserved.
+#
+# $FML: loader.in,v 1.13 2004/10/06 13:33:27 fukachan Exp $
+#
+
+eval 'exec @PERL@ -S $0 ${1+"$@"}'
+        if $running_under_some_shell;
+
+use vars qw($running_under_some_shell $hints $ERROR_EXIT_CODE);
+use strict;
+use IO::File;
+
+# reset PATH in the early stage
+$ENV{'PATH'} = '/bin:/usr/bin';
+delete @ENV{'IFS', 'CDPATH', 'ENV', 'BASH_ENV'};
+
+# XXX irregular global variable permitted to handle emergency cases.
+# default exit code in error.
+$ERROR_EXIT_CODE = 1;
+
+=head1 NAME
+
+loader -- top level wrapper to load and start a real fml program.
+
+=head1 SYNOPSIS
+
+loader C<[-c main.cf]> [program specific options]
+
+=head1 DESCRIPTION
+
+Perl modules C<fml> uses are dependent on fml version.
+C<loader> resolves fml version dependence by
+@sysconfdir@/main.cf,
+set up proper @INC and load C<FML::Process::Switch>.
+
+See C<FML::Process::Switch> for boot strap phase 2 of fml process.
+
+=head1 COMMAND LINE OPTIONS
+
+C<-c main.cf>
+    main.cf alternative
+
+=head1 METHOD
+
+=head2 Bootstrap( main_cf )
+
+top level loader.
+
+=cut
+
+
+# Descriptions: top lebel bootstrap program
+#               which load a dispather program (process_switch)
+#               for process switch. The flow of execution follows:
+#               libexec/loader ->
+#                  libexec/process_switch ->
+#                      FML::Process::Something
+#    Arguments: none
+#               XXX this program sees $0
+#                   (program name, == argv[0] of C language)
+# Side Effects: switch to the real process
+# Return Value: none
+sub init
+{
+    my ($main_cf_default, $config_cf_file) = @_;
+
+    # 1. main.cf exists and I can open it?
+    unless (-f $main_cf_default) {
+	__CROAK("cannot find $main_cf_default");
+    }
+    my $fh = new IO::File $main_cf_default, "r";
+    unless (defined $fh) {
+	__CROAK("cannot open $main_cf_default");
+    }
+
+    # 1.1 parse command line options (preliminary).
+    #     we check @ARGV again after by getopt().
+    my $main_cf_file = $main_cf_default; # main.cf by default
+    for (my $i = 0; $i <= $#ARGV; $i++) {
+	# -c main.cf
+	if ($ARGV[ $i ] =~ /^\-c$/) {
+	    $main_cf_file = $ARGV[$i + 1];
+	}
+    }
+
+    # 2.1 o.k. try to load main.cf (1st pass) to resolve @INC
+    my $main_cf = loader_read_main_cf($main_cf_file);
+
+    # 2.1.1 set up @INC to load FML::Process::Switch
+    if (defined $main_cf->{ lib_dir }) {
+	push(@INC, split(/\s+/, $main_cf->{ lib_dir }));
+    }
+    else {
+	__CROAK("\$lib_dir not defined in main.cf");
+    }
+
+    # 2.1.2 inherit some parameters to change behaviour
+    $main_cf->{ _hints } = $hints;
+
+    # arguments to pass off to bootstrap().
+    return ($main_cf, $config_cf_file);
+}
+
+
+# Descriptions: dispatch.
+#    Arguments: OBJ($main_cf) STR($config_cf_file)
+# Side Effects: none
+# Return Value: none
+sub bootstrap
+{
+    my ($main_cf, $config_cf_file) = @_;
+
+    # 3. execute
+    eval {
+      main::dispatch($main_cf, $config_cf_file);
+    };
+    if ($@) {
+	my $reason = $@;
+	$reason =~ s/[\n\s]*\s+at\s+.*$//m;
+	__CROAK("cannot load FML::Process::Switch", $reason);
+    }
+}
+
+
+=head2 loader_read_main_cf(cf_file)
+
+load "key = value" style configuration file and build a hash.
+return HASH REFERENCE.
+
+   my $main_cf = loader_read_main_cf($main_cf_file, $params);
+
+where $param is optional.
+
+=cut
+
+
+# Descriptions: load "key = value" style configuration.
+#               It is available to use the following style.
+#                    key = value1 value2
+#                          value3
+#               XXX This file is non-Object Oriented style but
+#               XXX this is minimum module used in standalone program.
+#    Arguments: $file $params
+#               $params is 'key1=value1 key2=value2' syntax.
+# Side Effects: $config (hash reference) is allocated on memory here.
+# Return Value: hash reference to configuration parameters
+sub loader_read_main_cf
+{
+    my ($file) = @_;
+    my $config = {};
+
+    my $fh = new IO::File $file, "r";
+
+    if (defined $fh) {
+	my $curkey = '';
+	while (<$fh>) {
+	    next if /^\#/;
+	    chomp;
+
+	    if (/^([A-Za-z]\w+)\s+=\s*(.*)/) {
+		my ($key, $value) = ($1, $2);
+		$curkey           = $key;
+		$config->{$key}   = $value;
+	    }
+	    if (/^\s+(.*)/) {
+		$config->{ $curkey }  .= " ". $1;
+	    }
+	}
+	$fh->close;
+    }
+    else {
+	__CROAK("Error: cannot open $file");
+    }
+
+    loader_expand_variables( $config );
+    return $config;
+}
+
+
+# Descriptions: expand $var to the value of $var.
+#    Arguments: $ref_to_config
+# Side Effects: rewrite the given $config
+# Return Value: none
+sub loader_expand_variables
+{
+    my ($config) = @_;
+    my (@order) = keys %$config;
+
+    # check whether the variable definition is recursive.
+    # For example, definition "var_a = $var_a/b/c" causes a loop.
+    for my $x ( @order ) {
+	if ((defined $x) && defined ($config->{ $x })) {
+	    if ($config->{ $x } =~ /\$$x/) {
+		__CROAK("loop1: definition of $x is recursive");
+	    }
+	}
+    }
+
+    # main expansion loop
+    my $org = '';
+    my $max = 0;
+  KEY:
+    for my $x ( @order ) {
+	next KEY unless defined($config->{ $x });
+	next KEY if $config->{ $x } !~ /\$/o;
+
+	# we need a loop to expand nested variables, for example,
+	# a = $x/y and b = $a/c/0
+	#
+	$max = 0;
+      EXPANSION_LOOP:
+	while ($max++ < 16) {
+	    $org = $config->{ $x };
+
+	    if ($config->{ $x } =~ /\{/) { # expand ${prefix}/xxx ...
+		$config->{ $x } =~ s/\$\{([a-z_]+)\}/$config->{$1}/g;
+	    }
+	    $config->{ $x } =~ s/\$([a-z_]+)/$config->{$1}/g;
+
+	    last EXPANSION_LOOP if $config->{ $x } !~ /\$/o;
+	    last EXPANSION_LOOP if $org eq $config->{ $x };
+
+	    if ($config->{ $x } =~ /\$$x/) {
+		__CROAK("loop2: definition of $x is recursive");
+	    }
+        }
+
+	if ($max >= 16) {
+	    __CROAK("variable expansion of $x causes infinite loop");
+	}
+    }
+}
+
+
+# Descriptions: print error reason
+#    Arguments: STR($reason) STR($detail)
+# Side Effects: print out error reason and exit here
+# Return Value: none
+sub __CROAK
+{
+    my ($reason, $detail) = @_;
+
+    print STDERR "fml loader error: $reason\n";
+    print STDERR "  reason(detail): $detail\n" if defined $detail;
+    exit($ERROR_EXIT_CODE);
+}
+
+
+
+#
+# MAIN
+#
+
+# main routine to boot off
+my (@argv) = ();
+BEGIN {
+    my $prefix      = "@prefix@";
+    my $exec_prefix = "@exec_prefix@";
+    my $main_cf     = "@fmlconfdir@/main.cf";
+    my $config_cf   = "@fmlconfdir@/tinymta.cf";
+
+    (@argv) = init($main_cf, $config_cf);
+}
+
+# not use Carp.pm to be quiet if needed
+eval q{ bootstrap(@argv); };
+if ($@) { print STDERR "Error: ", $@, "\n"; exit($ERROR_EXIT_CODE);}
+
+exit(0);
+
+
+=head1 SEE ALSO
+
+L<FML::Process::Switch>
+
+=head1 AUTHOR
+
+Ken'ichi Fukamachi
+
+=head1 COPYRIGHT
+
+Copyright (C) 2000-2002,2004,2006 Ken'ichi Fukamachi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself.
+
+=head1 HISTORY
+
+libexec/loader appeared in fml8 mailing list driver package.
+See C<http://www.fml.org/> for more details.
+
+=cut
+
+
+1;

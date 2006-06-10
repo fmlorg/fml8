@@ -1,0 +1,25 @@
+#!/bin/sh
+#
+# $FML$
+#
+
+
+# assert
+if [ ! -x ../../config.status ];then
+	echo "error: run configure at the top level directory (../..)"
+	echo "       before running configure here"
+	exit 1
+fi
+
+env CONFIG_FILES='Makefile loader tinymta.cf' sh ../../config.status
+chmod 755 loader
+
+echo creating tmdrop
+cat loader Config.pm Log.pm Drop.pm > tmdrop
+chmod 755 tmdrop
+
+echo creating tmsmtp
+cat loader Config.pm Log.pm SMTP.pm > tmsmtp
+chmod 755 tmsmtp
+
+exit 0;

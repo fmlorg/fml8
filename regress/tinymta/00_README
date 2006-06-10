@@ -1,0 +1,25 @@
+
+			tinymta
+
+1. 概要 
+
+fml8 のライブラリを使って作るシンプルな MTA です。
+
+半分実益をかねていますが、半分はライブラリのテストみたいなものと考えて
+ください。
+
+2. 構成
+
+	/usr/local/libexec/fml/tmdrop
+		キューへいれる。
+		入力はメール(RFC822)そのもの
+
+	/usr/local/libexec/fml/tmsmtp
+		キューからメールを一つ選択し SMTP 配送を行なう
+
+	/usr/local/etc/fml/tinymta.cf
+		tinymta 固有の設定ファイル
+
+	/usr/local/etc/fml/main.cf
+		fml8 と共通の設定ファイル
+
