@@ -1,6 +1,6 @@
 #! /bin/sh
 
-# From configure.in Revision: 1.43 
+# From configure.in Revision: 1.45 
 
 # Guess values for system-dependent variables and create Makefiles.
 # Generated automatically using autoconf version 2.13 
@@ -624,10 +624,81 @@ fi
 
 echo "$ac_t"""checking whether optional useful commands are available or not"" 1>&6
 
+# Extract the first word of "cc", so it can be a program name with args.
+set dummy cc; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:631: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_CC'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$CC" in
+  /*)
+  ac_cv_path_CC="$CC" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_CC="$CC" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_CC="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+CC="$ac_cv_path_CC"
+if test -n "$CC"; then
+  echo "$ac_t""$CC" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "install", so it can be a program name with args.
+set dummy install; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:666: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_INSTALL'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$INSTALL" in
+  /*)
+  ac_cv_path_INSTALL="$INSTALL" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_INSTALL="$INSTALL" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_INSTALL="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+INSTALL="$ac_cv_path_INSTALL"
+if test -n "$INSTALL"; then
+  echo "$ac_t""$INSTALL" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+
 # Extract the first word of "cksum", so it can be a program name with args.
 set dummy cksum; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:631: checking for $ac_word" >&5
+echo "configure:702: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_CKSUM'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -662,7 +733,7 @@ fi
 # Extract the first word of "sum", so it can be a program name with args.
 set dummy sum; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:666: checking for $ac_word" >&5
+echo "configure:737: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_SUM'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -697,7 +768,7 @@ fi
 # Extract the first word of "md5", so it can be a program name with args.
 set dummy md5; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:701: checking for $ac_word" >&5
+echo "configure:772: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_MD5'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -732,7 +803,7 @@ fi
 # Extract the first word of "digest", so it can be a program name with args.
 set dummy digest; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:736: checking for $ac_word" >&5
+echo "configure:807: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_DIGEST'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -768,7 +839,7 @@ fi
 # Extract the first word of "ls", so it can be a program name with args.
 set dummy ls; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:772: checking for $ac_word" >&5
+echo "configure:843: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_LS'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -803,7 +874,7 @@ fi
 # Extract the first word of "tar", so it can be a program name with args.
 set dummy tar; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:807: checking for $ac_word" >&5
+echo "configure:878: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_TAR'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -838,7 +909,7 @@ fi
 # Extract the first word of "gzip", so it can be a program name with args.
 set dummy gzip; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:842: checking for $ac_word" >&5
+echo "configure:913: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_GZIP'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -873,7 +944,7 @@ fi
 # Extract the first word of "zcat", so it can be a program name with args.
 set dummy zcat; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:877: checking for $ac_word" >&5
+echo "configure:948: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_ZCAT'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -908,7 +979,7 @@ fi
 # Extract the first word of "gzcat", so it can be a program name with args.
 set dummy gzcat; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:912: checking for $ac_word" >&5
+echo "configure:983: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_GZCAT'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -943,7 +1014,7 @@ fi
 # Extract the first word of "gunzip", so it can be a program name with args.
 set dummy gunzip; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:947: checking for $ac_word" >&5
+echo "configure:1018: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_GUNZIP'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -978,7 +1049,7 @@ fi
 # Extract the first word of "lha", so it can be a program name with args.
 set dummy lha; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:982: checking for $ac_word" >&5
+echo "configure:1053: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_LHA'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1013,7 +1084,7 @@ fi
 # Extract the first word of "ish", so it can be a program name with args.
 set dummy ish; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1017: checking for $ac_word" >&5
+echo "configure:1088: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_ISH'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1048,7 +1119,7 @@ fi
 # Extract the first word of "bzip2", so it can be a program name with args.
 set dummy bzip2; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1052: checking for $ac_word" >&5
+echo "configure:1123: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_BZIP2'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1083,7 +1154,7 @@ fi
 # Extract the first word of "bunzip2", so it can be a program name with args.
 set dummy bunzip2; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1087: checking for $ac_word" >&5
+echo "configure:1158: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_BUNZIP2'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1118,7 +1189,7 @@ fi
 # Extract the first word of "uuencode", so it can be a program name with args.
 set dummy uuencode; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1122: checking for $ac_word" >&5
+echo "configure:1193: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_UUENCODE'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1153,7 +1224,7 @@ fi
 # Extract the first word of "compress", so it can be a program name with args.
 set dummy compress; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1157: checking for $ac_word" >&5
+echo "configure:1228: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_COMPRESS'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1189,7 +1260,7 @@ fi
 # Extract the first word of "sendmail", so it can be a program name with args.
 set dummy sendmail; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1193: checking for $ac_word" >&5
+echo "configure:1264: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_SENDMAIL'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1224,7 +1295,7 @@ fi
 # Extract the first word of "makemap", so it can be a program name with args.
 set dummy makemap; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1228: checking for $ac_word" >&5
+echo "configure:1299: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_MAKEMAP'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1259,7 +1330,7 @@ fi
 # Extract the first word of "newaliases", so it can be a program name with args.
 set dummy newaliases; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1263: checking for $ac_word" >&5
+echo "configure:1334: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_NEWALIASES'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1294,7 +1365,7 @@ fi
 # Extract the first word of "postfix", so it can be a program name with args.
 set dummy postfix; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1298: checking for $ac_word" >&5
+echo "configure:1369: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_POSTFIX'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1329,7 +1400,7 @@ fi
 # Extract the first word of "postalias", so it can be a program name with args.
 set dummy postalias; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1333: checking for $ac_word" >&5
+echo "configure:1404: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_POSTALIAS'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1364,7 +1435,7 @@ fi
 # Extract the first word of "postconf", so it can be a program name with args.
 set dummy postconf; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1368: checking for $ac_word" >&5
+echo "configure:1439: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_POSTCONF'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1399,7 +1470,7 @@ fi
 # Extract the first word of "postmap", so it can be a program name with args.
 set dummy postmap; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1403: checking for $ac_word" >&5
+echo "configure:1474: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_POSTMAP'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1435,7 +1506,7 @@ fi
 # Extract the first word of "nkf", so it can be a program name with args.
 set dummy nkf; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1439: checking for $ac_word" >&5
+echo "configure:1510: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_NKF'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1470,7 +1541,7 @@ fi
 # Extract the first word of "kakasi", so it can be a program name with args.
 set dummy kakasi; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1474: checking for $ac_word" >&5
+echo "configure:1545: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_KAKASI'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1505,7 +1576,7 @@ fi
 # Extract the first word of "namazu", so it can be a program name with args.
 set dummy namazu; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1509: checking for $ac_word" >&5
+echo "configure:1580: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_NAMAZU'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1541,7 +1612,7 @@ fi
 # Extract the first word of "pgp", so it can be a program name with args.
 set dummy pgp; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1545: checking for $ac_word" >&5
+echo "configure:1616: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_PGP'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1576,7 +1647,7 @@ fi
 # Extract the first word of "pgp5", so it can be a program name with args.
 set dummy pgp5; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1580: checking for $ac_word" >&5
+echo "configure:1651: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_PGP5'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1611,7 +1682,7 @@ fi
 # Extract the first word of "pgpe", so it can be a program name with args.
 set dummy pgpe; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1615: checking for $ac_word" >&5
+echo "configure:1686: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_PGPe'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1646,7 +1717,7 @@ fi
 # Extract the first word of "pgpk", so it can be a program name with args.
 set dummy pgpk; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1650: checking for $ac_word" >&5
+echo "configure:1721: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_PGPK'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1681,7 +1752,7 @@ fi
 # Extract the first word of "pgps", so it can be a program name with args.
 set dummy pgps; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1685: checking for $ac_word" >&5
+echo "configure:1756: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_PGPS'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1716,7 +1787,7 @@ fi
 # Extract the first word of "pgpv", so it can be a program name with args.
 set dummy pgpv; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1720: checking for $ac_word" >&5
+echo "configure:1791: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_PGPV'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1751,7 +1822,7 @@ fi
 # Extract the first word of "gpg", so it can be a program name with args.
 set dummy gpg; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1755: checking for $ac_word" >&5
+echo "configure:1826: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_GPG'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1786,7 +1857,7 @@ fi
 # Extract the first word of "gpgv", so it can be a program name with args.
 set dummy gpgv; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1790: checking for $ac_word" >&5
+echo "configure:1861: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_GPGV'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1821,7 +1892,7 @@ fi
 # Extract the first word of "gpgsplit", so it can be a program name with args.
 set dummy gpgsplit; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1825: checking for $ac_word" >&5
+echo "configure:1896: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_GPGSPLIT'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1857,7 +1928,7 @@ fi
 # Extract the first word of "less", so it can be a program name with args.
 set dummy less; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1861: checking for $ac_word" >&5
+echo "configure:1932: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_LESS'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1892,7 +1963,7 @@ fi
 # Extract the first word of "more", so it can be a program name with args.
 set dummy more; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1896: checking for $ac_word" >&5
+echo "configure:1967: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_MORE'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1927,7 +1998,7 @@ fi
 # Extract the first word of "w3m", so it can be a program name with args.
 set dummy w3m; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1931: checking for $ac_word" >&5
+echo "configure:2002: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_W3M'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1964,7 +2035,7 @@ fi
 # Extract the first word of "spamassassin", so it can be a program name with args.
 set dummy spamassassin; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:1968: checking for $ac_word" >&5
+echo "configure:2039: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_SPAMASSASSIN'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1999,7 +2070,7 @@ fi
 # Extract the first word of "spamd", so it can be a program name with args.
 set dummy spamd; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:2003: checking for $ac_word" >&5
+echo "configure:2074: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_SPAMD'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2034,7 +2105,7 @@ fi
 # Extract the first word of "spamc", so it can be a program name with args.
 set dummy spamc; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:2038: checking for $ac_word" >&5
+echo "configure:2109: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_SPAMC'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2069,7 +2140,7 @@ fi
 # Extract the first word of "bogofilter", so it can be a program name with args.
 set dummy bogofilter; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:2073: checking for $ac_word" >&5
+echo "configure:2144: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_BOGOFILTER'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2106,7 +2177,7 @@ fi
 # Extract the first word of "clamscan", so it can be a program name with args.
 set dummy clamscan; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:2110: checking for $ac_word" >&5
+echo "configure:2181: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_CLAMSCAN'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2143,7 +2214,7 @@ fi
 # Extract the first word of "vi", so it can be a program name with args.
 set dummy vi; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:2147: checking for $ac_word" >&5
+echo "configure:2218: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_VI'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2178,7 +2249,7 @@ fi
 # Extract the first word of "ng", so it can be a program name with args.
 set dummy ng; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:2182: checking for $ac_word" >&5
+echo "configure:2253: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_NG'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2213,7 +2284,7 @@ fi
 # Extract the first word of "mule", so it can be a program name with args.
 set dummy mule; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:2217: checking for $ac_word" >&5
+echo "configure:2288: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_MULE'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2248,7 +2319,7 @@ fi
 # Extract the first word of "emacs", so it can be a program name with args.
 set dummy emacs; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:2252: checking for $ac_word" >&5
+echo "configure:2323: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_EMACS'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2283,7 +2354,7 @@ fi
 # Extract the first word of "xemacs", so it can be a program name with args.
 set dummy xemacs; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:2287: checking for $ac_word" >&5
+echo "configure:2358: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_XEMACS'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2598,6 +2669,8 @@ s%@infodir@%$infodir%g
 s%@mandir@%$mandir%g
 s%@have_perl@%$have_perl%g
 s%@PERL@%$PERL%g
+s%@CC@%$CC%g
+s%@INSTALL@%$INSTALL%g
 s%@CKSUM@%$CKSUM%g
 s%@SUM@%$SUM%g
 s%@MD5@%$MD5%g
