@@ -39,6 +39,17 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2006/06/10
+
+   TinyMTA
+	デバッグおよび、ちょっと(インチキだけど)MTAもどきを使いたい場
+	合に便利
+
+2006/05/22
+
+   Mail::Message::ToHTML 
+	_update_montly_thread_index_master() rewrite same logic
+	using _update_id_montly_index_master()
 
 2006/05/17
 
@@ -9888,4 +9899,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.285 2006/05/17 13:06:37 fukachan Exp $
+$FML: CHANGES.txt,v 1.286 2006/05/18 15:03:46 fukachan Exp $
