@@ -22,4 +22,47 @@ fml8 のライブラリを使って作るシンプルな MTA です。
 
 	/usr/local/etc/fml/main.cf
 		fml8 と共通の設定ファイル
+		ライブラリの場所などを知るために必要(なだけ)
+
+
+3. インストール
+
+	ライブラリを共用しているため、まず fml8 をインストールしてください。
+
+	次に、このディレクトリ(regress/tinymta)で、
+
+		configure
+		make install
+
+	を実行して下さい。
+
+	インストールのパスは .././config.status を使い fml8 と同じ値
+	に展開されるようになっています。
+
+	キューディレクトリのデフォルトは /var/tmp/tinymta です。インス
+	トールされた tinymta.cf (e.g. /usr/local/etc/fml/tinymta.cf)を
+	編集して適当なものにして下さい。
+
+	ちなみに /var/tmp/tinymta なのは daily で古いゴミキューが消される
+	だろうという期待があります。一応ゴミは残らないようになってるん
+	ですけどね。
+
+
+4. 使い方
+
+	% cat メール(822形式) | /usr/local/libexec/fml/tmdrop
+
+でキューに入ります。
+
+	% /usr/local/libexec/fml/tmsmtp
+
+を実行すると Mail::Delivery でキューにあるファイルを送信します。
+
+なんらかの理由で送信に失敗した場合は fallback され deferred キューに入
+ります。のちに再送が行なわれます。
+
+再送のため cron で /usr/local/libexec/fml/tmsmtp を定期的に実行して下
+さい。
+
+
 
