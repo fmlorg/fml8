@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.10 2006/01/07 13:16:41 fukachan Exp $
+# $FML: Drop.pm,v 1.1.1.1 2006/06/10 01:05:10 fukachan Exp $
 #
 
 package TinyMTA::Drop;
@@ -54,9 +54,12 @@ sub run
     # 1. prepare queue directory. 
     my $queue_dir = $config->{ queue_dir };
     unless (-d $queue_dir) {
-	mkdir $queue_dir, 0720;
+	mkdir $queue_dir, 0730;
 	if (-d $queue_dir) {
 	    $self->log("$queue_dir created");
+	}
+	else {
+	    $self->logerror("cannot mkdir $queue_dir");
 	}
     }
 
@@ -68,8 +71,8 @@ sub run
 
 	$wh->autoflush(1);
       LINE:
-	while ($buf = <STDIN>) {
-	    print $wh $buf;
+	while (sysread(STDIN, $buf, 8192)) {
+	    syswrite($wh, $buf, 8192);
 	}
 	$wh->close();
     }
