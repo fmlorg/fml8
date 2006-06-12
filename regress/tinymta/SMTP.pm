@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.10 2006/01/07 13:16:41 fukachan Exp $
+# $FML: SMTP.pm,v 1.1.1.1 2006/06/10 01:05:11 fukachan Exp $
 #
 
 package TinyMTA::SMTP;
@@ -56,6 +56,8 @@ sub run
 	$self->log("try to send: $q");
 	$self->send($q);
     }
+
+    $self->resend();
 }
 
 
@@ -109,6 +111,7 @@ sub send
 
     if (rename($qf_candidate, $qf_locked)) {
 	$self->_send_file($qf_locked);
+	unlink $qf_locked if -f $qf_locked;
     }
     else {
 	$self->logerror("cannot lock queue: $q");
@@ -158,7 +161,7 @@ sub _send_file
 
     use Mail::Delivery;
     my $logfp_normal = sub { $self->log(@_); };
-    my $logfp_error  = sub { $self->log(@_); };
+    my $logfp_error  = sub { $self->logerror(@_); };
     my $service = new Mail::Delivery {
 	log_info_function  => $logfp_normal,
 	log_error_function => $logfp_error,
@@ -168,8 +171,9 @@ sub _send_file
 	address_validate_function => $validater,
     };
     if ($service->error) { 
-	# log($service->error);
-	croak("cannot initialize Mail::Delivery object");
+	$self->logerror($service->error);
+	$self->logerror("cannot initialize Mail::Delivery object");
+	return 0;
     }
 
     $service->deliver({
@@ -189,13 +193,13 @@ sub _send_file
     });
     if ($service->error) { 
 	$self->logerror($service->error);
-	croak($service->error);
+	return 0;
     }
 
     # delivery not completes.
     if ($service->get_not_done()) { 
 	$self->logerror("delivery not done");
-	croak("delivery not done");
+	return 0;
     }
 
     # done.
@@ -206,6 +210,11 @@ sub _send_file
 	$qid =~ s/^_//;
 	$self->log("$qid removed");
     }
+    else {
+	$self->logerror("cannnot remove qid=$qid");
+    }
+
+    return 1;
 }
 
 
@@ -247,6 +256,46 @@ sub _analyze_message
     }
 
     return($sender, $rcpt_maps);
+}
+
+
+# Descriptions: re-schedule and send old messages.
+#    Arguments: OBJ($self)
+# Side Effects: old queue removed.
+# Return Value: none
+sub resend
+{
+    my ($self)    = @_;
+    my $config    = $self->{ _config };
+    my $queue_dir = $config->{ queue_dir };
+
+    use Mail::Delivery::Queue;
+    my $queue = new Mail::Delivery::Queue { directory => $queue_dir };
+    $queue->reschedule();
+    my $qlist = $queue->list();
+
+    for my $qid (@$qlist) {
+	my $q = new Mail::Delivery::Queue { 
+	    id        => $qid,
+	    directory => $queue_dir,
+	};
+
+        if ( $q->lock( { wait => 10 } ) && $q->is_valid_active_queue() ) {
+	    my $qf = $q->active_file_path($qid);
+	    my $status = $self->_send_file($qf);
+	    if ($status) {
+		$self->log("status=sent qid=$qid");
+		$q->remove();
+	    }
+	    else {
+		$self->logerror("status=deferred qid=$qid");
+		$q->remove();
+	    } 
+	}
+    }
+
+    # clean up
+    $queue->expire();
 }
 
 
