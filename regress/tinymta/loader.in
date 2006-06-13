@@ -4,7 +4,9 @@
 # Copyright (C) 2000-2002,2004,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: loader.in,v 1.13 2004/10/06 13:33:27 fukachan Exp $
+# $FML: loader.in,v 1.1.1.1 2006/06/10 01:05:10 fukachan Exp $
+#
+# derived from fml8 loader.in 1.13.
 #
 
 eval 'exec @PERL@ -S $0 ${1+"$@"}'
@@ -24,7 +26,7 @@ $ERROR_EXIT_CODE = 1;
 
 =head1 NAME
 
-loader -- top level wrapper to load and start a real fml program.
+loader -- top level wrapper to load and start a real TinyMTA program.
 
 =head1 SYNOPSIS
 
@@ -36,8 +38,6 @@ Perl modules C<fml> uses are dependent on fml version.
 C<loader> resolves fml version dependence by
 @sysconfdir@/main.cf,
 set up proper @INC and load C<FML::Process::Switch>.
-
-See C<FML::Process::Switch> for boot strap phase 2 of fml process.
 
 =head1 COMMAND LINE OPTIONS
 
@@ -121,7 +121,7 @@ sub bootstrap
     if ($@) {
 	my $reason = $@;
 	$reason =~ s/[\n\s]*\s+at\s+.*$//m;
-	__CROAK("cannot load FML::Process::Switch", $reason);
+	__CROAK("cannot call main::dispatch()", $reason);
     }
 }
 
@@ -274,8 +274,6 @@ exit(0);
 
 
 =head1 SEE ALSO
-
-L<FML::Process::Switch>
 
 =head1 AUTHOR
 
