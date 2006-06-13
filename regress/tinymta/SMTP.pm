@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.1.1.1 2006/06/10 01:05:11 fukachan Exp $
+# $FML: SMTP.pm,v 1.2 2006/06/12 22:49:46 fukachan Exp $
 #
 
 package TinyMTA::SMTP;
@@ -146,8 +146,20 @@ sub _send_file
 
     use Mail::Message;
     my $message = Mail::Message->parse( { file => $queue_file } );
+    unless (defined $message) {
+	$self->logerror("undefined message");
+	return 0;
+    }
 
     my ($sender, $rcpt_maps) = $self->_analyze_message($message);
+    unless ($sender) {
+	$self->logerror("no sender");
+	return 0;
+    }
+    unless (@$rcpt_maps) {
+	$self->logerror("no recipient");
+	return 0;
+    }
 
     use Mail::Delivery::Queue;
     my $queue = new Mail::Delivery::Queue { directory => $queue_dir };
@@ -203,11 +215,12 @@ sub _send_file
     }
 
     # done.
+    use File::Basename;
+    my $qid = basename($queue_file);
+    $qid =~ s/^_//;
+
     unlink $queue_file;
     unless (-f $queue_file) {
-	use File::Basename;
-	my $qid = basename($queue_file);
-	$qid =~ s/^_//;
 	$self->log("$qid removed");
     }
     else {

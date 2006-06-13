@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Drop.pm,v 1.1.1.1 2006/06/10 01:05:10 fukachan Exp $
+# $FML: Drop.pm,v 1.2 2006/06/12 22:53:06 fukachan Exp $
 #
 
 package TinyMTA::Drop;
@@ -85,6 +85,9 @@ sub run
 	    $self->logerror("cannot create $qf");
 	    croak("cannot create $qf\n");
 	}
+    }
+    else {
+	$self->logerror("0 byte tmp file: $qtmp");
     }
 }
 
