@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.83 2006/04/16 06:34:54 fukachan Exp $
+# $FML: ToHTML.pm,v 1.84 2006/05/22 14:24:51 tmu Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.83 2006/04/16 06:34:54 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.84 2006/05/22 14:24:51 tmu Exp $;
 my $versionid = 0;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $versionid = "$1";
@@ -178,18 +178,25 @@ sub htmlify_rfc822_message
     my ($id, $src, $dst) = $self->_init_htmlify_rfc822_message($args);
     $self->{ _debug_id } = $id;
 
+    # save information for index.html and thread.html
+    $self->cache_message_info($msg, { id  => $id,
+				      src => $src,
+				      dst => $dst,
+				  } );
+
+    # target html not define 
+    unless ($dst) {
+	$self->{ _ignore_list }->{ $id } = 1; # ignore flag
+	warn("html file for $id not define") if $debug;
+	return undef;
+    }
+
     # target html exists already.
     if (-f $dst) {
 	$self->{ _ignore_list }->{ $id } = 1; # ignore flag
 	warn("html file for $id already exists") if $debug;
 	return undef;
     }
-
-    # save information for index.html and thread.html
-    $self->cache_message_info($msg, { id  => $id,
-				      src => $src,
-				      dst => $dst,
-				  } );
 
     # prepare output channel
     my $wh = $self->_set_output_channel( { dst => $dst } );
@@ -325,6 +332,7 @@ sub htmlify_rfc822_message
     $self->mhl_separator($wh);
     $self->mhl_footer($wh);
     $self->html_end($wh);
+    return 1;
 }
 
 
@@ -435,6 +443,7 @@ sub html_filepath
 
     if (defined($id) && ($id > 0)) {
 	my $filename = $self->html_filename($id);
+	return undef unless($filename);
 
 	use File::Spec;
 	return File::Spec->catfile($html_base_dir, $filename);
@@ -781,7 +790,8 @@ sub _format_safe_header
 }
 
 
-my @indexs = qw(all thread month month_thread top);
+# create index.html type (all thread month month_thread top)
+my @indexs = qw(month month_thread top);
 
 # Descriptions: show link to indexes as navigation
 #    Arguments: HASH_REF($args)
@@ -1573,9 +1583,9 @@ sub _update_id_montly_index_master
 	    else {
 		_print_raw_str($wh, "<td>", $code);
 	    }
-	    _print_raw_str($wh, "</td>", $code);
+	    _print_raw_str($wh, "</td>\n", $code);
 	}
-	_print_raw_str($wh, "</tr>", $code);
+	_print_raw_str($wh, "</tr>\n", $code);
     }
     _print_raw_str($wh, "</table>", $code);
 
@@ -1882,9 +1892,9 @@ sub _update_montly_thread_index_master
 	    else {
 		_print_raw_str($wh, "<td>", $code);
 	    }
-	    _print_raw_str($wh, "</td>", $code);
+	    _print_raw_str($wh, "</td>\n", $code);
 	}
-	_print_raw_str($wh, "</tr>", $code);
+	_print_raw_str($wh, "</tr>\n", $code);
     }
     _print_raw_str($wh, "</table>", $code);
 
@@ -2345,10 +2355,13 @@ sub htmlify_file
     }
 
     _PRINT_DEBUG("htmlify_rfc822_message begin");
-    $html->htmlify_rfc822_message({
+    unless ($html->htmlify_rfc822_message({
 	id  => $id,
 	src => $file,
-    });
+    }) ) {
+	_PRINT_DEBUG("htmlify_rfc822_message end no change");
+	return;
+    }
     _PRINT_DEBUG("htmlify_rfc822_message end");
 
     if ($debug) {
