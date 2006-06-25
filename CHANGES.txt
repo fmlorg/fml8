@@ -45,6 +45,15 @@
 	デバッグおよび、ちょっと(インチキだけど)MTAもどきを使いたい場
 	合に便利
 
+
+2006/06/25
+
+   へんな SPAM でコマンドが落ちたりするのが直ったはず。
+
+   FML::Command::DataCheck 
+   FML::Process::Command 
+	validate if find_first_plaintext_message() returns object.
+
 2006/05/22
 
    Mail::Message::ToHTML 
@@ -9899,4 +9908,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.286 2006/05/18 15:03:46 fukachan Exp $
+$FML: CHANGES.txt,v 1.287 2006/06/11 14:56:42 fukachan Exp $
