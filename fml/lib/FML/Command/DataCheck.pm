@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DataCheck.pm,v 1.17 2005/05/27 03:03:34 fukachan Exp $
+# $FML: DataCheck.pm,v 1.18 2005/08/19 12:17:07 fukachan Exp $
 #
 
 package FML::Command::DataCheck;
@@ -148,6 +148,11 @@ sub find_anonymous_command_mail_allowed_commands
     my $commands = $config->get_as_array_ref('anonymous_command_mail_allowed_commands');
     my $body     = $curproc->incoming_message_body();
     my $msg      = $body->find_first_plaintext_message();
+
+    # assert
+    unless (defined $msg) {
+	return 0;
+    }
 
     # XXX-TODO: use message_text_as_array_ref().
     my (@body)   = split(/\n/, $msg->message_text );

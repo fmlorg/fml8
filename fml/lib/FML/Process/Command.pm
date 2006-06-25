@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.118 2006/03/05 08:08:37 fukachan Exp $
+# $FML: Command.pm,v 1.119 2006/04/10 13:13:56 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -285,6 +285,12 @@ sub _command_process_loop
     my $config    = $curproc->config();
     my $rbody     = $curproc->incoming_message_body();
     my $msg       = $rbody->find_first_plaintext_message();
+
+    # assert
+    unless (defined $msg) {
+	$curproc->logerror("cannot find plain/text part");
+	return undef;
+    }
     my $comlines  = $msg->message_text_as_array_ref();
     my $context   = {};
 
