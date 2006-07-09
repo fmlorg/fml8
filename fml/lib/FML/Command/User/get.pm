@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.25 2006/03/04 13:48:29 fukachan Exp $
+# $FML: get.pm,v 1.26 2006/04/16 06:33:36 fukachan Exp $
 #
 
 package FML::Command::User::get;
@@ -71,7 +71,7 @@ sub check_limit
 
     # 1. check the number of article in one command.
     my $total = $pcb->get('command', 'get_command_request_total') || 0;
-    my $nreq  = $self->num_files_in_send_article_args($curproc, 
+    my $nreq  = $self->num_files_in_send_article_args($curproc,
 						      $command_context);
     my $request_total = $total + $nreq;
     $pcb->set('command', 'get_command_request_total', $request_total);

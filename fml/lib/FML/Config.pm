@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.104 2006/02/03 11:06:03 fukachan Exp $
+# $FML: Config.pm,v 1.105 2006/05/02 11:22:43 fukachan Exp $
 #
 
 package FML::Config;
@@ -1239,13 +1239,13 @@ sub set_context
     $current_context = $context;
 
     unless (defined $_fml_pool->{ $current_context }->{ _fml_config_result }) {
-	my $p = $_fml_pool; 
+	my $p = $_fml_pool;
 	$p->{ $current_context }->{ _fml_config_result }  = {};
 	$p->{ $current_context }->{ _fml_config }         = {};
 	$p->{ $current_context }->{ _default_fml_config } = {};
     }
 
-    my $p = $_fml_pool; 
+    my $p = $_fml_pool;
     $_fml_config_result  = $p->{ $current_context }->{ _fml_config_result };
     $_fml_config         = $p->{ $current_context }->{ _fml_config };
     $_default_fml_config = $p->{ $current_context }->{ _default_fml_config };

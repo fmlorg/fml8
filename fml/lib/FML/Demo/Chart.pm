@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: Chart.pm,v 1.1 2006/02/01 12:35:45 fukachan Exp $
 #
 
 package FML::Demo::Chart;
@@ -312,7 +312,7 @@ sub print_as_html_table
 	    }
 	}
 	print "\n";
-    }	
+    }
     print "</TABLE>\n";
 }
 
@@ -350,7 +350,7 @@ sub print_as_csv
 	    print ",";
 	}
 	print "\n";
-    }	
+    }
 }
 
 

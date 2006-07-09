@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Mailer.pm,v 1.37 2006/04/03 09:53:29 fukachan Exp $
+# $FML: Mailer.pm,v 1.38 2006/04/05 11:39:11 fukachan Exp $
 #
 
 package FML::Mailer;
@@ -113,7 +113,7 @@ sub send
 	$fp_log_info  = sub { $curproc->log(@_);};
 	$fp_log_error = sub { $curproc->logerror(@_);};
 	$fp_log_debug = sub { $curproc->logdebug(@_);};
-	$fp_smtplog   = sub { 
+	$fp_smtplog   = sub {
 	    my ($s) = @_; print $s; print "\n" if $s !~ /\n$/o;
 	};
 
@@ -177,7 +177,7 @@ sub send
 
     # address validater
     my $validater = sub {
-	my ($address) = @_; 
+	my ($address) = @_;
 	use FML::Restriction::Base;
 	my $restriction = new FML::Restriction::Base;
 	return $restriction->regexp_match( 'address', $address );
@@ -219,7 +219,7 @@ sub send
     if ($service->error) { $curproc->logerror($service->error); return 0;}
 
     # delivery not completes.
-    if ($service->get_not_done()) { 
+    if ($service->get_not_done()) {
 	$curproc->logdebug("delivery not done");
 	return 0;
     }

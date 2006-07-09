@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.47 2006/04/20 23:55:02 fukachan Exp $
+# $FML: SMTP.pm,v 1.48 2006/04/22 08:55:33 fukachan Exp $
 #
 
 
@@ -284,7 +284,7 @@ sub _connect
 
     $self->clear_error;
 
-    # 1. try to connect(2) $mta by IPv6 if 
+    # 1. try to connect(2) $mta by IPv6 if
     #    (1) we can use Socket6.
     #    (2) mta is not pure IPv4 syntax (Iv6 syntax or hostname).
     if ($self->is_ipv6_ready() && (! $self->is_pure_ipv4_syntax($mta))) {
@@ -679,7 +679,7 @@ sub _fallback_into_queue
 		$queue->in( $msg ) || croak("fail to queue in");
 		{
 		    my $error;
-		    if ($error = $queue->error()) { 
+		    if ($error = $queue->error()) {
 			$self->logerror("fallback: $error");
 		    }
 		    my $n = $queue->write_count();
@@ -792,7 +792,7 @@ sub _deliver
     # 3. MAIL FROM;
     #    IF_ERROR_FOUND: do nothing and return as soon as possible
     $self->_send_mail_from($args);
-    if ($self->get_error) { 
+    if ($self->get_error) {
 	$self->_reset_smtp_transaction($args);
 	$self->_set_mta_as_fatal($args);
 	return;
@@ -939,7 +939,7 @@ sub _send_mail_from
     my ($self, $args) = @_;
     my $sender = $args->{ smtp_sender };
 
-    if (defined $sender) { 
+    if (defined $sender) {
 	$self->_send_command("MAIL FROM:<$sender>");
 	$self->_read_reply;
     }

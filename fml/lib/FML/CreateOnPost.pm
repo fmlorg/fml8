@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.10 2006/01/07 13:16:41 fukachan Exp $
+# $FML: CreateOnPost.pm,v 1.1 2006/02/04 08:00:09 fukachan Exp $
 #
 
 package FML::CreateOnPost;
@@ -41,7 +41,7 @@ sub new
 }
 
 
-# Descriptions: create ml. 
+# Descriptions: create ml.
 #    Arguments: OBJ($self) STR($ml_addr)
 # Side Effects: none
 # Return Value: none

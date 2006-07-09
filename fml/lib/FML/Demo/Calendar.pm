@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Calendar.pm,v 1.2 2005/05/27 00:53:23 fukachan Exp $
+# $FML: Calendar.pm,v 1.3 2006/01/12 12:17:26 fukachan Exp $
 #
 
 package FML::Demo::Calendar;
@@ -56,7 +56,7 @@ files here and use only valid entries found in them.
 The file format follows:
 
     # comment: the format is /^(\d+\/\d+)\s+(.*)/ or /^(*\/\d+)\s+(.*)/
-    DATE CONTENT 
+    DATE CONTENT
     DATE CONTENT FORMAT IS ARBITORARY
 
 where null lines or space lines are ignored.

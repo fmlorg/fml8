@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Checksum.pm,v 1.14 2006/05/11 14:27:03 fukachan Exp $
+# $FML: Checksum.pm,v 1.15 2006/05/11 14:52:35 fukachan Exp $
 #
 
 package Mail::Message::Checksum;
@@ -94,7 +94,7 @@ sub _init_external
 	    use Mail::Message::Utils;
 	    my $prog = Mail::Message::Utils::search_program('md5') ||
 	      Mail::Message::Utils::search_program('md5sum');
-	    
+
 	    if (defined $prog) {
 		$self->{ _program } = $prog;
 		$self->set_mode("external");
@@ -231,7 +231,7 @@ sub _external_md5_str_ref
 }
 
 
-# Descriptions: read checksum from the specified handle. 
+# Descriptions: read checksum from the specified handle.
 #    Arguments: OBJ($self) HANDLE($rh)
 # Side Effects: none
 # Return Value: STR

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.68 2006/04/28 13:18:57 fukachan Exp $
+# $FML: Queue.pm,v 1.69 2006/05/04 06:53:54 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -1990,7 +1990,7 @@ sub _cleanup
     use File::stat;
 
     my $fp = sprintf("%s_dir_path", $class);
-    my $queue_dir = 
+    my $queue_dir =
 	$self->can($fp) ? $self->$fp() : $self->local_dir_path($class);
     my $dh = new DirHandle $queue_dir;
     if (defined $dh) {
@@ -2002,7 +2002,7 @@ sub _cleanup
 	    next ENTRY if $entry =~ /^\./o;
 
 	    $fp   = sprintf("%s_file_path", $class);
-	    $file = $self->can($fp) ? $self->$fp($entry) : 
+	    $file = $self->can($fp) ? $self->$fp($entry) :
 		$self->local_file_path($class, $entry);
 	    next ENTRY unless -f $file;
 

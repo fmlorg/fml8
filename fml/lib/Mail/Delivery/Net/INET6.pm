@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: INET6.pm,v 1.19 2006/04/01 02:21:29 fukachan Exp $
+# $FML: INET6.pm,v 1.20 2006/04/20 04:02:30 fukachan Exp $
 #
 
 package Mail::Delivery::Net::INET6;
@@ -14,9 +14,9 @@ use Carp;
 
 require Exporter;
 @ISA    = qw(Exporter);
-@EXPORT = qw(is_ipv6_ready 
-	     set_ipv6_ready 
-	     get_ipv6_ready 
+@EXPORT = qw(is_ipv6_ready
+	     set_ipv6_ready
+	     get_ipv6_ready
 
 	     parse_mta6
 
@@ -192,7 +192,7 @@ sub connect6
 	if (defined $self->get_socket()) {
 	    $self->set_socket(undef);
 	}
- 
+
       ADDR_ENTRY:
 	while (scalar(@res) >= 5) {
 	    ($family, $type, $proto, $saddr, $canonname, @res) = @res;

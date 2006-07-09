@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: config_ph.pm,v 1.24 2006/04/30 07:02:25 fukachan Exp $
+# $FML: config_ph.pm,v 1.25 2006/05/17 12:23:54 fukachan Exp $
 #
 
 package FML::Merge::FML4::config_ph;
@@ -423,7 +423,7 @@ sub translate_xxx
 	my $host = $diff->{ 'HOST' } || '127.0.0.1';
 	my $port = $diff->{ 'PORT' } || 25;
 	$host = $host eq '___nil___' ? '127.00.1' : $host;
-	$port = $port eq '___nil___' ? 25 : $port; 
+	$port = $port eq '___nil___' ? 25 : $port;
 	return "smtp_servers = $host:$port";
     }
     elsif ($key eq 'SPOOL_DIR' || $key eq 'TMP_DIR') {
@@ -534,25 +534,25 @@ sub translate_xxx
 	$v =~ s/X-ML-Name:\s+//g;
 
 	$s .= sprintf("outgoing_mail_header_x_ml_name = %s\n\n", $v);
-	return $s;	
+	return $s;
     }
     elsif ($key eq 'LOGFILE_SUFFIX') {
 	if ($diff->{ LOGFILE }) {
 	    my $old = $config->{ LOGFILE };
 	    my $log = $self->_fix_path($config, $diff, "LOGFILE", $old);
 	    my $s = sprintf("log_file = %s%s\n\n", $log, $value);
-	    return $s;	
+	    return $s;
 	}
 	else {
 	    my $s = sprintf("log_file = \$ml_home_dir/log%s\n\n", $value);
-	    return $s;	
+	    return $s;
 	}
     }
     elsif ($key eq 'MAX_MEMBER_LIMIT') {
 	my $s = '';
 	$s .= sprintf("use_recipient_total_limit = yes\n\n");
 	$s .= sprintf("recipient_total_limit = %d\n\n", $value);
-	return $s;	
+	return $s;
     }
 
     return '# ***ERROR*** UNKNOWN TRANSLATION RULE';

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: INET4.pm,v 1.12 2006/03/24 14:16:38 fukachan Exp $
+# $FML: INET4.pm,v 1.13 2006/03/26 14:58:08 fukachan Exp $
 #
 
 package Mail::Delivery::Net::INET4;
@@ -39,7 +39,7 @@ sub connect4
     # XXX we should avoid croak() in IO::Socket module;
     # XXX-TODO: timeout must be customizable.
     eval {
-	local($SIG{ALRM}) = sub { 
+	local($SIG{ALRM}) = sub {
 	    $self->logerror("timeout to connect $mta");
 	};
 	use IO::Socket;
@@ -88,7 +88,7 @@ IPv4. This is a typical socket program.
 =head2 connect4()
 
 try L<connect(2)>.
-If it succeeds, return a file handle. 
+If it succeeds, return a file handle.
 return undef if failes.
 
 Also, save the socket handle via set_socket() access method.

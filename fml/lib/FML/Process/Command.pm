@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.119 2006/04/10 13:13:56 fukachan Exp $
+# $FML: Command.pm,v 1.120 2006/06/25 11:05:12 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -314,7 +314,7 @@ sub _command_process_loop
 	}
 
 	# XXX analyze the input command and set the result into $context.
-	# XXX-TODO: command_context_init() checks irregular condition, 
+	# XXX-TODO: command_context_init() checks irregular condition,
 	# XXX-TODO: provided by FML::Command::Irregular::* classes, too.
 	# XXX-TODO: hmm, we call irregular checks for each line ???
 	$context = $curproc->command_context_init($orig_command);
@@ -571,7 +571,7 @@ sub _check_effective_command_contained
 {
     my ($curproc) = @_;
 
-    # if no effective command, 
+    # if no effective command,
     # ignore or reply warning determined by matched rule.
     unless ($num_processed) {
 	my $rule = $curproc->restriction_state_get_ignore_reason() || '';

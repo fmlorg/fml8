@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #
-# $FML: Log.pm,v 1.34 2006/04/02 06:34:48 fukachan Exp $
+# $FML: Log.pm,v 1.35 2006/05/04 05:25:40 fukachan Exp $
 #
 
 package FML::Log;
@@ -139,7 +139,7 @@ sub Log
     my $fh     = undef;
     my $sender = FML::Credential->sender;
 
-    # expand % in log file name by POSIX::strftime(). 
+    # expand % in log file name by POSIX::strftime().
     if ($file =~ /\%/o) {
 	$file = strftime($file, localtime);
     }

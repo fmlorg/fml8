@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.10 2006/01/07 13:16:41 fukachan Exp $
+# $FML: Envelope.pm,v 1.1 2006/05/14 11:25:13 fukachan Exp $
 #
 
 package FML::Envelope;
@@ -85,7 +85,7 @@ set checksum method type.
 
 =head2 get_checksum_type()
 
-get checksum method type. 
+get checksum method type.
 return 'md5' by default.
 
 =cut

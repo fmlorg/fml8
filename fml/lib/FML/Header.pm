@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.91 2006/03/18 02:28:33 fukachan Exp $
+# $FML: Header.pm,v 1.92 2006/04/17 12:00:50 fukachan Exp $
 #
 
 package FML::Header;
@@ -351,7 +351,7 @@ sub add_rfc2369
     my $ml_name    = $config->{ ml_name }    || '';
     my $ml_domain  = $config->{ ml_domain }  || '';
     my $post       = $config->{ article_post_address } || '';
-    my $_contact   = "contact maintainer <$maintainer>"; 
+    my $_contact   = "contact maintainer <$maintainer>";
     my $default    = $maintainer  ? $_contact          : 'unavailable';
     my $list_id    = $_list_id || "$ml_name ML <$ml_name.$ml_domain>";
     my $list_owner = $maintainer  ? $_list_owner       : 'maintainer';

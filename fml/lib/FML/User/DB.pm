@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.10 2006/02/18 09:25:32 fukachan Exp $
+# $FML: DB.pm,v 1.11 2006/02/22 12:18:52 fukachan Exp $
 #
 
 package FML::User::DB;
@@ -113,7 +113,7 @@ sub set
 }
 
 
-# Descriptions: find the first matched entry { $key => $value } 
+# Descriptions: find the first matched entry { $key => $value }
 #               in $primary_user_db_${class}_map.
 #    Arguments: OBJ($self) STR($class) STR($key)
 # Side Effects: update database

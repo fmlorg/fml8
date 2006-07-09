@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.10 2006/01/07 13:16:41 fukachan Exp $
+# $FML: Project.pm,v 1.1 2006/02/01 12:35:45 fukachan Exp $
 #
 
 package FML::Demo::Project;
@@ -81,7 +81,7 @@ sub parse
 	    my ($title, @_data) = split(/\s+/, $buf);
 	  DATA:
 	    for my $s (@_data) {
-		if ($s =~ /\d+\/\d+/ || $s =~ /\d+\/\d+\/\d+/) { 
+		if ($s =~ /\d+\/\d+/ || $s =~ /\d+\/\d+\/\d+/) {
 		    $date = $self->_canonical_date($s);
 		    next DATA;
 		}
@@ -190,15 +190,15 @@ sub build
     my $chart = new FML::Demo::Chart;
     my $max_line = $#$data;
     for (my $line = 1; $line < $max_line; $line++) {
-	my $level   = $data->[ $line ]->{ level }   || 1; 
-	my $title   = $data->[ $line ]->{ title }   || ''; 
-	my $date    = $data->[ $line ]->{ date }    || ''; 
-	my $comment = $data->[ $line ]->{ comment } || ''; 
+	my $level   = $data->[ $line ]->{ level }   || 1;
+	my $title   = $data->[ $line ]->{ title }   || '';
+	my $date    = $data->[ $line ]->{ date }    || '';
+	my $comment = $data->[ $line ]->{ comment } || '';
 
-	if ($level == 1) { 
+	if ($level == 1) {
 	    $chart->add($line, "item1",  $title);
 	}
-	elsif ($level == 2) { 
+	elsif ($level == 2) {
 	    $chart->add($line, "item2",  $title);
 	}
 	else {
@@ -224,7 +224,7 @@ sub build
 # Return Value: none
 sub print_as_html_table
 {
-    my ($self) = @_;    
+    my ($self) = @_;
     my $chart  = $self->{ _chart };
     $chart->print_as_html_table();
 }
@@ -236,7 +236,7 @@ sub print_as_html_table
 # Return Value: none
 sub print_as_csv
 {
-    my ($self) = @_;    
+    my ($self) = @_;
     my $chart  = $self->{ _chart };
     $chart->print_as_csv();
 }

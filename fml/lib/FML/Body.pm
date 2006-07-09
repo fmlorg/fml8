@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Body.pm,v 1.3 2006/05/13 11:45:40 fukachan Exp $
+# $FML: Body.pm,v 1.4 2006/05/13 11:50:31 fukachan Exp $
 #
 
 package FML::Body;
@@ -139,7 +139,7 @@ set checksum method type.
 
 =head2 get_checksum_type()
 
-get checksum method type. 
+get checksum method type.
 return 'md5' by default.
 
 =cut

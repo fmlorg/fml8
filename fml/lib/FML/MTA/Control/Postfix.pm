@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.11 2006/02/04 07:58:03 fukachan Exp $
+# $FML: Postfix.pm,v 1.12 2006/02/15 13:44:04 fukachan Exp $
 #
 
 package FML::MTA::Control::Postfix;
@@ -481,7 +481,7 @@ sub postfix_install_createonpost
 	    $rh->close();
 	}
     }
-  
+
     # 2. install create-on-post entry into virtual.
     unless ($dup) {
         $curproc->ui_message("updating $virtual database for create-on-post");
@@ -529,7 +529,7 @@ sub postfix_delete_createonpost
       LINE:
 	while($buf = <$rh>) {
 	    if ($buf =~ /<CREATE-ON-POST>/
-		.. 
+		..
 		$buf =~ /<\/CREATE-ON-POST>/) {
 		next LINE;
 	    }
@@ -543,7 +543,7 @@ sub postfix_delete_createonpost
 	    $curproc->ui_message("error: $s");
 	    $curproc->logerror($s);
 	}
-	
+
 	# rebuild .map file.
 	$self->postfix_update_virtual_map($curproc, $params, $optargs);
     }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.84 2006/05/22 14:24:51 tmu Exp $
+# $FML: ToHTML.pm,v 1.85 2006/06/15 10:35:24 tmu Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.84 2006/05/22 14:24:51 tmu Exp $;
+my $version = q$FML: ToHTML.pm,v 1.85 2006/06/15 10:35:24 tmu Exp $;
 my $versionid = 0;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $versionid = "$1";
@@ -184,7 +184,7 @@ sub htmlify_rfc822_message
 				      dst => $dst,
 				  } );
 
-    # target html not define 
+    # target html not define
     unless ($dst) {
 	$self->{ _ignore_list }->{ $id } = 1; # ignore flag
 	warn("html file for $id not define") if $debug;

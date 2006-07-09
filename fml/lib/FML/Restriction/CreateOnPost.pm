@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: CreateOnPost.pm,v 1.1 2006/02/04 08:00:09 fukachan Exp $
+# $FML: CreateOnPost.pm,v 1.2 2006/02/05 02:44:25 fukachan Exp $
 #
 
 package FML::Restriction::CreateOnPost;
@@ -40,7 +40,7 @@ sub new
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: OBJ($self) STR($rule) STR($sender)
 # Side Effects: none
 # Return Value: ARRAY(STR, STR)
@@ -56,7 +56,7 @@ sub reject_errormail
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: OBJ($self) STR($rule) STR($sender)
 # Side Effects: none
 # Return Value: ARRAY(STR, STR)
@@ -73,7 +73,7 @@ sub reject_fml8_managed_address
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: OBJ($self) STR($rule) STR($sender)
 # Side Effects: none
 # Return Value: ARRAY(STR, STR)
@@ -91,7 +91,7 @@ sub reject_createonpost_domain
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: OBJ($self) STR($rule) STR($sender)
 # Side Effects: none
 # Return Value: ARRAY(STR, STR)

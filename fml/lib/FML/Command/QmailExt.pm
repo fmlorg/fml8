@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.10 2006/01/07 13:16:41 fukachan Exp $
+# $FML: QmailExt.pm,v 1.1 2006/05/09 12:43:58 fukachan Exp $
 #
 
 package FML::Command::QmailExt;
@@ -115,7 +115,7 @@ sub _parse_extension
 	    $found = 1;
 	    last COMMAND;
 	}
-    }		     
+    }
 
     if ($found) {
 	return($found, \@command);
@@ -238,7 +238,7 @@ sub _reopen_stdio_channel
 
     close(STDIN);
     my $status = open(STDIN, $message_file);
-    return( $status ? 1 : 0 ); 
+    return( $status ? 1 : 0 );
 }
 
 

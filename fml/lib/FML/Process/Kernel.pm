@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.283 2006/05/12 13:50:11 fukachan Exp $
+# $FML: Kernel.pm,v 1.284 2006/05/13 11:45:40 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -2362,7 +2362,7 @@ sub reply_message_delete
 
 	push(@$queue_fixed, $q);
     }
-    
+
     $pcb->set($category, $class, $queue_fixed);
 }
 

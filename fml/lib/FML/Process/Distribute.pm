@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.177 2006/05/03 07:42:37 fukachan Exp $
+# $FML: Distribute.pm,v 1.178 2006/05/04 05:19:37 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -615,7 +615,7 @@ sub _deliver_article
     my $fp_log_info  = sub { $curproc->log(@_);};
     my $fp_log_error = sub { $curproc->logerror(@_);};
     my $fp_log_debug = sub { $curproc->logdebug(@_);};
-    my $fp_smtplog   = sub { 
+    my $fp_smtplog   = sub {
 	my ($s) = @_; print $s; print "\n" if $s !~ /\n$/o;
     };
     my $handle = undef;
@@ -637,7 +637,7 @@ sub _deliver_article
 
     # address validater
     my $validater = sub {
-	my ($address) = @_; 
+	my ($address) = @_;
 	use FML::Restriction::Base;
 	my $restriction = new FML::Restriction::Base;
 	return $restriction->regexp_match( 'address', $address );
@@ -689,7 +689,7 @@ sub _deliver_article
 
 			  map_params        => $config,
 
-			  queue             => $queue, 
+			  queue             => $queue,
 
 			  # fallback
 			  use_queue_dir     => 1,
@@ -703,7 +703,7 @@ sub _deliver_article
     }
 
     # delivery not completes.
-    if ($service->get_not_done()) { 
+    if ($service->get_not_done()) {
 	$curproc->logdebug("delivery not done but must fallback, ok");
     }
 

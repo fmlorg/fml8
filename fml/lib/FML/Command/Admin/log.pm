@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: log.pm,v 1.31 2006/02/22 12:05:59 fukachan Exp $
+# $FML: log.pm,v 1.32 2006/03/04 13:48:28 fukachan Exp $
 #
 
 package FML::Command::Admin::log;
@@ -113,7 +113,7 @@ sub _show_log
 
 
 # Descriptions: grep log file by date.
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc) STR($log_file) HASH_REF($sl_args) NUM($when)
 # Side Effects: none
 # Return Value: none
@@ -178,7 +178,7 @@ sub _show_log_tail
     my $is_cgi     = 1 if $sl_args->{ printing_style } eq 'html';
     my $line_count = 0;
     my $line_max   = 0;
-    my $charset    = 
+    my $charset    =
 	$curproc->langinfo_get_charset($is_cgi ? "cgi" : "log_file");
 
     # run "tail -100 log" by default.

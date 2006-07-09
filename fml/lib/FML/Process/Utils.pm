@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.149 2006/04/22 08:29:23 fukachan Exp $
+# $FML: Utils.pm,v 1.150 2006/05/13 11:45:40 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1715,7 +1715,7 @@ sub is_fml8_managed_address
 {
     my ($curproc, $address)   = @_;
     my ($ml_name, $ml_domain) = split(/\@/, $address);
-    
+
     return $curproc->is_config_cf_exist($ml_name, $ml_domain);
 }
 
@@ -2265,7 +2265,7 @@ sub context_switch_get_context
     my ($curproc)     = @_;
     my $config        = $curproc->config();
     my $config_saved  = $config->get_context();
-    my $pcb           = $curproc->pcb();   
+    my $pcb           = $curproc->pcb();
     my $pcb_saved     = $pcb->get_context();
     my $process_title = $curproc->get_process_title();
     my $context       = {
@@ -2287,7 +2287,7 @@ sub context_switch_set_context
     my ($curproc, $context)= @_;
     my $config             = $curproc->config();
     my $config_context     = $context->{ config_saved_context };
-    my $pcb                = $curproc->pcb();   
+    my $pcb                = $curproc->pcb();
     my $pcb_context        = $context->{ pcb_saved_context };
     my $process_title      = $context->{ process_title };
 

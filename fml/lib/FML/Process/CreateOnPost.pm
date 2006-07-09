@@ -3,7 +3,7 @@
 # Copyright (C) 2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: CreateOnPost.pm,v 1.2 2006/02/05 01:02:52 fukachan Exp $
+# $FML: CreateOnPost.pm,v 1.3 2006/02/05 02:45:07 fukachan Exp $
 #
 
 package FML::Process::CreateOnPost;
@@ -243,7 +243,7 @@ sub _createonpost_verify_request
     # 1. parse To: and Cc:
     my ($all, $address2class, $class2address) = $curproc->_classify_address();
     my $r_args = {
-	address_to_class => $address2class, 
+	address_to_class => $address2class,
 	class_to_address => $class2address,
     };
 
@@ -253,7 +253,7 @@ sub _createonpost_verify_request
     my $cred        = $curproc->credential();
     my $sender      = $cred->sender();
 
-    # 2. check sender. 
+    # 2. check sender.
     $r_args->{ address_list } = [ $return_path, $sender ];
     $restriction = 'createonpost_sender_restrictions';
     $addrlist    = $curproc->_apply_restrictions($restriction, $r_args);
@@ -372,7 +372,7 @@ sub _apply_restrictions
 }
 
 
-# Descriptions: create-on-post main dispatcher. 
+# Descriptions: create-on-post main dispatcher.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
@@ -389,7 +389,7 @@ sub _run_createonpost
     my (@deny_list)   = @{ $addr_list->{ "deny" }   || [] };
     my (@permit_list) = @{ $addr_list->{ "permit" } || [] };
 
-    # 1. 
+    # 1.
     my $cop_list= $class_to_address->{ $ADDR_CREATE_ON_POST } || [];
     for my $ml (@$cop_list) {
 	if ($curproc->_is_ml_address($ml)) {
@@ -406,7 +406,7 @@ sub _run_createonpost
     for my $addr (@permit_list) {
 	for my $ign (@deny_list) {
 	    if ($addr eq $ign) {
-		$curproc->log("ignore $addr");		
+		$curproc->log("ignore $addr");
 		next ADDR;
 	    }
  	}
@@ -493,12 +493,12 @@ sub _distribute_ml
 
 =head1 FAULT HANDLING
 
-=head2 ML VALIDATION FAULT 
+=head2 ML VALIDATION FAULT
 
 This process checks the ML existence and call fault handler if not
 found. The fault handler creates a ML.
 
-=head2 ADDRESS VALIDATION FAULT 
+=head2 ADDRESS VALIDATION FAULT
 
 This process does not handle address fault that the specified address
 is not a member. Instead the executed process e.g. distirubition
@@ -507,7 +507,7 @@ process handles it as address validation fault.
 =cut
 
 
-# Descriptions: create ml. 
+# Descriptions: create ml.
 #    Arguments: OBJ($curproc) STR($ml_addr)
 # Side Effects: none
 # Return Value: none

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.13 2006/02/15 13:44:04 fukachan Exp $
+# $FML: Control.pm,v 1.14 2006/03/05 08:08:37 fukachan Exp $
 #
 
 package FML::ML::Control;
@@ -508,7 +508,7 @@ sub setup_listinfo
 sub install_createonpost
 {
     my ($self, $curproc, $command_context, $params) = @_;
-    my $config    = $curproc->config(); 
+    my $config    = $curproc->config();
     my $ml_name   = $curproc->ml_name();
     my $ml_domain = $curproc->ml_domain();
 
@@ -561,7 +561,7 @@ sub install_createonpost
 sub delete_createonpost
 {
     my ($self, $curproc, $command_context, $params) = @_;
-    my $config  = $curproc->config(); 
+    my $config  = $curproc->config();
     my $ml_name = $config->{ ml_name };
     my $list    = $config->get_as_array_ref('newml_command_mta_config_list');
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: subscribe.pm,v 1.38 2006/05/16 14:36:30 fukachan Exp $
+# $FML: subscribe.pm,v 1.39 2006/05/17 12:31:42 fukachan Exp $
 #
 
 package FML::Command::Admin::subscribe;
@@ -189,7 +189,7 @@ sub _is_member_total_exceed_limit
 }
 
 
-# Descriptions: check the number of users in ${map_name}_maps 
+# Descriptions: check the number of users in ${map_name}_maps
 #               exceeds the limit or not.
 #    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context) STR($map_name)
 # Side Effects: none
@@ -203,7 +203,7 @@ sub _check_total_limit
     my $control    = new FML::User::Control;
     my $var_maps   = sprintf("%s_maps", $map_name);
     my $config     = $curproc->config();
-    my $maplist    = $config->get_as_array_ref($var_maps); 
+    my $maplist    = $config->get_as_array_ref($var_maps);
     my $user_total = $control->get_user_total($curproc, $maplist);
 
     # 2. compare. return 1 if the total exceeds the limit.

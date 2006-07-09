@@ -3,7 +3,7 @@
 # Copyright (C) 2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML$
+# $FML: Project.pm,v 1.1 2006/02/01 12:35:45 fukachan Exp $
 #
 
 package FML::Process::Project;
@@ -135,7 +135,7 @@ sub run
 	$proj->print_as_html_table();
     }
     elsif (defined $option->{ csv }) {
-	$proj->print_as_csv();	
+	$proj->print_as_csv();
     }
     else {
 	$proj->print_as_csv();
