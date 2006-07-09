@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.78 2006/05/03 07:39:25 fukachan Exp $
+# $FML: Article.pm,v 1.79 2006/05/04 05:33:48 fukachan Exp $
 #
 
 package FML::Article;
@@ -25,7 +25,7 @@ FML::Article - manipulate an ML article and related information.
 =head1 SYNOPSIS
 
     use FML::Article;
-    $article = new FML::Article $curproc;
+    my $article = new FML::Article $curproc;
 
     # get sequence number
     my $id = $article->increment_id;
@@ -41,8 +41,7 @@ C<$article> object is just a container which holds
 C<header> and C<body> objects as hash keys.
 The C<header> is an C<FML::Header> object,
 the C<body> is a C<Mail::Message> object
-and
-the C<message> is the head object of message object chains.
+which is the head object of a message object chain.
 
 C<new()> method sets up the $curproc as
 
@@ -117,6 +116,7 @@ sub _setup_article_template
 	$curproc->{ article }->{ body }    = $duphdr->whole_message_body;
     }
     else {
+	$curproc->logerror("cannot duplicate message");
 	croak("cannot duplicate message");
     }
 }
@@ -343,6 +343,8 @@ sub expire
     }
 
     # 3. expire article summary.
+    # XXX-TODO: who ensure @$too_old_files is sorted already ???
+    # XXX-TODO: currently nobody ensure it.
     if ($config->yes('use_article_summary_file_expire')) {
 	my $id = $#$too_old_files || -1;
 	if ($id >= 0) {
@@ -356,15 +358,19 @@ sub expire
 	    }
 	    else {
 		my $msg = "$first_article_seq > $last_article_seq";
-		$curproc->logdebug("expire: invalid condition $msg"); 
+		$curproc->logdebug("expire: invalid condition $msg");
 	    }
 	}
+    }
+    else {
+	$curproc->logdebug("article_summary_file_expire disabled");
     }
 }
 
 
-# Descriptions: find too old articles in $spool_dir,
-#               which mtime < $threshold_mtime.
+# Descriptions: find too old articles in $spool_dir.
+#               If a file which mtime < $threshold_mtime,
+#               we call it "too old file".
 #    Arguments: OBJ($self) STR($spool_dir) NUM($threshold_mtime)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -378,7 +384,7 @@ sub _find_too_old_articles
 	$curproc->logerror("article expire: $threshold_mtime <= 0");
 	return;
     }
-    unless($threshold_mtime < time) {
+    unless ($threshold_mtime < time) {
 	$curproc->logerror("article expire: $threshold_mtime >= now");
 	return;
     }
@@ -417,16 +423,16 @@ sub __check_mtime
 
 =head2 filepath($id)
 
-return article file path.
+return article file path corresponding with the specified $id.
 
 =head2 subdirpath($id)
 
-return subdir path.
+return subdir path corresponding with the specified $id.
 
 =cut
 
 
-# Descriptions: return article file path.
+# Descriptions: return article file path corresponding with the specified $id.
 #    Arguments: OBJ($self) NUM($id)
 # Side Effects: none
 # Return Value: STR(file path)
@@ -438,7 +444,7 @@ sub filepath
 }
 
 
-# Descriptions: return subdir path for this article.
+# Descriptions: return subdir path corresponding with the specified $id.
 #    Arguments: OBJ($self) NUM($id)
 # Side Effects: none
 # Return Value: STR(file path)
