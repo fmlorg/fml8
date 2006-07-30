@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: edit.pm,v 1.19 2004/06/26 11:39:16 fukachan Exp $
+# $FML: edit.pm,v 1.20 2006/03/04 13:48:28 fukachan Exp $
 #
 
 package FML::Command::Admin::edit;
@@ -29,7 +29,26 @@ Tool to edit config.cf.
 
 =head1 METHODS
 
+=head2 new()
+
+constructor.
+
+=head2 need_lock()
+
+need lock or not.
+
+=head2 lock_channel()
+
+return lock channel name.
+
+=head2 verify_syntax($curproc, $command_context)
+
+provide command specific syntax checker.
+
 =head2 process($curproc, $command_context)
+
+main command specific routine.
+
 
 C<TODO>:
 now we can read and write config.cf, but can not change it.
@@ -71,9 +90,9 @@ sub process
     my $ml_domain = $curproc->ml_domain();
     my $config_cf = $curproc->config_cf_filepath($ml_name, $ml_domain);
     my $editor    = $ENV{ 'EDITOR' } || 'vi';
-    my $orig_path = $ENV{ 'PATH' };
 
     if (-f $config_cf) {
+	my $orig_path = $ENV{ 'PATH' };
 	$ENV{'PATH'} = '/bin:/usr/bin:/usr/pkg/bin:/usr/local/bin';
 	$curproc->ui_message("$editor $config_cf");
 	system $editor, $config_cf;
