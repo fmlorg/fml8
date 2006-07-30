@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: error.pm,v 1.17 2005/08/17 12:08:43 fukachan Exp $
+# $FML: error.pm,v 1.18 2006/03/04 13:48:28 fukachan Exp $
 #
 
 package FML::Command::Admin::error;
@@ -23,11 +23,29 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-show error status.
+show error (bounce mail) status.
 
 =head1 METHODS
 
+=head2 new()
+
+constructor.
+
+=head2 need_lock()
+
+need lock or not.
+
+=head2 lock_channel()
+
+return lock channel name.
+
+=head2 verify_syntax($curproc, $command_context)
+
+provide command specific syntax checker.
+
 =head2 process($curproc, $command_context)
+
+main command specific routine.
 
 call error status generator.
 

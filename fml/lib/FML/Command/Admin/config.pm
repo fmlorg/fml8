@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: config.pm,v 1.2 2004/12/19 11:10:51 fukachan Exp $
+# $FML: config.pm,v 1.3 2006/03/04 13:48:28 fukachan Exp $
 #
 
 package FML::Command::Admin::config;
@@ -31,7 +31,25 @@ Tool to config config.cf.
 
 =head1 METHODS
 
+=head2 new()
+
+constructor.
+
+=head2 need_lock()
+
+need lock or not.
+
+=head2 lock_channel()
+
+return lock channel name.
+
+=head2 verify_syntax($curproc, $command_context)
+
+provide command specific syntax checker.
+
 =head2 process($curproc, $command_context)
+
+main command specific routine.
 
 C<TODO>:
 now we can read and write config.cf, but can not change it.
@@ -59,7 +77,7 @@ sub new
 sub need_lock { 0;}
 
 
-# Descriptions: run "vi" or the specified configor to config config.cf.
+# Descriptions: run "vi" or the specified editor to config config.cf.
 #               If environmental variable EDITOR is specified,
 #               try to run "$EDITOR config.cf".
 #    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)

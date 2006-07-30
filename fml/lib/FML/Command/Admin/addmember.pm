@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: addmember.pm,v 1.7 2006/03/04 13:48:28 fukachan Exp $
+# $FML: addmember.pm,v 1.8 2006/03/05 08:08:36 fukachan Exp $
 #
 
 package FML::Command::Admin::addmember;
@@ -23,11 +23,29 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-change delivery mode from digest to real time.
+add a new member mail address as an ordinary user.
 
 =head1 METHODS
 
+=head2 new()
+
+constructor.
+
+=head2 need_lock()
+
+need lock or not.
+
+=head2 lock_channel()
+
+return lock channel name.
+
+=head2 verify_syntax($curproc, $command_context)
+
+provide command specific syntax checker.
+
 =head2 process($curproc, $command_context)
+
+main command specific routine.
 
 =cut
 
@@ -73,7 +91,7 @@ sub verify_syntax
 }
 
 
-# Descriptions: change delivery mode from digest to real time.
+# Descriptions: add an ordinary member.
 #    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: update $member_map
 # Return Value: none

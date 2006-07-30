@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: log.pm,v 1.32 2006/03/04 13:48:28 fukachan Exp $
+# $FML: log.pm,v 1.33 2006/07/09 12:11:12 fukachan Exp $
 #
 
 package FML::Command::Admin::log;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::log - log file operations.
+FML::Command::Admin::log - show log file content.
 
 =head1 SYNOPSIS
 
@@ -27,7 +27,25 @@ show log file(s).
 
 =head1 METHODS
 
+=head2 new()
+
+constructor.
+
+=head2 need_lock()
+
+need lock or not.
+
+=head2 lock_channel()
+
+return lock channel name.
+
+=head2 verify_syntax($curproc, $command_context)
+
+provide command specific syntax checker.
+
 =head2 process($curproc, $command_context)
+
+main command specific routine.
 
 =cut
 
@@ -192,6 +210,7 @@ sub _show_log_tail
     my $fh = new FileHandle $log_file;
     my $wh = \*STDOUT;
 
+    # XXX-TODO: use seek().
     if (defined $fh) {
 	while (<$fh>) { $line_max++;}
 	$fh->close();
