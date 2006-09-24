@@ -39,6 +39,21 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+
+2006/09/24
+
+   FML::Demo::Chart 
+	fix initialization code.
+	_shrink_date() for column list.
+	sort main data before printing.
+	
+   FML::Demo::Project 
+   FML::Demo::Language::Japanese 
+	NL-ify (use FML::Demo::Language if needed)
+	enabled to expand YY::DD-YY::DD form to date list.
+	cosmetics.
+	status and misc support.
+	
 2006/07/09
 
    オーヴァホールはじめた…
@@ -9912,4 +9927,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.288 2006/06/25 11:45:48 fukachan Exp $
+$FML: CHANGES.txt,v 1.289 2006/07/09 13:11:11 fukachan Exp $
