@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Chart.pm,v 1.1 2006/02/01 12:35:45 fukachan Exp $
+# $FML: Chart.pm,v 1.2 2006/07/09 12:11:12 fukachan Exp $
 #
 
 package FML::Demo::Chart;
@@ -330,19 +330,19 @@ sub print_as_csv
     my ($k, $v);
 
     # labels at 1st raw.
-    my (@r) = ("");
+    my (@r) = ();
     for my $y (@$column_list) {
 	if ($alias->{ $y }) {
 	    push(@r, $alias->{ $y });
 	}
 	else {
-	    push(@r, $y);
+	    push(@r, $self->_shrink_date($y));
 	}
     }
     print join(",", @r), "\n";
 
     # main data.
-    for my $x (sort keys %$data) {
+    for my $x (sort {$a <=> $b} keys %$data) {
 	for my $y (@$column_list) {
 	    if (defined $data->{ $x }->{ $y }) {
 		print $data->{ $x }->{ $y };
