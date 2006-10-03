@@ -1,0 +1,39 @@
+# $FML$
+#
+# TODO リスト
+#
+
+[参考]
+工程表(0.01)
+
+%format	item1 item2 misc status date
+%alias item1  項目
+%alias item2  小項目
+%alias misc   担当他
+%alias status ステータス
+%date_range 04/01 09/10
+
+
+技術検証
+	予備技術検証		FML 			01/04-06/30
+	検証結果について協議	FML、NUINUI-NET		01/04-06/30
+
+アーキテクチャア
+(外部設計局面)
+	執筆			FML			04/01-04/29
+	基本設計者へ提出	FML			04/30
+
+基本設計
+	執筆			FML			04/15-06/29
+	詳細設計者へ提出	FML			06/30
+
+現地調査
+	ケーブリング			NUINUI-NET	07/10
+	ラック				NUINUI-NET	07/10
+	パッチパネル			NUINUI-NET	07/10
+	
+詳細設計
+	最終工数見積案			NUINUI-NET	05/15
+	最終工数見積FIX			NUINUI-NET	06/15
+	執筆				NUINUI-NET	07/01-07/31
+	提出(完成図書)			NUINUI-NET	07/31
