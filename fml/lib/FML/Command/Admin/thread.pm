@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: thread.pm,v 1.11 2005/08/17 12:08:44 fukachan Exp $
+# $FML: thread.pm,v 1.12 2006/03/04 13:48:29 fukachan Exp $
 #
 
 package FML::Command::Admin::thread;
@@ -27,7 +27,25 @@ show status article thread or manipulate it.
 
 =head1 METHODS
 
+=head2 new()
+
+constructor.
+
+=head2 need_lock()
+
+need lock or not.
+
+=head2 lock_channel()
+
+return lock channel name.
+
+=head2 verify_syntax($curproc, $command_context)
+
+provide command specific syntax checker.
+
 =head2 process($curproc, $command_context)
+
+main command specific routine.
 
 =cut
 
@@ -72,7 +90,7 @@ sub process
     my $thargs = $curproc->article_thread_init();
     my $thread = new Mail::Message::Thread $thargs;
 
-    $self->_new_switch($curproc, $command_context, $thread);
+    $self->_dispatch($curproc, $command_context, $thread);
 }
 
 
@@ -81,7 +99,7 @@ sub process
 #               OBJ($curproc) OBJ($command_context) OBJ($thread)
 # Side Effects: update $recipient_map
 # Return Value: none
-sub _new_switch
+sub _dispatch
 {
     my ($self, $curproc, $command_context, $thread) = @_;
     my $config        = $curproc->config();

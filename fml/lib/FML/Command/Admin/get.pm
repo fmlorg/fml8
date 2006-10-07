@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.29 2006/03/04 13:48:28 fukachan Exp $
+# $FML: get.pm,v 1.30 2006/03/05 08:08:36 fukachan Exp $
 #
 
 package FML::Command::Admin::get;
@@ -28,6 +28,26 @@ See C<FML::Command> for more details.
 get arbitrary file(s) in $ml_home_dir.
 
 =head1 METHODS
+
+=head2 new()
+
+constructor.
+
+=head2 need_lock()
+
+need lock or not.
+
+=head2 lock_channel()
+
+return lock channel name.
+
+=head2 verify_syntax($curproc, $command_context)
+
+provide command specific syntax checker.
+
+=head2 process($curproc, $command_context)
+
+main command specific routine.
 
 =cut
 
@@ -68,6 +88,7 @@ sub process
 
     if ($curproc->is_cui_process()) {
 	$recipient = $curproc->command_line_cui_specific_recipient() || '';
+	# XXX-TODO: mothod-ify
 	$command_context->{ _recipient } = $recipient;
     }
 
@@ -84,6 +105,7 @@ sub process
 	if (-f $filepath) {
 	    $curproc->log("send back $filename");
 
+	    # XXX-TODO: mothod-ify
 	    $command_context->{ _filename_to_send } = $filename;
 	    $command_context->{ _filepath_to_send } = $filepath;
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: password.pm,v 1.15 2004/07/23 13:16:35 fukachan Exp $
+# $FML: password.pm,v 1.16 2006/03/04 13:48:29 fukachan Exp $
 #
 
 package FML::Command::Admin::password;
@@ -24,6 +24,22 @@ See C<FML::Command> for more details.
 =head1 DESCRIPTION
 
 =head1 METHODS
+
+=head2 new()
+
+constructor.
+
+=head2 need_lock()
+
+need lock or not.
+
+=head2 lock_channel()
+
+return lock channel name.
+
+=head2 verify_syntax($curproc, $command_context)
+
+provide command specific syntax checker.
 
 =head2 process($curproc, $command_context)
 
@@ -90,7 +106,7 @@ sub verify_syntax
     my ($self, $curproc, $command_context) = @_;
     my $comname    = $command_context->get_cooked_command()    || '';
     my $comsubname = $command_context->get_cooked_subcommand() || '';
-    my $options    = $command_context->get_options()    || [];
+    my $options    = $command_context->get_options()           || [];
     my @test       = ($comname);
 
     # XXX Let original_command be "admin password PASSWORD".

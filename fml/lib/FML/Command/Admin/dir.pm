@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: dir.pm,v 1.21 2005/08/17 12:08:43 fukachan Exp $
+# $FML: dir.pm,v 1.22 2006/03/04 13:48:28 fukachan Exp $
 #
 
 package FML::Command::Admin::dir;
@@ -27,7 +27,25 @@ show "ls -l" results.
 
 =head1 METHODS
 
+=head2 new()
+
+constructor.
+
+=head2 need_lock()
+
+need lock or not.
+
+=head2 lock_channel()
+
+return lock channel name.
+
+=head2 verify_syntax($curproc, $command_context)
+
+provide command specific syntax checker.
+
 =head2 process($curproc, $command_context)
+
+main command specific routine.
 
 =cut
 
@@ -60,7 +78,7 @@ sub process
 {
     my ($self, $curproc, $command_context) = @_;
     my $config    = $curproc->config();
-    my $options   = $command_context->get_options();
+    my $options   = $command_context->get_options() || [];
     my $du_args   = {};
     my @argv      = ();
     my $recipient = '';
@@ -72,7 +90,7 @@ sub process
     for my $x (@$options) {
 	# XXX-TODO: correct? we restrict the "ls" option pattern here.
 	if ($safe->regexp_match('directory', $x)) {
-	    # XXX-TODO: allow plural options ?
+	    # XXX-TODO: we should allow plural directories as options ?
 	    $du_args->{ opt_ls } = $x;
 	}
 	else {

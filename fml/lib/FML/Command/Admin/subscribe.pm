@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: subscribe.pm,v 1.39 2006/05/17 12:31:42 fukachan Exp $
+# $FML: subscribe.pm,v 1.40 2006/07/09 12:11:12 fukachan Exp $
 #
 
 package FML::Command::Admin::subscribe;
@@ -26,6 +26,22 @@ See C<FML::Command> for more details.
 subscribe a new address.
 
 =head1 METHODS
+
+=head2 new()
+
+constructor.
+
+=head2 need_lock()
+
+need lock or not.
+
+=head2 lock_channel()
+
+return lock channel name.
+
+=head2 verify_syntax($curproc, $command_context)
+
+provide command specific syntax checker.
 
 =head2 process($curproc, $command_context)
 
@@ -140,6 +156,7 @@ sub process
     if ($curproc->is_cgi_process() || $curproc->is_under_mta_process()) {
 	use FML::Command::SendFile;
 	push(@ISA, qw(FML::Command::SendFile));
+	# XXX-TODO: method-ify
 	$command_context->{ _recipient } = $address;
 	$self->send_user_xxx_message($curproc, $command_context, "welcome");
 	delete $command_context->{ _recipient };
