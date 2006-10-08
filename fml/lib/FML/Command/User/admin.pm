@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: admin.pm,v 1.19 2006/03/06 12:11:59 fukachan Exp $
+# $FML: admin.pm,v 1.20 2006/05/04 06:48:49 fukachan Exp $
 #
 
 package FML::Command::User::admin;
@@ -22,6 +22,28 @@ FML::Command::User::admin - entrance for priviledged command world.
 See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
+
+=head1 METHODS
+
+=head2 new()
+
+constructor.
+
+=head2 need_lock()
+
+need lock or not.
+
+=head2 lock_channel()
+
+return lock channel name.
+
+=head2 verify_syntax($curproc, $command_context)
+
+provide command specific syntax checker.
+
+=head2 process($curproc, $command_context)
+
+main command specific routine.
 
 =cut
 
@@ -223,6 +245,7 @@ sub _apply_new_admin_command_mail_restrictions
     my $sender  = $opt_args->{ address } || '';
 
     unless ($config->yes('use_admin_command_mail_function')) {
+	# XXX-TODO: return error message "admin command prohibited."
 	$curproc->logerror("admin command prohibited.");
 	return 0;
     }

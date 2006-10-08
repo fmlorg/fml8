@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: off.pm,v 1.21 2006/03/04 13:48:29 fukachan Exp $
+# $FML: off.pm,v 1.22 2006/03/05 08:08:37 fukachan Exp $
 #
 
 package FML::Command::User::off;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::User::off - change delivery mode from real time to digest.
+FML::Command::User::off - disable real time delivery.
 
 =head1 SYNOPSIS
 
@@ -23,12 +23,31 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-change delivery mode from real time to digest after confirmation
-succeeds.
+"off" command disables real time delivery, 
+so fml8 does not deliver articles to him/her.
+After confirmation succeeds, on process proceeds.
 
 =head1 METHODS
 
+=head2 new()
+
+constructor.
+
+=head2 need_lock()
+
+need lock or not.
+
+=head2 lock_channel()
+
+return lock channel name.
+
+=head2 verify_syntax($curproc, $command_context)
+
+provide command specific syntax checker.
+
 =head2 process($curproc, $command_context)
+
+main command specific routine.
 
 =cut
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: summary.pm,v 1.21 2004/06/26 11:43:42 fukachan Exp $
+# $FML: summary.pm,v 1.22 2006/03/04 13:48:29 fukachan Exp $
 #
 
 package FML::Command::User::summary;
@@ -30,7 +30,25 @@ send back summary file.
 
 =head1 METHODS
 
+=head2 new()
+
+constructor.
+
+=head2 need_lock()
+
+need lock or not.
+
+=head2 lock_channel()
+
+return lock channel name.
+
+=head2 verify_syntax($curproc, $command_context)
+
+provide command specific syntax checker.
+
 =head2 process($curproc, $command_context)
+
+main command specific routine.
 
 =cut
 
@@ -73,6 +91,7 @@ sub process
     my $article_summary_file = $config->{ "article_summary_file" };
 
     if (-f $article_summary_file) {
+	# XXX-TODO: method-fiy
 	$command_context->{ _filepath_to_send } = $article_summary_file;
 	$self->send_file($curproc, $command_context);
 	delete $command_context->{ _filepath_to_send };

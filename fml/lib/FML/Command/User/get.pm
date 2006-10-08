@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.26 2006/04/16 06:33:36 fukachan Exp $
+# $FML: get.pm,v 1.27 2006/07/09 12:11:12 fukachan Exp $
 #
 
 package FML::Command::User::get;
@@ -28,6 +28,26 @@ See C<FML::Command> for more details.
 send back article(s).
 
 =head1 METHODS
+
+=head2 new()
+
+constructor.
+
+=head2 need_lock()
+
+need lock or not.
+
+=head2 lock_channel()
+
+return lock channel name.
+
+=head2 verify_syntax($curproc, $command_context)
+
+provide command specific syntax checker.
+
+=head2 process($curproc, $command_context)
+
+main command specific routine.
 
 =cut
 

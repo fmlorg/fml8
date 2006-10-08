@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: confirm.pm,v 1.41 2006/05/02 11:23:55 fukachan Exp $
+# $FML: confirm.pm,v 1.42 2006/05/04 06:47:44 fukachan Exp $
 #
 
 package FML::Command::User::confirm;
@@ -26,7 +26,25 @@ execute the actual corresponding process if the confirmation succeeds.
 
 =head1 METHODS
 
+=head2 new()
+
+constructor.
+
+=head2 need_lock()
+
+need lock or not.
+
+=head2 lock_channel()
+
+return lock channel name.
+
+=head2 verify_syntax($curproc, $command_context)
+
+provide command specific syntax checker.
+
 =head2 process($curproc, $command_context)
+
+main command specific routine.
 
 =cut
 
@@ -164,6 +182,7 @@ sub _switch_process
     my $address = $confirm->get_address($id);
     my $request = $confirm->get_request($id);
 
+    # XXX-TODO: method-ify
     # pass confirmation id to the command layer.
     $command_context->{ _confirm_id }      = $id;
     $command_context->{ _confirm_address } = $address;
@@ -264,6 +283,8 @@ sub _forward_request
     my $default2   = "?";
     my $key1       = 'command.forward_request_to_admin';
     my $key2       = 'command.receive_confirmed_request';
+
+    # XXX-TODO: default meesage is correct ?
 
     # 2.1 notify "forwarded request to maintainer(s)." to sender(s).
     $curproc->reply_message_nl($key1, "", $user_args);
