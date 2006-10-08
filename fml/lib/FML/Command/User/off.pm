@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: off.pm,v 1.22 2006/03/05 08:08:37 fukachan Exp $
+# $FML: off.pm,v 1.23 2006/10/08 06:06:47 fukachan Exp $
 #
 
 package FML::Command::User::off;
@@ -23,7 +23,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-"off" command disables real time delivery, 
+"off" command disables real time delivery,
 so fml8 does not deliver articles to him/her.
 After confirmation succeeds, on process proceeds.
 

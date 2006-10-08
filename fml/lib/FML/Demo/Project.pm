@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Project.pm,v 1.2 2006/07/09 12:11:12 fukachan Exp $
+# $FML: Project.pm,v 1.3 2006/09/24 10:24:20 fukachan Exp $
 #
 
 package FML::Demo::Project;
@@ -69,11 +69,11 @@ sub parse
 	    $comment   = '';
 
 	    if ($buf =~ /^\%format/) {
-		$self->_parse_format($buf); 
+		$self->_parse_format($buf);
 		next LINE;
 	    }
-	    if ($buf =~ /^\%alias/)  { 
-		$self->_parse_alias($buf);  
+	    if ($buf =~ /^\%alias/)  {
+		$self->_parse_alias($buf);
 		next LINE;
 	    }
 	    if ($buf =~ /^\%date_range/) {
@@ -251,11 +251,11 @@ sub build
     my $max_line = $#$data;
   LINE:
     for (my $line = 1; $line < $max_line; $line++) {
-	my $level     = $data->[ $line ]->{ level }     || 1; 
-	my $title     = $data->[ $line ]->{ title }     || ''; 
+	my $level     = $data->[ $line ]->{ level }     || 1;
+	my $title     = $data->[ $line ]->{ title }     || '';
 	my $date_list = $data->[ $line ]->{ date_list } || [];
-	my $status    = $data->[ $line ]->{ status }    || ''; 
-	my $comment   = $data->[ $line ]->{ comment }   || ''; 
+	my $status    = $data->[ $line ]->{ status }    || '';
+	my $comment   = $data->[ $line ]->{ comment }   || '';
 
 	if ($level == 1) {
 	    $chart->add($line, "item1",  $title);
@@ -330,7 +330,7 @@ sub get_mark_nl
 {
     my ($self)     = @_;
     my $base_class = "FML::Demo::Language";
-    my $module     = sprintf("%s::%s", $base_class, $global_language); 
+    my $module     = sprintf("%s::%s", $base_class, $global_language);
     my $mark       = 'O';
     eval qq{
 	use $module;
