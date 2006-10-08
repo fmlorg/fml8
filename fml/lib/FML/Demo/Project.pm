@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Project.pm,v 1.3 2006/09/24 10:24:20 fukachan Exp $
+# $FML: Project.pm,v 1.4 2006/10/08 06:33:31 fukachan Exp $
 #
 
 package FML::Demo::Project;
@@ -61,7 +61,7 @@ sub parse
 
       LINE:
 	while ($buf = <$rh>) {
-	    next if $buf =~ /^\#/o;
+	    next LINE if $buf =~ /^\#/o;
 
 	    $level     = 0;
 	    $date_list = [];
@@ -96,7 +96,7 @@ sub parse
 		    $date_list = $self->_get_canonical_date_list($s);
 		    next DATA;
 		}
-		elsif ($s =~ /^DONE|WAIT$/) {
+		elsif ($s =~ /^(DONE|WAIT)$/) {
 		    $status = $s;
 		    next DATA;
 		}
