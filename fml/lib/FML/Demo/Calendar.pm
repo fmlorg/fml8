@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Calendar.pm,v 1.3 2006/01/12 12:17:26 fukachan Exp $
+# $FML: Calendar.pm,v 1.4 2006/07/09 12:11:12 fukachan Exp $
 #
 
 package FML::Demo::Calendar;
@@ -37,12 +37,12 @@ FML::Demo::Calendar - show a calendar (demonstration module).
 =head1 DESCRIPTION
 
 C<CAUTION:> This module is created just for a demonstration to show
-how to write a module not intended for your general use. This module
-is not enough mature nor secure.
+how to write a module intended for your personal use. This module is
+not enough mature nor secure.
 
-C<Calenter::Lite> is also a demonstration module to show how to use
-and build up modules to couple with CPAN and FML modules. For exaple,
-this routine needs C<HTML::CalendarMonthSimple>.
+This is also a demonstration module to show how to use and build up
+modules to couple with CPAN and FML modules. For exaple, this routine
+uses C<HTML::CalendarMonthSimple> under cpan/lib.
 
 It parses files in ~/.schedule/ and output the schedule of this month
 as HTML TABLE by default. To see it, you need a WWW browser
@@ -147,13 +147,13 @@ sub new
 
 =head2 tmpfilepath($args)
 
-return a tmpfile path name.
+return a tmpfile path name, which is under ~/.schedule directory.
 It creates just a file path not file itself.
 
 =cut
 
 
-# Descriptions: determine template file location.
+# Descriptions: determine a template file location.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: STR(filename)
@@ -393,10 +393,10 @@ sub print_as_html
 }
 
 
-=head2 print_specific_month($fh, $n)
+=head2 print_specific_month($fh, $month, $year)
 
-print range specified by C<$n>.
-C<$n> is number or string among C<this>, C<next> and C<last>.
+print range specified by C<$month> and C<$year>.
+C<$month> is a number or string among C<this>, C<next> and C<last>.
 
 =cut
 
@@ -436,7 +436,7 @@ sub print_specific_month
     print $fh "<A NAME=\"$month\">\n";
     $self->parse( { month => $thismonth, year => $thisyear } );
 
-    # overview if this month.
+    # show overview if this month.
     if ($thismonth == $default_month) {
 	print $fh "<pre>\n";
 	$self->_print_specific_day($fh, time);
@@ -445,7 +445,7 @@ sub print_specific_month
 	print $fh "</pre>\n";
     }
 
-    # Calendar style
+    # calendar style
     $self->print_as_html($fh);
 }
 
