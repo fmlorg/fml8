@@ -4,14 +4,14 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Chart.pm,v 1.2 2006/07/09 12:11:12 fukachan Exp $
+# $FML: Chart.pm,v 1.3 2006/09/24 06:18:38 fukachan Exp $
 #
 
 package FML::Demo::Chart;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use lib qw(../fml/lib ../../cpan/lib ../../img/lib);
+use lib qw(../../fml/lib ../../cpan/lib ../../img/lib);
 use Time::DaysInMonth;
 
 =head1 NAME
@@ -23,8 +23,8 @@ FML::Demo::Chart - handle chart structure (demonstration module).
 =head1 DESCRIPTION
 
 C<CAUTION:> This module is created just for a demonstration to show
-how to write a module not intended for your general use. This module
-is not enough mature nor secure.
+how to write a module intended for personal use. This module is not
+enough mature nor secure.
 
 =head2 CHART
 
