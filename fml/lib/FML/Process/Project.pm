@@ -3,7 +3,7 @@
 # Copyright (C) 2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Project.pm,v 1.1 2006/02/01 12:35:45 fukachan Exp $
+# $FML: Project.pm,v 1.2 2006/07/09 12:11:13 fukachan Exp $
 #
 
 package FML::Process::Project;
@@ -17,7 +17,7 @@ use FML::Process::Kernel;
 
 =head1 NAME
 
-FML::Process::Project -- demonstration of FML module usage.
+FML::Process::Project -- generate a Gantt chart as a demonstration.
 
 =head1 SYNOPSIS
 
@@ -49,9 +49,9 @@ dummy.
 
 main routine.
 
-parse the specified file and print it out by CSV or HTML TABLE format.
-You can specify the format by --csv or --html command line option.
-CSV by default.
+It parses the specified file and print it out by CSV or HTML TABLE
+format. You can specify the format by --csv or --html command line
+option. CSV by default.
 
 =head2 finish($args)
 
