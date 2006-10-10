@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Confirm.pm,v 1.19 2005/12/18 12:34:25 fukachan Exp $
+# $FML: Confirm.pm,v 1.20 2006/01/09 14:00:53 fukachan Exp $
 #
 
 package FML::Confirm;
@@ -83,12 +83,12 @@ sub new
 
 =head2 assign_id()
 
-assign new id for current object.
+assign a new id for the current object.
 
 =cut
 
 
-# Descriptions: assign new id for current object.
+# Descriptions: assign a new id for the current object.
 #    Arguments: OBJ($self)
 # Side Effects: update databse.
 # Return Value: STR
@@ -116,20 +116,21 @@ sub assign_id
     $self->store_id( $md5sum );
 
     # 3. internal later use.
-    $self->{ _cur_id } = $md5sum;
+    $self->{ _cur_primary_key } = $md5sum;
 
     return $id;
 }
 
 
-# Descriptions: return the current confirmation id.
+# Descriptions: return the current confirmation id 
+#               (primary key in the database).
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
 sub id
 {
     my ($self) = @_;
-    return( $self->{ _cur_id } || undef );
+    return( $self->{ _cur_primary_key } || undef );
 }
 
 
@@ -243,7 +244,11 @@ sub get_address
 
 =head2 set($id, $key, $value)
 
+set $value for the key $key-$id.
+
 =head2 get($id, $key)
+
+get value for the key $key-$id.
 
 =cut
 
@@ -286,6 +291,8 @@ sub get
 =head2 is_expired($id, $howold)
 
 check if request for $id is expired or not.
+The expiration limit can be specified by $howold parameter.
+If not specified, expiration limit is 14 days.
 
 =cut
 
@@ -317,9 +324,7 @@ sub is_expired
 
 This cache uses C<FML::Cache::Journal> based on C<Tie::JournaledDir>.
 
-=head2 _open_db()
-
-=head2 _close_db()
+These are private methods.
 
 =cut
 
@@ -336,9 +341,8 @@ sub _open_db
     if (defined $db) {
 	my $dir   = $self->{ _cache_dir };
 	my $class = $self->{ _class };
-	my $_db   = $db->open($dir, $class) || undef;
-	$self->{ _db } = $_db;
-	return $_db;
+	my $_hash = $db->open($dir, $class) || undef;
+	return $_hash;
     }
     else {
 	return undef;
