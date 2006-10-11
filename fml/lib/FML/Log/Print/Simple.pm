@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Simple.pm,v 1.4 2004/01/23 09:17:38 fukachan Exp $
+# $FML: Simple.pm,v 1.5 2004/07/23 13:16:39 fukachan Exp $
 #
 
 package FML::Log::Print::Simple;
@@ -22,7 +22,9 @@ FML::Log::Print::Simple - simplest print out engine.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
+
+constructor.
 
 =cut
 
@@ -44,6 +46,13 @@ sub new
 }
 
 
+=head2 add($msg)
+
+add message to module internal message queue.
+
+=cut
+
+
 # Descriptions: add message to module internal message queue.
 #    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: update queue.
@@ -54,6 +63,13 @@ sub add
     my $queue = $self->{ _queue };
     $queue->append($msg);
 }
+
+
+=head2 print()
+
+print message in the internal queue.
+
+=cut
 
 
 # Descriptions: print out to STDOUT.

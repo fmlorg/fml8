@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Alias.pm,v 1.22 2005/06/04 08:51:30 fukachan Exp $
+# $FML: Alias.pm,v 1.23 2005/08/10 15:03:24 fukachan Exp $
 #
 
 package FML::Process::Alias;
@@ -45,7 +45,7 @@ It make a C<FML::Process::Kernel> object and return it.
 
 =head2 prepare($args)
 
-load config files and fix @INC.
+load configuration files and fix @INC.
 
 =head2 verify_request($args)
 

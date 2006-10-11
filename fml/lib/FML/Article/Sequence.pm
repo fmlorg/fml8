@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.16 2005/06/04 08:49:06 fukachan Exp $
+# $FML: Sequence.pm,v 1.17 2005/06/04 08:51:31 fukachan Exp $
 #
 
 package FML::Article::Sequence;
@@ -34,7 +34,7 @@ save it to C<$sequence_file>.
 =cut
 
 
-# Descriptions: determine article id (sequence number).
+# Descriptions: determine the next article id (sequence number).
 #    Arguments: OBJ($self)
 # Side Effects: save and update the current article sequence number.
 # Return Value: NUM(sequence identifier) or 0(failed)
@@ -49,6 +49,7 @@ sub increment_id
 
     $curproc->lock($lock_channel);
 
+    # XXX-TODO: we should enhance sequence_file to all IO::Adapter classes.
     use IO::Adapter;
     my $io = new IO::Adapter "file:$seq_file";
     my $id = $io->sequence_increment();

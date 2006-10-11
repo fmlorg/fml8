@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.42 2006/04/20 23:56:02 fukachan Exp $
+# $FML: QueueManager.pm,v 1.43 2006/04/22 08:55:32 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -94,7 +94,8 @@ sub send
     $queue->set_log_error_function($fp_logerror);
     $queue->set_log_debug_function($fp_logdebug);
 
-    my $ra    = [];
+    # XXX-TODO: more readable variable name: $ra -> $msg_queue_list ?
+    my $ra = [];
     if (defined $id) {
 	$ra = [ $id ];
     }

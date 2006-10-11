@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Rotate.pm,v 1.7 2006/04/22 08:29:23 fukachan Exp $
+# $FML: Rotate.pm,v 1.8 2006/07/09 12:11:12 fukachan Exp $
 #
 
 package FML::File::Rotate;
@@ -28,8 +28,8 @@ FML::File::Rotate - file rotatation utilities.
 
 =head1 DESCRIPTION
 
-Utility functions for file rotatation.
-It turns over the given C<file> by some condition.
+This module provides utility functions for file rotatation.
+It turns over the given files under some condition.
 Typical condition is given as the number of files, size or how old they are.
 
 C<rotation> renames and rearranges files like this:
@@ -110,7 +110,7 @@ sub set_size_limit
 }
 
 
-# Descriptions: get max_size.
+# Descriptions: get max_size. 300K bytes by default.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: NUM
@@ -122,7 +122,7 @@ sub get_size_limit
 }
 
 
-# Descriptions: set number of backlog files.
+# Descriptions: set the number of backlog files.
 #    Arguments: OBJ($self) NUM($num)
 # Side Effects: update $self
 # Return Value: none
@@ -140,7 +140,7 @@ sub set_archive_file_total
 }
 
 
-# Descriptions: get number of backlog files.
+# Descriptions: get the number of backlog files.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: NUM

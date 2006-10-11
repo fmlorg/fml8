@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2004,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Ring.pm,v 1.5 2005/05/27 03:03:33 fukachan Exp $
+# $FML: Ring.pm,v 1.6 2005/08/17 10:51:01 fukachan Exp $
 #
 
 package FML::Cache::Ring;
@@ -35,7 +35,7 @@ FML::Cache::Ring - IO operations to ring buffer which consists of files.
 
    ... unlock ...
 
-The buffer directory has files with the name C<0>, C<1>, ...
+The buffer directory has files with the numeric name C<0>, C<1>, ...
 You can specify C<file_name> parameter.
 
    $obj = new FML::Cache::Ring {
@@ -43,12 +43,14 @@ You can specify C<file_name> parameter.
        file_name => '_smtplog',
    };
 
-If so, the file names become _smtplog.0, _smtplog.1, ...
+If specified, the file names become _smtplog.0, _smtplog.1, ...
 
 The cache data is limited by the number of files, so approximately
-size by default. Instead of number fo files, you can limit
-FML::Cache::Ring based on time. It is time based expiretion. If you
-so, use new() like this:
+size by default. 
+
+Instead of number fo files, you can limit FML::Cache::Ring based on
+time. It is time based expiretion. To specify based expiration, use
+new() like this:
 
    $obj = new FML::Cache::Ring {
        directory  => '/some/where',
@@ -110,7 +112,7 @@ END   {}
 
 
 # Descriptions: constructor.
-#               forward new() request to superclass (IO::File)
+#               forward new() request to superclass (IO::File).
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: OBJ (blessed as a file handle).
@@ -159,7 +161,7 @@ sub _take_file_name
 	my $io = new IO::Adapter $seq_file;
 	my $id = $io->sequence_increment();
 
-	# updated.
+	# the sequence $id is already incremetd.
 	my $saved_id = $id;
 
 	# check if $id is rolled over or not.
@@ -195,7 +197,7 @@ sub cache_file_path
 =head2 open(file, mode)
 
 open file in the buffer.
-The target file is already determined when constructor runs.
+The target file is already determined when our constructor runs.
 
 =cut
 
@@ -203,7 +205,7 @@ The target file is already determined when constructor runs.
 # Descriptions: open() cache file in the buffer.
 #    Arguments: OBJ($self) STR($file) STR($mode)
 #               XXX $self is blessed file handle.
-# Side Effects: create ${ *$self } hash to save status information
+# Side Effects: create ${ *$self } hash to save status information.
 # Return Value: HANDLE(write file handle for $file.new.$$)
 sub open
 {
@@ -299,12 +301,12 @@ sub add
 
 =head2 get(key)
 
-get value (latest value in the ring buffer) for key.
+get value (latest value in the ring buffer) for the key.
 
 =cut
 
 
-# Descriptions: get value (latest value in the ring buffer) for key.
+# Descriptions: get value (latest value in the ring buffer) for the key.
 #    Arguments: OBJ($self) STR($key)
 # Side Effects: none
 # Return Value: STR
@@ -481,7 +483,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2004,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Journal.pm,v 1.5 2004/06/26 11:24:44 fukachan Exp $
+# $FML: Journal.pm,v 1.6 2004/06/27 08:20:22 fukachan Exp $
 #
 
 package FML::Cache::Journal;
@@ -24,9 +24,15 @@ FML::Cache::Journal - interface into Tie::JournaledDir.
 
 =head2 new($curproc)
 
+constructor.
+
 =head2 open($cache_dir, $class)
 
+open database via Tie::JournaledDir.
+
 =head2 close()
+
+close connection to database.
 
 =cut
 
@@ -96,7 +102,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

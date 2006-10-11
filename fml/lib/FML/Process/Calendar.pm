@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Calendar.pm,v 1.17 2005/06/04 08:49:08 fukachan Exp $
+# $FML: Calendar.pm,v 1.18 2005/08/10 15:03:24 fukachan Exp $
 #
 
 package FML::Process::Calendar;
@@ -17,7 +17,7 @@ use FML::Process::Kernel;
 
 =head1 NAME
 
-FML::Process::Calendar -- demonstration of FML module usage.
+FML::Process::Calendar -- show calendear (as a demonstration).
 
 =head1 SYNOPSIS
 
@@ -85,7 +85,7 @@ sub prepare
 {
     my ($curproc, $args) = @_;
 
-    # load default configurations.
+    # load only "default" configurations.
     use FML::Config;
     $curproc->{ config } = new FML::Config;
     $curproc->config_cf_files_load();
