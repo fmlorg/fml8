@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Address.pm,v 1.1 2006/02/04 07:42:24 fukachan Exp $
+# $FML: Address.pm,v 1.2 2006/03/05 08:08:37 fukachan Exp $
 #
 
 package FML::Fault::Address;
@@ -22,7 +22,7 @@ FML::Fault::Address - fault handler
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 constructor.
 
@@ -44,7 +44,7 @@ sub new
 
 =head2 try_subscribe()
 
-check address and subscribe address if it is not a member
+check address and subscribe address if it is not a member.
 
 =head2 subscribe($addr)
 
@@ -85,8 +85,8 @@ sub try_subscribe
 sub subscribe
 {
     my ($self, $addr) = @_;
-    my ($curproc) = $self->{ _curproc };
-    my $method = "subscribe";
+    my $curproc = $self->{ _curproc };
+    my $method  = "subscribe";
     my @options = ($addr);
 
     $curproc->log("subscribe $addr");
