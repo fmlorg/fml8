@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Summary.pm,v 1.26 2006/05/04 05:33:48 fukachan Exp $
+# $FML: Summary.pm,v 1.27 2006/05/05 13:24:10 fukachan Exp $
 #
 
 package FML::Article::Summary;
@@ -94,6 +94,7 @@ sub _prepare_info
 
     my $file = $article->filepath($id);
     if (-f $file) {
+	use Mail::Message;
 	my $msg      = new Mail::Message->parse( { file => $file } );
 	my $header   = $msg->whole_message_header();
 	my $address  = $header->get('from')    || '';
@@ -101,7 +102,7 @@ sub _prepare_info
 	my $subject  = $header->get('subject') || '';
 
 	# data -> unix time.
-	use Mail::Message;
+	use Mail::Message::Date;
 	my $date     = new Mail::Message::Date $date_str;
 	my $unixtime = $date->as_unixtime();
 
