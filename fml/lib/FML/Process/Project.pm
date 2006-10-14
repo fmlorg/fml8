@@ -3,7 +3,7 @@
 # Copyright (C) 2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Project.pm,v 1.2 2006/07/09 12:11:13 fukachan Exp $
+# $FML: Project.pm,v 1.3 2006/10/10 09:53:22 fukachan Exp $
 #
 
 package FML::Process::Project;
@@ -137,8 +137,11 @@ sub run
     elsif (defined $option->{ csv }) {
 	$proj->print_as_csv();
     }
+    elsif (defined $option->{ xml }) {
+	$proj->print_as_xml();
+    }
     else {
-	$proj->print_as_csv();
+	$proj->print_as_xml();
     }
 }
 
@@ -159,9 +162,13 @@ sub help
 
 print <<"_EOF_";
 
-Usage: $name [--debug] [--html] [--csv]
+Usage: $name [--debug] [--html] [--csv] [--xml]
 
 --debug    debug mode on
+
+--html     dump data as html table format
+--csv      dump data as CSV
+--xml      dump data as GanttProject xml format
 
 _EOF_
 }

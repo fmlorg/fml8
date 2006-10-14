@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Project.pm,v 1.4 2006/10/08 06:33:31 fukachan Exp $
+# $FML: Project.pm,v 1.5 2006/10/08 09:10:27 fukachan Exp $
 #
 
 package FML::Demo::Project;
@@ -272,6 +272,18 @@ sub build
 	    for my $day (@$date_list) {
 		$chart->add($line, $day, $mark);
 	    }
+
+	    # save information for GanttProject XML format.
+	    my $duration    = $#$date_list + 1;
+	    $chart->add($line, "duration", $duration);
+	    my $range_start = $self->{ _date_range }->[0];
+	    $range_start = $self->_canonical_date($range_start);
+	    $chart->add($line, "start_time", $date_list->[0] || $range_start);
+	}
+	else {
+	    my $range_start = $self->{ _date_range }->[0];
+	    $range_start = $self->_canonical_date($range_start);
+	    $chart->add($line, "start_time", $date_list->[0] || $range_start);
 	}
 
 	if ($status) {
@@ -315,6 +327,18 @@ sub print_as_csv
 }
 
 
+# Descriptions: print as GanntProject XML format.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: none
+sub print_as_xml
+{
+    my ($self) = @_;
+    my $chart  = $self->{ _chart };
+    $chart->print_as_xml();
+}
+
+
 =head1 Japanese Specific Methods
 
 =head2 get_mark_nl()
@@ -348,7 +372,7 @@ if ($0 eq __FILE__) {
     my $proj = new FML::Demo::Project;
     $proj->parse($file);
     $proj->build();
-    $proj->print_as_csv();
+    $proj->print_as_xml();
 }
 
 

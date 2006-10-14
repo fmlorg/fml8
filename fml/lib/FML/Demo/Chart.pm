@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Chart.pm,v 1.3 2006/09/24 06:18:38 fukachan Exp $
+# $FML: Chart.pm,v 1.4 2006/10/08 09:11:13 fukachan Exp $
 #
 
 package FML::Demo::Chart;
@@ -351,6 +351,122 @@ sub print_as_csv
 	}
 	print "\n";
     }
+}
+
+
+# Descriptions: print as GanttProject XML format.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: none
+sub print_as_xml
+{
+    my ($self)        = @_;
+    my $data          = $self->{ _data };
+    my $alias         = $self->get_alias();
+    my ($column_list) = $self->_generate_column_list();
+    my ($k, $v, $prev_level, $cut_counter);
+
+    # task template
+    my $task_template = q{<task id="__id__" name="__name__" color="#8cb6ce" meeting="false" start="__start__" duration="__duration__" complete="__complete__" priority="__priority__" expand="true"/>};
+
+
+    # main data.
+    $self->_print_xml_preamble();
+  DATA:
+    for my $id (sort {$a <=> $b} keys %$data) {
+	my $template = $task_template;
+	my $is_top   = $data->{ $id }->{ item1 } ? 1 : 0;
+	my $is_top_n = $data->{ $id + 1 }->{ item1 } ? 1 : 0;
+	my $name     = $data->{ $id }->{ item1 } || $data->{ $id }->{ item2 };
+	my $start    = $data->{ $id }->{ start_time } || ''; $start =~ s@/@-@g;
+	my $duration = $data->{ $id }->{ duration } || '0';
+
+	unless ($name) {
+	    $name ||= '';
+	    print "<!--ignore id=\"$id\" name=\"$name\" -->\n";
+	    next DATA;
+	}
+
+	unless ($is_top) {
+	    $name =~ s/^/   /;
+	}
+
+	$template =~ s/__id__/$id/g;
+	$template =~ s/__name__/$name/g;
+	$template =~ s/__start__/$start/g;
+	$template =~ s/__duration__/$duration/g;
+	$template =~ s/__complete__/0/g;
+	$template =~ s/__priority__/1/g;
+
+	print $template;
+	print "\n";
+    }
+
+    $self->_print_xml_trailor();
+}
+
+
+# Descriptions: print GanttProject xml format preamble.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: none
+sub _print_xml_preamble
+{
+    print <<_EOF_;
+<?xml version="1.0" encoding="EUC-JP"?>
+<project name="Untitled Gantt Project" company="" webLink="http://" view-date="2006-10-12" view-index="0" gantt-divider-location="316" resource-divider-location="301" version="2.0">
+<description></description>
+<view zooming-state="default:2"/>
+<!-- -->
+<calendars>
+<day-types>
+<day-type id="0"/>
+<day-type id="1"/>
+<calendar id="1" name="default">
+<default-week sun="1" mon="0" tue="0" wed="0" thu="0" fri="0" sat="1"/>
+<overriden-day-types/>
+<days/>
+</calendar>
+</day-types>
+</calendars>
+<tasks color="#8cb6ce">
+<taskproperties>
+<taskproperty id="tpd0" name="type" type="default" valuetype="icon"/>
+<taskproperty id="tpd1" name="priority" type="default" valuetype="icon"/>
+<taskproperty id="tpd2" name="info" type="default" valuetype="icon"/>
+<taskproperty id="tpd3" name="name" type="default" valuetype="text"/>
+<taskproperty id="tpd4" name="begindate" type="default" valuetype="date"/>
+<taskproperty id="tpd5" name="enddate" type="default" valuetype="date"/>
+<taskproperty id="tpd6" name="duration" type="default" valuetype="int"/>
+<taskproperty id="tpd7" name="completion" type="default" valuetype="int"/>
+<taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
+<taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
+</taskproperties>
+_EOF_
+}
+
+
+# Descriptions: print GanttProject xml format trailor.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: none
+sub _print_xml_trailor
+{
+    print <<_EOF_;
+</tasks>
+<resources/>
+<allocations/>
+<vacations/>
+<taskdisplaycolumns>
+<displaycolumn property-id="tpd3" order="0" width="75"/>
+<displaycolumn property-id="tpd4" order="1" width="75"/>
+<displaycolumn property-id="tpd5" order="2" width="75"/>
+</taskdisplaycolumns>
+<previous/>
+<roles roleset-name="Default"/>
+</project>
+_EOF_
+
 }
 
 
