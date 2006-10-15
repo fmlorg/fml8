@@ -40,6 +40,25 @@
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
 
+2006/10/14
+
+   etc/command_line_options 
+   FML::Demo::{Chart,Project}
+   FML::Process::Project 
+	fmlproj::GanttProject XML format extension.
+	--xml options
+	dump GanttProject XML format by default.
+	
+   FML::Article::Summary 
+	fix importation
+	
+2006/10/10
+
+   FML::Confirm 
+	fix comments.
+	rename private variables to more proper ones.
+	remove not used private variables.
+
 2006/10/08
 
 	ちょっと体調がよくなってきたので、
@@ -9933,4 +9952,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.290 2006/09/24 11:35:13 fukachan Exp $
+$FML: CHANGES.txt,v 1.291 2006/10/08 06:47:42 fukachan Exp $
