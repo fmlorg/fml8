@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HTMLify.pm,v 1.27 2005/08/17 10:29:34 fukachan Exp $
+# $FML: HTMLify.pm,v 1.28 2005/08/17 12:08:45 fukachan Exp $
 #
 
 
@@ -23,12 +23,22 @@ FML::Command::HTMLify - utility functions to convert text to html.
 
 =head1 SYNOPSIS
 
+use FML::Command::HTMLify;
+&FML::Command::HTMLify::convert($curproc, {
+    src_dir => $src_dir,
+    dst_dir => $dst_dir,
+});
+
 =head1 DESCRIPTION
 
 This module provides several utility functions to convert text file to
-html format.
+html format one.
 
 =head1 METHODS
+
+=head2 convert($optargs)
+
+convert articles from text to html style.
 
 =cut
 
@@ -43,13 +53,16 @@ sub convert
     my $src_dir = $optargs->{ src_dir };
     my $dst_dir = $optargs->{ dst_dir };
 
+    # ASSERT
     croak("src_dir not defined") unless defined $src_dir;
     croak("src_dir not exists")  unless -d $src_dir;
     croak("dst_dir not defined") unless defined $dst_dir;
     croak("dst_dir not exists")  unless -d $dst_dir;
 
+    # debug
     print STDERR "  convert\n\t$src_dir =>\n\t$dst_dir\n" if $debug;
 
+    # XXX-TODO: $curproc->article_thread_init() returns HTML config CLASS ?
     # fix parameters: output_dir = ~fml/public_html/mlarchive/$domain/$ml/
     my $htmlifier_args = $curproc->article_thread_init();
     $htmlifier_args->{ output_dir } = $dst_dir;
@@ -63,14 +76,14 @@ sub convert
         }
 
 	if ($is_subdir_exists) {
-	    my (@x) = sort _sort_subdirs @$subdirs;
-	    print STDERR "   subdirs: @x\n" if $debug;
-	    for my $xdir (@x) {
+	    my (@subdir_list) = sort _sort_subdirs @$subdirs;
+	    print STDERR "   subdirs: @subdir_list\n" if $debug;
+	    for my $subdir (@subdir_list) {
 		# XXX-TODO: hmm, naming ? $obj->htmlify_dir(...).
 		eval q{
 		    use Mail::Message::ToHTML;
 		    my $obj = new Mail::Message::ToHTML $htmlifier_args;
-		    $obj->htmlify_dir($xdir, $htmlifier_args);
+		    $obj->htmlify_dir($subdir, $htmlifier_args);
 		};
 		croak($@) if $@;
 	    }
