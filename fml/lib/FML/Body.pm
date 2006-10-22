@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Body.pm,v 1.4 2006/05/13 11:50:31 fukachan Exp $
+# $FML: Body.pm,v 1.5 2006/07/09 12:11:11 fukachan Exp $
 #
 
 package FML::Body;
@@ -116,6 +116,10 @@ sub db_open
 	$self->{ _db } = \%db;
 	return \%db;
     }
+    else {
+	my $curproc = $self->{ _curproc };
+	$curproc->logerror("FML::Body: db_open: directory unspecified");
+    }
 
     return undef;
 }
@@ -155,13 +159,13 @@ my $global_default_checksum_type = 'md5';
 sub set_checksum_type
 {
     my ($self, $type) = @_;
-    my $curproc = $self->{ _curproc };
 
     if ($type eq 'md5') {
 	$self->{ _type } = $type;
     }
     else {
-	$curproc->logerror("unsupported checksum: $type");
+	my $curproc = $self->{ _curproc };
+	$curproc->logerror("FML::Body: unsupported checksum: $type");
     }
 }
 
