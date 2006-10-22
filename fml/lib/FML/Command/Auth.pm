@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.42 2006/03/05 08:08:36 fukachan Exp $
+# $FML: Auth.pm,v 1.43 2006/03/05 09:50:42 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -29,7 +29,9 @@ FML::Command::Auth - authentication functions.
 
 =head2 new()
 
-=head2 reject()
+constructor.
+
+=head2 reject($curproc, $optargs)
 
 dummy :-)
 
@@ -37,12 +39,12 @@ dummy :-)
 
 
 # Descriptions: constructor.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
 sub new
 {
-    my ($self, $args) = @_;
+    my ($self) = @_;
     my ($type) = ref($self) || $self;
     my $me     = {};
     return bless $me, $type;
@@ -61,6 +63,13 @@ sub reject
 }
 
 
+=head2 permit_anyone($curproc, $optargs)
+
+permit anyone.
+
+=cut
+
+
 # Descriptions: permit anyone.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($optargs)
 # Side Effects: none
@@ -71,6 +80,13 @@ sub permit_anyone
 
     return 1;
 }
+
+
+=head2 permit_admin_member_maps($curproc, $optargs)
+
+permit if admin_member_maps has the sender.
+
+=cut
 
 
 # Descriptions: permit if admin_member_maps has the sender.
@@ -93,6 +109,13 @@ sub permit_admin_member_maps
 }
 
 
+=head2 reject_system_special_accounts($curproc, $optargs)
+
+reject if the mail address looks like system accounts.
+
+=cut
+
+
 # Descriptions: reject if the mail address looks like system accounts.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($optargs)
 # Side Effects: none
@@ -105,7 +128,8 @@ sub reject_system_special_accounts
     my $match  = $cred->match_system_special_accounts($sender);
 
     if ($match) {
-	$curproc->logerror("reject_system_special_accounts: matches the sender");
+	my $msg = "reject_system_special_accounts: matches the sender";
+	$curproc->logerror($msg);
 	return '__LAST__';
     }
 
@@ -227,6 +251,8 @@ sub check_admin_member_password
 
 
 =head2 change_password($curproc, $command_context, $up_args)
+
+change password.
 
     $up_args = {
 	maplist  => $maps,

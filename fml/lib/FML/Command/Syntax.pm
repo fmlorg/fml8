@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Syntax.pm,v 1.3 2006/03/05 08:08:36 fukachan Exp $
+# $FML: Syntax.pm,v 1.4 2006/03/05 09:50:42 fukachan Exp $
 #
 
 package FML::Command::Syntax;
@@ -18,7 +18,13 @@ FML::Command::Syntax - common command syntax checker.
 
 =head1 SYNOPSIS
 
+use FML::Command::Syntax;
+push(@ISA, qw(FML::Command::Syntax));
+$self->check_syntax_address_handler($curproc, $command_context);
+
 =head1 DESCRIPTION
+
+This class provides the syntax command string checker.
 
 =head1 METHODS
 
@@ -39,7 +45,7 @@ sub check_syntax_address_handler
     my ($self, $curproc, $command_context) = @_;
     my $comname    = $command_context->get_cooked_command()    || '';
     my $comsubname = $command_context->get_cooked_subcommand() || '';
-    my $options    = $command_context->get_options()    || [];
+    my $options    = $command_context->get_options()           || [];
     my (@test)     = ($comname);
     my $ok         = 0;
 
@@ -61,7 +67,7 @@ sub check_syntax_address_handler
 	}
     }
 
-    # 2. check other comonents
+    # 2. validate syntax of other comonents (packed in @test array).
     use FML::Command;
     my $dispatch = new FML::Command;
     if ($dispatch->safe_regexp_match($curproc, $command_context, \@test)) {

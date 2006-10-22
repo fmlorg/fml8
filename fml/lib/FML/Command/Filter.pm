@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.6 2004/06/26 11:47:55 fukachan Exp $
+# $FML: Filter.pm,v 1.7 2004/12/05 16:19:06 fukachan Exp $
 #
 
 package FML::Command::Filter;
@@ -23,7 +23,20 @@ FML::Command::Filter - command mail specific filters.
 
 =head1 SYNOPSIS
 
+use FML::Command::Filter;
+my $_msg   = $curproc->incoming_message_body();
+my $obj    = new FML::Command::Filter $curproc;
+my $reason = $obj->check_command_limit($_msg);
+
 =head1 DESCRIPTION
+
+This class provides command mail specific filters.
+
+check_command_limit() checks the number of command requests in one
+command mail.
+
+check_line_length_limit() checks the line length of each line in a
+command mail.
 
 =head1 METHODS
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DataCheck.pm,v 1.19 2006/06/25 11:05:12 fukachan Exp $
+# $FML: DataCheck.pm,v 1.20 2006/07/03 13:58:32 fukachan Exp $
 #
 
 package FML::Command::DataCheck;
@@ -24,11 +24,20 @@ FML::Command::DataCheck - parse, clean up et.al. command buffer.
 
 =head1 SYNOPSIS
 
+use FML::Command::DataCheck;
+my $check = new FML::Command::DataCheck;
+my ($comname, $comsubname) = $check->parse_command_buffer($clean_command);
+my $options = $check->parse_command_arguments($clean_command, $comname);
+
 =head1 DESCRIPTION
+
+This class provides command parsing functions.
 
 =head1 METHODS
 
 =head2 new($args)
+
+constructor.
 
 =cut
 
@@ -46,6 +55,20 @@ sub new
 }
 
 
+=head2 parse_command_buffer($command)
+
+return command name ( ^\S+ in $command ) and the sub name as
+ARRAY (STR, STR).
+
+The returned values are already clean.
+
+=head2 parse_command_arguments($command, $comname)
+
+return arguments after command name $comname in $command as ARRAY_REF.
+
+=cut
+
+
 # Descriptions: return command name ( ^\S+ in $command ) and the sub name.
 #               remove the prepending strings such as \s, #, ...
 #    Arguments: OBJ($self) STR($command)
@@ -61,7 +84,8 @@ sub parse_command_buffer
 }
 
 
-# Descriptions: return arguments after command name $comname in $command.
+# Descriptions: return arguments after command name $comname in $command
+#               as ARRAY_REF.
 #    Arguments: OBJ($self) STR($command) STR($comname)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -86,6 +110,14 @@ sub parse_command_arguments
 
     return \@options;
 }
+
+
+=head2 find_special_keyword($curproc, $ra_data)
+
+check the message of the current process to find whether it contains
+some special keyword e.g. "confirm".
+
+=cut
 
 
 #
@@ -129,6 +161,14 @@ sub find_special_keyword
 	admin_keyword   => $admin_found,
     };
 }
+
+
+=head2 find_anonymous_command_mail_allowed_commands($curproc)
+
+check the message of the current process to find whether it contais
+special keyword e.g. "confirm".
+
+=cut
 
 
 #
@@ -179,6 +219,14 @@ sub find_anonymous_command_mail_allowed_commands
 
     return 0;
 }
+
+
+=head2 cleanup($string)
+
+clean up the given string and return a cleaned one.
+For example, "# ls uja " -> "ls uja"
+
+=cut
 
 
 # Descriptions: clean up the given string and return a cleaned one.
