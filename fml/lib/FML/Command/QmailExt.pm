@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QmailExt.pm,v 1.1 2006/05/09 12:43:58 fukachan Exp $
+# $FML: QmailExt.pm,v 1.2 2006/07/09 12:11:12 fukachan Exp $
 #
 
 package FML::Command::QmailExt;
@@ -14,15 +14,24 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::QmailExt - qmail-ext style command emulator.
+FML::Command::QmailExt - emulate qmail-ext style command parser.
 
 =head1 SYNOPSIS
 
+    use FML::Command::QmailExt;
+    my $extension = new FML::Command::QmailExt $curproc;
+    if ( $extension->match($ENV{EXT}) ) {
+	$extension->execute($ENV{EXT});
+    }
+
 =head1 DESCRIPTION
+
+This class provides qmail-ext style parser and fml8 command execution
+wrapper functions.
 
 =head1 METHODS
 
-=head2 new()
+=head2 new($curproc)
 
 constructor.
 
@@ -45,7 +54,7 @@ sub new
 =head2 match($extension)
 
 Environment variable EXT holds extention information.
-for example, a mail to ML-subscribe@VIRTUAL.DOMAIN is recognized as
+For example, a mail to ML-subscribe@VIRTUAL.DOMAIN is recognized as
 extension with "VIRTUAL.DOMAIN-ML-subscribe" in EXT variable.
 
 =cut
@@ -70,9 +79,9 @@ sub match
 
     # 2. admin command special handling.
     # XXX VERPs and admin command looks same.
-    # need more care for admin command, which is an exception.
+    # We need more care for admin command, which is an exception.
     my ($main_command, $sub_command) = @$command;
-    if ($main_command eq 'admin') {
+    if ($main_command =~ /^(admin)$/i) {
 	if ($sub_command =~ /^[a-z0-9]+$/i) {
 	    $curproc->logdebug("qmail-ext: looks admin command");
 	}
@@ -126,7 +135,7 @@ sub _parse_extension
 }
 
 
-# Descriptions: parse arguments and return it as ARRAY_REF.
+# Descriptions: extract arguments part and return it as ARRAY_REF.
 #    Arguments: OBJ($self) STR($extension) STR($pattern)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -134,6 +143,7 @@ sub _parse_argv
 {
     my ($self, $extension, $pattern) = @_;
 
+    # see qmail-local(5), dot-qmail(5) et.al.
     my $argv = $extension;
     $argv =~ s/^$pattern//;
     $argv =~ s/^\-//;
@@ -181,6 +191,7 @@ sub execute
     # 2.2 message body is $command.
     my $msg_file = $self->_construct_request_mail($command);
     unless (defined $msg_file) {
+	$curproc->logerror("msg_file emulation failed.");
 	$curproc->logerror("command execution stop");
 	return;
     }
@@ -224,7 +235,12 @@ sub _construct_request_mail
 	return undef;
     }
 
-    return $message_file;
+    if (-f $message_file && -s $message_file) {
+	return $message_file;
+    }
+    else {
+	return undef;
+    }
 }
 
 
