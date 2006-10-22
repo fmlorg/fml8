@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: PCB.pm,v 1.23 2006/01/09 14:00:53 fukachan Exp $
+# $FML: PCB.pm,v 1.24 2006/02/04 04:31:14 fukachan Exp $
 #
 
 package FML::PCB;
@@ -13,19 +13,19 @@ use strict;
 use Carp;
 
 # PCB: Process Control Block (malloc it here)
-use vars qw($_fml_pool $_fml_PCB $current_context);
+use vars qw($_fml_pool $_fml_PCB $global_current_context);
 
 
 # XXX context switching must be needed for listserv style emulator,
 # XXX not fml4 emulation nor fml8 itself.
-# XXX we set $current_context as $ml_name@$ml_domain for lisetserv.
-$current_context = '__default__';
+# XXX we set $global_current_context as $ml_name@$ml_domain for lisetserv.
+$global_current_context = '__default__';
 
 # init HASH_REF.
 {
     unless (defined $_fml_pool) { $_fml_pool = {};}
-    $_fml_pool->{ $current_context }->{ _fml_PCB } = {};
-    $_fml_PCB = $_fml_pool->{ $current_context }->{ _fml_PCB };
+    $_fml_pool->{ $global_current_context }->{ _fml_PCB } = {};
+    $_fml_PCB = $_fml_pool->{ $global_current_context }->{ _fml_PCB };
 }
 
 
@@ -58,8 +58,8 @@ Typically, $curproc is composed like this:
 		    },
 		},
 
-		incoming_message => $r_msg,
-		article          => $r_msg,
+		incoming_message => $message_object,
+		article          => $message_object,
 		          ... snip ...
 		};
 
@@ -121,7 +121,7 @@ sub dump_variables
     my ($k, $v, $xk, $xv);
     while (($k, $v) = each %$pcb) {
 	while (($xk, $xv) = each %$v) {
-	    printf "%-21s => {\n", $current_context;
+	    printf "%-21s => {\n", $global_current_context;
 	    printf "   %-18s => {\n", $k;
 	    printf "      %-15s => %-15s\n", $xk, $xv;
 	    printf "   }\n";
@@ -175,18 +175,18 @@ return context identifier.
 
 # Descriptions: set up context.
 #    Arguments: OBJ($self) STR($context)
-# Side Effects: update $current_context variable.
+# Side Effects: update $global_current_context variable.
 # Return Value: none
 sub set_context
 {
     my ($self, $context) = @_;
 
-    $current_context = $context;
+    $global_current_context = $context;
 
-    unless (defined $_fml_pool->{ $current_context }->{ _fml_PCB }) {
-	$_fml_pool->{ $current_context }->{ _fml_PCB } = {};
+    unless (defined $_fml_pool->{ $global_current_context }->{ _fml_PCB }) {
+	$_fml_pool->{ $global_current_context }->{ _fml_PCB } = {};
     }
-    $_fml_PCB = $_fml_pool->{ $current_context }->{ _fml_PCB };
+    $_fml_PCB = $_fml_pool->{ $global_current_context }->{ _fml_PCB };
 }
 
 
@@ -197,7 +197,7 @@ sub set_context
 sub get_context
 {
     my ($self) = @_;
-    return $current_context;
+    return $global_current_context;
 }
 
 
