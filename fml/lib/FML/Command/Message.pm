@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.2 2006/01/09 14:00:53 fukachan Exp $
+# $FML: Message.pm,v 1.3 2006/03/05 08:08:36 fukachan Exp $
 #
 
 package FML::Command::Message;
@@ -14,15 +14,25 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Message - what is this
+FML::Command::Message - utility for command message handling.
 
 =head1 SYNOPSIS
 
+use FML::Command::Message;
+my $_msg    = new FML::Command::Message;
+my $sc_args = {
+    command => "chaddr",
+    rm_args => $optargs,
+};
+$_msg->send_confirmation($curproc, $command_context, $confirm, $sc_args)
+
 =head1 DESCRIPTION
+
+This class provides utility function for command message handling.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 constructor.
 
@@ -78,7 +88,8 @@ sub send_confirmation
     #    fml8 do actual subscription et.al. automatically.
     #    So, $maintainer do nothing.
     if ($mode eq 'confirmation') {
-	$curproc->reply_message_nl('command.confirm', "", $rm_args);
+	my $default_msg = "please reply and send back this message.";
+	$curproc->reply_message_nl('command.confirm', $default_msg, $rm_args);
 	$curproc->reply_message("\n$id\n", $rm_args);
     }
     # 2. forward request to maintainer(s) "without confirmation".
