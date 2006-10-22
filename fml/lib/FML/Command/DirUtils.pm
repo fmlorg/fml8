@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DirUtils.pm,v 1.22 2006/03/05 08:08:36 fukachan Exp $
+# $FML: DirUtils.pm,v 1.23 2006/03/05 09:50:42 fukachan Exp $
 #
 
 package FML::Command::DirUtils;
@@ -19,7 +19,13 @@ FML::Command::DirUtils - utilities for directory handlings.
 
 =head1 SYNOPSIS
 
+    use FML::Command::DirUtils;
+    my $obj = new FML::Command::DirUtils;
+    $obj->dir($curproc, $command_context, $du_args);
+
 =head1 DESCRIPTION
+
+This class provides utilities for directory handlings.
 
 =head1 METHODS
 
@@ -46,6 +52,14 @@ sub new
     return bless $me, $type;
 }
 
+
+=head2 dir($curproc, $command_context, $du_args)
+
+show the result by executing "ls".
+
+=cut
+
+
 #
 # XXX-TODO: if we can find CPAN module for dir listing, use it.
 #
@@ -58,27 +72,24 @@ sub new
 sub dir
 {
     my ($self, $curproc, $command_context, $du_args) = @_;
-    my $config  = $curproc->config();
-    my $path_ls = $config->{ path_ls };
-    my $argv    = $du_args->{ argv };
-    my $opt_ls  = '';
-    my $rm_args = {};
+    my $config = $curproc->config();
 
     # inherit reply_message information.
+    my $rm_args   = {};
     my $recipient = $command_context->{ recipient } || '';
     if ($recipient) { $rm_args->{ recipient } = $recipient;}
 
     # option: permit "ls [-A-Za-z]" syntax
+    my $safe_opt_ls  = '';
     if (defined($du_args->{ opt_ls })) {
-	use FML::Restriction::Base;
-	my $safe = new FML::Restriction::Base;
 	my $opt  = $du_args->{ opt_ls };
+	my $safe = $self->{ _safe };
 	if ($safe->regexp_match('command_line_options', $opt)) {
-	    $opt_ls = $opt;
+	    $safe_opt_ls = $opt;
 	}
 	else {
 	    $curproc->logwarn("deny ls options '$opt'");
-	    $opt_ls = '';
+	    $safe_opt_ls = '';
 	}
     }
 
@@ -90,15 +101,18 @@ sub dir
     chdir $ml_home_dir || croak("cannot chdir \$ml_home_dir");
 
     # build safe arguments
-    my $y = '';
+    my $safe_args = '';
+    my $argv      = $du_args->{ argv };
     for my $x (@$argv) {
 	if ($safe->regexp_match('directory', $x) || $x =~ /^\s*$/) {
-	    $y .= " $x";
+	    $safe_args .= " $x";
 	}
     }
 
+    # execute ls command.
+    my $path_ls = $config->{ path_ls };
     if (-x $path_ls) {
-	my $eval = "$path_ls $opt_ls $y";
+	my $eval = "$path_ls $safe_opt_ls $safe_args";
 	$curproc->log("dir: run \"$eval\"");
 
 	use FileHandle;

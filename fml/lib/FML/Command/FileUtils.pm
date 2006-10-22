@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: FileUtils.pm,v 1.19 2006/03/05 08:08:36 fukachan Exp $
+# $FML: FileUtils.pm,v 1.20 2006/03/05 09:50:42 fukachan Exp $
 #
 
 package FML::Command::FileUtils;
@@ -19,7 +19,16 @@ FML::Command::FileUtils - utilities to handle files.
 
 =head1 SYNOPSIS
 
+use FML::Command::FileUtils;
+my $obj = new FML::Command::FileUtils;
+$obj->remove($curproc, $command_context, $du_args);
+
 =head1 DESCRIPTION
+
+This class provides file operation functions.
+
+remove(), same as delete() method can be used to remove files under
+$ml_home_dir.
 
 =head1 METHODS
 
@@ -54,20 +63,20 @@ same as remove() below.
 =head2 remove($curproc, $command_context, $du_aregs)
 
 remove files specified in $du_args->{ options }
-if the file exsits and the file name matches safe file regexp defined
-in FML::Restriction class.
+if the file exsits and the file name matches the safe file regexp
+defined in FML::Restriction class.
 
 =cut
 
 
 # Descriptions: remove files.
-#    Arguments: OBJ($self) VARARGS(@p)
+#    Arguments: OBJ($self) VARARGS(@var_args)
 # Side Effects: remove files
 # Return Value: same as remove()
 sub delete
 {
-    my ($self, @p) = @_;
-    $self->remove(@p);
+    my ($self, @var_args) = @_;
+    $self->remove(@var_args);
 }
 
 
@@ -80,16 +89,15 @@ sub remove
 {
     my ($self, $curproc, $command_context, $du_args) = @_;
     my $config   = $curproc->config();
-    my $argv     = $du_args->{ options };
     my $is_error = 0;
-
-    # regexp allowed here for file
-    my $safe = $self->{ _safe };
 
     # chdir $ml_home_dir firstly. return ASAP if failed.
     my $ml_home_dir = $config->{ ml_home_dir };
     chdir $ml_home_dir || croak("cannot chdir \$ml_home_dir");
 
+    # validate file and remove it if ok.
+    my $argv = $du_args->{ options };
+    my $safe = $self->{ _safe }; # regexp allowed here for file
     for my $file (@$argv) {
 	# If $file is a safe pattern, o.k. Try to remove it!
 	if ($safe->regexp_match('file', $file)) {
