@@ -40,6 +40,43 @@
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
 
+2006/10/22
+
+   FML::Body 
+	more error logs.
+	move $curproc definition to near message logging.
+	
+   FML::PCB 
+	use gloval_ prefix for package gloval variable:
+	current_context -> global_current_context
+	
+   FML::Command::{Auth,DataCheck,Filter,Syntax}
+	clean up. fix comments.
+	
+   FML::Command::DirUtils 
+	fix comments.
+	move definitions to near the codes.
+	use more proper variable names.
+	
+   FML::Command::FileUtils 
+	fix comments.
+	move definitions to near the codes.
+	use more proper variable names.
+	
+   FML::Command::HTMLify 
+	fix comments.
+	use more proper variable names.
+	
+   FML::Command::Message 
+	fix comments.
+	define the default message.
+	
+   FML::Command::QmailExt 
+	fix comments.
+	permit case insensitive commands.
+	more error messages.
+	validate temorary message file more.
+	
 2006/10/14
 
    etc/command_line_options 
@@ -9952,4 +9989,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.291 2006/10/08 06:47:42 fukachan Exp $
+$FML: CHANGES.txt,v 1.292 2006/10/15 18:22:42 fukachan Exp $
