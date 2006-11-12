@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Tiny.pm,v 1.2 2003/08/23 04:35:34 fukachan Exp $
+# $FML: Tiny.pm,v 1.3 2005/05/26 10:20:05 fukachan Exp $
 #
 
 package FML::Config::Tiny;
@@ -18,7 +18,14 @@ FML::Config::Tiny - just read and return without variable expansion.
 
 =head1 SYNOPSIS
 
+use FML::Config::Tiny;
+my $tinyconfig = new FML::Config::Tiny;
+$new_main_cf = $tinyconfig->read($default_main_cf);
+
 =head1 DESCRIPTION
+
+This class provides simplest function of configuration file parser.
+It reads and returns config hash without variable expansion.
 
 =head1 METHODS
 
