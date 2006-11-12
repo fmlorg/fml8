@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Envelope.pm,v 1.1 2006/05/14 11:25:13 fukachan Exp $
+# $FML: Envelope.pm,v 1.2 2006/07/09 12:11:12 fukachan Exp $
 #
 
 package FML::Envelope;
@@ -42,7 +42,14 @@ sub new
 }
 
 
-# Descriptions: checksum of mail Envelope part.
+=head2 check_envelope_sender()
+
+check if the envelope sender is not our maintainer.
+
+=cut
+
+
+# Descriptions: check if the envelope sender is not our maintainer.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
@@ -59,12 +66,12 @@ sub check_envelope_sender
 	return 0;
     }
 
-    # compare sender and envelope sender.
+    # compare the envelope sender with our maintainer.
     my $maintainer = $config->{ maintainer } || '';
     if ($maintainer) {
-	$maintainer      =~ tr/A-Z/a-z/;
-	$envelope_sender =~ tr/A-Z/a-z/;
-	if ($maintainer eq $envelope_sender) {
+	use FML::Credential;
+	my $cred = new FML::Credential $curproc;
+	if ($cred->is_same_address($maintainer, $envelope_sender, 128)) {
 	    $curproc->logerror("envelope sender == maintainer");
 	    return 1;
 	}
@@ -101,12 +108,12 @@ my $gloval_default_checksum_type = 'md5';
 sub set_checksum_type
 {
     my ($self, $type) = @_;
-    my $curproc = $self->{ _curproc };
 
     if ($type eq 'md5') {
 	$self->{ _type } = $type;
     }
     else {
+	my $curproc = $self->{ _curproc };
 	$curproc->logerror("unsupported checksum: $type");
     }
 }
