@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.38 2006/02/15 13:44:03 fukachan Exp $
+# $FML: Error.pm,v 1.39 2006/03/05 08:08:36 fukachan Exp $
 #
 
 package FML::Error;
@@ -33,9 +33,15 @@ FML::Error - front end of error messages analyzer.
 
 =head1 DESCRIPTION
 
+This class provides top level dispatcher to analyze error messages.
+It can parse error messages and classifies them into error or not
+messages.
+
+You can use delete_bouncers() method to remove bounce addresses.
+
 =head1 METHODS
 
-=head2 new()
+=head2 new($curproc)
 
 constructor.
 
@@ -121,7 +127,11 @@ sub unlock
 
 =head2 db_open()
 
+open cache database.
+
 =head2 db_close()
+
+close cache database (dummy).
 
 =cut
 
@@ -153,7 +163,7 @@ sub db_close
 
 =head2 add($info)
 
-add bounce info into cache where $info is a HASH_REF.  Currently,
+add bounce information into cache where $info is a HASH_REF.  Currently,
 $info expects "address", "status" (status code) and "reason".
 "address" and "status" are mandatory.
 
@@ -164,12 +174,12 @@ $info expects "address", "status" (status code) and "reason".
     };
 
 The format to store these information depends on FML::Error::Cache
-module, which conceals the detail of cache structure.
+module, which conceals the detail of the cache structure.
 
 =cut
 
 
-# Descriptions: add bounce info into cache.
+# Descriptions: add bounce information into cache.
 #               in fact, this is a wrapper of FML::Error::Cache::add()
 #               to clarify that we should lock.
 #    Arguments: OBJ($self) HASH_REF($info)
@@ -236,7 +246,7 @@ sub analyze
 
 =head2 set_analyzer_function($fp)
 
-set the function for error cost evaluator. Acutually, the contet
+set the function for error cost evaluator. Acutually, the content
 locates at C<FML::Error::Analyze::$fp>.
 
 =head2 get_analyzer_function($fp)
@@ -272,9 +282,10 @@ sub get_analyzer_function
 
 =head2 is_list_address($addr)
 
-check whether $addr is one of addresses this ML uses.
+check whether $addr is one of addresses this ML uses, such as
+elena, elena-ctl, elena-admin ... for elena ML.
 
-we need this function to exclude list related addresses from removal
+We need this function to exclude list related addresses from removal
 target.
 
 =cut
@@ -316,7 +327,7 @@ sub is_list_address
 
 =head2 delete_bouncers()
 
-delete mail addresses, which analyze() determined as bouncers, by
+delete mail addresses, determined by analyze() as bouncers, by
 delete_address() method.
 
 You need to call analyze() method before calling delete_bouncers() to
@@ -325,7 +336,7 @@ list up addresses to remove.
 =cut
 
 
-# Descriptions: delete addresses analyze() determined as bouncers.
+# Descriptions: delete addresses determined by analyze() as bouncers.
 #    Arguments: OBJ($self)
 # Side Effects: update user address lists.
 # Return Value: none
@@ -334,7 +345,8 @@ sub delete_bouncers
     my ($self)  = @_;
     my $curproc = $self->{ _curproc };
     my $cred    = $curproc->credential();
-    my $list    = $self->{ _list_to_be_removed };
+    my $list    = $self->{ _list_to_be_removed } || [];
+    my $myname  = "delete_bouncers";
 
     use FML::Restriction::Base;
     my $safe = new FML::Restriction::Base;
@@ -351,23 +363,23 @@ sub delete_bouncers
 			$self->delete_address( $addr );
 		    }
 		    else {
-			my $s = "delete_bouncers: <$addr> seems not a member";
+			my $s = "$myname: <$addr> seems not a member";
 			$curproc->logwarn($s);
 		    }
 		}
 		else {
-		    $curproc->logerror("delete_bouncers: <$addr> unsafe expr");
+		    $curproc->logerror("$myname: <$addr> unsafe expression");
 		    next ADDR;
 		}
 	    }
 	    else {
-		my $s = "delete_bouncers: <$addr> is one of ml addr. ignored";
+		my $s = "$myname: <$addr> is one of ml addr. ignored";
 		$curproc->logwarn($s);
 	    }
 	}
     }
     else {
-	$curproc->logerror("undefined list to remove");
+	$curproc->logerror("$myname: undefined list to remove");
     }
 }
 
@@ -403,7 +415,7 @@ sub delete_address
 	return;
     }
 
-    # we call FML::Command::Admin::unsubscribe not FML::User::Control
+    # We call FML::Command::Admin::unsubscribe not FML::User::Control
     # since FML::User::Control is too raw.
     my $method          = 'unsubscribe';
     my $command_context = $curproc->command_context_init("$method $address");
