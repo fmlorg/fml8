@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.9 2004/07/23 15:59:07 fukachan Exp $
+# $FML: Queue.pm,v 1.10 2005/05/27 00:54:29 fukachan Exp $
 #
 
 package FML::IPC::Queue;
@@ -257,9 +257,14 @@ sub use_queue_dir
 {
     my ($self, $dir) = @_;
 
+    print STDERR "\n-- " if $debug;
     if (-d $dir) {
+	print STDERR "use queue_dir: $dir\n" if $debug;
 	$self->{ _on_disk }   = 1;
 	$self->{ _queue_dir } = $dir;
+    }
+    else {
+	print STDERR "on memory process (not use queue_dir)\n" if $debug;  
     }
 }
 
@@ -322,20 +327,22 @@ if ($0 eq __FILE__) {
     my $msg = new FML::IPC::Message;
     $msg->set("to", "pager");
 
-    my $q = new FML::IPC::Queue;
-    $q->use_queue_dir("/tmp/queue");
-    $q->append($msg);
+    for my $queue_dir (qw(/tmp/queue $0)) { 
+	my $q = new FML::IPC::Queue;
+	$q->use_queue_dir($queue_dir);
+	$q->append($msg);
 
-    # list.
-    $q->use_object_class("FML::IPC::Message");
-    my $list = $q->list();
+	# list.
+	$q->use_object_class("FML::IPC::Message");
+	my $list = $q->list();
 
-    # dump.
-    use Data::Dumper;
-    print Dumper($list);
+	# dump.
+	use Data::Dumper;
+	print Dumper($list);
 
-    if (defined $ENV{ ROLLBACK } && $ENV{ ROLLBACK }) {
-	$q->rollback();
+	if (defined $ENV{ ROLLBACK } && $ENV{ ROLLBACK }) {
+	    $q->rollback();
+	}
     }
 }
 
