@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2005,2006 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Tiny.pm,v 1.3 2005/05/26 10:20:05 fukachan Exp $
+# $FML: Tiny.pm,v 1.4 2006/11/12 14:40:18 fukachan Exp $
 #
 
 package FML::Config::Tiny;
@@ -104,7 +104,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2005 Ken'ichi Fukamachi
+Copyright (C) 2003,2005,2006 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
