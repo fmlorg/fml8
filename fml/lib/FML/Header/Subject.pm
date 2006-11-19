@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.51 2005/08/19 12:17:08 fukachan Exp $
+# $FML: Subject.pm,v 1.53 2005/08/20 01:25:15 fukachan Exp $
 #
 
 package FML::Header::Subject;
@@ -59,7 +59,7 @@ replace the subject with the newer content e.g. including the ML tag.
 
 # Descriptions: add or rewrite the subject tag.
 #    Arguments: OBJ($self) OBJ($header) OBJ($config) HASH_REF($rw_args)
-# Side Effects: the header subject is rewritten
+# Side Effects: the header subject is rewritten.
 # Return Value: none
 sub rewrite_article_subject_tag
 {
@@ -118,6 +118,7 @@ sub decode
     my ($self, $subject, $tag) = @_;
     my ($in_code, $out_code)   = ();
 
+    # XXX $tag is defined by the ML administrator.
     # for example, ml_name = elena
     # if $tag has special regexp such as \U$ml_name\E or \L$ml_name\E
     if (defined $tag) {
