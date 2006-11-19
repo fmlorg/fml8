@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Cache.pm,v 1.22 2004/05/22 06:19:52 fukachan Exp $
+# $FML: Cache.pm,v 1.23 2004/07/23 13:16:37 fukachan Exp $
 #
 
 package FML::Error::Cache;
@@ -35,6 +35,8 @@ where C<$bounce_info) follows:
 
 =head1 DESCRIPTION
 
+This class provides database manipluation. 
+
 =head1 METHODS
 
 =head2 new()
@@ -46,7 +48,7 @@ constructor.
 
 # Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($curproc)
-# Side Effects: none
+# Side Effects: create a cache directory.
 # Return Value: OBJ
 sub new
 {
@@ -104,7 +106,7 @@ sub touch { 1;}
 
 =head2 add($address, $argv)
 
-add data given as hash reference $argv.
+add data given as hash reference $argv into the database.
 
     $argv = {
 	address => STR,
@@ -170,12 +172,12 @@ sub add
 
 =head2 delete($address)
 
-delete entry for $address.
+delete entry for the specified $address.
 
 =cut
 
 
-# Descriptions: delete entry for $address.
+# Descriptions: delete the entry for $address.
 #    Arguments: OBJ($self) STR($address)
 # Side Effects: update cache
 # Return Value: none
@@ -211,20 +213,15 @@ sub delete
 =head1 CACHE IO MANIPULATION
 
 You need to use primitive methods this class provides for IO into/from
-error data cache.
-
-C<Tie::JournaledDir> is a simple hash, so $argv is converted to the
-following a set of key ($address) and value.
-
-     $address => "$unixtime status=$status reason=$reason"
+error database (data cache).
 
 =cut
 
 
 # Descriptions: open the cache database for Tie::Journaled*.
 #    Arguments: OBJ($self)
-# Side Effects: none
-# Return Value: HASH_REF
+# Side Effects: set up $self->{ _db }.
+# Return Value: none
 sub _open_cache
 {
     my ($self)  = @_;
@@ -304,12 +301,12 @@ sub get_all_values_as_hash_ref
     my $dir     = $config->{ error_mail_analyzer_cache_dir };
 
     use Tie::JournaledDir;
-    my $obj = new Tie::JournaledDir { dir => $dir };
-    return $obj->get_all_values_as_hash_ref();
+    my $cache = new Tie::JournaledDir { dir => $dir };
+    return $cache->get_all_values_as_hash_ref();
 }
 
 
-# Descriptions: check if the address is valid string?
+# Descriptions: check if the address is a valid string?
 #    Arguments: OBJ($self) STR($address)
 # Side Effects: none
 # Return Value: NUM

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: histgram.pm,v 1.14 2005/08/17 12:08:45 fukachan Exp $
+# $FML: histgram.pm,v 1.15 2006/02/15 13:44:04 fukachan Exp $
 #
 
 package FML::Error::Analyze::histgram;
@@ -21,13 +21,34 @@ FML::Error::Analyze::histgram - cost evaluator.
 
 =head1 SYNOPSIS
 
+    my $analyzer = new FML::Error::Analyze::histgram;
+    $analyzer->process($curproc, $data);
+
 =head1 DESCRIPTION
+
+This class provides analysis based on the histgram model.
+
+It examines the continuity of error messages (*).
+
+    --------------------> time
+         *           ok
+        *********    bad
+        * * *** *    ambiguous
+
+but sum up counts by the delta.
+
+         *
+        ***
 
 =head1 METHODS
 
 =head2 new($curproc)
 
 constructor.
+
+=head2 process($curproc, $data)
+
+dispatch analysis.
 
 =cut
 
@@ -56,26 +77,10 @@ sub process
 }
 
 
-=head2 histgram()
-
-    examine the continuity of error messages (*).
-    --------------------> time
-         *           ok
-        *********    bad
-        * * *** *    ambiguous
-
-but sum up count as the delta.
-
-         *
-        ***
-
-=cut
-
-
 # Descriptions: error continuity based cost counting.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($data)
 # Side Effects: none
-# Return Value: ARRAY_REF
+# Return Value: none
 sub _histgram
 {
     my ($self, $curproc, $data) = @_;
@@ -84,11 +89,11 @@ sub _histgram
     my $summary    = {};
     my $config     = $curproc->config();
     my $limit      = $config->{ error_mail_analyzer_simple_count_limit } || 14;
-    my $daylimit   = $config->{ error_mail_analyzer_day_limit } || 14;
+    my $howold     = $config->{ error_mail_analyzer_day_limit } || 14;
     my $now        = time;                 # unix time (seconds).
     my $half_day   = 12   * 3600 ;         # 12 hours  (seconds).
     my $one_day    = 24   * 3600 ;         # 24 hours  (seconds).
-    my $threshold  = $one_day * $daylimit; # how old   (seconds).
+    my $threshold  = $one_day * $howold;   # how old   (seconds).
 
     # $data format = {
     #             key1 => [ value1, value2, ... ],

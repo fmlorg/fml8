@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.32 2005/08/17 12:08:46 fukachan Exp $
+# $FML: Analyze.pm,v 1.33 2006/02/15 13:44:04 fukachan Exp $
 #
 
 package FML::Error::Analyze;
@@ -18,7 +18,7 @@ my $debug = 1;
 
 =head1 NAME
 
-FML::Error::Analyze - provide model specific analyzer routines.
+FML::Error::Analyze - dispatch model specific analyzer routines.
 
 =head1 SYNOPSIS
 
@@ -36,6 +36,9 @@ FML::Error::Analyze - provide model specific analyzer routines.
 
 
 =head1 DESCRIPTION
+
+This class provides a top level dispatcher for
+model specific analyzer routines.
 
 =head1 METHODS
 
@@ -66,8 +69,8 @@ sub new
 return summary of address and points as HASH_REF.
 
     $summary = {
-	address1 => point,
-	address2 => point,
+	address1 => point1,
+	address2 => point2,
     };
 
 =head2 get_address_to_be_deleted()
@@ -111,6 +114,13 @@ sub get_address_to_be_deleted
 	return [];
     }
 }
+
+
+=head2 print()
+
+print address and the status summary.
+
+=cut
 
 
 # Descriptions: print address and the status summary.

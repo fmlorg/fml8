@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: simple_count.pm,v 1.12 2005/08/17 12:08:45 fukachan Exp $
+# $FML: simple_count.pm,v 1.13 2006/02/15 13:44:04 fukachan Exp $
 #
 
 package FML::Error::Analyze::simple_count;
@@ -21,7 +21,12 @@ FML::Error::Analyze::simple_count - simple cost evaluator.
 
 =head1 SYNOPSIS
 
+    my $analyzer = new FML::Error::Analyze::simple_count;
+    $analyzer->process($curproc, $data);
+
 =head1 DESCRIPTION
+
+This class provides simple evaluation of the number of error messages.
 
 =head1 METHODS
 
