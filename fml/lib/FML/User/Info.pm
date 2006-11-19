@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Info.pm,v 1.7 2006/02/18 09:25:32 fukachan Exp $
+# $FML: Info.pm,v 1.8 2006/02/22 12:16:31 fukachan Exp $
 #
 
 package FML::User::Info;
@@ -25,6 +25,8 @@ FML::User::Info - maintain user information.
     $data->set_subscribe_date($address, time);
 
 =head1 DESCRIPTION
+
+This class maintains user information.
 
 =head1 METHODS
 
@@ -104,7 +106,7 @@ get information from gecos database.
 
 # Descriptions: update gecos database.
 #    Arguments: OBJ($self) STR($address) STR($gecos)
-# Side Effects: update gecos database
+# Side Effects: update gecos database.
 # Return Value: none
 sub set_gecos
 {
@@ -114,10 +116,10 @@ sub set_gecos
 }
 
 
-# Descriptions: get gecos info from database.
+# Descriptions: get gecos information from database.
 #    Arguments: OBJ($self) STR($address)
-# Side Effects: update gecos database
-# Return Value: none
+# Side Effects: none
+# Return Value: STR
 sub get_gecos
 {
     my ($self, $address) = @_;
@@ -141,7 +143,7 @@ get information from subscribe_date database.
 
 # Descriptions: update subscribe_date database.
 #    Arguments: OBJ($self) STR($address) STR($subscribe_date)
-# Side Effects: update subscribe_date database
+# Side Effects: update subscribe_date database.
 # Return Value: none
 sub set_subscribe_date
 {
@@ -151,10 +153,10 @@ sub set_subscribe_date
 }
 
 
-# Descriptions: get info from subscribe_date database.
+# Descriptions: get information from subscribe_date database.
 #    Arguments: OBJ($self) STR($address)
-# Side Effects: update subscribe_date database
-# Return Value: none
+# Side Effects: none
+# Return Value: STR
 sub get_subscribe_date
 {
     my ($self, $address) = @_;

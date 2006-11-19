@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.11 2006/02/22 12:18:52 fukachan Exp $
+# $FML: DB.pm,v 1.12 2006/07/09 12:11:13 fukachan Exp $
 #
 
 package FML::User::DB;
@@ -39,9 +39,11 @@ FML::User::DB - maintain user database with expiration.
 
 =head1 DESCRIPTION
 
+This class maitains user database with expiration.
+
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 constructor.
 
@@ -50,7 +52,7 @@ constructor.
 
 # Descriptions: constructor.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($dbargs)
-# Side Effects: create object
+# Side Effects: create db_dir if needed.
 # Return Value: OBJ
 sub new
 {
@@ -84,7 +86,7 @@ same as set() above.
 
 # Descriptions: add { $key => $value } to $primary_user_db_${class}_map.
 #    Arguments: OBJ($self) STR($class) STR($key) STR($value)
-# Side Effects: update database
+# Side Effects: update database.
 # Return Value: none
 sub set
 {
@@ -116,8 +118,8 @@ sub set
 # Descriptions: find the first matched entry { $key => $value }
 #               in $primary_user_db_${class}_map.
 #    Arguments: OBJ($self) STR($class) STR($key)
-# Side Effects: update database
-# Return Value: none
+# Side Effects: none
+# Return Value: STR
 sub get
 {
     my ($self, $class, $key) = @_;
@@ -145,7 +147,7 @@ sub get
 
 # Descriptions: add { $key => $value } to $primary_user_db_${class}_map.
 #    Arguments: OBJ($self) STR($class) STR($key) STR($value)
-# Side Effects: update database
+# Side Effects: update database.
 # Return Value: none
 sub add
 {
