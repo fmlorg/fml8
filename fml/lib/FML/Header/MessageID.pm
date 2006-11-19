@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MessageID.pm,v 1.25 2006/04/17 23:58:58 fukachan Exp $
+# $FML: MessageID.pm,v 1.26 2006/04/18 11:14:06 fukachan Exp $
 #
 
 package FML::Header::MessageID;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Header::MessageID - manupulate message-id.
+FML::Header::MessageID - manipulate message-id.
 
 =head1 SYNOPSIS
 
@@ -59,9 +59,11 @@ sub new
 
 =head2 db_open($db_args)
 
-open db and return HASH_REF for the db access.
+open message-id database and return HASH_REF for the db access.
 
 =head2 db_close()
+
+close message-id database (dummy).
 
 =cut
 
@@ -69,7 +71,7 @@ open db and return HASH_REF for the db access.
 # Descriptions: open message-id database.
 #    Arguments: OBJ($self) HASH_REF($db_args)
 # Side Effects: open database.
-# Return Value: HASH_ERF
+# Return Value: HASH_REF
 sub db_open
 {
     my ($self, $db_args) = @_;
@@ -147,7 +149,7 @@ sub set
     my $db = $self->{ _db };
 
     if (defined $db) {
-	$db->{ $key } = $value;
+	$db->{ $key } = $value || '';
 	return $value;
     }
 
@@ -157,12 +159,12 @@ sub set
 
 =head2 gen_id($config)
 
-generate and return a new message-id.
+generate a new message-id and return it.
 
 =cut
 
 
-# Descriptions: generate new message-id used in reply message.
+# Descriptions: generate a new message-id used in reply message.
 #    Arguments: OBJ($self) OBJ($config)
 # Side Effects: counter increment
 # Return Value: STR
@@ -171,7 +173,7 @@ sub gen_id
     my ($self, $config) = @_;
     my $post_addr  = $config->{ article_post_address };
     my $maintainer = $config->{ maintainer };
-    my $addr = $post_addr || $maintainer;
+    my $addr       = $post_addr || $maintainer;
 
     $global_counter++;
     return sprintf("<%d.%d.%s.%s>", time, $$, $global_counter, $addr);
