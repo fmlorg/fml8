@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.82 2006/01/19 11:46:22 fukachan Exp $
+# $FML: Makefile,v 1.83 2006/03/08 13:28:54 fukachan Exp $
 #
 
 TMPFILE	=	/tmp/log.fml-devel.test
@@ -145,11 +145,11 @@ _doc_tutorial:
 
 _doc_check:
 	@ echo ""
-	@ echo "===> tutorial eheck (ja)"
+	@ echo "===> tutorial check (ja)"
 	@ (cd ../../fml/doc/ja/tutorial;make check)
 	@ echo ""
 	@ echo ""
-	@ echo "===> tutorial eheck (en)"
+	@ echo "===> tutorial check (en)"
 	@ (cd ../../fml/doc/en/tutorial;make check)
 	@ echo ""
 
