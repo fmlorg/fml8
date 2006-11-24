@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: @template.pm,v 1.10 2006/01/07 13:16:41 fukachan Exp $
 #
 
 package __MODULE_NAME__;
@@ -22,10 +22,17 @@ __MODULE_NAME__ - what is this
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
+
+constructor.
 
 =cut
 
+
+# Descriptions: constructor.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: OBJ
 sub new
 {
     my ($self) = @_;
