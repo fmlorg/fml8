@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Mailer.pm,v 1.38 2006/04/05 11:39:11 fukachan Exp $
+# $FML: Mailer.pm,v 1.39 2006/07/09 12:11:12 fukachan Exp $
 #
 
 package FML::Mailer;
@@ -74,7 +74,7 @@ sub new
 
 =head2 send($send_args)
 
-send the given C<message>.
+send the specified C<message>.
 $send_args (HASH_REF) can take the following arguments:
 
    ----------------------------------
@@ -87,7 +87,7 @@ $send_args (HASH_REF) can take the following arguments:
 =cut
 
 
-# Descriptions: send messages in the queue (queue flush).
+# Descriptions: send the specified message in the queue (queue flush).
 #    Arguments: OBJ($self) OBJ($queue) HASH_REF($send_args)
 # Side Effects: queue changed
 # Return Value: NUM(1 or 0)
@@ -151,10 +151,6 @@ sub send
     if (defined($send_args->{ message }) && ref($send_args->{ message })) {
 	$message = $send_args->{ message };
     }
-    else {
-	$curproc->logerror("FML::Mailer: no message");
-	return 0;
-    }
 
     # 3.2 file
     if (defined($send_args->{ file })) {
@@ -170,12 +166,13 @@ sub send
 	}
     }
 
+    # 3.3 error handling (must be here after 3.1 and 3.2).
     unless (defined $message) {
 	$curproc->logerror("FML::Mailer: no message");
 	return 0;
     }
 
-    # address validater
+    # address validater used in SMTP RCPT TO phase.
     my $validater = sub {
 	my ($address) = @_;
 	use FML::Restriction::Base;
