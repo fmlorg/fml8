@@ -40,6 +40,65 @@
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
 
+2006/11/26
+	
+   FML::Sys::Alias 
+	fix comments.
+	remove a unused local variable.
+	set the upper limit of recursive call _expand().
+	
+   FML::Sys::User 
+	fix comments.
+	add the label to a loop.
+	define debug code by myself.
+	
+   FML::Process::Fake 
+	fix comments.
+	fix help message.
+	change a local variable name to more proper one.
+	
+   FML::Credential 
+	fix comments (FNF).
+	ensure initial value.
+	use more proper local variables.
+	
+   FML::Mailer 
+	fix comments.
+	fix error logic.
+	
+   FML::Moderate 
+	fix comments.
+	correct argument definitions.
+
+2006/11/19
+	
+   FML::Error::{Analyze,Cache}
+   FML::Error::Analyze::{histgram,simple_count }
+	fix comments.
+	use more proper variable names.
+	
+   FML::Header::MessageID 
+	fix comments.
+	ensure initial value.
+
+2006/11/13
+	
+   FML::Error 
+	fix comments
+	ensure variable initialization.
+	define $mname and use it in log messages.
+	
+   FML::Envelope 
+	fix comments
+	use FML::Credential->is_same_assress() to compare addresses.
+	move variable definitions to the block using it more nearly.
+
+2006/11/12
+
+   FML::IPC::Queue 
+	more debug messages.
+	enhance debug patterns.
+
 2006/10/22
 
    FML::Body 
@@ -9989,4 +10048,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.292 2006/10/15 18:22:42 fukachan Exp $
+$FML: CHANGES.txt,v 1.293 2006/10/22 14:48:41 fukachan Exp $
