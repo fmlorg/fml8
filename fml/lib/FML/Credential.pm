@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.67 2006/01/09 14:00:53 fukachan Exp $
+# $FML: Credential.pm,v 1.68 2006/05/09 12:30:32 fukachan Exp $
 #
 
 package FML::Credential;
@@ -34,8 +34,8 @@ FML::Credential - functions to authenticate the mail sender.
 
 =head1 DESCRIPTION
 
-a collection of utilitity functions to authenticate the sender of the
-message which kicks off this process.
+This class provides a collection of utilitity functions to
+authenticate the sender of the message which kicks off this process.
 
 =head2 User credential information
 
@@ -62,7 +62,7 @@ processing mailing list occurs.
 #               bind $self ($me) to \%Credential, so
 #               you can access the same \%Credential through this object.
 #    Arguments: OBJ($self) OBJ($curproc)
-# Side Effects: bind $self ($me) to \%Credential
+# Side Effects: bind $self ($me) to \%Credential.
 # Return Value: OBJ
 sub new
 {
@@ -91,8 +91,8 @@ sub new
 # Return Value: none
 sub _reconfigure
 {
-    my ($self) = @_;
-    my $curproc = $self->{ _curproc };
+    my ($self)  = @_;
+    my $curproc = $self->{ _curproc } || undef;
 
     if (defined $curproc) {
 	my $config = $curproc->config();
@@ -106,7 +106,7 @@ sub _reconfigure
 	    $self->{ _use_address_compare_function } = 0;
 	}
 
-	# case insensitive for backward compatibility. (default)
+	# case insensitive for backward compatibility by default.
 	if ($actype eq 'user_part_case_insensitive' ||
 	    $actype eq 'case_insensitive') {
 	    $self->{ _user_part_case_sensitive } = 0;
@@ -135,7 +135,7 @@ sub DESTROY {}
 
 =head2 set_user_part_case_sensitive()
 
-compare user part case sensitively (default).
+compare user part case sensitively by default.
 
 =head2 set_user_part_case_insensitive()
 
@@ -177,18 +177,18 @@ sub is_user_part_case_sensitive
 }
 
 
-=head2 is_same_address($addr1, $addr2 [, $level])
+=head2 is_same_address($addr1, $addr2, $max_level)
 
 return 1 (same) or 0 (different).
 It returns 1 if C<$addr1> and C<$addr2> looks same within some
 ambiguity.  The ambiguity is defined by the following rules:
 
-1. C<user> part must be the same case sensitively.
+1. C<user> part must be same case-sensitively.
 
-2. C<domain> part is case insensitive by definition of C<DNS>.
+2. C<domain> part is same case-insensitively by definition of C<DNS>.
 
-3. C<domain> part is the same from the top C<gTLD> layer to
-   C<$level>-th sub domain level.
+3. C<domain> part is same case-insensitively
+   from the top C<gTLD> layer to C<$level>-th sub domain level.
 
             .jp
            d.jp
@@ -201,16 +201,12 @@ For example, consider these two addresses:
             rudo@nuinui.net
             rudo@sapporo.nuinui.net
 
-These addresses differ. But
+These addresses differ. But the following addresses
 
             rudo@fml.nuinui.net
             rudo@sapporo.fml.nuinui.net
 
 are same since the last 3 top level domains are same.
-
-=head2 is_same_domain($xdomain, $ydomain)
-
-check if $xdomain and $ydomain are same or not.
 
 =cut
 
@@ -277,7 +273,15 @@ sub is_same_address
 }
 
 
-# Descriptions: check if the specified domains are same or not.
+=head2 is_same_domain($xdomain, $ydomain)
+
+check if $xdomain and $ydomain are same or not case-insensitively.
+
+=cut
+
+
+# Descriptions: check if the specified domains are same or not
+#               case-insensitively.
 #    Arguments: OBJ($self) STR($xdomain) STR($ydomain)
 # Side Effects: none
 # Return Value: NUM
@@ -294,9 +298,9 @@ sub is_same_domain
 }
 
 
-=head2 is_member($curproc, $args)
+=head2 is_member($curproc, $address)
 
-return 1 if the sender is an ML member.
+return 1 if the sender <$address> is an ML member.
 return 0 if not.
 
 =cut
@@ -320,6 +324,14 @@ sub is_member
 }
 
 
+=head2 is_privileged_member($curproc, $address)
+
+return 1 if the sender <$address> is an ML administrator.
+return 0 if not.
+
+=cut
+
+
 # Descriptions: sender of the current process is an ML administrator ?
 #    Arguments: OBJ($self) STR($address)
 # Side Effects: none
@@ -336,6 +348,14 @@ sub is_privileged_member
 	member_maps => $member_maps,
     });
 }
+
+
+=head2 is_recipient($curproc, $address)
+
+return 1 if the sender <$address> is an ML recipient.
+return 0 if not.
+
+=cut
 
 
 # Descriptions: sender of the current process is an ML recipient or not.
@@ -356,6 +376,14 @@ sub is_recipient
 }
 
 
+=head2 is_moderator_member($curproc, $address)
+
+return 1 if the sender <$address> is an ML moderator.
+return 0 if not.
+
+=cut
+
+
 # Descriptions: sender of the current process is an ML moderator member or not.
 #    Arguments: OBJ($self) STR($address)
 # Side Effects: none
@@ -372,6 +400,14 @@ sub is_moderator_member
 	member_maps => $member_maps,
     });
 }
+
+
+=head2 is_spammer($curproc, $address)
+
+return 1 if the sender <$address> is a spammer.
+return 0 if not.
+
+=cut
 
 
 # Descriptions: sender of the current process is a spammer or not.
@@ -392,7 +428,7 @@ sub is_spammer
 }
 
 
-# Descriptions: compare the specified address included in the specified maps.
+# Descriptions: check the specified address is included in the specified maps.
 #    Arguments: OBJ($self) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
@@ -433,7 +469,7 @@ sub _is_member
 }
 
 
-# Descriptions: $map contains $address or not in some ambiguity
+# Descriptions: check $map contains $address or not within some ambiguity
 #               by is_same_address().
 #    Arguments: OBJ($self) STR($map) HASH_REF($config) STR($address)
 # Side Effects: none
@@ -470,13 +506,13 @@ sub has_address_in_map
     # 2. try each address in the result matches $address to check.
     if (defined $addrs) {
       ADDR:
-	for my $r (@$addrs) {
+	for my $_addr (@$addrs) {
 	    # 3. is_same_address() conceals matching algorithm details.
-	    print STDERR "is_same_address($r, $address)\n" if $debug;
-	    if ($self->is_same_address($r, $address)) {
+	    print STDERR "is_same_address($_addr, $address)\n" if $debug;
+	    if ($self->is_same_address($_addr, $address)) {
 		print STDERR "\tmatch!\n" if $debug;
 		$status = 1; # found
-		$self->_save_address($r);
+		$self->_save_address($_addr);
 		last ADDR;
 	    }
 	    else {
@@ -486,6 +522,7 @@ sub has_address_in_map
     }
 
     unless ($status) {
+	$user   ||= '';
 	$domain ||= '';
 	$self->error_set("user=$user domain=$domain not found");
     }
@@ -546,7 +583,7 @@ sub _get_address
 
 =head2 match_system_special_accounts($addr)
 
-C<addr> matches a system account or not.
+check is the specified C<addr> matches a system account or not.
 The system accounts are given as
 
      $curproc->config()->{ system_special_accounts }.
@@ -585,12 +622,15 @@ same as get_sender().
 
 =head2 set_sender()
 
+overwrite sender info in credential object.
+
 =head2 get_sender()
 
 return the mail address of the mail sender who kicks off this fml
 process.
 
 =cut
+
 
 # Descriptions: return the mail sender.
 #    Arguments: OBJ($self)
@@ -606,7 +646,7 @@ sub sender
 # Descriptions: set the mail sender.
 #    Arguments: OBJ($self) STR($address)
 # Side Effects: none
-# Return Value: STR(mail address)
+# Return Value: none
 sub set_sender
 {
     my ($self, $address) = @_;
@@ -634,8 +674,8 @@ sub get_sender
 
 =head2 set_compare_level( $level )
 
-set C<level>, how many sub-domains from top level we compare, in
-C<in_same_address()> address comparison.
+set C<level>, how many sub-domains from top level we compare.
+This parameter is in C<in_same_address()> address comparison.
 
 =head2 get_compare_level()
 
@@ -647,7 +687,7 @@ return the number of C<level>.
 
 # Descriptions: set address comparison level.
 #    Arguments: OBJ($self) NUM($level)
-# Side Effects: change private variables in object
+# Side Effects: change private variables in object.
 # Return Value: NUM
 sub set_compare_level
 {
