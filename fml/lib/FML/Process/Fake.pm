@@ -3,7 +3,7 @@
 # Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Fake.pm,v 1.15 2005/08/17 10:54:09 fukachan Exp $
+# $FML: Fake.pm,v 1.16 2006/01/09 14:00:54 fukachan Exp $
 #
 
 package FML::Process::Fake;
@@ -40,15 +40,6 @@ See C<FML::Process::Flow> for the flow detail.
 constructor.
 It make a C<FML::Process::Kernel> object and return it.
 
-=head2 prepare($args)
-
-load default config files,
-set up domain we need to fake,
-and
-fix @INC if needed.
-
-lastly, parse incoming message input from \*STDIN channel.
-
 =cut
 
 
@@ -63,6 +54,18 @@ sub new
     my $curproc = new FML::Process::Kernel $args;
     return bless $curproc, $type;
 }
+
+
+=head2 prepare($args)
+
+load default config files,
+set up domain we need to fake,
+and
+fix @INC if needed.
+
+lastly, parse incoming message input from \*STDIN channel.
+
+=cut
 
 
 # Descriptions: preparation.
@@ -180,22 +183,20 @@ print <<"_EOF_";
 
 Usage: $name [options]
 
--n   show fml specific aliases.
-
-[BUGS]
-	support only fml8 + postfix case.
-	also, we assume /etc/passwd exists.
-
 _EOF_
 }
 
 
 =head1 INTERNAL FAKER FUNCTIONS
 
+Internally, C<faker> process analyses mail headers and
+it creates a new ML if needed.
+After that, it restarts another process as an emulaion.
+
 =cut
 
 
-# Descriptions: initialize the faker process.
+# Descriptions: initialize a faker process.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -208,11 +209,13 @@ sub _faker_init
     my $faker_domain     = $argv->[0];
     $faker_domain        =~ s/^\@//;
 
+    # 0. chdir the default working directory for unexpected error.
     # XXX we should chdir(ml_home_prefix of $faker_domain).
     # XXX anyway chdir(2) to the default domain's ml_home_prefix
     # XXX before actions for emergency logging.
     chdir $work_dir || exit(1);
 
+    # 1. set up the default ml.
     my $ml_home_dir  = File::Spec->catfile($work_dir, 'faker');
     $curproc->mkdir($ml_home_dir);
     $config->set('ml_name',        'faker');
@@ -220,12 +223,13 @@ sub _faker_init
     $config->set('ml_home_prefix', $work_dir);
     $config->set('ml_home_dir',    $ml_home_dir);
 
-    # init
+    # 2. initialize faker process environment.
     $curproc->config_cf_files_load();
     $curproc->env_fix_perl_include_path();
     $curproc->scheduler_init();
     $curproc->log_message_init();
 
+    # 3. set up our domain to handle.
     # we assume
     #
     # [/etc/postfix/virtual]
@@ -240,7 +244,7 @@ sub _faker_init
 }
 
 
-# Descriptions: parser of incoming message header.
+# Descriptions: parse incoming message.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
@@ -248,7 +252,6 @@ sub _faker_prepare
 {
     my ($curproc) = @_;
 
-    # 1. parse message
     $curproc->incoming_message_parse();
 }
 
@@ -262,8 +265,8 @@ sub _faker_verify_request
     my ($curproc) = @_;
     my $pcb       = $curproc->pcb();
 
-    # 2. pick up to: and cc: information to speculate our ML
-    #    ${ml_name}@${ml_domain}.
+    # 2. pick up to: and cc: information to speculate 
+    #    our ML address <${ml_name}@${ml_domain}>.
     my $header = $curproc->incoming_message_header();
     if (defined $header) {
 	my (@mail_addresses) = ();
@@ -340,15 +343,10 @@ sub _faker_main
 }
 
 
-=head1 Faker utilities
-
-=cut
-
-
 # Descriptions: ?
 #    Arguments: OBJ($curproc) ARRAY_REF($addrlist)
 # Side Effects: none
-# Return Value: none
+# Return Value: NUM
 sub _faker_analyze_address
 {
     my ($curproc, $addrlist) = @_;
@@ -387,7 +385,7 @@ sub _faker_process_switch
     my ($curproc, $args, $ml_name, $ml_domain) = @_;
     my $ml_addr = sprintf("%s@%s", $ml_name, $ml_domain);
 
-    $curproc->logdebug("start ml emulation: $ml_name\@$ml_domain");
+    $curproc->logdebug("start ml emulation: $ml_addr");
 
     # start the process.
     my $path = $curproc->incoming_message_get_cache_file_path();
@@ -426,22 +424,22 @@ validate the existence of mailing list.
 # Descriptions: validate domain syntax.
 #    Arguments: OBJ($curproc) STR($domain)
 # Side Effects: none
-# Return Value: none
+# Return Value: STR
 sub is_valid_domain_syntax
 {
     my ($curproc, $domain) = @_;
 
-    my $obj = new FML::Restriction::Base;
-    if ($obj->regexp_match("domain", $domain)) {
+    my $safe = new FML::Restriction::Base;
+    if ($safe->regexp_match("domain", $domain)) {
         return $domain;
     }
 }
 
 
-# Descriptions: validate the existence of mailing list.
+# Descriptions: validate the existence of the specified mailing list.
 #    Arguments: OBJ($curproc) STR($ml_name) STR($ml_domain)
 # Side Effects: none
-# Return Value: none
+# Return Value: NUM
 sub is_valid_ml
 {
     my ($curproc, $ml_name, $ml_domain) = @_;
@@ -548,7 +546,7 @@ sub _set_emul_user_list
 }
 
 
-# Descriptions:
+# Descriptions: return user list in pcb.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: ARRAY_REF
