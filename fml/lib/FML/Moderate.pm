@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Moderate.pm,v 1.4 2006/01/09 14:00:53 fukachan Exp $
+# $FML: Moderate.pm,v 1.5 2006/05/04 05:34:57 fukachan Exp $
 #
 
 package FML::Moderate;
@@ -16,30 +16,46 @@ my $moderation_queue = "submitted";
 
 =head1 NAME
 
-FML::Moderate - manipulate Moderatoration database.
+FML::Moderate - manipulate Moderation database.
 
 =head1 SYNOPSIS
 
+use FML::Moderate;
+my $moderation = new FML::Moderate $curproc;
+$curproc->log("distribute article qid=$queue_id");
+$moderation->distribute_article($queue_id);
+
 =head1 DESCRIPTION
+
+This class manipulates moderation database. 
 
 =head1 METHODS
 
-=head2 new($cargs)
+=head2 new($curproc)
+
+constructor
 
 =cut
 
 
 # Descriptions: constructor.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($cargs)
-# Side Effects: create object
+#    Arguments: OBJ($self) OBJ($curproc)
+# Side Effects: none.
 # Return Value: OBJ
 sub new
 {
-    my ($self, $curproc, $cargs) = @_;
+    my ($self, $curproc) = @_;
     my ($type) = ref($self) || $self;
     my $me     = { _curproc => $curproc };
     return bless $me, $type;
 }
+
+
+=head2 forward_to_moderator
+
+forward incoming message to moderator.
+
+=cut
 
 
 # Descriptions: forward incoming message to moderator.
@@ -115,11 +131,6 @@ sub _send_confirmation
 }
 
 
-=head1 QUEUE MANIPULATION
-
-=cut
-
-
 # Descriptions: initialize queue object.
 #    Arguments: OBJ($self) STR($qid)
 # Side Effects: none
@@ -151,11 +162,11 @@ sub _queue_init
 }
 
 
-=head1 ARTICLE DISTRIBUTE
+=head1 DISTRIBUTE ARTICLES
 
 =head2 distribute_article($mid)
 
-distribute article.
+distribute article holded in the moderation queue.
 
 =cut
 
