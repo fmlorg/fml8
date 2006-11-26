@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Alias.pm,v 1.4 2004/07/23 13:16:44 fukachan Exp $
+# $FML: Alias.pm,v 1.5 2005/05/27 03:03:39 fukachan Exp $
 #
 
 package FML::Sys::Alias;
@@ -22,7 +22,14 @@ FML::Sys::Alias - get mail alias information on this system.
 
 =head1 SYNOPSIS
 
+   use FML::Sys::Alias;
+   my $alias = new FML::Sys::Alias;
+   $alias->read_alias_file($alias_file);
+
 =head1 DESCRIPTION
+
+This module provides methods to handle mail alias information on this
+system.
 
 =head1 METHODS
 
@@ -51,12 +58,11 @@ sub new
 
 # Descriptions: get entries in $file (e.g. /etc/mail/aliases).
 #    Arguments: OBJ($self) STR($file)
-# Side Effects: none
-# Return Value: HASH_REF
+# Side Effects: update hash on memory.
+# Return Value: none
 sub read_alias_file
 {
     my ($self, $file) = @_;
-    my $aliases = $self->{ _aliases };
 
     use FileHandle;
     my $fh = new FileHandle $file;
@@ -79,7 +85,7 @@ sub read_alias_file
 
 # Descriptions: add $key into aliases hash table.
 #    Arguments: OBJ($self) STR($key) STR($addrs)
-# Side Effects: update $self->{ _aliases }
+# Side Effects: update $self->{ _aliases } hash on memory. 
 # Return Value: none
 sub add_key
 {
@@ -91,6 +97,7 @@ sub add_key
     $addrs =~ s/\s*$//;
     my (@a) = split(/\s*,\s*/, $addrs);
 
+    # XXX-TODO: first match ? (only ?)
     unless (defined $aliases->{ $key }) {
 	$aliases->{ $key } = \@a;
     }
@@ -122,6 +129,9 @@ sub _expand
     my $r     = '';
 
     $recursive++;
+    if ($recursive > 16) { # avoid infinite loop.
+	return [ $key ];
+    }
 
     if ($debug) {
 	print STDERR "    " x $recursive;
@@ -144,6 +154,7 @@ sub _expand
 
     @r = sort @r;
 
+  OUT:
     return($#r >= 0 ?  \@r : [ $key ]);
 }
 
@@ -166,7 +177,8 @@ if ($0 eq __FILE__) {
 
 	    my ($k, $v) = split(/\s+/, $buf);
 	    my $a = $alias->expand($v);
-	    printf "%-20s %s\n", $k, join(" ", @$a);
+	    printf "%-20s => %s\n", "input> $k", $buf;
+	    printf "%-20s => %s\n", $k, join(" ", @$a);
 	}
     }
 }
