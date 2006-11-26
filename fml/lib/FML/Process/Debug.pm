@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Debug.pm,v 1.12 2006/04/18 11:14:06 fukachan Exp $
+# $FML: Debug.pm,v 1.13 2006/05/04 05:01:56 fukachan Exp $
 #
 
 package FML::Process::Debug;
@@ -45,8 +45,8 @@ FML::Process::Debug - debug tool / tiny FML::Process emulator.
 
 =head1 DESCRIPTION
 
-FML::Pcoess::Debug provides tiny FML::Process:: process emulator for
-debug use.
+FML::Process::Debug provides tiny FML::Process::XXX process emulator
+for debug use.
 
 It also provides dump_curproc() method to dump out $curproc structure
 as string for documentation.
@@ -56,10 +56,6 @@ as string for documentation.
 =head2 new()
 
 constructor.
-
-=head2 dump_curproc($curproc)
-
-dump curproc structure.
 
 =cut
 
@@ -81,15 +77,25 @@ sub new
 
 simplified version of FML::Process::* only used for debug.
 
-=head2 mkdir
+=head2 mkdir($dir, $mode)
 
-=head2 log
+create directory $dir if needed.
 
-=head2 logwarn
+=head2 log($msg, $msg_args)
 
-=head2 logerror
+log message.
 
-=head2 logdebug
+=head2 logwarn($msg, $msg_args)
+
+log message at level as warning.
+
+=head2 logerror($msg, $msg_args)
+
+log message at level as critical error.
+
+=head2 logdebug($msg, $msg_args)
+
+log message at level as debug.
 
 =cut
 
