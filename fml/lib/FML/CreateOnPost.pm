@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: CreateOnPost.pm,v 1.1 2006/02/04 08:00:09 fukachan Exp $
+# $FML: CreateOnPost.pm,v 1.2 2006/07/09 12:11:12 fukachan Exp $
 #
 
 package FML::CreateOnPost;
@@ -18,11 +18,15 @@ FML::CreateOnPost - CREATE-ON-POST
 
 =head1 SYNOPSIS
 
+use FML::CreateOnPost;
+my $cop = new FML::CreateOnPost $curproc;
+$cop->distribute_ml($ml);
+
 =head1 DESCRIPTION
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 constructor.
 
