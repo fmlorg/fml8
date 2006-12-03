@@ -40,6 +40,21 @@
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
 
+2006/12/03
+
+   overhaul continues ... (slowly ;_;) ...
+	ちょっとずつオーバホール継続中
+
+   FML::Command::Admin::reviveml 
+	fix comments.
+	ensure initial value.
+	add assert.
+	show more error messages.
+	
+   FML::Command::Admin::mergeml newcopml newdomain rmcopml rmdomain 
+	fix comments.
+	ensure initial value.
+
 2006/11/26
 	
    FML::Sys::Alias 
@@ -10048,4 +10063,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.293 2006/10/22 14:48:41 fukachan Exp $
+$FML: CHANGES.txt,v 1.294 2006/11/26 14:16:39 fukachan Exp $
