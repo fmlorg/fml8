@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newdomain.pm,v 1.9 2006/03/04 13:48:29 fukachan Exp $
+# $FML: newdomain.pm,v 1.10 2006/03/05 08:08:36 fukachan Exp $
 #
 
 package FML::Command::Admin::newdomain;
@@ -19,11 +19,19 @@ FML::Command::Admin::newdomain - declare a new domain we use.
 
 =head1 SYNOPSIS
 
-See C<FML::Command> for more detainewdomain.
+See C<FML::Command> for more detail of newdomain operation.
 
 =head1 DESCRIPTION
 
 declare a new domain we use.
+
+=head2 new()
+
+constructor.
+
+=head2 need_lock()
+
+not need lock in the first time.
 
 =cut
 
@@ -48,6 +56,14 @@ sub new
 sub need_lock { 0;}
 
 
+=head2 process($curproc, $command_context)
+
+declare a new domain we use.
+It adds domain to ml_home_prefix configuration file.
+
+=cut
+
+
 # Descriptions: declare a new domain we use.
 #    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
 # Side Effects: forward request to dir module
@@ -56,8 +72,8 @@ sub process
 {
     my ($self, $curproc, $command_context) = @_;
     my $canon_argv = $command_context->get_canon_argv();
-    my $domain     = $canon_argv->{ ml_name };
-    my $prefix     = $canon_argv->{ options }->[ 0 ];
+    my $domain     = $canon_argv->{ ml_name }        || '';
+    my $prefix     = $canon_argv->{ options }->[ 0 ] || '';
     my $error      = '';
 
     if ($domain && $prefix) {

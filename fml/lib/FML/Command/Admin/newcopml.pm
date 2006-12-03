@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newcopml.pm,v 1.1 2006/02/04 08:00:09 fukachan Exp $
+# $FML: newcopml.pm,v 1.2 2006/03/04 13:48:29 fukachan Exp $
 #
 
 package FML::Command::Admin::newcopml;
@@ -29,13 +29,30 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-set up a new mailing list.
-create mailing list directory,
-install config.cf, include, include-ctl et. al.
+set up a new virtual mailing list for create-on-post operation.
+Actually, run "make newml" operation to create a new ML.
+
+After that, modify it for create-on-post operation.
+We use this virtual ML for spooling and logging only.
+The actual processing is done by FML::Process::CreateOnPost process.   
 
 =head1 METHODS
 
+=head2 new()
+
+constructor.
+
+=head2 need_lock()
+
+not need lock in the first time.
+
 =head2 process($curproc, $command_context)
+
+main dispatcher.
+
+=head2 cgi_menu($curproc, $command_context)
+
+show cgi menu for newcopml command.
 
 =cut
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: rmcopml.pm,v 1.2 2006/02/15 13:44:03 fukachan Exp $
+# $FML: rmcopml.pm,v 1.3 2006/03/04 13:48:29 fukachan Exp $
 #
 
 package FML::Command::Admin::rmcopml;
@@ -29,13 +29,27 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-set up a new mailing list.
-create mailing list directory,
-install config.cf, include, include-ctl et. al.
+remove the specified ML (virtual create-on-post top level entrance).
+After that, 
+purge the relation between virtual domain configurations and ML's.
 
 =head1 METHODS
 
+=head2 new()
+
+constructor.
+
+=head2 need_lock()
+
+not need lock in the first time.
+
 =head2 process($curproc, $command_context)
+
+main dispatcher.
+
+=head2 cgi_menu($curproc, $command_context)
+
+show cgi menu for rmcopml command.
 
 =cut
 
