@@ -68,7 +68,6 @@ spool
 subscribe
 summary
 thread
-udb
 unsubscribe
 useradd
 userdel
