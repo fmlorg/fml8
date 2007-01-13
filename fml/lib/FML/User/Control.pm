@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.22 2006/03/05 08:08:37 fukachan Exp $
+# $FML: Control.pm,v 1.23 2006/05/16 12:27:21 fukachan Exp $
 #
 
 package FML::User::Control;
@@ -34,9 +34,25 @@ FML::User::Control - utility functions to control user list.
 
 =head1 SYNOPSIS
 
+my $maplist = [ $member_map, $recipient_map ];
+my $uc_args = {
+        address => $address,
+        maplist => $maplist,
+};
+
+use FML::User::Control;
+my $control = new FML::User::Control;
+$control->user_add($curproc, $command_context, $uc_args);
+
 =head1 DESCRIPTION
 
+This module provides functions to add/delete user address.
+
 =head1 METHODS
+
+=head2 new()
+
+constructor.
 
 =cut
 
@@ -54,6 +70,13 @@ sub new
 }
 
 
+=head2 user_add($curproc, $command_context, $uc_args)
+
+add the address specified in $uc_args into the map in $uc_args.
+
+=cut
+
+
 # Descriptions: add user.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) OBJ($command_context) HASH_REF($uc_args)
@@ -63,8 +86,8 @@ sub user_add
 {
     my ($self, $curproc, $command_context, $uc_args) = @_;
     my $config   = $curproc->config();
-    my $address  = $uc_args->{ address };
-    my $maplist  = $uc_args->{ maplist };
+    my $address  = $uc_args->{ address } || '';
+    my $maplist  = $uc_args->{ maplist } || [];
     my $trycount = 0;
     my $reason   = '';
 
@@ -75,7 +98,7 @@ sub user_add
 	croak("unsafe address");
     }
 
-    # pass info into reply_message().
+    # pass information into reply_message().
     my $msg_args = $command_context->get_msg_args();
     $msg_args->{ _arg_address } = $address;
 
@@ -159,6 +182,13 @@ sub user_add
 }
 
 
+=head2 user_del($curproc, $command_context, $uc_args)
+
+delete the address specified in $uc_args from the map in $uc_args.
+
+=cut
+
+
 # Descriptions: remove user.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) OBJ($command_context) HASH_REF($uc_args)
@@ -168,8 +198,8 @@ sub user_del
 {
     my ($self, $curproc, $command_context, $uc_args) = @_;
     my $config   = $curproc->config();
-    my $address  = $uc_args->{ address };
-    my $maplist  = $uc_args->{ maplist };
+    my $address  = $uc_args->{ address } || '';
+    my $maplist  = $uc_args->{ maplist } || [];
     my $trycount = 0;
     my $reason   = '';
 
@@ -254,6 +284,13 @@ sub user_del
 }
 
 
+=head2 user_chaddr($curproc, $command_context, $uc_args)
+
+dispatch chaddr (change from an old address to a new address) operation.
+
+=cut
+
+
 # Descriptions: dispatch chaddr operation.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) OBJ($command_context) HASH_REF($uc_args)
@@ -293,8 +330,8 @@ sub _try_chaddr_in_map
 {
     my ($self, $curproc, $command_context, $uc_args, $cred, $map) = @_;
     my $config      = $curproc->config();
-    my $old_address = $uc_args->{ old_address };
-    my $new_address = $uc_args->{ new_address };
+    my $old_address = $uc_args->{ old_address } || '';
+    my $new_address = $uc_args->{ new_address } || '';
     my (@address)   = ($old_address, $new_address);
 
     #
@@ -418,6 +455,13 @@ sub _try_chaddr_in_map
 }
 
 
+=head2 print_userlist($curproc, $command_context, $uc_args)
+
+print users in the specified map in $uc_args.
+
+=cut
+
+
 # Descriptions: show list.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) OBJ($command_context) HASH_REF($uc_args)
@@ -429,8 +473,8 @@ sub print_userlist
     my $config   = $curproc->config();
     my $maplist  = $uc_args->{ maplist } || [];
     my $wh       = $uc_args->{ wh }      || undef;
-    my $style    = $curproc->output_get_print_style()      || '';
-    my $is_mta   = $curproc->is_under_mta_process() || 0;
+    my $style    = $curproc->output_get_print_style() || '';
+    my $is_mta   = $curproc->is_under_mta_process()   || 0;
     my $msg_args = $command_context->get_msg_args();
 
     $curproc->lock($lock_channel);
@@ -473,6 +517,13 @@ sub print_userlist
 }
 
 
+=head2 get_user_list($curproc, $maps)
+
+return address list as ARRAY_REF.
+
+=cut
+
+
 # Descriptions: return address list as ARRAY_REF.
 #    Arguments: OBJ($self) OBJ($curproc) ARRAY_REF($maps)
 # Side Effects: none
@@ -501,6 +552,13 @@ sub get_user_list
 
     return $r;
 }
+
+
+=head2 get_user_total($curproc, $maps)
+
+return the total number of addresses in maps.
+
+=cut
 
 
 # Descriptions: return the total number of addresses in list.
