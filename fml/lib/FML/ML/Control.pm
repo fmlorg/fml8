@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.14 2006/03/05 08:08:37 fukachan Exp $
+# $FML: Control.pm,v 1.15 2006/07/09 12:11:12 fukachan Exp $
 #
 
 package FML::ML::Control;
@@ -19,7 +19,15 @@ FML::ML::Control - create, rename and delete ml_home_dir.
 
 =head1 SYNOPSIS
 
+use FML::ML::Control;
+my $control = new FML::ML::Control;
+$control->adjust_params_for_virtual_domain($curproc,
+					   $command_context,
+					   $params);
+
 =head1 DESCRIPTION
+
+This class provides ML control functions.
 
 =head1 METHODS
 
@@ -43,23 +51,35 @@ sub new
 }
 
 
-=head1 ML CREATE
+=head1 ML CREATION
+
+=head2 adjust_params_for_virtual_domain($curproc, $command_context, $params)
+
+set up $params for the specified virtual domain.
 
 =cut
 
 
-# Descriptions: generate _ml_name_xxx in $params.
+# Descriptions: set up $params for the virtual domain.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) OBJ($command_context) HASH_REF($params)
-# Side Effects: update $params
+# Side Effects: rewrite $params.
 # Return Value: none
 sub adjust_params_for_virtual_domain
 {
     my ($self, $curproc, $command_context, $params) = @_;
     my ($ml_name_admin, $ml_name_ctl, $ml_name_error,
 	$ml_name_post,$ml_name_request);
-    my $ml_name   = $params->{ _ml_name };
-    my $ml_domain = $params->{ ml_domain };
+    my $ml_name   = $params->{ _ml_name }  || '';
+    my $ml_domain = $params->{ ml_domain } || '';
+
+    # ASSERT
+    unless ($ml_name)   { 
+	$curproc->logerror("FML::ML::Control: undefined ml_name");
+    }
+    unless ($ml_domain) { 
+	$curproc->logerror("FML::ML::Control: undefined ml_domain");
+    }
 
     my $is_default_domain = 0;
     if ($curproc->is_default_domain($ml_domain)) {
@@ -97,6 +117,13 @@ sub adjust_params_for_virtual_domain
 }
 
 
+=head2 init_ml_home_dir($curproc, $command_context, $params)
+
+create $ml_home_dir if needed.
+
+=cut
+
+
 # Descriptions: create $ml_home_dir if needed.
 #    Arguments: OBJ($self)
 #               OBJ($curproc)
@@ -108,7 +135,13 @@ sub init_ml_home_dir
 {
     my ($self, $curproc, $command_context, $params) = @_;
     my $config      = $curproc->config();
-    my $ml_home_dir = $config->{ ml_home_dir };
+    my $ml_home_dir = $config->{ ml_home_dir } || '';
+
+    # ASSERT
+    unless ($ml_home_dir) {
+	$curproc->logerror("FML::ML::Control: undefined ml_home_dir");
+	return;
+    }
 
     unless (-d $ml_home_dir) {
 	$curproc->mkdir($ml_home_dir, "mode=public");
@@ -135,6 +168,13 @@ sub init_ml_home_dir
 }
 
 
+=head2 install_template_files($curproc, $command_context, $params)
+
+install config.cf, include, include-ctl et. al.
+
+=cut
+
+
 # Descriptions: install config.cf, include, include-ctl et. al.
 #    Arguments: OBJ($self)
 #               OBJ($curproc)
@@ -148,9 +188,15 @@ sub install_template_files
     my $config       = $curproc->config();
     my $mode         = $self->get_mode() || 'newml';
     my $template_dir = $curproc->newml_command_template_files_dir();
-    my $ml_home_dir  = $params->{ ml_home_dir };
+    my $ml_home_dir  = $params->{ ml_home_dir } || '';
     my $templ_files  =
 	$config->get_as_array_ref('newml_command_template_files');
+
+    # ASSERT
+    unless ($ml_home_dir) {
+	$curproc->logerror("FML::ML::Control: undefined ml_home_dir");
+	return;
+    }
 
     # 1. set up fml specific files e.g. config.cf
     use File::Spec;
@@ -177,6 +223,13 @@ sub install_template_files
 }
 
 
+=head2 install_config_cf($curproc, $command_context, $params)
+
+install ONLY config.cf file.
+
+=cut
+
+
 # Descriptions: install ONLY config.cf file.
 #    Arguments: OBJ($self)
 #               OBJ($curproc)
@@ -189,7 +242,13 @@ sub install_config_cf
     my ($self, $curproc, $command_context, $params) = @_;
     my $config       = $curproc->config();
     my $template_dir = $curproc->newml_command_template_files_dir();
-    my $ml_home_dir  = $params->{ ml_home_dir };
+    my $ml_home_dir  = $params->{ ml_home_dir } || '';
+
+    # ASSERT
+    unless ($ml_home_dir) {
+        $curproc->logerror("FML::ML::Control: undefined ml_home_dir");
+        return;
+    }
 
     use File::Spec;
     for my $file (qw(config.cf)) {
@@ -200,6 +259,14 @@ sub install_config_cf
 	$self->_install($src, $dst, $params);
     }
 }
+
+
+=head2 update_aliases($curproc, $command_context, $params)
+
+update alias entries in MTA configurations
+considering virtual domain.
+
+=cut
 
 
 # Descriptions: update alias entries.
@@ -213,12 +280,27 @@ sub update_aliases
 {
     my ($self, $curproc, $command_context, $params) = @_;
     my $config    = $curproc->config();
-    my $ml_name   = $config->{ ml_name };
-    my $ml_domain = $config->{ ml_domain };
-    my $alias     = $config->{ mail_aliases_file };
+    my $ml_name   = $config->{ ml_name }   || '';
+    my $ml_domain = $config->{ ml_domain } || '';
+    my $alias     = $config->{ mail_aliases_file } || '';
     my $mask      = umask( 022 );
 
-    # append
+    # ASSERT
+    unless ($ml_name) {
+        $curproc->logerror("FML::ML::Control: undefined ml_name");
+        return;
+    }
+    unless ($ml_domain) {
+        $curproc->logerror("FML::ML::Control: undefined ml_domain");
+        return;
+    }
+    unless ($alias) {
+        $curproc->logerror("FML::ML::Control: undefined mail_aliases_file");
+        return;
+    }
+
+    # if this user (ml entry) is found somewhere on this system, 
+    # 
     if ($self->is_mta_alias_maps_has_ml_entry($curproc, $params, $ml_name)) {
 	$curproc->ui_message("warning: $ml_name already defined!");
 	$curproc->ui_message("         ignore aliases updating");
@@ -237,7 +319,7 @@ sub update_aliases
 		    key      => $ml_name,
 		});
 
-		# we need to use the original $params here
+		# XXX we need to use the original $params here.
 		# update templates for qmail/control/virtualdomains
 		unless ($curproc->is_default_domain($ml_domain)) {
 		    $obj->install_virtual_map($curproc, $params, $optargs);
@@ -248,6 +330,8 @@ sub update_aliases
 		    $curproc->ui_message("skipping alias update for $mta");
 		}
 		else {
+		    # XXX set up a new alias entry for this ML.
+		    # XXX already virtual domain rewriting prepared above.
 		    $obj->install_alias($curproc, $params, $optargs);
 		    $obj->update_alias($curproc, $params, $optargs);
 		}
@@ -258,6 +342,13 @@ sub update_aliases
 
     umask( $mask );
 }
+
+
+=head2 is_mta_alias_maps_has_ml_entry($curproc, $params, $ml_name)
+
+check if $alias file has an $ml_name entry or not.
+
+=cut
 
 
 # Descriptions: check if $alias file has an $ml_name entry or not.
@@ -312,6 +403,13 @@ sub is_mta_alias_maps_has_ml_entry
 }
 
 
+=head2 setup_mail_archive_dir($curproc, $command_context, $params)
+
+set up ~fml/public_html/ for this mailing list.
+
+=cut
+
+
 # Descriptions: set up ~fml/public_html/ for this mailing list.
 #    Arguments: OBJ($self)
 #               OBJ($curproc)
@@ -330,6 +428,13 @@ sub setup_mail_archive_dir
 	$curproc->mkdir($dir, "mode=public");
     }
 }
+
+
+=head2 setup_cgi_interface($curproc, $command_context, $params)
+
+set up CGI interface for this mailing list.
+
+=cut
 
 
 # Descriptions: set up CGI interface for this mailing list but
@@ -437,7 +542,7 @@ sub setup_cgi_interface
 }
 
 
-# Descriptions: install $dst with variable expansion of $src.
+# Descriptions: install $dst with variable expansion within $src.
 #    Arguments: OBJ($self) STR($src) STR($dst) HASH_REF($config)
 # Side Effects: create $dst
 # Return Value: none
@@ -452,6 +557,13 @@ sub _install
     };
     croak($@) if $@;
 }
+
+
+=head2 setup_listinfo($curproc, $command_context, $params)
+
+set up information for this mailing list.
+
+=cut
 
 
 # Descriptions: set up information for this mailing list.
@@ -495,6 +607,10 @@ sub setup_listinfo
 
 =head1 CREATE-ON-POST
 
+=head2 install_createonpost($curproc, $command_context, $params)
+
+set up or fix create-on-post environment.
+
 =cut
 
 
@@ -512,7 +628,10 @@ sub install_createonpost
     my $ml_name   = $curproc->ml_name();
     my $ml_domain = $curproc->ml_domain();
 
-    # 1. set up virtual.
+    # 1. set up a virtual domain entry to trap all incoming messages.
+    #    for example, @tml.fml.org traps all incoming messages and
+    #    forwards it to the trap@tml.fml.org ML.
+    #    trap@tml.fml.org ML processs all requests virtually.
     eval q{
 	my $list = $config->get_as_array_ref('newml_command_mta_config_list');
 	for my $mta (@$list) {
@@ -529,7 +648,8 @@ sub install_createonpost
 	}
     };
 
-    # 2. remove include* files.
+    # 2. remove include* files in the actual ML trap@tml.fml.org
+    #    since usual fml processes do not runs.
     use File::Spec;
     my $ml_home_dir = $curproc->ml_home_dir($ml_name, $ml_domain);
     for my $file (qw(include include-ctl include-error)) {
@@ -538,6 +658,8 @@ sub install_createonpost
     }
 
     # 3. reset include file.
+    #    set up a virtual fml process "createonpost", 
+    #    which receives all incoming messages and processes them for all ML's.
     my $include = File::Spec->catfile($ml_home_dir, "include");
     my $prefix  = $curproc->executable_prefix();
     my $program = File::Spec->catfile($prefix, "createonpost");
@@ -549,6 +671,13 @@ sub install_createonpost
 	$wh->close();
     }
 }
+
+
+=head2 delete_createonpost($curproc, $command_context, $params)
+
+disable create-on-post environment.
+
+=cut
 
 
 # Descriptions: disable create-on-post environment.
@@ -583,7 +712,11 @@ sub delete_createonpost
 }
 
 
-=head1 ML REMOVE
+=head1 ML REMOVAL
+
+=head2 delete_ml_home_dir($curproc, $command_context, $params)
+
+remove $ml_home_dir and update aliases if needed.
 
 =cut
 
@@ -618,6 +751,13 @@ sub delete_ml_home_dir
 	$curproc->logerror($s);
     }
 }
+
+
+=head2 delete_aliases($curproc, $command_context, $params)
+
+remove aliases entry.
+
+=cut
 
 
 # Descriptions: remove aliases entry.
@@ -666,7 +806,7 @@ get mode.
 
 # Descriptions: set mode.
 #    Arguments: OBJ($self) STR($mode)
-# Side Effects: none
+# Side Effects: update $self.
 # Return Value: none
 sub set_mode
 {
@@ -681,7 +821,7 @@ sub set_mode
 # Descriptions: get mode.
 #    Arguments: OBJ($self)
 # Side Effects: none
-# Return Value: none
+# Return Value: STR
 sub get_mode
 {
     my ($self) = @_;
