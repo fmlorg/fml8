@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML: emul_error.sh,v 1.2 2003/05/28 15:08:27 fukachan Exp $
+# $FML: emul_error.sh,v 1.3 2004/04/07 12:17:32 fukachan Exp $
 #
 
 DO () {
@@ -12,7 +12,11 @@ DO () {
 	test -f $msg || return;
 
 	regress/message/scramble.pl $msg |\
-	${PERL:-perl} -w /usr/local/libexec/fml/error elena@home.fml.org
+	${PERL:-perl} -w /usr/local/libexec/fml/error \
+	-o use_debug=yes \
+	-o error_mail_analyzer_function=simple_count \
+	-o error_mail_analyzer_simple_count_limit=2 \
+ 	elena@home.fml.org
 
 	echo "-- exit code: $?"
    )
