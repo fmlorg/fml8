@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.10 2004/07/23 13:16:38 fukachan Exp $
+# $FML: Header.pm,v 1.11 2005/05/27 01:47:04 fukachan Exp $
 #
 
 package FML::Filter::Header;
@@ -19,6 +19,19 @@ use FML::Filter::ErrorStatus qw(error_set error error_clear);
 FML::Filter::Header - filter based on mail header content.
 
 =head1 SYNOPSIS
+
+use FML::Filter::Header;
+my $filter = new FML::Filter::Header;
+if (defined $filter) {
+    my $rules = $config->get_as_array_ref('article_header_filter_rules');
+    if (defined $rules) {
+	$filter->set_rules( $rules );
+    }
+    $filter->header_check($mesg);
+    if ($filter->error()) {
+        ... error handling ...
+    }
+}
 
 =head1 DESCRIPTION
 
@@ -68,7 +81,7 @@ overwrite rules by specified C<@$rules> ($rules is ARRAY_REF).
 
 # Descriptions: access method to overwrite filter rules.
 #    Arguments: OBJ($self) ARRAY_REF($rarray)
-# Side Effects: overwrite info in object
+# Side Effects: overwrite information in object.
 # Return Value: ARRAY_REF
 sub set_rules
 {
@@ -90,11 +103,11 @@ C<$msg> is C<Mail::Message> object.
 C<Usage>:
 
     use FML::Filter::Header;
-    my $obj = new FML::Filter::Header;
-    my $msg = $curproc->incoming_message();
+    my $filter = new FML::Filter::Header;
+    my $msg    = $curproc->incoming_message();
 
-    $obj->header_check($msg);
-    if ($obj->error()) {
+    $filter->header_check($msg);
+    if ($filter->error()) {
        # do something for wrong formated message ...
     }
 
@@ -131,6 +144,16 @@ sub header_check
 
 =head1 FILTER RULES
 
+=head2 check_message_id($msg)
+
+validate the message-id in the given message $msg.
+This routine checks whether the message-id has @.
+
+=head2 check_date($msg)
+
+validate the date in the given message $msg.
+This routine checks if the header has no date field or not.
+
 =cut
 
 
@@ -149,8 +172,9 @@ sub check_message_id
     }
 }
 
+
 # Descriptions: validate the date in the given message $msg.
-#               This routine checks missing date field.
+#               This routine checks if the header has no date field or not.
 #    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: croak()
 # Return Value: none
