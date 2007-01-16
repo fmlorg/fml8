@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HomePrefix.pm,v 1.8 2005/05/27 03:03:35 fukachan Exp $
+# $FML: HomePrefix.pm,v 1.9 2005/11/30 23:30:38 fukachan Exp $
 #
 
 package FML::ML::HomePrefix;
@@ -26,9 +26,22 @@ FML::ML::HomePrefix - create, rename and delete ml_home_prefix dir.
 
 =head1 SYNOPSIS
 
+use FML::ML::HomePrefix;
+my $ml_home_prefix = new FML::ML::HomePrefix $curproc;
+$ml_home_prefix->add($domain);
+$ml_home_prefix->delete($domain);
+
 =head1 DESCRIPTION
 
+This class provides functions to create, rename and delete
+ml_home_prefix directory information.
+Mainly it is used to edit ml_home_prefix configuration file.
+
 =head1 METHODS
+
+=head2 new($curproc)
+
+constructor.
 
 =cut
 
@@ -44,6 +57,13 @@ sub new
     my $me     = { _curproc => $curproc };
     return bless $me, $type;
 }
+
+
+=head2 primary_map()
+
+return the primary ml_home_prefix_map.
+
+=cut
 
 
 # Descriptions: return the primary ml_home_prefix_map.
@@ -93,9 +113,16 @@ sub _sanity_check
 }
 
 
+=head2 add($domain, $dir)
+
+add domain into $fml_primary_ml_home_prefix_map.
+
+=cut
+
+
 # Descriptions: add { $domian => $dir } map to $fml_primary_ml_home_prefix_map.
 #    Arguments: OBJ($self) STR($domain) STR($dir)
-# Side Effects: update $fml_primary_ml_home_prefix_map
+# Side Effects: update $fml_primary_ml_home_prefix_map map.
 # Return Value: none
 sub add
 {
@@ -106,7 +133,7 @@ sub add
 
     $self->_sanity_check();
 
-    # ml_home_prefix map
+    # 1. add domain into ml_home_prefix map.
     use IO::Adapter;
     my $obj = new IO::Adapter $pri_map;
     $obj->touch();
@@ -136,24 +163,26 @@ sub add
     $obj->close();
 
     # change onwer and group of the created directory.
-    if ($< == 0) {  # running as user "root".
+    if ($< == 0) {  # we can do this only when running as user "root".
 	my $owner = $curproc->fml_owner();
 	my $group = $curproc->fml_group();
 	$curproc->chown($owner, $group, $pri_map);
     }
 
-    # check the directory.
+    # 2. reuse or create the domain prefix directory.
+    # 2.1 check the directory.
     if (-d $dir) {
 	$curproc->logwarn("$dir already exist. reuse it.");
     }
     else {
 	# XXX proper mode ?
 	$curproc->mkdir($dir);
+
 	if (-d $dir) {
 	    $curproc->log("$dir created");
 
 	    # change onwer and group of the created directory.
-	    if ($< == 0) {  # running as user "root".
+	    if ($< == 0) {  # we can do this only when running as user "root".
 		my $owner = $curproc->fml_owner();
 		my $group = $curproc->fml_group();
 		$curproc->chown($owner, $group, $dir);
@@ -165,6 +194,13 @@ sub add
 	}
     }
 }
+
+
+=head2 delete($domain)
+
+delete the specified domain from $fml_primary_ml_home_prefix_map.
+
+=cut
 
 
 # Descriptions: delete { $domian => $dir } map
@@ -202,7 +238,7 @@ sub delete
     $obj->close();
 
     # change onwer and group of the created directory.
-    if ($< == 0) {  # running as user "root".
+    if ($< == 0) {  # we can do this only when running as user "root".
 	my $owner = $curproc->fml_owner();
 	my $group = $curproc->fml_group();
 	$curproc->chown($owner, $group, $pri_map);
