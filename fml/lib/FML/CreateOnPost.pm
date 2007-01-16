@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: CreateOnPost.pm,v 1.2 2006/07/09 12:11:12 fukachan Exp $
+# $FML: CreateOnPost.pm,v 1.3 2006/11/26 09:20:20 fukachan Exp $
 #
 
 package FML::CreateOnPost;
@@ -23,6 +23,8 @@ my $cop = new FML::CreateOnPost $curproc;
 $cop->distribute_ml($ml);
 
 =head1 DESCRIPTION
+
+This class provides CREATE-ON-POST.
 
 =head1 METHODS
 
@@ -45,7 +47,21 @@ sub new
 }
 
 
-# Descriptions: create ml.
+=head2 create_ml($ml_addr)
+
+create a ML.
+
+Actually it runs "makefml newml" process to create a new ML.
+The ML's ml_home_dir contais log, articles and so on to log them.
+But include files in the ml_home_dir are not used.
+
+Only FML::Process::CreateOnPost process emulates all ML's 
+but saves articles and log messages in each ml_home_dir.  
+
+=cut
+
+
+# Descriptions: create a ML.
 #    Arguments: OBJ($self) STR($ml_addr)
 # Side Effects: none
 # Return Value: none
@@ -74,6 +90,13 @@ sub create_ml
     };
     $curproc->logerror($@) if $@;
 }
+
+
+=head2 distribute_ml($ml_addr)
+
+run distribute process.
+
+=cut
 
 
 # Descriptions: run distribute process.
@@ -106,6 +129,7 @@ sub distribute_ml
 	unless ($queue->open($class, { in_channel => *STDIN{IO} })) {
 	    my $qid = $queue->id();
 	    $curproc->logerror("cannot open qid=$qid");
+	    return;
 	}
     }
     else {
