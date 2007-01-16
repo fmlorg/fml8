@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: POP3.pm,v 1.6 2005/12/18 12:03:52 fukachan Exp $
+# $FML: POP3.pm,v 1.7 2006/01/09 14:00:54 fukachan Exp $
 #
 
 package FML::MUA::POP3;
@@ -23,11 +23,53 @@ FML::MUA::POP3 - retrieve a message by pop3 protocol.
 
 =head1 SYNOPSIS
 
+use FML::MUA::POP3;
+my $mua = new FML::MUA::POP3 $curproc;
+MUA:
+    for my $server (@$servers) {
+        if (defined $mua) {
+            $mua->login({
+                server   => $server,
+                username => $username,
+                password => $password,
+            });
+        }
+        else {
+            $curproc->logerror("object undefined.");
+        }
+
+        if ($mua->error()) {
+            $curproc->logerror($mua->error());
+            next MUA;
+        }
+    }
+
+if ($mua->error()) {
+    $curproc->logerror($mua->error());
+    $curproc->stop_this_process();
+    return;
+}
+
+$mua->retrieve( { class => $class } );
+if ($mua->error()) {
+    $curproc->logerror($mua->error());
+    $curproc->stop_this_process();
+    return;
+}
+
+$mua->quit();
+if ($mua->error()) {
+    $curproc->logerror($mua->error());
+}
+
 =head1 DESCRIPTION
+
+This class provides POP3 protocol interface.
+It behaves a MUA.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 constructor.
 
@@ -44,6 +86,13 @@ sub new
     my $me     = { _curproc => $curproc };
     return bless $me, $type;
 }
+
+
+=head2 login($r_args)
+
+login to pop3 server.
+
+=cut
 
 
 # Descriptions: login to pop3 server.
@@ -65,6 +114,8 @@ sub login
 	    my $status = undef;
 	    my $capa   = $pop->capa();
 
+	    # 1. try APOP if APOP is supported (we can know it via CAPA).
+	    # 2. try ordinary POP if APOP fails or not supported. 
 	    if ($capa->{ APOP }) {
 		$status = $pop->apop($username, $password);
 	    }
@@ -90,6 +141,13 @@ sub login
 }
 
 
+=head2 retrieve($r_args)
+
+retrieve messages.
+
+=cut
+
+
 # Descriptions: retrieve messages.
 #    Arguments: OBJ($self) HASH_REF($r_args);
 # Side Effects: none
@@ -98,51 +156,61 @@ sub retrieve
 {
     my ($self, $r_args) = @_;
     my $curproc   = $self->{ _curproc };
-    my $pop       = $self->{ _pop }   || undef;
+    my $pop       = $self->{ _pop }    || undef;
     my $class     = $r_args->{ class } || undef;
     my $tmp_queue = "incoming";
 
-    if (defined $pop && defined $class) {
-	my $msgnums = $pop->list; # hashref of msgnum => size
+    # ASSERT
+    unless (defined $pop) {
+	$self->error_set("invalid state");
+	return undef;
+    }
+    unless (defined $class) {
+	$self->error_set("invalid class");
+	return undef;
+    } 
 
-      MSG:
-	foreach my $msgnum (keys %$msgnums) {
-	    my $q = $self->_new_queue_file($r_args);
-	    if (defined $q) {
-		my $wh = $q->open($tmp_queue, { mode => "w" });
-		if (defined $wh) {
-		    $wh->autoflush(1);
+    my $msgnums = $pop->list; # hashref of msgnum => size
+  MSG:
+    foreach my $msgnum (keys %$msgnums) {
+	my $q = $self->_new_queue_file($r_args);
+	if (defined $q) {
+	    my $wh = $q->open($tmp_queue, { mode => "w" });
+	    if (defined $wh) {
+		$wh->autoflush(1);
 
-		    $wh->clearerr();
-		    $pop->get($msgnum, $wh);
-		    if ($wh->error()) {
-			$curproc->logerror("failed to retrieve.");
-			$q->remove();
-		    }
-		    else {
-			my $id = $q->id();
-			$q->dup_content($tmp_queue, $class);
-			$q->remove();
-			$pop->delete($msgnum);
-			$curproc->log("fetched: qid=$id");
-		    }
-
-		    $wh->close();
+		$wh->clearerr();
+		$pop->get($msgnum, $wh);
+		if ($wh->error()) {
+		    $curproc->logerror("failed to retrieve NUM=$msgnum.");
+		    $q->remove();
 		}
 		else {
-		    last MSG;
+		    my $id = $q->id();
+		    $q->dup_content($tmp_queue, $class);
+		    $q->remove();
+		    $pop->delete($msgnum);
+		    $curproc->log("fetched: qid=$id");
 		}
+
+		$wh->close();
 	    }
 	    else {
-		$curproc->logerror("queue not prepared");
+		last MSG;
 	    }
 	}
-    }
-    else {
-	$self->error_set("invalid state") unless defined $pop;
-	$self->error_set("invalid class") unless defined $class;
+	else {
+	    $curproc->logerror("queue not prepared");
+	}
     }
 }
+
+
+=head2 quit($r_args)
+
+close pop session.
+
+=cut
 
 
 # Descriptions: close pop session.
@@ -165,7 +233,7 @@ sub quit
 =cut
 
 
-# Descriptions: new queue file path.
+# Descriptions: create a new queue and return the object.
 #    Arguments: OBJ($self) HASH_REF($r_args);
 # Side Effects: none
 # Return Value: OBJ
@@ -174,8 +242,18 @@ sub _new_queue_file
     my ($self, $r_args) = @_;
     my $curproc   = $self->{ _curproc };
     my $config    = $curproc->config();
-    my $queue_dir = $config->{ fetchfml_queue_dir };
-    my $class     = $r_args->{ class } || undef;
+    my $queue_dir = $config->{ fetchfml_queue_dir } || '';
+    my $class     = $r_args->{ class }              || '';
+
+    # ASSERT
+    unless ($class) {
+	$self->error_set("invalid class");
+	return undef;
+    } 
+    unless ($queue_dir) {
+	$self->error_set("queue_dir undefined");
+	return undef;
+    } 
 
     use Mail::Delivery::Queue;
     my $queue = new Mail::Delivery::Queue {
@@ -184,6 +262,11 @@ sub _new_queue_file
     };
     return $queue;
 }
+
+
+=head2 pickup_queue($r_args)
+
+=cut
 
 
 # Descriptions: pick up one queue and return the queue id.
@@ -195,8 +278,18 @@ sub pickup_queue
     my ($self, $r_args) = @_;
     my $curproc   = $self->{ _curproc };
     my $config    = $curproc->config();
-    my $class     = $r_args->{ class } || $opt_class->[ 0 ];
-    my $queue_dir = $config->{ fetchfml_queue_dir };
+    my $class     = $r_args->{ class } || $opt_class->[ 0 ] || '';
+    my $queue_dir = $config->{ fetchfml_queue_dir }         || '';
+
+    # ASSERT
+    unless ($class) {
+	$self->error_set("invalid class");
+	return undef;
+    } 
+    unless ($queue_dir) {
+	$self->error_set("queue_dir undefined");
+	return undef;
+    } 
 
     use Mail::Delivery::Queue;
     my $queue      = new Mail::Delivery::Queue {
@@ -235,12 +328,13 @@ return the last error reason.
 
 # Descriptions: save error reason.
 #    Arguments: OBJ($self) STR($reason)
-# Side Effects: update reason.
+# Side Effects: update $self.
 # Return Value: none
 sub error_set
 {
     my ($self, $reason) = @_;
-    $self->{ _error_reason } = $reason;
+
+    $self->{ _error_reason } = $reason || '';
 }
 
 
@@ -251,7 +345,8 @@ sub error_set
 sub error
 {
     my ($self) = @_;
-    $self->{ _error_reason } || '';
+
+    return( $self->{ _error_reason } || '' );
 }
 
 
