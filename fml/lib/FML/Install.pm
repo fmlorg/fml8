@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Install.pm,v 1.18 2004/11/25 12:05:12 fukachan Exp $
+# $FML: Install.pm,v 1.19 2005/05/26 09:39:08 fukachan Exp $
 #
 
 package FML::Install;
@@ -70,7 +70,7 @@ FML::Install - utility functions used in installation.
 
 =head1 DESCRIPTION
 
-Our installer C<install.pl> at the fml8 top directory uses this
+Our installer C<install.pl> at the fml8 source top directory uses this
 module.
 
 =head1 METHODS
@@ -92,7 +92,7 @@ sub new
     my ($type) = ref($self) || $self;
     my $me     = {};
 
-    # show several messages by default
+    # show processing messages by default.
     enable_message($me);
 
     return bless $me, $type;
@@ -128,7 +128,7 @@ read the specified config file, initialize and return config object.
 
 # Descriptions: read the specified config file and initialize config object.
 #    Arguments: OBJ($self) STR($cf)
-# Side Effects: initialize configuration object
+# Side Effects: initialize configuration object.
 # Return Value: OBJ
 sub load_install_cf
 {
@@ -147,7 +147,7 @@ sub load_install_cf
 	return $config;
     }
     else {
-	croak("no such file: $cf");
+	croak("no installer configuration file: $cf");
     }
 
     return undef;
@@ -164,7 +164,7 @@ In addition, chmod() if $mode specified.
 =cut
 
 
-# Descriptions: create $dst with variable substitutions.
+# Descriptions: create $dst file from $src with variable substitutions.
 #    Arguments: OBJ($self) STR($src) STR($dst) NUM($mode)
 # Side Effects: create $dst file.
 # Return Value: none
@@ -183,6 +183,7 @@ sub convert
 	my $version = $self->get_version();
 
 	my $buf = '';
+      LINE:
 	while ($buf = <$in>) {
 	    $buf =~ s/__fml_version__/$version/;
 	    print $out $buf;
@@ -576,7 +577,7 @@ sub need_resymlink_loader
     my $cur_sum = $self->md5( $cur_loader ) || '';
     my $new_sum = $self->md5( $loader )     || '';
 
-    # need to update loader.
+    # need to update loader if the current and new loader md5 differs.
     if ($cur_sum ne $new_sum) {
 	use Term::ReadLine;
 	my $term   = new Term::ReadLine 'Simple Perl calc';
@@ -859,8 +860,6 @@ sub path
 
 =head1 UTILITY FUNCTIONS FOR FILE HANDLING
 
-=head2 copy
-
 =cut
 
 
@@ -878,6 +877,7 @@ sub _copy
     use File::Copy;
     copy($src, $dst);
 
+    # sync the destination meta data to the source file one.
     if (-f $dst) {
 	my $atime = $st->atime;
 	my $mtime = $st->mtime;
@@ -1019,7 +1019,8 @@ sub md5
     my $fh  = new FileHandle $file;
     if (defined $fh) {
 	my $xbuf;
-	while ($xbuf = <$fh>) { $buf .= $xbuf;}
+      BUF:
+	while (sysread($fh, $xbuf, 8192)) { $buf .= $xbuf;}
 	$fh->close();
     }
 
@@ -1077,8 +1078,9 @@ sub _import_message_from_file
     my $fh = new FileHandle $file;
     if (defined $fh) {
         my $xbuf;
-        while ($xbuf = <$fh>) { $buf .= $xbuf;}
-        $fh->close();
+      BUF:
+	while (sysread($fh, $xbuf, 8192)) { $buf .= $xbuf;}
+	$fh->close();
     }
 
     return $buf;
