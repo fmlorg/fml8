@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.92 2006/04/17 12:00:50 fukachan Exp $
+# $FML: Header.pm,v 1.93 2006/07/09 12:11:12 fukachan Exp $
 #
 
 package FML::Header;
@@ -56,12 +56,13 @@ C<FML::Header> overloads C<get()> to remove the trailing "\n".
 
 =head2 new()
 
+constructor.
 forward the request up to superclass C<Mail::header::new()>.
 
 =cut
 
 
-# Descriptions: forward new() request to the base class.
+# Descriptions: forward new() request to the base class Mail::header.
 #    Arguments: OBJ($self) HASH_REF($rw_args)
 # Side Effects: none
 # Return Value: OBJ
@@ -122,7 +123,11 @@ sub set
 =head2 address_cleanup(address)
 
 clean up given C<address>. This method parses the given address by
-C<Mail::Address::parse()>, remove < and > and return the result.
+C<Mail::Address::parse()>, remove < and > and return the result 
+if the result is not empty. 
+
+return the raw "<>" if the specified address is "<>" 
+since we should not remove <> from "<>" special address.
 
 =cut
 
@@ -218,7 +223,7 @@ add X-ML-Count: field.
 #
 
 
-# Descriptions: add "X-ML-Name: elena" to header.
+# Descriptions: add "X-ML-Name: ML_NAME" to the mail header.
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
@@ -402,7 +407,7 @@ sub add_message_id
 }
 
 
-# Descriptions: add "X-Sequence: elena NUM" to header.
+# Descriptions: add "X-Sequence: ML_NAME NUM" to header.
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
@@ -420,10 +425,11 @@ sub add_x_sequence
 =head2 rewrite_subject_tag($config, $rw_args)
 =head2 rewrite_article_subject_tag($config, $rw_args)
 
-add subject tag like [elena:00010].
+add subject tag like [ML_NAME:00010] e.g. [elena:00010] for elena ML.
 The actual function definitions exist in C<FML::Header::Subject>.
 
 =cut
+
 
 # Descriptions: rewrite subject if needed.
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
@@ -526,7 +532,7 @@ sub rewrite_reply_to
 
 =head2 rewrite_reply_to_enforce_article_post_address
 
-enfoece replacement of C<Reply-To:> with this ML's address for post.
+enforce replacement of C<Reply-To:> with this ML's address for post.
 
 =cut
 
