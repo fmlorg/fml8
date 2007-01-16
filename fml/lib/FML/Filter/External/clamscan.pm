@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: clamscan.pm,v 1.5 2005/05/26 12:17:34 fukachan Exp $
+# $FML: clamscan.pm,v 1.6 2005/08/10 12:55:32 fukachan Exp $
 #
 
 package FML::Filter::External::clamscan;
@@ -18,7 +18,13 @@ FML::Filter::External::clamscan - clamav interface.
 
 =head1 SYNOPSIS
 
+use FML::Filter::External::clamscan;
+my $ext_filter = new FML::Filter::External::clamscan;
+$ext_filter->process($curproc, $msg);
+
 =head1 DESCRIPTION
+
+This module checks the specified message $msg by clamav.
 
 =head1 METHODS
 
@@ -42,13 +48,21 @@ sub new
 }
 
 
+=head2 process($curproc, $msg)
+
+top level dispather.
+It checks if the current message $msg looks a virus by clamav.
+
+=cut
+
+
 # Descriptions: check if the current message looks a virus.
-#    Arguments: OBJ($self) OBJ($curproc)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($msg)
 # Side Effects: none
 # Return Value: NUM(1 or 0) (1 if spam)
 sub process
 {
-    my ($self, $curproc) = @_;
+    my ($self, $curproc, $msg) = @_;
     my $config  = $curproc->config();
     my $program = $config->{ path_clamscan } || '';
     my $_opts   = "--quiet --mbox";
@@ -100,13 +114,12 @@ sub _check
 		my $r = "virus found by clamav";
 		$curproc->logerror($r);
 		$curproc->filter_state_virus_checker_set_error($r);
+		return 1;
 	    }
 	    else {
-		$curproc->logerror("bogofilter error: code=$?");
+		$curproc->logerror("clamscan error: code=$?");
 		return 0;
 	    }
-
-	    return 1;
 	}
     }
 
