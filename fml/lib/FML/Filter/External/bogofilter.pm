@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: bogofilter.pm,v 1.3 2004/07/23 13:16:38 fukachan Exp $
+# $FML: bogofilter.pm,v 1.4 2004/07/23 15:59:06 fukachan Exp $
 #
 
 package FML::Filter::External::bogofilter;
@@ -18,7 +18,13 @@ FML::Filter::External::bogofilter - bogofilter interface.
 
 =head1 SYNOPSIS
 
+use FML::Filter::External::bogofilter;
+my $ext_filter = new FML::Filter::External::bogofilter;
+$ext_filter->process($curproc, $msg);
+
 =head1 DESCRIPTION
+
+This module checks the specified message $msg by bogofilter.
 
 =head1 METHODS
 
@@ -40,6 +46,14 @@ sub new
     my $me     = {};
     return bless $me, $type;
 }
+
+
+=head2 process($curproc, $msg)
+
+top level dispather.
+It checks if the current message $msg looks a spam by bogofilter.
+
+=cut
 
 
 # Descriptions: check if the current message looks a spam.

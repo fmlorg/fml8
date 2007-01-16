@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: spamc.pm,v 1.3 2004/07/23 13:16:38 fukachan Exp $
+# $FML: spamc.pm,v 1.4 2004/07/23 15:59:06 fukachan Exp $
 #
 
 package FML::Filter::External::spamc;
@@ -18,7 +18,14 @@ FML::Filter::External::spamc - SpamAssassin interface.
 
 =head1 SYNOPSIS
 
+use FML::Filter::External::spamc;
+my $ext_filter = new FML::Filter::External::spamc;
+$ext_filter->process($curproc, $msg);
+
 =head1 DESCRIPTION
+
+This module checks the specified message $msg by spamc,
+which calls spamd (spamassassin).
 
 =head1 METHODS
 
@@ -42,6 +49,14 @@ sub new
 }
 
 
+=head2 process($curproc, $msg)
+
+top level dispather.
+It checks if the current message $msg looks a spam by spamc (spamassasin).
+
+=cut
+
+
 # Descriptions: check if the current message looks a spam.
 #    Arguments: OBJ($self) OBJ($curproc) OBJ($msg)
 # Side Effects: none
@@ -52,6 +67,7 @@ sub process
     my $config  = $curproc->config();
     my $program = $config->{ path_spamc } || '';
     my $opts    = $config->{ article_spam_filter_spamc_options } || '';
+
     if ($program) {
 	if (-x $program) {
 	    my $_program = sprintf("%s %s", $program, $opts);

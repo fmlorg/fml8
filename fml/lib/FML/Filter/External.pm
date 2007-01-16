@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: External.pm,v 1.5 2004/08/13 15:02:48 fukachan Exp $
+# $FML: External.pm,v 1.6 2005/05/27 01:47:04 fukachan Exp $
 #
 
 package FML::Filter::External;
@@ -19,11 +19,20 @@ FML::Filter::External - spawn external checker program.
 
 =head1 SYNOPSIS
 
+use FML::Filter::External;
+$ext_filter = new FML::Filter::External;
+$ext_filter->spawn($curproc, $mesg, $driver);
+if ($ext_filter->error()) {
+   ... error handling ...
+}
+
 =head1 DESCRIPTION
+
+This module spawns an specified external checker program.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 constructor.
 
@@ -41,6 +50,18 @@ sub new
     my $me     = { _curproc => $curproc };
     return bless $me, $type;
 }
+
+
+=head2 spawn($curproc, $msg, $driver)
+
+spawn external driver e.g. virus checker, spam checker,
+which checks the specified message $msg.
+
+When somthing strange happens and the process not returns, 
+this sub-routine timeouts and return temporary failure.
+The timeout is 120 seconds by default (not customizable now). 
+
+=cut
 
 
 # Descriptions: spawn external driver e.g. virus checker, spam checker.

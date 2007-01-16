@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: ErrorStatus.pm,v 1.1 2005/05/27 01:47:04 fukachan Exp $
 #
 
 package FML::Filter::ErrorStatus;
@@ -74,7 +74,7 @@ return $message which is saved by C<error_set($msg)>.
 
 # Descriptions: set the error message within $self object.
 #    Arguments: OBJ($self) STR($mesg)
-# Side Effects: update OBJ
+# Side Effects: update $self.
 # Return Value: STR
 sub error_set
 {
@@ -107,7 +107,7 @@ sub errstr
 
 # Descriptions: clear the error message buffer.
 #    Arguments: OBJ($self)
-# Side Effects: none
+# Side Effects: update $self.
 # Return Value: STR (cleared message)
 sub error_clear
 {
