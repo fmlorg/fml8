@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Size.pm,v 1.10 2004/07/23 12:41:33 fukachan Exp $
+# $FML: Size.pm,v 1.11 2005/05/27 01:47:04 fukachan Exp $
 #
 
 package FML::Filter::Size;
@@ -19,6 +19,19 @@ use FML::Filter::ErrorStatus qw(error_set error error_clear);
 FML::Filter::Size - filter based on mail size.
 
 =head1 SYNOPSIS
+
+use FML::Filter::Size;
+my $filter = new FML::Filter::Size $curproc;
+if (defined $filter) {
+    $filter->set_class('incoming_article');
+    my $rules = $config->get_as_array_ref('article_size_filter_rules');
+
+    if (defined $rules) {
+	$filter->set_rules( $rules );
+    }
+
+    $filter->size_check($mesg);
+}
 
 =head1 DESCRIPTION
 
@@ -70,7 +83,7 @@ overwrite rules by specified C<@$rules> ($rules is ARRAY_REF).
 
 # Descriptions: overwrite rules.
 #    Arguments: OBJ($self) ARRAY_REF($rarray)
-# Side Effects: overwrite info in object
+# Side Effects: overwrite information in object.
 # Return Value: ARRAY_REF
 sub set_rules
 {
@@ -94,7 +107,7 @@ set class e.g. incoming_article, outgoing_article, ...
 
 # Descriptions: set class.
 #    Arguments: OBJ($self) STR($class)
-# Side Effects: update $self->{ _class }
+# Side Effects: update $self->{ _class }.
 # Return Value: STR
 sub set_class
 {
@@ -113,7 +126,7 @@ C<Usage>:
     my $obj  = new FML::Filter::Size;
     my $msg  = $curproc->{'incoming_message'};
 
-    $obj->Size_check($msg);
+    $obj->size_check($msg);
     if ($obj->error()) {
        # do something for wrong formated message ...
     }
@@ -123,7 +136,7 @@ C<Usage>:
 
 # Descriptions: top level dispatcher.
 #    Arguments: OBJ($self) OBJ($msg)
-# Side Effects: none
+# Side Effects: set error flag if size over is found.
 # Return Value: none
 sub size_check
 {
@@ -213,6 +226,7 @@ sub _check_mail_size
 	}
     }
 
+    # XXX-TODO: $errmsg_key is not used. 
     if ($reason) {
 	$self->error_set($reason);
 	croak($reason);
