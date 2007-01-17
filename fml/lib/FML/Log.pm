@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #
-# $FML: Log.pm,v 1.35 2006/05/04 05:25:40 fukachan Exp $
+# $FML: Log.pm,v 1.36 2006/07/09 12:11:12 fukachan Exp $
 #
 
 package FML::Log;
@@ -23,7 +23,7 @@ FML::Log - logging functions.
 
 =head1 SYNOPSIS
 
-To import Log(),
+To import log function Log(),
 
    use FML::Log qw(Log LogWarn LogError);
    Log( $log_message );
@@ -41,9 +41,9 @@ or specify arguments in the hash reference
 =head1 DESCRIPTION
 
 FML::Log contains several interfaces to write log messages, for
-example, log files, syslog() (not yet implemented).
+example, log files and syslog.
 
-=head2 Log( $message [, $args])
+=head2 Log($message [, $args])
 
 The required argument is the message to log.
 You can specify C<log_file>, C<facility> and C<level> as an optional.
@@ -73,9 +73,9 @@ same as Log("error: $message", $args);
 =cut
 
 
-# Descriptions: write message $msg to logfile.
+# Descriptions: write message $msg to logfile et.al.
 #    Arguments: STR($mesg) HASH_REF($args)
-# Side Effects: update logfile
+# Side Effects: update logfile.
 # Return Value: none
 sub Log
 {
@@ -110,8 +110,11 @@ sub Log
 	    closelog();
 	}
     }
-    unless ($config->{ log_type } =~ /file/) {
-	# e.g. log_type = syslog (== syslog only)
+    elsif ($config->{ log_type } =~ /file/) {
+	; # do nothing
+    }
+    else {
+	carp("undefined log function type.");
 	return;
     }
 
@@ -158,9 +161,9 @@ sub Log
     if (defined $fh) {
 	# fml <= 4.x style
 	if ($style eq 'fml4_compatible') {
-	    print $fh $rdate->{'log_file_style'}, " ", $mesg;
-	    print $fh " ($sender)" if defined $sender;
-	    print $fh "\n";
+	    my $date = $rdate->{'log_file_style'};
+	    my $from = defined $sender ? "($sender)" : ""; 
+	    printf $fh "%s %s %s\n", $date, $mesg, $from;
 	}
 	# fml 8.x style
 	else {
@@ -168,8 +171,7 @@ sub Log
 	    my $name = basename($0);
 	    my $pid  = $config->{ _pid };
 	    my $iam  = sprintf("%s[%d]", $name, $pid);
-	    print $fh $rdate->{'log_file_style'}, " ", $iam, " ", $mesg;
-	    print $fh "\n";
+	    printf $fh "%s %s %s\n", $rdate->{'log_file_style'}, $iam, $mesg;
 	}
     }
     else {
