@@ -1,29 +1,27 @@
-fs.home.fml.org has address 10.255.0.3
-
                        The Perl 5 Registered Module List
 
    Maintained by Tim Bunce and Andreas Koenig <modules@perl.org>;
-   $Rev:  515 $ $Date: 2004-10-18 08:52:51 +0200 (Mon, 18 Oct 2004) $ -*-
+   $Rev: 515 $ $Date: 2004-10-18 08:52:51 +0200 (Mon, 18 Oct 2004) $ -*-
    coding:utf-8 -*-
-     _________________________________________________________________
+     __________________________________________________________________
 
 IMPORTANT NOTICE
 
-   This  Perl  5  Registered  Module List document is currently not being
+   This Perl 5 Registered Module List document is currently not being
    maintained and is several years out of date.
 
-   You    can    search   current   information   on   all   modules   at
+   You can search current information on all modules at
    kobesearch.cpan.org and search.cpan.org.
 
-   The  CPAN  ("Comprehensive  Perl Archive Network") global file archive
-   that   underlies   these   services   can   be  directly  accessed  at
-   www.cpan.org.  The  CPAN  FAQ is particularly worth reading to gain an
-   understanding  of  what  CPAN  is,  and isn't, how it works and how it
-   relates to the services built over it.
+   The CPAN ("Comprehensive Perl Archive Network") global file archive
+   that underlies these services can be directly accessed at www.cpan.org.
+   The CPAN FAQ is particularly worth reading to gain an understanding of
+   what CPAN is, and isn't, how it works and how it relates to the
+   services built over it.
 
-   For  background  information  about why this document is currently not
+   For background information about why this document is currently not
    being maintained see this message and this one.
-     _________________________________________________________________
+     __________________________________________________________________
 
   Contents
 
@@ -79,11 +77,11 @@ IMPORTANT NOTICE
 
    4.1) Information / Contact Reference Details
    4.2) Perl Frequently Asked Questions (FAQ) Files
-     _________________________________________________________________
+     __________________________________________________________________
 
     Introduction
 
-   This  document  is  a  semi-formal  list of Perl 5 Modules. The Perl 4
+   This document is a semi-formal list of Perl 5 Modules. The Perl 4
    concept of packages has been extended in Perl 5 and a new standardised
    form of reusable software component has been defined: the Module.
 
@@ -93,238 +91,234 @@ IMPORTANT NOTICE
     This list has two key aims:
 
      * FOR DEVELOPERS: To change duplication of effort into cooperation.
-     * FOR  USERS:  To  quickly  locate  existing  software  which can be
-       reused.
+     * FOR USERS: To quickly locate existing software which can be reused.
 
-   This  list  includes  the  Perl  5  standard  modules, other completed
-   modules,  work-in-progress modules and would-be-nice-to-have ideas for
-   modules.  It  also includes guidelines for those wishing to create new
+   This list includes the Perl 5 standard modules, other completed
+   modules, work-in-progress modules and would-be-nice-to-have ideas for
+   modules. It also includes guidelines for those wishing to create new
    modules including how to name them.
 
     Where Are The Modules Kept?
 
-   Most,  but  not  all,  of  the  modules  can be found within CPAN, the
-   Comprehensive  Perl  Archive Network of mirrored FTP sites. Within the
-   CPAN  scheme  the  modules  described in this list can be found in the
-   modules/  directory below the CPAN root directory. CPAN is a worlswide
-   network  of  mirrors  and you can find your closest mirror in the file
+   Most, but not all, of the modules can be found within CPAN, the
+   Comprehensive Perl Archive Network of mirrored FTP sites. Within the
+   CPAN scheme the modules described in this list can be found in the
+   modules/ directory below the CPAN root directory. CPAN is a worlswide
+   network of mirrors and you can find your closest mirror in the file
    http://www.cpan.org/SITES.html
 
-   NOTE:  If  you  can't  find  what you want, or wish to check that what
-   you've  found  is the latest version, or wonder why a module mentioned
-   in  this list is not on CPAN, you should contact the person associated
-   with  the  module  (and  not  the  maintainers of the archives or this
-   list). Contact details are given at the start of Part 4.
+   NOTE: If you can't find what you want, or wish to check that what
+   you've found is the latest version, or wonder why a module mentioned in
+   this list is not on CPAN, you should contact the person associated with
+   the module (and not the maintainers of the archives or this list).
+   Contact details are given at the start of Part 4.
 
     Playing Your Part
 
-   Perl  is  a  huge  collaborative  effort.  Everyone  who  uses perl is
-   benefiting  from  the contributions of many hundreds, maybe thousands,
-   of  people.  How  much time has perl saved you since you started using
-   it?
+   Perl is a huge collaborative effort. Everyone who uses perl is
+   benefiting from the contributions of many hundreds, maybe thousands, of
+   people. How much time has perl saved you since you started using it?
 
-   Do  you have any modules you could share with others? For example, you
+   Do you have any modules you could share with others? For example, you
    may have some perl4 scripts from which generally useful, and reusable,
-   modules  could  be  extracted. There may be many people who would find
-   your  work  very  useful.  Please play your part and contribute to the
-   Perl community where you can. [ end of sermon :-]
+   modules could be extracted. There may be many people who would find
+   your work very useful. Please play your part and contribute to the Perl
+   community where you can. [ end of sermon :-]
 
    Help save the world! Please submit new entries and updates to us so we
-   can  keep  this  list  up-to-date.  Send the new or corrected entry by
-   email  to  modules@perl.org . Please do not send code to this address.
-   Instead  upload  your  module,  once registered, to the PAUSE site for
-   forwarding on to CPAN. See section 2, especially 2.6 and 2.11.
+   can keep this list up-to-date. Send the new or corrected entry by email
+   to modules@perl.org . Please do not send code to this address. Instead
+   upload your module, once registered, to the PAUSE site for forwarding
+   on to CPAN. See section 2, especially 2.6 and 2.11.
 
     How To Get a More Recent Copy of the List
 
-   This  Registered Module List is fed into CPAN on a semi-regular basis.
+   This Registered Module List is fed into CPAN on a semi-regular basis.
    Its relative path within a CPAN mirror is in
    modules/00modlist.long.html .
 
     Editorial Information and Copyright
 
-   This  document  is  Copyright  (c)  1997-2000 by Tim Bunce and Andreas
-   Koenig.  All  rights reserved. Permission to distribute this document,
-   in full or part, via electronic means (emailed, posted or archived) or
-   printed  copy  is  granted  providing  that  no  charges are involved,
-   reasonable  attempt  is  made to use the most current version, and all
-   credits  and  copyright  notices  are  retained.  Requests  for  other
-   distribution  rights,  including incorporation in commercial products,
-   such  as  books,  magazine  articles,  or  CD-ROMs  should  be made to
+   This document is Copyright (c) 1997-2000 by Tim Bunce and Andreas
+   Koenig. All rights reserved. Permission to distribute this document, in
+   full or part, via electronic means (emailed, posted or archived) or
+   printed copy is granted providing that no charges are involved,
+   reasonable attempt is made to use the most current version, and all
+   credits and copyright notices are retained. Requests for other
+   distribution rights, including incorporation in commercial products,
+   such as books, magazine articles, or CD-ROMs should be made to
    Tim.Bunce@pobox.com and andreas.koenig@anima.de .
 
-   Disclaimer:  The  content  of  this document is simply a collection of
-   information  gathered  from  many  sources with little or no checking.
+   Disclaimer: The content of this document is simply a collection of
+   information gathered from many sources with little or no checking.
    There are NO warranties with regard to this information or its use.
 
-   A  little background information... I (Tim) created the Module List in
-   August  1994  and maintained it manually till April 1996. By that time
-   Andreas  had implemented the Perl Authors Upload Server (PAUSE) and it
-   was  happily  feeding  modules  through to the CPAN archive sites (see
-   http://www.cpan.org/modules/04pause.html  for  details).  Since  PAUSE
-   held  a  database  of  module information which could be maintained by
-   module authors it made sense for the module listing part of the Module
-   List  to  be built from that database. In April 1996 Andreas took over
-   the  automatic posting of the Module List and I now maintain the other
-   parts of the text. We plan to add value to the automation over time.
+   A little background information... I (Tim) created the Module List in
+   August 1994 and maintained it manually till April 1996. By that time
+   Andreas had implemented the Perl Authors Upload Server (PAUSE) and it
+   was happily feeding modules through to the CPAN archive sites (see
+   http://www.cpan.org/modules/04pause.html for details). Since PAUSE held
+   a database of module information which could be maintained by module
+   authors it made sense for the module listing part of the Module List to
+   be built from that database. In April 1996 Andreas took over the
+   automatic posting of the Module List and I now maintain the other parts
+   of the text. We plan to add value to the automation over time.
 
 Part 1 - Modules: Creation, Use and Abuse
 
   1) Perl 5 Module Terminology
 
-   Perl  5  implements  a  class  using  a package, but the presence of a
-   package  doesn't  imply  the  presence of a class. A package is just a
-   namespace.  A class is a package that provides subroutines that can be
-   used  as  methods.  A method is just a subroutine that expects, as its
-   first  argument,  either the name of a package (for "static" methods),
-   or a reference to something (for "virtual" methods).
+   Perl 5 implements a class using a package, but the presence of a
+   package doesn't imply the presence of a class. A package is just a
+   namespace. A class is a package that provides subroutines that can be
+   used as methods. A method is just a subroutine that expects, as its
+   first argument, either the name of a package (for "static" methods), or
+   a reference to something (for "virtual" methods).
 
-   A  module  is a file that (by convention) provides a class of the same
-   name  (sans  the .pm), plus an import method in that class that can be
-   called  to  fetch  exported symbols. This module may implement some of
-   its  methods  by  loading dynamic C or C++ objects, but that should be
-   totally  transparent  to  the user of the module. Likewise, the module
-   might  set  up an AUTOLOAD function to slurp in subroutine definitions
-   on demand, but this is also transparent. Only the .pm file is required
-   to exist.
+   A module is a file that (by convention) provides a class of the same
+   name (sans the .pm), plus an import method in that class that can be
+   called to fetch exported symbols. This module may implement some of its
+   methods by loading dynamic C or C++ objects, but that should be totally
+   transparent to the user of the module. Likewise, the module might set
+   up an AUTOLOAD function to slurp in subroutine definitions on demand,
+   but this is also transparent. Only the .pm file is required to exist.
 
   2) Guidelines for Module Creation
 
     2.1 Do similar modules already exist in some form?
 
-   If  so, please try to reuse the existing modules either in whole or by
-   inheriting  useful features into a new class. If this is not practical
-   try  to  get  together with the module authors to work on extending or
+   If so, please try to reuse the existing modules either in whole or by
+   inheriting useful features into a new class. If this is not practical
+   try to get together with the module authors to work on extending or
    enhancing the functionality of the existing modules. A perfect example
-   is  the  plethora  of  packages in perl4 for dealing with command line
+   is the plethora of packages in perl4 for dealing with command line
    options.
 
-   If  you  are  writing  a  module  to expand an already existing set of
+   If you are writing a module to expand an already existing set of
    modules, please coordinate with the author of the package. It helps if
    you follow the same naming scheme and module interaction scheme as the
    original author.
 
     2.2 Try to design the new module to be easy to extend and reuse.
 
-   Use  blessed  references.  Use the two argument form of bless to bless
-   into  the  class name given as the first parameter of the constructor,
+   Use blessed references. Use the two argument form of bless to bless
+   into the class name given as the first parameter of the constructor,
    e.g.:
 
      sub new { my $class = shift; return bless {}, $class; }
 
-   or  even  this  if  you'd  like  it to be used as either a static or a
+   or even this if you'd like it to be used as either a static or a
    virtual method.
 
      sub new { my $self = shift; my $class = ref($self) || $self; return
      bless {}, $class; }
 
-   Pass  arrays as references so more parameters can be added later (it's
-   also  faster). Convert functions into methods where appropriate. Split
-   large  methods  into  smaller more flexible ones. Inherit methods from
+   Pass arrays as references so more parameters can be added later (it's
+   also faster). Convert functions into methods where appropriate. Split
+   large methods into smaller more flexible ones. Inherit methods from
    other modules if appropriate.
 
-   Avoid  class  name tests like: die "Invalid" unless ref $ref eq 'FOO'.
-   Generally  you can delete the "eq 'FOO'" part with no harm at all. Let
-   the  objects look after themselves! If it's vital then you can use the
-   UNIVERSAL  methods isa and can. Generally, avoid hardwired class names
+   Avoid class name tests like: die "Invalid" unless ref $ref eq 'FOO'.
+   Generally you can delete the "eq 'FOO'" part with no harm at all. Let
+   the objects look after themselves! If it's vital then you can use the
+   UNIVERSAL methods isa and can. Generally, avoid hardwired class names
    as far as possible.
 
-   Avoid   $r->Class::func()  where  using  @ISA=qw(...  Class  ...)  and
+   Avoid $r->Class::func() where using @ISA=qw(... Class ...) and
    $r->func() would work (see perlbot man page for more details).
 
-   Use  autosplit  or the SelfLoader module so little used or newly added
+   Use autosplit or the SelfLoader module so little used or newly added
    functions won't be a burden to programs which don't use them. Add test
-   functions  to  the  module  after __END__ either using autosplit or by
+   functions to the module after __END__ either using autosplit or by
    saying:
 
      eval join('',<main::DATA>) || die $@ unless caller();
 
-   Does  your  module  pass  the  'empty  sub-class'  test?  If  you  say
-   "@SUBCLASS::ISA  = qw(YOURCLASS);" your applications should be able to
-   use  SUBCLASS  in exactly the same way as YOURCLASS. For example, does
+   Does your module pass the 'empty sub-class' test? If you say
+   "@SUBCLASS::ISA = qw(YOURCLASS);" your applications should be able to
+   use SUBCLASS in exactly the same way as YOURCLASS. For example, does
    your application still work if you change: $obj = new YOURCLASS; into:
    $obj = new SUBCLASS; ?
 
-   Avoid  keeping  any  state  information  in your packages. It makes it
-   difficult  for  multiple  other  packages  to  use  yours.  Keep state
+   Avoid keeping any state information in your packages. It makes it
+   difficult for multiple other packages to use yours. Keep state
    information in objects.
 
-   Always  use  -w.  Try  to  "use  strict;"  (or "use strict qw(...);").
+   Always use -w. Try to "use strict;" (or "use strict qw(...);").
    Remember that you can add "no strict qw(...);" to individual blocks of
-   code  which need less strictness. Always use -w. Always use -w! Follow
+   code which need less strictness. Always use -w. Always use -w! Follow
    the guidelines in the perlstyle(1) manual.
 
     2.3 Some simple style guidelines
 
    The perlstyle manual supplied with perl has many helpful points.
 
-   Coding  style  is a matter of personal taste. Many people evolve their
-   style  over  several  years  as  they  learn what helps them write and
-   maintain  good  code. Here's one set of assorted suggestions that seem
-   to be widely used by experienced developers:
+   Coding style is a matter of personal taste. Many people evolve their
+   style over several years as they learn what helps them write and
+   maintain good code. Here's one set of assorted suggestions that seem to
+   be widely used by experienced developers:
 
-   Use  underscores  to  separate  words.  It is generally easier to read
+   Use underscores to separate words. It is generally easier to read
    $var_names_like_this than $VarNamesLikeThis, especially for non-native
-   speakers  of  English. It's also a simple rule that works consistently
+   speakers of English. It's also a simple rule that works consistently
    with VAR_NAMES_LIKE_THIS.
 
-   Package/Module  names  are  an exception to this rule. Perl informally
-   reserves  lowercase module names for 'pragma' modules like integer and
-   strict.  Other  modules  normally  begin with a capital letter and use
+   Package/Module names are an exception to this rule. Perl informally
+   reserves lowercase module names for 'pragma' modules like integer and
+   strict. Other modules normally begin with a capital letter and use
    mixed case with no underscores (need to be short and portable).
 
-   You  may  find  it helpful to use letter case to indicate the scope or
+   You may find it helpful to use letter case to indicate the scope or
    nature of a variable. For example:
 
-     $ALL_CAPS_HERE  constants  only  (beware  clashes  with  perl vars)
-     $Some_Caps_Here  package-wide  global/static $no_caps_here function
+     $ALL_CAPS_HERE constants only (beware clashes with perl vars)
+     $Some_Caps_Here package-wide global/static $no_caps_here function
      scope my() or local() variables
 
-   Function  and  method  names seem to work best as all lowercase. E.g.,
+   Function and method names seem to work best as all lowercase. E.g.,
    $obj->as_string().
 
-   You  can  use  a  leading  underscore  to  indicate that a variable or
+   You can use a leading underscore to indicate that a variable or
    function should not be used outside the package that defined it.
 
    For method calls use either
 
-     $foo   =   new   Foo   $arg1,   $arg2;  #  no  parentheses  $foo  =
-     Foo->new($arg1, $arg2);
+     $foo = new Foo $arg1, $arg2; # no parentheses $foo = Foo->new($arg1,
+     $arg2);
 
    but avoid the ambiguous form
 
      $foo = new Foo($arg1, $arg2); # Foo() looks like function call
 
-   It  can  be  very helpful if the names of the classes that your module
+   It can be very helpful if the names of the classes that your module
    uses can be specified as parameters. Consider:
 
-     $dog_class     =     $args{dog_class}    ||    'Dog';    $spot    =
+     $dog_class = $args{dog_class} || 'Dog'; $spot =
      $dog_class->new(...);
 
-   This  allows  the  user of your module to specify an alternative class
+   This allows the user of your module to specify an alternative class
    (typically a subclass of the one you would normally have used).
 
    On how to report constructor failure, Larry said:
 
-   I  tend  to  see  it as exceptional enough that I'll throw a real Perl
-   exception  (die)  if I can't construct an object. This has a couple of
-   advantages  right  off  the  bat.  First,  you don't have to check the
-   return  value of every constructor. Just say "$fido = new Doggie;" and
-   presume it succeeded. This leads to clearer code in most cases.
+   I tend to see it as exceptional enough that I'll throw a real Perl
+   exception (die) if I can't construct an object. This has a couple of
+   advantages right off the bat. First, you don't have to check the return
+   value of every constructor. Just say "$fido = new Doggie;" and presume
+   it succeeded. This leads to clearer code in most cases.
 
-   Second,  if  it  does  fail, you get a better diagnostic than just the
-   undefinedness  of  the  return value. In fact, the exception it throws
-   may  be  quite rich in "stacked" error messages, if it's rethrowing an
+   Second, if it does fail, you get a better diagnostic than just the
+   undefinedness of the return value. In fact, the exception it throws may
+   be quite rich in "stacked" error messages, if it's rethrowing an
    exception caught further in.
 
-   And  you  can  always catch the exception if it does happen using eval
-   {}.
+   And you can always catch the exception if it does happen using eval {}.
 
-   If,  on  the  other hand, you expect your constructor to fail a goodly
-   part  of  the  time, then you shouldn't use exceptions, but you should
-   document  the  interface  so that people will know to check the return
+   If, on the other hand, you expect your constructor to fail a goodly
+   part of the time, then you shouldn't use exceptions, but you should
+   document the interface so that people will know to check the return
    value. You don't need to use defined(), since a constructor would only
-   return  a  true  reference  or  a  false undef. So good Perl style for
+   return a true reference or a false undef. So good Perl style for
    checking a return value would simply say
 
      $conn = new Connection $addr or die "Couldn't create Connection";
@@ -334,7 +328,7 @@ Part 1 - Modules: Creation, Use and Abuse
 
      if (do_your_thing() == OK)
 
-   in  Perl.  That's just asking for logic errors and domain errors. Just
+   in Perl. That's just asking for logic errors and domain errors. Just
    write
 
      if (do_your_thing())
@@ -343,116 +337,113 @@ Part 1 - Modules: Creation, Use and Abuse
 
     2.4 Select what to export.
 
-   Do  NOT  export  method  names! Do NOT export anything else by default
+   Do NOT export method names! Do NOT export anything else by default
    without a good reason!
 
-   Exports  pollute  the namespace of the module user. If you must export
-   try  to  use  @EXPORT_OK  in  preference to @EXPORT and avoid short or
+   Exports pollute the namespace of the module user. If you must export
+   try to use @EXPORT_OK in preference to @EXPORT and avoid short or
    common names to reduce the risk of name clashes.
 
-   Generally  anything  not exported is still accessible from outside the
-   module   using  the  ModuleName::item_name  (or  $blessed_ref->method)
-   syntax.  By  convention  you  can use a leading underscore on names to
+   Generally anything not exported is still accessible from outside the
+   module using the ModuleName::item_name (or $blessed_ref->method)
+   syntax. By convention you can use a leading underscore on names to
    informally indicate that they are 'internal' and not for public use.
 
-   (It  is  actually  possible  to  get  private  functions by saying: my
-   $subref  =  sub  {  ...  };  &$subref; But there's no way to call that
-   directly  as  a  method, since a method must have a name in the symbol
-   table.)
+   (It is actually possible to get private functions by saying: my $subref
+   = sub { ... }; &$subref; But there's no way to call that directly as a
+   method, since a method must have a name in the symbol table.)
 
-   As  a general rule, if the module is trying to be object oriented then
+   As a general rule, if the module is trying to be object oriented then
    export nothing. If it's just a collection of functions then @EXPORT_OK
    anything but use @EXPORT with caution.
 
     2.5 Select a name for the module.
 
    This name should be as descriptive, accurate and complete as possible.
-   Avoid  any  risk  of  ambiguity.  Always  try to use two or more whole
-   words.  Generally  the  name should reflect what is special about what
-   the module does rather than how it does it.
+   Avoid any risk of ambiguity. Always try to use two or more whole words.
+   Generally the name should reflect what is special about what the module
+   does rather than how it does it.
 
-   Having  57  modules all called Sort will not make life easy for anyone
-   (though  having  23  called Sort::Quick is only marginally better :-).
-   Imagine  someone  trying to install your module alongside many others.
-   If  in  any  doubt  ask  for  suggestions in comp.lang.perl.modules or
+   Having 57 modules all called Sort will not make life easy for anyone
+   (though having 23 called Sort::Quick is only marginally better :-).
+   Imagine someone trying to install your module alongside many others. If
+   in any doubt ask for suggestions in comp.lang.perl.modules or
    modules@perl.org .
 
-   Please  use  a  nested module name to informally group or categorise a
-   module,  e.g.,  placing  a  sorting  module  into a Sort:: category. A
-   module  should  have  a  very  good  reason not to have a nested name.
-   Please  avoid  using  more  than one level of nesting for module names
-   (packages or classes within modules can, of course, use any number).
+   Please use a nested module name to informally group or categorise a
+   module, e.g., placing a sorting module into a Sort:: category. A module
+   should have a very good reason not to have a nested name. Please avoid
+   using more than one level of nesting for module names (packages or
+   classes within modules can, of course, use any number).
 
-   Module  names  should begin with a capital letter. Lowercase names are
+   Module names should begin with a capital letter. Lowercase names are
    reserved for special modules such as pragmas (e.g., lib and strict).
 
-   Note  that module names are not related to class hierarchies. A module
-   name  Foo::Bar  does  not in any way imply that Foo::Bar inherits from
-   Foo.   Nested   names   are   simply   used  to  provide  some  useful
-   categorisation  for humans. The same is generally true for all package
-   names.
+   Note that module names are not related to class hierarchies. A module
+   name Foo::Bar does not in any way imply that Foo::Bar inherits from
+   Foo. Nested names are simply used to provide some useful categorisation
+   for humans. The same is generally true for all package names.
 
-   Since  the  CPAN is huge and growing daily, it's essential that module
-   authors  choose  names  which  lend themselves to browsing. That means
+   Since the CPAN is huge and growing daily, it's essential that module
+   authors choose names which lend themselves to browsing. That means
    minimizing acronyms, cute names, and jargon. Also, don't make up a new
-   top  level  category  unless  you have a good reason; please choose an
+   top level category unless you have a good reason; please choose an
    already-existing category when possible. Send mail to modules@perl.org
    before you upload, so we can help you select a name.
 
-   If  you  insist  on  a  name  that we consider inappropriate, we won't
-   prevent  you  from  uploading  your module -- but it'll remain in your
-   "author"    directory    and    won't   be   directly   visible   from
+   If you insist on a name that we consider inappropriate, we won't
+   prevent you from uploading your module -- but it'll remain in your
+   "author" directory and won't be directly visible from
    CPAN/modules/by-module.
 
    We appreciate the efforts of the contributors who have helped make the
-   CPAN  the  world's  largest  reusable  code repository. Please help us
+   CPAN the world's largest reusable code repository. Please help us
    enhance it by working with us to choose the best name possible.
 
-   If  you  are  developing  a suite of related modules/classes it's good
+   If you are developing a suite of related modules/classes it's good
    practice to use nested classes with a common prefix as this will avoid
-   namespace  clashes.  For  example: Xyz::Control, Xyz::View, Xyz::Model
+   namespace clashes. For example: Xyz::Control, Xyz::View, Xyz::Model
    etc. Use the modules in this list as a naming guide.
 
-   If  adding  a  new  module  to  a  set,  follow  the original author's
-   standards  for  naming  modules  and the interface to methods in those
-   modules.
+   If adding a new module to a set, follow the original author's standards
+   for naming modules and the interface to methods in those modules.
 
-   If  developing  modules  for private internal or project specific use,
+   If developing modules for private internal or project specific use,
    that will never be released to the public, then you should ensure that
-   their  names  will not clash with any future public module. You can do
-   this  either  by  using  the reserved Local::* category or by using an
+   their names will not clash with any future public module. You can do
+   this either by using the reserved Local::* category or by using an
    underscore in the top level name like Foo_Corp::*.
 
    To be portable each component of a module name should be limited to 11
-   characters.  If  it  might  be  used on DOS then try to ensure each is
+   characters. If it might be used on DOS then try to ensure each is
    unique in the first 8 characters. Nested modules make this easier.
 
     2.6 Have you got it right?
 
-   How  do you know that you've made the right decisions? Have you picked
-   an  interface  design  that will cause problems later? Have you picked
-   the most appropriate name? Do you have any questions?
+   How do you know that you've made the right decisions? Have you picked
+   an interface design that will cause problems later? Have you picked the
+   most appropriate name? Do you have any questions?
 
-   The  best  way to know for sure, and pick up many helpful suggestions,
-   is  to  ask  someone  who  knows.  The  comp.lang.perl.modules  Usenet
-   newsgroup is read by just about all the people who develop modules and
-   it's generally the best place to ask first. If you need more help then
-   try modules@perl.org .
+   The best way to know for sure, and pick up many helpful suggestions, is
+   to ask someone who knows. The comp.lang.perl.modules Usenet newsgroup
+   is read by just about all the people who develop modules and it's
+   generally the best place to ask first. If you need more help then try
+   modules@perl.org .
 
-   All  you need to do is post a short summary of the module, its purpose
-   and  interfaces.  A  few lines on each of the main methods is probably
-   enough.  (If  you  post  the  whole module it might be ignored by busy
+   All you need to do is post a short summary of the module, its purpose
+   and interfaces. A few lines on each of the main methods is probably
+   enough. (If you post the whole module it might be ignored by busy
    people - generally the very people you want to read it!)
 
-   Don't  worry  about  posting  if you can't say when the module will be
-   ready  - just say so in the message. It might be worth inviting others
+   Don't worry about posting if you can't say when the module will be
+   ready - just say so in the message. It might be worth inviting others
    to help you, they may be able to complete it for you!
 
     2.7 README and other Additional Files.
 
-   It's  well  known  that software developers usually fully document the
-   software  they write. If, however, the world is in urgent need of your
-   software  and there is not enough time to write the full documentation
+   It's well known that software developers usually fully document the
+   software they write. If, however, the world is in urgent need of your
+   software and there is not enough time to write the full documentation
    please at least provide a README file containing:
 
      * A description of the module/package/extension etc.
@@ -464,80 +455,79 @@ Part 1 - Modules: Creation, Use and Abuse
      * Changes / enhancements you plan to make in the future.
 
    If the README file seems to be getting too large you may wish to split
-   out  some  of the sections into separate files: INSTALL, Copying, ToDo
+   out some of the sections into separate files: INSTALL, Copying, ToDo
    etc.
 
     2.8 Adding a Copyright Notice.
 
-   How  you  choose  to  licence  your  work  is a personal decision. The
-   general  mechanism  is  to  assert  your  Copyright  and  then  make a
-   declaration of how others may copy/use/modify your work.
+   How you choose to licence your work is a personal decision. The general
+   mechanism is to assert your Copyright and then make a declaration of
+   how others may copy/use/modify your work.
 
-   Perl,  for example, is supplied with two types of licence: The GNU GPL
+   Perl, for example, is supplied with two types of licence: The GNU GPL
    and The Artistic License (see the files README, Copying and Artistic).
    Larry has good reasons for NOT just using the GNU GPL.
 
-   My  personal  recommendation,  out  of respect for Larry, Perl and the
-   perl community at large is to simply state something like:
+   My personal recommendation, out of respect for Larry, Perl and the perl
+   community at large is to simply state something like:
 
-     Copyright  (c) 1997 Your Name. All rights reserved. This program is
-     free  software;  you can redistribute it and/or modify it under the
+     Copyright (c) 1997 Your Name. All rights reserved. This program is
+     free software; you can redistribute it and/or modify it under the
      same terms as Perl itself.
 
    This statement should at least appear in the README file. You may also
-   wish  to  include it in a Copying file and your source files. Remember
-   to include the other words in addition to the Copyright.
+   wish to include it in a Copying file and your source files. Remember to
+   include the other words in addition to the Copyright.
 
     2.9 Give the module a version/issue/release number.
 
-   To  be  fully  compatible  with the Exporter and MakeMaker modules you
+   To be fully compatible with the Exporter and MakeMaker modules you
    should store your module's version number in a non-my package variable
-   called  $VERSION. This should be a valid floating point number with at
-   least  two  digits  after  the decimal (ie hundredths, e.g, $VERSION =
+   called $VERSION. This should be a valid floating point number with at
+   least two digits after the decimal (ie hundredths, e.g, $VERSION =
    "0.01"). See Exporter.pm for details.
 
-   Don't  use  a  "1.3.2"  style  version  directly.  If you use RCS or a
-   similar system which supports multilevel versions/branches you can use
-   this (but put it all on one line for MakeMaker VERSION_FROM):
+   Don't use a "1.3.2" style version directly. If you use RCS or a similar
+   system which supports multilevel versions/branches you can use this
+   (but put it all on one line for MakeMaker VERSION_FROM):
 
-   $VERSION   =   do  {  my  @r=(q$Revision:  3.112  $=~/\d+/g);  sprintf
+   $VERSION = do { my @r=(q$Revision: 3.112 $=~/\d+/g); sprintf
    "%d."."%03d"x$#r,@r };
 
-   It  may  be  handy to add a function or method to retrieve the number.
-   Use  the number in announcements and archive file names when releasing
-   the       module       (ModuleName-1.02.tar.gz).      See      perldoc
-   ExtUtils::MakeMaker.pm for details.
+   It may be handy to add a function or method to retrieve the number. Use
+   the number in announcements and archive file names when releasing the
+   module (ModuleName-1.02.tar.gz). See perldoc ExtUtils::MakeMaker.pm for
+   details.
 
     2.10 Listing Prerequisites in a Bundle module
 
    If your module needs some others that are available on CPAN, you might
-   consider  creating  a 'bundle' module that lists all the prerequisites
-   in  a  standardized  way.  Automatic installation software such as the
-   CPAN.pm  module  can  take advantage of such a listing and enable your
-   users to install all prerequisites and your own module with one single
-   command. See the CPAN.pm module for details.
+   consider creating a 'bundle' module that lists all the prerequisites in
+   a standardized way. Automatic installation software such as the CPAN.pm
+   module can take advantage of such a listing and enable your users to
+   install all prerequisites and your own module with one single command.
+   See the CPAN.pm module for details.
 
     2.11 How to release and distribute a module.
 
-   By  far  the  best way to release modules is to register yourself with
-   the  Perl Authors Upload Server (PAUSE). By registering with PAUSE you
-   will  be  able  to easily upload (or mirror) your modules to the PAUSE
-   server  from  where  they  will  be  mirrored to CPAN sites across the
-   planet.
+   By far the best way to release modules is to register yourself with the
+   Perl Authors Upload Server (PAUSE). By registering with PAUSE you will
+   be able to easily upload (or mirror) your modules to the PAUSE server
+   from where they will be mirrored to CPAN sites across the planet.
 
-   It's  good  idea  to  post an announcement of the availability of your
-   module  to  the comp.lang.perl.announce Usenet newsgroup. This will at
+   It's good idea to post an announcement of the availability of your
+   module to the comp.lang.perl.announce Usenet newsgroup. This will at
    least ensure very wide once-off distribution.
 
-   If  not  using  PAUSE  you  should  place  the module into a major ftp
-   archive  and  include  details  of it's location in your announcement.
-   Some notes about ftp archives: Please use a long descriptive file name
-   which  includes the version number. Most incoming directories will not
-   be  readable/listable,  i.e., you won't be able to see your file after
+   If not using PAUSE you should place the module into a major ftp archive
+   and include details of it's location in your announcement. Some notes
+   about ftp archives: Please use a long descriptive file name which
+   includes the version number. Most incoming directories will not be
+   readable/listable, i.e., you won't be able to see your file after
    uploading it. Remember to send your email notification message as soon
-   as   possible   after   uploading  else  your  file  may  get  deleted
-   automatically.  Allow  time  for the file to be processed and/or check
-   the file has been processed before announcing its location.
+   as possible after uploading else your file may get deleted
+   automatically. Allow time for the file to be processed and/or check the
+   file has been processed before announcing its location.
 
    FTP Archives for Perl Modules:
 
@@ -551,136 +541,135 @@ Part 1 - Modules: Creation, Use and Abuse
 
    and notify upload@pause.kbx.de .
 
-   By  using  the  PAUSE  WWW  interface you can ask the Upload Server to
-   mirror  your modules from your ftp or WWW site into your own directory
-   on  CPAN.  Please  remember to send us an updated entry for the Module
+   By using the PAUSE WWW interface you can ask the Upload Server to
+   mirror your modules from your ftp or WWW site into your own directory
+   on CPAN. Please remember to send us an updated entry for the Module
    list!
 
     2.12 Take care when changing a released module.
 
-   Always  strive  to  remain  compatible with previous released versions
-   (see  2.2 above) Otherwise try to add a mechanism to revert to the old
+   Always strive to remain compatible with previous released versions (see
+   2.2 above) Otherwise try to add a mechanism to revert to the old
    behaviour if people rely on it. Document incompatible changes.
 
   3) Guidelines for Converting Perl 4 Library Scripts into Modules
 
     3.1 There is no requirement to convert anything.
 
-   If  it  ain't  broke,  don't  fix  it!  Perl  4 library scripts should
-   continue  to  work  with  no problems. You may need to make some minor
-   changes  (like  escaping  non-array  @'s in double quoted strings) but
-   there  is  no  need to convert a .pl file into a Module for just that.
-   See perltrap.pod for details of all known perl4-to-perl5 issues.
+   If it ain't broke, don't fix it! Perl 4 library scripts should continue
+   to work with no problems. You may need to make some minor changes (like
+   escaping non-array @'s in double quoted strings) but there is no need
+   to convert a .pl file into a Module for just that. See perltrap.pod for
+   details of all known perl4-to-perl5 issues.
 
     3.2 Consider the implications.
 
    All the perl applications which make use of the script will need to be
-   changed  (slightly)  if  the  script is converted into a module. Is it
+   changed (slightly) if the script is converted into a module. Is it
    worth it unless you plan to make other changes at the same time?
 
     3.3 Make the most of the opportunity.
 
-   If  you  are  going  to convert the script to a module you can use the
-   opportunity  to  redesign  the  interface.  The 'Guidelines for Module
+   If you are going to convert the script to a module you can use the
+   opportunity to redesign the interface. The 'Guidelines for Module
    Creation' above include many of the issues you should consider.
 
     3.4 The pl2pm utility will get you started.
 
-   This  utility  will  read  *.pl  files (given as parameters) and write
+   This utility will read *.pl files (given as parameters) and write
    corresponding *.pm files. The pl2pm utilities does the following:
      * Adds the standard Module prologue lines
      * Converts package specifiers from ' to ::
      * Converts die(...) to croak(...)
      * Several other minor changes
 
-   Being  a  mechanical  process pl2pm is not bullet proof. The converted
-   code  will  need  careful checking, especially any package statements.
+   Being a mechanical process pl2pm is not bullet proof. The converted
+   code will need careful checking, especially any package statements.
    Don't delete the original .pl file till the new .pm one works!
 
   4) Guidelines for Reusing Application Code
 
    4.1 Complete applications rarely belong in the Perl Module Library.
 
-   4.2  Many  applications  contain some perl code which could be reused.
-   Help  save  the world! Share your code in a form that makes it easy to
+   4.2 Many applications contain some perl code which could be reused.
+   Help save the world! Share your code in a form that makes it easy to
    reuse.
 
-   4.3  Break-out  the  reusable  code  into  one or more separate module
-   files.
+   4.3 Break-out the reusable code into one or more separate module files.
 
    4.4 Take the opportunity to reconsider and redesign the interfaces.
 
-   4.5  In  some  cases  the 'application' can then be reduced to a small
-   fragment  of code built on top of the reusable modules. In these cases
+   4.5 In some cases the 'application' can then be reduced to a small
+   fragment of code built on top of the reusable modules. In these cases
    the application could invoked as:
 
     5) Namespace Coordination
 
-   The  maintainers  of  the  module  list  are not the Internic for perl
-   namespaces.  They  do  neither  sell namespaces nor can they establish
-   property  rights. What they try to do is to minimize namespace clashes
-   and  maximize usablility of the CPAN archive by setting up a catalogue
-   of  modules  and control the indexers. Time permitting, they will also
-   try  to  give  advice  for  what  they  think is a proper usage of the
+   The maintainers of the module list are not the Internic for perl
+   namespaces. They do neither sell namespaces nor can they establish
+   property rights. What they try to do is to minimize namespace clashes
+   and maximize usablility of the CPAN archive by setting up a catalogue
+   of modules and control the indexers. Time permitting, they will also
+   try to give advice for what they think is a proper usage of the
    namespace.
 
-   It  is an important part of the namespace concept that the module list
-   maintainers  do not guarantee to you that somebody else won't use the,
-   say,  Foo::Bar  namespace.  The upload area is not censored except for
+   It is an important part of the namespace concept that the module list
+   maintainers do not guarantee to you that somebody else won't use the,
+   say, Foo::Bar namespace. The upload area is not censored except for
    abuse. People are free to upload any modules they like. Instead, there
    are several levels of protection for your namespaces:
 
-   a)  The  most  important  is  the module list which actually lists and
+   a) The most important is the module list which actually lists and
    proclaims your namespace.
 
-   b)  The  second  is  the  indexing  mechanism of the CPAN. Modules are
-   indexed  on  a first-come-first-serve basis. The module namespace that
-   is  uploaded  for the first time ever gets indexed, but not the module
-   of the second one who tries to use the same namespace.
+   b) The second is the indexing mechanism of the CPAN. Modules are
+   indexed on a first-come-first-serve basis. The module namespace that is
+   uploaded for the first time ever gets indexed, but not the module of
+   the second one who tries to use the same namespace.
 
-   c)  As  the  whole  process  is  trying  to benefit the community, all
-   parties  are  subject to a wider monitoring within the community. This
-   is sometimes referred to as security by visibility.
+   c) As the whole process is trying to benefit the community, all parties
+   are subject to a wider monitoring within the community. This is
+   sometimes referred to as security by visibility.
 
    d) So the next level of namespace protection is the common sense. Your
-   own  common  sense.  Help to save the world. If you get the impression
-   that  something  goes wrong with regard to namespaces, please write to
+   own common sense. Help to save the world. If you get the impression
+   that something goes wrong with regard to namespaces, please write to
    modules@perl.org and let them know.
 
-   e)  The  perhaps  most interesting namespace protection is provided by
-   the perl symbol table itself. A namespace Foo:: is just a package name
-   and  its  relationship  to a namespace Foo::Bar:: is not predetermined
-   whatsoever.  The  two  namespaces can be closely or loosely related or
-   not  related  at all, but what's most important, they can be writen by
-   different  authors  who may work rather independently from each other.
-   So if you have registered any namespace, it does not mean that you own
-   the  whole  namespace tree that starts there. If you are registered as
-   the contact for Foo::Bar, you are not necessarily also associated with
+   e) The perhaps most interesting namespace protection is provided by the
+   perl symbol table itself. A namespace Foo:: is just a package name and
+   its relationship to a namespace Foo::Bar:: is not predetermined
+   whatsoever. The two namespaces can be closely or loosely related or not
+   related at all, but what's most important, they can be writen by
+   different authors who may work rather independently from each other. So
+   if you have registered any namespace, it does not mean that you own the
+   whole namespace tree that starts there. If you are registered as the
+   contact for Foo::Bar, you are not necessarily also associated with
    Foo::Bar::Baz.
 
-   f)  In  a  few  rare cases the module list people restrict indexing of
+   f) In a few rare cases the module list people restrict indexing of
    certain categories. For example: DBI::* under the control of Tim Bunce
    Sun::* under the control of Sun Microsystems
 
 Part 2 - The Perl 5 Registered Module List
 
-   The  remainder  of  this  document  is  divided up into sections. Each
-   section  deals  with  a  particular  topic and lists all known modules
+   The remainder of this document is divided up into sections. Each
+   section deals with a particular topic and lists all known modules
    related to that topic. Modules are only listed in one section so check
    all sections that might related to your particular needs.
 
-   All  the  information  corresponds  to  the  latest  updates  we  have
-   received.  We  don't record the version number or release dates of the
-   listed  Modules.  Nor  do  we  record  the locations of these Modules.
-   Consult  the  contact,  try  the  usual  perl  CPAN  sites  or  ask in
-   comp.lang.perl.modules.  Please  do  *not*  ask us directly, we simply
+   All the information corresponds to the latest updates we have received.
+   We don't record the version number or release dates of the listed
+   Modules. Nor do we record the locations of these Modules. Consult the
+   contact, try the usual perl CPAN sites or ask in
+   comp.lang.perl.modules. Please do *not* ask us directly, we simply
    don't have the time. Sorry.
 
     1) Registered Module Listing Format
 
-   Each  Module listing is very short. The main goal is to simply publish
+   Each Module listing is very short. The main goal is to simply publish
    the existence of the modules, or ideas for modules, and enough contact
-   information  for  you  to  find  out  more. Each listing includes some
+   information for you to find out more. Each listing includes some
    characters which convey (approximate) basic status information.
 
     For example:
@@ -688,6 +677,7 @@ Part 2 - The Perl 5 Registered Module List
 Name           DSLIP  Description                                  Info
 -------------  -----  -------------------------------------------- -----
 Fcntl          Sdcfp  Defines fcntl() constants (see File::Lock)   JHI
+
 
     Where the 'DSLIP' characters have the following meanings:
 
@@ -709,7 +699,7 @@ Fcntl          Sdcfp  Defines fcntl() constants (see File::Lock)   JHI
 
      * L - Language Used:
      *
-          + p  -  Perl-only,  no  compiler  needed,  should  be  platform
+          + p - Perl-only, no compiler needed, should be platform
             independent
           + c - C and perl, a C compiler will be needed
           + h - Hybrid, written in perl with optional C code, no compiler
@@ -723,68 +713,67 @@ Fcntl          Sdcfp  Defines fcntl() constants (see File::Lock)   JHI
           + h - hybrid, object and function interfaces available
           + n - no interface at all (huh?)
           + r - some use of unblessed References or ties
-          + O   -   Object   oriented  using  blessed  references  and/or
+          + O - Object oriented using blessed references and/or
             inheritance
 
      * P - Public License
      *
           + p - Standard-Perl: user may choose between GPL and Artistic
           + g - GPL: GNU General Public License
-          + l  -  LGPL:  "GNU  Lesser General Public License" (previously
+          + l - LGPL: "GNU Lesser General Public License" (previously
             known as "GNU Library
           + General Public License")
           + b - BSD: The BSD License
           + a - Artistic license alone
           + o - other (but distribution allowed without restrictions)
 
-   DISCLAIMER:  The  status  of  the  Public  License  field is there for
-   informational  purpose only and does not constitute a legal binding of
-   any  kind. To obtain proper information about the Licencing terms of a
+   DISCLAIMER: The status of the Public License field is there for
+   informational purpose only and does not constitute a legal binding of
+   any kind. To obtain proper information about the Licencing terms of a
    module and its accompanying files, please refer to the distribution of
-   the  modules  or  contact  the  author  as  appropriate. Please inform
+   the modules or contact the author as appropriate. Please inform
    modules@perl.org if you encounter any mismatch between the contents of
    the Public License field and what the distribution actually says about
    it.
 
-   Where  letters  are  missing  they  can  usually  be inferred from the
-   others. For example 'i' implies 'id', 'S' implies 'Su'.
+   Where letters are missing they can usually be inferred from the others.
+   For example 'i' implies 'id', 'S' implies 'Su'.
 
-   The  Info  column  gives a contact reference 'tag'. Lookup this tag in
-   the  "Information  /  Contact  Reference Details" section in Pert 3 of
-   this   document.   If  no  contact  is  given  always  try  asking  in
+   The Info column gives a contact reference 'tag'. Lookup this tag in the
+   "Information / Contact Reference Details" section in Pert 3 of this
+   document. If no contact is given always try asking in
    comp.lang.perl.modules.
 
-   Most   Modules  are  nested  in  categories  such  as  IPC::Open2  and
-   IPC::Open3.  These  are  shown as 'IPC::' on one line then each module
+   Most Modules are nested in categories such as IPC::Open2 and
+   IPC::Open3. These are shown as 'IPC::' on one line then each module
    listed below with a '::' prefix.
 
     Ideas For Adoption
 
-   Modules  listed  as  in  the  'i'  Development  Stage  with no contact
-   reference  are  ideas without an owner. Feel free to 'adopt' these but
-   please  let  me  know  so  that we can update the list and thus inform
-   anyone  else  who  might be interested. Adoption simply means that you
+   Modules listed as in the 'i' Development Stage with no contact
+   reference are ideas without an owner. Feel free to 'adopt' these but
+   please let me know so that we can update the list and thus inform
+   anyone else who might be interested. Adoption simply means that you
    either hope to implement the module one day or would like to cooperate
    with anyone else who might be interested in implementing it.
 
     Cooperation
 
-   Similarly,  if  an idea that interests you has been adopted by someone
-   please  contact  them so you can share ideas. Just because an idea has
-   been  adopted  does  NOT imply that it's going to be implemented. Just
-   because  a  module is listed and being implemented does NOT mean it'll
+   Similarly, if an idea that interests you has been adopted by someone
+   please contact them so you can share ideas. Just because an idea has
+   been adopted does NOT imply that it's going to be implemented. Just
+   because a module is listed and being implemented does NOT mean it'll
    get finished. Waiting silently in the hope that the Module will appear
-   one  day  is  unlikely  to be fruitful! Offer to help. Cooperate. Pool
-   your efforts. Go on, try it!
+   one day is unlikely to be fruitful! Offer to help. Cooperate. Pool your
+   efforts. Go on, try it!
 
-   The  same applies to modules in all states. Most modules are developed
-   in  limited  spare  time.  If you're interested in a module don't just
-   wait for it to happen, offer to help.
+   The same applies to modules in all states. Most modules are developed
+   in limited spare time. If you're interested in a module don't just wait
+   for it to happen, offer to help.
 
-   Module  developers should feel free to announce incomplete work early.
-   If  you're  not  going to be able to spend much time on something then
-   say  so. If you invite cooperation maybe someone will implement it for
-   you!
+   Module developers should feel free to announce incomplete work early.
+   If you're not going to be able to spend much time on something then say
+   so. If you invite cooperation maybe someone will implement it for you!
 
     2) Perl Core Modules, Perl Language Extensions and Documentation Tools
 
@@ -3904,12 +3893,12 @@ Bundle::
 
 Part 3 - Standards Cross-reference
 
-   This  section aims to provide a cross reference between standards that
-   exist  in the computing world and perl modules which have been written
+   This section aims to provide a cross reference between standards that
+   exist in the computing world and perl modules which have been written
    to implement or interface to those standards.
 
-   It  also  aims  to  encourage module authors to consider any standards
-   that might relate to the modules they are developing.
+   It also aims to encourage module authors to consider any standards that
+   might relate to the modules they are developing.
 
     3.1) IETF - Internet Engineering Task Force (RFCs)
 
@@ -3964,17 +3953,16 @@ Part 4 - Who's Who and What's Where
 
     4.1) Information / Contact Reference Details (in alphabetical order)
 
-   The  following  list  of  email  addresses is based on the credentials
-   stored  on the automated Perl Authors Upload Server (PAUSE). If any of
-   the   details   is   not   up  to  date,  you're  requested  to  visit
-   http://www.cpan.org/modules/04pause.html  ,  where  you  will  find  a
-   pointer  to  a  CGI  script  that  lets  you edit the database entries
+   The following list of email addresses is based on the credentials
+   stored on the automated Perl Authors Upload Server (PAUSE). If any of
+   the details is not up to date, you're requested to visit
+   http://www.cpan.org/modules/04pause.html , where you will find a
+   pointer to a CGI script that lets you edit the database entries
    yourself.
 
 4.2) Perl Frequently Asked Questions (FAQ)
 
-   The  FAQ  is  available  on  all  CPAN sites in the directory doc/FAQs
-   (e.g.,
+   The FAQ is available on all CPAN sites in the directory doc/FAQs (e.g.,
      * http://www.cpan.org/doc/FAQs/
 
    ) as well as from the RTFM server where you can find all posted FAQs:
