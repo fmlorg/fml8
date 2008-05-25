@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: config.sh.in,v 1.7 2002/03/31 12:12:28 fukachan Exp $
+# $FML: config.sh.in,v 1.8 2003/01/28 04:12:36 fukachan Exp $
 #
 
 
@@ -20,11 +20,12 @@ prefix=@prefix@
 exec_prefix=@exec_prefix@
 bindir=@bindir@
 mandir=@mandir@
+datarootdir=@datarootdir@
 
 config_dir=@fmlconfdir@
 libexec_dir=@libexecdir@/fml
 lib_dir=@libdir@/fml
-data_dir=@datadir@/fml
+data_dir=@datarootdir@/fml
 
 
 # ml spool

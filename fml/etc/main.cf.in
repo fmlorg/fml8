@@ -1,5 +1,5 @@
 #
-# $FML: main.cf.in,v 1.19 2004/09/29 05:04:07 fukachan Exp $
+# $FML: main.cf.in,v 1.20 2004/11/21 06:55:47 fukachan Exp $
 #
 
 # fml version
@@ -21,6 +21,7 @@ fml_group	=	@fml_group@
 # Example: /usr/local
 prefix			= 	@prefix@
 exec_prefix		=	@exec_prefix@
+datarootdir		=	@datarootdir@
 
 # $config_dir holds the global main configuration and
 # several version-dependent default configurations
@@ -48,7 +49,7 @@ libexec_dir		= 	@libexecdir@/fml/$fml_version
 lib_dir			=	@libdir@/fml/$fml_version
 
 # Example: /usr/local/share/fml/$fml_version
-share_dir		=	@datadir@/fml/$fml_version
+share_dir		=	@datarootdir@/fml/$fml_version
 
 # site local library location
 # which is prepared but not used by fml itself

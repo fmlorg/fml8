@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: install.cf.in,v 1.21 2006/02/01 12:35:45 fukachan Exp $
+# $FML: install.cf.in,v 1.22 2006/02/04 06:48:58 fukachan Exp $
 #
 
 
@@ -22,6 +22,8 @@ prefix		=	@prefix@
 
 exec_prefix	=	@exec_prefix@
 
+datarootdir	=	@datarootdir@
+
 bindir		=	@bindir@
 
 mandir		=	@mandir@
@@ -34,7 +36,7 @@ libexec_dir	=	@libexecdir@/fml
 
 lib_dir		=	@libdir@/fml
 
-data_dir	=	@datadir@/fml
+data_dir	=	@datarootdir@/fml
 
 
 # ml spool
@@ -128,4 +130,4 @@ libexec_programs 	=	fml.pl
 				faker
 				createonpost
 				fetchfml
-
+				remind
