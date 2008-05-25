@@ -40,6 +40,17 @@
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
 
+2008/05/25
+
+   switched to configure 2.62 based
+		configure.in 
+		configure
+			show datarootdir
+
+		fmlsrc/config.sh.in 
+		fmlsrc/fml/etc/{install.cf.in, main.cf.in}
+		datadir -> datarootdir	
+
 2008/05/11
 
   project restarts (crash and fsck;) ends, orz).
@@ -10068,4 +10079,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.295 2006/12/03 14:37:30 fukachan Exp $
+$FML: CHANGES.txt,v 1.296 2008/05/11 02:27:27 fukachan Exp $
