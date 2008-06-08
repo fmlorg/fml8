@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2006 Ken'ichi Fukamachi
+# Copyright (C) 2006,2008 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: CreateOnPost.pm,v 1.3 2006/02/05 02:45:07 fukachan Exp $
+# $FML: CreateOnPost.pm,v 1.4 2006/07/09 12:11:13 fukachan Exp $
 #
 
 package FML::Process::CreateOnPost;
@@ -30,7 +30,26 @@ FML::Process::CreateOnPost -- create-on-post ML master process.
 =head1 DESCRIPTION
 
 FML::Process::CreateOnPost provides the main function for
-C<libexec/createonpost>.
+C<libexec/createonpost>, which creates a ML dynamically on demand.
+
+Typically,
+
+(1) define your domain <cop.example.org> to support Create-On-Post operation.
+
+(2) a user <user@domain> sends a mail to <newml@cop.example.org>.
+
+(3) create <newml@cop.example.org> ML and add <user@domain> as a member.
+
+(4) To add another member, send the following mail to
+<newml@cop.example.org>.
+
+  To: newml@cop.example.org
+  Cc: anotheruser@anotherdomain
+  Subject: anything
+
+    any in the body.
+
+See C<FML::CreateOnPost> for Create-On-Post detail.
 
 See C<FML::Process::Flow> for the flow detail.
 
@@ -99,7 +118,7 @@ sub prepare
 
 =head2 verify_request($args)
 
-dummy.
+parse incoming messages for later use.
 
 =cut
 
@@ -133,6 +152,9 @@ sub verify_request
 =head2 run($args)
 
 the top level dispatcher for C<createonpost>.
+
+It emulates subscription and execultes a faked ML process.
+See C<FML::CreateOnPost> for Create-On-Post detail.
 
 =cut
 
@@ -217,10 +239,8 @@ _EOF_
 
 =head1 INTERNAL FUNCTIONS
 
-Internal function fakes mail retrieve and forward mechanism.
-
-It fetches a message via POP3 or IMAP4 protocol and forward it into
-fml8 process.
+Internal function prepares and executes a faked ML via
+FML::CreateOnPost object.
 
 =cut
 
@@ -247,7 +267,7 @@ sub _createonpost_verify_request
 	class_to_address => $class2address,
     };
 
-    # 1.1 and some preparations.
+    # 1.1 do some preparations.
     my $header      = $curproc->incoming_message_header();
     my $return_path = $header->address_cleanup( $header->get('Return-Path') );
     my $cred        = $curproc->credential();
@@ -305,7 +325,7 @@ sub _classify_address
 	my $addr = $_addr->address();
 	push(@$addrlist, $addr);
 
-	# 1. create-on-post
+	# 1. create-on-post: may need to create a new ml.
 	if ($addr =~ /\@$ml_domain$/i) {
 	    $result->{ $addr } = $ADDR_CREATE_ON_POST;
 	    push(@{$rev_result->{ $ADDR_CREATE_ON_POST }}, $addr);
@@ -389,7 +409,7 @@ sub _run_createonpost
     my (@deny_list)   = @{ $addr_list->{ "deny" }   || [] };
     my (@permit_list) = @{ $addr_list->{ "permit" } || [] };
 
-    # 1.
+    # 1. check if the ML exists or not. create it if not exists.
     my $cop_list= $class_to_address->{ $ADDR_CREATE_ON_POST } || [];
     for my $ml (@$cop_list) {
 	if ($curproc->_is_ml_address($ml)) {
@@ -401,7 +421,7 @@ sub _run_createonpost
 	}
     }
 
-    # 2. generate list to subscribe.
+    # 2. generate address list to subscribe.
   ADDR:
     for my $addr (@permit_list) {
 	for my $ign (@deny_list) {
