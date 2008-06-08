@@ -60,3 +60,10 @@ createonpost_sender_maps	=	pcre:$ml_home_dir/sender.pcre
 createonpost_subscribe_maps	=	pcre:$ml_home_dir/subscribe.pcre
 
 
+# Descriptions: 
+#               ファイルの中は、たとえば \S+\@example.com
+#      History: NONE
+#        Value: FILE
+#     Examples:
+createonpost_maintainer_maps	=	pcre:$ml_home_dir/maintainer.pcre
+
