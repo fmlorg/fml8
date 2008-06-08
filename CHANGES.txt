@@ -40,6 +40,11 @@
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
 
+2008/06/08
+
+   create-on-post enhanced.
+	define $createonpost_maintainer_maps
+
 2008/05/25
 
    switched to configure 2.62 based
@@ -10079,4 +10084,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.296 2008/05/11 02:27:27 fukachan Exp $
+$FML: CHANGES.txt,v 1.297 2008/05/25 10:08:40 fukachan Exp $
