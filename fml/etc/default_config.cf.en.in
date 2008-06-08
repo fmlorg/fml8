@@ -3143,6 +3143,14 @@ createonpost_sender_maps	=	pcre:$ml_home_dir/sender.pcre
 createonpost_subscribe_maps	=	pcre:$ml_home_dir/subscribe.pcre
 
 
+# Descriptions: 
+#               For eaxmple, this file contains \S+\@example.com line.
+#      History: NONE
+#        Value: FILE
+#     Examples:
+createonpost_maintainer_maps	=	pcre:$ml_home_dir/maintainer.pcre
+
+
 
 =head1 program paths
 
