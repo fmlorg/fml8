@@ -45,6 +45,17 @@
    create-on-post enhanced.
 	define $createonpost_maintainer_maps
 
+   FML::Process::CreateOnPost 
+	clean up. fix comments.
+	restrict who can create a new ML.
+
+   FML::Credential 
+	define is_valid_map() method
+	
+   configurations	
+	define $createonpost_maintainer_maps
+
+
 2008/05/25
 
    switched to configure 2.62 based
@@ -10084,4 +10095,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.297 2008/05/25 10:08:40 fukachan Exp $
+$FML: CHANGES.txt,v 1.298 2008/06/08 13:15:55 fukachan Exp $
