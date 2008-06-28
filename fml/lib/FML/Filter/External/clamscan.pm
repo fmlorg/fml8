@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2004,2005,2007,2008 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: clamscan.pm,v 1.6 2005/08/10 12:55:32 fukachan Exp $
+# $FML: clamscan.pm,v 1.7 2007/01/16 11:59:54 fukachan Exp $
 #
 
 package FML::Filter::External::clamscan;
@@ -137,7 +137,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2004,2005,2007,2008 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

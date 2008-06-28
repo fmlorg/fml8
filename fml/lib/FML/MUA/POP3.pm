@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2005,2006 Ken'ichi Fukamachi
+#  Copyright (C) 2005,2006,2007,2008 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: POP3.pm,v 1.7 2006/01/09 14:00:54 fukachan Exp $
+# $FML: POP3.pm,v 1.8 2007/01/16 12:16:52 fukachan Exp $
 #
 
 package FML::MUA::POP3;
@@ -427,7 +427,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2005,2006 Ken'ichi Fukamachi
+Copyright (C) 2005,2006,2007,2008 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
