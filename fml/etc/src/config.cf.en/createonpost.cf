@@ -60,11 +60,32 @@ createonpost_sender_maps	=	pcre:$ml_home_dir/sender.pcre
 createonpost_subscribe_maps	=	pcre:$ml_home_dir/subscribe.pcre
 
 
-# Descriptions: 
+=head2 CREATE-ON-POST NEWML RESTRICTIONS
+
+
+# Descriptions: Who is allowed to create a newml dynamically by remote.
+#               Anyone can do this by default at the first design,
+#               but it is inappropriate in the actual operation.
+#               If you restricts the permission more granually, 
+#               use $createonpost_newml_maps, which allows regexp. 
+#      History: fml4 has no CREATE-ON-POST function.
+#		In the first implementation of CREATE-ON-POST of fml8, 
+#		this restriction is not implemented. So, 
+#		it was "permit_anyone" in creating a new ML.
+#        Value: MIX (
+#			permit_createonpost_newml_maps
+#			permit_ml_domain
+#			permit_anyone
+#		)
+#     Examples: permit_ml_domain
+createonpost_newml_restrictions = permit_ml_domain
+
+
+# Descriptions: Who is allowed to create a newml dynamically by remote.
+#               You can use perl regular expressions.
 #               For eaxmple, this file contains \S+\@example.com line.
 #      History: NONE
 #        Value: FILE
-#     Examples:
-createonpost_maintainer_maps	=	pcre:$ml_home_dir/maintainer.pcre
-
+#     Examples: pcre:$ml_home_dir/newml.pcre
+createonpost_newml_maps	=	pcre:$ml_home_dir/newml.pcre
 
