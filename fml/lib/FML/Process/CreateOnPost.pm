@@ -3,7 +3,7 @@
 # Copyright (C) 2006,2008 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: CreateOnPost.pm,v 1.5 2008/06/08 03:09:13 fukachan Exp $
+# $FML: CreateOnPost.pm,v 1.6 2008/06/08 13:13:09 fukachan Exp $
 #
 
 package FML::Process::CreateOnPost;
@@ -564,55 +564,17 @@ sub _create_ml
 
 
 # Descriptions: check if the sender is allowed to create a new ML.
-#    Arguments: OBJ($self)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub _is_sender_allowed_to_create_ml
 {
     my ($curproc) = @_;
-    my $ml_domain = $curproc->default_domain();
-    my $config    = $curproc->config();
-    my $cred      = $curproc->credential();
-    my $header    = $curproc->incoming_message_header();
-    my $from      = $header->address_cleanup( $header->get('from') );
-    my $status    = 0;
-    my $map_count = 0;
 
-    # 1. check $createonpost_maintainer_maps.
-    my $maintainer_maps = 
-	$config->get_as_array_ref('createonpost_maintainer_maps') || [];
-
-    # sanity
-    return 0 unless defined $maintainer_maps;
-
-    # check if from: address is contained in either map.
-  MAP:
-    for my $map (@$maintainer_maps) {
-        if (defined $map) {
-            my $is_valid = $cred->is_valid_map($map, $config);
-	    if ($is_valid) {
-		$map_count++;
-		$status = $cred->has_address_in_map($map, $config, $from);
-		last MAP if $status;
-	    }
-	    else {
-		$curproc->logdebug("invalid map: $map");
-	    }
-        }
-    }
-
-    # 2. try the default naive restriction if no valid map.
-    unless ($map_count) {
-	$curproc->logdebug("no valid map: createonpost_maintainer_maps");
-
-	# ok if same domain (user@domain == ml@domain).
-	if ($from =~ /\@$ml_domain$/i) {
-	    $curproc->log("from address is our domain <$ml_domain>");
-	    return 1;
-	}
-    }
-
-    return $status;
+    my $restriction = 'createonpost_newml_restrictions',
+    my $addr_list   = $curproc->_apply_restrictions($restriction);
+    my $is_allowed  = $addr_list->{ permit } ? 1 : 0;
+    return $is_allowed;
 }
 
 
@@ -626,7 +588,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2006 Ken'ichi Fukamachi
+Copyright (C) 2006,2008 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
