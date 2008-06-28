@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2006 Ken'ichi Fukamachi
+#  Copyright (C) 2006,2007,2008 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: CreateOnPost.pm,v 1.3 2006/11/26 09:20:20 fukachan Exp $
+# $FML: CreateOnPost.pm,v 1.4 2007/01/16 11:06:16 fukachan Exp $
 #
 
 package FML::CreateOnPost;
@@ -161,7 +161,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2006 Ken'ichi Fukamachi
+Copyright (C) 2006,2007,2008 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
