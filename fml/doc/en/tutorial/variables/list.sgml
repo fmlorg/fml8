@@ -757,6 +757,24 @@ confirm
 </row>
 <row>
 <entry>
+createonpost_newml_maps</entry>
+<entry>
+ Who is allowed to create a newml dynamically by remote.</entry>
+<entry>
+pcre:$ml_home_dir/newml.pcre
+   </entry>
+</row>
+<row>
+<entry>
+createonpost_newml_restrictions</entry>
+<entry>
+ Who is allowed to create a newml dynamically by remote.</entry>
+<entry>
+permit_ml_domain
+   </entry>
+</row>
+<row>
+<entry>
 createonpost_sender_maps</entry>
 <entry>
  </entry>

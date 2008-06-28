@@ -341,6 +341,11 @@ createonpost {
           $use_createonpost_function
    }
 
+   createonpost_newml { 
+          $createonpost_newml_maps
+          $createonpost_newml_restrictions
+   }
+
    createonpost_sender { 
           $createonpost_sender_maps
           $createonpost_sender_restrictions
