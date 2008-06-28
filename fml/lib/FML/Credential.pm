@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.70 2008/06/08 13:09:20 fukachan Exp $
+# $FML: Credential.pm,v 1.71 2008/06/28 20:05:56 fukachan Exp $
 #
 
 package FML::Credential;
@@ -501,7 +501,7 @@ sub _is_member
 
 # Descriptions: check $map contains $address or not within some ambiguity
 #               by is_same_address().
-#    Arguments: OBJ($self) STR($map) HASH_REF($config) STR($address)
+#    Arguments: OBJ($self) STR($map) HASH_REF($config)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub is_valid_map
