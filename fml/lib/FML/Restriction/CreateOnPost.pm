@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2006 Ken'ichi Fukamachi
+#  Copyright (C) 2006,2008 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: CreateOnPost.pm,v 1.2 2006/02/05 02:44:25 fukachan Exp $
+# $FML: CreateOnPost.pm,v 1.3 2006/07/09 12:11:13 fukachan Exp $
 #
 
 package FML::Restriction::CreateOnPost;
@@ -110,6 +110,46 @@ sub reject_list_header_field
 }
 
 
+# Descriptions: permit if the sender is contained in $createonpost_newml_maps.
+#    Arguments: OBJ($self) STR($rule) STR($sender)
+# Side Effects: none
+# Return Value: ARRAY(STR, STR)
+sub permit_createonpost_newml_maps
+{
+    my ($self, $rule, $sender) = @_;
+    my $curproc   = $self->{ _curproc };
+    my $config    = $curproc->config();
+    my $header    = $curproc->incoming_message_header();
+    my $cred      = $curproc->credential();
+    my $from      = $header->address_cleanup( $header->get('from') );
+
+    my $maps     = 'createonpost_newml_maps';
+    my $map_list = $config->get_as_array_ref($maps) || [];
+
+    # check if from: address is contained in either map.
+    my $status = 0;
+  MAP:
+    for my $map (@$map_list) {
+        if (defined $map) {
+            my $is_valid = $cred->is_valid_map($map, $config);
+	    if ($is_valid) {
+		$status = $cred->has_address_in_map($map, $config, $from);
+		last MAP if $status;
+	    }
+	    else {
+		$curproc->logdebug("invalid map: $map");
+	    }
+        }
+    }
+
+    if ($status) {
+	return("matched", "permit");
+    }
+
+    return(0, undef);
+}
+
+
 =head1 CODING STYLE
 
 See C<http://www.fml.org/software/FNF/> on fml coding style guide.
@@ -120,7 +160,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2006 Ken'ichi Fukamachi
+Copyright (C) 2006,2008 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
