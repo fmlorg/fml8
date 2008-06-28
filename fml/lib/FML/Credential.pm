@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006,2008 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.69 2006/11/26 11:59:50 fukachan Exp $
+# $FML: Credential.pm,v 1.70 2008/06/08 13:09:20 fukachan Exp $
 #
 
 package FML::Credential;
@@ -298,7 +298,37 @@ sub is_same_domain
 }
 
 
-=head2 is_member($curproc, $address)
+=head2 is_ml_domain($address)
+
+check if the domain part of $address matches exact $ml_domain (our
+default domain) or not. return 1 if matched or 0 not.
+
+XXX o.k. to support only exact match ?
+
+=cut
+
+
+# Descriptions: check if the domain part of $address matches exact $ml_domain.
+#    Arguments: OBJ($self) STR($address)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub is_ml_domain
+{
+    my ($self, $address) = @_;
+    my $curproc   = $self->{ _curproc };
+    my $ml_domain = $curproc->ml_domain();
+
+    if ($address && $ml_domain) {
+	if ($address =~ /\@$ml_domain$/i) { # domain is case insensitive.
+	    return 1;
+	}
+    }
+
+    return 0;
+}
+
+
+=head2 is_member($address)
 
 return 1 if the sender <$address> is an ML member.
 return 0 if not.
@@ -324,7 +354,7 @@ sub is_member
 }
 
 
-=head2 is_privileged_member($curproc, $address)
+=head2 is_privileged_member($address)
 
 return 1 if the sender <$address> is an ML administrator.
 return 0 if not.
@@ -350,7 +380,7 @@ sub is_privileged_member
 }
 
 
-=head2 is_recipient($curproc, $address)
+=head2 is_recipient($address)
 
 return 1 if the sender <$address> is an ML recipient.
 return 0 if not.
@@ -376,7 +406,7 @@ sub is_recipient
 }
 
 
-=head2 is_moderator_member($curproc, $address)
+=head2 is_moderator_member($address)
 
 return 1 if the sender <$address> is an ML moderator.
 return 0 if not.
@@ -402,7 +432,7 @@ sub is_moderator_member
 }
 
 
-=head2 is_spammer($curproc, $address)
+=head2 is_spammer($address)
 
 return 1 if the sender <$address> is a spammer.
 return 0 if not.
@@ -793,12 +823,26 @@ sub set
 if ($0 eq __FILE__) {
     my $file = $ARGV[0];
     my $addr = $ARGV[1];
-    my $obj  = new FML::Credential;
+    my $fp   = $ARGV[2] || "has_address_in_map";
+
+    use FML::Process::Debug;
+    my $curproc = new FML::Process::Debug;
+    my $obj     = new FML::Credential $curproc;
 
     $debug = 1;
-    print STDERR "has_address_in_map( $file, {}, $addr ) ...\n";
-    print STDERR $obj->has_address_in_map( $file, {}, $addr );
-    print STDERR "\n";
+    if ($fp eq "has_address_in_map") {
+	print STDERR "has_address_in_map( $file, {}, $addr ) ...\n";
+	print STDERR $obj->has_address_in_map( $file, {}, $addr );
+	print STDERR "\n";
+    }
+    elsif ($obj->can($fp)) {
+	print STDERR "\$obj->$fp($addr);\n";
+	my $status = $obj->$fp($addr);
+	print STDERR "status: $status\n";
+    }
+    else {
+	croak("no such function: $fp");
+    }
 }
 
 
@@ -812,7 +856,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006,2008 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
