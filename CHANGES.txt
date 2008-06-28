@@ -40,6 +40,30 @@
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
 
+2008/06/29
+
+	CREATE-ON-POST 機能では、動的にＭＬの作成、メンバーの追加が
+	出来るわけですが、ＭＬの作成が可能なユーザの制限を可能としました。
+
+   FML::Credential 
+	implement is_ml_domain() method.
+	fix debug and pod descriptions.
+	
+   FML::Restriction::Post 
+	implement permit_ml_domain()
+	
+   FML::Restriction::CreateOnPost 
+	define permit_createonpost_newml_maps
+	
+   FML::Process::CreateOnPost 
+	"who can do newml operations" code is rewritten to use of
+	createonpost_newml_restrictions.
+	
+   variables
+	define $createonpost_newml_restrictions.
+	define $createonpost_newml_maps.
+	remove $createonpost_maintainer_maps.
+
 2008/06/08
 
    create-on-post enhanced.
@@ -10095,4 +10119,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.298 2008/06/08 13:15:55 fukachan Exp $
+$FML: CHANGES.txt,v 1.299 2008/06/08 13:26:34 fukachan Exp $
