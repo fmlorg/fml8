@@ -3208,6 +3208,24 @@ createonpost_subscribe_restrictions =	reject_system_special_accounts
  					permit_anyone
 
 
+# Descriptions:
+#      History: NONE
+#        Value: MIX (
+#			reject_errormail
+#			reject_fml8_managed_address
+#			reject_createonpost_domain
+#			permit_createonpost_maintainer_maps
+#			permit_anyone
+#               )
+#     Examples: permit_anyone
+createonpost_newml_restrictions =	reject_system_special_accounts
+					reject_errormail
+					reject_fml8_managed_address
+					reject_createonpost_domain
+					permit_createonpost_maintainer_maps
+ 					permit_anyone
+
+
 # Descriptions: 
 #               ファイルの中は、たとえば \S+\@example.com
 #      History: NONE
@@ -3224,12 +3242,35 @@ createonpost_sender_maps	=	pcre:$ml_home_dir/sender.pcre
 createonpost_subscribe_maps	=	pcre:$ml_home_dir/subscribe.pcre
 
 
-# Descriptions: 
+=head2 CREATE-ON-POST でＭＬを作る機能への制限
+
+
+# Descriptions: CREATE-ON-POST で動的にＭＬを作ることができるユーザ
+#               を制限する。
+#               デフォルトでは $ml_domain (サーバのデフォルトドメイン)
+#		のユーザのみ(create-on-post 用に別のドメインを使うので、
+#		これは大抵サーバ管理者たちという意味)。
+#               もっと細かい制御をしたいなら、正規表現も使える
+#               $createonpost_newml_maps でドメイン制限などを行なうと良い。
+#      History: fml4 にはない。
+#		fml8 の初期実装では、この restrictions はなく、
+#		permit_anyone と同じ意味であった。 
+#        Value: MIX (
+#			permit_createonpost_newml_maps
+#			permit_ml_domain
+#			permit_anyone
+#		)
+#     Examples: yes
+createonpost_newml_restrictions = permit_ml_domain
+
+
+# Descriptions: CREATE-ON-POST で動的にＭＬを作ることができるユーザのリスト。
+#               pcre マップを使えば正規表現も使える。
 #               ファイルの中は、たとえば \S+\@example.com
 #      History: NONE
 #        Value: FILE
-#     Examples:
-createonpost_maintainer_maps	=	pcre:$ml_home_dir/maintainer.pcre
+#     Examples: pcre:$ml_home_dir/newml.pcre
+createonpost_newml_maps	=	pcre:$ml_home_dir/newml.pcre
 
 
 =head1 program paths
