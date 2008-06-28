@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2005,2006,2008 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.26 2006/04/10 13:08:52 fukachan Exp $
+# $FML: Post.pm,v 1.27 2006/05/09 12:30:05 fukachan Exp $
 #
 
 package FML::Restriction::Post;
@@ -108,6 +108,25 @@ sub permit_anyone
     my ($self, $rule, $sender) = @_;
 
     return("matched", "permit");
+}
+
+
+# Descriptions: permit if the domain of the sender mathces exact $ml_domain.
+#    Arguments: OBJ($self) STR($rule) STR($sender)
+# Side Effects: none
+# Return Value: ARRAY(STR, STR)
+sub permit_ml_domain
+{
+    my ($self, $rule, $sender) = @_;
+    my $curproc = $self->{ _curproc };
+    my $cred    = $curproc->credential();
+
+    if ($cred->is_ml_domain($sender)) {
+	return("matched", "permit");
+    }
+    else {
+	return(0, undef);
+    }
 }
 
 
@@ -427,7 +446,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004,2005,2006 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005,2006,2008 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
