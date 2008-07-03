@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.27 2006/05/09 12:30:05 fukachan Exp $
+# $FML: Post.pm,v 1.28 2008/06/28 20:06:21 fukachan Exp $
 #
 
 package FML::Restriction::Post;
@@ -187,15 +187,47 @@ sub reject
 }
 
 
+=head1 EXTENSION: HOLD CASE
+
+=head2 hold()
+
+hold messages in the hold queue.
+
+=cut
+
+
+# Descriptions: hold irrespective of other conditions.
+#    Arguments: OBJ($self) STR($rule) STR($sender)
+# Side Effects: none
+# Return Value: ARRAY(STR, STR)
+sub hold
+{
+    my ($self, $rule, $sender) = @_;
+    my $curproc = $self->{ _curproc };
+
+    # XXX the deny reason is first match.
+    unless ($curproc->restriction_state_get_hold_reason()) {
+	$curproc->restriction_state_set_hold_reason($rule);
+    }
+    return("matched", "hold");
+}
+
+
 =head1 EXTENSION: IGNORE CASE
 
 =head2 ignore
 
 ignore irrespective of other conditions.
 
+=head2 discard
+
+syntax sugar.
+disard request, same as ignore() method.
+
 =head2 ignore_invalid_request
 
 ignore request if the content is invalid.
+same as ignore() in current implemention.
 
 =cut
 
@@ -214,6 +246,18 @@ sub ignore
 	$curproc->restriction_state_set_ignore_reason($rule);
     }
     return("matched", "ignore");
+}
+
+
+# Descriptions: ignore request if the content is invalid.
+#               same as ignore() in this module.
+#    Arguments: OBJ($self) STR($rule) STR($sender)
+# Side Effects: none
+# Return Value: ARRAY(STR, STR)
+sub discard
+{
+    my ($self, $rule, $sender) = @_;
+    $self->ignore();
 }
 
 
