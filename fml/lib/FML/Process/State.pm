@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2004,2005,2006 Ken'ichi Fukamachi
+#  Copyright (C) 2004,2005,2006,2008 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: State.pm,v 1.26 2006/04/10 13:10:08 fukachan Exp $
+# $FML: State.pm,v 1.27 2008/07/03 20:44:12 fukachan Exp $
 #
 
 package FML::Process::State;
@@ -760,7 +760,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2004,2005,2006 Ken'ichi Fukamachi
+Copyright (C) 2004,2005,2006,2008 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
