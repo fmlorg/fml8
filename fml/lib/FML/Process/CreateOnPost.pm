@@ -3,7 +3,7 @@
 # Copyright (C) 2006,2008 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: CreateOnPost.pm,v 1.6 2008/06/08 13:13:09 fukachan Exp $
+# $FML: CreateOnPost.pm,v 1.7 2008/06/28 21:08:26 fukachan Exp $
 #
 
 package FML::Process::CreateOnPost;
@@ -571,7 +571,7 @@ sub _is_sender_allowed_to_create_ml
 {
     my ($curproc) = @_;
 
-    my $restriction = 'createonpost_newml_restrictions',
+    my $restriction = 'createonpost_newml_restrictions';
     my $addr_list   = $curproc->_apply_restrictions($restriction);
     my $is_allowed  = $addr_list->{ permit } ? 1 : 0;
     return $is_allowed;
