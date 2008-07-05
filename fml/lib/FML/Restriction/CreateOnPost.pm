@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: CreateOnPost.pm,v 1.3 2006/07/09 12:11:13 fukachan Exp $
+# $FML: CreateOnPost.pm,v 1.4 2008/06/28 21:05:47 fukachan Exp $
 #
 
 package FML::Restriction::CreateOnPost;
@@ -12,6 +12,7 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
+use FML::Restriction::Post;
 push(@ISA, qw(FML::Restriction::Post));
 
 =head1 NAME
