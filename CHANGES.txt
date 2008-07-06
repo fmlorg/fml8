@@ -39,6 +39,41 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2008/07/06
+
+	各 restrictions (例: 投稿、コマンドメール)で reject のかわりに
+	isolate と ignore を使えるようにし、デフォルトを reject から isolate
+	へ変更します。
+
+	isolate 命令は ignore ＋ 一定期間保存(隔離)相当の機能です。
+	拒否の返事をせずに、メールを保存し、一定期間後に削除します。
+
+	補足: 最初 hold 命令を、この意味で使おうとしましたが、それだと
+	Postfix の hold と意味が違ってしまうので、それは廃止。hold は
+	予約語として、そのまま（実態がない命令なので書いても何も起こら
+	ないので注意）。
+
+   FML::Process::{Distribute,State}
+   FML::Restriction::Post 
+	define "isolate" operation template.
+	
+	"isolate" differs "hold".
+	"isolate" sets apart spam candidates from normal incoming messages,
+	whereas "hold" moves the incoming message to "hold" queue, which does
+	not move until someone changes the state.
+
+2008/07/05
+
+   FML::Restriction::CreateOnPost 
+	fixed: add missing use FML::Restriction::Post
+
+2008/07/04
+
+   FML::Process::State 
+	define restriction_state_{set,get}_hold_reason()
+	
+   FML::Restriction::Post 
+	define hold() and discard()
 
 2008/06/29
 
@@ -10119,4 +10154,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.299 2008/06/08 13:26:34 fukachan Exp $
+$FML: CHANGES.txt,v 1.300 2008/06/28 22:51:12 fukachan Exp $
