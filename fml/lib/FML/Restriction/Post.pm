@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.28 2008/06/28 20:06:21 fukachan Exp $
+# $FML: Post.pm,v 1.29 2008/07/03 20:45:09 fukachan Exp $
 #
 
 package FML::Restriction::Post;
@@ -193,6 +193,8 @@ sub reject
 
 hold messages in the hold queue.
 
+XXX DO NOTHING NOW. "HOLD" NAME IS PRESERVED FOR LATER USE.
+
 =cut
 
 
@@ -210,6 +212,33 @@ sub hold
 	$curproc->restriction_state_set_hold_reason($rule);
     }
     return("matched", "hold");
+}
+
+
+=head1 EXTENSION: ISOLATE CASE
+
+=head2 isolate()
+
+isolate messages in the isolated queue.
+This operation is used for messages such as spam candidates.
+
+=cut
+
+
+# Descriptions: isolate irrespective of other conditions.
+#    Arguments: OBJ($self) STR($rule) STR($sender)
+# Side Effects: none
+# Return Value: ARRAY(STR, STR)
+sub isolate
+{
+    my ($self, $rule, $sender) = @_;
+    my $curproc = $self->{ _curproc };
+
+    # XXX the deny reason is first match.
+    unless ($curproc->restriction_state_get_isolate_reason()) {
+	$curproc->restriction_state_set_isolate_reason($rule);
+    }
+    return("matched", "isolate");
 }
 
 

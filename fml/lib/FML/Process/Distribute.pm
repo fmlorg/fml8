@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.178 2006/05/04 05:19:37 fukachan Exp $
+# $FML: Distribute.pm,v 1.179 2006/07/09 12:11:13 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -259,7 +259,17 @@ sub run
 	    $curproc->log("ignore article submission");
 	    $curproc->stop_this_process();
 	}
-	else {
+	elsif ($action eq 'hold') {
+	    # XXX NEED actual hold operation !
+	    $curproc->log("ignore and hold article");
+	    $curproc->stop_this_process();
+	}
+	elsif ($action eq 'isolate') {
+	    # XXX NEED actual isolate operation !
+	    $curproc->log("isolate article");
+	    $curproc->stop_this_process();
+	}
+	else { # reject and anything.
 	    $curproc->logerror("deny article submission");
 	    $curproc->stop_this_process();
 
