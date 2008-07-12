@@ -1,4 +1,4 @@
-<!-- $FML: fml.dsl,v 1.6 2003/03/13 15:13:16 fukachan Exp $ -->
+<!-- $FML: fml.dsl,v 1.7 2005/07/27 12:20:52 fukachan Exp $ -->
 
 <!DOCTYPE style-sheet PUBLIC "-//James Clark//DTD DSSSL Style Sheet//EN" [
    <!ENTITY docbook.dsl PUBLIC "-//Norman Walsh//DOCUMENT DocBook HTML Stylesheet//EN" CDATA DSSSL>
@@ -68,9 +68,9 @@ CDATA DSSSL>
                 (literal "fml 4.0 project homepage is ")
 	        (make element gi: "a"
                       attributes: 
-                     (list (list "href" "http://www.fml.org/fml/")
+                     (list (list "href" "http://www.fml.org/software/fml4/")
                             (list "target" "_top"))
-                  (literal "www.fml.org/fml/menu.ja.html"))
+                  (literal "www.fml.org/software/fml4/"))
                 (literal "."))
 
                 (make empty-element gi: "br")
