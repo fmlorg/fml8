@@ -1,5 +1,5 @@
 <!--
-   $FML: bookinfo.sgml,v 1.15 2005/06/25 15:11:31 fukachan Exp $
+   $FML: bookinfo.sgml,v 1.16 2006/01/14 17:19:49 fukachan Exp $
 -->
 
 <bookinfo>
@@ -46,8 +46,8 @@
 
 	<para>
 	現在の fml8 で動く機能そして TODO リストは
-	<ulink url="../../../fml/doc/ja/todo/STATUS.html">
-	http://www.fml.org/software/fml-devel/fml/doc/ja/todo/STATUS.html
+	<ulink url="../../../fml/doc/ja/todo/STATUS.txt">
+	http://www.fml.org/software/fml8/fml/doc/ja/todo/STATUS.txt
 	</ulink>
 	を、
 	fml4 と fml8 の相違点については、

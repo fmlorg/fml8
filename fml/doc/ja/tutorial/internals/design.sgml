@@ -1,5 +1,5 @@
 <!--
-   $FML: design.sgml,v 1.10 2004/04/07 11:07:07 fukachan Exp $
+   $FML: design.sgml,v 1.11 2004/10/06 09:07:38 fukachan Exp $
 -->
 
 
@@ -20,7 +20,7 @@
 	</title>
 
 <para>
-<ulink url="http://www.fml.org/software/fml-devel/">
+<ulink url="http://www.fml.org/software/fml8/">
 fml-devel
 </ulink>
 とも呼ばれている &fml8; プロジェクトは、
@@ -29,8 +29,8 @@ fml-devel
 </PARA>
 
 <para>
-<ulink url="http://www.fml.org/software/fml-devel/">
-http://www.fml.org/software/fml-devel/
+<ulink url="http://www.fml.org/software/fml8/">
+http://www.fml.org/software/fml8/
 </ulink>
 は将来の fml-current についてのデザインや実装例を紹介しています。
 </PARA>
