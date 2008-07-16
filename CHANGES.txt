@@ -39,6 +39,24 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+
+2008/07/16
+
+	[isolate_XXX 命令シリーズ創設案]
+
+	2008/07/06 の各 restrictions (例: 投稿、コマンドメール)で 
+	reject のかわりに isolate と ignore を使えるようにし ...
+	は、いいのですが、reject_system_special_accounts 命令は
+	どうすればよいのでしょう？
+
+	isolate_system_special_accounts ってのを創設すれば良いですね？
+
+	ほえ_restrictions にある reject なんとか命令をすべて isolate へ
+	書き換えてしまえば、一番素直な拡張だと思える。
+ 
+		$*_restrictions =~ s/reject/isolate/g;
+
+
 2008/07/06
 
 	各 restrictions (例: 投稿、コマンドメール)で reject のかわりに
@@ -10154,4 +10172,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.300 2008/06/28 22:51:12 fukachan Exp $
+$FML: CHANGES.txt,v 1.301 2008/07/06 05:40:23 fukachan Exp $
