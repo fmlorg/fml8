@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.29 2008/07/03 20:45:09 fukachan Exp $
+# $FML: Post.pm,v 1.30 2008/07/06 05:31:47 fukachan Exp $
 #
 
 package FML::Restriction::Post;
@@ -239,6 +239,40 @@ sub isolate
 	$curproc->restriction_state_set_isolate_reason($rule);
     }
     return("matched", "isolate");
+}
+
+
+# Descriptions: isolate the message if $sender matches a system account.
+#    Arguments: OBJ($self) STR($rule) STR($sender)
+# Side Effects: none
+# Return Value: ARRAY(STR, STR)
+sub isolate_system_special_accounts
+{
+    my ($self, $rule, $sender) = @_;
+    my $curproc = $self->{ _curproc };
+    my $cred    = $curproc->credential();
+    my $match   = $cred->match_system_special_accounts($sender);
+
+    if ($match) {
+	$curproc->log("${rule}: $match matches sender address");
+	unless ($curproc->restriction_state_get_isolate_reason()) {
+	    $curproc->restriction_state_set_isolate_reason($rule);
+	}
+	return("matched", "isolate");
+    }
+
+    return(0, undef);
+}
+
+
+# Descriptions: isolate if $sender matches a system account.
+#    Arguments: OBJ($self) STR($rule) STR($sender)
+# Side Effects: none
+# Return Value: ARRAY(STR, STR)
+sub isolate_system_accounts
+{
+    my ($self, $rule, $sender) = @_;
+    $self->isolate_system_special_accounts($rule, $sender);
 }
 
 
