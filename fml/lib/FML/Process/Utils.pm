@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006,2008 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.150 2006/05/13 11:45:40 fukachan Exp $
+# $FML: Utils.pm,v 1.151 2006/07/09 12:11:13 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -384,6 +384,64 @@ sub incoming_message_print_body_as_file
 	$curproc->logerror("incoming_message_dup_body: no cache");
 	return undef;
     }
+}
+
+
+=head2 incoming_message_dup_content($new_class)
+
+dupliate the incoming queue at $new_class.
+
+=head2 incoming_message_isolate_content()
+
+dupliate the incoming queue at isolated queue.
+
+=cut
+
+
+# Descriptions: dupliate the queue in $new_class.
+#    Arguments: OBJ($curproc) STR($new_class)
+# Side Effects: create another queue file.
+# Return Value: STR
+sub incoming_message_dup_content
+{
+    my ($curproc, $new_class) = @_;
+
+    # ASSERT
+    unless ($new_class) {
+	return undef;
+    }
+
+    my $queue = $curproc->incoming_message_get_current_queue();
+    if (defined $queue) {
+	if ($new_class) {
+	    my $cur_class = "incoming";
+	    my $new_qid = $queue->dup_content($cur_class, $new_class);
+	    if ($new_qid) {
+		return $new_qid;
+	    }
+	    else {
+		return undef;
+	    }
+	}
+    }
+    else {
+	$curproc->logerror("no incoming queue");
+    }
+
+    return undef;
+}
+
+
+# Descriptions: isolate the incoming queue to isolated queue.
+#    Arguments: OBJ($curproc)
+# Side Effects: create another queue file.
+# Return Value: STR
+sub incoming_message_isolate_content
+{
+    my ($curproc) = @_;
+
+    my $new_class = "isolated";
+    $curproc->incoming_message_dup_content($new_class);
 }
 
 
@@ -2427,7 +2485,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006,2008 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
