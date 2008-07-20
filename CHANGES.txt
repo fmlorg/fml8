@@ -40,6 +40,19 @@
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
 
+2008/07/20
+
+   FML::Process::Utils 
+	define incoming_message_dup_content() and
+	incoming_message_isolate_content().
+	
+   FML::Process::{Command,Distribute}
+	isolate the current incoming message if matched
+
+   FML::Restriction::Post 
+	define isolate_system_special_accounts() and
+	isolate_system_accounts().
+	
 2008/07/16
 
 	[isolate_XXX 命令シリーズ創設案]
@@ -10172,4 +10185,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.301 2008/07/06 05:40:23 fukachan Exp $
+$FML: CHANGES.txt,v 1.302 2008/07/16 20:54:40 fukachan Exp $
