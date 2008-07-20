@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2008 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.120 2006/06/25 11:05:12 fukachan Exp $
+# $FML: Command.pm,v 1.121 2006/07/09 12:11:13 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -345,6 +345,12 @@ sub _command_process_loop
 	    $curproc->reply_message_nl('command.stop', "stopped.");
 	    last COMMAND;
 	}
+
+	# 3. we need to isolate the incoming message.
+	if ($curproc->restriction_state_get_isolate_reason()) {
+	    $curproc->incoming_message_isolate_content();
+	    last COMMAND;
+	}
     }
 }
 
@@ -428,6 +434,10 @@ sub _command_switch
 	elsif ($result eq "ignore") {
 	    $num_ignored++;
 	    $curproc->logdebug("command mail should be ignored");
+	}
+	elsif ($result eq "isolate") {
+	    $num_ignored++;
+	    $curproc->logdebug("command mail need to be isolated");
 	}
 	else {
 	    $num_ignored++;
@@ -596,7 +606,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2008 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

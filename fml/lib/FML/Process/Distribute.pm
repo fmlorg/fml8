@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2008 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.180 2008/07/06 05:31:47 fukachan Exp $
+# $FML: Distribute.pm,v 1.181 2008/07/19 12:27:59 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -267,6 +267,7 @@ sub run
 	elsif ($action eq 'isolate') {
 	    # XXX NEED actual isolate operation !
 	    $curproc->log("isolate article");
+	    $curproc->incoming_message_isolate_content();
 	    $curproc->stop_this_process();
 	}
 	else { # reject and anything.
