@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.69 2006/05/04 06:53:54 fukachan Exp $
+# $FML: Queue.pm,v 1.70 2006/07/09 12:11:13 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -88,6 +88,7 @@ my $default_dir_mode = 0755;
 		 recipients
 		 transport
 		 strategy
+		 isolated
 		 );
 
 # Descriptions: constructor.
