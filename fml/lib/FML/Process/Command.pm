@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2008 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.121 2006/07/09 12:11:13 fukachan Exp $
+# $FML: Command.pm,v 1.122 2008/07/20 09:15:55 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -584,14 +584,25 @@ sub _check_effective_command_contained
     # if no effective command,
     # ignore or reply warning determined by matched rule.
     unless ($num_processed) {
-	my $rule = $curproc->restriction_state_get_ignore_reason() || '';
+	my $rule;
+
+	$rule = $curproc->restriction_state_get_ignore_reason()  || '';
 	if ($rule eq 'ignore_invalid_request' || $rule eq 'ignore') {
 	    $curproc->log("no effective command, ignore reply");
 	    $curproc->reply_message_delete();
+	    return;
 	}
-	else {
-	    $curproc->log("no effective command, send warning");
+
+	$rule = $curproc->restriction_state_get_isolate_reason() || '';
+	if ($rule eq 'isolate_invalid_request' || $rule eq 'isolate') {
+	    $curproc->log("no effective command, isolate and ignore request");
+	    $curproc->incoming_message_isolate_content();
+	    $curproc->reply_message_delete();
+	    return;
 	}
+
+	# not matched, send warning.
+	$curproc->log("no effective command, send warning");
     }
 }
 
