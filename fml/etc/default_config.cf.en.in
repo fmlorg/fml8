@@ -341,13 +341,16 @@ address_compare_function_domain_matching_level	=	3
 #			reject_system_special_accounts
 #			reject_spammer_maps
 #			reject
+#			isolate_system_special_accounts
+#			isolate_spammer_maps
+#			isolate
 #			ignore_invalid_request
 #			ignore
 #		)
 #     Examples:
-article_post_restrictions	=	reject_system_special_accounts
+article_post_restrictions	=	isolate_system_special_accounts
 					permit_member_maps
-					reject
+					isolate
 
 # Descriptions: restrictions for command mail
 #      History: fml 4.0's PERMIT_COMMAND_FROM + REJECT_ADDR
@@ -360,14 +363,17 @@ article_post_restrictions	=	reject_system_special_accounts
 #			reject_system_special_accounts
 #			reject_spammer_maps
 #			reject
+#			isolate_system_special_accounts
+#			isolate_spammer_maps
+#			isolate
 #			ignore_invalid_request
 #			ignore
 #		)
 #     Examples:
-command_mail_restrictions	=	reject_system_special_accounts
+command_mail_restrictions	=	isolate_system_special_accounts
 					permit_anonymous_command
 					permit_user_command
-					reject
+					isolate
 
 
 # Descriptions: restrictions for admin command mail
@@ -380,6 +386,9 @@ command_mail_restrictions	=	reject_system_special_accounts
 #			reject_system_special_accounts
 #			reject_spammer_maps
 #			reject
+#			isolate_system_special_accounts
+#			isolate_spammer_maps
+#			isolate
 #		)
 #     Examples:
 #		1. if auth by members-admin only
