@@ -3,9 +3,11 @@
 
   [最近のまとめ]
 
-  FML_CURRENT_VERSION=7.98.12
+  FML_CURRENT_VERSION=7.98.13
 
   8.0 PRE_ALPHA
+	7.98.13 "isolate" instead of "reject" spam or unknown messages
+		by default.
 	7.98.12 delivery system error handling fixed.
 	7.98.11 ignore in restrictions supported.
 	7.98.10	delivery system overhaul sequal.
@@ -39,6 +41,32 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+
+2008/08/03
+
+   bump up version to 7.98.13
+	isolation or quarantine mode implemented and enabled by default.
+	"isolate" instead of "reject" spam or unknown messages
+	by default.
+
+	変なメール(まぁはっきり言えば、ほぼ全部 SPAM)は、今まで
+	*_restrictions のルールの最後が reject のため、敵に返事を
+	送ろうとしてしまっていたが、デフォルトを isolate に変更。
+
+	とりあえず受けとり、隔離キューに入れる動作にした。
+
+	隔離キューのレポートなどは、まだ未実装。
+
+   variables
+	support directives (isolate_system_special_accounts
+	isolate_spammer_maps isolate) for $article_post_restrictions and
+	$command_mail_restrictions.
+	
+   Mail::Delivery::Queue 
+	create isolated queue, too.
+	
+   FML::Process::Command 
+	fixed that isolate operation works.
 
 2008/07/20
 
@@ -10185,4 +10213,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.302 2008/07/16 20:54:40 fukachan Exp $
+$FML: CHANGES.txt,v 1.303 2008/07/20 12:34:47 fukachan Exp $
