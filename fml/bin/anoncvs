@@ -1,12 +1,12 @@
 #!/bin/sh
 #
-# Copyright (C) 2000,2002 Ken'ichi Fukamachi
+# Copyright (C) 2000,2002,2008 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML$
+# $FML: anoncvs,v 1.1 2002/04/11 08:52:11 fukachan Exp $
 #
 
-exec cvs -d :pserver:anoncvs@anoncvs.fml.org:/exports/cvsroot $*
+exec cvs -d anoncvs@anoncvs.fml.org:/cvsroot $*
 
 # not reached here
 echo cannot exec cvs -d :pserver:anoncvs@anoncvs.fml.org:/exports/cvsroot $*
