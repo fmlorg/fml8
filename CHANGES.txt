@@ -42,6 +42,12 @@
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
 
+2008/08/07
+
+   anoncvs.fml.org changed to support anonymous cvs over ssh.
+	   fml/bin/anoncvs changed.
+	   documents updated.
+
 2008/08/03
 
    bump up version to 7.98.13
@@ -10213,4 +10219,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.303 2008/07/20 12:34:47 fukachan Exp $
+$FML: CHANGES.txt,v 1.304 2008/08/03 10:24:35 fukachan Exp $
