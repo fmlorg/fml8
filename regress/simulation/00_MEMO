@@ -263,7 +263,10 @@
 	どうやってシンクロするの？
 
 
-[TODO]	2005/05 のオーバホールの残り
+[TODO]	2008 document overhaul
+
+
+[TODO]	2008 module overhaul + 2005/05 のオーバホールの残り
 
    * 重たいので後回しにされてるもの
 	Mail/Delivery/Queue.pm
@@ -294,4 +297,4 @@
 	FML::Sys::Alias
 
 ----------
-$FML: 00_MEMO,v 1.127 2006/03/20 06:09:56 fukachan Exp $
+$FML: 00_MEMO,v 1.128 2008/08/10 04:06:13 fukachan Exp $
