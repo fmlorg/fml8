@@ -43,10 +43,11 @@ error_analyzer_simple_count_limit	=	2
 
 
 
-article_post_restrictions       =       reject_system_special_accounts
+# thread test
+article_post_restrictions       =       isolate_system_special_accounts
 					check_article_thread
                                         permit_member_maps
-                                        reject
+                                        isolate
 
 
 
