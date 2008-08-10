@@ -6,6 +6,7 @@
 	XXX このファイルは、なる早で解決する/bug fix するべきもの
         XXX 遠大なビジョンやとりあえず後まわしでよいものは STATUS.txt へ
 
+
 [TODO] 添付ファイルをサイズでチェック
 
 	# allow only text/plain messages.
@@ -17,7 +18,7 @@
 
 [TODO] fml 4 to 8: $AUTO_REGISTRATION_TYPE
 
-	subject body no-keyword 
+	subject body no-keyword
 
 	行ごとに解析する現在のコードには、うまくのらない。
 
@@ -36,6 +37,9 @@
 	GUI config
 
 
+[TODO]	メッセージを config する tool
+
+
 [TODO]	MTI トラフィックフィルタ
 
 	   単位時間あたりの投稿数を制限したい
@@ -46,6 +50,12 @@
 
 
 [TODO]	CGI は cookie をつかったほうがいいのかなぁ？
+
+	そのばあいは、はじめから perl 5 についてるモジュールで GO
+
+	/usr/pkg/lib/perl5//5.8.0/CGI/eg/cookie.cgi
+	/usr/pkg/lib/perl5//5.8.0/CGI/Cookie.pm
+
 
 
 [TODO]	CGI スキンを動的に切替えられる？
@@ -216,20 +226,20 @@
 	* TODO
 
  	FixIt                                    Mail/Bounce/FixBrokenAddress
-	
+
 	address_cleanup                          FML/Header
 	address_cleanup                          Mail/Bounce
-	
+
 	---------->8---------->8---------->8---------->8---------->8
 	* けすべき
-	
+
 	method_regexp                            FML/Restriction/CGI
 	param_regexp                             FML/Restriction/CGI
-	
+
 	* どうなんだろう？
-	
+
 	regexp_compile                           FML/Header/Subject
-	
+
 	command_regexp_match                     FML/Restriction/Command
 	regexp_match                             FML/Restriction/Base
 	safe_regexp_match                        FML/Command
@@ -284,4 +294,4 @@
 	FML::Sys::Alias
 
 ----------
-$FML: 00_MEMO,v 1.126 2006/03/08 13:28:14 fukachan Exp $
+$FML: 00_MEMO,v 1.127 2006/03/20 06:09:56 fukachan Exp $
