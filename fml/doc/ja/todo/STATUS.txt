@@ -1,8 +1,8 @@
 		STATUS: fml-devel で現在できること/できないこと
 		Last Modified: $Date$ (GMT)
 
-	* このドキュメントは"fml bible" の目次に沿って何ができて何がま
-	  だできないかをリストアップしたものです。
+	* このドキュメントは"fml bible" の目次に沿って、fml version 8 で
+          何ができて何がまだできないかをリストアップしたものです。
 
 ○ 動作実績
 	perl 5.8.5   on NetBSD 2.0				*
@@ -27,15 +27,15 @@
 		 () テスト中
 
 3章
-	[TODO] ＭＬサーバの理論をかく
+	[TODO] ＭＬサーバの理論を書く
 
 
 II部　fmlのセットアップ〜MLの作成
 
 4章　Unix上でのfmlのインストール
 
-	ユーザ root になり、configure そして make install です。
-	つまり典型的なインストール手順を行なって下さい。
+	「ユーザ root になり、configure そして make install を実行」です。
+	つまりフリーソフトウエアの典型的なインストール手順を行なって下さい。
 		# ./configure
 		# make install
 
@@ -45,16 +45,17 @@ II部　fmlのセットアップ〜MLの作成
 	メールサーバの設定は 4.0 の場合と同様です。
 
 	ユーザ fml を作るだけでなく、きちんとユーザ fml さんのホームディ
-	レクトリも作って下さい。
+	レクトリも作って下さい。というのは ~fml/public_html でＭＬの公
+	開をする、ＣＧＩを動かすというのがデフォルトの設定だからです。
 
 	パッケージ作成者のかたへ: 
 		fml8 一式を / 以外の場所へインストールする際は、
 		以下のように install_root でディレクトリを指定して下さい。
 		# make install install_root=/tmp/dir
 	
-	[TODO] sendmail + smtpfeed
+	[TODO] sendmail + smtpfeed の場合のセットアップ方法
 
-	[TODO] MacOS X Server
+	[TODO] MacOS X Server の場合のセットアップ方法
 
 
 5章　Unix上でMLを作る
@@ -65,14 +66,15 @@ II部　fmlのセットアップ〜MLの作成
 	ＭＬ作成時には postfix と qmail、sendmail、procmail の設定見本
 	を作ります。
 
-	[TODO] sendmail + smtpfeed
-	[TODO] MacOS X Server
+	[TODO] sendmail + smtpfeed の場合
+	[TODO] MacOS X Server の場合
 
 	なお fml8 では newml 時に設定用 CGI や、HTML 化された記事をお
 	くディレクトリ ~fml/public_html/ .. なども作成します。
 
 	バーチャルドメインの扱いは fml4 と異なりバーチャルドメインを含
-	めて統一化した使い勝手となっています。
+	めて統一化した使い勝手となっています。なので、全てのＭＬをバー
+	チャルドメインとして扱う方が便利だと思います。
 
 	たとえば nuinui.net を例にとります。まず最初に nuinui.net 用の
 	トップディレクトリを指定します。
@@ -96,19 +98,21 @@ II部　fmlのセットアップ〜MLの作成
 	[TODO]	Microsoft ものは IMail から手をつけるのがいいんじゃないかな
 	[TODO]	sendmail (NT版)を使ったＭＬ
 
-	fetchfml (POP/IMAP サーバからメールを取り出す MTA + MLエミュレー
-	ション)により、メールサーバを立ち上げなくとも自宅でＭＬを実行
-	すると行ったことが可能です。
+	なお fetchfml (POP/IMAP サーバからメールを取り出す MTA + MLエ
+	ミュレーション)により、メールサーバを立ち上げなくとも自宅でＭ
+	Ｌを実行すると行ったことが可能です。→ fetchfml の項目を検索
 
 	POP によるＭＬの実行は実装済みですが、IMAP 版は未実装です。
+		→ fetchfml の項目を検索
 
 
 7章　fml8 のアップグレード
 
-	もう一度 fml8 をインストールをし、/etc/fml/main.cf の 
+	もう一度 fml8 をインストールをし、/usr/local/etc/fml/main.cf の 
 	fml_version を編集してください。これだけで任意のバージョンへの
 	アップグレードとダウングレードが可能です。つまり main.cf の編
 	集をするだけでアップグレードもダウングレードも思いのままです。
+	システムコール一発、数ミリ秒で。
 
 	main.cf の編集だけですので、fml8 のアップグレード/ダウングレー
 	ドの際にメールサーバの停止は不要です。
@@ -121,12 +125,17 @@ II部　fmlのセットアップ〜MLの作成
 8章　Unix上でのCGIのセットアップ
 
 	ＭＬ作成時にデフォルトで CGI スクリプトが用意されます。
-	無効の .htaccess で動作しないようになっています。
 
-	別途 WWW サーバの設定(CGI および認証の設定)が必要です。
+	この時、無効の .htaccess を生成して、デフォルトでは CGI が動作
+	しないようになっています。
+	また、別途 WWW サーバの設定(CGI および認証の設定)が必要です。
 
-	[TODO] .htaccess の設定支援ツールがまだありません。
-		エディタでファイルを消すなり、編集するなりして下さい。
+	[TODO] apache の設定見本を生成
+
+	[TODO] .htaccess の設定支援ツール
+
+		設定支援ツールがまだありません。いまのところは、エディ
+		タでファイルを消すなり、編集するなりして下さい。
 
 	[TODO] config 
 
@@ -174,6 +183,8 @@ III部　fmlのカスタマイズ
 		use_article_digest_function = yes / no
 
 	により使う/使わないが指定できます(デフォルトは yes)。
+
+	まとめおくりは MIME/Multipart のみサポートしています。
 
 
 	[TODO] get: ファイル数が多い場合、分割して送返(fml-devel 485)
@@ -223,15 +234,17 @@ III部　fmlのカスタマイズ
 		受信者ごとに時刻や圧縮形式を変えるといったことは出来ま
 		せん。ただ fml 1 の設計された時代と環境が大きく異なる
 		現代では、こんな仕様はオーバースペックで不要なのではな
-		いかとも思います。そういうわけで後回しです。
+		いかとも思います。
 
-	[DONE]	rmml したＭＬをふっかつさせることは？
+		そういうわけで間違いなく実装しないでしょう。
 
-		reviveml コマンドでしょうか？
+	[DONE]	rmml したＭＬを復活させる → reviveml コマンド
 
-		動作は「一番日付が最近の @xxx.yyyymmdd を探して戻す」
-		となります。しかしながら aliases を復活させる問題があ
-		るので、もう一度 newml もする必要がありますね。
+		1. 一番日付が最近の @xxx.yyyymmdd を探し
+		2. それを元に戻し、
+		3.もう一度 newml を実行し、aliases などの再設定を行なう。
+
+		という動作をしています。
 
 	[TODO]	期限つきのＭＬ入会 subscribe
 
@@ -242,13 +255,17 @@ III部　fmlのカスタマイズ
 		o.k. so, how to kick off removal process ?
 
 
-	[DONE]	動的にＭＬを作成する CREATE-ON-POST
-
-
-	[TODO]	期限つきのＭＬ作成
+	[DONE]	動的にＭＬを作成する → CREATE-ON-POST 機能
 
 
 	[TODO]	期限つきの自動ＭＬ作成
+
+		動的にＭＬを作成(CREATE-ON-POST)し、
+		使われなくなったら(トラフィックがないなら)自動削除
+
+
+	[TODO]	期限つきのＭＬ作成 (トラフィック？日にちで有無をいわさず？)
+
 
 
 
@@ -257,42 +274,77 @@ III部　fmlのカスタマイズ
 	各ＭＬの設定変更方法は、各ＭＬのホームディレクトリにある 
 	config.cf を編集してください。フォーマットは Postfix 風です。
 
-		key = value
+		key = 	value
 
-	etc/fml/site_default_config.cf は、そのサーバの上で動いている
-	すべてのＭＬに同じ設定を強制します。これは fml4 の 
-	site_force.ph 相当です。
+		key = 	value1
+			value2	
+
+		拡張オプションとして += や -= が使えます。
+
+		key += value3
+
+		key -= value1
+
+	/usr/local/etc/fml/site_default_config.cf は、そのサーバの上で
+	動いているすべてのＭＬに同じ設定を強制します。これは fml4 の 
+	site_force.ph に相当するファイルです。
 
 	メニューによる設定支援ツール(CUI/GUI)は実装途中です。まだ実験
 	的なものしか動きません。
 
-	[TODO]	fml4 の site_init.ph にあたるものはありません。が必要？
+	[TODO]	fml4 の site_init.ph にあたるものはありません。これ必要？
 
 		って必要なのかなぁ…？？？
 
 
 13章　MLのスタイルのカスタマイズ (ケーススタディ)
 
+	◎ 記事の投稿に対する制御
+
 	投稿の制御は $article_post_restrictions で制御します。
 	restrictions という名前から分かる通り Postfix 的な考え方の制御
 	方法を採用しています。
 
+	＊＊＊重要な変更＊＊＊
+	2008/08/03 以降の fml8 では「SPAM メールの隔離」がデフォルトの
+	動作です(デフォルトも reject を isolate に書き換えてました)。
+
+	古い fml8 で restrictions を config.cf に書いている場合、
+	書き直しが必要です。書いていないなら、アップグレードするだけで
+	メールの隔離が動作するようになります。
+
+
 	例: デフォルト (メンバーであれば投稿可能）
+
 		article_post_restrictions =
-				reject_system_special_accounts
+				isolate_system_special_accounts
 				permit_member_maps
-				reject
+				isolate
 
 	例: PGP 電子署名で認証
 
 		article_post_restrictions =
-				reject_system_special_accounts
+				isolate_system_special_accounts
 				check_pgp_signature
-				reject
+				isolate
 
 	例: 誰でも投稿可能
+
 		article_post_restrictions = permit_anyone
 
+	従来はルールにマッチしない場合 reject 命令で終っていました。
+	これは、送信者に返事を出してしまいます。
+
+	isolate 命令は、隔離するだけで返事を出しません。
+
+	[TODO] 隔離レポートを管理者へ送信。
+
+	[TODO] 隔離メールをＭＬに流す命令の実装
+
+	[TODO] 隔離レポートで、メールをＭＬに流す操作はどうする？
+
+
+	◎ コマンドメールに対する制御
 
 	(一般ユーザからの)コマンドメールにたいする制限は
 	$command_mail_restrictions で制御します。
@@ -302,13 +354,20 @@ III部　fmlのカスタマイズ
 	コマンドメールを受けると受信はしますが、そのまま無視します。
 
 	$command_mail_restrictions で reject とだけ指定してもコマンド
-	メールの禁止になりますが、この場合コマンドメールが行なわれてし
-	まいます。
+	メールの禁止になりますが、この場合コマンドメールの処理が行なわ
+	れてしまいます。
 
+	＊＊＊重要な変更＊＊＊
+	2008/08/03 以降の fml8 では「SPAM メールの隔離」がデフォルトの
+	動作です(デフォルトも reject を isolate に書き換えてました)。
+
+	古い fml8 で restrictions を config.cf に書いている場合、
+	書き直しが必要です。書いていないなら、アップグレードするだけで
+	メールの隔離が動作するようになります。
 
 	restrictionsと同様にメンバーリストも member_maps のように
 	複数かけることが前提です。*_restrictions と *_maps の細かな定
-	義を使うと特別なハックなしでもいろいろなことができます。
+	義を使うと特別な hack なしでもいろいろなことができます。
 
 	例: メールマガジン型
 		$member_maps から $primary_member_map をはずす。
@@ -322,7 +381,6 @@ III部　fmlのカスタマイズ
 
 	例: procmail によるＭＬ
 		makefml newml が見本を作るので、それを使うだけです。
-
 
 
 	[DONE] 自動登録/手動登録をどこで指定するの？デフォルトは自動
@@ -355,13 +413,16 @@ III部　fmlのカスタマイズ
 
 		fml4 のタイプ 2 だけ実装しましたが 1 と 3 は未実装
 
-	[TODO] 複数の管理者による運用
+	[DONE] 複数の管理者による運用
 
-	[TODO] 登録と削除をまとめておこなう
+		$maintainer_recipient_maps を定義すれば、
+		その管理者たちへ転送される。 
+
+	[TODO] 登録と削除をまとめておこなう (コマンド一つ＋複数アドレス)
 
 	[TODO] listserv 風のコマンドアドレス
 
-	[TODO] qmail-ext によるコマンド
+	[DONE] qmail-ext を使ったコマンド e.g ML-subscribe@DOMAIN 可能
 
 	[削除] ＭＬ本体でコマンドメールも受けられる機能
 
@@ -384,6 +445,10 @@ III部　fmlのカスタマイズ
 	などを見て、返すメッセージの言語を決めています。
 	曖昧な場合、複数の言語で返します(mime/multipartになります)。
 
+
+	[TODO] メッセージカスタマイズ設定の支援ツール
+
+
 	[TODO] site local のディレクトリを決める
 		/etc/fml/ 以下?
 		site_local/ ?
@@ -400,7 +465,7 @@ III部　fmlのカスタマイズ
 
 16章　記事のフィルタリング
 
-	実装済み (FML::Filter クラス)
+	[DONE] フィルタは実装済み (FML::Filter クラス)
 		ヘッダフィルタ
 		本文に対するフィルタ
 		text/plain に対するフィルタ
@@ -456,7 +521,7 @@ III部　fmlのカスタマイズ
 
 	利用可能なコマンドは FML::Command::Admin:: クラスの部分集合です
 
-	etc/passwd-admin
+	各ＭＬのホームディレクトリ/etc/passwd-admin
 		fml4 の etc/passwd は fml8 の etc/passwd-admin です。
 		フォーマットが微妙に違います（拡張されている）
 		操作ツール、コマンドは fml4 と同じです。
@@ -477,12 +542,14 @@ III部　fmlのカスタマイズ
 
 20章　MLの記事をWWWで公開する
 
-	デフォルトで作ることになっています。デフォルトでは
+	[DONE] 記事の WWW アーカイブ → デフォルトで作成。
+
+		デフォルトでは
 
 		~fml/public_html/fml/mlarchive/$domain/$ml_name/
 
-	というディレクトリに作ります。このまま作るなり、適宜
-	alias を切るなりして使うとよいでしょう。
+		というディレクトリに作ります。このまま作るなり、適宜
+		alias を切るなりして使うとよいでしょう。
 
 	[TODO] permission はこれでいい？
 
@@ -516,12 +583,12 @@ V部　その他のトピック
 
 	スプールは真っ平ら or 一階層構造のどちらでもとれます。
 	何万通も流れそうなＭＬでは一階層構造がお薦めです。
-	デフォルトは fml4 との互換性のため、まったいらです。
+	デフォルトは fml4 との互換性のため真っ平らです。
 
 	デバッグのためにメールを一定量つねに保存しています。
 	これは記事の保存とは別の仕組みで、全プロセスの入出力の記録です。
 
-	   受けとったメールをすべて保存する。
+	   受けとったメール(incoming mails)をすべて保存する。
 		var/mail/incoming/ 以下に保存します。
 		fml4 と異なり保存がデフォルトの挙動です。
 
@@ -534,13 +601,23 @@ V部　その他のトピック
 
 		log_rotate_size = バイト数
 
-	[削除]	var/log/_smtplog.数字ではなくなりました。
+	[削除]	「var/log/_smtplog.数字」ファイルは無くなりました。
 
 	[TODO] スプールの圧縮
+
 	[TODO] スプールを tar などにまとめる (mode_archive)
-	[TODO] スプールの expire (mode_expire)
+
+	[DONE] 古い記事の自動消去
+
+		use_article_expire = yes (デフォルトは no)
+
+		デフォルトのリミットは 90 日。	
+		article_expire_limit = 90d
+
 	[TODO] 設定ファイルなどの RCS 管理
+
 	[TODO] 設定ファイルなどの CVS 管理
+
 	[TODO] log suffix extension: log.YYYYMMDD とかは？
 
 	[TODO] 「このＭＬはもうありません」オプション
@@ -558,7 +635,9 @@ V部　その他のトピック
 	自動削除も可能。
 
 	[TODO] カスタマイズを可能にする
+
 	[TODO] カスタマイズされたモジュールの置き場所
+
 	[TODO] エラーメールのフォワードについて改良 (fml-devel 451)
 
 		maintainer_recipient_maps は実装済み
@@ -571,6 +650,8 @@ V部　その他のトピック
 28章　メールサーバの変更/引越し
 
 	手間は 4.0 とほとんど同じかな
+
+	[TODO] fml project 第５世代への移行ログを残すこと。	
 
 
 29章　バーチャルドメイン
@@ -681,4 +762,4 @@ VIII部　付録
 
 
 ---
-$FML: STATUS.txt,v 1.39 2006/01/08 01:40:02 fukachan Exp $
+$FML: STATUS.txt,v 1.40 2006/02/05 03:31:56 fukachan Exp $
