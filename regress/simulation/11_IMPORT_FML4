@@ -1,7 +1,7 @@
 kern/fml.pl                    13.30	
 	kern/libenvf.pl                1.46	done
 	kern/libenvfsubr.pl            0.62	done
-kern/liblmtp.pl                0.24	
+	kern/liblmtp.pl                0.24	removed	
 	kern/libloadconfig.pl          2.12	removed
 	kern/libsmtp.pl                4.22	done
 	kern/libsmtphack.pl            0.39	removed?
@@ -16,7 +16,7 @@ kern/liblmtp.pl                0.24
 		* DoGenerateHeader() is not yet ?
 
 	kern/libtrap.pl                0.23	removed
-kern/msend.pl                  3.42	
+	kern/msend.pl                  3.42	removed
 	proc/libMIME.pl                0.73	done
 proc/libamctl.pl               5.14	
 	proc/libarchive.pl             0.47	scheduled in the future ?
@@ -29,7 +29,7 @@ proc/libcrypt.pl               0.98
 	proc/libdist.pl                2.03	done?
 proc/libdisthack.pl            1.25	
 proc/liberror.pl               0.38	
-proc/libexpire.pl              0.66	
+	proc/libexpire.pl              0.66	done
 proc/libfml.pl                 6.13	
 	proc/libfop.pl                 4.59	removed
 	proc/libhtmlsubr.pl            1.77	half done (Mail::HTML::Lite)
@@ -52,7 +52,7 @@ proc/libmti.pl                 2.03
 	proc/libnewsyslog.pl           0.69	done
 proc/libpgp.pl                 2.74	
 	proc/libpop.pl                 0.98	removed?
-proc/libqmail.pl               0.19	
+	proc/libqmail.pl               0.19	done
 proc/libra.pl                  6.35	
 	proc/librcs.pl                 0.27	removed?
 	proc/librelayhack.pl           0.37	removed

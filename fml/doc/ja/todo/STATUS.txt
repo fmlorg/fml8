@@ -227,9 +227,9 @@ III部　fmlのカスタマイズ
 
 	リモート管理は現在パスワード認証とPGP認証が利用可能です。
 
-	[TODO]	まとめおくり (fml 4 のような複雑なバージョン)
+	[削除]	まとめおくり (fml 4 のような複雑なバージョン)
 
-		まとめおくりは、簡易バージョンが動いています。
+		MIME/Multipart のまとめおくりは実装されています。
 
 		受信者ごとに時刻や圧縮形式を変えるといったことは出来ま
 		せん。ただ fml 1 の設計された時代と環境が大きく異なる
@@ -734,7 +734,9 @@ VII部　Advanced Study
 		それって、メール爆撃するあれか？ ;) 
 		text/plain を適当に切ると読めないような気がするが…
 
-	[TODO] Mail::Delivery の LMTP モード
+	[削除] Mail::Delivery の LMTP モード 
+		キュー管理しないといけない
+		→ 無駄に難しいので不要では？
 
 	[TODO] outgoing address hack
 		SPAM 対策についてドキュメントを書く
@@ -762,4 +764,4 @@ VIII部　付録
 
 
 ---
-$FML: STATUS.txt,v 1.40 2006/02/05 03:31:56 fukachan Exp $
+$FML: STATUS.txt,v 1.41 2008/08/11 04:49:30 fukachan Exp $
