@@ -3,7 +3,7 @@
 # Copyright (C) 2006,2008 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: CreateOnPost.pm,v 1.7 2008/06/28 21:08:26 fukachan Exp $
+# $FML: CreateOnPost.pm,v 1.8 2008/07/05 23:40:02 fukachan Exp $
 #
 
 package FML::Process::CreateOnPost;
@@ -135,6 +135,8 @@ sub verify_request
 
     my $eval = $config->get_hook( 'createonpost_verify_request_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
+
+    $curproc->credential_verify_sender();
 
     unless ($curproc->is_refused()) {
 	$curproc->_createonpost_verify_request();
@@ -272,9 +274,10 @@ sub _createonpost_verify_request
     my $return_path = $header->address_cleanup( $header->get('Return-Path') );
     my $cred        = $curproc->credential();
     my $sender      = $cred->sender();
+    my $sender_list = [ $return_path, $sender ];
 
     # 2. check sender.
-    $r_args->{ address_list } = [ $return_path, $sender ];
+    $r_args->{ address_list } = $sender_list;
     $restriction = 'createonpost_sender_restrictions';
     $addrlist    = $curproc->_apply_restrictions($restriction, $r_args);
     if ($addrlist->{ "deny" }) {
@@ -292,6 +295,7 @@ sub _createonpost_verify_request
 
     # 4. save for later use.
     my $pcb = $curproc->pcb();
+    $pcb->set("createonpost", "sender_list",  $sender_list);
     $pcb->set("createonpost", "address_list", $addrlist);
     $pcb->set("createonpost", "address_to_class", $address2class);
     $pcb->set("createonpost", "class_to_address", $class2address);
@@ -571,8 +575,13 @@ sub _is_sender_allowed_to_create_ml
 {
     my ($curproc) = @_;
 
+    # restrictions needs sender information as the argument.
+    my $pcb         = $curproc->pcb();
+    my $sender_list = $pcb->get("createonpost", "sender_list") || [];
+    my $r_args      = { address_list => $sender_list };
+
     my $restriction = 'createonpost_newml_restrictions';
-    my $addr_list   = $curproc->_apply_restrictions($restriction);
+    my $addr_list   = $curproc->_apply_restrictions($restriction, $r_args);
     my $is_allowed  = $addr_list->{ permit } ? 1 : 0;
     return $is_allowed;
 }
