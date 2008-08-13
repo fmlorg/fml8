@@ -6,6 +6,49 @@
 	XXX このファイルは、なる早で解決する/bug fix するべきもの
         XXX 遠大なビジョンやとりあえず後まわしでよいものは STATUS.txt へ
 
+[TODO]	discard_spam for *_restrictions ?
+
+	*_restrictions = 	discard_spam
+				reject_system_special_accounts
+				... いつものかんじ ...
+
+[TODO]	fml4 to fml8 コンバート (subject tag)
+
+	    BRACKET
+	    STRIP_BRACKETS
+	    BRACKET_SEPARATOR
+	    SUBJECT_FREE_FORM
+	    SUBJECT_FREE_FORM_REGEXP
+	    SUBJECT_FORM_LONG_ID
+	    SUBJECT_HML_FORM
+	    HML_FORM_LONG_ID
+
+
+[TODO]	fml4 to fml8 コンバート(mime component filter)
+
+	    CONTENT_HANDLER_CUTOFF_EMPTY_MESSAGE
+	    CONTENT_HANDLER_REJECT_EMPTY_MESSAGE
+	    HTML_MAIL_DEFAULT_HANDLER
+
+	のへんかん、むつかしー。とりあえず忘れる(ステータス:未サポート)。
+
+
+[TODO] NOT WORKS !
+
+	command_mail_restrictions =	reject_system_special_accounts 
+					permit_forward_to_moderator
+					reject
+
+
+	confirm がかえるのはただしいが、confirm をおくりかえすと
+	confirm コマンドとして解釈されない（もういちど confirmation になる)
+
+
+[TODO] web で [subscribe] をくりっく
+		ユニークな ID を DB に登録
+		ユニークな ID つきのメールを送信
+		ユニークな ID が認証されたら confirmation へはいる
+
 
 [TODO] 添付ファイルをサイズでチェック
 
@@ -293,8 +336,7 @@
 
    * 使ってないモジュール?
 	FML::Data::Deadline
-	FML::Process::QMail
 	FML::Sys::Alias
 
 ----------
-$FML: 00_MEMO,v 1.128 2008/08/10 04:06:13 fukachan Exp $
+$FML: 00_MEMO,v 1.129 2008/08/10 04:09:07 fukachan Exp $
