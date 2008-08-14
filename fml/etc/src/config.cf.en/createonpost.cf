@@ -8,7 +8,11 @@
 use_createonpost_function	=	yes
 
 
-# Descriptions:
+=head2 CREATE-ON-POST who can post ?
+
+
+# Descriptions: who can post for CREATE-ON-POST ML ?
+#		anyone by default.
 #      History: NONE
 #        Value: MIX (
 #			reject_errormail
@@ -21,13 +25,27 @@ use_createonpost_function	=	yes
 #               )
 #     Examples: permit_anyone
 createonpost_sender_restrictions =	reject_system_special_accounts
-					reject_errormail	
+					reject_errormail
 					reject_list_header_field
 					reject_fml8_managed_address
 					reject_createonpost_domain
 					permit_anyone
 
-# Descriptions:
+
+# Descriptions: restrict "who can post". PCRE is available.
+#               e.g. \S+\@example.com
+#      History: NONE
+#        Value: FILE
+#     Examples: pcre:$ml_home_dir/sender.allow.pcre
+createonpost_sender_maps	=	pcre:$ml_home_dir/sender.allow.pcre
+
+
+
+=head2 CREATE-ON-POST で subscribe 可能な人
+
+
+# Descriptions: who can subscribe ? 
+#		anyone by default.
 #      History: NONE
 #        Value: MIX (
 #			reject_errormail
@@ -44,48 +62,49 @@ createonpost_subscribe_restrictions =	reject_system_special_accounts
  					permit_anyone
 
 
-# Descriptions: 
-#               For eaxmple, this file contains \S+\@example.com line.
+# Descriptions: restrict "who can subscribe". PCRE is available.
+#               e.g. \S+\@example.com
 #      History: NONE
 #        Value: FILE
-#     Examples:
-createonpost_sender_maps	=	pcre:$ml_home_dir/sender.pcre
+#     Examples: pcre:$ml_home_dir/subscribe.allow.pcre
+createonpost_subscribe_maps	=	pcre:$ml_home_dir/subscribe.allow.pcre
 
 
-# Descriptions: 
-#               For eaxmple, this file contains \S+\@example.com line.
-#      History: NONE
-#        Value: FILE
-#     Examples:
-createonpost_subscribe_maps	=	pcre:$ml_home_dir/subscribe.pcre
+=head2 CREATE-ON-POST who can create a new create-on-post ML ?
 
 
-=head2 CREATE-ON-POST NEWML RESTRICTIONS
-
-
-# Descriptions: Who is allowed to create a newml dynamically by remote.
-#               Anyone can do this by default at the first design,
-#               but it is inappropriate in the actual operation.
-#               If you restricts the permission more granually, 
-#               use $createonpost_newml_maps, which allows regexp. 
-#      History: fml4 has no CREATE-ON-POST function.
-#		In the first implementation of CREATE-ON-POST of fml8, 
-#		this restriction is not implemented. So, 
-#		it was "permit_anyone" in creating a new ML.
+# Descriptions: Who can create a new CREATE-ON-POST ML ?
+#		user@$ml_domain is allowed by default.
+#		It is recommended that you should use $createonpost_newml_maps
+#		to control senders more granually.
+#      History: fml4 has no such function.
+#		fml8 before 2008/07 does not have this rectrictions.
+#		It means permit_anyone.
+#		Default action is changed to permit_ml_domain at 2008/07.
 #        Value: MIX (
+#			reject_errormail
+#			reject_fml8_managed_address
+#			reject_createonpost_domain
+#			permit_createonpost_maintainer_maps
+#			permit_createonpost_newml_maps
 #			permit_createonpost_newml_maps
 #			permit_ml_domain
 #			permit_anyone
-#		)
-#     Examples: permit_ml_domain
-createonpost_newml_restrictions = permit_ml_domain
+#               )
+#     Examples: permit_anyone
+createonpost_newml_restrictions =	reject_system_special_accounts
+					reject_errormail
+					reject_fml8_managed_address
+					reject_createonpost_domain
+					permit_createonpost_maintainer_maps
+ 					permit_ml_domain
 
 
-# Descriptions: Who is allowed to create a newml dynamically by remote.
-#               You can use perl regular expressions.
-#               For eaxmple, this file contains \S+\@example.com line.
+# Descriptions: restrict "who can create a new ML". PCRE is available.
+#               e.g. \S+\@example.com
 #      History: NONE
 #        Value: FILE
-#     Examples: pcre:$ml_home_dir/newml.pcre
-createonpost_newml_maps	=	pcre:$ml_home_dir/newml.pcre
+#     Examples: pcre:$ml_home_dir/newml.allow.pcre
+createonpost_newml_maps	=	pcre:$ml_home_dir/newml.allow.pcre
+
 

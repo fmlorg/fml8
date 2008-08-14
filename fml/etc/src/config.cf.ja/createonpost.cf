@@ -1,5 +1,6 @@
 =head1 CREATE-ON-POST
 
+
 # Descriptions: CREATE-ON-POST 機能を使うか否か？
 #               なお、この変数は createonpost プログラムでのみ意味がある。
 #      History: NONE
@@ -8,7 +9,11 @@
 use_createonpost_function	=	yes
 
 
-# Descriptions:
+=head2 CREATE-ON-POST で投稿可能な人
+
+
+# Descriptions: CREATE-ON-POST なＭＬへ投稿できる人は誰か？
+#		デフォルトはループを防ぐための例外を除き「誰でも投稿可」
 #      History: NONE
 #        Value: MIX (
 #			reject_errormail
@@ -27,7 +32,21 @@ createonpost_sender_restrictions =	reject_system_special_accounts
 					reject_createonpost_domain
 					permit_anyone
 
+
 # Descriptions:
+#               ファイルの中は、たとえば \S+\@example.com
+#      History: NONE
+#        Value: FILE
+#     Examples: pcre:$ml_home_dir/sender.allow.pcre
+createonpost_sender_maps	=	pcre:$ml_home_dir/sender.allow.pcre
+
+
+
+=head2 CREATE-ON-POST で subscribe 可能な人
+
+
+# Descriptions: REATE-ON-POST なＭＬへ subscribe できる人は誰か？
+#		デフォルトはループを防ぐための例外を除き「誰でも可」
 #      History: NONE
 #        Value: MIX (
 #			reject_errormail
@@ -45,40 +64,14 @@ createonpost_subscribe_restrictions =	reject_system_special_accounts
 
 
 # Descriptions:
-#      History: NONE
-#        Value: MIX (
-#			reject_errormail
-#			reject_fml8_managed_address
-#			reject_createonpost_domain
-#			permit_createonpost_maintainer_maps
-#			permit_anyone
-#               )
-#     Examples: permit_anyone
-createonpost_newml_restrictions =	reject_system_special_accounts
-					reject_errormail
-					reject_fml8_managed_address
-					reject_createonpost_domain
-					permit_createonpost_maintainer_maps
- 					permit_anyone
-
-
-# Descriptions: 
 #               ファイルの中は、たとえば \S+\@example.com
 #      History: NONE
 #        Value: FILE
-#     Examples:
-createonpost_sender_maps	=	pcre:$ml_home_dir/sender.pcre
+#     Examples: pcre:$ml_home_dir/subscribe.allow.pcre
+createonpost_subscribe_maps	=	pcre:$ml_home_dir/subscribe.allow.pcre
 
 
-# Descriptions: 
-#               ファイルの中は、たとえば \S+\@example.com
-#      History: NONE
-#        Value: FILE
-#     Examples:
-createonpost_subscribe_maps	=	pcre:$ml_home_dir/subscribe.pcre
-
-
-=head2 CREATE-ON-POST でＭＬを作る機能への制限
+=head2 CREATE-ON-POST でＭＬを作成可能な人
 
 
 # Descriptions: CREATE-ON-POST で動的にＭＬを作ることができるユーザ
@@ -90,14 +83,24 @@ createonpost_subscribe_maps	=	pcre:$ml_home_dir/subscribe.pcre
 #               $createonpost_newml_maps でドメイン制限などを行なうと良い。
 #      History: fml4 にはない。
 #		fml8 の初期実装では、この restrictions はなく、
-#		permit_anyone と同じ意味であった。 
+#		permit_anyone と同じ意味であった。
 #        Value: MIX (
+#			reject_errormail
+#			reject_fml8_managed_address
+#			reject_createonpost_domain
+#			permit_createonpost_maintainer_maps
+#			permit_createonpost_newml_maps
 #			permit_createonpost_newml_maps
 #			permit_ml_domain
 #			permit_anyone
-#		)
-#     Examples: yes
-createonpost_newml_restrictions = permit_ml_domain
+#               )
+#     Examples: permit_anyone
+createonpost_newml_restrictions =	reject_system_special_accounts
+					reject_errormail
+					reject_fml8_managed_address
+					reject_createonpost_domain
+					permit_createonpost_maintainer_maps
+ 					permit_ml_domain
 
 
 # Descriptions: CREATE-ON-POST で動的にＭＬを作ることができるユーザのリスト。
@@ -105,6 +108,7 @@ createonpost_newml_restrictions = permit_ml_domain
 #               ファイルの中は、たとえば \S+\@example.com
 #      History: NONE
 #        Value: FILE
-#     Examples: pcre:$ml_home_dir/newml.pcre
-createonpost_newml_maps	=	pcre:$ml_home_dir/newml.pcre
+#     Examples: pcre:$ml_home_dir/newml.allow.pcre
+createonpost_newml_maps	=	pcre:$ml_home_dir/newml.allow.pcre
+
 
