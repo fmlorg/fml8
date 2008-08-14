@@ -3173,6 +3173,7 @@ moderate_queue_expire_limit	=	14d
 
 =head1 CREATE-ON-POST
 
+
 # Descriptions: CREATE-ON-POST 機能を使うか否か？
 #               なお、この変数は createonpost プログラムでのみ意味がある。
 #      History: NONE
@@ -3181,7 +3182,11 @@ moderate_queue_expire_limit	=	14d
 use_createonpost_function	=	yes
 
 
-# Descriptions:
+=head2 CREATE-ON-POST で投稿可能な人
+
+
+# Descriptions: CREATE-ON-POST なＭＬへ投稿できる人は誰か？
+#		デフォルトはループを防ぐための例外を除き「誰でも投稿可」
 #      History: NONE
 #        Value: MIX (
 #			reject_errormail
@@ -3200,7 +3205,21 @@ createonpost_sender_restrictions =	reject_system_special_accounts
 					reject_createonpost_domain
 					permit_anyone
 
+
 # Descriptions:
+#               ファイルの中は、たとえば \S+\@example.com
+#      History: NONE
+#        Value: FILE
+#     Examples: pcre:$ml_home_dir/sender.allow.pcre
+createonpost_sender_maps	=	pcre:$ml_home_dir/sender.allow.pcre
+
+
+
+=head2 CREATE-ON-POST で subscribe 可能な人
+
+
+# Descriptions: REATE-ON-POST なＭＬへ subscribe できる人は誰か？
+#		デフォルトはループを防ぐための例外を除き「誰でも可」
 #      History: NONE
 #        Value: MIX (
 #			reject_errormail
@@ -3218,40 +3237,14 @@ createonpost_subscribe_restrictions =	reject_system_special_accounts
 
 
 # Descriptions:
-#      History: NONE
-#        Value: MIX (
-#			reject_errormail
-#			reject_fml8_managed_address
-#			reject_createonpost_domain
-#			permit_createonpost_maintainer_maps
-#			permit_anyone
-#               )
-#     Examples: permit_anyone
-createonpost_newml_restrictions =	reject_system_special_accounts
-					reject_errormail
-					reject_fml8_managed_address
-					reject_createonpost_domain
-					permit_createonpost_maintainer_maps
- 					permit_anyone
-
-
-# Descriptions: 
 #               ファイルの中は、たとえば \S+\@example.com
 #      History: NONE
 #        Value: FILE
-#     Examples:
-createonpost_sender_maps	=	pcre:$ml_home_dir/sender.pcre
+#     Examples: pcre:$ml_home_dir/subscribe.allow.pcre
+createonpost_subscribe_maps	=	pcre:$ml_home_dir/subscribe.allow.pcre
 
 
-# Descriptions: 
-#               ファイルの中は、たとえば \S+\@example.com
-#      History: NONE
-#        Value: FILE
-#     Examples:
-createonpost_subscribe_maps	=	pcre:$ml_home_dir/subscribe.pcre
-
-
-=head2 CREATE-ON-POST でＭＬを作る機能への制限
+=head2 CREATE-ON-POST でＭＬを作成可能な人
 
 
 # Descriptions: CREATE-ON-POST で動的にＭＬを作ることができるユーザ
@@ -3263,14 +3256,24 @@ createonpost_subscribe_maps	=	pcre:$ml_home_dir/subscribe.pcre
 #               $createonpost_newml_maps でドメイン制限などを行なうと良い。
 #      History: fml4 にはない。
 #		fml8 の初期実装では、この restrictions はなく、
-#		permit_anyone と同じ意味であった。 
+#		permit_anyone と同じ意味であった。
 #        Value: MIX (
+#			reject_errormail
+#			reject_fml8_managed_address
+#			reject_createonpost_domain
+#			permit_createonpost_maintainer_maps
+#			permit_createonpost_newml_maps
 #			permit_createonpost_newml_maps
 #			permit_ml_domain
 #			permit_anyone
-#		)
-#     Examples: yes
-createonpost_newml_restrictions = permit_ml_domain
+#               )
+#     Examples: permit_anyone
+createonpost_newml_restrictions =	reject_system_special_accounts
+					reject_errormail
+					reject_fml8_managed_address
+					reject_createonpost_domain
+					permit_createonpost_maintainer_maps
+ 					permit_ml_domain
 
 
 # Descriptions: CREATE-ON-POST で動的にＭＬを作ることができるユーザのリスト。
@@ -3278,8 +3281,56 @@ createonpost_newml_restrictions = permit_ml_domain
 #               ファイルの中は、たとえば \S+\@example.com
 #      History: NONE
 #        Value: FILE
-#     Examples: pcre:$ml_home_dir/newml.pcre
-createonpost_newml_maps	=	pcre:$ml_home_dir/newml.pcre
+#     Examples: pcre:$ml_home_dir/newml.allow.pcre
+createonpost_newml_maps	=	pcre:$ml_home_dir/newml.allow.pcre
+
+
+
+=head1	定期的に情報を送る、もしくは確認する
+
+
+# Descriptions: remind プロセスを有効にするか否か
+#      History: none
+#        Value: YES_OR_NO
+#     Examples: yes
+use_remind_function		=	yes
+
+
+# Descriptions: 定期的に「subscribe し続けるか否か」を確認するか？
+#      History: none
+#        Value: YES_OR_NO
+#     Examples: no
+use_remind_keep_subscribed_function	=	no
+
+
+# Descriptions: 何日おきに「subscribe し続けるか否か」を確認するか？
+#      History: $CONFIRMD_ACK_EXPIRE_UNIT
+#        Value: DATE
+#     Examples: 90d
+remind_keep_subscribed_interval  =	90d
+
+
+# Descriptions: 確認にたいする返事をどれだけ待つか？
+# 		この期間を過ぎると該当ユーザは削除される。               
+#      History: $CONFIRMD_ACK_WAIT_UNIT
+#        Value: DATE
+#     Examples: 14d
+remind_keep_subscribed_wait_reply_interval  =	14d
+
+
+# Descriptions: ＭＬの使い方を定期的に教えるか？
+#      History: none
+#        Value: YES_OR_NO
+#     Examples: no
+use_remind_usage_function	=	no
+
+
+# Descriptions: 何日おきにＭＬの使い方を教えるか？
+#      History: none
+#        Value: DATE
+#     Examples: 90d
+remind_usage_interval           =	90d
+
 
 
 =head1 program paths
@@ -4119,4 +4170,12 @@ ldap_query_find_search_filter		=	(&(objectclass=*)(ou=$ml_name@$ml_domain))
 # $makefml_run_start_hook = q{ 1;};
 # $makefml_verify_request_end_hook = q{ 1;};
 # $makefml_verify_request_start_hook = q{ 1;};
+# $remind_finish_end_hook = q{ 1;};
+# $remind_finish_start_hook = q{ 1;};
+# $remind_prepare_end_hook = q{ 1;};
+# $remind_prepare_start_hook = q{ 1;};
+# $remind_run_end_hook = q{ 1;};
+# $remind_run_start_hook = q{ 1;};
+# $remind_verify_request_end_hook = q{ 1;};
+# $remind_verify_request_start_hook = q{ 1;};
 
