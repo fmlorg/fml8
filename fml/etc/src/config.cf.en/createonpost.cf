@@ -85,8 +85,6 @@ createonpost_subscribe_maps	=	pcre:$ml_home_dir/subscribe.allow.pcre
 #			reject_errormail
 #			reject_fml8_managed_address
 #			reject_createonpost_domain
-#			permit_createonpost_maintainer_maps
-#			permit_createonpost_newml_maps
 #			permit_createonpost_newml_maps
 #			permit_ml_domain
 #			permit_anyone
