@@ -3201,53 +3201,6 @@ createonpost_newml_maps	=	pcre:$ml_home_dir/newml.allow.pcre
 
 
 
-=head1	send information or confirm periodically
-
-
-# Descriptions: enable remind process or not
-#      History: none
-#        Value: YES_OR_NO
-#     Examples: yes
-use_remind_function		=	yes
-
-
-# Descriptions: confirm he/she keeps to subscribe this list periodically. 
-#      History: none
-#        Value: YES_OR_NO
-#     Examples: no
-use_remind_keep_subscribed_function       =	no
-
-
-# Descriptions: how often should we confirm ?
-#      History: $CONFIRMD_ACK_EXPIRE_UNIT
-#        Value: DATE
-#     Examples: 90d
-remind_keep_subscribed_interval  =	90d
-
-
-# Descriptions: how much should we wait for the query ?
-#		If no reply after this period, remove the user.
-#      History: $CONFIRMD_ACK_WAIT_UNIT
-#        Value: DATE
-#     Examples: 14d
-remind_keep_subscribed_wait_reply_interval  =	14d
-
-
-# Descriptions: inform ML usage periodically ?
-#      History: none
-#        Value: YES_OR_NO
-#     Examples: no
-use_remind_usage_funtion	=	no
-
-
-# Descriptions: how often we inform ML usage ?
-#      History: none
-#        Value: DATE
-#     Examples: 90d
-remind_usage_interval           =	90d
-
-
-
 =head1 program paths
 
 # Descriptions:
@@ -4069,12 +4022,4 @@ ldap_query_find_search_filter		=	(&(objectclass=*)(ou=$ml_name@$ml_domain))
 # $makefml_run_start_hook = q{ 1;};
 # $makefml_verify_request_end_hook = q{ 1;};
 # $makefml_verify_request_start_hook = q{ 1;};
-# $remind_finish_end_hook = q{ 1;};
-# $remind_finish_start_hook = q{ 1;};
-# $remind_prepare_end_hook = q{ 1;};
-# $remind_prepare_start_hook = q{ 1;};
-# $remind_run_end_hook = q{ 1;};
-# $remind_run_start_hook = q{ 1;};
-# $remind_verify_request_end_hook = q{ 1;};
-# $remind_verify_request_start_hook = q{ 1;};
 
