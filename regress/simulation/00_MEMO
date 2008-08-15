@@ -6,6 +6,30 @@
 	XXX このファイルは、なる早で解決する/bug fix するべきもの
         XXX 遠大なビジョンやとりあえず後まわしでよいものは STATUS.txt へ
 
+
+[TODO]	isolate queue
+
+	(0) そもそも、そんなにファイルはたまらないよ？
+		そもそもＭＬごとのキューなんだから、一杯はない
+
+	(1) queue 自体を YYYY/MM/DD 形式にする
+
+	(2) report system が report 作成時に YYYY/MM/DD に置き換える。
+		→ 一番手直しがない解決法
+		→ どのみち WWW インターフェイスのために、
+		   この手のクリーニングが必要だし。	
+
+[TODO]	isolate for non effective command mail.
+
+	有効なコマンドが含まれていないと警告を送り返してしまう;-)
+
+	command processing results:
+	   processed = 0
+	   error     = 0
+	   ignored   = 0
+	   total     = 0
+
+
 [TODO]	discard_spam for *_restrictions ?
 
 	*_restrictions = 	discard_spam
@@ -339,4 +363,4 @@
 	FML::Sys::Alias
 
 ----------
-$FML: 00_MEMO,v 1.129 2008/08/10 04:09:07 fukachan Exp $
+$FML: 00_MEMO,v 1.130 2008/08/13 09:23:44 fukachan Exp $
