@@ -1,5 +1,5 @@
 <!--
-   $FML: preface.sgml,v 1.25 2005/11/19 03:44:24 fukachan Exp $
+   $FML: preface.sgml,v 1.26 2005/11/19 04:17:10 fukachan Exp $
 -->
 
 
@@ -9,22 +9,40 @@
 	</title>
 
 
+<para>
+「１０年たったらソフトウエアは一から書き直せ」
+そういう悟りの境地が大事だと思う今日この頃です(一撃でまとめすぎ)。
+</para>
+
+
 <sect1 id="status">
 	<title>
 	&fml8; プロジェクトの現状
 	</title>
 
 
-<warning>
 <para>
 現状の &fml8; は運用ベースの実証実験の段階です。
-基本的な機能は、ほぼすべて実装されています。
-ＭＬごとに細かい設定変更をしたい場合はファイルの編集が必要ですが、
-ツール類を含めて &fml4; と同様に使えるはずです。
 </para>
 
 <para>
-なお、fml4 と fml8 の相違点については、
+ＭＬとしての基本的な機能は全て実装されています。
+</para>
+
+<para>
+CUI は、ほぼ全部実装済みですが、
+config コマンドの細かいメニュー画面がありません。
+ＭＬごとに細かい設定変更をしたい場合はファイルの編集が必要ですが、
+それ以外はツール類を含めて &fml4; と同様に使えるはずです。
+</para>
+
+<para>
+GUI も基本機能は実装済みですが、
+メニュー画面とか、まだいろいろ作らないと行けません。
+</para>
+
+<para>
+なお、&fml4; と &fml8; の相違点については、
 <link linkend="changes">
 <xref linkend="changes">
 </link>
@@ -32,22 +50,17 @@
 </para>
 
 <para>
-ただ &fml4; の細かい機能まで実装されているわけではありません。
-非常にマニアックな機能を使いたい人は、まだ
-<ulink url="http://www.fml.org/software/fml/menu.html">
-4.0 stable
-</ulink>
-を使う方がよいでしょうが、たいていの用途では &fml8; で大丈夫です。
+&fml4; の細かい機能の中には &fml8; で捨てたものがありますが、
+たいていの用途では &fml8; で大丈夫なはずです。
 </para>
 
 <para>
 なお、現在の &fml8; で動く機能そして TODO リストは
-<ulink url="http://www.fml.org/software/fml8/fml/doc/ja/todo/STATUS.html">
-http://www.fml.org/software/fml8/fml/doc/ja/todo/STATUS.html
+<ulink url="http://www.fml.org/software/fml8/fml/doc/ja/todo/STATUS.txt">
+http://www.fml.org/software/fml8/fml/doc/ja/todo/STATUS.txt
 </ulink>
 を参照して下さい。
 </para>
-</warning>
 
 </sect1>
 
@@ -84,12 +97,12 @@ sendmail と postfix のような関係と思って下さい。
 また、構造論ではなく単に自分で欲しい機能があります。fml 自体が簡易版 
 bug tracking system を提供して欲しいし、bug tracking system もサーチエ
 ンジンもできるだけメールと連動していろいろして欲しい。cvs ログとも連動
-して欲しい。
+して欲しい。SPAM は隔離しろ。
 </para>
 
 <para>
-最初にするべきことは 4.0 の機能とそのデザインについての再検討です。た
-とえば、次のような項目が考えられます。
+最初にするべきことは 4.0 の機能とそのデザインについての再検討です。
+たとえば、次のような項目が考えられます。
 
     <itemizedlist>
 

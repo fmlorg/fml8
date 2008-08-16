@@ -1,5 +1,5 @@
 <!--
-	$FML: terms.sgml,v 1.5 2005/06/25 15:11:32 fukachan Exp $
+	$FML: terms.sgml,v 1.6 2005/09/30 13:22:44 fukachan Exp $
 -->
 
 <sect1 id="terms">
@@ -63,7 +63,8 @@
 	<listitem>
 	<para>
 	&fml8; にある fml というコマンドのこと。
-	引数の順番が異なる makefml コマンド同等品。
+	makefml コマンドと同じ機能だが、
+	引数の順番が異なる。こちらの方がオブジェクト風。
 	</para>
 	</listitem>
    </varlistentry>
@@ -80,14 +81,20 @@
    <varlistentry>
 	<term> fml4 </term>
 	<listitem>
-	<para>	&fml4; シリーズのこと </para>
+	<para>
+	&fml4; シリーズのこと
+	</para>
 	</listitem>
    </varlistentry>
 
    <varlistentry>
 	<term> fml8 </term>
 	<listitem>
-	<para>	&fml8; シリーズのこと </para>
+	<para>
+	&fml8; シリーズのこと。
+	以前は &fml8; のことを
+	fml 5.0 とか fml-devel と言っていた時期もあるので注意。
+	</para>
 	</listitem>
    </varlistentry>
 
