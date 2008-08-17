@@ -1,5 +1,5 @@
 <!--
-   $FML: docbook.sgml,v 1.6 2003/04/15 14:51:38 fukachan Exp $
+   $FML: docbook.sgml,v 1.7 2004/10/06 09:07:36 fukachan Exp $
 -->
 
 
@@ -89,7 +89,7 @@ DTD は自由に定義すれば良いのですが、かなり大変です。
 DOCBOOK は OASIS-0PEN.ORG が保守している DTD 集です。非常に有名なもの
 で、デファクトスタンダードといってもよいでしょう。(わかりやすいかどう
 かは別として;)リファレンスがオライリーから本も出ていますし、ドキュメン
-トも豊富です。Free の UNIX などをはじめ、多くのプロジェクトで使われて
+トも豊富です。Free の Unix などをはじめ、多くのプロジェクトで使われて
 います。
 </para>
 
@@ -242,7 +242,7 @@ include するべき定義ファイルを
 
    &lt;listitem&gt;
 	&lt;para&gt;
-		るどるどはテディベア
+		るどるどはばんざいベア
 	&lt;/para&gt;
    &lt;/listitem&gt;
 
@@ -256,7 +256,7 @@ include するべき定義ファイルを
 	<para>		けんけんはきたきつね	</para>
    </listitem>
    <listitem>
-	<para>		るどるどはテディベア	</para>
+	<para>		るどるどはばんざいベア	</para>
    </listitem>
 </itemizedlist>
 
@@ -267,7 +267,7 @@ include するべき定義ファイルを
 	<para>		けんけんはきたきつね	</para>
    </listitem>
    <listitem>
-	<para>		るどるどはテディベア	</para>
+	<para>		るどるどはばんざいベア	</para>
    </listitem>
 </orderedlist>
 
@@ -329,12 +329,12 @@ include するべき定義ファイルを
       &lt;tbody&gt;
         &lt;row&gt;
           &lt;entry&gt; けんけん	&lt;/entry&gt;
-          &lt;entry&gt; きたきつね	 &lt;/entry&gt;
+          &lt;entry&gt; きたきつね	&lt;/entry&gt;
         &lt;/row&gt;
 
         &lt;row&gt;
           &lt;entry&gt; るど 		&lt;/entry&gt;
-          &lt;entry&gt; テディベア	 &lt;/entry&gt;
+          &lt;entry&gt; ばんざいベア	&lt;/entry&gt;
         &lt;/row&gt;
       &lt;/tbody&gt;
 
@@ -359,12 +359,12 @@ include するべき定義ファイルを
       <tbody>
         <row>
           <entry> けんけん	</entry>
-          <entry> きたきつね	 </entry>
+          <entry> きたきつね	</entry>
         </row>
 
         <row>
           <entry> るど 		</entry>
-          <entry> テディベア	 </entry>
+          <entry> ばんざいベア	</entry>
         </row>
       </tbody>
 
@@ -400,19 +400,13 @@ SGML を HTML などに翻訳するために、いくつかのツールが必要です。
 
    <listitem>
 	<para>
-           openjade       1.3
+           openjade       1.3 以降
 	</para>
    </listitem>
 
    <listitem>
 	<para>
-           opensp         1.3.4
-	</para>
-   </listitem>
-
-   <listitem>
-	<para>
-           SGMLtools-Lite 3.0.3
+           opensp         1.3.4 以降
 	</para>
    </listitem>
 
@@ -422,16 +416,10 @@ SGML を HTML などに翻訳するために、いくつかのツールが必要です。
 </para>
 
 <para>
-もちろん sgmltools がなくても SGML から HTML を作ることができます。
-どのツールを使うかは、あなたがどれを便利に思うか？次第です。
-単に &fml8; では、sgmltools を歴史的に使っているだけです。
-</para>
-
-<para>
 また、SGML からの変換には fml/doc/share/sgml/ にある fml.dtd と 
 fml.dsl を定義として使っています。各 Makefile 内に、これらのファイルを
-各ツールでどう使うかの定義(jade に与えるオプション -c や -d オプション)
-が記述されています。
+各ツールでどう使うかの定義(openjade に与えるオプション -c や -d オプショ
+ン)が記述されています。
 </para>
 
 
@@ -451,8 +439,14 @@ openjade をうまく compile できないことがありました。
 <!--  =========================================================  -->
 <sect1>
    <title>
-   例: SGML から HTML を作る
+   例: SGML から HTML を作る (sgmltools を使う例)
    </title>
+
+<warning>
+<para>
+obsolete です(すでに sgmltools は使っていません)。
+</para>
+</warning>
 
 <para>
 <link linkend="book.sgml">

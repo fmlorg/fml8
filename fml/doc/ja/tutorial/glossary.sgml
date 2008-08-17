@@ -1,5 +1,5 @@
 <!--
-	$FML: glossary.sgml,v 1.6 2004/10/06 09:07:32 fukachan Exp $
+	$FML: glossary.sgml,v 1.7 2005/06/25 15:11:27 fukachan Exp $
 -->
 
 <glossary id="glossary">
@@ -127,7 +127,7 @@
 	関数へのポインタ( function pointer )。
 	perl では CODE リファレンスと呼ぶべきだが、
 	cr などと書くより分かりやすいので、
-	プログラム中では $fp を使うることが多い。
+	プログラム中では $fp を使うことが多い。
 	</para>
 	</glossdef>
    </glossentry>
@@ -157,7 +157,7 @@
 	<glossdef>
 	<para>
 	r はリファレンス(reference)の略。
-	これはハンガリアン記法と呼ばれている。
+	これは世間ではハンガリアン記法と呼ぶことが多い。
 	</para>
 
 	<para>
