@@ -1,5 +1,5 @@
 <!--
-   $FML: dataflow.sgml,v 1.4 2004/10/06 09:07:33 fukachan Exp $
+   $FML: dataflow.sgml,v 1.5 2005/06/25 15:11:28 fukachan Exp $
 -->
 
 
@@ -71,11 +71,11 @@ admin コマンドの実行は、ここでは行なわれません。「admin ...」コマンド
 注: admin コマンドは user_command_mail_allowed_commands で許されています
 </para>
 </footnote>
-として処理が薦められ、最終的に 「FML::Command::User::admin」クラスが呼
+として処理が進められ、最終的に「FML::Command::User::admin」クラスが呼
 び出されます。このクラスの中で、$admin_command_mail_restrictions に基
 づいてリモート権限があるか？が確認され、もう一度「FML::Command」クラス
 経由で管理者権限の「FML::Command::Admin::コマンド」クラスが呼び出され
-ます。
+ます(つまりトランポリンメカニズムです)。
 </para>
 
 </sect2>
@@ -91,6 +91,11 @@ admin コマンドの実行は、ここでは行なわれません。「admin ...」コマンド
 ユーザ fml に su できる権限)があるはずです。よって、特別な制限はありま
 せん。FML::Command経由で「FML::Command::Admin::コマンド」クラスを直接
 呼び出しています。
+</para>
+
+<para>
+なお、サーバにリモートで入れるようにする際、SSH で「RSA 2048 bit 鍵の
+み許す」といった設定および運用ルールにしてください。
 </para>
 
 </sect2>

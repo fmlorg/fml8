@@ -1,5 +1,5 @@
 <!--
-   $FML: extension.sgml,v 1.12 2004/10/06 09:07:33 fukachan Exp $
+   $FML: extension.sgml,v 1.13 2005/06/25 15:11:28 fukachan Exp $
 -->
 
 
@@ -24,11 +24,14 @@
 /usr/local/lib/fml/site_local/
 </screen>
 以下に配置して下さい。
-一方、特定のＭＬだけを拡張する場合は、各ＭＬのホーム以下
+一方、特定のＭＬだけを拡張する場合は、各ＭＬのホーム以下の local/lib/
+以下において下さい。
 <screen>
+ＭＬのホーム/local/lib/
+
+例:
 /var/spool/ml/elena/local/lib/
 </screen>
-以下において下さい。
 </para>
 
 <!--
@@ -120,11 +123,14 @@ admin_command_mail_allowed_commands += uja
 /usr/local/lib/fml/site_local/
 </screen>
 以下に配置して下さい。
-一方、特定のＭＬだけを拡張する場合は、各ＭＬのホーム以下
+一方、特定のＭＬだけを拡張する場合は、各ＭＬのホーム以下の local/lib/
+以下において下さい。
 <screen>
+ＭＬのホーム/local/lib/
+
+例:
 /var/spool/ml/elena/local/lib/
 </screen>
-以下において下さい。
 </para>
 
 <para>
@@ -169,11 +175,14 @@ FML::Command::Admin 以下から適当に cut and paste して
 /usr/local/lib/fml/site_local/
 </screen>
 以下に配置して下さい。
-一方、特定のＭＬだけを拡張する場合は、各ＭＬのホーム以下
+一方、特定のＭＬだけを拡張する場合は、各ＭＬのホーム以下の local/lib/
+以下において下さい。
 <screen>
+ＭＬのホーム/local/lib/
+
+例:
 /var/spool/ml/elena/local/lib/
 </screen>
-以下において下さい。
 </para>
 
 <para>
