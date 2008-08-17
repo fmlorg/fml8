@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2008 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.122 2008/07/20 09:15:55 fukachan Exp $
+# $FML: Command.pm,v 1.123 2008/08/02 21:51:28 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -16,7 +16,8 @@ use FML::Process::Kernel;
 @ISA = qw(FML::Process::Kernel);
 
 
-my ($num_total, $num_error, $num_ignored, $num_processed) = (0, 0, 0, 0);
+my ($num_total, $num_error, $num_ignored, $num_isolated, $num_processed) = 
+    (0, 0, 0, 0, 0);
 my %cc_recipient = ();
 
 
@@ -326,8 +327,14 @@ sub _command_process_loop
 	    $curproc->_command_switch($context);
 	}
 	else {
-	    $curproc->_eval_command_mail_restrictions($context);
-	    $num_ignored++;
+	    my ($match, $result) = 
+		$curproc->_eval_command_mail_restrictions($context);
+	    if ($match && ($result eq 'isolate')) {
+		$num_isolated++;
+	    }
+	    else {
+		$num_ignored++;
+	    }
 	}
 
 	# XXX error handlings.
@@ -436,7 +443,7 @@ sub _command_switch
 	    $curproc->logdebug("command mail should be ignored");
 	}
 	elsif ($result eq "isolate") {
-	    $num_ignored++;
+	    $num_isolated++;
 	    $curproc->logdebug("command mail need to be isolated");
 	}
 	else {
@@ -586,17 +593,19 @@ sub _check_effective_command_contained
     unless ($num_processed) {
 	my $rule;
 
-	$rule = $curproc->restriction_state_get_ignore_reason()  || '';
-	if ($rule eq 'ignore_invalid_request' || $rule eq 'ignore') {
-	    $curproc->log("no effective command, ignore reply");
+	$rule = $curproc->restriction_state_get_isolate_reason() || '';
+	if ($rule eq 'isolate_invalid_request' || $rule eq 'isolate' ||
+	    $num_isolated) {
+	    $curproc->log("no effective command, isolate and ignore request");
+	    $curproc->incoming_message_isolate_content();
 	    $curproc->reply_message_delete();
 	    return;
 	}
 
-	$rule = $curproc->restriction_state_get_isolate_reason() || '';
-	if ($rule eq 'isolate_invalid_request' || $rule eq 'isolate') {
-	    $curproc->log("no effective command, isolate and ignore request");
-	    $curproc->incoming_message_isolate_content();
+	$rule = $curproc->restriction_state_get_ignore_reason()  || '';
+	if ($rule eq 'ignore_invalid_request' || $rule eq 'ignore' ||
+	    $num_ignored) {
+	    $curproc->log("no effective command, ignore reply");
 	    $curproc->reply_message_delete();
 	    return;
 	}
