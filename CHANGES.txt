@@ -41,7 +41,32 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2008/08/17
 
+   FML::Process::Command 
+	[bug fix]
+	check isolated or ignored precisely and determine the final action.
+
+2008/08/15
+
+    documents being updated.
+
+2008/08/14
+
+    variables
+	bug fix create-on-post default configuration.
+	update and complete descriptions.
+	sort definitions.
+	remove "permit_createonpost_maintainer_maps", which is not defined.
+	remove duplication in descriptions.
+
+2008/08/13
+
+   FML::Process::CreateOnPost 
+	bug fix::fix internal arguments passing bug to handle sender
+	information correctly.
+	save sender candidates in PCB.
+	
 2008/08/07
 
    anoncvs.fml.org changed to support anonymous cvs over ssh.
@@ -10219,4 +10244,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.304 2008/08/03 10:24:35 fukachan Exp $
+$FML: CHANGES.txt,v 1.305 2008/08/07 01:08:02 fukachan Exp $
