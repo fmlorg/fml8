@@ -1,5 +1,5 @@
 <!--
- $FML$
+ $FML: command_check_pgp_signature.sgml,v 1.1 2005/12/15 03:07:25 fukachan Exp $
 -->
 
 
@@ -23,8 +23,10 @@ PGP/GPG で(ユーザモードの)コマンドメールを認証したい
 <screen>
 
 command_mail_restrictions	=	check_pgp_signature
-					reject
+					isolate
 
+注: 以前は reject でした。
+fml8 2008/08/17 以降のバージョンでは isolate (SPAM の隔離)が推奨です。
 </screen>
 鍵は 
 fmlgpg fmlgpgv fmlpgp fmlpgp5 fmlpgpe fmlpgpk fmlpgps fmlpgpv
@@ -59,8 +61,10 @@ PGP/GPG で admin コマンドメールを認証したい
 <screen>
 
 admin_command_mail_restrictions	=	check_pgp_signature
-					reject
+					isolate
 
+注: 以前は reject でした。
+fml8 2008/08/17 以降のバージョンでは isolate (SPAM の隔離)が推奨です。
 </screen>
 鍵は 
 fmlgpg fmlgpgv fmlpgp fmlpgp5 fmlpgpe fmlpgpk fmlpgps fmlpgpv

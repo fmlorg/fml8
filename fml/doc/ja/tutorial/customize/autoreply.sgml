@@ -1,5 +1,5 @@
 <!--
-   $FML: autoreply.sgml,v 1.5 2005/06/25 15:11:29 fukachan Exp $
+   $FML: autoreply.sgml,v 1.6 2005/11/30 21:58:04 fukachan Exp $
 -->
 
 
@@ -16,7 +16,8 @@
 </para>
 
 <para>
-この場合の config.cf の例はこのようになります。
+この場合 config.cf (e.g. /var/spool/ml/help/config.cf)の例は、
+次のようになります。
 <screen>
 article_post_restrictions = permit_anyone
 </screen>
@@ -42,6 +43,12 @@ $curproc->stop_this_process();
 が &fml4; の $DO_NOTHING 変数にあたりますが、&fml8; ではメソッドです。
 これで、この HOOK 以降、正常の処理が無視されるようになります。
 つまり、なにも実行されなくなるというわけです。
+</para>
+
+<para>
+ただ、身のある処理は何も実行されませんが、
+reply_message() メソッドでメッセージキューに入れられたメッセージを
+送信する処理は行なわれるので、メッセージの送信が行なわれます。
 </para>
 
 

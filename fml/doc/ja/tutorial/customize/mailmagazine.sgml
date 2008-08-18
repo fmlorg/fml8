@@ -1,5 +1,5 @@
 <!--
-   $FML: mailmagazine.sgml,v 1.7 2005/06/25 13:54:39 fukachan Exp $
+   $FML: mailmagazine.sgml,v 1.8 2005/08/03 13:45:11 fukachan Exp $
 -->
 
 
@@ -60,7 +60,7 @@ fml 4.0 のように subscribe コマンドの仕方を変更するといったやり方
 </footnote>
 というのは subscribe や unsubscribe は primary_member_map や
 primary_recipient_map に対する変更を加えるものだからです。一方、メンバー
-認証時の探索にはmember_maps や recipient_maps を使うのです。よって、こ
+認証時の探索には member_maps や recipient_maps を使うのです。よって、こ
 れらの値をうまく設定すれば、こういった動作が可能というわけです。
 </para>
 
@@ -131,6 +131,26 @@ fml8 のメールキューに落ちます。
 </screen>
 ちなみに flush と flushq コマンドは同じ意味です。
 flushq が打ちづらいので flush コマンドも作ってみました。
+</para>
+
+<para>
+いちいち、これを打ち込むのは面倒なので、シェルスクリプトを作っておくと
+良いでしょう。
+</para>
+
+<para>
+社内向けに、
+ＭＬのキューファイルを WWW サーバで見せるようにしておき、
+OK なら、そのシェルスクリプトを CGI で実行可能にしておくという方法も
+よいでしょう。
+生のキューファイル名が見えてしまって、？？？になるとは思いますが、
+こんなシステムなら一瞬で作れますよね？
+</para>
+
+<para>
+さらに、OK を出すのが、送信者と異なる人にしておけば、より優れたメール
+マガジンの運用になります。というのは、送信者が自分で自分に OK を出すと、
+検査が甘くなるからです。
 </para>
 
 </sect1>

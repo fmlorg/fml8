@@ -1,5 +1,5 @@
 <!--
-   $FML: case_studies.sgml,v 1.10 2005/11/30 23:42:31 fukachan Exp $
+   $FML: case_studies.sgml,v 1.11 2005/12/07 11:50:57 fukachan Exp $
 -->
 
 
@@ -47,8 +47,8 @@ article_post_restrictions		=	permit_anyone
 </para>
 
 <para>
-そして、社内用途のＭＬなので、フィルタの多くは使いません。
-つぅか、使うと問題だらけのようです;)
+そして、社内用途のＭＬなので、フィルタの多くは使えません。
+使うと問題だらけのようです;)
 <screen>
 use_article_body_filter			=	no
 use_article_non_mime_filter		=	no
@@ -67,7 +67,7 @@ spool_type			=	subdir
 </para>
 
 <para>
-なお、コマンドメールは使いません。
+なお、コマンドメールは使えなくしておきます。
 <screen>
 use_command_mail_function	=	no
 </screen>

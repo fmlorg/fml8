@@ -1,8 +1,53 @@
 <!--
- $FML: recipes.www.sgml,v 1.1 2006/01/19 10:18:41 fukachan Exp $
+ $FML: recipes.www.sgml,v 1.2 2006/01/19 14:36:54 fukachan Exp $
 -->
 
 <qandaset>
+
+
+<qandaentry>
+<question>
+	<para>
+	HTML 化された記事を公開したくない
+	</para>
+</question>
+
+<answer>
+	<para>
+	apache に suexec をサポートする機能がなければ
+	~fml/public_html/ 以下はインターネットから見えないはずなので、
+	デフォルトでは問題ないとおもいます。 
+	</para>
+
+	<para>
+	でも、そもそも記事を HTML 化しないというのが安全策です。
+	<screen>
+	[config.cf]
+
+	use_html_archive        =       no
+	</screen>
+	</para>
+</answer>
+</qandaentry>
+
+
+<qandaentry>
+<question>
+	<para>
+	HTML 化された記事の URL の ~fml をなくしたいんですが？
+	</para>
+</question>
+
+<answer>
+	<para>
+	apache の Alias で
+	<screen>
+	Alias /mlarchive/ "/home/fml/public_html/"
+	</screen>
+	とかすれば OK だと思うのですが、それじゃ駄目？
+	</para>
+</answer>
+</qandaentry>
 
 
 <qandaentry>
@@ -86,7 +131,13 @@ rsync over ssh を自動で実行するには少し特殊な ssh の設定が必要ですので
 <para>
 案 3 として WWW サーバのファイルシステムに NFS 経由でアクセスするとい
 うのもありえますが、NFS サーバがインターネットから見える場所にあるよう
-なネットワーク構成はいけません。構成を良く考える必要があります。
+なネットワーク構成はいけません。構成を良く考える必要があります(裏ネッ
+トワーク経由でアクセス)。
+</para>
+
+<para>
+案 4 は iSCSI とかでサーバ間をつなぐか？
+ぼくはやったことがありません(NetBSD 4.0 は iSCSI target にしかなれないから)
 </para>
 
 </answer>

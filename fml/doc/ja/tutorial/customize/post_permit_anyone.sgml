@@ -1,5 +1,5 @@
 <!--
-   $FML: post_permit_anyone.sgml,v 1.8 2005/11/19 08:24:33 fukachan Exp $
+   $FML: post_permit_anyone.sgml,v 1.9 2006/01/22 16:12:47 fukachan Exp $
 -->
 
 
@@ -19,7 +19,9 @@ article_post_restrictions = permit_anyone
 <para>
 &fml4; と異なり、上のように書くと本当に「誰でも投稿可能」であることに
 注意して下さい。
-reject_system_special_accounts という root などを弾くルールが別途あります。
+*_restrictions には reject_system_special_accounts という root などを
+弾くルールが別途あります。デフォルトでは、それらを明示的に指定していま
+す(&fml4; では、このあたり曖昧でした)。
 </para>
 
 <para>
@@ -28,12 +30,18 @@ reject_system_special_accounts という root などを弾くルールが別途あります。
 <screen>
 article_post_restrictions =	reject_system_special_accounts
 				permit_anyone
+
+注: 以前は reject でした。
+fml8 2008/08/17 以降のバージョンでは isolate (SPAM の隔離)が推奨です。
+
+article_post_restrictions =	isolate_system_special_accounts
+				permit_anyone
 </screen>
 </para>
 
 <para>
-ちなみに article_post_restrictions のデフォルトは &fml4; 互換のため、
-次のようになっています。 
+ちなみに 2008/08/17 以前 の article_post_restrictions のデフォルトは 
+&fml4; 互換のため、次のようになっています
 <screen>
 article_post_restrictions =	reject_system_special_accounts
 				permit_member_maps
@@ -52,6 +60,14 @@ article_post_restrictions =	reject_system_special_accounts
 す。
 </para>
 
+<para>
+2008/08/17 以降のバージョンでは SPAM を隔離するのがデフォルトです。
+<screen>
+article_post_restrictions =	isolate_system_special_accounts
+				permit_member_maps
+				isolate
+</screen>
+</para>
 
 
 <sect2 id="recipes.config.post.permitanyone">
@@ -91,6 +107,25 @@ member_maps                     =       pcre:$ml_home_dir/sender.pcre
         \S+\@example.co.jp
 </screen>
 </para>
+
+<para>
+注: fml8 2008/08/17 以降のバージョンでは isolate (SPAM の隔離)が推奨です。
+
+<screen>
+[/var/spool/ml/elena/config.cf]
+
+article_post_restrictions       =       isolate_system_special_accounts
+                                        permit_member_maps
+                                        isolate
+
+member_maps                     =       pcre:$ml_home_dir/sender.pcre
+
+[$ml_home_dir/domains]
+        \S+\@example.co.jp
+</screen>
+
+</para>
+
 </answer>
 
 </qandaentry>

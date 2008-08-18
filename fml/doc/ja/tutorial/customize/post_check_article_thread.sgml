@@ -1,5 +1,5 @@
 <!--
-   $FML: post_check_article_thread.sgml,v 1.4 2005/12/14 12:39:16 fukachan Exp $
+   $FML: post_check_article_thread.sgml,v 1.5 2005/12/14 12:43:52 fukachan Exp $
 -->
 
 
@@ -62,6 +62,16 @@ article_post_restrictions       =       reject_system_special_accounts
 </screen>
 もちろんデフォルトでは使いません。
 利用したい場合は、明示的に article_post_restrictions を変更して下さい。
+</para>
+
+<para>
+注: fml8 2008/08/17 以降のバージョンでは isolate (SPAM の隔離)が推奨です。
+<screen>
+article_post_restrictions       =       isolate_system_special_accounts
+                                        check_article_thread
+                                        permit_member_maps
+                                        isolate
+</screen>
 </para>
 
 </answer>
@@ -151,6 +161,7 @@ article_post_restrictions       =       reject_system_special_accounts
                                         permit_member_maps
                                         reject
 
+注: fml8 2008/08/17 以降のバージョンでは isolate (SPAM の隔離)が推奨です。
 </screen>
 などと設定すると、疑似的に「スレッドをたてる小数の人(管理者) + スレッ
 ドへのリプライをする管理者以外の人たち」という運用になりますね。
@@ -170,11 +181,11 @@ article_post_restrictions       =       reject_system_special_accounts
 </para>
 
 <para>
-いや、このほうがモデレータより簡単で良い感じですかね？
+いや、このほうがモデレータより簡単で便利だと思うんですが、どうですかね？
 </para>
 
 <para>
-また、ネタふりをするひとの認証も PGP のほうがより良いでしょう。
+また、ネタふりをする人の認証も PGP のほうがより良いでしょう。
 <screen>
 member_maps			=       $tmp_dir/members-thread-init
 
@@ -183,6 +194,7 @@ article_post_restrictions       =       reject_system_special_accounts
                                         check_pgp_signature
                                         reject
 
+注: fml8 2008/08/17 以降のバージョンでは isolate (SPAM の隔離)が推奨です。
 </screen>
 </para>
 

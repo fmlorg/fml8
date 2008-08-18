@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.command.sgml,v 1.5 2006/01/16 12:02:07 fukachan Exp $
+   $FML: chapter.command.sgml,v 1.6 2006/01/19 10:14:04 fukachan Exp $
 -->
 
 
@@ -23,9 +23,10 @@ elena ＭＬに独自の help コマンドを作ることを考えます。
 カルのライブラリパスへおくだけでOKです。オリジナルの help.pm を参考に
 して、独自の help.pm を作り、以下のパスにおいてください。
 <screen>
+例:
 /var/spool/ml/elena/local/lib/FML/Command/User/help.pm
 </screen>
-モジュールをロードするさい、
+モジュールをロードする際には、
 この local/ パスのモジュールが優先されるので、
 help コマンドの応答には、このモジュール help.pm が使われます。
 </para>

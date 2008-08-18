@@ -1,5 +1,5 @@
 <!--
- $FML$
+ $FML: recipes.command.admin.sgml,v 1.1 2006/01/19 10:14:04 fukachan Exp $
 -->
 
 <qandaset>
@@ -37,6 +37,11 @@ admin コマンドでＭＬのメンバーリストを一気に削除/登録
 「admin useradd アドレス」や「admin userdel アドレス」
 を書き連ねる方法しかありません _o_
 </para>
+
+<para>
+実装する気はあります。考え中です。
+</para>
+
 </answer>
 
 </qandaentry>

@@ -1,5 +1,5 @@
 <!--
-   $FML: command_rejectall.sgml,v 1.5 2004/10/06 09:07:34 fukachan Exp $
+   $FML: command_rejectall.sgml,v 1.6 2005/06/25 15:11:29 fukachan Exp $
 -->
 
 
@@ -34,6 +34,20 @@ command_mail_restrictions = reject
 
 <para>
 この設定の問題点は「各行を評価してしまう」つまり無駄ということです。
+</para>
+
+<para>
+注: 
+この解答は「コマンドメールが使えないことを教えてあげる」ことを想定して
+います。社内ＭＬなどでは、これで問題ないと思いますが、一般のＭＬでは、
+SPAM がほとんど全部なので、親切がアダになります。
+そこで、
+fml8 2008/08/17 以降のバージョンでは isolate (SPAM の隔離)命令が推奨です。
+<screen>
+use_command_mail_function = yes
+
+command_mail_restrictions = isolate
+</screen>
 </para>
 
 </sect1>

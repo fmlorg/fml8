@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.message.sgml,v 1.2 2003/04/15 14:51:36 fukachan Exp $
+   $FML: chapter.message.sgml,v 1.3 2004/10/06 09:07:34 fukachan Exp $
 -->
 
 
@@ -11,15 +11,26 @@
 
 <sect1 id="customize.message.myproc">
 	<title>
-	ケーススタディ: 独自のメッセージを作る
+	ケーススタディ: ＭＬ独自のメッセージを作る
 	</title>
 
 <para>
+elena ML (ML のホームが /var/spool/ml/elena)の場合、
 <screen>
 /var/spool/ml/elena/local/share/message/euc-jp/クラス
 </screen>
 にファイルをつくって下さい。
-フォーマットは… share/fml/ の下を見てぱくってください。 
+そのファイルフォーマットは /usr/local/fml/share/fml/ の下を参考に、
+コピー＆ペーストして編集してください。
+</para>
+
+<para>
+補足:
+各関数の中では「_arg_変数名」に値を入れてハッシュをメッセージ生成関数へ
+渡します。
+そして、メッセージ内では「$_arg_変数名」という特殊な変数名を使い、
+それを渡されたハッシュの値で置換したものが送り返されるメッセージです。
+なお config.cf に書く変数(e.g. $ml_name )は全て使えます。
 </para>
 
 </sect1>

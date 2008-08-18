@@ -1,5 +1,5 @@
 <!--
-   $FML: recipes.delivery.sgml,v 1.2 2006/01/15 13:49:56 fukachan Exp $
+   $FML: recipes.delivery.sgml,v 1.3 2006/01/17 04:27:01 fukachan Exp $
 -->
 
 <qandaset>
@@ -81,9 +81,8 @@ Subject のキーワードによって受信者を切替えることを考えます。
 </para>
 
 <para>
-たとえばSubjectに「資料請求」とあるメールであれば、ＭＬドライバがちょ
-くせつ資料請求を担当する人たちへフォワードしてあげると効率がよいでしょ
-う。
+たとえばSubjectに「資料請求」とあるメールであれば、ＭＬドライバが直接
+資料請求を担当する人たちへフォワードしてあげると効率がよい。
 </para>
 
 <para>
@@ -187,7 +186,8 @@ $distribute_run_start_hook = q{
 recipient_maps = unix.group:fml
 
 </screen>
-
+ただし、他ドメインには送れないし、そのサーバにアカウントかエイリアス設
+定がないと配送できないので注意して下さい。
 </para>
 </answer>
 

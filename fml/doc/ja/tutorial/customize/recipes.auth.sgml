@@ -1,5 +1,5 @@
 <!--
- $FML$
+ $FML: recipes.auth.sgml,v 1.1 2005/10/29 04:28:42 fukachan Exp $
 -->
 
 <qandaset>
@@ -21,7 +21,7 @@ config.cf で
 address_compare_function_domain_matching_level を設定して下さい。
 <footnote>
 <para>
-&fml4; の ADDRESS_CHECK_MAX です。
+&fml4; の ADDRESS_CHECK_MAX に相当する変数です。
 </para>
 </footnote>
 <screen>
@@ -33,6 +33,7 @@ address_compare_function_domain_matching_level = 4
 たとえば、user@mail.example.co.jp というアドレスに対して、
 3 なら example.co.jp までが比較の対象、
 4 なら mail.example.co.jp までが比較の対象ということになります。
+デフォルトは 3 です。
 </para>
 
 <para>
@@ -73,6 +74,12 @@ use_address_compare_function = no
 もちろん、これは From アドレス認証にまつわる部分だけで、PGP/GPG 認証な
 どとは別の話です(つまり、この変数を no にしても PGP/GPG 認証を使うこと
 が出来ます)。
+</para>
+
+<para>
+また、
+各 restrictions で permit_anyone を指定すると、
+実質認証をしていないので「アドレス認証していない」設定になりますね。
 </para>
 
 </answer>

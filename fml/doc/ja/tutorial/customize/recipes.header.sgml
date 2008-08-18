@@ -1,5 +1,5 @@
 <!--
- $FML: recipes.header.sgml,v 1.5 2006/01/19 03:59:51 fukachan Exp $
+ $FML: recipes.header.sgml,v 1.6 2006/03/20 09:31:34 fukachan Exp $
 -->
 
 <qandaset>
@@ -16,10 +16,14 @@ Subject: に [elena:00100] のようなタグをつける
 <answer>
 <para>
 デフォルトではタグはつきません。
-&fml8; ではタグを sprintf 形式で指定することになっています。
+また &fml8; ではタグを sprintf 形式で指定することになっています。
 <screen>
 [/var/spool/ml/elena/config.cf]
 
+# タグをつけるルールを追加
+article_header_rewrite_rules    +=      rewrite_article_subject_tag
+
+# タグの数字を7桁へ設定
 article_subject_tag = [$ml_name:%05d]
 </screen>
 
@@ -44,6 +48,10 @@ Subject: [elena:00100] の数字部分(00100)の桁数を変える
 <screen>
 [/var/spool/ml/elena/config.cf]
 
+# タグをつけるルールを追加
+article_header_rewrite_rules    +=      rewrite_article_subject_tag
+
+# タグの数字を7桁へ設定
 article_subject_tag = [$ml_name:%07d]
 </screen>
 
@@ -67,6 +75,10 @@ Subject: のタグの数字(00100)の0パディングをなくしたい。
 <screen>
 [/var/spool/ml/elena/config.cf]
 
+# タグをつけるルールを追加
+article_header_rewrite_rules    +=      rewrite_article_subject_tag
+
+
 article_subject_tag = [$ml_name:%d]
 </screen>
 
@@ -87,6 +99,9 @@ article_subject_tag = [$ml_name:%d]
 <answer>
 <para>
 <screen>
+# タグをつけるルールを追加
+article_header_rewrite_rules    +=      rewrite_article_subject_tag
+
 article_subject_tag = [\U$ml_name\E:%05d]
 </screen>
 (注意: この機能を使う場合には 2002/10/29 以降の snapshot を使ってください)。 
@@ -108,8 +123,11 @@ article_subject_tag = [\U$ml_name\E:%05d]
 <para>
 Unix 上では、たいてい小文字を使うので、ＭＬ名前も小文字でしょう。
 だから、普通は何もしなくても小文字のはずですが、
-念のため、小文字を強制したいなら、つぎのようにしてください。
+念のため、小文字を強制したいなら、次のようにしてください。
 <screen>
+# タグをつけるルールを追加
+article_header_rewrite_rules    +=      rewrite_article_subject_tag
+
 article_subject_tag = [\L$ml_name\E:%05d]
 </screen>
 (注意: この機能を使う場合には 2002/10/29 以降の snapshot を使ってください)。 
@@ -139,8 +157,8 @@ $distribute_verify_request_start_hook = q{
 
 };
 </screen>
-なお strftime(3) を使うところを編集すればフォーマットはいろいろかえる
-ことができます。
+なお strftime(3) では様々なフォーマットが利用できます。
+詳しくは Unix マニュアルを参照。
 </para>
 </answer>
 
@@ -507,7 +525,7 @@ $article_header_rewrite_end_hook = q{
 <answer>
 <para>
 未実装です。
-現在の fml8 でも、実際には
+現在の fml8 でも
 <screen>
 outgoing_mail_header_reply_to = アドレス
 </screen>
@@ -555,7 +573,8 @@ outgoing_mail_header_reply_to = アドレス
     };
 
 </screen>
-
+設定変数で制御したいほど、需要があるでしょうか？
+あれば考えますが…
 </para>
 </answer>
 

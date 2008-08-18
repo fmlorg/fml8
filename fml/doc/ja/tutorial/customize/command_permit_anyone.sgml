@@ -1,5 +1,5 @@
 <!--
-   $FML: command_permit_anyone.sgml,v 1.4 2004/10/06 09:07:34 fukachan Exp $
+   $FML: command_permit_anyone.sgml,v 1.5 2005/12/14 12:39:16 fukachan Exp $
 -->
 
 
@@ -18,8 +18,8 @@ command_mail_restrictions = permit_anyone
 </para>
 
 <para>
-って、こんな設定していいのか/いつ使うんだ？というのはありますが…
-設定は可能です。
+こんな設定していいのか？
+いつ使うんだ？というのはありますが、理論上、設定は可能です。
 </para>
 
 
@@ -60,8 +60,11 @@ command_mail_restrictions = permit_anyone
 <answer>
 <para>
 <screen>
-command_mail_restrictions = reject_system_accounts
+command_mail_restrictions = isolate_system_accounts
                             permit_anyone
+
+注: 以前は reject_system_accounts でした。
+fml8 2008/08/17 以降のバージョンでは isolate (SPAM の隔離)が推奨です。
 </screen>
 </para>
 </answer>
@@ -80,7 +83,10 @@ command_mail_restrictions = reject_system_accounts
 <answer>
 <para>
 <screen>
-command_mail_restrictions = reject
+command_mail_restrictions = isolate
+
+注: 以前は reject でした。
+fml8 2008/08/17 以降のバージョンでは isolate (SPAM の隔離)が推奨です。
 </screen>
 </para>
 
