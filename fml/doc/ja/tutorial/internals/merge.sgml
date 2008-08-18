@@ -1,17 +1,17 @@
 <!--
-   $FML: merge.sgml,v 1.2 2004/10/06 09:07:40 fukachan Exp $
+   $FML: merge.sgml,v 1.3 2005/06/25 15:11:34 fukachan Exp $
 -->
 
 
 <chapter id="merge.internal.to.fml8">
 	<title>
-	他のＭＬシステムの設定を fml8 へ変換する処理について
+	他のＭＬシステムの設定を &fml8; へ変換する処理について
 	</title>
 
 
 <sect1 id="merge.internal.fml4to8">
 	<title>
-	内部実装: fml 4.0 から fml 8.0 への移行について
+	内部実装: &fml4; から &fml8; への移行について
 	</title>
 
 <sect2>
@@ -24,21 +24,21 @@
 </para>
 
 <para>
-1) fml8 をインストールする。この際、postfix の alias_maps に 
+1) &fml8; をインストールする。この際、postfix の alias_maps に 
 /var/spool/ml/etc/mail/aliases (まだ、この段階では中身のないファイルで
 よい)を追加する。
 </para>
 
 <para>
-2) makefml --force newml elena 相当の処理を行なう。いろいろ fml8 で必
-要なファイルを作る必要があるので、newml を実行してしまうほうがよい。本
-当に makefml newml を実行するか、newml の実体の処理を呼び出すようにす
-るかはどっちでもよい。たぶん後者でよい。
+2) makefml --force newml elena 相当の処理を行なう。&fml8; で必要なファ
+イルをいろいろと作る必要があるので、newml を実行してしまうほうがよい。
+本当に makefml newml を実行するか、newml の実体の処理を呼び出すように
+するかはどっちでもよい。たぶん後者でよい。
 </para>
 
 <para>
-3) /var/spool/ml/elena のメンバーリストを fml8 形式へ変換する。
-その際に、いろいろ変換しないといけない。
+3) /var/spool/ml/elena のメンバーリストを &fml8; 形式へ変換する。
+その際にも、いろいろ変換しないといけない。
 </para>
 
 <para>
@@ -57,14 +57,14 @@ off を s=skip と書いていると on 扱いになってしまう。
 3-3)
 m=... つまりまとめ行が無効になる。
 
-しかしながら、歴史的に members で # address とかされていると
-4.0 では OK だが、8.0 ではこのアドレスは見えない(認証する際の
-候補にならない)。フォーマットを検査して warning を出すべきだろうか？
+しかしながら、歴史的に members で # address と書かれていると 4.0 では 
+OK だが、8.0 ではこのアドレスは見えない(認証する際の候補にならない)。
+フォーマットを検査して warning を出すべきだろうか？
 </para>
 
 <para>
-4) fml4 の aliases ファイル (/var/spool/ml/etc/fml/aliases) から該当す
-るＭＬの部分を消して .db を再生成する。
+4) &fml4; の aliases ファイル (/var/spool/ml/etc/fml/aliases) から該当
+するＭＬの部分を消して .db を再生成する。
 </para>
 
 </sect2>
@@ -76,11 +76,11 @@ m=... つまりまとめ行が無効になる。
 	</title>
 
 <para>
-ケース1を繰り返し、適用すればいいでしょう。
+ケース 1. を繰り返し適用すればいいでしょう。
 </para>
 
 <para>
-移行作業中にＭＬ全体を止めていいなら、fml4 の 
+移行作業中にＭＬ全体を止めていいなら、&fml4; の 
 /var/spool/ml/etc/fml/aliases を削除してからケース１を適用する方が楽で
 すね。もちろん、移行作業中は MTA を止めてください。
 </para>
@@ -90,7 +90,7 @@ m=... つまりまとめ行が無効になる。
 
 <sect2>
 	<title>
-	議論: 同一ドメインで、fml4 と fml8 を半々に使っている場合
+	議論: 同一ドメインで、&fml4; と &fml8; を半々に使っている場合
 	</title>
 
 <para>
@@ -98,18 +98,18 @@ m=... つまりまとめ行が無効になる。
 </para>
 
 <para>
-同一ドメインで、fml4 と fml8 を半々に使っている場合、
+同一ドメインで、&fml4; と &fml8; を半々に使っている場合、
 次のような設定を施しておくとよい？
 いや中途半端なトリックはやめて、
 すなおに、mergeml で変換するか、しないかにしておいた方が無難だと思う。
 </para>
 
 <para>
-fml4での設定(site_init.phとかconfig.ph)で
+&fml4; での設定(site_init.phとかconfig.ph)で
 <screen>
 push(@ACTIVE_LIST,"$DIR/recipients") if( -f "$DIR/recipients" ) ;
 </screen>
-一方、fml8での設定(site_default_config.cfやconfig.cf)で
+一方、&fml8; での設定(site_default_config.cfやconfig.cf)で
 <screen>
 html_archive_dir = $ml_home_dir/htdocs
 </screen>

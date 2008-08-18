@@ -1,5 +1,5 @@
 <!--
-   $FML: io_abstraction.sgml,v 1.4 2004/10/06 09:07:39 fukachan Exp $
+   $FML: io_abstraction.sgml,v 1.5 2005/06/25 15:11:34 fukachan Exp $
 -->
 
 
@@ -43,7 +43,7 @@ IO に使われるクラスの各メソッドです。たとえば、IO::Adapter はユーザリ
 	</title>
 
 <para>
-&fmldevel; 全体の基調となる型は 
+&fml8; 全体の基調となる型は 
 <link linkend="module.io.adapter">
 IO::Adapter
 </link>

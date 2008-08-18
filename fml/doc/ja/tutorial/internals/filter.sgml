@@ -1,10 +1,11 @@
 <!--
-   $FML: filter.sgml,v 1.8 2004/10/06 09:07:39 fukachan Exp $
+   $FML: filter.sgml,v 1.9 2005/06/25 15:11:34 fukachan Exp $
 -->
 
 
 <!--
-   XXX-TODO: かきなおせよ、ふぃるた
+   XXX-TODO: フィルタの説明を書き直せ
+   XXX-TODO: MTI の説明？
 -->
 
 
@@ -93,10 +94,10 @@ text/plain に対してより厳しいシンタックスチェックを行なうフィルタも
 <para>
 変数名体系の基本は以下の通りです。
 <screen>
-use_サービス_filter       = yes
+use_サービス_filter       = yes か no
 サービス_filter_functions = 機能A 機能B
 
-use_機能A   = yes
+use_機能A   = yes か no
 機能A_rules = ルール1 ルール2
 </screen>
 </para>
@@ -190,9 +191,9 @@ text/plain 		:size>500k	cutoff
 	</title>
 
 <para>
-アクションには first match のものとそうでないものがある。reject は た
-いてい first match ですが、cutoff は first match ではないとおもわれま
-す。さて？
+アクションには first match のものとそうでないものがあります。reject は 
+大抵 first match ですが、cutoff は first match ではないとおもわれます。
+さて？
 </para>
 
 </sect2>
@@ -216,7 +217,7 @@ text/plain + image/jpeg + text/html
 <para>
 結論をいえば、cutoff や reject を指定するタイプのルールしかうまく機能
 しない、つまり「特定の○○を削除ないしは拒否する」ことならうまくできる
-といえそうです。ゆえにデフォルトは permit にするしかありません。
+と言えそうです。ゆえにデフォルトは permit にするしかありません。
 </para>
 
 <para>
@@ -278,7 +279,7 @@ multipart/mixed		image/*		cutoff
 
 <para>
 暗黙のデフォルトルールは、他の header や text フィルタとの整合性を考え
-ると、「とりあえず通す」ですかね？
+ると「とりあえず通す」ですかね？
 <screen>
 *		*	permit
 </screen>
@@ -440,7 +441,7 @@ text/plain + text/plain + text/plain
 text/plain + text/plain + image/jpeg
 text/plain + text/plain + text/html
 </screen>
-どれも OK だが、ルールのマッチする場所が異なります。
+どれも OK ですが、ルールのマッチする場所が異なります。
 </para>
 
 </sect2>
