@@ -1,5 +1,5 @@
 <!--
- $FML$
+ $FML: recipes.sgml,v 1.1 2005/10/08 03:37:42 fukachan Exp $
 -->
 
 <qandaset>
@@ -16,7 +16,6 @@
 <answer>
 <para>
 いつでもかまいません。
-crontab を適当に書き換えて下さい。
 </para>
 </answer>
 
@@ -33,6 +32,7 @@ crontab を適当に書き換えて下さい。
 
 <answer>
 <para>
+できません。
 現在は MIME/Multipart しかサポートしていないので、
 変更ということがそもそもありえません。
 </para>
@@ -51,6 +51,7 @@ makefml add の時にまとめ送りパラメータも指定したい
 
 <answer>
 <para>
+できません。
 現在は MIME/Multipart しかサポートしていないので、
 まとめ送りパラメータの指定ということがそもそもありえません。
 </para>
@@ -63,7 +64,7 @@ makefml add の時にまとめ送りパラメータも指定したい
 
 <question>
 <para>
-まとめ送りのログを別ファイルに記録したい 
+まとめ送りのログ”だけ”を別ファイルに記録したい 
 </para>
 </question>
 

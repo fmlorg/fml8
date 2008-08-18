@@ -1,5 +1,5 @@
 <!--
- $FML$
+ $FML: recipes.sgml,v 1.1 2005/10/08 07:32:54 fukachan Exp $
 -->
 
 <qandaset>
@@ -50,8 +50,7 @@ procmail の利用を考えてみて下さい。
 </para>
 
 <para>
-ダウンロードからインストールまで全てユーザ root で行なってもよいでしょ
-う。
+ダウンロードからインストールまで全てユーザ root で行なっても問題ありません。
 </para>
 </answer>
 
@@ -119,7 +118,7 @@ jperl で fml を使いたい
 
 <question>
 <para>
-elena ML を上書きしたい
+elena ML を上書き(再生成)したい
 </para>
 </question>
 
@@ -145,10 +144,10 @@ elena ML を上書きしたい
 
 <answer>
 <para>
-はい、編集してもかまいませんが内容は自分で管理するようにして下さい。本
-来そこは makefml/fml が自動で編集するところですので、ＭＬを消せば削除
-されますし、削除後にＭＬ復活を行なっても元には戻りませんので注意して下
-さい。
+はい、編集してもかまいませんが内容は自分で管理するようにして下さい。
+ただ、本来そこは makefml/fml が自動で編集するところですので、ＭＬを消
+せば削除されますし、削除後にＭＬ復活を行なっても元には戻りませんので、
+注意して下さい。
 </para>
 </answer>
 
@@ -181,7 +180,7 @@ MTA を Unix で動かせば良いでしょう。
 
 <question>
 <para>
-ML を初期化したい
+ＭＬを初期化(再初期化)したい
 </para>
 </question>
 
@@ -196,6 +195,22 @@ ML を初期化したい
 </answer>
 
 </qandaentry>
+
+
+<qandaentry>
+<question>
+	<para>
+	間違えて rmml してしまったＭＬを復活させたい
+	</para>
+</question>
+
+<answer>
+	<para>
+	reviveml コマンドを使って下さい。
+	</para>
+</answer>
+</qandaentry>
+
 
 
 </qandaset>

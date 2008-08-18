@@ -1,11 +1,11 @@
 <!--
-   $FML: fml_on_unix.sgml,v 1.11 2005/10/08 07:32:54 fukachan Exp $
+   $FML: fml_on_unix.sgml,v 1.12 2005/11/19 03:45:07 fukachan Exp $
 -->
 
 
 <chapter id="install.fml.unix">
 	<title>
-	UNIX 上での fml のインストール
+	Unix 上での fml のインストール
 	</title>
 
 
@@ -64,10 +64,10 @@ make install を実行すると、configure が生成した etc/fml/install.cf を
 fml では各ディレクトリにさらに /fml といった suffix をつけます。
 変更できるのは、その直前の prefix 部分までです。
 <screen>
-変数            configure のデフォルト値    fml の利用するディレクトリ
+変数            configure のデフォルト値    fml の利用するディレクトリ例
 --------------------------------------------------------
 prefix          /usr/local                  /usr/local
-exec_prefix     /usr/local
+exec_prefix     /usr/local                  /usr/local
 bindir          ${exec_prefix}/bin          /usr/local/bin
 sbindir         ${exec_prefix}/sbin         /usr/local/sbin
 libexecdir      ${exec_prefix}/libexec      /usr/local/libexec/fml
@@ -114,7 +114,7 @@ configure --help
 	</title>
 
 <para>
-例: NetBSD は /usr/pkg 以下だね 
+例: NetBSD は /usr/pkg 以下へ。
 <screen>
 % ./configure --prefix=/usr/pkg
 </screen>
@@ -398,7 +398,7 @@ mani.cf は大枠の最も基本的な設定です。より細かな設定、たとえばサイト共
 デフォルトでは &fml4; と合わせるために、および見本として:)
 subject のタグをつけない設定とフィルタ関連の設定だけが入っています。
 <screen>
-# $FML: fml_on_unix.sgml,v 1.11 2005/10/08 07:32:54 fukachan Exp $
+# $FML: fml_on_unix.sgml,v 1.12 2005/11/19 03:45:07 fukachan Exp $
 #
 #               site default_config.cf EXAMPLE
 #
@@ -482,6 +482,20 @@ use_mime_component_filter	=	yes
 /usr/local/etc/fml/mime_component_filter 
 をカスタマイズしてください。
 </para>
+
+<warning>
+<para>
+ただ、仕事のメールで添付ファイルなしは厳しいようなので、
+社内向けメールなど仕事用のＭＬサーバとして使うなら、
+インストール後、すぐに
+<screen>
+[/usr/local/etc/fml/site_default_config.cf]
+
+use_mime_component_filter	=	no
+</screen>
+に変更しておくとよいでしょう。
+</para>
+</warning>
 
 </sect1>
 

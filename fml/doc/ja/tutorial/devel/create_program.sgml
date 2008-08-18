@@ -1,5 +1,5 @@
 <!--
-   $FML: create_program.sgml,v 1.9 2004/10/06 09:07:35 fukachan Exp $
+   $FML: create_program.sgml,v 1.10 2005/06/25 15:11:30 fukachan Exp $
 -->
 
 
@@ -99,7 +99,7 @@ lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 mead@ -> loader
 <para>
 デフォルトのプログラムについては、インストーラがこれらの symlink 処理
 をしてくれています。インストーラに symlink (後述)を実行してもらう必要
-があるなら、etc/install.cf.in のbin_programs か libexec_programs にプ
+があるなら、etc/install.cf.in の bin_programs か libexec_programs にプ
 ログラム名を定義して下さい。テスト段階では手動で symlink を行なってか
 まいません。
 </para>
@@ -173,7 +173,7 @@ run_cgi_options()
 これらの組で一つの画面
 <footnote>
 <para>
-正確には画面は３×３の合計９個のブロックからなりますが、
+正確には、画面は３×３の合計９個のブロックからなりますが、
 そのうちの６つしか使っていません。
 </para>
 </footnote>

@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.sgml,v 1.7 2005/10/08 07:30:07 fukachan Exp $
+   $FML: chapter.sgml,v 1.8 2005/11/19 03:45:06 fukachan Exp $
 -->
 
 
@@ -48,8 +48,8 @@ recipients-digest が、まとめおくりの配送リストです。
 </para>
 
 <para>
-$digest_recipient_maps は、もちろん IO::Adapter なので、
-mysql なども利用可能です。
+もちろん IO::Adapter クラスを利用して配送リストを取得するので、
+$digest_recipient_maps では mysql なども利用可能です。
 </para>
 
 </sect1>

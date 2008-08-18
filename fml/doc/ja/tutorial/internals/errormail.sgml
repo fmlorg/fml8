@@ -1,5 +1,5 @@
 <!--
-   $FML: errormail.sgml,v 1.6 2004/10/06 09:07:39 fukachan Exp $
+   $FML: errormail.sgml,v 1.7 2005/06/25 14:43:08 fukachan Exp $
 -->
 
 
@@ -15,12 +15,12 @@ libexec/error は &fml4; の libexec/mead に相当するものです。
 <para>
 $use_error_mail_analyzer_function を yes にすると、エラー解析機能が有効にな
 ります。ちなみに、デフォルトで $use_error_mail_analyzer_function は yes つま
-りエラー解析機能は有効になっています。このへんは &fml4; と異なります。
+りエラー解析機能は有効になっています。このあたりは &fml4; と異なります。
 </para>
 
 <para>
 つまるところ、
-&fml8; では &fml4; でよく使う機能は始めから有効になっています。
+&fml8; では &fml4; でよく使う機能は初めから有効になっています。
 </para>
 
 
@@ -35,8 +35,8 @@ $use_error_mail_analyzer_function を yes にすると、エラー解析機能が有効にな
 </para>
 
 <para>
-distribute などと同様に libexec/error は標準入力からメールを読みこみ、
-それを解析し、Mail::Message オブジェクトの鎖を作ります。そして、
+libexec/distribute などと同様に libexec/error は標準入力からメールを読
+みこみ、それを解析し、Mail::Message オブジェクトの鎖を作ります。そして、
 Mail::Bounce クラスがエラー内容の解析をします。
 </para>
 
@@ -100,8 +100,12 @@ $error_mail_analyzer_function_select_list にある関数名が利用し得るアル
 </para>
 
 <para>
+デメリット:
 少なくとも一日一通は流量がないと、このアルゴリズムは動作しません。
-よって、ちょっと間違えただけの受信者が削除されることはありません。
+</para>
+
+<para>
+メリット: ちょっと間違えただけの受信者が削除されることはありません。
 </para>
 
 <para>
@@ -109,8 +113,8 @@ $error_mail_analyzer_function_select_list にある関数名が利用し得るアル
 </para>
 
 <para>
-注意: とうぜんのことながら、流量が一日一通に満たないような、まったりと
-したＭＬでは、このアルゴリズムは動作しません:-)
+注意: 当然のことながら、流量が一日一通に満たないような、まったりとした
+ＭＬでは、このアルゴリズムは動作しません:-)
 </para>
 
 </sect2>
@@ -160,6 +164,10 @@ $maintainer_recipient_maps
 現在は、単にエラーメールをフォワーディングしてるだけです。中身は
 message/rfc822 一通だけの無味乾燥な mime/multipart です。
 </para>
+
+<!--
+   XXX-TODO: ヘッダ情報 + そのエラーメールのアドレスの分析レポート
+-->
 
 <para>
 そのうち、ヘッダ情報 + そのエラーメールのアドレスの分析レポートとか

@@ -1,5 +1,5 @@
 <!--
-    $FML: queue.sgml,v 1.7 2004/10/06 09:07:35 fukachan Exp $
+    $FML: queue.sgml,v 1.8 2005/06/25 15:11:30 fukachan Exp $
 -->
 
 
@@ -24,6 +24,14 @@ fml は、いったんメールを読みこみ、まずはディスクに書き込みます
 もし、失敗した場合、exit(EX_TEMPFAIL)します。たいていの OS では 
 exit(75) です。このエラーコードをうけとると、MTA は一時的なエラーがお
 こったとみなすため、このメッセージの再送処理を試みてくれます。
+</para>
+
+<para>
+失敗が一時的なディスク溢れ(file system full)なら、MTA の再送処理でリト
+ライが行なわれＭＬの処理が行なわれます。
+ただ、ＭＬのスプールに用意したファイルシステムでのディスク溢れ(file
+system full)が一時的とは考えにくいので、システム管理者が気づかないと、
+ずっとエラーになり続ける可能性が高いと思います。
 </para>
 
 <para>
@@ -52,13 +60,13 @@ FML::Process::QueueManager
 <para>
 微妙に処理が異なりますが、記事の配送もコマンドメールも同様に
 Mail::Delivery::Queue ベースのキューイング処理をしています。そのため、
-配送処理の途中でエラーが起きた場合、別のfmlプロセスにより再送処理が行
-なわれます。
+配送処理の途中でエラーが起きた場合、別の &fml8; プロセスにより再送処理
+が行なわれます。
 </para>
 
 <sect2>
 	<title>
-	fml の中では、どう書くのか？
+	&fml8; の中では、どう書くのか？
 	</title>
 
 <para>
@@ -67,7 +75,7 @@ Mail::Delivery::Queue ベースのキューイング処理をしています。そのため、
 $curproc->reply_message( "you are not a ML member." );
 </screen>
 この場合の受信者はコマンドの結果などを受けとる人、
-fml にリクエストをした人です。
+&fml8; にリクエストをした人です。
 </para>
 
 
@@ -146,8 +154,10 @@ deferred/
 info/sender/
 info/recipients/
 info/transport/
+isolated/
 </screen>
 info/ には envelope 情報が格納されます。
+isolated/ は隔離された不正なメール（ほぼ 100 % SPAM)置場です。
 また incoming/ は incoming queue ですが、それ以外のディレクトリは
 outgoing 用です。
 </para>

@@ -1,5 +1,5 @@
 <!--
-   $FML: bootloader.sgml,v 1.12 2004/10/06 09:07:37 fukachan Exp $
+   $FML: bootloader.sgml,v 1.13 2005/06/25 15:11:33 fukachan Exp $
 -->
 
 
@@ -120,7 +120,7 @@ FML::Process::Mead       >-|    |
 	/usr/local/etc/fml/main.cf を読み込む。
 	読み込むと fml のバージョンが分かる。
 	main.cf の値から @INC を再設定しバージョン依存性を解決します。
-	default_config.cf はバージョン依存ですので、
+	default_config.cf.{ja,en} はバージョン依存ですので、
 	設定ファイルを読み込む前に、
 	この段階でバージョンを評価しなければいけないことに注意してください。
 	</para>
@@ -156,7 +156,7 @@ FML::Process::Mead       >-|    |
 		<para>
 		(ポリモーフィズムの例)
 		モジュールをダイナミックバインディングし、
-		該当するプロセスオブジェクトを生成する。
+		該当するプロセスオブジェクトを生成、
 		そして、プロセスをスタートさせます。
 
 		FML::Process::Flow の中に、
@@ -169,7 +169,7 @@ $process->verify_request($args);
 $process->run($args);
 $process->finish($args);
 </screen>
-		のように実行されています。
+		のような実行順です。
 		各プロセスは、それぞれについて適当なメソッドを
 		FML::Process:: 以下に用意する必要があります。
 		</para>

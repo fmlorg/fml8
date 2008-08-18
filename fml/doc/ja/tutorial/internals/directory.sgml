@@ -1,5 +1,5 @@
 <!--
-   $FML: directory.sgml,v 1.6 2005/06/25 15:11:34 fukachan Exp $
+   $FML: directory.sgml,v 1.7 2005/11/29 14:05:11 fukachan Exp $
 -->
 
 
@@ -82,7 +82,7 @@ HTML 化されたファイルをおくサブディレクトリを 1000 ごとに用意すると、
 
 $_xxx_hook = q{
 	my $config = $curproc->config();
-	my $xxxdir = $config->{ some_where_dir };
+	my $xxxdir = $config->get('some_where_dir');
 
 	... 略 ...
 }

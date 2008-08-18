@@ -1,17 +1,44 @@
 <!--
-   $FML: postfix.sgml,v 1.5 2004/10/06 09:07:37 fukachan Exp $
+   $FML: postfix.sgml,v 1.6 2005/06/25 15:11:32 fukachan Exp $
 -->
 
 
 <sect1 id="install.postfix">
 	<title>
-	メールサーバの設定 (postfix)
+	メールサーバの設定 (Postfix)
 	</title>
 
 <para>
-makefml newml を実行するだけでＭＬが自動的に有効になるように、あらかじ
-め postfix の設定を変更しておいて下さい。
+makefml newml を実行するだけでＭＬが自動的に有効になるように、
+次のように Postfix の設定を変更して下さい。
 </para>
+
+<caution>
+<para>
+一つのドメインについては、一度 Postfix の設定をすれば、あとは makefml 
+ないしは fml コマンドの操作だけでＭＬの作成、削除が可能になりますが、
+別のドメインを使うなら、ドメインごとに Postfix の alias_maps と 
+virtual_maps の追加設定が必要になることに注意して下さい。
+</para>
+
+
+</caution>
+
+
+<sect2>
+	<title>
+	Postfix からプログラムを実行可能にする。	
+	</title>
+
+<para>
+<screen>
+allow_mail_to_commands = alias,forward,include
+</screen>
+の設定を入れて下さい。
+これはＭＬドライバを実行するためにどんなケースでも必須の設定です。
+</para>
+
+</sect2>
 
 
 <sect2>
@@ -23,12 +50,28 @@ makefml newml を実行するだけでＭＬが自動的に有効になるように、あらかじ
 <para>
 具体的には postfix の /etc/postfix/main.cf を次のようにしておきます。
 <screen>
+# Postfix からプログラムを実行可能にする。
 allow_mail_to_commands = alias,forward,include
 
 alias_maps	=	hash:/etc/mail/aliases
 			hash:/var/spool/ml/etc/mail/aliases
 </screen>
+hash:/var/spool/ml/etc/mail/aliases は 
+「デフォルトのＭＬスプール/etc/mail/aliases」です。
+CUI で newml コマンドを実行すると、画面上で
+hash:/var/spool/ml/etc/mail/aliases 
+ファイルをアップデートしていることが表示されるのでパスを確認してみて下
+さい。
+newml コマンドの使い方についての詳細は
+<link linkend="install.fml.unix">
+<xref linkend="install.fml.unix">
+</link>
+の章を参照。
 </para>
+
+<!--
+XXX-TODO: newml の際に、Postfix の設定のヒントを表示するべきでしょう。
+-->
 
 <warning>
 <para>
@@ -49,6 +92,7 @@ alias_maps	=	hash:/etc/mail/aliases
 /etc/postfix/main.cf で
 alias_maps と virtual_maps の両方に設定の追加が必要です。
 <screen>
+# Postfix からプログラムを実行可能にする。
 allow_mail_to_commands = alias,forward,include
 
 alias_maps	=	hash:/etc/mail/aliases
@@ -62,27 +106,37 @@ makefml newml を実行すると
 /var/spool/nuinui.net/etc/mail/aliases
 および
 /var/spool/nuinui.net/etc/postfix/virtual 
-は makefml によって自動的に更新されます。
-なお、この場合、ml_home_prefix_maps で
+は makefml によって自動的に更新されます(画面に表示されるので分かるはず)。
+なお、この場合、事前に ml_home_prefix_maps で
 <screen>
 nuinui.net /var/spool/nuinui.net
 </screen>
 という「ドメイン←→ディレクトリ」の定義がなされています。
+newml コマンドの使い方についての詳細は
+<link linkend="install.fml.unix">
+<xref linkend="install.fml.unix">
+</link>
+の章を参照。
 </para>
+
+<!--
+XXX-TODO: newml の際に、Postfix の設定のヒントを表示するべきでしょう。
+-->
 
 <warning>
 
 <para>
 &fml8; が作る virtual_maps のファイルは Postfix スタイルの 
 virtual_maps です。最近の Postfix には sendmail スタイルというのもあり
-ますが、ここでは昔からある postfix スタイルを使っているということに注
-意して下さい。
+ますが、&fml8; では昔からある postfix スタイルを使っているということに
+注意して下さい。
 </para>
 
 <para>
-mydestination にデフォルトのドメイン(おそらく $mydomain)がちゃんと追加
-されていることを確認して下さい。しかし、バーチャルドメイン(ここでは 
-nuinui.net)は mydestination に追加する必要はありません。注意して下さい。
+mydestination には、デフォルトのドメイン(おそらく $mydomain)を入れるこ
+とが普通ですが、バーチャルドメイン(ここでは nuinui.net)は 
+mydestination に追加する必要はありません(Postfix は virtual_maps の値
+を見て mydestination 相当であるとみなしています)。注意して下さい。
 </para>
 
 <para>
