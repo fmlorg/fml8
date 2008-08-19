@@ -1,5 +1,5 @@
 <!--
-   $FML: create.sgml,v 1.2 2003/04/15 14:51:42 fukachan Exp $
+   $FML: create.sgml,v 1.3 2005/06/25 15:11:36 fukachan Exp $
 -->
 
 <chapter id="module.create">
@@ -9,9 +9,9 @@
 
 
 <para>
-ここでは、単純なスケジュール表示ソフトを例にとり、&fmldevel; のフレー
-ムワークの中で新しいプログラムを追加するにはどうすれば良いのかを説明し
-ます。 以下、プログラム名は fmlsch とし、その CGI 版が fmlsch.cgi です。
+ここでは、単純なスケジュール表示ソフトを例にとり、&fml8; のフレームワー
+クの中で新しいプログラムを追加するにはどうすれば良いのかを説明します。 
+以下、プログラム名は fmlsch とし、その CGI 版が fmlsch.cgi です。
 </para>
 
 
@@ -74,14 +74,18 @@ Date-Calc も必要なので適宜インストールしてください。
 
 <para>
 仕事のほとんどの部分は FML::Demo::Calendar が実行しますが、
-&fmldevel; のブートローダから FML::Demo::Calendar を呼び出すために
+&fml8; のブートローダから FML::Demo::Calendar を呼び出すために
 FML::Process:: クラスを修正する必要があります。
 </para>
 
 <para>
 まず、fmlsch プロセスの初期化から実行といった大まかな一連の手順を
 fml/lib/FML/Process/Calender.pm 
-に書きます。このファイルは新規に作成して下さい。
+に書きます。このファイルは新規に作成して下さい
+(<link linkend="bootloader">
+<xref linkend="bootloader">
+</link>
+章を参照)。
 </para>
 
 <para>

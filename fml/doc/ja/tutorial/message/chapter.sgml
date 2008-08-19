@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.sgml,v 1.6 2004/04/07 11:07:09 fukachan Exp $
+   $FML: chapter.sgml,v 1.7 2004/10/06 09:07:40 fukachan Exp $
 -->
 
 
@@ -28,7 +28,8 @@ Mail::Bounce や Mail::Delivery を始め、
 
 <para>
 メールはヘッダに始まりボディ(メール本文)が続きます。MIME/Multipart の
-ように、ボディは複数の部分(パート)から成ることもあります。
+ように、ボディは複数の部分(パート)から成ることもありますが、いずれにせ
+よ数珠つなぎ構造です。
 </para>
 
 <para>

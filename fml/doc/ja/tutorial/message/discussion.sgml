@@ -1,5 +1,5 @@
 <!--
-   $FML: discussion.sgml,v 1.5 2004/10/06 09:07:40 fukachan Exp $
+   $FML: discussion.sgml,v 1.6 2005/06/25 15:11:35 fukachan Exp $
 -->
 
 
@@ -9,9 +9,9 @@
 	</title>
 
 <para>
-適宜、エラーメッセージを送信者に返す必要があります。
-それもエラーメッセージは言語依存です。
-よって、何らかの形で言語変換をしてから送り出す必要があるわけです。
+ＭＬドライバは、適宜、エラーメッセージを送信者に返す必要があります。
+そしてエラーメッセージは言語依存です。
+よって、何らかの形で言語変換をしてから送り出す必要があります。
 </para>
 
 
@@ -49,7 +49,7 @@ Mesg() は /usr/local/fml/messages/Japanese/ 以下にあるファイル群に対し
 <!-- ===================================================== -->
 <sect2>
 	<title>
-	&fmldevel; では、どうするべきか？
+	&fml8; では、どうするべきか？
 	</title>
 
 <para>
@@ -75,22 +75,22 @@ catgets(catd, set_id, msg_id, char *s);
 	ここで s はデフォルトのメッセージとなります。
 	</para>
 	</footnote>
-例えば、次のような使い方をします。
+locale の使い方は次のようなかんじです。
 <screen>
 printf(catgets(catd, 30,  4,  "%s: Internal match error.\n"), progname);
 </screen>
-この時、
+この時、catgets() は
 locale の定義ファイル(
 例: /usr/pkg/share/nls/ja_JP.EUC/プログラム名.cat
 )
-の中の se 30、エントリ 4 のメッセージに変換してくれます。
+の中の se 30、エントリ 4 のメッセージを元にメッセージを生成しています。
 </para>
 
 </sect3>
 
 <sect3>
    <title>
-   &fmldevel;: とりあえずの方針
+   &fml8; とりあえずの方針
    </title>
 
 <para>

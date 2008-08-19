@@ -1,5 +1,5 @@
 <!--
-   $FML: Message.sgml,v 1.2 2003/04/15 14:51:42 fukachan Exp $
+   $FML: Message.sgml,v 1.3 2005/06/25 15:11:36 fukachan Exp $
 -->
 
 <chapter id="module.mail.message">
@@ -148,7 +148,7 @@ whole_message_header()
 <para>
 __head_message() は鎖の先頭のオブジェクトを返します。
 __last_message() は鎖の最後のオブジェクトを返します。
-プライベートなので、これらのメソッドはは使わないで下さい。
+プライベートなので、これらのメソッドは使わないで下さい。
 __head_message() は、通常、図の header オブジェクトを返すことになりま
 すので、多くの場合 whole_message_header() と等価です。
 </para>
@@ -263,7 +263,7 @@ reset_print_mode()
 
 <para>
 size()
-はオブジェクトのサイズを返します。
+は(鎖の一つ一つの Mail::Message)オブジェクトのサイズを返します。
 メール全体ではありません。
 header_size()
 や
@@ -325,8 +325,9 @@ num_paragraph()
 <para>
 nth_paragraph(数字)
 は
-数字番目のパラグラフの内容を文字列として返します。
+「数字」番目のパラグラフの内容を文字列として返します。
 例えば、一番目のパラグラフは 0 ではなく 1 と指定して下さい。
+ここは、わざとＣ言語風ではなく人間に分かりやすいようにしてあります。
 </para>
 
 

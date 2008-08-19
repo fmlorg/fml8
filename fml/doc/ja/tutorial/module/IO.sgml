@@ -1,5 +1,5 @@
 <!--
-   $FML: IO.sgml,v 1.4 2003/04/15 14:51:42 fukachan Exp $
+   $FML: IO.sgml,v 1.5 2005/06/25 15:11:35 fukachan Exp $
 -->
 
 <chapter id="module.io.adapter">
@@ -14,16 +14,16 @@
 	</title>
 
 <para>
-&fmldevel; でのメンバーリストの読み書き、例えばアドレスの登録/削除は
+&fml8; でのメンバーリストの読み書き、例えばアドレスの登録/削除は
 IO::Adapter という抽象クラスを通じて行ないます。ようは Unix で 
 vfs/vnode インターフェイスを導入した時のような感じですね。
 使い方は次のようになります。
 <screen>
 use IO::Adapter;
-$obj = new IO::Adapter $map, $map_params;
-$obj->open || croak("cannot open $map");
-while ($x = $obj->get_next_key()) { ... }
-$obj->close;
+$io = new IO::Adapter $map, $map_params;
+$io->open || croak("cannot open $map");
+while ($x = $io->get_next_key()) { ... }
+$io->close;
 </screen>
 </para>
 
@@ -36,8 +36,8 @@ file:/var/spool/ml/elena/recipients
 unix.group:root
 nis.group:root
 mysql:id
-postgresql:id  (未実装、実装予定)
-ldap:id        (未実装、実装予定)
+postgresql:id
+ldap:id
 </screen>
 </para>
 
@@ -45,10 +45,15 @@ ldap:id        (未実装、実装予定)
 file: は通常のファイルです。
 unix.group:root は /etc/group の root のエントリにあるユーザのリストを、
 nis.group:root は NIS の root のエントリにあるユーザのリストです。
-mysql:id は MySQL へのアクセスです。
-config.cf の mysql:id で指定されたパラメータを用います。
+mysql:id は MySQL、postgresql:id は PostgreSQL へのアクセスです。
+ldap:id は LDAP への通信を可能とします。
+</para>
+
+<para>
+RDBMS などは別の名前空間で定義することにしています。
+たとえば MySQL は config.cf の mysql:id で指定されたパラメータを用います。
 このパラメータは new IO::Adapter を実行する際に、
-指定する必要があります。
+指定する必要があります(後述)。
 </para>
 
 </sect1>
@@ -107,7 +112,7 @@ REGEXP は正規表現ですが、たいていはメールアドレスです。
 
 <sect1>
 	<title>
-	&fmldevel; で必要なメソッドの型
+	&fml8; で必要なメソッドの型
 	</title>
 
 <para>
@@ -191,7 +196,7 @@ wheel:*:0:root,rudo,kenken
 </screen>
 は IO::Adapter では unixgroup:wheel としてアクセスできます。
 <screen>
-$obj = new IO::Adapter "unixgroup:wheel";
+$io = new IO::Adapter "unixgroup:wheel";
 </screen>
 というオブジェクトに対し get_next_key() すると
 グループのメンバーが順に返されます。
@@ -202,7 +207,7 @@ rudo
 kenken
 </screen>
 のようなファイルとみなされます。
-つまり 3 行のファイルを読みだすようにみなされているわけですね。
+つまり 3 行のファイルを読みだすようにみなされているわけです。
 </para>
 
 </sect1>
@@ -228,7 +233,7 @@ NIS/YP から group にあたるものを引っ張ってくるところだけが異なります。
 
 <para>
 保守性をあげるためには、一箇所に設定をまとめておきたい。つまり、一つの 
-cf ファイルにいろいろ書けるようにしておきたい。たとえば &fmldevel; の
+cf ファイルにいろいろ書けるようにしておきたい。たとえば &fml8; の
 場合、config.cf の中だけに SQL の設定を書いておきたいわけです。
 </para>
 
@@ -254,6 +259,7 @@ sql_find	=	select * from ...
 
 		...
 </screen>
+config.cf の中に別の名前空間を定義していると考えてもらってかまいません。
 </para>
 
 <para>
@@ -289,7 +295,13 @@ FML::Config のオブジェクトを引数で渡せば OK です。
 関数が呼ばれた時に始めて決まる変数もあるので
 cf で全部定義することはできません。
 そこで、lexical scope で取り扱われる変数の表現があれば解決でしょうか？
-現在では &amp;varname 記法(下記)を使っています。
+現在は、この目的のために &amp;varname 記法(下記)を使っています。
+</para>
+
+<para>
+ただ、どこで呼ばれるか？を考えないと分からないので、利用可能なローカル
+スコープの変数一覧表を作るのは、かなり困難です。
+どうしたものかと…
 </para>
 
 <para>

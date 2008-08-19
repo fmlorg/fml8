@@ -1,5 +1,5 @@
 <!--
-   $FML: language.sgml,v 1.6 2004/04/07 11:07:09 fukachan Exp $
+   $FML: language.sgml,v 1.7 2005/06/25 15:11:35 fukachan Exp $
 -->
 
 
@@ -44,8 +44,13 @@ $_arg_address
 <para>
 また config.cf 中で定義されている変数も同様に展開可能です。
 例えばテンプレート中の $ml_name はＭＬ名に展開されるようになっています。
-ちなみに、渡す引数に $_arg_ などという prefix をつけているのは 
-config.cf の変数群とぶつからないようにするためです。
+</para>
+
+<para>
+こういったことがあるので、渡す引数に $_arg_ などという prefix をつけて
+いるわけです。つまり、config.cf の変数群とぶつからないようにするため。
 </para>
 
 </sect1>
+
+

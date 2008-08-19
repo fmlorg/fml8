@@ -1,5 +1,5 @@
 <!--
-   $FML: backup.sgml,v 1.3 2004/10/06 09:07:41 fukachan Exp $
+   $FML: backup.sgml,v 1.4 2006/01/18 14:56:35 fukachan Exp $
 -->
 
 
@@ -51,13 +51,14 @@ $ml_home_prefix	(たとえば /var/spool/ml/、ドメインごとに異なります)
 あらゆるものが含まれているので、サイズが大きいです。
 <screen>
 /usr/local/etc/fml/
-$ml_home_prefix	(たとえば /var/spool/ml/、ドメインごとに異なります)
+$ml_home_prefix	(たとえば /var/spool/ml/、ドメインごとに異なる点に注意)
 </screen>
 </para>
 
 <para>
 ディスクの安い昨今では、何も気にせず、この階層を全部バックアップしてお
-くほうがよいとおもいます。
+くほうがよいとおもいます。面倒ならファイルシステム全体を常時バックアッ
+プしておくのが良いと思います。
 </para>
 
 <para>

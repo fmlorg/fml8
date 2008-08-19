@@ -1,5 +1,5 @@
 <!--
- $FML$
+ $FML: move.sgml,v 1.1 2006/01/19 10:20:04 fukachan Exp $
 -->
 
 
@@ -8,6 +8,13 @@
 	サーバの引越し
 	</title>
 
+
+<para>
+<link linkend="virtualdomain.movement">
+ケーススタディ: FML.ORG サーバ間引越の例
+</link>
+も参考にしてみて下さい。
+</para>
 
 <sect1 id="operations.move.recipes">
 	<title>

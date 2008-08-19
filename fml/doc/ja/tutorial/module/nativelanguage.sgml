@@ -1,8 +1,8 @@
 <!--
-   $FML: nativelanguage.sgml,v 1.2 2002/04/01 23:41:05 fukachan Exp $
+   $FML: nativelanguage.sgml,v 1.3 2003/04/15 14:51:43 fukachan Exp $
 -->
 
-<chapter>
+<chapter id="nativelanguage">
 	<title>
 	言語別の処理関数
 	</title>
@@ -23,7 +23,7 @@ fml 内部では言語に依存した変換処理が必要です。
 </para>
 
 
-<sect1>
+<sect1 id="nativelanguage.overview">
 	<title>
 	何か::Language::
 	</title>
