@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.onhost.sgml,v 1.16 2005/11/19 03:45:08 fukachan Exp $
+   $FML: chapter.onhost.sgml,v 1.17 2008/08/19 03:22:18 fukachan Exp $
 -->
 
 
@@ -11,8 +11,8 @@
 
 <para>
 makefml の基本的な使い方は &fml4; の makefml と同様です。
-できるだけ同じ使い勝手になるように、
-つまり互換性を保つようにしてあります。
+できるだけ &fml4; と同じ使い勝手になるように、
+つまり互換性を保つように努力しています。
 </para>
 
 <para>

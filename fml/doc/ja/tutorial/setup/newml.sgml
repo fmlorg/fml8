@@ -1,5 +1,5 @@
 <!--
-   $FML: newml.sgml,v 1.8 2004/10/06 09:07:42 fukachan Exp $
+   $FML: newml.sgml,v 1.9 2005/06/25 15:11:37 fukachan Exp $
 -->
 
 
@@ -135,7 +135,7 @@ makefml newml は実行時、次のような処理を行ないます。
 </caution>
 
 <para>
-ＭＬを作成には makefml を使います。
+ＭＬ作成には makefml を使います。
 使い方は &fml4; と同様です。
 しかしながらＭＬ名にきちんとドメインまでつけるところが異なります。
 注意して下さい。
@@ -153,7 +153,7 @@ makefml newml は実行時、次のような処理を行ないます。
 二回目以降の場合は
 <screen>
 % su fml
-% makefml newml elena@nuinui.net
+% makefml newml rudo@nuinui.net
 </screen>
 だけでかまいません。
 </para>

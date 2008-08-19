@@ -1,5 +1,5 @@
 <!--
- $FML$
+ $FML: recipes.onhost.sgml,v 1.1 2005/10/15 10:51:13 fukachan Exp $
 -->
 
 <qandaset>
@@ -59,7 +59,8 @@ CGI でも同様です。rmml で消していれば reviveml で復活できます。
 
 <para>
 会社からも、夜、自宅からもＭＬに投稿したいが、受取先は会社だけにしたい
-なら、投稿可能なアドレスだけを増やして下さい(member_mapsにのみ登録)。
+なら addmember コマンドを使って「投稿可能なアドレスだけを増やして」下
+さい。
 </para>
 
 <para>

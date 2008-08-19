@@ -1,5 +1,5 @@
 <!--
-   $FML: post.sgml,v 1.9 2004/10/06 09:07:44 fukachan Exp $
+   $FML: post.sgml,v 1.10 2005/06/25 15:11:39 fukachan Exp $
 -->
 
 
@@ -9,7 +9,7 @@
 	</title>
 
 <para>
-fml.org の elena ＭＬへの投稿は、
+elena@fml.org ＭＬ(fml.org の elena ＭＬ)への投稿は、
 普通にメールを elena@fml.org に送信することです。
 メールは MTA が受け、最終的に MTA は
 /usr/local/libexec/fml/distribute
@@ -22,7 +22,7 @@ MTA へ配送処理を委ねます。
 
 <sect2>
 	<title>
-	distribute が ＭＬとして処理するべきこと
+	distribute プログラムが ＭＬとして処理するべきこと
 	</title>
 
 
@@ -31,7 +31,7 @@ subject のタグをつける、もしくは記事番号などを更新するなど
 <screen>
 例
 
-Subject: [elena:00100] えれなさん素敵
+Subject: [elena:00100] エレナさん素敵
 </screen>
 (デフォルトではつけません)
 </para>

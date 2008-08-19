@@ -1,5 +1,5 @@
 <!--
-   $FML: cgi.sgml,v 1.8 2004/10/27 10:21:58 fukachan Exp $
+   $FML: cgi.sgml,v 1.9 2005/06/25 15:11:37 fukachan Exp $
 -->
 
 
@@ -34,7 +34,7 @@ apache で suexec を使う
 </para>
 
 <para>
-なお、CGI から設定変更を行なう場合でも、メールサーバとして postfix や 
+なお、CGI から設定変更を行なう場合でも、メールサーバとして Postfix や 
 qmail を使っているなら、CGI 用の特別な「メールサーバの設定変更」は不要
 です。
 </para>
@@ -56,7 +56,7 @@ makefml newml を実行するとデフォルトで config.cgi などの CGI スクリプ
 ~fml/public_html/fml/ドメイン/admin/config.cgi
 
 ＭＬごとの管理者用
-~fml/public_html/fml/ドメイン/ml-admin/config.cgi
+~fml/public_html/fml/ドメイン/ml-admin/ＭＬ名/config.cgi
 </screen>
 </para>
 
@@ -260,6 +260,11 @@ config.cgi では TABLE と SELECT が基本です。
 </para>
 
 </sect1>
+
+
+<!--
+	XXX-TODO: wizard.cgi があるといいかもね
+-->
 
 
 </chapter>

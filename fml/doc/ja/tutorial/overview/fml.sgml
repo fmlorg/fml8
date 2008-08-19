@@ -1,5 +1,5 @@
 <!--
-   $FML: fml.sgml,v 1.11 2006/01/16 03:21:34 fukachan Exp $
+   $FML: fml.sgml,v 1.12 2008/08/19 03:22:17 fukachan Exp $
 -->
 
 
@@ -10,7 +10,7 @@
 
 
 <para>
-なお、fml4 と fml8 の相違点についての詳細は、
+なお、&fml4; と &fml8; の相違点についての詳細は、
 <link linkend="changes">
 <xref linkend="changes">
 </link>
@@ -26,7 +26,8 @@
 
 <para>
 &fml4; の再実装にあたっての山場は越えたと思います。
-あとは、こまごま、いろいろです。
+CGI 関係以外は RC (Release Candidate) の気分…
+あぁ、うそ makefml config ができてない。
 </para>
 
 <para>
@@ -38,7 +39,7 @@
 	設定ファイル形式が新しくなりました。
 	今度は
 	<link linkend="internal.config.cf">
-	postfix 風の設定ファイル
+	Postfix 風の設定ファイル
 	</link>
 	です。
 	</para>
@@ -126,6 +127,13 @@
 
     <listitem>
 	<para>
+	SPAM メールの隔離 (2008/08/17 以降)
+	</para>
+    </listitem>
+
+
+    <listitem>
+	<para>
 	IPv6 による配送
 	</para>
     </listitem>
@@ -172,8 +180,8 @@
 
     <listitem>
 	<para>
-	fml4 エミュレーション: fml4 の fml.pl と fml8 の fml.pl を入れ
-	換えるだけで fml8 に移行できるようにした。
+	&fml4; エミュレーション: &fml4; の fml.pl と &fml8; の fml.pl 
+	を入れ換えるだけで &fml8; に移行できるようにした。
 	</para>
 
 	<para>
@@ -291,7 +299,7 @@ OS 附属のパッケージシステムなどにはやさしくなっているといえるでしょう。
 	</para>
 
 	<para>
-	デフォルトでは、インストーラはメインのMTAから呼ばれるプログラムを
+	デフォルトでは、インストーラはメインの MTA から呼ばれるプログラムを
 	/usr/local/libexec/fml/ 以下へ、
 	makefml や fmldoc など fml で始まるユーティリティプログラムを
 	/usr/local/bin
@@ -397,6 +405,11 @@ elena@fml.org ＭＬを作るには
 % su fml
 % makefml newml elena@nuinui.net
 </screen>
+</para>
+
+<para>
+いまどき一人で複数ドメインを持つなんて普通だと思うので、全ＭＬをバーチャ
+ルドメインにしておくほうが統一感があって良いと思いますね。
 </para>
 
 <warning>

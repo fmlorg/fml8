@@ -1,5 +1,5 @@
 <!--
-	$FML: command.sgml,v 1.9 2004/10/06 09:07:43 fukachan Exp $
+	$FML: command.sgml,v 1.10 2005/06/25 15:11:38 fukachan Exp $
 -->
 
 
@@ -16,7 +16,7 @@ fml にメールで文字列(コマンド)を送り込むことで、fml に特定の処理をして
 
 <important>
 <para>
-fml の基本的な使い方は makefml を使った操作です。
+fml の基本的な使い方は CUI (makefml or fml コマンド) を使った操作です。
 </para>
 
 <para>
@@ -41,7 +41,7 @@ makefml を使えるということは、ＭＬサーバのホストのシェルが取れている、
 	</title>
 
 <para>
-elena ＭＬの場合、
+elena@fml.org ＭＬの場合、
 コマンドメールを elena-ctl@fml.org に送信してください。
 メールは MTA が受け、最終的に MTA は
 /usr/local/libexec/fml/command

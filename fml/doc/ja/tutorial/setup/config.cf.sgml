@@ -1,5 +1,5 @@
 <!--
-   $FML: config.cf.sgml,v 1.5 2004/10/06 09:07:42 fukachan Exp $
+   $FML: config.cf.sgml,v 1.6 2005/06/25 15:11:37 fukachan Exp $
 -->
 
 
@@ -35,9 +35,10 @@ config.cf include include-ctl include-error
 </warning>
 
 <para>
-makefml newml が作る config.cf には、ほとんど何も定義されていません。
+makefml newml が作る config.cf には、ほとんど何も定義されていません(つ
+まりデフォルト値を使うことになっています)。
 config.cf の先頭の ml_domain と ml_name もコメントになっていますが、
-それらはコマンドの引数から自動的に決定されるのでコメントでよいのです。
+それらはコマンドの引数から自動的に決定されるのでコメントで OK です。
 </para>
 
 <para>

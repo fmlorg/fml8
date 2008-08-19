@@ -1,44 +1,45 @@
 <!--
-   $FML: merge.fml4to8.sgml,v 1.5 2004/12/23 14:59:51 fukachan Exp $
+   $FML: merge.fml4to8.sgml,v 1.6 2005/06/25 15:11:37 fukachan Exp $
 -->
 
 
 <chapter id="mergeml.fml4to8">
 	<title>
-	fml4 のＭＬを fml8 形式のＭＬへ変換する
+	&fml4; のＭＬを &fml8; 形式のＭＬへ変換する
 	</title>
 
 <para>
-2004/03: fml4 の $DIR ($ml_home_dirにあたるもの)、たとえば 
-/var/spool/ml/elena、を fml8 形式の構成へ自動変換するコマンドを実装し
-ました。ただ、まだ設定ファイルの翻訳機能は予備的なもので、順次、改良さ
-れていく予定です。
+2004/03: &fml4; の $DIR ($ml_home_dirにあたるもの)、たとえば 
+/var/spool/ml/elena 以下のファイル群を &fml8; 形式の構成へ自動変換する
+コマンドを実装しました。ただ、まだ設定ファイルの翻訳機能は予備的なもの
+で、順次、改良されていく予定です。
 </para>
 
 <para>
 2004/11: 
 <link linkend="mergeml.fml4.overview">
-fml4 の fml.pl を fml8 の fml.pl と入れ換え可能
+&fml4; の fml.pl を &fml8; の fml.pl と入れ換え可能
 </link>
-としました。つまり、fml8 による fml4 の直接エミュレーションです。これ
-は fml4 の fml.pl を fml8 の fml.pl に入れ換えるだけで 4 から 8 へのアッ
-プグレードを可能にしようとするものです。
+としました。つまり、&fml8; による &fml4; の直接エミュレーションです。
+これは &fml4; の fml.pl を &fml8; の fml.pl に入れ換えるだけで 4 から 
+8 へのアップグレードを可能にしようとするものです。
 </para>
 
 
 <sect1 id="mergeml.fml4to8.overview">
 	<title>
-	概要: fml4 から fml8 への移行(1) fml8 形式への変換
+	概要: &fml4; から &fml8; への移行(1) &fml8; 形式への変換
 	</title>
 
 <para>
-要するに fml4 から fml8 への移行ということですが、「fml4 の実行ファイ
-ルを fml8 で上書きすれば、そのまま動く」というわけではありません。
+要するに &fml4; から &fml8; への移行ということですが、
+「&fml4; の実行ファイルを &fml8; で上書きすれば、そのまま動く」
+というわけではありません。
 </para>
 
 <para>
-今の fml8 では、それに近いことも出来ますが、その際にも、設定ファイルの
-自動変換などバックグラウンドで色々な処理が行なわれています。
+今の &fml8; では、それに近いことも出来ますが、その際にも、設定ファイル
+の自動変換などバックグラウンドで色々な処理が行なわれています。
 </para>
 
 <para>
@@ -56,9 +57,9 @@ fml4 の fml.pl を fml8 の fml.pl と入れ換え可能
 <para>
 ちなみに、いま考えている操作手順は、こんな感じです。
 <screen>
-1. fml8 をインストールする
+1. &fml8; をインストールする
 
-2. (postfix の場合) alias_maps に fml8 の aliases を追加
+2. (postfix の場合) alias_maps に &fml8; の aliases を追加
 
    例:
 	alias_maps	=	hash:/etc/mail/aliases
@@ -66,27 +67,30 @@ fml4 の fml.pl を fml8 の fml.pl と入れ換え可能
 				hash:/var/spool/ml/etc/mail/aliases (fml8)
 
 
-3. fml4 の ML を fml8 へコンバートする。
+3. &fml4; の ML を &fml8; へコンバートする。
 
-   fml $ml mergeml fml4の$DIR 
+   fml $ml mergeml &fml4; の$DIR 
 たとえば
    fml elena mergeml /var/spool/ml/elena
 </screen>
-fml8 へ移行したいＭＬに対して 3. を繰り返す。
+&fml8; へ移行したいＭＬに対して 3. を繰り返す。
 </para>
 
 <para>
-aliases や include の自動変換は、makefml mergeml コマンドが頑張ります。
-また、fml4 の設定ファイルとメンバーリストを fml8 形式へ変換する作業も
-頑張ります。
+aliases や include の自動変換は、makefml mergeml コマンドが処理します。
+また、&fml4; の設定ファイルとメンバーリストを &fml8; 形式へ変換する作
+業も mergeml コマンドが行ないます。
 </para>
 
 <para>
 さすがに、難しい設定がてんこ盛りの config.ph は無理ですが、簡単な
-config.ph であれば、fml8 の config.cf へ全自動で変換できる予定です。な
-お、簡単な config.ph とは、たとえば、Subjectのタグと投稿制限の設定など
-の、makefml config (メニュー)で設定変更ができたレベルのものを想定して
-います。
+config.ph であれば、&fml8; の config.cf へ全自動で変換できるつもりです。
+</para>
+
+<para>
+なお、簡単な設定とは、Subject のタグと投稿制限の設定などの &fml4; の 
+makefml config (メニュー)で設定変更ができたレベルのものを想定していま
+す。
 </para>
 
 </sect1>
@@ -94,12 +98,12 @@ config.ph であれば、fml8 の config.cf へ全自動で変換できる予定です。な
 
 <sect1 id="mergeml.fml4.overview">
 	<title>
-	概要: fml4 から fml8 への移行(2) 
-	fml4 の実行ファイルを入れ換え、そのまま使う
+	概要: &fml4; から &fml8; への移行(2) 
+	&fml4; の実行ファイルを入れ換え、そのまま使う
 	</title>
 
 <para>
-2004/11: fml4 の fml.pl を fml8 の fml.pl と入れ換え可能としました。
+2004/11: &fml4; の fml.pl を &fml8; の fml.pl と入れ換え可能としました。
 いわば、Postfix の /usr/sbin/sendmail (sendmail 互換コマンド)みたいな
 扱い方と考えればよいでしょう。
 </para>
@@ -119,14 +123,14 @@ config.ph であれば、fml8 の config.cf へ全自動で変換できる予定です。な
 </para>
 
 <para>
-正確には fml4 の設定ファイルをそのまま使っているわけではありません。
-fml.pl (fml8) が起動された時に config.cf が見つからないと、ＭＬのホー
+正確には &fml4; の設定ファイルをそのまま使っているわけではありません。
+fml.pl (&fml8;) が起動された時に config.cf が見つからないと、ＭＬのホー
 ムディレクトリにある config.ph から config.cf を自動生成し、そのファイ
-ルを読み込んで fml8 プロセスとして動作します。
+ルを読み込んで &fml8; プロセスとして動作します。
 </para>
 
 <para>
-設定ファイルの自動変換が可能な範囲は限られていますが、fml4 のメニュー
+設定ファイルの自動変換が可能な範囲は限られていますが、&fml4; のメニュー
 で設定可能な(単純な)ものなら自動変換して何とかなるようになっています。
 </para>
 
@@ -135,13 +139,13 @@ fml.pl (fml8) が起動された時に config.cf が見つからないと、ＭＬのホー
 
 <sect1 id="mergeml.fml4to8.config.diff">
 	<title>
-	概要: fml4 と fml8 の相違点
+	概要: &fml4; と &fml8; の相違点
 	</title>
 
 <para>
-fml8 は fml4 を一旦忘れて、一から再設計、再コーディングされたソフトウ
-エアです。そのため、fml4 と fml8 では直接の対応関係がない機能や変数が
-あります。
+&fml8; は &fml4; を一旦忘れて、一から再設計、再コーディングされたソフ
+トウエアです。そのため、&fml4; と &fml8; では直接の対応関係がない機能
+や変数があります。
 </para>
 
 <para>
@@ -159,16 +163,23 @@ fml8 は fml4 を一旦忘れて、一から再設計、再コーディングされたソフトウ
 	</title>
 
 <para>
-「登録されたユーザからのみ投稿が可能」なのは fml4 でも fml8 でもデフォ
-ルトです。もし誰でも投稿可能にしたいなら、fml4 (の config.ph ファイル)では
+「登録されたユーザからのみ投稿が可能」なのは &fml4; でも &fml8; でもデ
+フォルトです。もし誰でも投稿可能にしたいなら、&fml4; (の config.ph ファ
+イル)では
 <screen>
 $PERMIT_POST_FROM = "anyone";
 </screen>
-としますが、fml8 (の config.cf)では
+としますが、&fml8; (の config.cf)では
 <screen>
 article_post_restrictions = reject_system_special_accounts
                             permit_anyone
                             reject
+
+注: fml8 2008/08/17 以降のバージョンでは isolate (SPAM の隔離)が推奨です。
+
+article_post_restrictions = isolate_system_special_accounts
+                            permit_anyone
+                            isolate
 </screen>
 となります。
 </para>
@@ -183,11 +194,11 @@ article_post_restrictions = reject_system_special_accounts
 <para>
 デフォルトでは「Subjectのタグがない」。
 これも &fml4; と &fml8; で同じです。
-そして、fml4 での
+そして、&fml4; での
 <screen>
 $SUBJECT_TAG_TYPE = '[:]';
 </screen>
-は fml8 の
+は &fml8; の
 <screen>
 article_header_rewrite_rules += rewrite_article_subject_tag
 
@@ -204,8 +215,8 @@ article_subject_tag           = [$ml_name:%05d]
 	</title>
 
 <para>
-「members コマンドなどが使えない」これは fml8 ではデフォルトです。
-fml4 の以下のコマンドに対応するものは不要です。
+「members コマンドなどが使えない」これは &fml8; ではデフォルトです。
+&fml4; の以下のコマンドに対応するものは不要です。
 <screen>
 &amp;DENY_PROCEDURE('member');
 &amp;DENY_PROCEDURE('active');
@@ -217,8 +228,9 @@ fml4 の以下のコマンドに対応するものは不要です。
 </para>
 
 <para>
-fml4 以前および fml4 非推奨設定の状態では「フィルタは使わない」ように
-なっています。しかし、fml8 では「フィルタを使う」がデフォルトです。
+&fml4; 以前および &fml4; 非推奨設定の状態では「フィルタは使わない」よ
+うになっています。しかし、&fml8; では「フィルタを使う」がデフォルトで
+す。
 </para>
 
 <para>
@@ -228,8 +240,8 @@ fml4 以前および fml4 非推奨設定の状態では「フィルタは使わない」ように
 </para>
 
 <para>
-fml4 と異なり、subscribe, chaddr, unsubscribe はconfirmation が必須と
-なっています。現状、confirmation を抑制することは出来ません。
+&fml4; と異なり、subscribe, chaddr, unsubscribe はconfirmation が必須
+となっています。現状、confirmation を抑制することは出来ません。
 </para>
 
 </sect2>
@@ -249,13 +261,13 @@ fml4 と異なり、subscribe, chaddr, unsubscribe はconfirmation が必須と
 
 <para>
 しかしながら、行なっている作業について理解してもらうために、
-aliasesとincludeファイルについての説明をしておきます。
+aliases と include ファイルについての説明をしておきます。
 </para>
 
 <para>
-まず、メールサーバに fml4 から fml8 を起動させるように変更しなくてはな
-りません。最終的に fml8 が起動されることができれば、fml4 の config.ph 
-を適宜解釈するとかする部分は、なんとかなるとはおもいます。
+まず、メールサーバに &fml4; から &fml8; を起動させるように変更しなくて
+はなりません。最終的に &fml8; が起動されることができれば、&fml4; の 
+config.ph を適宜解釈するとかする部分は、なんとかなるとはおもいます。
 </para>
 
 <para>
@@ -268,9 +280,9 @@ aliasesとincludeファイルについての説明をしておきます。
 
 <para>
 たとえば Postfix を使う場合、Postfix は aliases ファイルから include 
-ファイルを読むべきことを知り、include ファイルから fml8 の起動の仕方を
-知ります。最終的に Postfix は /usr/local/libexec/fml/distribute コマン
-ドを実行します。
+ファイルを読むべきことを知り、include ファイルから &fml8; の起動の仕方
+を知ります。最終的に Postfix は /usr/local/libexec/fml/distribute コマ
+ンドを実行します。
 </para>
 
 <para>
@@ -279,7 +291,7 @@ aliasesとincludeファイルについての説明をしておきます。
 </para>
 
 <para>
-つまり、fml8 が起動されるまでに
+つまり、&fml8; が起動されるまでに
 <screen>
 aliases ファイル (MTA の設定)
 include ファイル
@@ -289,30 +301,30 @@ include ファイル
 
 <para>
 そして、aliases ファイル（群）には同じＭＬの設定が重複していてはいけま
-せん。だから /etc/postfix/main.cf には次のように fml4 と fml8 の設定両
-方を書いてもよいのですが、
+せん。だから /etc/postfix/main.cf には次のように &fml4; と &fml8; の設
+定両方を書いてもよいのですが、
 <screen>
 alias_maps	=	hash:/etc/mail/aliases
 			hash:/var/spool/ml/etc/aliases (fml4)
 			hash:/var/spool/ml/etc/mail/aliases (fml8)
 </screen>
-fml4 と fml8 の aliases ファイル間での重複はきちんと削除していかないと
-いけません。
+&fml4; と &fml8; の aliases ファイル間での重複はきちんと削除していかな
+いといけません。
 </para>
 
 <para>
 別の言い方をすると、
 <screen>
-MTA -> fml4のaliases -> fml4のinclude -> fml4 (fml.pl)を起動する
+MTA -> fml4のaliases -> fml4のinclude -> &fml4; (fml.pl)を起動する
 </screen>
 となっている起動の順番を次のように変更するわけです。
 <screen>
-MTA -> fml8のaliases -> fml8のinclude -> fml8 を起動する
+MTA -> fml8のaliases -> fml8のinclude -> &fml8; を起動する
 </screen>
 そのためには
 <screen>
-fml4 の aliases ファイルから該当するＭＬ部分の設定を削除
-fml8 の aliases ファイルに該当するＭＬ部分の設定を追加
+&fml4; の aliases ファイルから該当するＭＬ部分の設定を削除
+&fml8; の aliases ファイルに該当するＭＬ部分の設定を追加
 </screen>
 が必要です。
 </para>
