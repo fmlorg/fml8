@@ -1,5 +1,5 @@
 <!--
-   $FML: qmail.sgml,v 1.4 2004/04/07 11:07:06 fukachan Exp $
+   $FML: qmail.sgml,v 1.5 2004/10/06 09:07:37 fukachan Exp $
 -->
 
 
@@ -10,7 +10,7 @@
 
 <warning>
 <para>
-&fmldevel; の qmail 設定は、
+&fml8; の qmail 設定は、
 バーチャルドメインなのかデフォルトのドメインなのか？を問わず、
 常に
 /var/qmail/control/virtualdomains

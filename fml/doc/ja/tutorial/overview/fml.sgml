@@ -1,11 +1,11 @@
 <!--
-   $FML: fml.sgml,v 1.10 2005/08/03 13:45:11 fukachan Exp $
+   $FML: fml.sgml,v 1.11 2006/01/16 03:21:34 fukachan Exp $
 -->
 
 
 <chapter id="overview.fml">
 	<title>
-	&fmldevel; の概要
+	&fml8; の概要
 	</title>
 
 
@@ -21,7 +21,7 @@
 <!-- ======================================================== -->
 <sect1 id="overview.fml8">
 	<title>
-	&fmldevel; でできること
+	&fml8; でできること
 	</title>
 
 <para>
@@ -539,7 +539,7 @@ HOOK (perl script)を書く場合は、
 この仕組み
 </link>
 のおかげでアップグレードしても元に戻すのが簡単です。
-これは &fmldevel; の特徴です。
+これは &fml8; の特徴です。
 </para>
 
 </sect2>

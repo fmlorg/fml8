@@ -1,10 +1,10 @@
 <!--
-   $FML: TODO,v 1.2 2002/02/16 10:08:36 fukachan Exp $
+   $FML: TODO,v 1.3 2002/04/01 23:41:07 fukachan Exp $
 -->
 
 <chapter id="available">
 	<title>
-	&fmldevel; の実行形式プログラム
+	&fml8; の実行形式プログラム
 	</title>
 
 <para>
@@ -22,8 +22,8 @@
 </para>
 
 <para>
-&fmldevel; ではすべてのプログラムは /usr/local/libexec/fml/loader を経
-由して起動されます。バージョン依存性を処理するためです。
+&fml8; ではすべてのプログラムは /usr/local/libexec/fml/loader を経由し
+て起動されます。バージョン依存性を処理するためです。
 </para>
 
 <para>

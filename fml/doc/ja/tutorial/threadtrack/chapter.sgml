@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.sgml,v 1.6 2003/04/15 14:51:44 fukachan Exp $
+   $FML: chapter.sgml,v 1.7 2004/04/21 13:15:15 fukachan Exp $
 -->
 
 
@@ -9,7 +9,7 @@
 	</title>
 
 <para>
-&fmldevel; の問題意識は
+&fml8; の問題意識は
 「ＭＬを走らせたら、スレッドのまとめくらい宜しくやって欲しい」
 ということです。
 あえていえば、インチキ knowledge database のようなものです。

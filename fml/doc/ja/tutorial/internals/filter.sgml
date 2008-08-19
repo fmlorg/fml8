@@ -1,5 +1,5 @@
 <!--
-   $FML: filter.sgml,v 1.9 2005/06/25 15:11:34 fukachan Exp $
+   $FML: filter.sgml,v 1.10 2008/08/18 20:52:59 fukachan Exp $
 -->
 
 
@@ -151,8 +151,8 @@ use_機能A   = yes か no
 	</title>
 
 <para>
-fml 4.0 の content filter とは異なり、
-&fmldevel; の mime component filter は
+&fml4; の content filter とは異なり、
+&fml8; の mime component filter は
 <screen>
 text/plain 	permit
 text/html	reject

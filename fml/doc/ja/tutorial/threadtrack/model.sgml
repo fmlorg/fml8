@@ -1,10 +1,10 @@
 <!--
-   $FML$
+   $FML: model.sgml,v 1.1 2002/12/30 07:38:08 fukachan Exp $
 -->
 
 <sect1 id="threadtrack.model.minimal">
 	<title>
-	&fmldevel; (minimal_states モデル版)チケットシステム
+	&fml8; (minimal_states モデル版)チケットシステム
 	</title>
 
 

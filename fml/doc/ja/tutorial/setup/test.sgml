@@ -1,5 +1,5 @@
 <!--
-   $FML: test.sgml,v 1.7 2005/06/25 15:11:37 fukachan Exp $
+   $FML: test.sgml,v 1.8 2005/08/03 13:44:54 fukachan Exp $
 -->
 
 
@@ -40,8 +40,8 @@ qmail をメールサーバに使っている人は特にやることはないとおもいます。
 </warning>
 
 <para>
-以下では、&fmldevel; と MTA が動いているホスト(ahodori.fml.org)をメー
-ルサーバと呼びます。
+以下では、&fml8; と MTA が動いているホスト(ahodori.fml.org)をメールサー
+バと呼びます。
 </para>
 
 </sect1>
