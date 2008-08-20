@@ -13,8 +13,6 @@ HTML-CalendarMonthSimple	1.02		? (freesoftware, unlimited)
 HTML-FromText			1.005		perl itself
 HTML-Template			2.5		perl (GNU or Artistic)
 
-IO-stringy			1.220		?
-
 Jcode				0.83		perl itself
 
 Log-ErrLogger			1.5		perl itself
@@ -38,4 +36,4 @@ Text-CSV			0.01		perl itself
 
 Unicode-Japanese		0.09		perl itself
 
-$FML: MANIFEST,v 1.14 2006/01/01 14:53:51 fukachan Exp $
+$FML: MANIFEST,v 1.15 2008/05/11 13:11:06 fukachan Exp $
