@@ -19,23 +19,6 @@
 		→ どのみち WWW インターフェイスのために、
 		   この手のクリーニングが必要だし。	
 
-[TODO]	isolate for non effective command mail.
-
-	有効なコマンドが含まれていないと警告を送り返してしまう;-)
-
-	command processing results:
-	   processed = 0
-	   error     = 0
-	   ignored   = 0
-	   total     = 0
-
-
-[TODO]	discard_spam for *_restrictions ?
-
-	*_restrictions = 	discard_spam
-				reject_system_special_accounts
-				... いつものかんじ ...
-
 [TODO]	fml4 to fml8 コンバート (subject tag)
 
 	    BRACKET
@@ -330,7 +313,8 @@
 	どうやってシンクロするの？
 
 
-[TODO]	2008 document overhaul
+[TODO]	2008 document overhaul (en)
+		remove tech, recipes.
 
 
 [TODO]	2008 module overhaul + 2005/05 のオーバホールの残り
@@ -363,4 +347,4 @@
 	FML::Sys::Alias
 
 ----------
-$FML: 00_MEMO,v 1.130 2008/08/13 09:23:44 fukachan Exp $
+$FML: 00_MEMO,v 1.131 2008/08/15 23:33:18 fukachan Exp $
