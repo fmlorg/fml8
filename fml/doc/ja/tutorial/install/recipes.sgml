@@ -1,5 +1,5 @@
 <!--
- $FML: recipes.sgml,v 1.1 2005/10/08 07:32:54 fukachan Exp $
+ $FML: recipes.sgml,v 1.2 2008/08/18 13:21:42 fukachan Exp $
 -->
 
 <qandaset>
@@ -211,6 +211,32 @@ MTA を Unix で動かせば良いでしょう。
 </answer>
 </qandaentry>
 
+
+<qandaentry>
+<question>
+	<para>
+	loader や Bootstrap() がど〜っとかいうエラーが出る
+	</para>
+</question>
+
+<answer>
+<para>
+ブートストラップのやり方がまだ収束してないので、稀に
+fml の boot loader (/usr/local/fml/libexec/loader)
+を入れ替える必要がある時があります。
+</para>
+
+<para>
+そういう場合は、make install 時に
+<screen>
+You must upgrade loader. Replace it ? [y/n]
+</screen>
+と表示されます。ここで  y と答えると、
+インストーラが loader を新しいものに入れ換えます。
+</para>
+
+</answer>
+</qandaentry>
 
 
 </qandaset>

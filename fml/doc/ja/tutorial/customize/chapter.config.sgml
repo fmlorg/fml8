@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.config.sgml,v 1.4 2004/04/07 11:07:02 fukachan Exp $
+   $FML: chapter.config.sgml,v 1.5 2004/10/06 09:07:34 fukachan Exp $
 -->
 
 
@@ -22,6 +22,42 @@
 <para>
 このファイルは、&fml4; の site_force.ph に相当するものです。
 </para>
+
+</sect1>
+
+
+<sect1 id="recipes.config">
+	<title>
+	レシピ's
+	</title>
+
+<qandaset>
+
+<qandaentry>
+<question>
+	<para>
+	elena ＭＬの設定を見る
+	</para>
+</question>
+
+<answer>
+	<para>
+	全部の変数を表示する
+<screen>
+% /usr/local/bin/fmlconf elena
+</screen>
+	</para>
+
+	<para>
+	デフォルト値と異なる変数を表示する
+<screen>
+% /usr/local/bin/fmlconf -n elena
+</screen>
+	</para>
+</answer>
+</qandaentry>
+
+</qandaset>
 
 </sect1>
 

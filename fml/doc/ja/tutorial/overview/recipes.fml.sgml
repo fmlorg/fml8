@@ -1,5 +1,5 @@
 <!--
- $FML$
+ $FML: recipes.fml.sgml,v 1.1 2006/01/16 03:21:34 fukachan Exp $
 -->
 
 <sect1 id="recipes.overview.fml">
@@ -78,6 +78,24 @@ current, stable, release どれをダウンロードするべきですか？
 </para>
 </answer>
 
+</qandaentry>
+
+
+<qandaentry>
+<question>
+	<para>
+	ドキュメントは ?
+	</para>
+</question>
+
+<answer>
+	<para>
+	ドキュメントはテキストと HTML 版があります。
+
+	HTML 版は
+	トップ・ディレクトリにある index.html.ja からたどっていってください。
+	</para>
+</answer>
 </qandaentry>
 
 
