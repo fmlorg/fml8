@@ -1,8 +1,51 @@
 <!--
- $FML: recipes.onhost.sgml,v 1.1 2005/10/15 10:51:13 fukachan Exp $
+ $FML: recipes.onhost.sgml,v 1.2 2008/08/19 07:11:03 fukachan Exp $
 -->
 
 <qandaset>
+
+<qandaentry>
+
+<question>
+	<para>
+	メンバ一覧(認証リストの一覧)が見たい
+	</para>
+</question>
+
+<answer>
+<para>
+elena ML のメンバ一覧を見たい場合、
+<screen>
+makefml list elena
+</screen>
+もしくは
+<screen>
+makefml list member
+</screen>
+</para>
+</answer>
+</qandaentry>
+
+
+<qandaentry>
+<question>
+	<para>
+	受信者リストが見たい
+	</para>
+</question>
+
+<answer>
+<para>
+<screen>
+makefml list elena recipient
+</screen>
+もしくは
+<screen>
+makefml list elena active
+</screen>
+</para>
+</answer>
+</qandaentry>
 
 
 <qandaentry>
