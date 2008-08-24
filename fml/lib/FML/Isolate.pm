@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: Isolate.pm,v 1.1 2008/08/24 08:18:33 fukachan Exp $
 #
 
 package FML::Isolate;
@@ -53,7 +53,7 @@ $isolated_queue_dir.
 # Descriptions: rearrange isolated mails to a date based sub directory
 #               under $isolated_queue_dir.
 #    Arguments: OBJ($self)
-# Side Effects:
+# Side Effects: queue rearrnged.
 # Return Value: none
 sub rearrange
 {
@@ -90,7 +90,7 @@ sub rearrange
 # Descriptions: return ARRAY_REF(YEAR, MON, DAY) on mtime.
 #    Arguments: OBJ($self) NUM($mtime)
 # Side Effects: none
-# Return Value: ARRAY_REF
+# Return Value: ARRAY_REF(NUM, NUM, NUM)
 sub _get_mtime_info
 {
     my ($self, $mtime) = @_;
@@ -143,7 +143,7 @@ sub _rearranged_dir_key
 
 
 # Descriptions: $qid is moved from $src_dir to $dst_dir.
-#    Arguments: OBJ($self) NUM($mtime)
+#    Arguments: OBJ($self) STR($qid) STR($src_dir) STR($dst_dir) STR($dst_key)
 # Side Effects: $dst_dir created if not exists.
 #               $qid is moved from $src_dir to $dst_dir.
 # Return Value: none
