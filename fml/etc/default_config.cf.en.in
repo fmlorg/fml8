@@ -1895,6 +1895,26 @@ article_spam_filter_bogofilter_options		=	-e
 
 
 
+=head1 isolation
+
+
+# Descriptions: top level directory to hold isolated messages
+#		which are aligned for administrators to be easy to check.
+#      History: NONE
+#        Value: DIR
+#     Examples: /var/spool/ml/elena/var/mail/queue-moderate
+isolated_queue_dir = $var_dir/mail/queue-isolated
+
+
+
+# Descriptions: expire messages in the queue after this limit.
+#      History: NONE
+#        Value: TIME
+#     Examples: 14d
+isolated_queue_expire_limit	=	14d
+
+
+
 =head2	ARTICLE VIRUS FILTER CONFIGURATIONS
 
 
