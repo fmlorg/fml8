@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Outline.pm,v 1.2 2005/09/14 00:02:37 fukachan Exp $
+# $FML: Outline.pm,v 1.3 2005/09/17 01:33:47 fukachan Exp $
 #
 
 package FML::Article::Outline;
@@ -111,7 +111,7 @@ sub _fix_charset
 #    Arguments: OBJ($self) STR($outline) STR($charset) STR($lang)
 # Side Effects: update article header.
 # Return Value: none
-sub _fp_add_outline_to_header_field
+sub _fp_add_outline_to_header
 {
     my ($self, $outline, $charset, $lang) = @_;
     my $curproc  = $self->{ _curproc };
