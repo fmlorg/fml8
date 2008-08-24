@@ -41,6 +41,43 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2008/08/24
+
+   隔離されたメール(SPAM)を日付名ディレクトリへ奇麗に並べ替える。
+	TODO: レポートメールの生成と送信。
+	TODO: ワンタイムパスワードつき URL の生成。
+	      この URL はレポートメールに含まれるようにする。
+
+   FML::Process::{Flow,Kernel}
+   FML::Isolate 
+	rearrange isolated mails to under
+	$isolated_queue_dir/YYYY/MM/DD dir. 
+	
+   FML::Command::Admin::thread 
+	allow sub-command "outline" load.
+	
+   FML::Article::Outline 
+	fixed::typo: add_outline_to_header_field -> add_outline_to_header
+
+   variables
+	add new entry on "isolatation" related variables.
+	define $isolated_queue_dir and $isolated_queue_expire_limit.
+
+2008/08/23
+
+  clean up documents (continued)
+	remove recipes and faq, tech category.
+	merge recipes to tutorial.
+
+2008/08/21
+
+   clean up cpan/
+	IO::Stringy removed since it is not used.
+
+2008/08/20
+
+   tutorial(jp) overhaul-ed.
+
 2008/08/17
 
    FML::Process::Command 
@@ -10244,4 +10281,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.305 2008/08/07 01:08:02 fukachan Exp $
+$FML: CHANGES.txt,v 1.306 2008/08/17 12:38:28 fukachan Exp $
