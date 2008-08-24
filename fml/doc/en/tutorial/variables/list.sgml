@@ -324,9 +324,9 @@ article_post_restrictions</entry>
 <entry>
  restrictions for post</entry>
 <entry>
-reject_system_special_accounts
+isolate_system_special_accounts
    permit_member_maps
-   reject
+   isolate
    </entry>
 </row>
 <row>
@@ -709,10 +709,10 @@ command_mail_restrictions</entry>
 <entry>
  restrictions for command mail</entry>
 <entry>
-reject_system_special_accounts
+isolate_system_special_accounts
    permit_anonymous_command
    permit_user_command
-   reject
+   isolate
    </entry>
 </row>
 <row>
@@ -759,36 +759,68 @@ confirm
 <entry>
 createonpost_newml_maps</entry>
 <entry>
- Who is allowed to create a newml dynamically by remote.</entry>
+ restrict "who can create a new ML". PCRE is available.</entry>
 <entry>
-pcre:$ml_home_dir/newml.pcre
+pcre:$ml_home_dir/newml.allow.pcre
    </entry>
 </row>
 <row>
 <entry>
 createonpost_newml_restrictions</entry>
 <entry>
- Who is allowed to create a newml dynamically by remote.</entry>
+ Who can create a new CREATE-ON-POST ML ?</entry>
 <entry>
-permit_ml_domain
+reject_system_special_accounts
+   reject_errormail
+   reject_fml8_managed_address
+   reject_createonpost_domain
+   permit_createonpost_maintainer_maps
+   permit_ml_domain
    </entry>
 </row>
 <row>
 <entry>
 createonpost_sender_maps</entry>
 <entry>
- </entry>
+ restrict "who can post". PCRE is available.</entry>
 <entry>
-pcre:$ml_home_dir/sender.pcre
+pcre:$ml_home_dir/sender.allow.pcre
+   </entry>
+</row>
+<row>
+<entry>
+createonpost_sender_restrictions</entry>
+<entry>
+ who can post for CREATE-ON-POST ML ?</entry>
+<entry>
+reject_system_special_accounts
+   reject_errormail
+   reject_list_header_field
+   reject_fml8_managed_address
+   reject_createonpost_domain
+   permit_anyone
    </entry>
 </row>
 <row>
 <entry>
 createonpost_subscribe_maps</entry>
 <entry>
- </entry>
+ restrict "who can subscribe". PCRE is available.</entry>
 <entry>
-pcre:$ml_home_dir/subscribe.pcre
+pcre:$ml_home_dir/subscribe.allow.pcre
+   </entry>
+</row>
+<row>
+<entry>
+createonpost_subscribe_restrictions</entry>
+<entry>
+ who can subscribe ? </entry>
+<entry>
+reject_system_special_accounts
+   reject_errormail
+   reject_fml8_managed_address
+   reject_createonpost_domain
+   permit_anyone
    </entry>
 </row>
 <row>
@@ -1270,6 +1302,24 @@ incoming_mail_header_loop_check_rules</entry>
 check_message_id
    check_x_ml_info
    check_list_post
+   </entry>
+</row>
+<row>
+<entry>
+isolated_queue_dir</entry>
+<entry>
+ top level directory to hold isolated messages</entry>
+<entry>
+$var_dir/mail/queue-isolated
+   </entry>
+</row>
+<row>
+<entry>
+isolated_queue_expire_limit</entry>
+<entry>
+ expire messages in the queue after this limit.</entry>
+<entry>
+14d
    </entry>
 </row>
 <row>

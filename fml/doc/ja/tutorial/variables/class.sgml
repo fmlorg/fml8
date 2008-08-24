@@ -951,6 +951,7 @@ _dir$ {
           $db_dir
           $etc_dir
           $event_queue_dir
+          $isolated_queue_dir
           $listinfo_base_dir
           $listinfo_dir
           $listinfo_template_dir
@@ -965,6 +966,7 @@ _dir$ {
 *** unclassified ***
     ?     $commands_for_ml_admin_cgi
     ?     $file_default_mode
+          $isolated_queue_expire_limit
     ?     $language_preference_order
     ?     $unsafe_header_fields
 </screen>

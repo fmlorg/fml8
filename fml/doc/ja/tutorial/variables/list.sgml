@@ -325,9 +325,9 @@ article_post_restrictions</entry>
 <entry>
  投稿への制限</entry>
 <entry>
-reject_system_special_accounts
+isolate_system_special_accounts
    permit_member_maps
-   reject
+   isolate
    </entry>
 </row>
 <row>
@@ -692,10 +692,10 @@ command_mail_restrictions</entry>
 <entry>
  コマンドへの制限</entry>
 <entry>
-reject_system_special_accounts
+isolate_system_special_accounts
    permit_anonymous_command
    permit_user_command
-   reject
+   isolate
    </entry>
 </row>
 <row>
@@ -744,7 +744,7 @@ createonpost_newml_maps</entry>
 <entry>
  CREATE-ON-POST で動的にＭＬを作ることができるユーザのリスト。</entry>
 <entry>
-pcre:$ml_home_dir/newml.pcre
+pcre:$ml_home_dir/newml.allow.pcre
    </entry>
 </row>
 <row>
@@ -753,25 +753,39 @@ createonpost_newml_restrictions</entry>
 <entry>
  CREATE-ON-POST で動的にＭＬを作ることができるユーザ</entry>
 <entry>
-permit_ml_domain
+reject_system_special_accounts
+   reject_errormail
+   reject_fml8_managed_address
+   reject_createonpost_domain
+   permit_createonpost_maintainer_maps
+   permit_ml_domain
    </entry>
 </row>
 <row>
 <entry>
-createonpost_sender_maps</entry>
+createonpost_sender_restrictions</entry>
 <entry>
- </entry>
+ CREATE-ON-POST なＭＬへ投稿できる人は誰か？</entry>
 <entry>
-pcre:$ml_home_dir/sender.pcre
+reject_system_special_accounts
+   reject_errormail
+   reject_list_header_field
+   reject_fml8_managed_address
+   reject_createonpost_domain
+   permit_anyone
    </entry>
 </row>
 <row>
 <entry>
-createonpost_subscribe_maps</entry>
+createonpost_subscribe_restrictions</entry>
 <entry>
- </entry>
+ REATE-ON-POST なＭＬへ subscribe できる人は誰か？</entry>
 <entry>
-pcre:$ml_home_dir/subscribe.pcre
+reject_system_special_accounts
+   reject_errormail
+   reject_fml8_managed_address
+   reject_createonpost_domain
+   permit_anyone
    </entry>
 </row>
 <row>
@@ -1253,6 +1267,24 @@ incoming_mail_header_loop_check_rules</entry>
 check_message_id
    check_x_ml_info
    check_list_post
+   </entry>
+</row>
+<row>
+<entry>
+isolated_queue_dir</entry>
+<entry>
+ top level directory to hold isolated messages</entry>
+<entry>
+$var_dir/mail/queue-isolated
+   </entry>
+</row>
+<row>
+<entry>
+isolated_queue_expire_limit</entry>
+<entry>
+ expire messages in the queue after this limit.</entry>
+<entry>
+14d
    </entry>
 </row>
 <row>
