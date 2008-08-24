@@ -1,5 +1,5 @@
 <!--
-   $FML: chapters.ent,v 1.14 2006/01/19 10:13:41 fukachan Exp $
+   $FML: chapters.ent,v 1.15 2006/01/19 14:33:17 fukachan Exp $
    $jaFML: chapters.ent,v 1.75 2003/06/20 22:03:12 fukachan Exp $
 -->
 
@@ -26,6 +26,7 @@
 <!entity bookinfo   SYSTEM "include/bookinfo.sgml">
 <!entity preface    SYSTEM "preface.sgml">
 <!entity sect.terms SYSTEM "terms.sgml">
+<!entity list.recipes SYSTEM "tmp/lor.sgml">
 
 
 <!-- part I: introduction .. test -->
@@ -64,7 +65,10 @@
 <!entity sect.usage.onhost.recipes  SYSTEM "usage/recipes.onhost.sgml">
 <!entity chapter.customize.mlstyle  SYSTEM "customize/chapter.ml_style.sgml">
 <!entity chapter.customize.header   SYSTEM "customize/chapter.header.sgml">
+<!entity chapter.customize.body     SYSTEM "customize/chapter.body.sgml">
 <!entity chapter.customize.command  SYSTEM "customize/chapter.command.sgml">
+<!entity chapter.customize.message  SYSTEM "customize/chapter.message.sgml">
+
 
 <!entity sect.config.autoreply              SYSTEM "customize/autoreply.sgml">
 <!entity sect.config.command.permit.anyone  SYSTEM "customize/command_permit_anyone.sgml">
@@ -126,6 +130,7 @@
 <!entity sect.command.extension      SYSTEM "command/extension.sgml">
 <!entity sect.command.module         SYSTEM "command/module.sgml">
 <!entity sect.command.recipes        SYSTEM "command/recipes.sgml">
+
 
 
 <!-- ? ;-) -->
