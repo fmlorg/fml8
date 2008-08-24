@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.284 2006/05/13 11:45:40 fukachan Exp $
+# $FML: Kernel.pm,v 1.285 2006/07/09 12:11:13 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -3121,6 +3121,28 @@ sub _delete_too_old_files_in_dir
 	    }
 	}
 	$dh->close();
+    }
+}
+
+
+# Descriptions: manipulate isolated messages.
+#    Arguments: OBJ($curproc)
+# Side Effects: remove incoming queue.
+# Return Value: none
+sub isolated_message_cleanup_queue
+{
+    my ($curproc) = @_;
+    my $config    = $curproc->config();
+    my $channel   = 'mail_isolated_queue_cleanup';
+
+    # XXX ONLY WHEN VALID $ml_home_dir EXISTS.
+    if ($curproc->_is_valid_ml_home_dir()) {
+	if ($curproc->is_event_timeout($channel)) {
+	    use FML::Isolate;
+	    my $isolate = new FML::Isolate $curproc;
+	    $isolate->rearrange();
+	    $curproc->event_set_timeout($channel, time + 3600);
+	}
     }
 }
 
