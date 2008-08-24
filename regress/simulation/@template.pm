@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2006 Ken'ichi Fukamachi
+#  Copyright (C) 2008 __YOUR_NAME__
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.10 2006/01/07 13:16:41 fukachan Exp $
+# $FML: @template.pm,v 1.11 2006/11/24 07:03:19 fukachan Exp $
 #
 
 package __MODULE_NAME__;
@@ -52,7 +52,7 @@ __YOUR_NAME__
 
 =head1 COPYRIGHT
 
-Copyright (C) 2006 __YOUR_NAME__
+Copyright (C) 2008 __YOUR_NAME__
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
