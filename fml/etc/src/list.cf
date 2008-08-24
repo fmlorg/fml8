@@ -17,6 +17,7 @@ log.cf
 distribute.cf
 article.cf
 spam.cf
+isolate.cf
 virus.cf
 spool.cf
 summary.cf
