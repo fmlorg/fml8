@@ -12,6 +12,7 @@
 		変数名
 		$curproc のメソッド名
 		->{ next } を消す
+		○ 内部構造の TODO をやれ！
 
 	など。
 
@@ -28,38 +29,6 @@
 	http://lists.x.y/~fml/cgi-bin/anonymous/report.cgi?id=aaaaa...
 
 	→ web で [subscribe/unsubscribe] をくりっくの URL とも整合性を
-
-
-[TODO]	fml4 to fml8 コンバート (subject tag)
-
-	    BRACKET
-	    STRIP_BRACKETS
-	    BRACKET_SEPARATOR
-	    SUBJECT_FREE_FORM
-	    SUBJECT_FREE_FORM_REGEXP
-	    SUBJECT_FORM_LONG_ID
-	    SUBJECT_HML_FORM
-	    HML_FORM_LONG_ID
-
-
-[TODO]	fml4 to fml8 コンバート (mime component filter)
-
-	    CONTENT_HANDLER_CUTOFF_EMPTY_MESSAGE
-	    CONTENT_HANDLER_REJECT_EMPTY_MESSAGE
-	    HTML_MAIL_DEFAULT_HANDLER
-
-	の変換が難しい。とりあえず忘れる(ステータス:未サポート)。
-
-
-[TODO] 無限 confirmation 問題(?)
-
-	command_mail_restrictions =	reject_system_special_accounts 
-					permit_forward_to_moderator
-					reject
-
-
-	confirm がかえるのはただしいが、confirm をおくりかえすと
-	confirm コマンドとして解釈されない（もういちど confirmation になる)
 
 
 [TODO] web で [subscribe/unsubscribe] をクリック
@@ -79,23 +48,33 @@
 	~/public_html/fml/listinfo/DOMAIN/ML/index.html.{ja,en}
 
 
-[TODO] 添付ファイルをサイズでチェック
+[TODO]	CGI は cookie をつかったほうがいいのかなぁ？
 
-	# allow only text/plain messages.
-	text/plain	*		permit
-	text/html	*		reject
-	multipart/*	*;size<=1M	permit		<- ?
-	multipart/*	!text/plain	reject
+	その場合、はじめから perl 5 についてるモジュールで GO
 
+	/usr/pkg/lib/perl5//5.8.0/CGI/eg/cookie.cgi
+	/usr/pkg/lib/perl5//5.8.0/CGI/Cookie.pm
 
-[TODO] fml 4 to 8: $AUTO_REGISTRATION_TYPE
-
-	subject body no-keyword
-
-	行ごとに解析する現在のコードには、うまくのらない。
+	設定を覚えるためだけに
 
 
-[TODO]	"IS-A FML::Command::Syntax" wrong
+[TODO]	CGI スキンを動的に切替えられる？
+
+		config.cgi -> menu.cgi
+
+	cookie で設定を覚えておかないといかんな。そうじゃないと、スキ
+	ンが増えるたびに再インストールしないといけないじゃないか。
+
+
+[TODO] 無限 confirmation 問題(?)
+
+	command_mail_restrictions =	reject_system_special_accounts 
+					permit_forward_to_moderator
+					reject
+
+
+	confirm がかえるのはただしいが、confirm をおくりかえすと
+	confirm コマンドとして解釈されない（もういちど confirmation になる)
 
 
 [TODO]	command_args をあちこちで生書きしない。オブジェクトにすること
@@ -121,22 +100,13 @@
 	   リモート管理者は MTI の対象にしない
 
 
-[TODO]	CGI は cookie をつかったほうがいいのかなぁ？
+[TODO] mime component filter で添付ファイルをサイズでチェック
 
-	その場合、はじめから perl 5 についてるモジュールで GO
-
-	/usr/pkg/lib/perl5//5.8.0/CGI/eg/cookie.cgi
-	/usr/pkg/lib/perl5//5.8.0/CGI/Cookie.pm
-
-	設定を覚えるためだけに
-
-
-[TODO]	CGI スキンを動的に切替えられる？
-
-		config.cgi -> menu.cgi
-
-	cookie で設定を覚えておかないといかんな。そうじゃないと、スキ
-	ンが増えるたびに再インストールしないといけないじゃないか。
+	# allow only text/plain messages.
+	text/plain	*		permit
+	text/html	*		reject
+	multipart/*	*;size<=1M	permit		<- ?
+	multipart/*	!text/plain	reject
 
 
 [TODO]	mime component filter で添付ファイルを禁止する
@@ -159,19 +129,6 @@
 
 	article_mime_component_filter_unsafe_attachments = exe
 
-
-
-[TODO]	変数名なんだが… *_mta_config_list は困ったな
-
-		newml_command_mta_config_list
-		rmml_command_mta_config_list
-
-	こいつらは select_list とも微妙に違うのだが？
-
-	まぁいいか？
-
-
-[TODO]	ドキュメント: fml 4 to 8 の解説ってあってる？
 
 
 [TODO]	スレッド関連のモジュールとドキュメントを全部見直せよ
@@ -225,7 +182,45 @@
 
 
 ======================================================================
+○ fml4 → fml8 コンバータの問題
+
+
+[TODO] ドキュメント: fml 4 to 8 の解説ってあってる？
+
+
+[TODO] fml 4 to 8: $AUTO_REGISTRATION_TYPE
+
+	subject body no-keyword
+
+	行ごとに解析する現在のコードには、うまくのらない。
+
+
+[TODO]	fml4 to fml8 コンバート (subject tag)
+
+	    BRACKET
+	    STRIP_BRACKETS
+	    BRACKET_SEPARATOR
+	    SUBJECT_FREE_FORM
+	    SUBJECT_FREE_FORM_REGEXP
+	    SUBJECT_FORM_LONG_ID
+	    SUBJECT_HML_FORM
+	    HML_FORM_LONG_ID
+
+
+[TODO]	fml4 to fml8 コンバート (mime component filter)
+
+	    CONTENT_HANDLER_CUTOFF_EMPTY_MESSAGE
+	    CONTENT_HANDLER_REJECT_EMPTY_MESSAGE
+	    HTML_MAIL_DEFAULT_HANDLER
+
+	の変換が難しい。とりあえず忘れる(ステータス:未サポート)。
+
+
+======================================================================
 ○	内部構造
+
+
+[TODO]	"IS-A FML::Command::Syntax" wrong
 
 
 [TODO]	charset と言語(japanese,english)との対応関係を一箇所にまとめて定義
@@ -298,6 +293,17 @@
 
 ======================================================================
 ○		FNF-ify およびドキュメント
+
+
+[TODO]	変数名なんだが… *_mta_config_list は困ったな
+
+		newml_command_mta_config_list
+		rmml_command_mta_config_list
+
+	こいつらは select_list とも微妙に違うのだが？
+
+	まぁいいか？
+
 
 [TODO]	このネーミングはどうなん？
 
@@ -375,4 +381,4 @@
 	FML::Sys::Alias
 
 ----------
-$FML: 00_MEMO,v 1.132 2008/08/20 00:35:55 fukachan Exp $
+$FML: 00_MEMO,v 1.133 2008/08/27 23:45:09 fukachan Exp $
