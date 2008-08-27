@@ -7,17 +7,28 @@
         XXX 遠大なビジョンやとりあえず後まわしでよいものは STATUS.txt へ
 
 
+[TODO]	リリースしてしまうと直せないものを優先的に直すこと
+
+		変数名
+		$curproc のメソッド名
+		->{ next } を消す
+
+	など。
+
+
 [TODO]	isolate queue
 
-	(0) そもそも、そんなにファイルはたまらないよ？
-		そもそもＭＬごとのキューなんだから、一杯はない
+	定期的に $isolated_queue_dir/YYYY/MM/DD へ移動。 
+		
+	TODO; expire!
 
-	(1) queue 自体を YYYY/MM/DD 形式にする
+	TODO: レポートにうめる URL
+		ACL を書きやすいように、管理画面とは違う URL か？
 
-	(2) report system が report 作成時に YYYY/MM/DD に置き換える。
-		→ 一番手直しがない解決法
-		→ どのみち WWW インターフェイスのために、
-		   この手のクリーニングが必要だし。	
+	http://lists.x.y/~fml/cgi-bin/anonymous/report.cgi?id=aaaaa...
+
+	→ web で [subscribe/unsubscribe] をくりっくの URL とも整合性を
+
 
 [TODO]	fml4 to fml8 コンバート (subject tag)
 
@@ -31,16 +42,16 @@
 	    HML_FORM_LONG_ID
 
 
-[TODO]	fml4 to fml8 コンバート(mime component filter)
+[TODO]	fml4 to fml8 コンバート (mime component filter)
 
 	    CONTENT_HANDLER_CUTOFF_EMPTY_MESSAGE
 	    CONTENT_HANDLER_REJECT_EMPTY_MESSAGE
 	    HTML_MAIL_DEFAULT_HANDLER
 
-	のへんかん、むつかしー。とりあえず忘れる(ステータス:未サポート)。
+	の変換が難しい。とりあえず忘れる(ステータス:未サポート)。
 
 
-[TODO] NOT WORKS !
+[TODO] 無限 confirmation 問題(?)
 
 	command_mail_restrictions =	reject_system_special_accounts 
 					permit_forward_to_moderator
@@ -51,10 +62,21 @@
 	confirm コマンドとして解釈されない（もういちど confirmation になる)
 
 
-[TODO] web で [subscribe] をくりっく
-		ユニークな ID を DB に登録
-		ユニークな ID つきのメールを送信
-		ユニークな ID が認証されたら confirmation へはいる
+[TODO] web で [subscribe/unsubscribe] をクリック
+
+		受信者リストにあるか？否か？を確認
+			ない場合は「ない」と表示して終り
+			→ 総辺り戦をされて、リストがばれる可能性は？
+
+		受信者リストにあることが確認されているので
+			confirmation を送る。
+
+			念のため WWW クライアントの情報をおくるべきだろう。
+			不正アクセスの可能性を考えて。
+
+	~/public_html/cgi-bin/fml/DOMAIN/ML/anonymous/request.cgi
+
+	~/public_html/fml/listinfo/DOMAIN/ML/index.html.{ja,en}
 
 
 [TODO] 添付ファイルをサイズでチェック
@@ -76,7 +98,7 @@
 [TODO]	"IS-A FML::Command::Syntax" wrong
 
 
-[TODO]	command_args をあちこちで生書きしない。オブジェクトにする
+[TODO]	command_args をあちこちで生書きしない。オブジェクトにすること
 
 	cvs diff -ub -D 2006-03-01
 
@@ -90,7 +112,7 @@
 [TODO]	メッセージを config する tool
 
 
-[TODO]	MTI トラフィックフィルタ
+[TODO]	MTI トラフィックフィルタ → これって必要ですかね？
 
 	   単位時間あたりの投稿数を制限したい
 	   単位時間あたりのコマンドメール数を制限したい
@@ -101,16 +123,20 @@
 
 [TODO]	CGI は cookie をつかったほうがいいのかなぁ？
 
-	そのばあいは、はじめから perl 5 についてるモジュールで GO
+	その場合、はじめから perl 5 についてるモジュールで GO
 
 	/usr/pkg/lib/perl5//5.8.0/CGI/eg/cookie.cgi
 	/usr/pkg/lib/perl5//5.8.0/CGI/Cookie.pm
 
+	設定を覚えるためだけに
 
 
 [TODO]	CGI スキンを動的に切替えられる？
 
 		config.cgi -> menu.cgi
+
+	cookie で設定を覚えておかないといかんな。そうじゃないと、スキ
+	ンが増えるたびに再インストールしないといけないじゃないか。
 
 
 [TODO]	mime component filter で添付ファイルを禁止する
@@ -140,10 +166,12 @@
 		newml_command_mta_config_list
 		rmml_command_mta_config_list
 
-	こいつらは select_list とも、びみょうにちがうか…
+	こいつらは select_list とも微妙に違うのだが？
+
+	まぁいいか？
 
 
-[TODO]	ドキュメント: 4 to 8 の解説ってあってる？
+[TODO]	ドキュメント: fml 4 to 8 の解説ってあってる？
 
 
 [TODO]	スレッド関連のモジュールとドキュメントを全部見直せよ
@@ -347,4 +375,4 @@
 	FML::Sys::Alias
 
 ----------
-$FML: 00_MEMO,v 1.131 2008/08/15 23:33:18 fukachan Exp $
+$FML: 00_MEMO,v 1.132 2008/08/20 00:35:55 fukachan Exp $
