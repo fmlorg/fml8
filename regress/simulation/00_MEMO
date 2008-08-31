@@ -33,19 +33,27 @@
 
 [TODO] web で [subscribe/unsubscribe] をクリック
 
-		受信者リストにあるか？否か？を確認
-			ない場合は「ない」と表示して終り
-			→ 総辺り戦をされて、リストがばれる可能性は？
-
-		受信者リストにあることが確認されているので
-			confirmation を送る。
-
-			念のため WWW クライアントの情報をおくるべきだろう。
-			不正アクセスの可能性を考えて。
-
-	~/public_html/cgi-bin/fml/DOMAIN/ML/anonymous/request.cgi
+	受信者リストにあるか？否か？は確認しない (総辺り戦をされないように)
+		1. リクエストをうける
+		2. ゆがんだ文字を入力させる。
+		3. confirmation を送る。
+			不正アクセスの可能性を考えて、
+			念のため WWW クライアントの情報も送る。
 
 	~/public_html/fml/listinfo/DOMAIN/ML/index.html.{ja,en}
+		→
+	~/public_html/cgi-bin/anonymous/DOMAIN/ML/submit.cgi
+
+		→
+	バナー入力画面
+		→
+	~/public_html/cgi-bin/anonymous/DOMAIN/ML/submit.cgi
+		hidden otp=ABCD...Z
+		hideen mode=confirm
+		input banner=
+
+
+
 
 
 [TODO]	CGI は cookie をつかったほうがいいのかなぁ？
@@ -381,4 +389,4 @@
 	FML::Sys::Alias
 
 ----------
-$FML: 00_MEMO,v 1.133 2008/08/27 23:45:09 fukachan Exp $
+$FML: 00_MEMO,v 1.134 2008/08/27 23:49:05 fukachan Exp $
