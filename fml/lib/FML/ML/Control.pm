@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.16 2007/01/13 14:18:26 fukachan Exp $
+# $FML: Control.pm,v 1.17 2008/06/28 21:16:12 fukachan Exp $
 #
 
 package FML::ML::Control;
@@ -454,11 +454,13 @@ sub setup_cgi_interface
     #
     # 1. create directory path if needed
     #
-    my (%is_dir_exists)  = ();
-    my $cgi_base_dir     = $config->{ cgi_base_dir };
-    my $admin_cgi_dir    = $config->{ admin_cgi_base_dir };
-    my $ml_admin_cgi_dir = $config->{ ml_admin_cgi_base_dir };
-    for my $dir ($cgi_base_dir, $admin_cgi_dir, $ml_admin_cgi_dir) {
+    my (%is_dir_exists)      = ();
+    my $cgi_base_dir         = $config->{ cgi_base_dir };
+    my $admin_cgi_dir        = $config->{ admin_cgi_base_dir };
+    my $ml_admin_cgi_dir     = $config->{ ml_admin_cgi_base_dir };
+    my $ml_anonymous_cgi_dir = $config->{ ml_anonymous_cgi_base_dir };
+    for my $dir ($cgi_base_dir, $admin_cgi_dir, $ml_admin_cgi_dir,
+		 $ml_anonymous_cgi_dir) {
 	unless (-d $dir) {
 	    $curproc->ui_message("creating $dir");
 	    $is_dir_exists{ $dir } = 0;
@@ -516,7 +518,6 @@ sub setup_cgi_interface
 	}
     }
 
-    #
     # 3.2. install ml-admin/
     {
 	# hints
@@ -534,6 +535,27 @@ sub setup_cgi_interface
 		   File::Spec->catfile($ml_admin_cgi_dir, 'config.cgi'),
 		   File::Spec->catfile($ml_admin_cgi_dir, 'thread.cgi')
 		     ) {
+	    $curproc->ui_message("creating $dst");
+	    $self->_install($src, $dst, $params);
+	    chmod 0755, $dst;
+	}
+    }
+
+    # 3.3. install cgi script(s) for anonymous users.
+    {
+	use File::Spec;
+	my $submit = File::Spec->catfile($ml_anonymous_cgi_dir, 'submit.cgi');
+
+	# hints
+	$params->{ __hints_for_fml_process__ } = qq{
+	    \$hints = {
+		cgi_mode  => 'anonymous',
+		ml_name   => '$ml_name',
+		ml_domain => '$ml_domain',
+	    };
+	};
+
+	for my $dst ($submit) {
 	    $curproc->ui_message("creating $dst");
 	    $self->_install($src, $dst, $params);
 	    chmod 0755, $dst;
