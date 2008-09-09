@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2005,2008 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.15 2005/06/04 08:21:28 fukachan Exp $
+# $FML: Utils.pm,v 1.16 2005/06/04 08:51:29 fukachan Exp $
 #
 
 package FML::Process::CGI::Utils;
@@ -143,8 +143,7 @@ sub cgi_var_available_command_list
 	return $config->get_as_array_ref('admin_cgi_allowed_commands');
     }
     else {
-	# XXX-TODO: commands_for_ml_admin_cgi -> ml_admin_cgi_allowed_commands
-	return $config->get_as_array_ref('commands_for_ml_admin_cgi');
+	return $config->get_as_array_ref('ml_admin_cgi_allowed_commands');
     }
 }
 
@@ -156,7 +155,12 @@ sub cgi_var_available_command_list
 sub cgi_var_action
 {
     my ($curproc) = @_;
-    return $curproc->safe_cgi_action_name();
+
+    my ($action) = $curproc->safe_cgi_action_name() || '';
+    unless ($action) {
+	$curproc->logdebug("no action name");
+    }
+    return $action;
 }
 
 
@@ -215,8 +219,14 @@ sub cgi_var_navigator_title
     if ($mode eq 'admin') {
 	return "<B>$fml_url admin menu</B>\n<BR>";
     }
-    else {
+    elsif ($mode eq 'ml-admin') {
 	return "<B>$fml_url ml-admin menu</B>\n<BR>";
+    }
+    elsif ($mode eq 'anonymous') {
+	return "<B>$fml_url anonymous menu</B>\n<BR>";
+    }
+    else {
+	return "<B>$fml_url menu</B>\n<BR>";
     }
 }
 
@@ -297,7 +307,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005,2008 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
