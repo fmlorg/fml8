@@ -1,74 +1,77 @@
 #
-# $FML: modules,v 1.15 2006/02/01 12:35:45 fukachan Exp $
+# $FML: modules,v 1.16 2006/02/04 06:48:59 fukachan Exp $
 #
 # map between programs and modules (like /etc/name_to_sysnum on solaris ?)
 #
 
-# program name		class				argv syntax
+# program name           class                            argv syntax
 # --------------------------------------------------------------------
 #
 
 # libexec/
-command			FML::Process::Command		$ml
-digest			FML::Process::Digest		$ml
-distribute		FML::Process::Distribute	$ml	
-error			FML::Process::Error		$ml
-createonpost		FML::Process::CreateOnPost	
-fmlserv			FML::Process::ListServer	?
-mead			FML::Process::Error		$ml
-fetchfml		FML::Process::FetchFML		$ml
+command                  FML::Process::Command            $ml
+digest                   FML::Process::Digest             $ml
+distribute               FML::Process::Distribute         $ml        
+error                    FML::Process::Error              $ml
+createonpost             FML::Process::CreateOnPost        
+fmlserv                  FML::Process::ListServer         ?
+mead                     FML::Process::Error              $ml
+fetchfml                 FML::Process::FetchFML           $ml
 
 # bin/
-makefml			FML::Process::Configure		$command $ml $opts
-fml			FML::Process::Configure		$ml $command $opts
-fmladdr			FML::Process::Addr		
-fmlalias		FML::Process::Alias		
-fmlconf			FML::Process::ConfViewer	
-fmldoc			FML::Process::DocViewer		
-fmlhtmlify		FML::Process::HTMLify		$ml
-fmlpgp			FML::Process::PGP		$ml
-fmlpgp5			FML::Process::PGP		$ml
-fmlpgpe			FML::Process::PGP		$ml
-fmlpgpk			FML::Process::PGP		$ml
-fmlpgps			FML::Process::PGP		$ml
-fmlpgpv			FML::Process::PGP		$ml
-fmlgpg			FML::Process::PGP		$ml
-fmlgpgv			FML::Process::PGP		$ml
+makefml                  FML::Process::Configure          $command $ml $opts
+fml                      FML::Process::Configure          $ml $command $opts
+fmladdr                  FML::Process::Addr                
+fmlalias                 FML::Process::Alias                
+fmlconf                  FML::Process::ConfViewer        
+fmldoc                   FML::Process::DocViewer                
+fmlhtmlify               FML::Process::HTMLify            $ml
+fmlpgp                   FML::Process::PGP                $ml
+fmlpgp5                  FML::Process::PGP                $ml
+fmlpgpe                  FML::Process::PGP                $ml
+fmlpgpk                  FML::Process::PGP                $ml
+fmlpgps                  FML::Process::PGP                $ml
+fmlpgpv                  FML::Process::PGP                $ml
+fmlgpg                   FML::Process::PGP                $ml
+fmlgpgv                  FML::Process::PGP                $ml
 
 
 # bin/ but obsolete
-fmlerror		FML::Process::Obsolete		$ml
-fmlspool		FML::Process::Obsolete		$ml
-fmlsummary		FML::Process::Obsolete		$ml
-fmlsuper		FML::Process::Obsolete		$ml
-fmlthread		FML::Process::Obsolete		$ml
-faker			FML::Process::Obsolete
+fmlerror                 FML::Process::Obsolete           $ml
+fmlspool                 FML::Process::Obsolete           $ml
+fmlsummary               FML::Process::Obsolete           $ml
+fmlsuper                 FML::Process::Obsolete           $ml
+fmlthread                FML::Process::Obsolete           $ml
+faker                    FML::Process::Obsolete
 
 
 # cgi-bin/
-admin/fmlthread.cgi	FML::CGI::Thread		$cgiargs
-admin/thread.cgi	FML::CGI::Thread		$cgiargs
-admin/threadview.cgi	FML::CGI::Thread		$cgiargs
+admin/fmlthread.cgi      FML::CGI::Thread                 $cgiargs
+admin/thread.cgi         FML::CGI::Thread                 $cgiargs
+admin/threadview.cgi     FML::CGI::Thread                 $cgiargs
 
 # admin configuration cgi
-admin/menu.cgi		FML::CGI::Admin::MenuOld	$cgiargs
-admin/config.cgi	FML::CGI::Admin::Menu		$cgiargs
+admin/menu.cgi           FML::CGI::Admin::MenuOld         $cgiargs
+admin/config.cgi         FML::CGI::Admin::Menu            $cgiargs
 
 # ml-admin configuration cgi
-ml-admin/*/menu.cgi	FML::CGI::MLAdmin::MenuOld	$cgiargs
-ml-admin/*/config.cgi	FML::CGI::MLAdmin::Menu		$cgiargs
+ml-admin/*/menu.cgi      FML::CGI::MLAdmin::MenuOld       $cgiargs
+ml-admin/*/config.cgi    FML::CGI::MLAdmin::Menu          $cgiargs
+
+# anonymous cgi interface
+anonymous/*/*/submit.cgi FML::CGI::Anonymous::Submit      $cgiargs
 
 # fml4 libexec/ compatibility
-fml.pl			FML::Process::Emulate		$ml
-fml.pl__--ctladdr	FML::Process::Emulate		$ml $emulator_opts
-msend.pl		FML::Process::Emulate		$ml
-mead.pl			FML::Process::Emulate		$ml
+fml.pl                   FML::Process::Emulate            $ml
+fml.pl__--ctladdr        FML::Process::Emulate            $ml $emulator_opts
+msend.pl                 FML::Process::Emulate            $ml
+mead.pl                  FML::Process::Emulate            $ml
 
 # test
-loader			FML::Process::Distribute	$ml
-loader__--ctladdr	FML::Process::Command
+loader                   FML::Process::Distribute         $ml
+loader__--ctladdr        FML::Process::Command
 
 # demo
-fmlsch			FML::Process::Calendar
-fmlsch.cgi		FML::CGI::Calendar
-fmlproj			FML::Process::Project
+fmlsch                   FML::Process::Calendar
+fmlsch.cgi               FML::CGI::Calendar
+fmlproj                  FML::Process::Project
