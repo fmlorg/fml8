@@ -49,6 +49,21 @@ admin {
    }
 }
 
+anonymous {
+
+   anonymous_cgi { 
+          $anonymous_cgi_base_dir
+          $anonymous_cgi_expire_limit
+    ?     $ml_anonymous_cgi_allowed_commands
+          $ml_anonymous_cgi_base_dir
+          $use_anonymous_cgi_function
+   }
+
+   anonymous_command { 
+    ?     $anonymous_command_mail_allowed_commands
+   }
+}
+
 article {
 
    article_delivery { 
@@ -241,7 +256,6 @@ admin_command {
 anonymous_command {
 
    anonymous_command { 
-    ?     $anonymous_command_mail_allowed_commands
    }
 }
 
@@ -475,6 +489,11 @@ html {
    html_archive_address_mask { 
           $html_archive_address_mask_type
           $use_html_archive_address_mask
+   }
+
+   html_* {
+    ?     $html_tmp_base_url
+          $html_tmp_dir
    }
 }
 
@@ -964,10 +983,10 @@ _dir$ {
 
 
 *** unclassified ***
-    ?     $commands_for_ml_admin_cgi
     ?     $file_default_mode
           $isolated_queue_expire_limit
     ?     $language_preference_order
+    ?     $ml_admin_cgi_allowed_commands
     ?     $unsafe_header_fields
 </screen>
 </para>

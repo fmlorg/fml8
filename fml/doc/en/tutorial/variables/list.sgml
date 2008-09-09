@@ -116,6 +116,24 @@ $primary_admin_recipient_map
 </row>
 <row>
 <entry>
+anonymous_cgi_base_dir</entry>
+<entry>
+ top level directory for anonymous cgi scripts.</entry>
+<entry>
+$fml_owner_home_dir/public_html/cgi-bin/anonymous
+   </entry>
+</row>
+<row>
+<entry>
+anonymous_cgi_expire_limit</entry>
+<entry>
+ expire limit of anonymous CGI session ID.</entry>
+<entry>
+15m
+   </entry>
+</row>
+<row>
+<entry>
 article_delivery_transport</entry>
 <entry>
  specify transport for article delivery.</entry>
@@ -1214,6 +1232,24 @@ $fml_owner_home_dir/public_html/fml/mlarchive/$ml_domain/$ml_name
 </row>
 <row>
 <entry>
+html_tmp_base_url</entry>
+<entry>
+ temporary url base for CGI</entry>
+<entry>
+/~$fml_owner/fml/tmp
+   </entry>
+</row>
+<row>
+<entry>
+html_tmp_dir</entry>
+<entry>
+ temporary directory for CGI</entry>
+<entry>
+$fml_owner_home_dir/public_html/fml/tmp
+   </entry>
+</row>
+<row>
+<entry>
 incoming_article_body_size_limit</entry>
 <entry>
  maximum size limit of article body passed from MTA.</entry>
@@ -1721,6 +1757,25 @@ ml_admin_cgi_base_dir</entry>
  base directory which locates .cgi for this ML.</entry>
 <entry>
 $cgi_base_dir/ml-admin/$ml_name
+   </entry>
+</row>
+<row>
+<entry>
+ml_anonymous_cgi_allowed_commands</entry>
+<entry>
+ </entry>
+<entry>
+subscribe
+   unsubscribe
+   </entry>
+</row>
+<row>
+<entry>
+ml_anonymous_cgi_base_dir</entry>
+<entry>
+ ml specific directory for anonymous cgi scripts.</entry>
+<entry>
+$anonymous_cgi_base_dir/$ml_domain/$ml_name
    </entry>
 </row>
 <row>
@@ -2415,6 +2470,15 @@ use_admin_command_mail_function</entry>
  use admin command mail ?</entry>
 <entry>
 no
+   </entry>
+</row>
+<row>
+<entry>
+use_anonymous_cgi_function</entry>
+<entry>
+ allow a request e.g. subscribe and unsubscribe from www.</entry>
+<entry>
+yes
    </entry>
 </row>
 <row>

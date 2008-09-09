@@ -2493,11 +2493,12 @@ admin_command_mail_allowed_commands	=	subscribe
 					list
 
 
-# Descriptions:
-#      History:
+# Descriptions: マスター管理用 CGI で許されるコマンドのリスト
+#      History: 
 #        Value: FML_COMMAND_LIST
-#     Examples:
-admin_cgi_allowed_commands	=		adduser
+#     Examples: adduser deluser addadmin deladmin digeston digestoff list log 
+#               newml rmml reviveml
+admin_cgi_allowed_commands	=	adduser
 					deluser
 					addadmin
 					deladmin
@@ -2509,11 +2510,11 @@ admin_cgi_allowed_commands	=		adduser
 					rmml
 					reviveml
 
-# Descriptions:
-#      History:
+# Descriptions: 各ＭＬごとの管理用 CGI で許されるコマンドのリスト
+#      History: 
 #        Value: FML_COMMAND_LIST
-#     Examples:
-commands_for_ml_admin_cgi	=	adduser
+#     Examples: adduser deluser addadmin deladmin digeston digestoff list log
+ml_admin_cgi_allowed_commands	=	adduser
 					deluser
 					addadmin
 					deladmin
@@ -2521,6 +2522,14 @@ commands_for_ml_admin_cgi	=	adduser
 					digestoff
 					list
 					log
+
+
+# Descriptions: 
+#      History: none
+#        Value: FML_COMMAND_LIST
+#     Examples: subscribe unsubscribe
+ml_anonymous_cgi_allowed_commands	=	subscribe
+						unsubscribe
 
 
 =head2	特定のコマンドへの制限
@@ -2818,59 +2827,67 @@ thread_cgi_bgcolor	=	#E6E6FA
 =head1	CGI 関連の設定
 
 
-# Descriptions: CGI を置くトップディレクトリ
+=head2	管理用 CGI
+
+
+# Descriptions: 管理用 CGI を置くトップディレクトリ
 #      History:
 #        Value: DIR
 #     Examples:
-cgi_base_dir	=	$fml_owner_home_dir/public_html/cgi-bin/fml/$ml_domain
+cgi_base_dir	=	$fml_owner_home_dir/public_html/cgi-bin/fml
 
 
-# Descriptions: このＭＬの admin CGI を置くディレクトリ
-#               注意: ドメインごと、ＭＬごとに別のディレクトリになる
+# Descriptions: このドメイン全体を管理できる CGI を置くディレクトリ。
+#               注意: ドメインごと、ＭＬごとに別のディレクトリ。
+#               なお、ACL は管理用 CGI の単位「~fml/cgi-bin/fml/」か
+#               ドメイン単位「~fml/cgi-bin/fml/ドメイン/」でかけると
+#               便利だろう。また、「fml/ドメイン/役割/」となっているのは、
+#               マスターだけ「~fml/cgi-bin/fml/ドメイン/admin」と
+#               各ＭＬごと「~fml/cgi-bin/fml/ドメイン/ml-admin」で
+#               別の ACL を書けるようにするためである。
 #      History:
 #        Value: DIR
-#     Examples: ~fml/public_admin/cgi-bin/fml/admin/fml.org/elena
-#        Notes: admin/.htaccess か admin/$domain/.htaccess で ACL する
-admin_cgi_base_dir	=	$cgi_base_dir/admin
+#     Examples: ~fml/public_html/cgi-bin/fml/fml.org/admin
+admin_cgi_base_dir	=	$cgi_base_dir/$ml_domain/admin
 
 
-# Descriptions: このＭＬの admin CGI を置くディレクトリ
-#               注意: ドメインごと、ＭＬごとに別のディレクトリになる
+# Descriptions: 特定のＭＬ向け管理用 CGI を置くディレクトリ。
+#               注意: ドメインごと、ＭＬごとに別のディレクトリ
 #      History:
 #        Value: DIR
-#     Examples: ~fml/public_admin/cgi-bin/fml/admin/fml.org/elena
-ml_admin_cgi_base_dir	=	$cgi_base_dir/ml-admin/$ml_name
+#     Examples: ~fml/public_html/cgi-bin/fml/fml.org/ml-admin/elena
+ml_admin_cgi_base_dir	=	$cgi_base_dir/$ml_domain/ml-admin/$ml_name
 
 
-# Descriptions: CGI の表示の CHARSET
+# Descriptions: CGI 表示のデフォルト CHARSET
 #      History:
 #        Value: SELECT ( euc-jp us-ascii )
 #     Examples:
 cgi_default_charset	=	$cgi_charset_ja
 
 
-# Descriptions: CGI の表示の CHARSET
+# Descriptions: CGI 表示の日本語デフォルト CHARSET
 #      History:
 #        Value: SELECT ( euc-jp )
 #     Examples:
-cgi_charset_ja	=	euc-jp
+cgi_charset_ja		=	euc-jp
 
 
-# Descriptions: CGI の表示の CHARSET
+# Descriptions: CGI の表示の英語デフォルト CHARSET
 #      History:
 #        Value: SELECT ( us-ascii)
 #     Examples:
-cgi_charset_en	=	us-ascii
+cgi_charset_en		=	us-ascii
 
 
-# Descriptions: CGI の言語モード (!= charset) 
+# Descriptions: CGI のデフォルト言語モード (!= charset) 
 #      History:
 #        Value: SELECT ( japanese )
 #     Examples:
 cgi_default_language	=	japanese
 
 
-# Descriptions: CGI で利用可能な言語モード (!= charset) 
+# Descriptions: CGI で利用可能な言語モード一覧 (!= charset) 
 #      History:
 #        Value: MIX ( japanese english )
 #     Examples:
@@ -2892,21 +2909,74 @@ cgi_main_menu_color		=	#FFFFFF
 cgi_navigation_bar_color	=	#FFFFFF
 
 
-# Descriptions: CGI のアドレス操作の際に選べる種類
+# Descriptions: 管理用 CGI でのアドレス操作の際に選べるマップ一覧
 #      History: 4.0 には該当する変数はない
 #        Value: MIX ( member recipient admin_member )
 #     Examples: member recipient admin_member
-cgi_menu_address_map_select_list		=	member
-							recipient
-							admin_member
+cgi_menu_address_map_select_list	=	member
+						recipient
+						admin_member
 
 
-# Descriptions: CGI のアドレス操作の際に選べる種類のデフォルト値
+# Descriptions: 管理用 CGI でのアドレス操作に使うマップのデフォルト値
 #      History: 4.0 には該当する変数はない
 #        Value: MIX ( member recipient admin_member )
 #     Examples: member
 cgi_menu_default_address_map		=	recipient
 
+
+=head2	一般人(管理者以外)向け CGI
+
+
+# Descriptions: WWW から subscribe や unsubscribe リクエストを受け付ける
+#		ための CGI インターフェイスを使うか否か？。デフォルトは YES。
+#      History: 4.0 にはなし
+#        Value: YES_OR_NO
+#     Examples: yes
+use_anonymous_cgi_function	=	yes
+
+
+# Descriptions: 一般ユーザ用 CGI session ID の有効時間
+#      History: NONE
+#        Value: TIME
+#     Examples: 15m
+anonymous_cgi_expire_limit	=	15m
+
+
+# Descriptions: 一般人向け CGI を置くトップディレクトリ。
+#               cgi-bin/ 直下で fml と anonymous と分けているのは、
+#		管理用 CGI の単位「~fml/cgi-bin/fml/」と
+#		一般向け CGI の単位「~fml/cgi-bin/anonymous/」で
+#		別の ACL を書きやすくするため。
+#      History: 4.0 にはなし
+#        Value: DIR
+#     Examples: ~fml/public_html/cgi-bin/anonymous/fml.org
+anonymous_cgi_base_dir	= $fml_owner_home_dir/public_html/cgi-bin/anonymous
+
+
+# Descriptions: このＭＬの一般人向け CGI を置くディレクトリ。
+#               注意: ドメインごと、ＭＬごとに別のディレクトリになる。
+#      History: 4.0 にはなし
+#        Value: DIR
+#     Examples: ~fml/public_html/cgi-bin/anonymous/fml.org/elena
+ml_anonymous_cgi_base_dir	= $anonymous_cgi_base_dir/$ml_domain/$ml_name
+
+
+=head2	管理用 CGI 一時領域
+
+
+# Descriptions: 管理用 CGI 一時領域ディレクトリ
+#      History: none
+#        Value: DIR
+#     Examples: ~fml/public_html/fml/tmp
+html_tmp_dir		= $fml_owner_home_dir/public_html/fml/tmp
+
+
+# Descriptions: 管理用 CGI 一時領域 URL
+#      History: none
+#        Value: DIR
+#     Examples: /~fml/fml/tmp
+html_tmp_base_url	= /~$fml_owner/fml/tmp
 
 =head1	MTA に依存する設定のヒント
 

@@ -32,11 +32,30 @@ user_part_case_insensitive
 </row>
 <row>
 <entry>
+admin_cgi_allowed_commands</entry>
+<entry>
+ マスター管理用 CGI で許されるコマンドのリスト</entry>
+<entry>
+adduser
+   deluser
+   addadmin
+   deladmin
+   digeston
+   digestoff
+   list
+   log
+   newml
+   rmml
+   reviveml
+   </entry>
+</row>
+<row>
+<entry>
 admin_cgi_base_dir</entry>
 <entry>
- このＭＬの admin CGI を置くディレクトリ</entry>
+ このドメイン全体を管理できる CGI を置くディレクトリ。</entry>
 <entry>
-$cgi_base_dir/admin
+$cgi_base_dir/$ml_domain/admin
    </entry>
 </row>
 <row>
@@ -112,6 +131,24 @@ admin_recipient_maps</entry>
  とりあえず定義してあるけど、使われてはいない</entry>
 <entry>
 $primary_admin_recipient_map
+   </entry>
+</row>
+<row>
+<entry>
+anonymous_cgi_base_dir</entry>
+<entry>
+ 一般人向け CGI を置くトップディレクトリ。</entry>
+<entry>
+$fml_owner_home_dir/public_html/cgi-bin/anonymous
+   </entry>
+</row>
+<row>
+<entry>
+anonymous_cgi_expire_limit</entry>
+<entry>
+ 一般ユーザ用 CGI session ID の有効時間</entry>
+<entry>
+15m
    </entry>
 </row>
 <row>
@@ -515,16 +552,16 @@ reject
 <entry>
 cgi_base_dir</entry>
 <entry>
- CGI を置くトップディレクトリ</entry>
+ 管理用 CGI を置くトップディレクトリ</entry>
 <entry>
-$fml_owner_home_dir/public_html/cgi-bin/fml/$ml_domain
+$fml_owner_home_dir/public_html/cgi-bin/fml
    </entry>
 </row>
 <row>
 <entry>
 cgi_charset_en</entry>
 <entry>
- CGI の表示の CHARSET</entry>
+ CGI の表示の英語デフォルト CHARSET</entry>
 <entry>
 us-ascii
    </entry>
@@ -533,7 +570,7 @@ us-ascii
 <entry>
 cgi_charset_ja</entry>
 <entry>
- CGI の表示の CHARSET</entry>
+ CGI 表示の日本語デフォルト CHARSET</entry>
 <entry>
 euc-jp
    </entry>
@@ -542,7 +579,7 @@ euc-jp
 <entry>
 cgi_default_charset</entry>
 <entry>
- CGI の表示の CHARSET</entry>
+ CGI 表示のデフォルト CHARSET</entry>
 <entry>
 $cgi_charset_ja
    </entry>
@@ -551,7 +588,7 @@ $cgi_charset_ja
 <entry>
 cgi_default_language</entry>
 <entry>
- CGI の言語モード (!= charset) </entry>
+ CGI のデフォルト言語モード (!= charset) </entry>
 <entry>
 japanese
    </entry>
@@ -560,7 +597,7 @@ japanese
 <entry>
 cgi_language_select_list</entry>
 <entry>
- CGI で利用可能な言語モード (!= charset) </entry>
+ CGI で利用可能な言語モード一覧 (!= charset) </entry>
 <entry>
 japanese
    english
@@ -579,7 +616,7 @@ cgi_main_menu_color</entry>
 <entry>
 cgi_menu_address_map_select_list</entry>
 <entry>
- CGI のアドレス操作の際に選べる種類</entry>
+ 管理用 CGI でのアドレス操作の際に選べるマップ一覧</entry>
 <entry>
 member
    recipient
@@ -590,7 +627,7 @@ member
 <entry>
 cgi_menu_default_address_map</entry>
 <entry>
- CGI のアドレス操作の際に選べる種類のデフォルト値</entry>
+ 管理用 CGI でのアドレス操作に使うマップのデフォルト値</entry>
 <entry>
 recipient
    </entry>
@@ -1179,6 +1216,24 @@ $fml_owner_home_dir/public_html/fml/mlarchive/$ml_domain/$ml_name
 </row>
 <row>
 <entry>
+html_tmp_base_url</entry>
+<entry>
+ 管理用 CGI 一時領域 URL</entry>
+<entry>
+/~$fml_owner/fml/tmp
+   </entry>
+</row>
+<row>
+<entry>
+html_tmp_dir</entry>
+<entry>
+ 管理用 CGI 一時領域ディレクトリ</entry>
+<entry>
+$fml_owner_home_dir/public_html/fml/tmp
+   </entry>
+</row>
+<row>
+<entry>
 incoming_article_body_size_limit</entry>
 <entry>
  投稿された記事の本文の上限値</entry>
@@ -1690,11 +1745,46 @@ $fml_share_dir/message
 </row>
 <row>
 <entry>
+ml_admin_cgi_allowed_commands</entry>
+<entry>
+ 各ＭＬごとの管理用 CGI で許されるコマンドのリスト</entry>
+<entry>
+adduser
+   deluser
+   addadmin
+   deladmin
+   digeston
+   digestoff
+   list
+   log
+   </entry>
+</row>
+<row>
+<entry>
 ml_admin_cgi_base_dir</entry>
 <entry>
- このＭＬの admin CGI を置くディレクトリ</entry>
+ 特定のＭＬ向け管理用 CGI を置くディレクトリ。</entry>
 <entry>
-$cgi_base_dir/ml-admin/$ml_name
+$cgi_base_dir/$ml_domain/ml-admin/$ml_name
+   </entry>
+</row>
+<row>
+<entry>
+ml_anonymous_cgi_allowed_commands</entry>
+<entry>
+ </entry>
+<entry>
+subscribe
+   unsubscribe
+   </entry>
+</row>
+<row>
+<entry>
+ml_anonymous_cgi_base_dir</entry>
+<entry>
+ このＭＬの一般人向け CGI を置くディレクトリ。</entry>
+<entry>
+$anonymous_cgi_base_dir/$ml_domain/$ml_name
    </entry>
 </row>
 <row>
@@ -2427,6 +2517,15 @@ use_admin_command_mail_function</entry>
  admin コマンドメールを使うか？</entry>
 <entry>
 no
+   </entry>
+</row>
+<row>
+<entry>
+use_anonymous_cgi_function</entry>
+<entry>
+ WWW から subscribe や unsubscribe リクエストを受け付ける</entry>
+<entry>
+yes
    </entry>
 </row>
 <row>
