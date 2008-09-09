@@ -3,9 +3,12 @@
 
   [最近のまとめ]
 
-  FML_CURRENT_VERSION=7.98.13
+  FML_CURRENT_VERSION=7.98.14
 
   8.0 PRE_ALPHA
+	7.98.14 www interface for anonymous users.
+		Anyone can submit a subscribe/unsubscribe request via
+		www interface. 
 	7.98.13 "isolate" instead of "reject" spam or unknown messages
 		by default.
 	7.98.12 delivery system error handling fixed.
@@ -40,6 +43,108 @@
 
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
+
+
+2008/09/09
+
+   WWW interface for anonymous users is added.
+	Anyone can request subscribe/unsubscribe via WWW interface.
+	After the request processed, the command flow is same as usual
+	command mails ( confirmation is sent back, ...).
+
+	一般ユーザが WWW インターフェイスでＭＬへの「入会」「退会」
+	のリクエストを出すことが出来るようにしました。
+	・ subscribe と unsubscribe しか出来ません。
+	・ リクエストを出すと confirmation のフェイズに入ります。
+	   その後は、いつのもコマンドメールと同じ処理になるだけです。
+	   本当に入口だけ。２つの違う通信路を使うことに意味があります。
+	・ パスワード登録とかはしません。どうせ次に使う時には忘れてる。
+	   無駄にＭＬ側へ情報が集まってしまうと逆に危ないだけ。
+	・ ゆがんだ画像を読みといてもらって「魔法の文字列」を入れさせます。
+	   SPAM よけの軽いおまじないです。
+	   気合いの入った OCR 野郎とかいたら無駄でしょうが、そこまでして
+	   突破したいような価値ある WWW じゃないし(confirmation かえる
+	   だけなんだし)。
+	・ もっといけてる画像の作り方のアイデア(というかコード)募集中。
+
+   variables
+	define variables for anonymous cgi::$use_anonymous_cgi_function,
+	$anonymous_cgi_expire_limit, $anonymous_cgi_base_dir,
+	$ml_anonymous_cgi_base_dir, $html_tmp_dir, and $html_tmp_base_url.
+	
+	define $ml_anonymous_cgi_allowed_commands
+
+	definition changed::$cgi_base_dir, $admin_cgi_base_dir and
+	$ml_admin_cgi_base_dir.
+	
+	renamed::$commands_for_ml_admin_cgi -> $ml_admin_cgi_allowed_commands
+
+   etc/modules
+	add definition "anonymous::*::*::submit.cgi".
+	while space cosmetics.
+
+   share/messages
+	add message templates for anonymous CGI.
+
+   FML::Char::Ascii::Data 
+	ascii presentation of letters.
+	
+   FML::String::Banner
+   FML::String::Banner::{Ascii,Image}
+	banner string generator
+
+   FML::String::Random
+	generates a magic string and the identifier used for the
+	session ID. 
+
+   FML::Restriction::Base 
+	define $alnum_regexp class.
+	define 'session_id' and 'magic_string' regexp.
+
+   FML::CGI::User 
+	define anonymous_cgi_menu().
+	fix and update documents.
+	
+   FML::CGI::Anonymous::{DB.pm,Submit}
+   FML::CGI::Skin::Anonymous
+	anonymous cgi initial version
+
+   FML::Command::User::{chaddr,subscribe,unsubscribe} 
+	show menu for an anonymous user by calling
+	FML::CGI::User->anonymous_cgi_menu();
+	
+   FML::ML::Control 
+	in setting up cgi, install cgi script(s) for anonymous users,
+	too. 
+
+   FML::Process::Kernel 
+	import $fml_owner and $fml_group into $config name space from
+	main.cf.
+
+   FML::Process::Utils 
+	fix how to search main_cf information.
+	
+	define set_allow_reply_message() and get_allow_reply_message().
+	We can enable or disable reply_message*() functions dynamically.
+	
+   FML::Process::CGI::Kernel 
+	generate anonymous session ID always (anyway).
+
+	finish() calls message flush sub-system.
+
+	cgi_execute_command() is enhanced to handle both *admin.cgi
+	  and anonymous cgi case.
+
+	some error messages are natural-languaged.
+
+	use cgi_var_*() and specify -target if could.
+	
+   FML::Process::CGI::Utils 
+	$commands_for_ml_admin_cgi -> $ml_admin_cgi_allowed_commands
+
+	ensure the return value for CGI action to be not "undef".
+
+	menu is enhanced to handle both *admin.cgi and anonymous cgi case.
 
 2008/08/31
 
@@ -10287,4 +10392,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.307 2008/08/24 11:33:15 fukachan Exp $
+$FML: CHANGES.txt,v 1.308 2008/08/31 14:15:29 fukachan Exp $
