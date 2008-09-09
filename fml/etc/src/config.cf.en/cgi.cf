@@ -83,3 +83,53 @@ cgi_menu_address_map_select_list	=	member
 #        Value: MIX ( member recipient admin_member )
 #     Examples: member
 cgi_menu_default_address_map		=	recipient
+
+
+
+=head2	CGI for anonymous users
+
+
+# Descriptions: allow a request e.g. subscribe and unsubscribe from www.
+#		yes by default.
+#      History: none
+#        Value: YES_OR_NO
+#     Examples: yes
+use_anonymous_cgi_function	=	yes
+
+
+# Descriptions: expire limit of anonymous CGI session ID.
+#      History: NONE
+#        Value: TIME
+#     Examples: 15m
+anonymous_cgi_expire_limit	=	15m
+
+
+# Descriptions: top level directory for anonymous cgi scripts.
+#      History: none
+#        Value: DIR
+#     Examples: ~fml/public_html/cgi-bin/anonymous/fml.org
+anonymous_cgi_base_dir	= $fml_owner_home_dir/public_html/cgi-bin/anonymous
+
+
+# Descriptions: ml specific directory for anonymous cgi scripts.
+#      History: none
+#        Value: DIR
+#     Examples: ~fml/public_html/cgi-bin/anonymous/fml.org/elena
+ml_anonymous_cgi_base_dir	= $anonymous_cgi_base_dir/$ml_domain/$ml_name
+
+
+=head2	temporary area for CGI
+
+
+# Descriptions: temporary directory for CGI
+#      History: none
+#        Value: DIR
+#     Examples: ~fml/public_html/fml/tmp
+html_tmp_dir		= $fml_owner_home_dir/public_html/fml/tmp
+
+
+# Descriptions: temporary url base for CGI
+#      History: none
+#        Value: DIR
+#     Examples: /~fml/fml/tmp
+html_tmp_base_url	= /~$fml_owner/fml/tmp
