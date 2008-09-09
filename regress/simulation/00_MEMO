@@ -31,7 +31,21 @@
 	→ web で [subscribe/unsubscribe] をくりっくの URL とも整合性を
 
 
-[TODO] web で [subscribe/unsubscribe] をクリック
+[TODO] aonymous CGI: IP を監視し、失敗したら exponential back off 
+
+
+[TODO] CGI スクリプトの消去、再生成の方法は？
+
+	makefml COMMAND DOMAIN スタイル？
+
+	makefml rmcgi DOMAIN
+	makefml newcgi DOMAIN
+	makefml --force newcgi DOMAIN
+
+	makefml updatecgi DOMAIN		(必要か？)
+
+
+[DONE] web で [subscribe/unsubscribe] をクリック
 
 	受信者リストにあるか？否か？は確認しない (総辺り戦をされないように)
 		1. リクエストをうける
@@ -389,4 +403,4 @@
 	FML::Sys::Alias
 
 ----------
-$FML: 00_MEMO,v 1.134 2008/08/27 23:49:05 fukachan Exp $
+$FML: 00_MEMO,v 1.135 2008/08/31 14:16:29 fukachan Exp $
