@@ -1,5 +1,5 @@
 dnl
-dnl $FML: configure.in,v 1.45 2006/06/10 01:05:53 fukachan Exp $
+dnl $FML: configure.in,v 1.46 2008/05/25 02:55:25 fukachan Exp $
 dnl
 AC_REVISION($Revision$)
 
@@ -130,6 +130,12 @@ AC_ARG_WITH(default_domain,
     default_domain=$withval)
 AC_SUBST(default_domain)
 
+default_hostname=`hostname`
+AC_ARG_WITH(default_hostname, 
+[  --with-default-hostname=HOSTNAME use HOSTNAME as the default hostname], 
+    default_hostname=$withval)
+AC_SUBST(default_hostname)
+
 
 use_mime_component_filter=yes
 AC_ARG_WITH(mime-component-filter, 
@@ -231,6 +237,7 @@ echo "                fmlconfdir: $fmlconfdir"
 echo "        ml_home_prefix_map: $primary_ml_home_prefix_map"   
 echo "                mlspooldir: $mlspooldir"   
 echo "            default domain: $default_domain"   
+echo "          default hostname: $default_hostname"   
 echo "   "   
 echo "         mime based filter: $use_mime_component_filter"   
 echo "   "
