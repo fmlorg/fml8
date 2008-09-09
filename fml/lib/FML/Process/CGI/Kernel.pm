@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006,2008 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.90 2006/01/09 14:00:55 fukachan Exp $
+# $FML: Kernel.pm,v 1.91 2006/03/05 08:08:37 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -106,6 +106,9 @@ sub prepare
     print header(-type    => "text/html; charset=$charset",
 		 -charset => $charset,
 		 -target  => "_top");
+
+    # generate and save the session string and identifier.
+    $curproc->_set_anonymous_session_id();
 }
 
 
@@ -232,6 +235,20 @@ sub _cgi_fix_log_file
 }
 
 
+# Descriptions: generate the session string and identifier and set it.
+#    Arguments: OBJ($curproc)
+# Side Effects: update pcb and temporary databases.
+# Return Value: none
+sub _set_anonymous_session_id
+{
+    my ($curproc) = @_;
+
+    use FML::CGI::Anonymous::DB;
+    my $db = new FML::CGI::Anonymous::DB $curproc;
+    $db->assign_id();
+}
+
+
 =head2 verify_request()
 
 dummy method now.
@@ -249,10 +266,16 @@ dummy method now.
 sub verify_request { 1;}
 
 # Descriptions: dummy.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
-sub finish { 1;}
+sub finish
+{
+    my ($curproc) = @_;
+
+    $curproc->reply_message_inform();
+    $curproc->queue_flush();
+}
 
 
 =head2 run()
@@ -418,12 +441,35 @@ execute specified command given as FML::Command::*
 
 
 # Descriptions: execute FML::Command.
-#    Arguments: OBJ($curproc) OBJ($command_context)
+#    Arguments: OBJ($curproc) OBJ($command_context) STR($mode)
 # Side Effects: load module
 # Return Value: none
 sub cgi_execute_command
 {
-    my ($curproc, $command_context) = @_;
+    my ($curproc, $command_context, $mode) = @_;
+
+    $mode ||= 'admin_cgi';
+    if ($mode eq 'ml_anonymous_cgi') {
+	$curproc->__cgi_execute_command($command_context,
+					$mode,
+					"ml_anonymous_cgi_allowed_commands");
+    }
+    else {
+	$curproc->__cgi_execute_command($command_context, 
+					$mode,
+					"admin_cgi_allowed_commands");
+    }
+}
+
+
+# Descriptions: execute FML::Command.
+#    Arguments: OBJ($curproc) OBJ($command_context) 
+#               STR($mode) STR($var_command_list)
+# Side Effects: load module
+# Return Value: none
+sub __cgi_execute_command
+{
+    my ($curproc, $command_context, $mode, $var_command_list) = @_;
 
     # XXX Only FML::CGI::Skin::Base calls cgi_execute_command() now.
     # XXX comname are the result returned by $curproc->safe_param_command().
@@ -434,8 +480,9 @@ sub cgi_execute_command
 
     # XXX $comname is one of strings defined in the config file,
     # XXX NOT user defined one.
-    unless ($config->has_attribute("admin_cgi_allowed_commands", $comname)) {
-	$curproc->logerror("cgi deny command: mode=$commode level=cgi");
+    unless ($config->has_attribute($var_command_list, $comname)) {
+	my $msg = "cgi deny command=$comname mode=$commode level=cgi";
+	$curproc->logerror($msg);
 
 	my $buf = $curproc->message_nl("cgi.deny",
 				       "Error: deny $comname command");
@@ -454,21 +501,30 @@ sub cgi_execute_command
 	    $obj->$comname($curproc, $command_context);
 	};
 	unless ($@) {
-	    # XXX-TODO: NL
-	    print "OK! $comname succeed.\n";
+	    my $buf = '';
+	    if ($mode eq 'ml_anonymous_cgi') {
+		$buf = $curproc->message_nl("cgi.anonymous.ok",
+					    "OK! $comname succeed");
+	    }
+	    else {
+		$buf = $curproc->message_nl("cgi.ok",
+					    "OK! $comname succeed");
+	    }
+	    print $buf, "<br>\n";
+
 	}
 	else {
-	    # XXX-TODO: NL
-	    print "Error! $comname fails.\n<BR>\n";
+	    my $buf = $curproc->message_nl("cgi.fail",
+					   "Error! $comname fails.");
+	    print $buf, "<br>\n";
 	    if ($@ =~ /^(.*)\s+at\s+/) {
 		my $reason    = $1;
 		my ($key, $r) = $curproc->exception_parse($reason);
-		my $buf       = $curproc->message_nl($key);
-
-		# XXX-TODO: validate output.
-		print "<BR>\n";
-		print ($buf || $reason);
-		print "<BR>\n";
+		my $buf       = $curproc->message_nl($key) || undef;
+		$curproc->logerror($reason);
+		if ($buf) {
+		    print "<br>", $buf, "<br>\n";
+		}
 	    }
 	}
     }
@@ -582,7 +638,8 @@ sub run_cgi_options
 {
     my ($curproc) = @_;
     my $domain    = $curproc->cgi_var_ml_domain();
-    my $action    = $curproc->safe_cgi_action_name();
+    my $action    = $curproc->cgi_var_action();
+    my $target    = $curproc->cgi_var_frame_target();
     my $lang      = $curproc->cgi_var_language();
     my $config    = $curproc->config();
     my $langlist  = $config->get_as_array_ref('cgi_language_select_list');
@@ -600,7 +657,7 @@ sub run_cgi_options
 
 	print "<P> <B> $name_options </B>\n";
 	print "<BR>\n";
-	print start_form(-action=>$action);
+	print start_form(-action=>$action, -target=>$target);
 
 	print $name_lang, ":\n";
 	print scrolling_list(-name    => 'language',
@@ -882,6 +939,7 @@ sub AUTOLOAD
     }
     else {
 	# XXX-TODO: validate $comname
+	$curproc->logerror("cannot validate command name.");
         croak("__ERROR_cgi.unknown_method__: unknown method $comname");
     }
 }
@@ -897,7 +955,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006,2008 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
