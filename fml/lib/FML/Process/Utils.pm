@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.151 2006/07/09 12:11:13 fukachan Exp $
+# $FML: Utils.pm,v 1.152 2008/07/20 00:38:53 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1389,7 +1389,8 @@ return $ml_home_prefix in main.cf.
 sub ml_home_prefix
 {
     my ($curproc, $domain) = @_;
-    my $main_cf = $curproc->{ __parent_args }->{ main_cf };
+    my $main_cf = 
+	$curproc->{ __parent_args }->{ main_cf } || $curproc->{ main_cf };
     $curproc->__ml_home_prefix_from_main_cf($main_cf, $domain);
 }
 
@@ -1739,7 +1740,10 @@ sub is_allow_reply_message
     my $option    = $curproc->command_line_options();
     my $myname    = $curproc->myname();
 
-    if ($curproc->is_under_mta_process()) {
+    if ($curproc->_is_allow_reply_message()) {
+	return 1;
+    }
+    elsif ($curproc->is_under_mta_process()) {
 	return 1;
     }
     elsif (defined $option->{ 'allow-reply-message' }) {
@@ -1753,6 +1757,42 @@ sub is_allow_reply_message
     }
 
     return 0;
+}
+
+
+# Descriptions: enable that reply_message*() functions work.
+#    Arguments: OBJ($curproc)
+# Side Effects: update PCB.
+# Return Value: none
+sub set_allow_reply_message
+{
+    my ($curproc) = @_;
+    my ($pcb) = $curproc->pcb();
+
+    $pcb->set("reply_message", "allow", 1);
+}
+
+
+# Descriptions: check if that reply_message*() functions work.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub get_allow_reply_message
+{
+    my ($curproc) = @_;
+    my ($pcb) = $curproc->pcb();
+    $pcb->get("reply_message", "allow") ? 1 : 0;
+}
+
+
+# Descriptions: check if that reply_message*() functions work.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub _is_allow_reply_message
+{
+    my ($curproc) = @_;
+    $curproc->get_allow_reply_message();
 }
 
 
