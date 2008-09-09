@@ -293,7 +293,7 @@ admin_cgi_allowed_commands	=		adduser
 #      History:
 #        Value: FML_COMMAND_LIST
 #     Examples:
-commands_for_ml_admin_cgi	=	adduser
+ml_admin_cgi_allowed_commands	=	adduser
 					deluser
 					addadmin
 					deladmin
@@ -301,6 +301,14 @@ commands_for_ml_admin_cgi	=	adduser
 					digestoff
 					list
 					log
+
+
+# Descriptions: 
+#      History: none
+#        Value: FML_COMMAND_LIST
+#     Examples: subscribe unsubscribe
+ml_anonymous_cgi_allowed_commands	=	subscribe
+						unsubscribe
 
 
 # Descriptions: special command name used as confirmation

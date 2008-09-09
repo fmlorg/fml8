@@ -284,11 +284,12 @@ admin_command_mail_allowed_commands	=	subscribe
 					list
 
 
-# Descriptions:
-#      History:
+# Descriptions: マスター管理用 CGI で許されるコマンドのリスト
+#      History: 
 #        Value: FML_COMMAND_LIST
-#     Examples:
-admin_cgi_allowed_commands	=		adduser
+#     Examples: adduser deluser addadmin deladmin digeston digestoff list log 
+#               newml rmml reviveml
+admin_cgi_allowed_commands	=	adduser
 					deluser
 					addadmin
 					deladmin
@@ -300,11 +301,11 @@ admin_cgi_allowed_commands	=		adduser
 					rmml
 					reviveml
 
-# Descriptions:
-#      History:
+# Descriptions: 各ＭＬごとの管理用 CGI で許されるコマンドのリスト
+#      History: 
 #        Value: FML_COMMAND_LIST
-#     Examples:
-commands_for_ml_admin_cgi	=	adduser
+#     Examples: adduser deluser addadmin deladmin digeston digestoff list log
+ml_admin_cgi_allowed_commands	=	adduser
 					deluser
 					addadmin
 					deladmin
@@ -312,6 +313,14 @@ commands_for_ml_admin_cgi	=	adduser
 					digestoff
 					list
 					log
+
+
+# Descriptions: 
+#      History: none
+#        Value: FML_COMMAND_LIST
+#     Examples: subscribe unsubscribe
+ml_anonymous_cgi_allowed_commands	=	subscribe
+						unsubscribe
 
 
 =head2	特定のコマンドへの制限
