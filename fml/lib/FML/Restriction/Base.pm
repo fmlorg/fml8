@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+# Copyright (C) 2001,2002,2003,2004,2008 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Base.pm,v 1.31 2004/07/23 13:09:10 fukachan Exp $
+# $FML: Base.pm,v 1.32 2004/07/23 15:59:12 fukachan Exp $
 #
 
 package FML::Restriction::Base;
@@ -88,6 +88,7 @@ my $file_regexp    = '[-A-Za-z0-9_]+';     # file name
 my $dir_regexp     = '[-A-Za-z0-9_]+';     # directory name
 my $option_regexp  = '[-A-Za-z0-9]+';      # command option
 my $number_regexp  = '\d+';                # number
+my $alnum_regexp   = '[A-Za-z0-9]+';       # alphabets + numbers
 my $address_regexp = sprintf("%s\@%s", $user_regexp, $domain_regexp);
 my %basic_variable =
     (
@@ -116,6 +117,10 @@ my %basic_variable =
 
      # command mail
      'command_mail_substr'  => $commail_regexp,
+
+     # cgi
+     'session_id'           => $alnum_regexp,
+     'magic_string'         => $alnum_regexp,
 
      # misc
      'language'             => $option_regexp,
@@ -244,7 +249,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2008 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
