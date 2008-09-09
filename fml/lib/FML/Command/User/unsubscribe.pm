@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006,2008 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: unsubscribe.pm,v 1.38 2006/03/04 13:48:29 fukachan Exp $
+# $FML: unsubscribe.pm,v 1.39 2006/03/05 08:08:37 fukachan Exp $
 #
 
 package FML::Command::User::unsubscribe;
@@ -133,6 +133,27 @@ sub process
 }
 
 
+# Descriptions: show cgi menu for unsubscribe command for an anonymous user.
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($command_context)
+# Side Effects: update $member_map $recipient_map
+# Return Value: none
+sub cgi_menu
+{
+    my ($self, $curproc, $command_context) = @_;
+    my $r = '';
+
+    # XXX-TODO: $command_context checked ?
+    eval q{
+        use FML::CGI::User;
+        my $submit = new FML::CGI::User;
+        $submit->anonymous_cgi_menu($curproc, $command_context);
+    };
+    if ($r = $@) {
+        croak($r);
+    }
+}
+
+
 =head1 CODING STYLE
 
 See C<http://www.fml.org/software/FNF/> on fml coding style guide.
@@ -143,7 +164,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006,2008 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
