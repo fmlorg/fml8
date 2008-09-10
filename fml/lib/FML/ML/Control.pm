@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.17 2008/06/28 21:16:12 fukachan Exp $
+# $FML: Control.pm,v 1.18 2008/09/09 08:30:11 fukachan Exp $
 #
 
 package FML::ML::Control;
@@ -448,119 +448,34 @@ set up CGI interface for this mailing list.
 sub setup_cgi_interface
 {
     my ($self, $curproc, $command_context, $params) = @_;
-    my $template_dir = $curproc->newml_command_template_files_dir();
-    my $config       = $curproc->config();
+    my $config = $curproc->config();
 
-    #
+    # 0. check if this cgi-setup is the first time or not.
+    my $is_first_time = 0;
+    my $cgi_base_dir  = $config->{ cgi_base_dir };
+    unless (-d $cgi_base_dir) {
+	$is_first_time = 1;
+    }
+
     # 1. create directory path if needed
-    #
-    my (%is_dir_exists)      = ();
-    my $cgi_base_dir         = $config->{ cgi_base_dir };
-    my $admin_cgi_dir        = $config->{ admin_cgi_base_dir };
-    my $ml_admin_cgi_dir     = $config->{ ml_admin_cgi_base_dir };
-    my $ml_anonymous_cgi_dir = $config->{ ml_anonymous_cgi_base_dir };
-    for my $dir ($cgi_base_dir, $admin_cgi_dir, $ml_admin_cgi_dir,
-		 $ml_anonymous_cgi_dir) {
+    for my $cgi_mode (qw(admin ml-admin ml-anonymous)) {
+	my $dir = $self->_cgi_base_dir($curproc, $cgi_mode);
 	unless (-d $dir) {
 	    $curproc->ui_message("creating $dir");
-	    $is_dir_exists{ $dir } = 0;
 	    $curproc->mkdir($dir, "mode=public");
 	}
-	else {
-	    $is_dir_exists{ $dir } = 1;
-	}
     }
 
-    #
     # 2. disable CGI access by creating a dummy .htaccess
     #    install .htaccess only for the first time.
-    #
-    unless ( $is_dir_exists{ $cgi_base_dir } ) {
-	use File::Spec;
-	my $src   = File::Spec->catfile($template_dir, 'dot_htaccess');
-	my $dst   = File::Spec->catfile($cgi_base_dir, '.htaccess');
-
-	$curproc->ui_message("creating $dst");
-	$curproc->ui_message("         (a dummy to disable cgi by default)");
-	$self->_install($src, $dst, $params);
+    if ($is_first_time) {
+	$self->_htaccess_setup($curproc, $params);
     }
 
-    #
     # 3.  install *.cgi
-    #
-
-    use File::Spec;
-    my $libexec_dir = $config->{ fml_libexec_dir };
-    my $src         = File::Spec->catfile($libexec_dir, 'loader');
-    my $ml_name     = $config->{ ml_name };
-    my $ml_domain   = $config->{ ml_domain };
-
-    # 3.1 install admin/{menu,config,thread}.cgi
-    {
-	# hints
-	$params->{ __hints_for_fml_process__ } = qq{
-	    \$hints = {
-		cgi_mode  => 'admin',
-		ml_name   => '$ml_name',
-		ml_domain => '$ml_domain',
-	    };
-	};
-
-	use File::Spec;
-	for my $dst (
-		   File::Spec->catfile($admin_cgi_dir, 'menu.cgi'),
-		   File::Spec->catfile($admin_cgi_dir, 'config.cgi'),
-		   File::Spec->catfile($admin_cgi_dir, 'thread.cgi')
-		     ) {
-	    $curproc->ui_message("creating $dst");
-	    $self->_install($src, $dst, $params);
-	    chmod 0755, $dst;
-	}
-    }
-
-    # 3.2. install ml-admin/
-    {
-	# hints
-	$params->{ __hints_for_fml_process__ } = qq{
-	    \$hints = {
-		cgi_mode  => 'ml-admin',
-		ml_name   => '$ml_name',
-		ml_domain => '$ml_domain',
-	    };
-	};
-
-	use File::Spec;
-	for my $dst (
-		   File::Spec->catfile($ml_admin_cgi_dir, 'menu.cgi'),
-		   File::Spec->catfile($ml_admin_cgi_dir, 'config.cgi'),
-		   File::Spec->catfile($ml_admin_cgi_dir, 'thread.cgi')
-		     ) {
-	    $curproc->ui_message("creating $dst");
-	    $self->_install($src, $dst, $params);
-	    chmod 0755, $dst;
-	}
-    }
-
-    # 3.3. install cgi script(s) for anonymous users.
-    {
-	use File::Spec;
-	my $submit = File::Spec->catfile($ml_anonymous_cgi_dir, 'submit.cgi');
-
-	# hints
-	$params->{ __hints_for_fml_process__ } = qq{
-	    \$hints = {
-		cgi_mode  => 'anonymous',
-		ml_name   => '$ml_name',
-		ml_domain => '$ml_domain',
-	    };
-	};
-
-	for my $dst ($submit) {
-	    $curproc->ui_message("creating $dst");
-	    $self->_install($src, $dst, $params);
-	    chmod 0755, $dst;
-	}
-    }
+    $self->_cgi_setup($curproc, $params, "install", "admin");
+    $self->_cgi_setup($curproc, $params, "install", "ml-admin");
+    $self->_cgi_setup($curproc, $params, "install", "ml-anonymous");
 }
 
 
@@ -578,6 +493,94 @@ sub _install
 	&FML::Config::Convert::convert_file($src, $dst, $config);
     };
     croak($@) if $@;
+}
+
+
+# Descriptions: return the cgi script base directory 
+#               for the specified mode. 
+#    Arguments: OBJ($self) OBJ($curproc) STR($cgi_mode)
+# Side Effects: none
+# Return Value: STR
+sub _cgi_base_dir
+{
+    my ($self, $curproc, $cgi_mode) = @_;
+    my $config = $curproc->config();
+
+    $cgi_mode =~ s/-/_/g;
+    my $var_name  = sprintf("%s_cgi_base_dir", $cgi_mode);
+    my $base_dir  = $config->{ $var_name };
+}
+
+
+# Descriptions: install admin/{menu,config,thread}.cgi
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params)
+#               STR($action) STR($cgi_mode)
+# Side Effects: cgi scriptes created.
+# Return Value: none
+sub _cgi_setup
+{
+    my ($self, $curproc, $params, $action, $cgi_mode) = @_;
+    my $config      = $curproc->config();
+    my $ml_name     = $config->{ ml_name };
+    my $ml_domain   = $config->{ ml_domain };
+    my $base_dir    = $self->_cgi_base_dir($curproc, $cgi_mode);
+    my (@file_list) = ();
+
+    # hints to be hard-coded.
+    $params->{ __hints_for_fml_process__ } = qq{
+	\$hints = {
+	    cgi_mode  => '$cgi_mode',
+	    ml_name   => '$ml_name',
+	    ml_domain => '$ml_domain',
+	};
+    };
+
+    # file(s) to install/deinstall depend(s) $cgi_mode.
+    if ($cgi_mode eq 'ml-anonymous') {
+	@file_list = qw(submit.cgi);
+    }
+    else {
+	@file_list = qw(menu.cgi config.cgi thread.cgi);
+    }
+
+    # install it(them) !
+    use File::Spec;
+    my $libexec_dir = $config->{ fml_libexec_dir };
+    my $src         = File::Spec->catfile($libexec_dir, 'loader');
+    for my $file (@file_list) {
+	my $dst = File::Spec->catfile($base_dir, $file);
+	$curproc->ui_message("creating $dst");
+	if ($action eq 'install') {
+	    $self->_install($src, $dst, $params);
+	    chmod 0755, $dst;
+	}
+	elsif ($action eq 'deinstall') {
+	    unlink $dst;
+	}
+	else {
+	    croak("unknown action: $action");
+	}
+    }
+}
+
+
+# Descriptions: set up a dummy htaccess at the first time only.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params)
+# Side Effects: create a dummy htaccess.
+# Return Value: none
+sub _htaccess_setup
+{
+    my ($self, $curproc, $params) = @_;
+    my $template_dir = $curproc->newml_command_template_files_dir();
+    my $config       = $curproc->config();
+    my $cgi_base_dir = $config->{ cgi_base_dir };
+
+    use File::Spec;
+    my $src   = File::Spec->catfile($template_dir, 'dot_htaccess');
+    my $dst   = File::Spec->catfile($cgi_base_dir, '.htaccess');
+    $curproc->ui_message("creating $dst");
+    $curproc->ui_message("         (a dummy to disable cgi by default)");
+    $self->_install($src, $dst, $params);
 }
 
 
