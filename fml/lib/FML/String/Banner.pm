@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.12 2008/08/24 08:28:36 fukachan Exp $
+# $FML: Banner.pm,v 1.1 2008/09/09 02:59:03 fukachan Exp $
 #
 
 package FML::String::Banner;
@@ -66,14 +66,14 @@ constructor.
 
 
 # Descriptions: constructor.
-#    Arguments: OBJ($self)
+#    Arguments: OBJ($self) OBJ($curproc)
 # Side Effects: none
 # Return Value: OBJ
 sub new
 {
-    my ($self) = @_;
+    my ($self, $curproc) = @_;
     my ($type) = ref($self) || $self;
-    my $me     = {};
+    my $me     = { _curproc => $curproc };
 
     srand(time|$$);
 
@@ -192,11 +192,29 @@ file at the caller side.
 sub as_png
 {
     my ($self, $string) = @_;
+    my ($curproc) = $self->{ _curproc };
     my ($_string) = $self->get_string() || $string;
 
-    use FML::String::Banner::Image;
-    my $banner = new FML::String::Banner::Image;
-    return $banner->as_png($_string);
+    eval q{
+	use GD;
+    };
+    if ($@) {
+	$curproc->logwarn("cannot load GD perl module.");
+	$curproc->logwarn("install p5-GD from package system on your OS");
+    }
+
+    my $banner = undef;
+    eval q{
+	use FML::String::Banner::Image;
+	$banner = new FML::String::Banner::Image;
+    };
+    unless ($@) {
+	if (defined $banner) {
+	    return $banner->as_png($_string);
+	}
+    }
+
+    return undef;
 }
 
 
