@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004,2005,2006,2008 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Cache.pm,v 1.24 2006/11/19 02:24:52 fukachan Exp $
+# $FML: Cache.pm,v 1.25 2006/11/19 03:41:45 fukachan Exp $
 #
 
 package FML::Error::Cache;
@@ -22,7 +22,7 @@ FML::Error::Cache - manipulate error/bounce information database.
 	my $db = new FML::Error::Cache $curproc;
 	$db->add( $bounce_info );
 
-where C<$bounce_info) follows:
+where C<$bounce_info> follows:
 
     $bounce_info = [
             {
@@ -335,7 +335,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005,2006,2008 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
