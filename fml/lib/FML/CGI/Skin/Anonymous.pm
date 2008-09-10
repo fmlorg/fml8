@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: Anonymous.pm,v 1.1 2008/09/09 08:48:59 fukachan Exp $
 #
 
 package FML::CGI::Skin::Anonymous;
@@ -401,11 +401,17 @@ sub _anonymous_cgi_print_magic_string
     my $session_id   = $db->get_session_id();
 
     use FML::String::Banner;
-    my $banner = new FML::String::Banner;
+    my $banner = new FML::String::Banner $curproc;
     $banner->set_string($string);
+
+    # firstly, check if image generator works.
+    my $png = $banner->as_png();
+    unless (defined $png) { $is_mode = "ascii";};
+
+    # go! go! go!
     if ($is_mode eq "ascii") {
 	my $ascii = $banner->as_ascii();
-	printf("\n<pre>[%s]\n\n%s\n</pre>\n", $name_magic, $ascii);
+	printf("\n<p>[%s]\n<pre>\n%s\n</pre>\n", $name_magic, $ascii);
     }
     elsif ($is_mode eq "png") {
 	my $html_tmp_dir = $config->get('html_tmp_dir');
@@ -421,7 +427,6 @@ sub _anonymous_cgi_print_magic_string
 	my $wh = new FileHandle "> $image_file";
 	if (defined $wh) {
 	    $wh->binmode();
-	    my $png = $banner->as_png();
 	    $wh->print($png);
 	    $wh->close();
 	}
