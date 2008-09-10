@@ -45,6 +45,20 @@
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
 
+2008/09/10
+
+   FML::CGI::Skin::Anonymous 
+	(1) check if the banner image format generator works or not
+	(2) if not, use ascii generator.
+	
+   FML::String::Banner 
+	new() needs $curproc as the argument.
+	as_png() checks if GD perl module is available. if not, return
+	undef.
+
+   FML::ML::Control 
+	clean up setup_cgi_interface() to be more modular.
+
 2008/09/09
 
    WWW interface for anonymous users is added.
@@ -10392,4 +10406,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.308 2008/08/31 14:15:29 fukachan Exp $
+$FML: CHANGES.txt,v 1.309 2008/09/09 11:31:11 fukachan Exp $
