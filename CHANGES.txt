@@ -45,6 +45,26 @@
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
 
+2008/09/12
+
+   variables
+	define $ml_anonymous_cgi_base_url
+
+   FML::Command::Admin::{newml,rmml}
+	clean up.
+	warn() -> ui_message() + logwarn().
+	change variable names to be more proper.
+	fix comments.
+	
+   FML::Command::Admin::rmml 
+   FML::ML::Control 
+	delete cgi scripts and listinfo in runnign rmml.
+
+2008/09/11
+
+   FML::Error::Cache 
+	document: fix typo
+
 2008/09/10
 
    FML::CGI::Skin::Anonymous 
@@ -10406,4 +10426,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.309 2008/09/09 11:31:11 fukachan Exp $
+$FML: CHANGES.txt,v 1.310 2008/09/10 22:32:27 fukachan Exp $
