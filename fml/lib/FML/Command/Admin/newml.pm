@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2006 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2006,2008 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.83 2006/03/04 13:48:29 fukachan Exp $
+# $FML: newml.pm,v 1.84 2006/03/05 08:08:37 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -104,19 +104,20 @@ sub process
     $config->set( 'ml_home_dir',    $ml_home_dir );
 
     use FML::ML::Control;
-    my $control = new FML::ML::Control;
+    my $mlctl = new FML::ML::Control;
 
     # define _ml_name_xxx variables in $parms for virtual domain
-    $control->adjust_params_for_virtual_domain($curproc,
-					       $command_context,
-					       $params);
+    $mlctl->adjust_params_for_virtual_domain($curproc,
+					     $command_context,
+					     $params);
 
     # "makefml --force newml elena" creates elena ML even if elena
     # already exists.
     unless ($self->get_force_mode($curproc, $command_context)) {
 	if (-d $ml_home_dir) {
-	    # XXX-TODO: $curproc->logwarn() ?
-	    warn("$ml_name ml_home_dir($ml_home_dir) already exists");
+	    my $msg = "$ml_name ml_home_dir($ml_home_dir) already exists";
+	    $curproc->ui_message($msg);
+	    $curproc->logwarn($msg);
 	    return ;
 	}
     }
@@ -125,10 +126,11 @@ sub process
     # Example: search among all entries in postfix $alias_maps and /etc/passwd
     # XXX we assume /etc/passwd exists for backword compatibility
     # XXX on all unix plathomes.
-    if ($control->is_mta_alias_maps_has_ml_entry($curproc,$params,$ml_name)) {
+    if ($mlctl->is_mta_alias_maps_has_ml_entry($curproc,$params,$ml_name)) {
 	unless ($self->get_force_mode($curproc, $command_context)) {
-	    # XXX-TODO: $curproc->logwarn() ?
-	    warn("$ml_name already exists (somewhere in MTA aliases)");
+	    my $msg = "$ml_name already exists (somewhere in MTA aliases)";
+	    $curproc->ui_message($msg);
+	    $curproc->logwarn($msg);
 	    return ;
 	}
     }
@@ -142,14 +144,14 @@ sub process
     #    prepare thread cgi interface at ?
     #      ~fml/public_html/cgi-bin/fml/$domain/threadview.cgi ?
     # 5. prepare listinfo url
-    $control->init_ml_home_dir($curproc, $command_context, $params);
-    $control->install_template_files($curproc, $command_context, $params);
+    $mlctl->init_ml_home_dir($curproc, $command_context, $params);
+    $mlctl->install_template_files($curproc, $command_context, $params);
     if ($self->is_update_alias($curproc, $command_context)) {
-	$control->update_aliases($curproc, $command_context, $params);
+	$mlctl->update_aliases($curproc, $command_context, $params);
     }
-    $control->setup_mail_archive_dir($curproc, $command_context, $params);
-    $control->setup_cgi_interface($curproc, $command_context, $params);
-    $control->setup_listinfo($curproc, $command_context, $params);
+    $mlctl->setup_mail_archive_dir($curproc, $command_context, $params);
+    $mlctl->setup_cgi_interface($curproc, $command_context, $params);
+    $mlctl->setup_listinfo($curproc, $command_context, $params);
 }
 
 
@@ -244,7 +246,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2006 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2006,2008 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

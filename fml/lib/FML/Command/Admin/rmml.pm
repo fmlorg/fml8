@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2006 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2006,2008 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: rmml.pm,v 1.30 2006/03/04 13:48:29 fukachan Exp $
+# $FML: rmml.pm,v 1.31 2006/03/05 08:08:37 fukachan Exp $
 #
 
 package FML::Command::Admin::rmml;
@@ -91,17 +91,18 @@ sub process
 
     # check if $ml_name exists.
     unless (-d $ml_home_dir) {
-	my $s = "no such ml_home_dir ($ml_home_dir) for $ml_name\@$ml_domain";
-	$curproc->ui_message($s);
-	$curproc->logwarn($s);
+	my $msg = 
+	    "no such ml_home_dir ($ml_home_dir) for $ml_name\@$ml_domain";
+	$curproc->ui_message($msg);
+	$curproc->logwarn($msg);
 	return;
     }
 
     # o.k. here we go!
     use FML::ML::Control;
-    my $ml = new FML::ML::Control;
-    $ml->delete_ml_home_dir($curproc, $command_context, $params);
-    $ml->delete_aliases($curproc, $command_context, $params);
+    my $mlctl = new FML::ML::Control;
+    $mlctl->delete_ml_home_dir($curproc, $command_context, $params);
+    $mlctl->delete_aliases($curproc, $command_context, $params);
 }
 
 
@@ -114,7 +115,7 @@ sub cgi_menu
     my ($self, $curproc, $command_context) = @_;
     my $r = '';
 
-    # XXX-TODO: $commnad_args checked ?
+    # XXX-TODO: $commnad_context checked ?
     eval q{
         use FML::CGI::ML;
         my $obj = new FML::CGI::ML;
@@ -136,7 +137,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2006 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2006,2008 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
