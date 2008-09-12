@@ -1780,6 +1780,15 @@ $anonymous_cgi_base_dir/$ml_domain/$ml_name
 </row>
 <row>
 <entry>
+ml_anonymous_cgi_base_url</entry>
+<entry>
+ ml specific url base for anonymous cgi scripts.</entry>
+<entry>
+/~$fml_owner/cgi-bin/anonymous/$ml_domain/$ml_name
+   </entry>
+</row>
+<row>
+<entry>
 ml_local_dir</entry>
 <entry>
  ML local directory</entry>

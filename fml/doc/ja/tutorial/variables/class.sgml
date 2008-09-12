@@ -56,6 +56,7 @@ anonymous {
           $anonymous_cgi_expire_limit
     ?     $ml_anonymous_cgi_allowed_commands
           $ml_anonymous_cgi_base_dir
+    ?     $ml_anonymous_cgi_base_url
           $use_anonymous_cgi_function
    }
 
