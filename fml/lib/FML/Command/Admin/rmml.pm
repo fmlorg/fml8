@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: rmml.pm,v 1.31 2006/03/05 08:08:37 fukachan Exp $
+# $FML: rmml.pm,v 1.32 2008/09/12 11:05:24 fukachan Exp $
 #
 
 package FML::Command::Admin::rmml;
@@ -103,6 +103,8 @@ sub process
     my $mlctl = new FML::ML::Control;
     $mlctl->delete_ml_home_dir($curproc, $command_context, $params);
     $mlctl->delete_aliases($curproc, $command_context, $params);
+    $mlctl->delete_cgi_interface($curproc, $command_context, $params);
+    $mlctl->delete_listinfo($curproc, $command_context, $params);
 }
 
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.18 2008/09/09 08:30:11 fukachan Exp $
+# $FML: Control.pm,v 1.19 2008/09/10 11:00:59 fukachan Exp $
 #
 
 package FML::ML::Control;
@@ -74,10 +74,10 @@ sub adjust_params_for_virtual_domain
     my $ml_domain = $params->{ ml_domain } || '';
 
     # ASSERT
-    unless ($ml_name)   { 
+    unless ($ml_name)   {
 	$curproc->logerror("FML::ML::Control: undefined ml_name");
     }
-    unless ($ml_domain) { 
+    unless ($ml_domain) {
 	$curproc->logerror("FML::ML::Control: undefined ml_domain");
     }
 
@@ -299,8 +299,8 @@ sub update_aliases
         return;
     }
 
-    # if this user (ml entry) is found somewhere on this system, 
-    # 
+    # if this user (ml entry) is found somewhere on this system,
+    #
     if ($self->is_mta_alias_maps_has_ml_entry($curproc, $params, $ml_name)) {
 	$curproc->ui_message("warning: $ml_name already defined!");
 	$curproc->ui_message("         ignore aliases updating");
@@ -434,6 +434,10 @@ sub setup_mail_archive_dir
 
 set up CGI interface for this mailing list.
 
+=head2 delete_cgi_interface($curproc, $command_context, $params)
+
+delete CGI scripts and the directories.
+
 =cut
 
 
@@ -479,6 +483,24 @@ sub setup_cgi_interface
 }
 
 
+# Descriptions: delete CGI interface for this mailing list.
+#    Arguments: OBJ($self)
+#               OBJ($curproc)
+#               OBJ($command_context)
+#               HASH_REF($params)
+# Side Effects: remove directories and installed cgi scripts.
+# Return Value: none
+sub delete_cgi_interface
+{
+    my ($self, $curproc, $command_context, $params) = @_;
+    my $config = $curproc->config();
+
+    $self->_cgi_setup($curproc, $params, "deinstall", "admin");
+    $self->_cgi_setup($curproc, $params, "deinstall", "ml-admin");
+    $self->_cgi_setup($curproc, $params, "deinstall", "ml-anonymous");
+}
+
+
 # Descriptions: install $dst with variable expansion within $src.
 #    Arguments: OBJ($self) STR($src) STR($dst) HASH_REF($config)
 # Side Effects: create $dst
@@ -496,8 +518,8 @@ sub _install
 }
 
 
-# Descriptions: return the cgi script base directory 
-#               for the specified mode. 
+# Descriptions: return the cgi script base directory
+#               for the specified mode.
 #    Arguments: OBJ($self) OBJ($curproc) STR($cgi_mode)
 # Side Effects: none
 # Return Value: STR
@@ -549,16 +571,30 @@ sub _cgi_setup
     my $src         = File::Spec->catfile($libexec_dir, 'loader');
     for my $file (@file_list) {
 	my $dst = File::Spec->catfile($base_dir, $file);
-	$curproc->ui_message("creating $dst");
 	if ($action eq 'install') {
+	    $curproc->ui_message("creating $dst");
 	    $self->_install($src, $dst, $params);
 	    chmod 0755, $dst;
 	}
 	elsif ($action eq 'deinstall') {
+	    $curproc->ui_message("removing $dst");
 	    unlink $dst;
+	    if (-f $dst) {
+		$curproc->logerror("cannot remove $dst");
+	    }
 	}
 	else {
 	    croak("unknown action: $action");
+	}
+    }
+
+    if ($action eq 'deinstall') {
+	if (-d $base_dir) {
+	    $curproc->ui_message("removing $base_dir");
+	    rmdir $base_dir;
+	    if (-d $base_dir) {
+		$curproc->logerror("cannot remove $base_dir");
+	    }
 	}
     }
 }
@@ -588,6 +624,10 @@ sub _htaccess_setup
 
 set up information for this mailing list.
 
+=head2 delete_listinfo($curproc, $command_context, $params)
+
+delete listinfo files and the directories.
+
 =cut
 
 
@@ -596,7 +636,7 @@ set up information for this mailing list.
 #               OBJ($curproc)
 #               OBJ($command_context)
 #               HASH_REF($params)
-# Side Effects: create directories
+# Side Effects: create file(s) and the directorie(s).
 # Return Value: none
 sub setup_listinfo
 {
@@ -625,6 +665,50 @@ sub setup_listinfo
 
 	    $curproc->ui_message("creating $dst");
 	    $self->_install($src, $dst, $params);
+	}
+    }
+}
+
+
+# Descriptions: unsetup listinfo file(s) and directories.
+#    Arguments: OBJ($self)
+#               OBJ($curproc)
+#               OBJ($command_context)
+#               HASH_REF($params)
+# Side Effects: delete file(s) and the directorie(s).
+# Return Value: none
+sub delete_listinfo
+{
+    my ($self, $curproc, $command_context, $params) = @_;
+    my $config       = $curproc->config();
+    my $template_dir = $config->{ listinfo_template_dir };
+    my $listinfo_dir = $config->{ listinfo_dir };
+
+    use DirHandle;
+    my $dh = new DirHandle $template_dir;
+    if (defined $dh) {
+	my $file = '';
+
+      FILE:
+	while (defined($file = $dh->read)) {
+	    next FILE if $file =~ /^\./o;
+	    next FILE if $file =~ /^CVS/o;
+
+	    use File::Spec;
+	    my $dst = File::Spec->catfile($listinfo_dir, $file);
+	    $curproc->ui_message("removing $dst");
+	    unlink $dst;
+	    if (-f $dst) {
+		$curproc->logerror("cannot remove $dst");
+	    }
+	}
+    }
+
+    if (-d $listinfo_dir) {
+	$curproc->ui_message("removing $listinfo_dir");
+	rmdir($listinfo_dir);
+	if (-d $listinfo_dir) {
+	    $curproc->logerror("cannot remove $listinfo_dir");
 	}
     }
 }
@@ -680,10 +764,13 @@ sub install_createonpost
     for my $file (qw(include include-ctl include-error)) {
 	my $dst = File::Spec->catfile($ml_home_dir, $file);
 	unlink($dst);
+	if (-f $dst) {
+	    $curproc->logerror("cannot remove $dst");
+	}
     }
 
     # 3. reset include file.
-    #    set up a virtual fml process "createonpost", 
+    #    set up a virtual fml process "createonpost",
     #    which receives all incoming messages and processes them for all ML's.
     my $include = File::Spec->catfile($ml_home_dir, "include");
     my $prefix  = $curproc->executable_prefix();
