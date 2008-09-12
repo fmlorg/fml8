@@ -136,6 +136,14 @@ anonymous_cgi_base_dir	= $fml_owner_home_dir/public_html/cgi-bin/anonymous
 ml_anonymous_cgi_base_dir	= $anonymous_cgi_base_dir/$ml_domain/$ml_name
 
 
+# Descriptions: このＭＬの一般人向け CGI を置く URL のベース。
+#               注意: ドメインごと、ＭＬごとに別のディレクトリになる。
+#      History: 4.0 にはなし
+#        Value: DIR
+#     Examples: /~fml/cgi-bin/anonymous/fml.org/elena
+ml_anonymous_cgi_base_url = /~$fml_owner/cgi-bin/anonymous/$ml_domain/$ml_name
+
+
 =head2	管理用 CGI 一時領域
 
 
