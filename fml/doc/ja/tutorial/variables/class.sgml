@@ -974,6 +974,7 @@ _dir$ {
           $isolated_queue_dir
           $listinfo_base_dir
           $listinfo_dir
+          $listinfo_template_base_dir
           $listinfo_template_dir
           $ml_admin_cgi_base_dir
           $shared_db_dir

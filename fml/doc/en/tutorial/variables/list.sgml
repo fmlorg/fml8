@@ -1445,6 +1445,15 @@ $listinfo_base_dir/$ml_domain/$ml_name
 </row>
 <row>
 <entry>
+listinfo_template_base_dir</entry>
+<entry>
+ listinfo template template dir</entry>
+<entry>
+$fml_share_dir/listinfo
+   </entry>
+</row>
+<row>
+<entry>
 listinfo_template_dir</entry>
 <entry>
  listinfo template</entry>
