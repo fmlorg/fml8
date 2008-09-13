@@ -182,6 +182,13 @@ command_mail_line_length_limit	=	128
 =head2	CGI
 
 
+# Descriptions: listinfo template template dir
+#      History: /usr/local/fml/listinfo/
+#        Value: DIR
+#     Examples: /usr/local/share/fml/$fml_version/listinfo
+listinfo_template_base_dir	= $fml_share_dir/listinfo
+
+
 # Descriptions: listinfo template
 #      History: /usr/local/fml/listinfo/
 #        Value: DIR
