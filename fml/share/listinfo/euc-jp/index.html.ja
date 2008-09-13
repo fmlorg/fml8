@@ -17,9 +17,16 @@ __ml_name__@__ml_domain__ ML listinfo
 </CENTER>
 
 
-<A HREF="mailto:__ml_name__@__ml_domain__?body=subscribe">
-__ml_name__@__ml_domain__
+<!-- GUIDE_BEGIN -->
+
+<!-- GUIDE_END   -->
+
+
+<!-- SUBMIT_CGI_BEGIN -->
+<A HREF="/~__fml_owner__/cgi-bin/anonymous/__ml_domain__/__ml_name__/submit.cgi">
+ＭＬへの入会、退会はこちらから
 </A>
+<!-- SUBMIT_CGI_END   -->
 
 
 <!-- =================================================================== -->
