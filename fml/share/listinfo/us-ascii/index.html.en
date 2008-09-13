@@ -1,0 +1,34 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>
+__ml_name__@__ml_domain__ ML listinfo
+</TITLE>
+<META http-equiv="Content-Type"
+	content="text/html; charset=US-ASCII">
+</HEAD>
+
+<BODY BGCOLOR="#E6E6FA">
+
+<CENTER>
+<B>
+__ml_name__@__ml_domain__ ML listinfo
+</B>
+</CENTER>
+
+
+<!-- GUIDE_BEGIN -->
+
+<!-- GUIDE_END   -->
+
+
+<!-- SUBMIT_CGI_BEGIN -->
+<A HREF="/~__fml_owner__/cgi-bin/anonymous/__ml_domain__/__ml_name__/submit.cgi">
+Click here to subscribe or unsubscribe.
+</A>
+<!-- SUBMIT_CGI_END   -->
+
+
+<!-- =================================================================== -->
+</BODY>
+</HTML>
