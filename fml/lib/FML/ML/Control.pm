@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.19 2008/09/10 11:00:59 fukachan Exp $
+# $FML: Control.pm,v 1.20 2008/09/12 11:43:03 fukachan Exp $
 #
 
 package FML::ML::Control;
@@ -641,9 +641,30 @@ delete listinfo files and the directories.
 sub setup_listinfo
 {
     my ($self, $curproc, $command_context, $params) = @_;
+    my $config = $curproc->config();
+
+    my $list = $config->get_as_array_ref('template_file_charset_select_list');
+    for my $charset (@$list) {
+	$self->_setup_listinfo($curproc, $command_context, $params, $charset);
+    }
+}
+
+
+# Descriptions: set up charset specific listinfo.
+#    Arguments: OBJ($self)
+#               OBJ($curproc)
+#               OBJ($command_context)
+#               HASH_REF($params)
+#               STR($charset)
+# Side Effects: create file(s) and the directorie(s).
+# Return Value: none
+sub _setup_listinfo
+{
+    my ($self, $curproc, $command_context, $params, $charset) = @_;
     my $config       = $curproc->config();
-    my $template_dir = $config->{ listinfo_template_dir };
+    my $base_dir     = $config->{ listinfo_template_base_dir };
     my $listinfo_dir = $config->{ listinfo_dir };
+    my $template_dir = File::Spec->catfile($base_dir, $charset);
 
     unless (-d $listinfo_dir) {
 	$curproc->mkdir($listinfo_dir, "mode=public");
@@ -667,6 +688,9 @@ sub setup_listinfo
 	    $self->_install($src, $dst, $params);
 	}
     }
+    else {
+	$curproc->logerror("cannot opendir $template_dir");
+    }
 }
 
 
@@ -680,9 +704,30 @@ sub setup_listinfo
 sub delete_listinfo
 {
     my ($self, $curproc, $command_context, $params) = @_;
+    my $config = $curproc->config();
+
+    my $list = $config->get_as_array_ref('template_file_charset_select_list');
+    for my $charset (@$list) {
+	$self->_delete_listinfo($curproc, $command_context, $params, $charset);
+    }
+}
+
+
+# Descriptions: unsetup listinfo file(s) and directories.
+#    Arguments: OBJ($self)
+#               OBJ($curproc)
+#               OBJ($command_context)
+#               HASH_REF($params)
+#               STR($charset)
+# Side Effects: delete file(s) and the directorie(s).
+# Return Value: none
+sub _delete_listinfo
+{
+    my ($self, $curproc, $command_context, $params, $charset) = @_;
     my $config       = $curproc->config();
-    my $template_dir = $config->{ listinfo_template_dir };
+    my $base_dir     = $config->{ listinfo_template_base_dir };
     my $listinfo_dir = $config->{ listinfo_dir };
+    my $template_dir = File::Spec->catfile($base_dir, $charset);
 
     use DirHandle;
     my $dh = new DirHandle $template_dir;
