@@ -45,6 +45,33 @@
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
 
+2008/09/14
+
+   FML::Process::Utils 
+	define ml_name_list(), which returns the list of valid ml in the
+	specified domain.
+	fix documents and todo.
+	
+   FML::ML::Control 
+	fix admin.cgi removing operation bug.
+	count up the number of valid ml,
+	remove admin.cgi only if ensured that no more valid ml exists.
+
+2008/09/13
+
+   variables
+	define $listinfo_template_base_dir
+
+   template files
+	share/listinfo/euc-jp/index.html.ja 
+	change default url for submission of subscribe/unsubscribe request.
+	mailto:... -> ::...::submit.cgi
+	
+	share/listinfo/euc-jp/index.html.en aded.
+
+   FML::ML::Control 
+	listinfo operations fixed::install and deinstall index.html.{ja,en}.
+
 2008/09/12
 
    variables
@@ -10426,4 +10453,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.310 2008/09/10 22:32:27 fukachan Exp $
+$FML: CHANGES.txt,v 1.311 2008/09/12 12:40:11 fukachan Exp $
