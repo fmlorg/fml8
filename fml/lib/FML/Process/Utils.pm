@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.152 2008/07/20 00:38:53 fukachan Exp $
+# $FML: Utils.pm,v 1.153 2008/09/09 09:47:57 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -846,14 +846,15 @@ sub unique
 
 =head2 ml_home_dir_deleted_path($ml_home_prefix, $ml_name)
 
-return ml_home_dir to be removed.
+return ml_home_dir to be removed. If mupltiple directories are
+matched, return the latest removed one by using
+ml_home_dir_find_latest_deleted_path().
+
+=head2 ml_home_dir_find_latest_deleted_path($ml_home_prefix, $ml_name)
+
+find the latest removed ml_home_dir and return it.
 
 =cut
-
-
-#
-# XXX-TODO: when we remove twice a day ?
-#
 
 
 # Descriptions: return ml_home_dir to be removed.
@@ -995,6 +996,44 @@ sub _mtime
     my $p  = File::Spec->catfile($prefix, $x);
     my $st = stat($p);
     return $st->mtime;
+}
+
+
+# Descriptions: return the list of valid ml_name(s) in the specified domain.
+#    Arguments: OBJ($curproc) STR($ml_domain)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub ml_name_list
+{
+    my ($curproc, $ml_domain) = @_;
+    my ($ml_domain_base_dir)  = $curproc->ml_home_prefix($ml_domain);
+    my (@r_list) = ();
+
+    use DirHandle;
+    my $dh = new DirHandle $ml_domain_base_dir;
+    if (defined $dh) {
+	my $entry;
+
+      ENTRY:
+	while ($entry = $dh->read()) {
+	    next ENTRY if $entry =~ /^\./;
+	    next ENTRY if $entry =~ /^\@/;
+
+	    my $config_cf = File::Spec->catfile($ml_domain_base_dir, 
+						$entry, 
+						"config.cf");
+	    if (-f $config_cf) {
+		push(@r_list, $entry);
+	    }
+	}
+
+	$dh->close();
+    }
+    else {
+	$curproc->logerror("cannot opendir $ml_domain_base_dir");
+    }
+
+    return(\@r_list);
 }
 
 
