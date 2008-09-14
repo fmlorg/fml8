@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.20 2008/09/12 11:43:03 fukachan Exp $
+# $FML: Control.pm,v 1.21 2008/09/13 10:53:15 fukachan Exp $
 #
 
 package FML::ML::Control;
@@ -495,7 +495,14 @@ sub delete_cgi_interface
     my ($self, $curproc, $command_context, $params) = @_;
     my $config = $curproc->config();
 
-    $self->_cgi_setup($curproc, $params, "deinstall", "admin");
+    my $valid_ml_list = $curproc->ml_name_list();
+    my $num_ml_list   = $#$valid_ml_list + 1;
+
+    # XXX already ml_home_dir is removed. so, th null list means no valid ml.
+    unless (@$valid_ml_list) {
+	# no more valid ml. so, remove admin.cgi, too. 
+	$self->_cgi_setup($curproc, $params, "deinstall", "admin");
+    }
     $self->_cgi_setup($curproc, $params, "deinstall", "ml-admin");
     $self->_cgi_setup($curproc, $params, "deinstall", "ml-anonymous");
 }
