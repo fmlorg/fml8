@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.21 2008/09/13 10:53:15 fukachan Exp $
+# $FML: Control.pm,v 1.22 2008/09/14 11:45:39 fukachan Exp $
 #
 
 package FML::ML::Control;
@@ -495,16 +495,44 @@ sub delete_cgi_interface
     my ($self, $curproc, $command_context, $params) = @_;
     my $config = $curproc->config();
 
-    my $valid_ml_list = $curproc->ml_name_list();
-    my $num_ml_list   = $#$valid_ml_list + 1;
+    # XXX delete scripts in the reverse order of creation.
+    $self->_cgi_setup($curproc, $params, "deinstall", "ml-anonymous");
+    $self->_cgi_setup($curproc, $params, "deinstall", "ml-admin");
 
     # XXX already ml_home_dir is removed. so, th null list means no valid ml.
-    unless (@$valid_ml_list) {
-	# no more valid ml. so, remove admin.cgi, too. 
+    if ($self->get_force_mode()) {
 	$self->_cgi_setup($curproc, $params, "deinstall", "admin");
     }
-    $self->_cgi_setup($curproc, $params, "deinstall", "ml-admin");
-    $self->_cgi_setup($curproc, $params, "deinstall", "ml-anonymous");
+    else {
+	my $valid_ml_list = $curproc->ml_name_list();
+	my $num_ml_list   = $#$valid_ml_list + 1;
+	unless (@$valid_ml_list) {
+	    # no more valid ml. so, remove admin.cgi, too. 
+	    $self->_cgi_setup($curproc, $params, "deinstall", "admin");
+	}
+    }
+}
+
+
+# Descriptions: set flag of "force mode".
+#    Arguments: OBJ($self)
+# Side Effects: update $self
+# Return Value: none
+sub set_force_mode
+{
+    my ($self) = @_;
+    $self->{ _is_forced_mode } = 1;
+}
+
+
+# Descriptions: get flag of "force mode".
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub get_force_mode
+{
+    my ($self) = @_;
+    $self->{ _is_forced_mode } || 0;
 }
 
 
