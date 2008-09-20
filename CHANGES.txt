@@ -45,6 +45,15 @@
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
 
+2008/09/15
+
+   FML::ML::Control 
+	delete scripts in the reverse order of creation.
+	define {get,set}_force_mode().
+	
+   FML::Command::Admin::{newcgi,rmcgi}
+	install/deinstall all CGI scripts for the specified domain.
+
 2008/09/14
 
    FML::Process::Utils 
@@ -10453,4 +10462,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.311 2008/09/12 12:40:11 fukachan Exp $
+$FML: CHANGES.txt,v 1.312 2008/09/14 12:12:35 fukachan Exp $
