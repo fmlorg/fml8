@@ -1,5 +1,5 @@
 <!--
-   $FML: cgi.sgml,v 1.9 2005/06/25 15:11:37 fukachan Exp $
+   $FML: cgi.sgml,v 1.10 2008/08/19 07:11:02 fukachan Exp $
 -->
 
 
@@ -20,24 +20,36 @@ CGI の内部構造については
 </para>
 
 <para>
+デフォルトの &fml8; では、
 <link linkend="setup.apache.suexec">
 apache で suexec を使う
 </link>
 ことを前提としています。
+つまり http://mail.example.org/~fml/cgi-bin/.../config.cgi などといった
+URL を使うつもりでいます。
 </para>
 
 <para>
-現在、ＭＬごとの CGI およびドメイン全体を管理する CGI が用意されていま
-す。このインターフェイスで、ユーザの追加、削除、メンバーリストやログの
-閲覧などが可能ですが、CGI からの設定変更インターフェイス( config.cf の
-編集機能)が中途半端です。
+ＭＬごとの管理用 CGI、
+ドメイン全体を管理する CGI
+一般ユーザ向けの subscribe/unsubscribe リクエストを申請してもらう CGI (
+2008/09/09 以降)
+の３種類が用意されています。
 </para>
 
+<para>
+管理用 CGI インターフェイスでは、ユーザの追加、削除、メンバーリストや
+ログの閲覧などが可能ですが、CGI からの設定変更インターフェイス(
+config.cf の編集機能)が中途半端です。
+</para>
+
+<!--
 <para>
 なお、CGI から設定変更を行なう場合でも、メールサーバとして Postfix や 
 qmail を使っているなら、CGI 用の特別な「メールサーバの設定変更」は不要
 です。
 </para>
+-->
 
 </warning>
 
@@ -48,35 +60,51 @@ qmail を使っているなら、CGI 用の特別な「メールサーバの設定変更」は不要
 	</title>
 
 <para>
-makefml newml を実行するとデフォルトで config.cgi などの CGI スクリプ
-トが ~fml/public_html/ 以下に用意されています。この CGI は二種類あり、
-ドメイン全体を管理する CGI と、それぞれのＭＬを管理する CGI があります。
+makefml newml を実行すると、
+CGI スクリプトが ~fml/public_html/ 以下に作成されます。
+</para>
+
+<para>
+この CGI は前述のように３種類あります。
+管理用の二種類には
+ドメイン全体を管理する CGI と、
+それぞれのＭＬを管理する CGI があり、それぞれの次のパスに作成されます。
 <screen>
 そのドメインのＭＬ全部の管理者用
-~fml/public_html/fml/ドメイン/admin/config.cgi
+~fml/public_html/cgi-bin/fml/ドメイン/admin/config.cgi
 
 ＭＬごとの管理者用
-~fml/public_html/fml/ドメイン/ml-admin/ＭＬ名/config.cgi
+~fml/public_html/cgi-bin/fml/ドメイン/ml-admin/ＭＬ名/config.cgi
+</screen>
+一般ユーザ向けの CGI は、
+WWW サーバの設定で ACL が書きやすいように、
+わざと別のパスに作成しています。
+<screen>
+~fml/public_html/cgi-bin/anonymous/ドメイン/ＭＬ名/submit.cgi
 </screen>
 </para>
 
 <para>
-例えば、elena@fml.org ＭＬを作成すると
-fml.org の全ＭＬを管理する CGI スクリプト
+例えば、elena@fml.org ＭＬを作成すると次の３つが作成されます。
 <screen>
-http://lists.fml.org/~fml/cgi-bin/fml/ドメイン/admin/config.cgi
+○ fml.org の全ＭＬを管理する CGI スクリプト
 
+http://lists.fml.org/~fml/cgi-bin/fml/ドメイン/admin/config.cgi
 例
 http://lists.fml.org/~fml/cgi-bin/fml/fml.org/admin/config.cgi
-</screen>
-と elena ML だけを管理する CGI スクリプト
-<screen>
-http://lists.fml.org/~fml/cgi-bin/fml/ドメイン/ml-admin/ＭＬ名/config.cgi
 
+○ elena@fml.org ML だけを管理する CGI スクリプト
+
+http://lists.fml.org/~fml/cgi-bin/fml/ドメイン/ml-admin/ＭＬ名/config.cgi
 例
 http://lists.fml.org/~fml/cgi-bin/fml/fml.org/ml-admin/elena/config.cgi
+
+○ elena@fml.org ＭＬへの入会・退会用申請 CGI スクリプト
+
+http://lists.fml.org/~fml/cgi-bin/anonymous/ドメイン/submit.cgi
+例
+http://lists.fml.org/~fml/cgi-bin/anonymous/fml.org/elena/submit.cgi
 </screen>
-の両方が makefml により用意されます。
 </para>
 
 <para>
@@ -86,10 +114,30 @@ http://lists.fml.org/~fml/cgi-bin/fml/fml.org/ml-admin/elena/config.cgi
 </sect1>
 
 
+<sect1 id="setupcgi.authentication">
+	<title>
+	認証: どうすればよいのですか？
+	</title>
+
+<para>
+WWW サーバの認証システムにおんぶにだっこです。
+</para>
+
+<para>
+もう少し、設定支援コマンドがあるべきですね。
+</para>
+
+</sect1>
+
+
 <sect1 id="setupcgi.htaccess">
 	<title>
-	.htaccess を編集する
+	認証: .htaccess を編集する
 	</title>
+
+<para>
+デフォルトでは、とりあえず潰してありますので、適切に設定して下さい。
+</para>
 
 <para>
 デフォルトでは、CGI のアクセスを拒否するようにドメイン単位で
@@ -131,10 +179,11 @@ require valid-user
 
 <warning>
 <para>
-(当たり前ですが)このファイルを消すと、誰でもアクセスできるようになりま
-す。デバッグする場合はともかく、そういう裏技は使わないようにしましょう;-)
-また、そういうデバッグなんて時に限って、そのまま再設定し忘れたりするも
-のなので、しない方が良いです。きちんと .htaccess を設定しましょう。
+(当たり前ですが)この .htaccess ファイルを消すと、誰でもアクセスできる
+ようになります。デバッグする場合は便利ですが、そういう裏技は使わないよ
+うにしましょう;-)また、そういうデバッグなんて時に限って、そのまま再設
+定し忘れたりするものなので、しない方が良いです。きちんと .htaccess を
+設定しましょう。
 </para>
 </warning>
 
@@ -143,14 +192,14 @@ require valid-user
 
 <sect1 id="setupcgi.admin.cgi.overview">
 	<title>
-	例: ドメインマスタ CGI の画面
+	管理用 CGI の例: ドメインマスタ CGI の画面
 	</title>
 
 <para>
 この CGI は
 「makefml を実行できる権限を与えても良いけれど、
 でも、UNIX のコマンドラインを使うのがちょっと辛い」
-という人を想定しています。
+という人を想定し、あるドメイン全体を操作できる権限を与えています。
 よって、ＭＬの作成などができるわけですが、
 makefml のすべての機能が使えるわけでもありません。 
 </para>
@@ -158,7 +207,7 @@ makefml のすべての機能が使えるわけでもありません。
 <para>
 画面を見るとわかる通り、
 CGI で可能な項目は makefml のサブセットとなっています。
-なお、使用可能なコマンドは最初の画面にヘルプとして表示されています。
+使用可能なコマンドは最初の画面にヘルプとして表示されているものだけです。
 <screen>
 例: CGI トップ画面
 
@@ -198,7 +247,7 @@ options Language:    list        アドレスリストを見る
 
 <sect1 id="setupcgi.admin.cgi.newml">
 	<title>
-	CGI の使い方の例: ＭＬの作成
+	管理用 CGI の使い方: 例: ＭＬの作成
 	</title>
 
 <para>
@@ -221,7 +270,7 @@ ML 名を選択する必要はありません:)
 
 <sect1 id="setupcgi.admin.cgi.subscribe">
 	<title>
-	CGI の使い方の例: メンバー登録
+	管理用 CGI の使い方: 例: メンバー登録
 	</title>
 
 <para>
@@ -244,7 +293,7 @@ submit ボタンを押して下さい。
 
 <sect1 id="setupcgi.admin.cgi.skin">
 	<title>
-	CGI スキンの選択
+	管理用 CGI スキンの選択
 	</title>	
 
 <para>
@@ -259,12 +308,111 @@ config.cgi では TABLE と SELECT が基本です。
 </screen>
 </para>
 
-</sect1>
-
+<para>
+TODO: cookie で設定を覚えておくようにしようと考えています。
+</para>
 
 <!--
 	XXX-TODO: wizard.cgi があるといいかもね
 -->
+
+
+</sect1>
+
+
+<sect1 id="setupcgi.anonymous.cgi.overview">
+	<title>
+	一般ユーザ用 CGI 
+	</title>
+
+<para>
+&fml8; を使ったＭＬへの入会/退会(subscribe/unsubscribe)は、
+元々
+<link linkend="fml.command.bymail">
+メールベースのシステム
+</link>
+です。
+</para>
+
+<para>
+このコマンドメールによる入会/退会(subscribe/unsubscribe)の最初のフェイ
+ズだけは CGI でも出来るようにしました。
+CGI だけで入会/退会が出来るとセキュリティ面でもよろしくないので、
+<screen>
+(1) 最初は CGI から申請、
+(2) メールで confirmation を送る、
+(3) メールで confirmation が返ってきたら OK
+</screen>
+としています。
+</para>
+
+<para>
+何のことはない、最初のところが「subscribe というメールを出して下さい」
+から「この CGI でメールアドレスを入力して下さい」に変わっただけですね？
+</para>
+
+<para>
+なお、この CGI には、SPAM よけの”おまじない”として、メールアドレスを
+魔法の文字列の２つをセットで入力してもらうようにしてあります。
+「ゆがんだ文字列を認識できるのは機械ではなく人間に違いない」(image
+verification)です。
+</para>
+
+<para>
+ま、気休めですけどね。
+どうせ、このあとメールによる confirmation もあるので、
+あまり気にしないでよいでしょう。 
+</para>
+
+<para>
+しょせん CGI などメールによる confirmation システムの wrapper にすぎな
+いという位置付けです。単体では動作させません。
+そのため、一般ユーザ用の CGI は、すべてのこの image verification で申
+請を出してもらうようにして、パスワード認証などといった面倒なシステムは
+廃しています。
+</para>
+
+
+<sect2>
+	<title>
+	議論: 一般ユーザ用にパスワード認証させるのってどうよ？
+	</title>
+
+<para>
+ユーザにパスワードを入れさせるＭＬシステムもありますが、
+私はパスワードを覚えていたためしがありません。
+あんな仕様は危ないだけです。
+</para>
+
+<para>
+一般ユーザがＭＬ関連の操作をすることは数カ月から数年に一回しかありません。
+だから、パスワードを設定しても次回まで覚えていることがないのです。
+</para>
+
+<para>
+また、そういったシステムでは、パスワードを忘れた場合に再送を依頼すると、
+メールで平文パスワードが送られてきたりする始末です。
+分かりにくいパスワードといえど、
+大抵個人的な情報を元にした連想だったりするので、
+そういったパスワードが平文でやりとりされるのは単体で危険といえるばかり
+でなく、それ以外のシステムへの危険性を増します。
+</para>
+
+<para>
+毎日使うようなシステム
+<footnote>
+<para>
+もちろんパスワード認証システムは、
+定期的に変えるよう強制もされることが望ましい。
+</para>
+</footnote>
+でないかぎり、パスワード認証法はセキュリティホールを作るだけです。
+</para>
+
+</sect2>
+
+
+</sect1>
 
 
 </chapter>
