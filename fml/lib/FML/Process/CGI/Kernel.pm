@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.91 2006/03/05 08:08:37 fukachan Exp $
+# $FML: Kernel.pm,v 1.92 2008/09/09 09:49:07 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -251,7 +251,7 @@ sub _set_anonymous_session_id
 
 =head2 verify_request()
 
-dummy method now.
+log client info.
 
 =head2 finish()
 
@@ -259,11 +259,34 @@ dummy method now.
 
 =cut
 
-# Descriptions: dummy.
+# Descriptions: log client info.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
-sub verify_request { 1;}
+sub verify_request
+{
+    my ($curproc) = @_;
+
+    # log client address by considering use of http proxy if could.
+    if (defined $ENV{ HTTP_VIA }) {
+	my $value = $ENV{ HTTP_X_FORWARDED_FOR } || undef;
+	if (defined $value) {
+	    my $via = $ENV{ HTTP_VIA } || '';
+	    $curproc->log("client: $value (via $via)");
+	}
+	else {
+	    my $value = $ENV{ HTTP_VIA } || '';
+	    $curproc->log("client: unknown via $value");	    
+	}
+    }
+    else {
+	my $client_addr = $ENV{ REMOTE_ADDR } || undef;
+	if (defined $client_addr && $client_addr) {
+	    $curproc->log("client: $client_addr");
+	}
+    }
+}
+
 
 # Descriptions: dummy.
 #    Arguments: OBJ($curproc)
