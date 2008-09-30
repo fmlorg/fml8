@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.92 2008/09/09 09:49:07 fukachan Exp $
+# $FML: Kernel.pm,v 1.93 2008/09/29 00:06:30 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -260,7 +260,7 @@ dummy method now.
 =cut
 
 # Descriptions: log client info.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub verify_request
