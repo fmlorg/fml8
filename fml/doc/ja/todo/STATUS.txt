@@ -1,4 +1,4 @@
-		STATUS: fml-devel で現在できること/できないこと
+		STATUS: fml8 で現在できること/できないこと
 		Last Modified: $Date$ (GMT)
 
 	* このドキュメントは"fml bible" の目次に沿って、fml version 8 で
@@ -99,6 +99,10 @@ II部　fmlのセットアップ〜MLの作成
 	[TODO]	Microsoft ものは IMail から手をつけるのがいいんじゃないかな
 	[TODO]	sendmail (NT版)を使ったＭＬ
 
+	[TODO]	IMAP4 でメールをダウンロードして fml を実行する。
+
+	[DONE]	POP3  でメールをダウンロードして fml を実行する。
+
 	なお fetchfml (POP/IMAP サーバからメールを取り出す MTA + MLエ
 	ミュレーション)により、メールサーバを立ち上げなくとも自宅でＭ
 	Ｌを実行すると行ったことが可能です。→ fetchfml の項目を検索
@@ -126,10 +130,14 @@ II部　fmlのセットアップ〜MLの作成
 8章　Unix上でのCGIのセットアップ
 
 	ＭＬ作成時にデフォルトで CGI スクリプトが用意されます。
+	＃ 別途 WWW サーバの設定(CGI および認証の設定)は必要です。
 
-	この時、無効の .htaccess を生成して、デフォルトでは CGI が動作
-	しないようになっています。
-	また、別途 WWW サーバの設定(CGI および認証の設定)が必要です。
+	＊注意＊
+	(1) そもそも WWW サーバのデフォルト設定では
+	     ~fml/cgi-bin が使えないはずです。
+
+	(2) ＭＬ作成時に、無効の .htaccess を生成して、デフォルトでは 
+	    CGI が動作できないようにしてあります。
 
 	[TODO] apache の設定見本を生成
 
@@ -149,6 +157,14 @@ II部　fmlのセットアップ〜MLの作成
 	[TODO] エラーフレームワーク
 		CGI からのエラーは __ERROR_.(キーワード)__ で croak() 
 		していますが、もう少し良いフレームワークがあるとよいです。
+
+	[TODO] 本当に必要？ anonymous CGI: IP を監視
+		失敗したら exponential back off 
+	
+	[TODO] 本当に必要？ anonymous CGI: 失敗したら exponential back off 
+		IP にかかわらず back off
+		source IP は参考にならないから
+
 
 
 9章　fmlの動作確認
@@ -173,11 +189,13 @@ III部　fmlのカスタマイズ
 	誰でも使えるコマンドの例 ($anonymous_command_mail_allowed_commands)
 		guide info add subscribe chaddr confirm
 
-	これらは FML::Command::User:: クラスで定義されています。
+	これらは「FML::Command::User::コマンド」クラスで定義されています。
+	fml8 ではコマンドごとに異なるファイルになります。特定のコマン
+	ドだけ改造することが容易になりました。
 
 	リモート管理のためのコマンドは別のクラスになっています。
 	利用可能なコマンドリストは $admin_command_mail_allowed_commands で、
-	モジュールの実体は FML::Command::Admin 以下にあります。
+	モジュールの実体は「FML::Command::Admin::コマンド」にあります。
 
 	なお、簡単なまとめおくりも可能です。
 
@@ -186,7 +204,8 @@ III部　fmlのカスタマイズ
 	により使う/使わないが指定できます(デフォルトは yes)。
 
 	まとめおくりは MIME/Multipart のみサポートしています。
-
+	複数の OS 環境を前提とした世界で MIME/Multipart 以外を使うのは
+	非現実的なので MIME/Multipart のみサポートするつもりです。
 
 	[TODO] get: ファイル数が多い場合、分割して送返(fml-devel 485)
 		reply_message() によろしくねーとしかしてないので、
@@ -194,8 +213,11 @@ III部　fmlのカスタマイズ
 
 11章　fml管理者ができること
 
-	makefml で操作可能な項目は FML::Command::Admin:: クラスの
-	コマンドすべてです。$admin_command_mail_allowed_commands は
+	CUI つまりコマンドラインでの操作について:
+
+	makefml で操作可能な項目は「FML::Command::Admin::コマンド」ク
+	ラスで用意されているコマンドすべてです。
+	$admin_command_mail_allowed_commands は
 	コマンドメールによるリモート管理に制限を加えますが、CUI
 	(makefml/fml)の動作には制限を加えていません。
 
@@ -256,7 +278,9 @@ III部　fmlのカスタマイズ
 		o.k. so, how to kick off removal process ?
 
 
-	[DONE]	動的にＭＬを作成する → CREATE-ON-POST 機能
+	[DONE]	動的にＭＬを作成する → 「CREATE-ON-POST 機能」を参照
+
+		ユーザが自由にＭＬを新規作成、メンバー追加が可能です。
 
 
 	[TODO]	期限つきの自動ＭＬ作成
@@ -265,8 +289,10 @@ III部　fmlのカスタマイズ
 		使われなくなったら(トラフィックがないなら)自動削除
 
 
-	[TODO]	期限つきのＭＬ作成 (トラフィック？日にちで有無をいわさず？)
+	[TODO]	期限つきのＭＬ作成
 
+		トラフィックが無くなってＮ日したら削除？
+		日にちで有無をいわさず削除？
 
 
 
@@ -288,12 +314,12 @@ III部　fmlのカスタマイズ
 
 	/usr/local/etc/fml/site_default_config.cf は、そのサーバの上で
 	動いているすべてのＭＬに同じ設定を強制します。これは fml4 の 
-	site_force.ph に相当するファイルです。
+	site_init.ph に相当するファイルです。
 
 	メニューによる設定支援ツール(CUI/GUI)は実装途中です。まだ実験
 	的なものしか動きません。
 
-	[TODO]	fml4 の site_init.ph にあたるものはありません。これ必要？
+	[TODO]	fml4 の site_force.ph にあたるものはありません。必要？
 
 		って必要なのかなぁ…？？？
 
@@ -368,7 +394,7 @@ III部　fmlのカスタマイズ
 
 	restrictionsと同様にメンバーリストも member_maps のように
 	複数かけることが前提です。*_restrictions と *_maps の細かな定
-	義を使うと特別な hack なしでもいろいろなことができます。
+	義を使うと特別な改造なしでもいろいろなことができます。
 
 	例: メールマガジン型
 		$member_maps から $primary_member_map をはずす。
@@ -409,7 +435,6 @@ III部　fmlのカスタマイズ
 		$subscribe_command_auth_type      = confirmation
 		$subscribe_command_operation_mode = manual
 
-
 	[DONE] モデレータ 
 
 		fml4 のタイプ 2 だけ実装しましたが 1 と 3 は未実装
@@ -419,13 +444,14 @@ III部　fmlのカスタマイズ
 		$maintainer_recipient_maps を定義すれば、
 		その管理者たちへ転送される。 
 
+	[DONE] qmail-ext を使ったコマンド e.g ML-subscribe@DOMAIN 可能
+
+	[削除] ＭＬ本体でコマンドメールも受けられる機能
+
 	[TODO] 登録と削除をまとめておこなう (コマンド一つ＋複数アドレス)
 
 	[TODO] listserv 風のコマンドアドレス
 
-	[DONE] qmail-ext を使ったコマンド e.g ML-subscribe@DOMAIN 可能
-
-	[削除] ＭＬ本体でコマンドメールも受けられる機能
 
 
 14章　ヘッダの書き換え
@@ -477,7 +503,7 @@ III部　fmlのカスタマイズ
 	4.0 の ContertFilter 相当機能は mime_component_filter です。
 		ファイル名は	/etc/fml/mime_component_filter
 		デフォルト値は  /etc/fml/mime_component_filter
-
+	
 	[TODO] 統計をとりたい(どのルールにどのくらい引っかかったか？)
 		
 	[TODO] 統計を見せるコマンド（必要？）
@@ -504,6 +530,38 @@ III部　fmlのカスタマイズ
 		Q: 古いメールは SPAM に違いない
 
 
+	[TODO] 添付ファイルをサイズでチェック 本当に必要？
+
+		mime component filter でこんな感じ？
+
+		# allow only text/plain messages.
+		text/plain	*		permit
+		text/html	*		reject
+		multipart/*	*;size<=1M	permit		<- ?
+		multipart/*	!text/plain	reject
+
+
+	[TODO]	mime component filter で添付ファイルを禁止する
+
+		こんなかんじ？
+
+		use_article_mime_component_filter       =       yes
+		article_mime_component_filter_rules     = 	ファイル
+
+		[ファイル]
+		multipart/*	*;name=.*\.exe 	reject
+		multipart/*	attachment	reject
+
+		もしくは、こんなの？
+
+		[config.cf]
+		article_mime_component_filter_rules     = 	ファイル
+							reject_attachment
+
+		article_mime_component_filter_unsafe_attachments = exe
+
+
+
 17章　トラフィックを制限する（メール爆弾対策）
 
 	コマンドメールで、コマンドごとのリクエスト数制限は実装されている。
@@ -512,6 +570,14 @@ III部　fmlのカスタマイズ
 		下準備はしてある → UDB 
 	
 	[TODO] トラフィックフィルタ自体は未実装
+
+	[TODO]	そもそも必要か？ トラフィックフィルタ
+		fml 4.0 の MTI 相当品のこと。 
+		単位時間あたりの投稿数を制限したい
+		単位時間あたりのコマンドメール数を制限したい
+		MTI のデータベースで dbmopen() 以外のものが使いたい
+		MTI の結果を他のプログラムでも使いたい
+		リモート管理者は MTI の対象にしない
 
 
 18章　リモート管理（メールでfmlを操作する）
@@ -524,8 +590,8 @@ III部　fmlのカスタマイズ
 
 	各ＭＬのホームディレクトリ/etc/passwd-admin
 		fml4 の etc/passwd は fml8 の etc/passwd-admin です。
-		フォーマットが微妙に違います（拡張されている）
-		操作ツール、コマンドは fml4 と同じです。
+		fml4 とはフォーマットが微妙に違います（拡張されている）
+		操作ツールやコマンドの使い方は fml4 と同じです。
 
 	[DONE] 共通鍵暗号認証
 
@@ -570,7 +636,7 @@ III部　fmlのカスタマイズ
 
 	簡易版のまとめおくりはサポートされている。
 
-	[TODO] fml 4 のような粒度の細かなまとめ送り
+	[削除] fml 4 のような粒度の細かなまとめ送り
 
 
 IV部　トラブルシューティング
@@ -608,16 +674,16 @@ V部　その他のトピック
 
 	[DONE] log suffix extension: log.YYYYMMDD とかは？
 
-	[TODO] スプールの圧縮
-
-	[TODO] スプールを tar などにまとめる (mode_archive)
-
 	[DONE] 古い記事の自動消去
 
 		use_article_expire = yes (デフォルトは no)
 
 		デフォルトのリミットは 90 日。	
 		article_expire_limit = 90d
+
+	[TODO] スプールの圧縮
+
+	[TODO] スプールを tar などにまとめる (mode_archive)
 
 	[TODO] 設定ファイルなどの RCS 管理
 
@@ -631,7 +697,7 @@ V部　その他のトピック
 		ml や ml-ctl 宛に来たメールにみんな返事を返すべきだ。
 		ただし、negative cache つきで（同じアドレスには一回し
 		か返事をしない)。コマンドじゃなくて変数でしょうねぇ。
-		デフォルトでは off (SPAM 対策）。
+		デフォルトでは off (SPAM 対策のため）。
 
 
 27章　エラーメールを自動解析する
@@ -656,24 +722,26 @@ V部　その他のトピック
 
 	手間は 4.0 とほとんど同じかな
 
-	[TODO] fml project 第５世代への移行ログを残すこと。	
+	[TODO] fml8 への移行ログを残すこと。	
 
 
 29章　バーチャルドメイン
 
-	デフォルトで考えてある。
+	[DONE] デフォルトで考えてある。
 
 
 VI部　fmlの内部構造と機能拡張
 
 30章　変数と関数
 
-	変数一覧は常に更新されている。fml8 チュートリアルを参照。
+	変数一覧は常に更新されている。
+
+	→ fml8 チュートリアルを参照。
 
 
 31章　リストファイルのフォーマット
 
-	fml8 チュートリアルを参照。
+	→ fml8 チュートリアルを参照。
 
 
 32章　fml.plプロセスの動作
@@ -713,7 +781,7 @@ VI部　fmlの内部構造と機能拡張
 
 35章　ケーススタディ：HOOKによる拡張
 
-	[レシピ] subject: によってフォワード先を変えられる？
+	[TODO] レシピ: Subject によってフォワード先を変えられる？
 
 
 VII部　Advanced Study
@@ -730,7 +798,11 @@ VII部　Advanced Study
 
 37章　配送の高速化について (+ 配送関係の TIPS )
 
-	[レシピ] フォワードする関数
+	[削除] Mail::Delivery の LMTP モード 
+		キュー管理しないといけない
+		→ 無駄に難しいので不要では？
+
+	[TODO] レシピ: フォワードする関数
 		multipart ということではなく、いきなり曲げる
 		宛先を変えるということか？
 
@@ -739,10 +811,6 @@ VII部　Advanced Study
 		それって、メール爆撃するあれか？ ;) 
 		text/plain を適当に切ると読めないような気がするが…
 
-	[削除] Mail::Delivery の LMTP モード 
-		キュー管理しないといけない
-		→ 無駄に難しいので不要では？
-
 	[TODO] outgoing address hack
 		SPAM 対策についてドキュメントを書く
 
@@ -750,7 +818,12 @@ VII部　Advanced Study
 
 
 38章　試論：現代的サーバデザインについて
+
+	「fml バイブル」を参照。
+
+
 VIII部　付録
+
 付録D　virus_check.phの例
 
 
@@ -763,10 +836,8 @@ VIII部　付録
 
 
         ********* ********* ********* ********* ********* ********* 
-	fml-devel 固有の TODO
+	fml8 固有の TODO
 
 
-
-
----
-$FML: STATUS.txt,v 1.42 2008/08/11 05:07:54 fukachan Exp $
+------------------------------------------------------------
+$FML: STATUS.txt,v 1.43 2008/08/13 09:25:13 fukachan Exp $

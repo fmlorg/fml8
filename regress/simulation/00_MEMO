@@ -19,7 +19,7 @@
 
 [TODO]	isolate queue
 
-	定期的に $isolated_queue_dir/YYYY/MM/DD へ移動。 
+	DONE: 定期的に $isolated_queue_dir/YYYY/MM/DD へ移動。 
 		
 	TODO; expire!
 
@@ -31,64 +31,25 @@
 	→ web で [subscribe/unsubscribe] をくりっくの URL とも整合性を
 
 
-[TODO] aonymous CGI: IP を監視し、失敗したら exponential back off 
+[TODO]	CGI の設定を動的に切替えられる
+		SKIN and Language
 
+	cookie で設定を覚えておかないといかんな。
 
-[TODO] CGI スクリプトの消去、再生成の方法は？
-
-	makefml COMMAND DOMAIN スタイル？
-
-	makefml rmcgi DOMAIN
-	makefml newcgi DOMAIN
-	makefml --force newcgi DOMAIN
-
-	makefml updatecgi DOMAIN		(必要か？)
-
-
-[DONE] web で [subscribe/unsubscribe] をクリック
-
-	受信者リストにあるか？否か？は確認しない (総辺り戦をされないように)
-		1. リクエストをうける
-		2. ゆがんだ文字を入力させる。
-		3. confirmation を送る。
-			不正アクセスの可能性を考えて、
-			念のため WWW クライアントの情報も送る。
-
-	~/public_html/fml/listinfo/DOMAIN/ML/index.html.{ja,en}
-		→
-	~/public_html/cgi-bin/anonymous/DOMAIN/ML/submit.cgi
-
-		→
-	バナー入力画面
-		→
-	~/public_html/cgi-bin/anonymous/DOMAIN/ML/submit.cgi
-		hidden otp=ABCD...Z
-		hideen mode=confirm
-		input banner=
-
-
-
-
-
-[TODO]	CGI は cookie をつかったほうがいいのかなぁ？
+	URL ごとにスキンがことなる、いまのほうしきでは、スキンが増える
+	たびに再インストールしないといけないし、めんどうだし、やめたい。
+	ま、ぷろとたいぷだから、ここは、すて↑
 
 	その場合、はじめから perl 5 についてるモジュールで GO
 
-	/usr/pkg/lib/perl5//5.8.0/CGI/eg/cookie.cgi
-	/usr/pkg/lib/perl5//5.8.0/CGI/Cookie.pm
+		/usr/pkg/lib/perl5//5.8.0/CGI/eg/cookie.cgi
+		/usr/pkg/lib/perl5//5.8.0/CGI/Cookie.pm
 
-	設定を覚えるためだけに
-
-
-[TODO]	CGI スキンを動的に切替えられる？
-
-		config.cgi -> menu.cgi
-
-	cookie で設定を覚えておかないといかんな。そうじゃないと、スキ
-	ンが増えるたびに再インストールしないといけないじゃないか。
+	設定を覚えるためだけに cookie ? いや、それはただしいだろ。
 
 
-[TODO] 無限 confirmation 問題(?)
+
+[TODO]	無限 confirmation 問題(?)
 
 	command_mail_restrictions =	reject_system_special_accounts 
 					permit_forward_to_moderator
@@ -99,58 +60,25 @@
 	confirm コマンドとして解釈されない（もういちど confirmation になる)
 
 
-[TODO]	command_args をあちこちで生書きしない。オブジェクトにすること
+[TODO]	command_context をあちこちで生書き換えしない。オブジェクト化。
 
-	cvs diff -ub -D 2006-03-01
-
-
-[TODO]	config tool
-
-	多言語サポート
-	GUI config
-
-
-[TODO]	メッセージを config する tool
-
-
-[TODO]	MTI トラフィックフィルタ → これって必要ですかね？
-
-	   単位時間あたりの投稿数を制限したい
-	   単位時間あたりのコマンドメール数を制限したい
-	   MTI のデータベースで dbmopen() 以外のものが使いたい
-	   MTI の結果を他のプログラムでも使いたい
-	   リモート管理者は MTI の対象にしない
+		FML/Article/Spool.pm
+		FML/CGI/User.pm
+		FML/Command/Admin/dir.pm
+		FML/Command/Admin/get.pm
+		FML/Command/Admin/moderate.pm
+		FML/Command/Admin/spool.pm
+		FML/Command/Admin/subscribe.pm
+		FML/Command/DirUtils.pm
+		FML/Command/SendFile.pm
+		FML/Command/User/confirm.pm
+		FML/Command/User/summary.pm
 
 
-[TODO] mime component filter で添付ファイルをサイズでチェック
-
-	# allow only text/plain messages.
-	text/plain	*		permit
-	text/html	*		reject
-	multipart/*	*;size<=1M	permit		<- ?
-	multipart/*	!text/plain	reject
+[TODO]	config tool: 多言語サポート (CUI)
 
 
-[TODO]	mime component filter で添付ファイルを禁止する
-
-	こんなかんじ？
-
-	use_article_mime_component_filter       =       yes
-	article_mime_component_filter_rules     = 	ファイル
-
-	[ファイル]
-
-		multipart/*	*;name=.*\.exe 	reject
-		multipart/*	attachment	reject
-
-	もしくは、こんなの？
-
-
-	article_mime_component_filter_rules     = 	ファイル
-							reject_attachment
-
-	article_mime_component_filter_unsafe_attachments = exe
-
+[TODO]	config tool: メッセージを編集するツール
 
 
 [TODO]	スレッド関連のモジュールとドキュメントを全部見直せよ
@@ -207,17 +135,17 @@
 ○ fml4 → fml8 コンバータの問題
 
 
-[TODO] ドキュメント: fml 4 to 8 の解説ってあってる？
+[TODO]	fml4 to fml8: ドキュメントの fml4 to fml8 の解説は正しい？
 
 
-[TODO] fml 4 to 8: $AUTO_REGISTRATION_TYPE
+[TODO]	fml4 to fml8: $AUTO_REGISTRATION_TYPE
 
 	subject body no-keyword
 
 	行ごとに解析する現在のコードには、うまくのらない。
 
 
-[TODO]	fml4 to fml8 コンバート (subject tag)
+[TODO]	fml4 to fml8: subject tag
 
 	    BRACKET
 	    STRIP_BRACKETS
@@ -229,7 +157,7 @@
 	    HML_FORM_LONG_ID
 
 
-[TODO]	fml4 to fml8 コンバート (mime component filter)
+[TODO]	fml4 to fml8: mime component filter
 
 	    CONTENT_HANDLER_CUTOFF_EMPTY_MESSAGE
 	    CONTENT_HANDLER_REJECT_EMPTY_MESSAGE
@@ -275,6 +203,7 @@
 
 
 [TODO]	FML::Command::Admin::dir
+
 	cgi_menu() ?
 	ディレクトリ listing してくれる perl module ないかな？
 
@@ -403,4 +332,4 @@
 	FML::Sys::Alias
 
 ----------
-$FML: 00_MEMO,v 1.135 2008/08/31 14:16:29 fukachan Exp $
+$FML: 00_MEMO,v 1.136 2008/09/09 11:22:58 fukachan Exp $
