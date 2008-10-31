@@ -45,6 +45,11 @@
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
 
+2008/09/29
+
+   FML::Process::CGI::Kernel 
+	verify_request() logs client ip address if could.
+
 2008/09/28
 
    documentation
@@ -10467,4 +10472,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.313 2008/09/20 11:19:55 fukachan Exp $
+$FML: CHANGES.txt,v 1.314 2008/09/28 11:16:39 fukachan Exp $
