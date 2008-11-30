@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.113 2006/01/09 14:00:54 fukachan Exp $
+# $FML: Switch.pm,v 1.114 2006/02/04 07:54:37 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -568,13 +568,15 @@ sub _program_subdir_match
     @n = reverse @n;
     @p = reverse @p;
     for (my $i = 0; $i <= $#n; $i++) {
-	if ($n[$i] eq $p[$i]) {
-	    $point += 2;
-	    $count++;
-	}
-	elsif ($n[$i] eq '*') {
-	    $point += 1;
-	    $count++;
+	if (defined $n[$i]) {
+	    if (defined $p[$i] && ($n[$i] eq $p[$i])) {
+		$point += 2;
+		$count++;
+	    }
+	    elsif ($n[$i] eq '*') {
+		$point += 1;
+		$count++;
+	    }
 	}
     }
 
