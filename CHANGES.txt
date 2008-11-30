@@ -45,6 +45,13 @@
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
 
+2008/11/30
+
+	開発環境を perl 5.10 ベースへ変更。
+
+   FML::Process::Switch 
+	defined() before eq
+	
 2008/09/29
 
    FML::Process::CGI::Kernel 
@@ -10472,4 +10479,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.314 2008/09/28 11:16:39 fukachan Exp $
+$FML: CHANGES.txt,v 1.315 2008/10/31 00:57:56 fukachan Exp $
