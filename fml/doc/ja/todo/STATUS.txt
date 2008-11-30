@@ -5,6 +5,8 @@
           何ができて何がまだできないかをリストアップしたものです。
 
 ○ 動作実績
+	perl 5.10.0  on NetBSD 2.0.2				*
+	perl 5.10.0  on NetBSD 2.0				*
 	perl 5.8.8   on NetBSD 2.0.2				
 	perl 5.8.5   on NetBSD 2.0				*
 	perl 5.6.1   on NetBSD 2.0				*
@@ -840,4 +842,4 @@ VIII部　付録
 
 
 ------------------------------------------------------------
-$FML: STATUS.txt,v 1.43 2008/08/13 09:25:13 fukachan Exp $
+$FML: STATUS.txt,v 1.44 2008/10/31 00:58:45 fukachan Exp $
