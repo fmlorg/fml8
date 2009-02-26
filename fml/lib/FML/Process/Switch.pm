@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006,2008,2009 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.114 2006/02/04 07:54:37 fukachan Exp $
+# $FML: Switch.pm,v 1.115 2008/11/30 00:50:07 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -627,7 +627,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006,2008,2009 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
