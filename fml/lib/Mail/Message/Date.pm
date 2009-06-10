@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 #
-# $FML: Date.pm,v 1.28 2004/07/23 13:10:42 fukachan Exp $
+# $FML: Date.pm,v 1.29 2005/05/27 03:03:42 fukachan Exp $
 #
 
 package Mail::Message::Date;
@@ -534,6 +534,7 @@ sub date_to_unixtime
     # calculate shift between local time and UTC
     $shift_t =~ s/^0*//o;
     $shift_m =~ s/^0*//o;
+    $shift_t = 0 unless $shift_t;
     $shift_m = 0 unless $shift_m;
     $shift   = $shift_t + ($shift_m/60);
     $shift   = ($pm eq '+' ? -1 : +1) * $shift;
