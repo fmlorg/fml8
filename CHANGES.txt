@@ -45,6 +45,12 @@
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
 
+
+2009/06/10
+
+   Mail::Message::Date 
+	bugfix case timezone +0000
+
 2008/11/30
 
 	開発環境を perl 5.10 ベースへ変更。
@@ -10479,4 +10485,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.315 2008/10/31 00:57:56 fukachan Exp $
+$FML: CHANGES.txt,v 1.316 2008/11/30 00:56:59 fukachan Exp $
