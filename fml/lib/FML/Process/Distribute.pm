@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2008 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.181 2008/07/19 12:27:59 fukachan Exp $
+# $FML: Distribute.pm,v 1.182 2008/07/20 09:15:55 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -379,6 +379,16 @@ sub finish
 	$curproc->logwarn("queue remains due to MTA fatal error.");
     }
 
+    unless ($curproc->is_refused()) {
+	my $article = $curproc->_build_article_object();
+ 	my $id = $article->increment_id;
+	if ($config->yes('use_html_archive')) {
+	    $curproc->log("htmlify article $id");
+	    $curproc->_htmlify();
+	    $curproc->logdebug("htmlify article $id end");
+    	}
+    }
+
     $curproc->_expire_article();
 
     $eval  = $config->get_hook( 'distribute_finish_end_hook' );
@@ -461,11 +471,6 @@ sub _deliver_article_prep
     # delivery starts !
     # $curproc->_deliver_article();
 
-    if ($config->yes('use_html_archive')) {
-	$curproc->log("htmlify article $id");
-	$curproc->_htmlify();
-	$curproc->logdebug("htmlify article $id end");
-    }
 }
 
 
