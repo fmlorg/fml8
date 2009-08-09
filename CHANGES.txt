@@ -45,6 +45,15 @@
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
 
+2009/08/08
+
+   fml-7.98.14-20090808.tar.gz built.
+
+2009/07/15
+
+   FML::Process::Distribute 
+	move calling _htmlify() from _deliver_article_prep() to finish()
+	
 2009/06/20
 
    fml-7.98.14-20090620.tar.gz built.
@@ -10488,4 +10497,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.317 2009/06/14 01:45:33 fukachan Exp $
+$FML: CHANGES.txt,v 1.318 2009/06/20 02:41:44 fukachan Exp $
