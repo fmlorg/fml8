@@ -1,5 +1,5 @@
 #
-# $FML: Makefile.template,v 1.8 2005/06/26 00:05:30 fukachan Exp $
+# $FML: Makefile.template,v 1.9 2005/11/19 03:40:41 fukachan Exp $
 #
 
 TMP_DIR     = ./tmp
@@ -10,6 +10,11 @@ BOOK        = tech
 BOOK_ID     = tips
 TARGET_HTML_DIR  = ../../../../Documentation/ja/$(BOOK)
 TARGET_TEXT_DIR  = ../../../../Documentation/ja/text
+
+# version replacement hack
+VERSION_REPLACE  = perl ../../../../fml/utils/bin/version_replace.pl 
+BOOK_INFO	 = include/bookinfo.sgml 
+BOOK_INFO_COOKED = include/bookinfo.sgml.cooked
 
 # programs (except for /bin/*)
 SGML_CC     = ../../../../fml/utils/bin/sgml_compile.sh
@@ -65,6 +70,7 @@ ps: _init
 clean:
 	$(FIND) . -type f -print |$(GREP) '~' |$(PERL) -nple unlink
 	rm -f book.txt book.html
+	rm -f $(BOOK_INFO_COOKED)
 	rm -fr $(SOURCE)
 
 export: _init html w3m
@@ -82,3 +88,6 @@ _init:
 	test -d $(TMP_DIR) || mkdir $(TMP_DIR)
 	perl ../../../../fml/utils/bin/listup_recipes.pl > tmp/lor.sgml.new
 	mv tmp/lor.sgml.new tmp/lor.sgml
+	test -f $(BOOK_INFO) && ( \
+		$(VERSION_REPLACE) $(BOOK_INFO) > $(BOOK_INFO_COOKED);\
+	)
