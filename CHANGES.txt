@@ -45,6 +45,28 @@
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
 
+2009/12/26
+
+    fml/utils/bin/version_replace.pl 
+	added: version replacement utility.
+
+    tutorial/Makefile.template
+	replace version in include/bookinfo.sgml always
+	using fml/utils/bin/version_replace.pl utility.
+	
+	catch up the change in clean and export rules.
+	
+    ja/tutorial/include/chapters.ent 
+	define bookinfo.cooked entity.
+	we use it as version-managed bookinfo.sgml.
+	
+    ja/tutorial/book.sgml 
+	use version managed bookinfo entity. clean up a little.
+	
+    ja/tutorial/
+	clean up a little ...
+
+
 2009/08/09
 
    fml-7.98.14-20090809.tar.gz built.
@@ -10497,4 +10519,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.319 2009/08/09 12:08:25 fukachan Exp $
+$FML: CHANGES.txt,v 1.320 2009/08/09 12:10:29 fukachan Exp $
