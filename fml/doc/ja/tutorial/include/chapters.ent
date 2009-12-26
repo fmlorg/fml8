@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.112 2006/01/19 14:33:17 fukachan Exp $
+	$FML: chapters.ent,v 1.113 2008/08/19 03:22:05 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -26,6 +26,8 @@
 <!entity sect.terms   SYSTEM "terms.sgml">
 <!entity list.recipes SYSTEM "tmp/lor.sgml">
 
+<!-- メタレベル modified by a program -->
+<!entity bookinfo.cooked SYSTEM "include/bookinfo.sgml.cooked">
 
 <!-- パート I: introduction 〜 インストール、テストまで -->
 <!entity chapter.overview.fml     SYSTEM "overview/fml.sgml">
