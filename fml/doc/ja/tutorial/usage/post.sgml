@@ -1,5 +1,5 @@
 <!--
-   $FML: post.sgml,v 1.10 2005/06/25 15:11:39 fukachan Exp $
+   $FML: post.sgml,v 1.11 2008/08/19 07:11:02 fukachan Exp $
 -->
 
 
@@ -11,6 +11,9 @@
 <para>
 elena@fml.org ＭＬ(fml.org の elena ＭＬ)への投稿は、
 普通にメールを elena@fml.org に送信することです。
+</para>
+
+<para>
 メールは MTA が受け、最終的に MTA は
 /usr/local/libexec/fml/distribute
 というコマンドを実行します。
@@ -95,9 +98,10 @@ symlink(2) で結ばれ、同一のファイルです。
 </para>
 
 <para>
-@INC を設定した後、loader (/usr/local/libexec/fml/distribute の実体) 
-は FML::Process::Switch をロードし、$0 を調べます。その名前から自分の
-仕事は配送処理だと知ります。
+@INC (Perl のライブラリサーチパス)を設定した後、
+loader (/usr/local/libexec/fml/distribute の実体) 
+は FML::Process::Switch をロードし、$0 (プロセス名)を調べます。
+その名前から自分の仕事は「配送処理」だと知ります。
 </para>
 
 <para>

@@ -1,5 +1,5 @@
 <!--
-   $FML: fml.sgml,v 1.1 2003/01/05 08:03:23 fukachan Exp $
+   $FML: fml.sgml,v 1.2 2004/10/06 09:07:43 fukachan Exp $
 -->
 
 
@@ -10,8 +10,8 @@
 
 <para>
 引数の順が異なることを除けば、
-fml (/usr/local/bin/fml)
-は makefml と全く同じです。 
+fml (/usr/local/bin/fml) コマンドは
+makefml コマンドと全く同じです。 
 単に、引数順の好き嫌いで使い分けて下さい。
 </para>
 

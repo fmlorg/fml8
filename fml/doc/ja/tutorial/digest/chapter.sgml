@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.sgml,v 1.8 2005/11/19 03:45:06 fukachan Exp $
+   $FML: chapter.sgml,v 1.9 2008/08/18 13:21:42 fukachan Exp $
 -->
 
 
@@ -9,16 +9,21 @@
 	</title>
 
 <para>
+記事の「まとめ送り」をするには、
 <screen>
 /usr/local/libexec/fml/digest ＭＬ名
 </screen>
-を定期的に cron から起動すれば、まとめ送りができます。
+を定期的に cron から実行して下さい。
 </para>
 
 <warning>
 <para>
-まだ、簡易版です。
 &fml4; のようなキメの細かい設定は出来ません。
+</para>
+
+<para>
+というより、
+&fml8; では、&fml4; のようなキメの細かい設定を実装する予定がありません。
 </para>
 </warning>
 
@@ -125,6 +130,10 @@ admin digest $address off
 digest on
 digest off
 </screen>
+</para>
+
+<para>
+(未実装)
 これは confirmation を返す。で、よい？
 </para>
 

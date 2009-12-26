@@ -1,5 +1,5 @@
 <!--
-   $FML: post_permit_anyone.sgml,v 1.9 2006/01/22 16:12:47 fukachan Exp $
+   $FML: post_permit_anyone.sgml,v 1.10 2008/08/18 02:23:59 fukachan Exp $
 -->
 
 
@@ -9,31 +9,31 @@
 	</title>
 
 <para>
-article_post_restrictions は記事の投稿を許すメンバーを定義しています。
-これを permit_anyone とすると、だれでも投稿可能になります。
+article_post_restrictions 変数は「記事の投稿を許すメンバー」を定義して
+います。これを permit_anyone とすると、だれでも投稿可能になります。
 <screen>
 article_post_restrictions = permit_anyone
 </screen>
 </para>
 
 <para>
-&fml4; と異なり、上のように書くと本当に「誰でも投稿可能」であることに
+&fml4; と異なり、上のように書くと本当に「誰でも投稿可能」となることに
 注意して下さい。
-*_restrictions には reject_system_special_accounts という root などを
-弾くルールが別途あります。デフォルトでは、それらを明示的に指定していま
-す(&fml4; では、このあたり曖昧でした)。
+*_restrictions 変数には reject_system_special_accounts という root な
+どを弾くルールが別途あります。デフォルトでは、それらを明示的に指定して
+います(&fml4; では、このあたり曖昧でした)。
 </para>
 
 <para>
-&fml4; のように、rootなどシステムの特別なアカウントは弾き、それ以外の
+&fml4; のように、root などシステムの特別なアカウントは弾き、それ以外の
 ユーザからのメールは受け付けるという場合、次のようにします。
 <screen>
 article_post_restrictions =	reject_system_special_accounts
 				permit_anyone
-
-注: 以前は reject でした。
-fml8 2008/08/17 以降のバージョンでは isolate (SPAM の隔離)が推奨です。
-
+</screen>
+注: 以前は reject でしたが、
+&fml8; 2008/08/17 以降のバージョンでは isolate (SPAM の隔離)が推奨です。
+<screen>
 article_post_restrictions =	isolate_system_special_accounts
 				permit_anyone
 </screen>
@@ -55,18 +55,18 @@ article_post_restrictions =	reject_system_special_accounts
 </para>
 
 <para>
-なお「rejectなになに」および「 permitなになに」という命令はマッチした
-ところで処理が終りに、マッチしない場合は次の条件を試すことになっていま
-す。
+なお「reject_なになに」および「permit_なになに」という命令は、マッチし
+たところで処理が終りになります。マッチしない場合には次の条件を試します。
 </para>
 
 <para>
-2008/08/17 以降のバージョンでは SPAM を隔離するのがデフォルトです。
+2008/08/17 以降のバージョンでは SPAM を隔離するのがデフォルトです
 <screen>
 article_post_restrictions =	isolate_system_special_accounts
 				permit_member_maps
 				isolate
 </screen>
+注: reject ではなく isolate となっている。
 </para>
 
 
@@ -104,13 +104,13 @@ article_post_restrictions       =       reject_system_special_accounts
 member_maps                     =       pcre:$ml_home_dir/sender.pcre
 
 [$ml_home_dir/domains]
-        \S+\@example.co.jp
+
+\S+\@example.co.jp
 </screen>
 </para>
 
 <para>
-注: fml8 2008/08/17 以降のバージョンでは isolate (SPAM の隔離)が推奨です。
-
+注: &fml8; 2008/08/17 以降のバージョンでは isolate (SPAM の隔離)が推奨です。
 <screen>
 [/var/spool/ml/elena/config.cf]
 
@@ -121,7 +121,8 @@ article_post_restrictions       =       isolate_system_special_accounts
 member_maps                     =       pcre:$ml_home_dir/sender.pcre
 
 [$ml_home_dir/domains]
-        \S+\@example.co.jp
+
+\S+\@example.co.jp
 </screen>
 
 </para>

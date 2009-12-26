@@ -1,5 +1,5 @@
 <!--
-   $FML: autoreply.sgml,v 1.6 2005/11/30 21:58:04 fukachan Exp $
+   $FML: autoreply.sgml,v 1.7 2008/08/18 02:23:59 fukachan Exp $
 -->
 
 
@@ -9,9 +9,9 @@
 	</title>
 
 <para>
-配送プロセス( libexec/distribute )を改造して
-/some/where/help ファイルを送り返すことを考えます。
-例えば help@fml.org ＭＬを作り、このアドレスにメールを送ると
+配送プロセス( /usr/local/libexec/fml/distribute )を改造し、
+どんなときでも /some/where/help ファイルを送り返すことを考えます。
+たとえば help@fml.org ＭＬを作り、このアドレスにメールを送ると
 (うむをいわさず:-)ヘルプファイルを送り返すというものです。
 </para>
 
@@ -46,9 +46,9 @@ $curproc->stop_this_process();
 </para>
 
 <para>
-ただ、身のある処理は何も実行されませんが、
+正確には「身のある処理は何も実行されません」が、
 reply_message() メソッドでメッセージキューに入れられたメッセージを
-送信する処理は行なわれるので、メッセージの送信が行なわれます。
+送信する処理は行なわれるので、メッセージの送信は行なわれます。
 </para>
 
 

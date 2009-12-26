@@ -1,16 +1,16 @@
 <!--
-    $FML: queue.sgml,v 1.8 2005/06/25 15:11:30 fukachan Exp $
+    $FML: queue.sgml,v 1.9 2008/08/18 13:21:42 fukachan Exp $
 -->
 
 
 <sect1 id="message.queue.incoming">
 	<TITLE>
-	fml がメールを読みこむ際のキューイング
+	&fml8; がメールを読みこむ際のキューイング
 	</TITLE>
 
 <para>
-fmlの各プロセスは MTA から起動され、STDIN(標準入力)からメールを読みこ
-みます。
+&fml8; (以下 fml)の各プロセスは MTA から起動され、STDIN(標準入力)から
+メールを読みこみます。
 </para>
 
 <para>
@@ -23,12 +23,13 @@ fml は、いったんメールを読みこみ、まずはディスクに書き込みます
 <para>
 もし、失敗した場合、exit(EX_TEMPFAIL)します。たいていの OS では 
 exit(75) です。このエラーコードをうけとると、MTA は一時的なエラーがお
-こったとみなすため、このメッセージの再送処理を試みてくれます。
+こったとみなすため、このメッセージの再送処理を試みてくれます(つまり、
+何分か後に、もう一度、最初から処理が試みられます)。
 </para>
 
 <para>
-失敗が一時的なディスク溢れ(file system full)なら、MTA の再送処理でリト
-ライが行なわれＭＬの処理が行なわれます。
+失敗が一時的なディスク溢れ(file system full)なら、
+MTA の再送処理でリトライが行なわれ、ＭＬの処理が行なわれます。
 ただ、ＭＬのスプールに用意したファイルシステムでのディスク溢れ(file
 system full)が一時的とは考えにくいので、システム管理者が気づかないと、
 ずっとエラーになり続ける可能性が高いと思います。
@@ -45,16 +46,16 @@ incoming queue の処理は Mail::Delivery::Queue を使い、ＭＬ固有の queue
 
 <sect1 id="message.queue.outgoing">
 	<TITLE>
-	fml からメールで返事を送り返す
+	&fml8; からメールで返事を送り返す
 	</TITLE>
 
 <para>
 送り返すべきメールは
 Mail::Delivery::Queue
-を使いＭＬ固有の queue に入れます。
-queue に入ったメールは、のちに
+を使いＭＬ固有のキューに入ります。
+キューに入ったメールは、のちに
 FML::Process::QueueManager
-クラス経由で(配送)処理をします。
+クラス経由で(配送)処理が行なわれます。
 </para>
 
 <para>
@@ -66,16 +67,16 @@ Mail::Delivery::Queue ベースのキューイング処理をしています。そのため、
 
 <sect2>
 	<title>
-	&fml8; の中では、どう書くのか？
+	&fml8; の中では送信処理をどのように書くのか？
 	</title>
 
 <para>
-あるメッセージ(テキストメッセージ)を送り返したい場合は、次のように書きます。
+あるメッセージ(テキストメッセージ)を送り返したい場合、次のように書きます。
 <screen>
 $curproc->reply_message( "you are not a ML member." );
 </screen>
-この場合の受信者はコマンドの結果などを受けとる人、
-&fml8; にリクエストをした人です。
+この場合の受信者は、投稿を拒否された人やコマンドの結果などを受けとる人、
+つまり &fml8; に何かの処理を要求した人です。
 </para>
 
 
@@ -105,15 +106,14 @@ $curproc->reply_message( {
 
 <sect1 id="message.queue">
 	<TITLE>
-	mail queue と配送の仕組み
+	&fml8; におけるメールキューと配送の仕組み
 	</TITLE>
 
 <para>
 FML::Process::QueueManager により
-特定の queue ファイルが queue ディレクトリから pickup され、
-Mail::Message で parse され、
-FML::Mailer 経由で
-Mail::Delivery が実際にメール配送処理をします。
+(1) 特定のキューファイルがメールキューディレクトリから pickup され、
+(2) Mail::Message で parse され、
+(3) FML::Mailer 経由で Mail::Delivery が実際のメール配送処理を行ないます。
 <screen>
 Mail::Delivery::Queue
    ↓
@@ -139,13 +139,13 @@ ATOMIC 操作を使って実装してもよいのですが、
 </sect1>
 
 
-<sect1>
+<sect1 id="message.queue.directory">
 	<TITLE>
-	mail queue ディレクトリ
+	メールキューディレクトリ
 	</TITLE>
 
 <para>
-queue ディレクトリは複数のディレクトリからなります。
+キューディレクトリは次のように複数のディレクトリからなります。
 <screen>
 new/
 active/
@@ -163,10 +163,16 @@ outgoing 用です。
 </para>
 
 <para>
-(outgoing の) queue ファイルを作る時は、一旦 new/ に作成します。
-queue ファイルを作る作業が終了し、配送準備 OK となったら
+outgoing の キューファイルを作る時は、一旦 new/ に作成します。
+キューファイルを作る作業が終了し、配送準備 OK となったら
 new/ から active/ に移動されます。
 つまり active/ にあるファイルは配送準備ができているものです。
+</para>
+
+<para>
+処理の途中でエラーが起こったら、new/ に残骸が残ります。
+定期的にゴミは消すようにしていますが、しばらくは残るわけです。
+そのあいだは救出するチャンスともいえますね。
 </para>
 
 <sect2>

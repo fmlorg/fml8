@@ -1,5 +1,5 @@
 <!--
-   $FML: post_check_article_thread.sgml,v 1.5 2005/12/14 12:43:52 fukachan Exp $
+   $FML: post_check_article_thread.sgml,v 1.6 2008/08/18 02:23:59 fukachan Exp $
 -->
 
 
@@ -60,12 +60,13 @@ article_post_restrictions       =       reject_system_special_accounts
                                         permit_member_maps
                                         reject
 </screen>
-もちろんデフォルトでは使いません。
-利用したい場合は、明示的に article_post_restrictions を変更して下さい。
+これをデフォルト設定にしておいたほうが便利な気もしますが、いまのところ、
+そういう設定になっていません。
+この機能を利用したい場合、明示的に article_post_restrictions を変更して下さい。
 </para>
 
 <para>
-注: fml8 2008/08/17 以降のバージョンでは isolate (SPAM の隔離)が推奨です。
+注: &fml8; 2008/08/17 以降のバージョンでは isolate (SPAM の隔離)が推奨です。
 <screen>
 article_post_restrictions       =       isolate_system_special_accounts
                                         check_article_thread
@@ -107,7 +108,7 @@ $article_post_article_thread_lifetime という変数で制御できるようにして
 スレッドの始まった時からＮ秒？
 それとも
 スレッドで最後に投稿された記事からＮ秒？
-どちらが妥当だろうか？
+どちらが妥当なのでしょうか？
 </para>
 
 <para>
@@ -146,11 +147,22 @@ $article_post_article_thread_lifetime という変数で制御できるようにして
 
 <question>
 <para>
-特定少数の人だけがスレッドをたてられるＭＬ
+特定少数の人だけがスレッドをたてられるＭＬ。
 </para>
+
 </question>
 
 <answer>
+
+<para>
+これ、モデレータシステムより便利だと思うのですが、どうでしょうか？
+</para>
+
+<para>
+たとえば次のような設定です。こうすると、疑似的に「スレッドをたてる小数
+の人(管理者) + スレッドへのリプライをする管理者以外の人たち」という運
+用になりますね。
+</para>
 
 <para>
 <screen>
@@ -159,43 +171,41 @@ member_maps			=       $tmp_dir/members-thread-init
 article_post_restrictions       =       reject_system_special_accounts
                                         check_article_thread
                                         permit_member_maps
-                                        reject
-
-注: fml8 2008/08/17 以降のバージョンでは isolate (SPAM の隔離)が推奨です。
+                                        isolate
 </screen>
-などと設定すると、疑似的に「スレッドをたてる小数の人(管理者) + スレッ
-ドへのリプライをする管理者以外の人たち」という運用になりますね。
+注: &fml8; 2008/08/17 以降のバージョンでは
+reject ではなく isolate (SPAM の隔離)が推奨です。
 </para>
 
 <para>
 まず members-thread-init に登録されている人だけは
-いつでも投稿ができます。これ以外のメンバーは、通常は投稿を拒否されます。
-しかし、これらの投稿されたにリプライをすると check_article_thread により
-投稿が許されるというわけです。
+「いつでも投稿」できます。これ以外のメンバーは、通常、投稿を拒否されます。
+しかし、投稿されたメールに返信をした場合にかぎり
+check_article_thread 命令で投稿が許されるという仕組みです。
 </para>
 
 <para>
 つまり、最初に管理者の人が話題をふる。その話題へのフォローだけはＭＬに
-流れる。ようするに、新規の話題は管理者の人しかふれない。
-モデレータ風だけど、ちっと違う感じです。
+流れる。ようするに、管理者の人だけが「新規の話題を紹介する」ことが出来
+る仕組みです。モデレータ風だけど、少し違う仕掛けです。
 </para>
 
 <para>
-いや、このほうがモデレータより簡単で便利だと思うんですが、どうですかね？
+このほうがモデレータより簡単で便利だと思うんですが、どうですかね？
 </para>
 
 <para>
-また、ネタふりをする人の認証も PGP のほうがより良いでしょう。
+また、ネタふりをする人の認証も PGP を使うとより良いです。
 <screen>
 member_maps			=       $tmp_dir/members-thread-init
 
 article_post_restrictions       =       reject_system_special_accounts
                                         check_article_thread
                                         check_pgp_signature
-                                        reject
-
-注: fml8 2008/08/17 以降のバージョンでは isolate (SPAM の隔離)が推奨です。
+                                        isolate
 </screen>
+注: &fml8; 2008/08/17 以降のバージョンでは
+reject より isolate (SPAM の隔離)が推奨です。
 </para>
 
 </answer>

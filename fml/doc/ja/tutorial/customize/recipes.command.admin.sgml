@@ -1,5 +1,5 @@
 <!--
- $FML: recipes.command.admin.sgml,v 1.1 2006/01/19 10:14:04 fukachan Exp $
+ $FML: recipes.command.admin.sgml,v 1.2 2008/08/18 02:23:59 fukachan Exp $
 -->
 
 <qandaset>
@@ -16,7 +16,7 @@ admin コマンドでＭＬの再初期化をしたい
 <answer>
 <para>
 そういう危ないことは出来ません。
-CUI を実行する権限のある人に頼んで下さい。
+makefml (CUI) を実行する権限のある人に頼んで下さい。
 </para>
 </answer>
 
@@ -40,6 +40,10 @@ admin コマンドでＭＬのメンバーリストを一気に削除/登録
 
 <para>
 実装する気はあります。考え中です。
+</para>
+
+<para>
+ようは「リスト.xls ファイルを、ぺしっとはるとかしたい」んですよね？
 </para>
 
 </answer>
@@ -83,7 +87,8 @@ FML::Restriction::Base をみてください。
 </para>
 
 <para>
-subscribe 可能な人を特定のドメインだけに限りたいといった機能は未実装です。
+subscribe 可能な人を特定のドメインだけに限りたいといった機能は未実装です(
+いや HOOK を使えば出来ますけど)。
 </para>
 
 </answer>

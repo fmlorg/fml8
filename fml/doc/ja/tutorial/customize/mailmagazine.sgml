@@ -1,5 +1,5 @@
 <!--
-   $FML: mailmagazine.sgml,v 1.8 2005/08/03 13:45:11 fukachan Exp $
+   $FML: mailmagazine.sgml,v 1.9 2008/08/18 02:23:59 fukachan Exp $
 -->
 
 
@@ -25,8 +25,8 @@ fml8 単体で処理できる
 <link linkend="config.post.check.pgp">
 PGP 認証
 </link>
-のほうがよい気がしますが、
-メールマガジンの担当者が PGP/GPG を使える必要があります。 
+が理想ですが、この場合、
+メールマガジンの担当者に PGP/GPG を使える技術力が要求されます。
 ここが PGP 話のネックです。
 </para>
 
@@ -34,49 +34,81 @@ PGP 認証
 
 
 <para>
-メールマガジンは投稿可能なメンバーリストをカスタマイズすることで行なえ
-ます。
+メールマガジンは
+「投稿可能なメンバーリストをカスタマイズ」することで行なえます。
 </para>
 
 <para>
-member_maps から $primary_member_map を抜き、
+$member_maps から $primary_member_map を抜き、
 代わりに投稿可能なメンバーのリスト(ここでは 
-$ml_home_dir/members-mailmag としましょう)を
-member_maps を追加します。
+$ml_home_dir/members-mailmag ファイルとしましょう)を
+$member_maps に追加します。
 <screen>
 member_maps	=	$ml_home_dir/members-mailmag
 </screen>
+このファイルに、メールマガジンの投稿者のアドレスを書いて下さい。
 </para>
 
 <para>
-なお subscribe コマンドの利用方法はデフォルトのままで構いません。
+なお subscribe コマンドの利用方法はデフォルトのままでかまいません。
 <footnote>
 <para>
-fml 4.0 のように subscribe コマンドの仕方を変更するといったやり方
-ではありません。
-メンバーの認証方法を config.cf できめ細かくコントロールできるので、
-それを使う方が、subscribe コマンドを変更するより簡単ですしね。
+fml 4.0 のように 
+subscribe コマンドの仕方を変更するといったやり方で実装していません。
+メンバーの認証方法を config.cf で細かくコントロールできるので、
+それを使う方法が subscribe コマンドを変更するより簡単です。
 </para>
 </footnote>
-というのは subscribe や unsubscribe は primary_member_map や
-primary_recipient_map に対する変更を加えるものだからです。一方、メンバー
-認証時の探索には member_maps や recipient_maps を使うのです。よって、こ
-れらの値をうまく設定すれば、こういった動作が可能というわけです。
+というのは subscribe や unsubscribe コマンドは「 $primary_member_map 
+や$primary_recipient_map に対する変更を加える」という仕様だからです。
+一方、メンバー認証時の探索には member_maps や recipient_maps を使うの
+です。なお、それぞれのデフォルト値は次のようになっています。
+<screen>
+member_maps             =       $primary_member_map
+                                $admin_member_maps
+
+recipient_maps          =       $primary_recipient_map
+                                file:$ml_home_dir/actives
+</screen>
+$recipient_maps に actives ファイルが入っているのは互換性のためです(
+&fml8; では、actives ファイルを使いませんが、&fml4; のディレクトリ構造
+そのままでも動作するようにするための互換性です)。
+よって、これらの値をうまく設定すれば、
+こういった設定が容易という具合になっているわけです。
 </para>
 
 <para>
-この場合 subscribe したアドレスが members というファイル
-(primary_member_map)に追加されていきますが、このファイルは認証時の探索
-に使われない設定なので良いわけです。気にはなるかも知れませんが…
+さて、上述の
+<screen>
+member_maps	=	$ml_home_dir/members-mailmag
+</screen>
+という設定をした場合、動作は次のようになります。
 </para>
 
 <para>
-別解としては、逆に
+ユーザが subscribe すると、そのアドレスは 
+recipients ファイル($primary_recipient_map)
+と 
+members ファイル($primary_member_map)に追加されていきます。
+認証は members-mailmag にたいして行なわれるので、
+members ファイルは認証時の探索に使われません。
+そのため、一般ユーザは投稿できません。
+投稿可能なユーザは members-mailmag ファイルにあるアドレスのユーザだけです。
+</para>
+
+<para>
+一方、配送は recipients ファイル($primary_recipient_map)を元に、
+subscribe したユーザ宛にたいして行なわれます。
+ここの部分は普通のＭＬと一緒です。
+</para>
+
+<para>
+別解としては、逆の方法も可能です。
 <screen>
 primary_member_map	=	$tmp_dir/members-dummy
 </screen>
-などとメンバーリストの新規分追加先を変更して闇に葬り、
-membersには投稿可能なアドレスだけを書くというやり方もあります。
+などと設定し、メンバーリストの新規分追加先を変更して闇に葬る案です。
+members には投稿可能なアドレスだけを書きます。
 このほうが &fml4; 風で分かりやすいでしょうか。
 </para>
 
@@ -91,13 +123,15 @@ membersには投稿可能なアドレスだけを書くというやり方もあります。
 <para>
 2004/06 後半以降: キューイングシステムの改変により、「わざとエラーにし
 てメールキューに落し、メールの中身を確認してから flush する(配送する)」
-なんて技もできるようになりました。
+技が可能になりました。
 </para>
 
 <para>
-これにより、まず一度送信し、キューに入れ、キューの中身を確認したのちに
-配送をはじめることが出来ます。つまり間違った内容のメールを出す可能性が
-低くなりえます。
+これにより、
+(1) まず一度送信してキューに入れ、
+(2) キューの中身を確認したのちに配送をはじめる、
+ことが出来ます。
+つまり間違った内容のメールを出す可能性が非常に低くなり得ます。
 </para>
 
 <para>
@@ -114,8 +148,7 @@ smtp_servers = 無意味なトランスポート
 smtp_servers = 127.0.0.1:2025
 </screen>
 こうしておくと、
-記事を投稿したさいには配送エラーになり、
-fml8 のメールキューに落ちます。
+記事を投稿したさいには配送エラーになり、&fml8; のメールキューに落ちます。
 </para>
 
 <para>
@@ -134,8 +167,9 @@ flushq が打ちづらいので flush コマンドも作ってみました。
 </para>
 
 <para>
-いちいち、これを打ち込むのは面倒なので、シェルスクリプトを作っておくと
-良いでしょう。
+もっとも、毎回、いちいち、
+これらのコマンド群を打ち込むのは面倒なので、
+シェルスクリプトを作っておくと良いでしょう。
 </para>
 
 <para>
@@ -148,9 +182,9 @@ OK なら、そのシェルスクリプトを CGI で実行可能にしておくという方法も
 </para>
 
 <para>
-さらに、OK を出すのが、送信者と異なる人にしておけば、より優れたメール
-マガジンの運用になります。というのは、送信者が自分で自分に OK を出すと、
-検査が甘くなるからです。
+さらに「配送 OK 」を出すのが「送信者と異なる人」にしておけば、より優れ
+たメールマガジンの運用になります。というのは、送信者が自分で自分に OK 
+を出すと、検査が甘くなるからです。
 </para>
 
 </sect1>

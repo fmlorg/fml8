@@ -1,5 +1,5 @@
 <!--
- $FML: recipes.onhost.sgml,v 1.2 2008/08/19 07:11:03 fukachan Exp $
+ $FML: recipes.onhost.sgml,v 1.3 2008/08/23 00:38:21 fukachan Exp $
 -->
 
 <qandaset>
@@ -75,7 +75,7 @@ CGI でも同様です。rmml で消していれば reviveml で復活できます。
 
 <para>
 もちろん「rm -fr /var/spool/ml/elena」などとしてＭＬを消去してしまって
-いれば元に戻す方法ありません.バックアップから戻して下さい(こまめにバッ
+いれば元に戻す方法ありません。バックアップから戻して下さい(こまめにバッ
 クアップをとりましょう)。
 </para>
 

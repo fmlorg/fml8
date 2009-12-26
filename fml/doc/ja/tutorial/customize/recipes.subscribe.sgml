@@ -1,5 +1,5 @@
 <!--
- $FML: recipes.subscribe.sgml,v 1.3 2006/01/26 12:10:10 fukachan Exp $
+ $FML: recipes.subscribe.sgml,v 1.4 2008/08/18 02:23:59 fukachan Exp $
 -->
 
 <qandaset>
@@ -15,7 +15,7 @@ subscribe の登録作業は手動でしたい
 
 <answer>
 <para>
-subscribe は confirmation つきの自動登録がデフォルトです。
+&fml8; の subscribe は confirmation つきの自動登録がデフォルトです。
 <screen>
 [config.cf のデフォルト値]
 
@@ -26,6 +26,7 @@ subscribe_command_operation_mode = automatic
 </para>
 
 <para>
+「手動操作」併用方式にするには、次のような設定があります。
 <screen>
 [config.cf]
 
@@ -35,20 +36,21 @@ subscribe_command_operation_mode = manual
 </screen>
 と設定した場合は、次のような挙動になります。
 (1) &fml8; が confirmation を行ないリクエストの正当性を確認します。
+「正当性を確認した」という報告を管理者へ行ないます。
 (2) 一方、アドレスの登録作業は自動では行なわれません。
-    管理者へは登録作業を依頼するメールが &fml8; から出されます。
-    そのメールを見たら登録作業(admin コマンド、CUI、GUI)をして下さい。
+管理者へは登録作業を依頼するメールが &fml8; から出されます。
+そのメールを見たら、
+管理者は登録作業(admin コマンド、CUI、GUI)を手動でして下さい。
 </para>
 
 <para>
-ようするにデフォルトの自動登録過程の最後が自動ではなく手動に変わっただ
-けです。
+ようするに登録過程の最終段階が「自動」から「手動」に変わっただけです。
 </para>
 
 <para>
 confirmation も登録も管理者が自ら行なう場合は次のようにして下さい。
-まぁこの場合ＭＬドライバを使う意義がないような気もしますが、
-いや SPAM よけになるから意味がありますね。
+この場合、ＭＬドライバを使う意義がないような気もしますが、
+いや SPAM よけになるから若干の意味があるでしょう。
 <screen>
 [config.cf]
 
@@ -115,19 +117,19 @@ unsubscribe_command_operation_mode = manual
 </screen>
 と設定した場合は、次のような挙動になります。
 (1) &fml8; が confirmation を行ないリクエストの正当性を確認します。
+管理者へ作業依頼のメールが &fml8; から出されます。
 (2) 一方、アドレスの登録作業は自動では行なわれません。
-    管理者へは登録作業を依頼するメールが &fml8; から出されます。
-    そのメールを見たら登録作業(admin コマンド、CUI、GUI)をして下さい。
+管理者へは登録作業を依頼するメールが &fml8; から出されます。
+そのメールを見たら登録作業(admin コマンド、CUI、GUI)をして下さい。
 </para>
 
 <para>
-ようするにデフォルトの自動登録過程の最後が自動ではなく手動に変わっただ
-けです。
+ようするに登録過程の最終段階が「自動」から「手動」に変わっただけです。
 </para>
 
 <para>
 confirmation も登録も管理者が自ら行なう場合は次のようにして下さい。
-まぁこの場合ＭＬドライバを使う意義がないような気もしますが、
+この場合、ＭＬドライバを使う意義がないような気もしますが、
 いや SPAM よけになるから意味がありますね。
 <screen>
 [config.cf]
@@ -201,13 +203,12 @@ chaddr_command_operation_mode = manual
 </para>
 
 <para>
-ようするにデフォルトの自動登録過程の最後が自動ではなく手動に変わっただ
-けです。
+ようするに登録過程の最後が「自動」から「手動」に変わっただけです。
 </para>
 
 <para>
 confirmation も登録も管理者が自ら行なう場合は次のようにして下さい。
-まぁこの場合ＭＬドライバを使う意義がないような気もしますが、
+この場合、ＭＬドライバを使う意義がないような気もしますが、
 いや SPAM よけになるから意味がありますね。
 <screen>
 [config.cf]
@@ -281,7 +282,7 @@ fml 3.0 以前の auto_regist を使い続けたい
 </para>
 
 <para>
-いまさら、これの需要があるとは思えませんが、一応。
+いまさら、この機能の需要があるとは思えませんが、一応、解説します。
 </para>
 
 <para>
@@ -289,10 +290,11 @@ fml 3.0 以前の auto_regist を使い続けたい
 <screen>
 primary_recipient_map = $primary_member_map 
 </screen>
-とすればよいことになりますが、自動登録時にエラーがでます(すでにメンバー
-です)。エラーを回避するため登録対象である primary_recipient_map はその
-ままダミーのファイルとして残し、実際の配送リスト(recipient_maps)は
-members になるようにしてしまうのがよいでしょう。
+とすればよいことになります。
+ただ、自動登録時にエラーがでます(すでにメンバーですから)。エラーを回避
+するため登録対象である primary_recipient_map はそのままダミーのファイ
+ルとして残し、実際の配送リスト(recipient_maps)は members になるように
+してしまうのがよいでしょう。
 <screen>
 recipient_maps = $primary_member_map 
 </screen>

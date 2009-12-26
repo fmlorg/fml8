@@ -1,5 +1,5 @@
 <!--
-   $FML: fmlconf.sgml,v 1.4 2002/07/28 06:26:58 fukachan Exp $
+   $FML: fmlconf.sgml,v 1.5 2004/10/06 09:07:44 fukachan Exp $
 -->
 
 
@@ -11,7 +11,7 @@
 <para>
 fmlconf (/usr/local/bin/fmlconf)
 は引数にＭＬ名をとり、そのＭＬの変数一覧を表示します。
--n をつけるとデフォルトと異なる変数のみを表示します。
+-n をつけるとデフォルト値と異なる変数とその値一覧を表示します。
 </para>
 
 <para>

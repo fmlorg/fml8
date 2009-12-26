@@ -1,5 +1,5 @@
 <!--
- $FML: recipes.command.sgml,v 1.1 2006/01/16 12:02:07 fukachan Exp $
+ $FML: recipes.command.sgml,v 1.2 2008/08/18 02:23:59 fukachan Exp $
 -->
 
 
@@ -17,10 +17,6 @@
 <answer>
 <para>
 コマンドメールの送信者(From:)へ返事を返すのがデフォルトの挙動です。
-<screen>
-
-</screen>
-
 </para>
 </answer>
 
@@ -94,12 +90,12 @@ help メッセージの元ファイルをカスタマイズする。
 
 <para>
 なおＭＬのホームディレクトリに help ファイルがある場合は
-それが help コマンドの返事に使われています。
+それが help コマンドの返事に使われています(優先されます)。
 よって help ファイルを自分で用意しているなら
 自分で編集してください。
 この場合も、常にこのファイルが使われるので、
 バージョンアップしても内容は変わりません。
-それが欠点です。
+逆に言えば、それが欠点です。
 </para>
 
 </answer>
@@ -178,7 +174,7 @@ sub process
 <link linkend="fml.command.hack.commandmail">
 <xref linkend="fml.command.hack.commandmail">
 </link>
-も参照してみてください。
+も参照してください。
 </para>
 </answer>
 
@@ -218,7 +214,7 @@ get コマンドを mget mp と同じ意味にする
 
 <answer>
 <para>
-&fml8; ではデフォルトでそういう意味になっています。
+&fml8; ではデフォルトで、その意味(MIME/Multipart モード)になっています。
 </para>
 
 <para>

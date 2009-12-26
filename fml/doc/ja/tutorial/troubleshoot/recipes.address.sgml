@@ -1,5 +1,5 @@
 <!--
- $FML: recipes.address.sgml,v 1.1 2006/01/17 04:46:04 fukachan Exp $
+ $FML: recipes.address.sgml,v 1.2 2006/01/19 04:34:38 fukachan Exp $
 -->
 
 
@@ -13,17 +13,18 @@
 <answer>
 
 <para>
-fmladdr が /etc/passwd で定義されているユーザと aliases ファイルに設定
+fmladdr コマンドが
+/etc/passwd で定義されているユーザと aliases ファイルに設定
 されている全アドレスを表示してくれます。
 <screen>
-% fmladdr
+% /usr/local/bin/fmladdr
 </screen>
 </para>
 
 <para>
 <warning>
 <para>
-fmladdr と fmlalias の違いは、一覧に
+fmladdr コマンドと fmlalias コマンドの違いは、一覧に
 ユーザ( /etc/passwd で定義されているもの )を含むか否か？という点です。
 fmladdr は含みます、fmlalias は含みません。 
 fmlalias は純粋に alias 群を表示します。
@@ -45,17 +46,17 @@ fmlalias は純粋に alias 群を表示します。
 <answer>
 
 <para>
-fmlalias が aliases ファイル(群)に設定されている全アドレスを表示してく
-れます。
+fmlalias コマンドが 
+aliases ファイル(群)に設定されている全アドレスを表示してくれます。
 <screen>
-% fmlalias
+% /usr/local/bin/fmlalias
 </screen>
 </para>
 
 <para>
 <warning>
 <para>
-fmladdr と fmlalias の違いは、一覧に
+fmladdr コマンドと fmlalias コマンドの違いは、一覧に
 ユーザ( /etc/passwd で定義されているもの )を含むか否か？という点です。
 fmladdr は含みます、fmlalias は含みません。 
 fmlalias は純粋に alias 群を表示します。
@@ -71,25 +72,27 @@ fmlalias は純粋に alias 群を表示します。
 
 <question>
 <para>
-メンバーが所属しているＭＬをすべて表示したい
+あるメンバーが所属しているＭＬをすべて表示したい
 </para>
 </question>
 
 <answer>
 
 <para>
-grep と言いたいところですが、grep じゃだめでしょう。メンバーリストがファ
-イルとは限らないので、全て出力させてから grep してみないとわかりません。
+「grep コマンドを使え！」と言いたいところですが、
+grep では駄目だめでしょう。
+というのは、メンバーリストがファイルとは限らないので、
+全て出力させてから grep してみないとわかりません。
 たとえば
 <screen>
-% fml ＭＬアドレス list|grep アドレス
+% /usr/local/bin/fml ＭＬアドレス list|grep アドレス
 </screen>
 を各ＭＬについて繰り返すという作業になります。
 </para>
 
 <para>
-これでも面倒かなぁ、よっぽど繁雑にする作業であればコマンドを用意しても
-良いのですが、はてさて…
+これでも面倒かなぁ、よっぽどひんぱんに行なう作業というのであれば、
+それ用のコマンドを用意しても良いのですが、はてさて？
 </para>
 
 </answer>

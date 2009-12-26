@@ -1,5 +1,5 @@
 <!--
- $FML: recipes.user.sgml,v 1.1 2005/10/29 04:58:01 fukachan Exp $
+ $FML: recipes.user.sgml,v 1.2 2008/08/19 07:11:03 fukachan Exp $
 -->
 
 <qandaset>
@@ -63,7 +63,7 @@ chaddr リクエストを受け付けると confirmation を
 
 <question>
 <para>
-ML に投稿できるメールアドレスを増やしたい
+ＭＬに投稿できるメールアドレスを増やしたい
 </para>
 </question>
 

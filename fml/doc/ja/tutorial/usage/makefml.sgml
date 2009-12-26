@@ -1,5 +1,5 @@
 <!--
-   $FML: makefml.sgml,v 1.11 2005/06/25 15:11:39 fukachan Exp $
+   $FML: makefml.sgml,v 1.12 2008/08/19 07:11:02 fukachan Exp $
 -->
 
 
@@ -16,8 +16,8 @@
 ＭＬ名は＠抜きの場合、デフォルトのドメインとなり、アドレスを完全に指定
 すればバーチャルドメインまで含めて makefml がよろしくがんばることになっ
 ています。もちろんデフォルトかバーチャルか否かにかかわらず、常に＠ドメ
-インつきで指定してかまいませんし、その方が良いでしょう。
-例えばデフォルトドメイン(fml.org)であれば、次の二つは同じ意味です。
+インつきで指定してかまいません。むしろ、その方が良いでしょう。
+たとえばデフォルトドメイン(fml.org)であれば、次の二つは同じ意味です。
 <screen>
 % makefml newml elena
 % makefml newml elena@fml.org
@@ -29,7 +29,7 @@
 <link linkend="setup.newml">
 <xref linkend="setup.newml">
 </link>
-を参照して下さい。
+を参照してください。
 </para>
 
 </sect1>
@@ -48,7 +48,7 @@
 ＭＬ名は @ 抜きの場合デフォルトのドメイン、
 アドレスを完全に指定すればバーチャルドメインまで含めて
 makefml が自動的に処理できます。
-例えばデフォルトドメイン(fml.org)であれば、次の二つは同じ意味です。
+たとえばデフォルトドメイン(fml.org)であれば、次の二つは同じ意味です。
 <screen>
 % makefml rmml elena
 % makefml rmml elena@fml.org
@@ -59,7 +59,7 @@ makefml が自動的に処理できます。
 できるだけ newml の反対の動作をします。
 ホームディレクトリを消すとか
 MTA の alias の該当エントリを消すといったことなども
-可能な操作は全て頑張ります。
+可能なかぎり全て行ないます。
 </para>
 
 </sect1>
@@ -111,7 +111,8 @@ resign
 signoff
 unsubscribe
 </screen>
-どれを使っても同じです。
+どれを使っても同じです
+(注: BSD 派と System V 派どちらの流儀でも良いように :-)。
 </para>
 
 
@@ -259,7 +260,7 @@ xxx_maps は
 <para>
 makefml を使える管理者が一番偉い人です。当然:-)、
 makefml を使える管理者は、
-(より権限の弱い)リモート管理のための諸設定を行なうことができます。
+「(より権限の弱い)リモート管理」のための諸設定を行なうことができます。
 </para>
 </warning>
 
@@ -273,7 +274,7 @@ makefml を使える管理者は、
 ＭＬ名は @ 抜きの場合デフォルトのドメイン、
 アドレスを完全に指定すればバーチャルドメインまで含めて
 makefml がよろしくがんばります。
-例えば
+たとえば
 <screen>
 % su fml
 % makefml addadmin elena rudo@nuinui.net
@@ -319,7 +320,7 @@ byepriv
 ＭＬ名は @ 抜きの場合デフォルトのドメイン、
 アドレスを完全に指定すればバーチャルドメインまで含めて
 makefml がよろしくがんばります。
-例えば
+たとえば
 <screen>
 % su fml
 % makefml addmoderator elena rudo@nuinui.net

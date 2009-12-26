@@ -1,20 +1,21 @@
 <!--
-   $FML: recipe.version.sgml,v 1.5 2004/10/06 09:07:43 fukachan Exp $
+   $FML: recipes.version.sgml,v 1.1 2006/01/17 04:46:04 fukachan Exp $
 -->
 
 <qandaentry>
 <question>
 <para>
-fml のバージョンが知りたい。
+使っている fml のバージョンが知りたい。
 </para>
 </question>
 
 <answer>
 <para>
-fmlconf が各ＭＬの変数一覧を表示してくれます。どのＭＬ(実は適当なＭＬ
-でも良い)を指定しても良いので、fmlconf を実行して下さい。例えば
+fmlconf コマンドが各ＭＬの変数一覧を表示してくれます。どのＭＬ(実は適
+当なＭＬでも良い)を指定しても良いので、fmlconf を実行して下さい。
+たとえば
 <screen>
-% fmlconf test |grep fml_version
+% /usr/local/bin/fmlconf test |grep fml_version
 fml_version                          = fml-devel current-20021029
 </screen>
 </para>
@@ -53,5 +54,29 @@ Sendmail のバージョンが知りたい。
 % echo '$v' | sendmail -bt
 </screen>
 </para>
+</answer>
+</qandaentry>
+
+
+<qandaentry>
+<question>
+<para>
+qmail のバージョンが知りたい。
+</para>
+</question>
+
+<answer>
+
+<para>
+答えは、たぶん 1.03 + よく分からないパッチ群です。
+インストールした人なり、
+使ったパッケージシステムの中をのぞきまくるかしてください。
+</para>
+
+<para>
+一般論は存在しません。
+DJB 教は「パッチをあてろ！」という運用を考えない文化なのでしょうがないです。
+</para>
+
 </answer>
 </qandaentry>

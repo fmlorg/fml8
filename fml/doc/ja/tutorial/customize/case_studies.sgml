@@ -1,5 +1,5 @@
 <!--
-   $FML: case_studies.sgml,v 1.11 2005/12/07 11:50:57 fukachan Exp $
+   $FML: case_studies.sgml,v 1.12 2008/08/18 02:23:59 fukachan Exp $
 -->
 
 
@@ -10,11 +10,12 @@
 
 <para>
 以下の設定を /usr/local/etc/fml/site_default_config.cf に書き、全ＭＬ
-に反映させてください。
+に反映させてください。このファイルに設定を書けば、今あるＭＬも今後作る
+すべてのＭＬも同じ仕様になります。
 </para>
 
 <para>
-ヘッダ関連では、まず Subject: にタグをつけない
+ヘッダ関連では、まず「Subject: にタグをつけない」
 <footnote>
 <para>
 なお、この設定はデフォルトの site_default_config.cf に仕込まれています。
@@ -29,7 +30,7 @@ article_header_rewrite_rules	-=	rewrite_article_subject_tag
 </para>
 
 <para>
-そして、X-ML-Name: 部分の mlname にオフィス名をつける(prepend する)、
+そして「X-ML-Name: 部分の mlname にオフィス名をつける(prepend する)」
 つまり mlname から office#mlname へ変更するようにします。
 <screen>
 outgoing_mail_header_x_ml_name          =       office#$ml_name
@@ -37,18 +38,23 @@ outgoing_mail_header_x_ml_name          =       office#$ml_name
 </para>
 
 <para>
-記事は誰でも投稿可能としましょう。
+仕事用ですから、記事は「誰でも投稿可能」としましょう。
 <screen>
 article_post_restrictions		=	permit_anyone
 </screen>
 この例では root さんからのシステムメールなども許していることに注意して
-ください( root などは弾きたい場合 reject_system_accounts permit_anyone 
-です)。
+ください(root などシステムからのメールを弾きたい場合は 
+reject_system_accounts permit_anyone です)。
 </para>
 
 <para>
-そして、社内用途のＭＬなので、フィルタの多くは使えません。
-使うと問題だらけのようです;)
+そして、「社内用途のＭＬなのでフィルタの多くは不要」です。
+正確には「フィルタを使うと問題だらけ」になります;)
+<screen>
+use_article_filter                     =        no
+</screen>
+として、全てのフィルタを切ってしまうのが良いでしょう。
+個別にフィルタを抑制するには、次のように個別に no を設定してください。
 <screen>
 use_article_body_filter			=	no
 use_article_non_mime_filter		=	no
@@ -58,9 +64,10 @@ use_article_text_plain_filter		=	no
 </para>
 
 <para>
-記事のスプールですが、長期的な展望を踏まえるなら、仕事のメールは数が多
-いので、数万通単位で記事を保存すると思います。よって、記事のスプールは 
-subdir 形式としました。
+記事のスプールを考えます。
+仕事のメールは数が多いので、長期的な展望をふまえるなら、
+数万通単位で記事を保存するという仮定が必要です。
+よって、記事のスプールは subdir 形式としました。
 <screen>
 spool_type			=	subdir
 </screen>
@@ -88,11 +95,12 @@ use_command_mail_function	=	no
 
 <para>
 以下の設定を /usr/local/etc/fml/site_default_config.cf に書き、全ＭＬ
-に反映させてください。
+に反映させてください。このファイルに設定を書けば、今あるＭＬも今後作る
+すべてのＭＬも同じ仕様になります。
 </para>
 
 <para>
-まず、記事の subject にはＭＬ名を大文字にしたタグをつけます。
+まず「記事の subject にはＭＬ名を大文字にしたタグ」をつけます。
 <screen>
 article_subject_tag = (\U$ml_name\E %05d)
 </screen>
@@ -101,12 +109,14 @@ support@example.co.jp ＭＬでは
 <screen>
 Subject: (SUPPORT 10000)
 </screen>
-などとするわけです。
+とするわけです。
+( や [ が多いですが、特殊文字は好きなものを使ってかまいません
+(正規表現ですので、適当なエスケープは必要です)。
 </para>
 
 <para>
 そして、過去記事を参照させるために、コマンドメールの使用を許します。
-ただし、自ドメイン(例: example.co.jp )からのリクエストに対してのみ、
+ただし、自ドメイン( 例: example.co.jp )からのリクエストに対してのみ、
 コマンドメールの使用を許すこととします。
 これは、HOOK で実現します。
 <screen>

@@ -1,11 +1,12 @@
 <!--
-   $FML: bookinfo.sgml,v 1.17 2008/07/12 12:53:05 fukachan Exp $
+   $FML: bookinfo.sgml,v 1.18 2008/08/17 12:36:06 fukachan Exp $
 -->
 
 <bookinfo>
   <bookbiblio>
      <title>
-	fml8 チュートリアル
+	&fml8; チュートリアル
+	<!-- __FML_CURRENT_VERSION__ -->
      </title>
 
      <author>
@@ -25,7 +26,7 @@
      </author>
 
      <copyright>
-   	<year> 2001,2002,2003,2004,2005,2006,2008 </year>
+   	<year> 2001,2002,2003,2004,2005,2006,2008,2009 </year>
    	<holder> Ken'ichi Fukamachi </holder>
      </copyright>
 
@@ -39,18 +40,19 @@
 
 
 	<para>
-	fml 8 の現在のステータスは PRE ALPHA です。
+	&fml8; 自体は、すでにプロダクションクオリティと考えていますが、
+	一応、現在のステータスは PRE ALPHA です。
 	そのためバージョン番号として 7.98.x という番号をつけています。
-	fml 8 ALPHA 〜 fml 8 BETA および fml 8 RC の間は 7.99.x の予定です。
+	&fml8; ALPHA 〜 &fml8; BETA および &fml8; RC の間は 7.99.x の予定です。
 	</para>
 
 	<para>
-	現在の fml8 で動く機能そして TODO リストは
+	現在の &fml8; で動く機能そして TODO リストは
 	<ulink url="../../../fml/doc/ja/todo/STATUS.txt">
 	http://www.fml.org/software/fml8/fml/doc/ja/todo/STATUS.txt
 	</ulink>
 	を、
-	fml4 と fml8 の相違点については、
+	&fml4; と &fml8; の相違点については、
 	<link linkend="changes">
 	<xref linkend="changes">
 	</link>
@@ -65,6 +67,7 @@
 	</ulink>
 	ドキュメントを参照して下さい)。
 <screen>
+	perl 5.10.0  on NetBSD 5.0 
 	perl 5.8.8   on NetBSD 4.0 
 	perl 5.8.8   on NetBSD 2.0.2
 	perl 5.8.8   on NetBSD 2.0 

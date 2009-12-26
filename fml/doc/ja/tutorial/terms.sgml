@@ -1,5 +1,5 @@
 <!--
-	$FML: terms.sgml,v 1.6 2005/09/30 13:22:44 fukachan Exp $
+	$FML: terms.sgml,v 1.7 2008/08/16 00:26:19 fukachan Exp $
 -->
 
 <sect1 id="terms">
@@ -79,7 +79,7 @@
    </varlistentry>
 
    <varlistentry>
-	<term> fml4 </term>
+	<term> &fml4; </term>
 	<listitem>
 	<para>
 	&fml4; シリーズのこと
@@ -88,7 +88,7 @@
    </varlistentry>
 
    <varlistentry>
-	<term> fml8 </term>
+	<term> &fml8; </term>
 	<listitem>
 	<para>
 	&fml8; シリーズのこと。

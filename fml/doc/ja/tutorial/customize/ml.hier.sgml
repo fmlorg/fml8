@@ -1,5 +1,5 @@
 <!--
-   $FML: ml.hier.sgml,v 1.1 2006/01/21 10:40:04 fukachan Exp $
+   $FML: ml.hier.sgml,v 1.2 2008/08/18 02:23:59 fukachan Exp $
 
    階層化されたＭＬ: $member_maps $recipient_maps をよろしく書く
 
@@ -11,24 +11,26 @@
 	</title>
 
 <para>
-メンバー制限をする普通の ML 群を考えます。
+メンバー制限をする普通のＭＬ群があたっとして、それらの階層化を考えます。
 (
 <ulink url="http://www.oreilly.co.jp/BOOK/fml/">
 fml バイブル
 </ulink>
-にあるように)例えば営業部に営業 1、 2、 3 課がある場合です。
+にあるように)
+たとえば営業部に営業 1、 2、 3 課がある場合が、これに該当します。
 </para>
 
 <para>
-まず、それぞれの課用に sales-1、 sales-2、 sales-3 ML を作り、
- ML のメンバーはそれぞれの課で管理してもらうことにします。
-また別途、営業部全体の連絡用に sales  ML も作り、
-sales ML へメールを送信すると、
-sales-1 sales-2 sales-3 のメンバーにも配送されます。
+まず、それぞれの課用に sales-1、 sales-2、 sales-3 ＭＬを作り、
+各ＭＬのメンバーは、それぞれの課で管理してもらうことにします。
+また別途、営業部全体の連絡用に sales  ＭＬも作り、
+sales ＭＬへメールを送信すると、
+sales-1 sales-2 sales-3 のメンバーにも配送されるようにしましょう。
 </para>
 
 <para>
-配送先は sales ＭＬの config.cf で
+設定は簡単で、sales ＭＬの配送先を増やすだけです。
+sales ＭＬの config.cf で
 <screen>
 recipient_maps 	+=	$ml_home_dir/../sales-1/recipients
 recipient_maps 	+=	$ml_home_dir/../sales-2/recipients
@@ -45,12 +47,15 @@ member_maps 	+=	$ml_home_dir/../sales-2/members
 member_maps 	+=	$ml_home_dir/../sales-3/members
 </screen>
 としてください。
-社内用の場合はか、member_maps を変更せずとも
-誰でも投稿できるように
+</para>
+
+<para>
+社内用ＭＬの場合は誰でも投稿できるように、
+$member_maps を変更するのではなく
 <screen>
 article_post_restrictions	=	permit_anyone
 </screen>
-と設定してしまうのもアリでしょう。
+と設定して「誰でも投稿可能」としてしまうのもアリでしょう。
 </para>
 
 <para>
@@ -63,6 +68,10 @@ article_post_restrictions	=	permit_anyone
 代的ではあるでしょう。準備も保守も、それなりに必要となりますが、すでに
 そういった認証システムがあるなら、それと連携するように設計してみてくだ
 さい。
+</para>
+
+<para>
+ちなみに &fml8; は MySQL PostgreSQL LDAP との通信が可能です。
 </para>
 
 </sect1>

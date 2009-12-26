@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.message.sgml,v 1.3 2004/10/06 09:07:34 fukachan Exp $
+   $FML: chapter.message.sgml,v 1.4 2008/08/18 02:23:59 fukachan Exp $
 -->
 
 
@@ -20,7 +20,11 @@ elena ML (ML のホームが /var/spool/ml/elena)の場合、
 /var/spool/ml/elena/local/share/message/euc-jp/クラス
 </screen>
 にファイルをつくって下さい。
-そのファイルフォーマットは /usr/local/fml/share/fml/ の下を参考に、
+</para>
+
+<para>
+これが、メッセージのテンプレートです。
+ファイルフォーマットは /usr/local/fml/share/fml/ の下を参考に、
 コピー＆ペーストして編集してください。
 </para>
 
@@ -30,7 +34,11 @@ elena ML (ML のホームが /var/spool/ml/elena)の場合、
 渡します。
 そして、メッセージ内では「$_arg_変数名」という特殊な変数名を使い、
 それを渡されたハッシュの値で置換したものが送り返されるメッセージです。
-なお config.cf に書く変数(e.g. $ml_name )は全て使えます。
+</para>
+
+<para>
+なおテンプレート中では、
+config.cf で利用できる全変数(e.g. $ml_name )が使えます。
 </para>
 
 </sect1>

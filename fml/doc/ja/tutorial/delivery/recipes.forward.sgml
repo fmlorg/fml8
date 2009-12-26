@@ -1,5 +1,5 @@
 <!--
-   $FML: recipes.forward.sgml,v 1.1 2006/01/17 04:46:03 fukachan Exp $
+   $FML: recipes.forward.sgml,v 1.2 2008/08/18 13:21:42 fukachan Exp $
 -->
 
 
@@ -12,22 +12,29 @@
 
 <answer>
 <para>
-転送先をファイルで指定して良いなら、簡単です。
-例えば、条件 A B C に応じて
+一番簡単な例として、転送先をファイルで指定する例を考えましょう。
+たとえば、条件 A B C に応じて
 <screen>
 recipients.A
 recipients.B
 recipients.C
 </screen>
-が用意されているとしましょう。
-この場合は HOOK で条件をチェックしつつ
+が用意されているとします。
+この場合 HOOK で条件をチェックしつつ
 <screen>
 if (条件 A にマッチした) {
    $config->set('recipient_maps', "recipients.A");
 }
 </screen>
-のようなコード(hook)を書けば動きます。
+のようなコードを書けば「本文の内容に応じて転送先を変える」ことが出来ます。
 </para>
+
+<para>
+recipient_maps 変数にはファイル以外の指定も可能です。
+指定可能なパラメータは IO::Adapter クラスが扱えるものすべてです。
+MySQL や LDAP から配送リストを取り出すといったこともできます。
+</para>
+
 </answer>
 
 </qandaentry>

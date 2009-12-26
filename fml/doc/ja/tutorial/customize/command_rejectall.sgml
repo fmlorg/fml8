@@ -1,5 +1,5 @@
 <!--
-   $FML: command_rejectall.sgml,v 1.6 2005/06/25 15:11:29 fukachan Exp $
+   $FML: command_rejectall.sgml,v 1.7 2008/08/18 02:23:59 fukachan Exp $
 -->
 
 
@@ -22,7 +22,7 @@ use_command_mail_function	=	no
 </para>
 
 <para>
-プロセスが動いてしまうのですが、別解として次のやり方もありでしょう。
+プロセスが動いてしまうのですが、別解として次のやり方もアリでしょう。
 <screen>
 use_command_mail_function = yes
 
@@ -33,16 +33,17 @@ command_mail_restrictions = reject
 </para>
 
 <para>
-この設定の問題点は「各行を評価してしまう」つまり無駄ということです。
+この設定の問題点は「各行を評価してしまう」つまり無駄な動作をしてしまう、
+ということです。
 </para>
 
 <para>
 注: 
 この解答は「コマンドメールが使えないことを教えてあげる」ことを想定して
 います。社内ＭＬなどでは、これで問題ないと思いますが、一般のＭＬでは、
-SPAM がほとんど全部なので、親切がアダになります。
+SPAM メールに対して応答してしまうため親切がアダになります。
 そこで、
-fml8 2008/08/17 以降のバージョンでは isolate (SPAM の隔離)命令が推奨です。
+&fml8; 2008/08/17 以降のバージョンでは isolate (SPAM の隔離)命令が推奨です。
 <screen>
 use_command_mail_function = yes
 

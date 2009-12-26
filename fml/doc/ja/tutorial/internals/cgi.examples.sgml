@@ -1,5 +1,5 @@
 <!--
-   $FML: cgi.examples.sgml,v 1.2 2004/10/06 09:07:37 fukachan Exp $
+   $FML: cgi.examples.sgml,v 1.3 2005/06/25 15:11:33 fukachan Exp $
 
    注意: cgi.sgml の中にはめ込むので <chapter> は不必要だ。
 -->
@@ -26,11 +26,21 @@ FML::CGI::Thread FML::Process::CGI::Kernel FML::Process::CGI::Param
 </para>
 
 <para>
-FML::Process::CGI::Kernel には、
+固有でないコード(.cgi 群で共有するコード)は
+FML::Process::CGI::Kernel に定義されています。
+ここには、
 プロセス全体の制御部分と、
-デフォルトの CGI 固有の関数「run_cgi_なんとか()」を置きます。
-必要に応じて FML::CGI:: の階層でオーバーロードしてください。
-なお、FML::Process::CGI::Kernel の以下のメソッドは使われていません。
+デフォルトの CGI 固有関数「run_cgi_なんとか()」が定義されています。
+</para>
+
+<para>
+必要に応じて FML::CGI:: の階層で、
+これらのメソッドをオーバーロードしてください。
+</para>
+
+<para>
+なお、FML::Process::CGI::Kernel の以下のメソッドは定義されているだけで、
+実際には使われていません。
 <screen>
 run_cgi_log
 run_cgi_dummy
@@ -75,53 +85,63 @@ FML::Process::CGI::Kernel では
     $curproc->_drive_cgi_by_table(); (FML::Process::CGI::Kernel)
     $curproc->html_end();            (FML::CGI::Menu)
 </screen>
-を実行します。画面を作るのは _drive_cgi_by_table() の部分です。
-この関数から呼ばれる関数が CGI のメイン部分です。
+を実行します。
+CGI の画面を作る実体は _drive_cgi_by_table() メソッドです。
+このメソッド内から呼ばれる関数が CGI のメイン部分です。
 </para>
 
 <para>
-$curproc->_drive_cgi_by_table()
-は、以下の各「run_いろいろ()」メソッド群を呼び出します。
-<screen>
-run_cgi_main              (FML::CGI::Menu)
-</screen>
-cgi_execute_command (FML::Process::CGI::Kernel) を使い、
-FML::Command 経由で FML::Command::Admin::コマンドを実行します。
+$curproc->_drive_cgi_by_table() メソッドは、
+以下の各「run_いろいろ()」メソッド群を呼び出します。
+</para>
+
+<para>
+たとえばコマンドを実行するメイン部分が run_cgi_main です。これは、
+cgi_execute_command (FML::Process::CGI::Kernel) を呼び出し、
+FML::Command 経由で「FML::Command::Admin::コマンド」クラスを実行します。
 これが、GUI からコマンドを実行するコードの本体です。
-ただし、画面の表示は別です。
+</para>
+
+<para>
+画面の表示をするには別のメソッド群が呼ばれています。
 </para>
 
 <para>
 たとえば GUI から「ユーザのメールアドレスを登録する」場合、
-run_cgi_main() が実際の登録作業を行ないます。
-run_cgi_menu() は、入力画面の生成をおこないます。
-前者は FML::Command::Admin::subscribe::process() メソッド、
-後者は FML::Command::Admin::subscribe::cgi_menu() メソッドを呼び出しています。
+run_cgi_menu() が入力画面の生成をおこないます。
+run_cgi_menu() は cgi_execute_cgi_menu() 経由で各コマンドクラスの
+「FML::Command::Admin::コマンド::cgi_menu()」を実行しています。
+この場合 FML::Command::Admin::subscribe::cgi_menu() 
+メソッドを呼び出しています。
 </para>
 
 <para>
-他にも run_cgi_* 関数がありますが、これらは画面の作りに関係する補助的
-なものたちといってよいでしょう。
+ちなみに、実際の登録作業をする run_cgi_main() は、
+FML::Command::Admin::subscribe::process() 
+メソッドを呼び出しています。
 </para>
 
 <para>
-この２つは、たいていデフォルトのものを使っています。
+他にも run_cgi_* 関数がありますが、
+これらは画面の作りに関係する補助的なものたちといってよいでしょう。
+</para>
+
+<para>
+次の２つのメソッドは、たいていデフォルトのものを使っています。
 <screen>
 run_cgi_title             FML::Process::CGI::Kernel クラス (タイトル表示)
 run_cgi_options           FML::Process::CGI::Kernel クラス (言語選択画面)
 </screen>
-また、この .cgi 固有のメソッド群として次のものがあります。
+また、この .cgi 固有の画面作り関連メソッド群として次のものがあります。
 <screen>
 run_cgi_navigator         FML::CGI::Menu クラス
 run_cgi_help              FML::CGI::Menu クラス
 run_cgi_command_help      FML::CGI::Menu クラス
 run_cgi_menu              FML::CGI::Menu クラス
 </screen>
-</para>
-
-<para>
-ちなみに run_cgi_menu() は cgi_execute_cgi_menu() 経由で
-FML::Command::Admin::コマンド::cgi_menu() を実行しています。
+ヘルプなどはコマンドごとに違うわけですから、当たり前ですね？
+ただ、メッセージが異なるとかいうだけで、モジュールが違っても、
+ほぼ似たようなつくりです。
 </para>
 
 </sect1>

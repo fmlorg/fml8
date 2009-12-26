@@ -1,5 +1,5 @@
 <!--
-	$FML: glossary.sgml,v 1.7 2005/06/25 15:11:27 fukachan Exp $
+	$FML: glossary.sgml,v 1.8 2008/08/17 12:36:19 fukachan Exp $
 -->
 
 <glossary id="glossary">
@@ -9,20 +9,20 @@
 
 
    <glossentry>
-	<glossterm>	fml 4	</glossterm>
+	<glossterm>	&fml4;	</glossterm>
 	<glossdef>
 	<para>
-	&fml4; シリーズのこと
+	&fml4;  (fml バージョン 4)シリーズのこと
 	</para>
 	</glossdef>
    </glossentry>
 
 
    <glossentry>
-	<glossterm>	fml 8	</glossterm>
+	<glossterm>	&fml8;	</glossterm>
 	<glossdef>
 	<para>
-	&fml8; シリーズのこと
+	&fml8;  (fml バージョン 8)シリーズのこと
 	</para>
 	</glossdef>
    </glossentry>
@@ -32,7 +32,7 @@
 	<glossterm>	fml-devel	</glossterm>
 	<glossdef>
 	<para>
-	&fml8 の開発時の名称。
+	&fml8; 開発初期のコードネーム。
 	</para>
 	</glossdef>
    </glossentry>
@@ -42,12 +42,13 @@
 	<glossterm>	curproc	</glossterm>
 	<glossdef>
 	<para>
-	"current process"の略。
+	"current process" の略。
 	</para>
 
 	<para>
-	UNIX カーネルで伝統的に使われている省略名の典型例
+	Unix カーネルで伝統的に使われている省略名の典型例。
 	</para>
+
 	</glossdef>
    </glossentry>
 
@@ -55,16 +56,17 @@
    <glossentry>
 	<glossterm>	PCB	</glossterm>
 	<glossdef>
+
 	<para>
 	Process Control Block の略で、そのプロセス固有の情報を含む。
 	ＭＬごとに内容は異なる。
 	fml 内部でのコンテキスト切替は、
-	listserve スタイルのＭＬなどエミュレータプログラムの中で
-	起こり得ます。
+	listserv スタイルのＭＬなどエミュレータプログラムの中で
+	起こり得る。
 	</para>
 
 	<para>
-	UNIX カーネルで伝統的に使われている省略名の典型例
+	Uni カーネルで伝統的に使われている省略名の典型例。
 	</para>
 	</glossdef>
    </glossentry>
@@ -74,7 +76,7 @@
 	<glossterm>	config	</glossterm>
 	<glossdef>
 	<para>
-	configuration の略
+	configuration の略。
 	</para>
 	</glossdef>
    </glossentry>
@@ -84,7 +86,7 @@
 	<glossterm>	conf	</glossterm>
 	<glossdef>
 	<para>
-	configuration の略
+	configuration の略。
 	</para>
 	</glossdef>
    </glossentry>
@@ -94,7 +96,7 @@
 	<glossterm>	arg / args	</glossterm>
 	<glossdef>
 	<para>
-	アーギュメント( argument )の略
+	アーギュメント( argument )の略。
 	</para>
 	</glossdef>
    </glossentry>
@@ -104,7 +106,7 @@
 	<glossterm>	fh	</glossterm>
 	<glossdef>
 	<para>
-	ファイルハンドル( file handle )
+	ファイルハンドル( file handle )。
 	</para>
 	</glossdef>
    </glossentry>
@@ -114,7 +116,7 @@
 	<glossterm>	dh	</glossterm>
 	<glossdef>
 	<para>
-	ディレクトリハンドル( directory handle )
+	ディレクトリハンドル( directory handle )。
 	</para>
 	</glossdef>
    </glossentry>
@@ -123,12 +125,17 @@
    <glossentry>
 	<glossterm>	fp	</glossterm>
 	<glossdef>
+
 	<para>
 	関数へのポインタ( function pointer )。
-	perl では CODE リファレンスと呼ぶべきだが、
+	</para>
+
+	<para>
+	Perl では本来 CODE リファレンスと呼ぶべきだが、
 	cr などと書くより分かりやすいので、
 	プログラム中では $fp を使うことが多い。
 	</para>
+
 	</glossdef>
    </glossentry>
 
@@ -136,6 +143,7 @@
    <glossentry>
 	<glossterm>	_なになに	</glossterm>
 	<glossdef>
+
 	<para>
 	慣習的にパッケージ、クラス、オブジェクト内部で使う
 	変数や関数名に _ ではじまるキーワードを使う。
@@ -144,10 +152,11 @@
 	<para>
 	つまり private ということ(
 	ここで
-	OO の厳密な意味で private method という意味か？などとは
-	つっこまないようにされたい
+	オブジェクト指向言語でいうところの厳密な意味で
+	 private method という意味か？などと、つっこまないようにされたい
 	:-)
 	</para>
+
 	</glossdef>
    </glossentry>
 
@@ -157,14 +166,16 @@
 	<glossdef>
 	<para>
 	r はリファレンス(reference)の略。
-	これは世間ではハンガリアン記法と呼ぶことが多い。
+	これを
+	"世間では"
+	ハンガリアン記法と呼ぶことが多い。
 	</para>
 
 	<para>
 	型を特別に強調したい場合に使うことがあるが、
-	fml 内部では、ほとんど使っていない。
-	適宜コメントを参照してください。
+	&fml8; では、ほとんど使わない。
 	</para>
+
 	</glossdef>
    </glossentry>
 
@@ -173,7 +184,7 @@
 	<glossterm> 	STR	</glossterm>
 	<glossdef>
 	<para>
-	文字列 ( string ) の略
+	文字列 ( string ) の略。
 	</para>
 	</glossdef>
    </glossentry>
@@ -183,7 +194,7 @@
 	<glossterm> 	日本語コードの略称	</glossterm>
 	<glossdef>
 	<para>
-	JIS SJIS EUC などおなじみのもの…
+	JIS SJIS EUC などおなじみのたぐい…
 	</para>
 	</glossdef>
    </glossentry>
@@ -193,8 +204,8 @@
 	<glossterm> 	2	</glossterm>
 	<glossdef>
 	<para>
-	to と発音が一緒のため省略形としてよく使う。
-	類似品として 4 ( for の意味)もある
+	to と発音が一緒のため省略形としてよく使われる。
+	類似品として 4 ( for の意味)がある。
 	</para>
 	<para>
 		例: STR2EUC (STRing to EUC の略)
@@ -212,7 +223,7 @@ $euc_string = STR2EUC($string);
 	<glossdef>
 	<para>
 	for と発音が同じために用いる。
-	例はまだなし。
+	いまのところ使っている例は無い。
 	</para>
 	</glossdef>
    </glossentry>
@@ -224,8 +235,8 @@ $euc_string = STR2EUC($string);
 	<para>
 	メールの本文に fml への命令(コマンド)を書いて送ることで
 	何らかの処理をしてもらう操作の総称。
-	一般ユーザ用のコマンドと、
-	リモート管理用のコマンド(通称 admin コマンド)の２つのクラスがある。
+	一般ユーザ用のコマンドと
+	リモート管理用のコマンド(通称 admin コマンド)がある。
 	</para>
 	</glossdef>
    </glossentry>

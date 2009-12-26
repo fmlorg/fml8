@@ -1,5 +1,5 @@
 <!--
-   $FML: create_program.sgml,v 1.10 2005/06/25 15:11:30 fukachan Exp $
+   $FML: create_program.sgml,v 1.11 2008/08/18 13:21:42 fukachan Exp $
 -->
 
 
@@ -9,20 +9,20 @@
 	</title>
 
 
-<sect1>
+<sect1 id="program.create.cui">
 	<title>
 	プログラムを作る(コマンドライン用)
 	</title>
 
 <para>
-まず FML::Process:: にモジュールを用意します。
+まず FML::Process:: クラス以下にモジュールを用意します。
 最小構成の見本としては FML::Process::Calender 、
 最大構成としては FML::Process::Distribute (記事配送プログラムの本体)
 を参考にすると良いでしょう。
 </para>
 
 <para>
-各 FML::Process::* モジュールが用意しなければいけない関数(メソッド)は
+各 FML::Process::○○○ モジュールが用意しなければいけない関数(メソッド)は
 FML::Process::Flow::ProcessStart()
 を見ると分かります。
 FML::Process::Flow::ProcessStart()
@@ -38,7 +38,7 @@ help()
 </screen>
 ダミーでもよいので、これらのメソッドを適宜用意しておいて下さい。各メソッ
 ドの具体例は、FML::Process 以下のモジュールを見て下さい。メソッドの役
-割を知るためには最大構成の FML::Process::Distribute が一番適当かも知れ
+割を知るためには最大構成の FML::Process::Distribute が一番適当かもしれ
 ません。
 </para>
 
@@ -60,10 +60,13 @@ FML::Process::○○○
 を用意したら、
 etc/modules
 にプログラムとクラスの関係を定義して下さい。
+これはプログラム名からロードするべきモジュールを定義するファイルです。
 また、
 etc/command_line_options
-にオプションとＭＬ名の有無などを定義してください
-(書き方は、これらのファイルの中身を見て推測して下さい)。
+にオプションとＭＬ名の有無などを定義してください。
+名前の通り、可能なオプションについて指定するファイルです。
+これらのファイルフォーマットは、これらの中身を見て推測して下さい。
+Unix 伝統のスペース区切りなので、すぐ分かります。
 </para>
 
 <para>
@@ -107,7 +110,7 @@ lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 mead@ -> loader
 </sect1>
 
 
-<sect1>
+<sect1 id="program.create.gui">
 	<title>
 	プログラムを作る( CGI 用)
 	</title>
@@ -121,7 +124,7 @@ lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 mead@ -> loader
 <link linkend="cgi.internal">
 <xref linkend="cgi.internal">
 </link>
-を参照してみて下さい。
+を参照してください。
 </para>
 
 <para>
@@ -146,7 +149,7 @@ CGI 系列では次のような、オブジェクトの関係があります。
 <para>
 CGI のプログラムの書き方もコマンドラインプログラムと同様です。
 名前空間で区別するために CGI スクリプトのモジュールは
-FML::Process ではなく FML::CGI に配置されています。
+FML::Process ではなく FML::CGI 以下に配置されています。
 既存の FML::CGI のモジュールを見本にして、
 FML::CGI::○○○
 を適宜用意して下さい。
@@ -174,7 +177,7 @@ run_cgi_options()
 <footnote>
 <para>
 正確には、画面は３×３の合計９個のブロックからなりますが、
-そのうちの６つしか使っていません。
+たいてい、そのうちの６つしか使っていません。
 </para>
 </footnote>
 が構成されています。

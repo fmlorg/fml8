@@ -1,5 +1,5 @@
 <!--
-   $FML: log.sgml,v 1.2 2004/10/06 09:07:41 fukachan Exp $
+   $FML: log.sgml,v 1.3 2006/01/16 10:24:27 fukachan Exp $
 -->
 
 
@@ -23,7 +23,7 @@
 </para>
 
 <para>
-GUI からも log コマンドを実行可能です。
+GUI からもログを見ることが可能です(裏では log コマンドを実行している)。
 </para>
 
 </sect1>
@@ -35,8 +35,9 @@ GUI からも log コマンドを実行可能です。
 	</title>
 
 <para>
-別のコマンドや独自の CGI などから &fml8; CUI を呼びだし処理をさせたい
-場合に STDERR などでログを受けとりたいことがあります。
+&fml8; 以外の別のコマンドや独自の CGI などから 
+&fml8; CUI を呼びだし処理をさせたい場合に
+STDERR などで &fml8; からのログを受けとりたいことがあります。
 </para>
 
 <para>
@@ -73,8 +74,8 @@ use_log_computer_output = yes
 
 <para>
 しかしながら、この変数を yes にすると、makefml や fml だけでなく、配送
-やコマンドメールのプログラムもSTDERRにログの出力をしてしまいますので注
-意が必要です。
+やコマンドメールのプログラムも STDERR にログを出力してしまいますので注
+意してください。
 </para>
 
 <para>
@@ -83,7 +84,7 @@ module のなかに押し込めてあります。このモジュール(デフォルトは
 FML::Log::Print::Simple)は config.cf で log_computer_output_engine を
 変数を使えば変更可能です。出力を切替えたい場合は、自分用のモジュールを
 作り、それを、この変数に指定してください。モジュールは
-FML::Log::Print::Simpleを参考に、hack してみてください:)
+FML::Log::Print::Simple を参考に、hack してみてください:)
 </para>
 
 </sect1>

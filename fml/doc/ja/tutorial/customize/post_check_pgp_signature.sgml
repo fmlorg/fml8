@@ -1,5 +1,5 @@
 <!--
-   $FML: post_check_pgp_signature.sgml,v 1.3 2005/12/14 12:39:16 fukachan Exp $
+   $FML: post_check_pgp_signature.sgml,v 1.4 2008/08/18 02:23:59 fukachan Exp $
 -->
 
 
@@ -13,7 +13,8 @@
 この機能を使うには Crypt::OpenPGP モジュールが必要です。
 OS 附属のパッケージシステムなどでインストールして下さい。
 このモジュールが依存しているモジュールがたくさんあるので、
-OS 附属のパッケージシステムを使えないとインストールは、かなり面倒です。
+OS 附属のパッケージシステムが使えないと、
+インストールは、かなり面倒です。
 </para>
 </caution>
 
@@ -35,17 +36,24 @@ PGP/GPG の電子署名で投稿制限をするＭＬ
 
 <para>
 設定例は次のようになります。
-check_pgp_signature が、このオプションです。
-電子署名が正当なユーザだけが投稿を許されます。
+check_pgp_signature が、この PGP/GPG 認証オプション部分です。
+電子署名が正当なユーザだけに投稿が許されます。
 <screen>
 article_post_restrictions       =       reject_system_special_accounts
                                         check_pgp_signature
                                         reject
-
-注: fml8 2008/08/17 以降のバージョンでは isolate (SPAM の隔離)が推奨です。
 </screen>
 もちろんデフォルトでは使いません。
 利用したい場合は、明示的に article_post_restrictions を変更して下さい。
+</para>
+
+<para>
+注: &fml8; 2008/08/17 以降のバージョンでは isolate (SPAM の隔離)が推奨です。
+<screen>
+article_post_restrictions       =       reject_system_special_accounts
+                                        check_pgp_signature
+                                        isolate
+</screen>
 </para>
 
 </answer>
@@ -63,7 +71,8 @@ article_post_restrictions       =       reject_system_special_accounts
 	</title>
 
 <para>
-PGP のキーリングは、動作条件ごとに別々に用意されます。たとえば記事投稿
+PGP のキーリングは、
+動作条件ごとに別に保存するようになっています。たとえば記事投稿
 用のキーは $ml_home_dir/etc/pgp-article-post-auth/ ディレクトリ以下に、
 リモート管理用のキーは $ml_home_dir/etc/pgp-admin-command-mail-auth/ 
 ディレクトリ以下に置くといった具合です。
@@ -72,7 +81,7 @@ PGP のキーリングは、動作条件ごとに別々に用意されます。たとえば記事投稿
 <para>
 これらのキーは pgp2 pgp5 gpg コマンドで操作してください。ただ、デフォ
 ルトのディレクトリではないこと、モードごとに異なるディレクトリを使うた
-め、fmlpgp などの wrapper を利用すると便利です。
+め、fmlpgp などのユーティリティプログラム( wrapper )を利用すると便利です。
 <screen>
 例: elena ML で記事投稿で使うキーの生成
 
@@ -86,7 +95,7 @@ fmlpgp elena --article-post-auth -kg
 --article-post-encrypt    (記事を暗号化(未実装)) 
 </screen>
 などと使用する条件を指定してください。
-それぞれの条件に対して異なるキーリングのディレクトリが用意されています。
+それぞれの条件に対して異なるキーリングのディレクトリが使われます。
 </para>
 
 <para>
@@ -94,12 +103,12 @@ fmlpgp elena --article-post-auth -kg
 </para>
 
 <para>
-pgp2: 
+pgp2 用: 
 fmlpgp
 </para>
 
 <para>
-pgp5:
+pgp5 用:
 fmlpgp5
 fmlpgpe
 fmlpgpk
@@ -108,7 +117,7 @@ fmlpgpv
 </para>
 
 <para>
-gpg: 
+gpg 用: 
 fmlgpg
 fmlgpgv
 </para>

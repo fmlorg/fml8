@@ -1,5 +1,5 @@
 <!--
- $FML: recipes.auth.sgml,v 1.1 2005/10/29 04:28:42 fukachan Exp $
+ $FML: recipes.auth.sgml,v 1.2 2008/08/18 02:23:59 fukachan Exp $
 -->
 
 <qandaset>
@@ -18,7 +18,7 @@
 デフォルトの From アドレス認証で
 ドメインの比較するレベルを変更したい場合は、
 config.cf で
-address_compare_function_domain_matching_level を設定して下さい。
+$address_compare_function_domain_matching_level を設定して下さい。
 <footnote>
 <para>
 &fml4; の ADDRESS_CHECK_MAX に相当する変数です。
@@ -42,7 +42,7 @@ From アドレス認証以外に PGP/GPG 認証を使うことも出来ます。
 <link linkend="config.post.check.pgp">
 <xref linkend="config.post.check.pgp">
 </link>
-の節を見て下さい。
+の節を参照してください。
 </para>
 
 </answer>
@@ -79,7 +79,7 @@ use_address_compare_function = no
 <para>
 また、
 各 restrictions で permit_anyone を指定すると、
-実質認証をしていないので「アドレス認証していない」設定になりますね。
+実質認証をしていないので「アドレス認証していない」設定になります。
 </para>
 
 </answer>

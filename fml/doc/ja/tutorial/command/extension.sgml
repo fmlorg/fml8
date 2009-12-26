@@ -1,5 +1,5 @@
 <!--
-   $FML: extension.sgml,v 1.13 2005/06/25 15:11:28 fukachan Exp $
+   $FML: extension.sgml,v 1.14 2008/08/17 18:28:36 fukachan Exp $
 -->
 
 
@@ -18,25 +18,35 @@
 
 <warning>
 <para>
-このホスト上の「全ての ML で利用可能な」コマンドを作りたい場合は、
+「拡張した機能を許可する範囲」が制御できます。
+</para>
+
+<para>
+このホスト上の「全てのＭＬで利用可能な」コマンドを作りたい場合は、
 拡張したモジュールを
 <screen>
 /usr/local/lib/fml/site_local/
 </screen>
 以下に配置して下さい。
-一方、特定のＭＬだけを拡張する場合は、各ＭＬのホーム以下の local/lib/
-以下において下さい。
+</para>
+
+<para>
+一方、特定のＭＬだけで利用可能な機能拡張であれば、
+各ＭＬのホーム以下の local/lib/ 以下において下さい。
 <screen>
 ＭＬのホーム/local/lib/
 
-例:
+例: elena ( ML のホームが /var/spool/ml/elena/ )
 /var/spool/ml/elena/local/lib/
 </screen>
 </para>
 
 <!--
 <para>
-以下では、このホスト全ての ML で有効にする場合を考えます。
+以下では、すべてのＭＬで有効にする場合を考えます。
+</para>
+
+<para>
 もちろん、どちらのケースでもモジュールの書き方は一緒です。
 </para>
 -->
@@ -51,25 +61,31 @@
 
 <para>
 ユーザ向けのコマンド uja を作りたい場合、
-FML::Command::User 以下のモジュールから適当に cut and paste して
+(1)
+FML::Command::User 以下のモジュールから適当にコピー＆ペーストして
 <screen>
 /usr/local/lib/fml/site_local/FML/Command/User/uja.pm
 </screen>
-というファイルを作り、設定ファイルで
-uja を許可するコマンドリストに追加して下さい。
+というファイルを作ってください。
+(2) 次に、設定ファイルで uja を許可してください。
+</para>
 
-全ての ML で有効にする場合は、site_default_config.cf で、
+<para>
+すべてのＭＬで有効にする場合は、site_default_config.cf で、
+「許可するコマンドのリスト」に追加してください。
+<screen>
+user_command_mail_allowed_commands += uja
+</screen>
+user_command_mail_allowed_commands 変数は、
+一般ユーザに許すコマンドのリスト一覧です。
+</para>
+
+<para>
+elena MＬだけで有効にする場合は、elena ＭＬの config.cf で、
 許可するコマンドリストに追加してください。
 <screen>
 user_command_mail_allowed_commands += uja
 </screen>
-
-elena ML だけで有効にする場合は、elena ML の config.cf で、
-許可するコマンドリストに追加してください。
-<screen>
-user_command_mail_allowed_commands += uja
-</screen>
-
 </para>
 
 </sect2>
@@ -81,23 +97,26 @@ user_command_mail_allowed_commands += uja
 	</title>
 
 <para>
-admin 向けのコマンド uja を作りたい場合、
-FML::Command::Admin 以下から適当に cut and paste して
+管理者向けのコマンド(admin コマンド)の uja を作りたい場合、
+FML::Command::Admin 以下から適当にコピー＆ペーストして
 <screen>
 /usr/local/lib/fml/site_local/FML/Command/Admin/uja.pm
 </screen>
 というファイルをつくってください。
+</para>
 
-
-全ての ML で有効にする場合は、site_default_config.cf で、
+<para>
+すべてのＭＬでコマンドを有効にする場合は、site_default_config.cf で、
 許可するコマンドリストに追加してください。
 <screen>
 admin_command_mail_allowed_commands += uja
 </screen>
+admin_command_mail_allowed_commands 変数は
+管理者に許すコマンドのリスト一覧です。
 </para>
 
 <para>
-elena ML だけで有効にする場合は、elena ML の config.cf で、
+elena ＭＬだけで有効にする場合は、elena ＭＬの config.cf で、
 許可するコマンドリストに追加してください。
 <screen>
 admin_command_mail_allowed_commands += uja
@@ -134,20 +153,28 @@ admin_command_mail_allowed_commands += uja
 </para>
 
 <para>
-以下では、このホスト全ての ML で有効にする場合を考えます。
+以下では、すべてのＭＬで有効にする場合を考えます。
 </para>
 </warning>
 
 
 <para>
-makefml でコマンド uja を作いたい場合、
-FML::Command::Admin 以下から適当に cut and paste して
+makefml でコマンド uja を作りたい場合、
+FML::Command::Admin 以下から適当にコピー＆ペーストして
 <screen>
 /usr/local/lib/fml/site_local/FML/Command/Admin/uja.pm
 </screen>
 というファイルをつくるだけで有効になります
-つまりモジュールを置くだけで有効になります。
-*_allowed_commands 系の変数の設定変更は不要です。
+</para>
+
+<para>
+makefml では「モジュールを置くだけで有効」になります。
+許されるコマンド一覧 *_allowed_commands 系の変数設定変更は不要です。
+</para>
+
+<para>
+makefml を利用できる時点で、そのＭＬサーバの特権権限を奪取できているわ
+けですから、それ以上複雑な制限をつけても使いにくいだけでしょうから。
 </para>
 
 
@@ -164,17 +191,20 @@ FML::Command::Admin 以下から適当に cut and paste して
 <warning>
 
 <para>
-以下の記述で利用可能な機能を追加することが出来ますが、
-別途、画面の作り込みが必要です。
+以下の記述で「利用可能な機能の追加」が出来ますが、
+それとは別に CGI 画面の作り込みは必要です。
 </para>
 
 <para>
-このホスト全ての ML で有効にする場合、
+このホスト上のすべてのＭＬで有効にする場合、
 拡張するモジュールを
 <screen>
 /usr/local/lib/fml/site_local/
 </screen>
 以下に配置して下さい。
+</para>
+
+<para>
 一方、特定のＭＬだけを拡張する場合は、各ＭＬのホーム以下の local/lib/
 以下において下さい。
 <screen>
@@ -186,30 +216,37 @@ FML::Command::Admin 以下から適当に cut and paste して
 </para>
 
 <para>
-以下では、このホスト全ての ML で有効にする場合を考えます。
+以下では、すべてのＭＬで有効にする場合を考えます。
 </para>
 </warning>
 
-
 <para>
-admin 向けのコマンド uja を作りたい場合、
-FML::Command 以下から適当に cut and paste して
-<screen>
-/usr/local/lib/fml/site_local/FML/Command/Admin/uja.pm
-</screen>
-というファイルを置いてください。
+CGI での拡張は、一般ユーザ向けということは少なく、
+たいていは管理者向けのものと考えます。
+よって、以下、管理者向け機能拡張のみを取り上げます。
 </para>
 
 <para>
-全ての ML で有効にする場合は、site_default_config.cf で、
+管理者向けのコマンド uja を作りたい場合、
+FML::Command 以下から適当にコピー＆ペーストして
+<screen>
+/usr/local/lib/fml/site_local/FML/Command/Admin/uja.pm
+</screen>
+というファイルを作ってください。
+</para>
+
+<para>
+すべてのＭＬで uja コマンドを有効にしたい場合、site_default_config.cf で、
 許可するコマンドリストに追加してください。
 <screen>
 admin_cgi_allowed_commands += uja
 </screen>
+admin_cgi_allowed_commands 変数は管理者用 CGI インターフェイスで許可す
+るコマンドの一覧です。
 </para>
 
 <para>
-elena ML だけで有効にする場合は、elena ML の config.cf で、
+elena ＭＬだけで有効にする場合は、elena ＭＬの config.cf で、
 許可するコマンドリストに追加してください。
 <screen>
 admin_cgi_allowed_commands += uja

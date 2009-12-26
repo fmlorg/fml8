@@ -1,5 +1,5 @@
 <!--
- $FML: recipes.header.sgml,v 1.6 2006/03/20 09:31:34 fukachan Exp $
+ $FML: recipes.header.sgml,v 1.7 2008/08/18 02:23:59 fukachan Exp $
 -->
 
 <qandaset>
@@ -16,7 +16,8 @@ Subject: に [elena:00100] のようなタグをつける
 <answer>
 <para>
 デフォルトではタグはつきません。
-また &fml8; ではタグを sprintf 形式で指定することになっています。
+また &fml8; ではタグを sprintf などで使われる形式で指定することになっています
+(strftime(3) を参照)。
 <screen>
 [/var/spool/ml/elena/config.cf]
 
@@ -43,7 +44,8 @@ Subject: [elena:00100] の数字部分(00100)の桁数を変える
 
 <answer>
 <para>
-&fml8; ではタグを sprintf 形式で指定することになっています。
+&fml8; ではタグを sprintf 形式で指定することになっています
+(strftime(3) を参照)。
 たとえば７桁なら %07 などとすればよいだけです。
 <screen>
 [/var/spool/ml/elena/config.cf]
@@ -65,7 +67,8 @@ article_subject_tag = [$ml_name:%07d]
 
 <question>
 <para>
-Subject: のタグの数字(00100)の0パディングをなくしたい。
+Subject: のタグの数字(00100)の0パディングをなくしたい
+(strftime(3) を参照)。
 </para>
 </question>
 
@@ -92,7 +95,7 @@ article_subject_tag = [$ml_name:%d]
 
 <question>
 <para>
-記事のヘッダの Subject: のタグを大文字にしたい
+Subject: のタグを大文字にしたい。
 </para>
 </question>
 
@@ -115,7 +118,7 @@ article_subject_tag = [\U$ml_name\E:%05d]
 
 <question>
 <para>
-記事のヘッダの Subject: のタグを小文字にしたい
+Subject: のタグを小文字にしたい
 </para>
 </question>
 
@@ -158,7 +161,7 @@ $distribute_verify_request_start_hook = q{
 };
 </screen>
 なお strftime(3) では様々なフォーマットが利用できます。
-詳しくは Unix マニュアルを参照。
+詳しくは Unix マニュアル strftime(3) を参照。
 </para>
 </answer>
 
@@ -169,13 +172,13 @@ $distribute_verify_request_start_hook = q{
 
 <question>
 <para>
-いつでも Reply-To: を投稿用アドレスに強制する。
+Reply-To: を常に投稿用アドレスに強制変更する。
 </para>
 </question>
 
 <answer>
 <para>
-次の HOOK を config.cf の最後(=cutより後)に書いて下さい。
+次の HOOK を config.cf の最後(=cut 行より下側)に書いて下さい。
 <screen>
 $article_header_rewrite_end_hook = q{
     my $ml = $config->{ article_post_address };
@@ -202,7 +205,7 @@ Reply-To: を送信者に設定する。
 
 <answer>
 <para>
-次の HOOK を config.cf の最後(=cutより後)に書いて下さい。
+次の HOOK を config.cf の最後(=cut 行より下側)に書いて下さい。
 <screen>
 $article_header_rewrite_end_hook = q{
     my $cred   = $curproc->credential();
@@ -228,7 +231,7 @@ Reply-To: を「送信者 ＋ ＭＬ」に設定する。
 
 <answer>
 <para>
-次の HOOK を config.cf の最後(=cutより後)に書いて下さい。
+次の HOOK を config.cf の最後(=cut 行より下側)に書いて下さい。
 <screen>
 $article_header_rewrite_end_hook = q{
     my $ml     = $config->{ article_post_address };
@@ -249,13 +252,14 @@ $article_header_rewrite_end_hook = q{
 
 <question>
 <para>
-ＭＬメンバーからの投稿であれば、Reply-To: を「送信者＋ＭＬ」にする。
+ＭＬメンバーからの投稿であれば、
+Reply-To: を「送信者＋ＭＬ」に設定する。
 </para>
 </question>
 
 <answer>
 <para>
-次の HOOK を config.cf の最後(=cutより後)に書いて下さい。
+次の HOOK を config.cf の最後(=cut 行より下側)に書いて下さい。
 <screen>
 $article_header_rewrite_end_hook = q{
     my $ml     = $config->{ article_post_address };
@@ -279,15 +283,25 @@ $article_header_rewrite_end_hook = q{
 
 <question>
 <para>
-To: と Cc: の中にある fml8 が管理しているＭＬのアドレスだけを
+To: と Cc: の中にある &fml8; が管理しているＭＬのアドレスだけを
 Reply-To: に設定する。
 </para>
 </question>
 
 <answer>
 <para>
-だいぶ複雑ですが HOOK で実現できます。
-次の HOOK を config.cf の最後(=cutより後)に書いて下さい。
+説明しにくい動作ですが、
+ようするに記事から自分の知らないアドレスを削除するということです。
+</para>
+
+<para>
+ヘッダに書いてある全てのアドレスへ返信する人が多いので、
+こういった動作が有用であることがあります。
+</para>
+
+<para>
+設定は、だいぶ複雑ですが HOOK だけで実現できます。
+次の HOOK を config.cf の最後(=cut 行より下側)に書いて下さい。
 <screen>
 $article_header_rewrite_end_hook = q{
     my $to   = $header->get('to');
@@ -345,14 +359,28 @@ Sender: を X-Sender: にコピーする。
 <answer>
 <para>
 
+<para>
+投稿されたメールの Sender: を X-Sender: にコピーしておきます。
+配送後、どこかで Sender: が変更されたとしても、オリジナルの送信者が
+分かるということです。
+</para>
+
+<para>
+もっとも Sender: をつけない人もいるので、
+そういったメールに対しては対応できません。
+Sender: がないなら From: を X-Sender: にコピーしておくといった
+条件文も必要かもしれません。
+</para>
+
+<para>
 <screen>
 $article_header_rewrite_end_hook = q{
    my $header   = $curproc->article_message_header();
    $header->add('X-Sender', $header->get('Sender'));
 };
 </screen>
-
 </para>
+
 </answer>
 
 </qandaentry>
@@ -362,7 +390,7 @@ $article_header_rewrite_end_hook = q{
 
 <question>
 <para>
-Received: を X-Received: へ移動させる。
+Received: を X-Received: へ移動する。
 </para>
 </question>
 
@@ -401,10 +429,10 @@ article_header_rewrite_rules    -=      rewrite_reply_to
 </para>
 
 <para>
-デフォルトでは Reply-To: のないメールのヘッダに対し「Reply-To: 投稿用
-アドレス」が追加されます。これは article_header_rewrite_rules にある 
+デフォルトでは Reply-To: のないメールヘッダに対し「Reply-To: 投稿用ア
+ドレス」が追加されます。これは $article_header_rewrite_rules にある 
 rewrite_reply_to 命令によります。よって、これをルールから削除してしま
-えば Reply-To: に対する書き換えルールが無効となるというわけです。
+えば「Reply-To: に対する書き換えルールが無効となる」というわけです。
 </para>
 </answer>
 
@@ -464,6 +492,10 @@ article_header_rewrite_rules    -=      rewrite_reply_to
 
 <answer>
 <para>
+特殊な需要ですが、可能です。
+</para>
+
+<para>
 
 <screen>
 [/var/spool/ml/elena/config.cf]
@@ -483,8 +515,12 @@ $article_header_rewrite_end_hook = q{
 	$header->replace('Message-Id', $new_id);
 };
 </screen>
-
 </para>
+
+<para>
+もともとは某ＭＬで遊び心で始めた話が元ネタ。
+</para>
+
 </answer>
 
 </qandaentry>
@@ -525,7 +561,7 @@ $article_header_rewrite_end_hook = q{
 <answer>
 <para>
 未実装です。
-現在の fml8 でも
+現在の &fml8; でも
 <screen>
 outgoing_mail_header_reply_to = アドレス
 </screen>
@@ -591,10 +627,16 @@ In-Reply-To: か References: を強制したい。
 
 <answer>
 <para>
-記事への返事にも関わらず In-Reply-To: も References: もないメールがあります。
-一つには、スレッド関係が分からないので見づらいという問題があります。
-二つには、通常そういったメールはないので普通のメールではなく SPAM などの
-類ではないかという可能性です。
+記事への返信であるにも関わらず In-Reply-To: も References: もないメー
+ルを送ってくる人が現実にいます。
+これをされると、いくつかの問題が生じます。
+</para>
+
+<para>
+第一に、メール間のスレッド関係が分からなくなるので見づらいです。
+第二に、通常そういったメールは無い(少ない)ので、
+そういったメールは「普通のメール」ではなく 
+「SPAM メール」などの可能性が高いとみなされます。
 </para>
 
 <para>

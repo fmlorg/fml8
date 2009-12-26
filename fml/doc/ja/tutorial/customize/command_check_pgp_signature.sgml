@@ -1,5 +1,5 @@
 <!--
- $FML: command_check_pgp_signature.sgml,v 1.1 2005/12/15 03:07:25 fukachan Exp $
+ $FML: command_check_pgp_signature.sgml,v 1.2 2008/08/18 02:23:59 fukachan Exp $
 -->
 
 
@@ -37,11 +37,10 @@ fmlgpg fmlgpgv fmlpgp fmlpgp5 fmlpgpe fmlpgpk fmlpgps fmlpgpv
 % fmlpgp --command-mail-auth ＭＬ名 -kg
 
 </screen>
-また
 <link linkend="config.post.check.pgp">
 <xref linkend="config.post.check.pgp">
 </link>
-を参考にしてみて下さい。
+を参考にして下さい。
 </para>
 </answer>
 
@@ -75,11 +74,10 @@ fmlgpg fmlgpgv fmlpgp fmlpgp5 fmlpgpe fmlpgpk fmlpgps fmlpgpv
 % fmlpgp --admin-command-mail-auth ＭＬ名 -kg
 
 </screen>
-また
 <link linkend="config.post.check.pgp">
 <xref linkend="config.post.check.pgp">
 </link>
-を参考にしてみて下さい。
+を参考にして下さい。
 </para>
 </answer>
 

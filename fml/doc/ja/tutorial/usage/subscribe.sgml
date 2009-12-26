@@ -1,5 +1,5 @@
 <!--
-   $FML: subscribe.sgml,v 1.4 2006/05/17 13:13:01 fukachan Exp $
+   $FML: subscribe.sgml,v 1.5 2008/08/19 07:11:03 fukachan Exp $
 -->
 
 
@@ -9,7 +9,7 @@
 	</title>
 
 <para>
-elena@fml.org ＭＬの場合、
+elena@fml.org ＭＬに参加したい場合、
 本文に 
 <screen>
 
@@ -22,7 +22,10 @@ subscribe Teresa Testarossa
 </screen>
 と書いたメールを
 elena-ctl@fml.org  に送って下さい。
-メールで confirmation が返送されます。
+</para>
+
+<para>
+メールに対し confirmation が返送されます。
 その confirmation メールに返答すると登録されます。
 </para>
 

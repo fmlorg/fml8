@@ -1,5 +1,5 @@
 <!--
-   $FML: module.sgml,v 1.5 2004/04/07 11:07:00 fukachan Exp $
+   $FML: module.sgml,v 1.6 2008/08/17 18:28:36 fukachan Exp $
 -->
 
 
@@ -25,8 +25,9 @@ FML::Command::Admin	管理者用コマンド群
 例えば、(コマンドメールでの)ユーザ用コマンドの場合
 FML::Command を経由して
 FML::Command::User::コマンド
-モジュールを使うことになります。
+モジュールを呼び出しています。
 </para>
+
 
 <sect2>
 	<title>
@@ -36,33 +37,34 @@ FML::Command::User::コマンド
 <para>
 FML::Process::Command から
 FML::Command 経由で
-FML::Command::User::コマンド
+「FML::Command::User::コマンド」
 を呼び出しています。
 </para>
 
 <para>
 最終的に
-FML::Command::Admin::コマンド
+「FML::Command::Admin::コマンド」
 を使うモジュールもあります。
-例えば登録と削除の実作業は
-FML::Command::Admin::コマンド
-内のコードが行なっています。
-登録/削除の実体のコードをすべてのプログラムで共有するためです。
+たとえば登録と削除の実作業は
+「FML::Command::Admin::コマンド」
+にあるコードが行なっています。
+すべてのプログラムで登録/削除作業の実体部分を共有するためです。
 この場合、
-FML::Command::User::コマンド
-のコマンドは confirm を行なうための wrapper という位置付けになります。
+「FML::Command::User::コマンド」は
+confirm を行なうための wrapper という位置付けになります。
 </para>
 </sect2>
 
+
 <sect2>
 	<title>
-	(メールでの) adminコマンド
+	(コマンドメールでの) 管理者用コマンド (admin コマンド)
 	</title>
 
 <para>
 FML::Process::Command から
 FML::Command 経由で
-FML::Command::Admin::コマンド
+「FML::Command::Admin::コマンド」
 を呼び出しています。
 </para>
 
@@ -71,13 +73,20 @@ FML::Command::Admin::コマンド
 
 <sect2>
 	<title>
-	makefml のコマンド
+	makefml
 	</title>
+
+<warning>
+<para>
+makefml を実行できる時点で、
+サーバにログインできる管理者権限があるとみなされています。
+</para>
+</warning>
 
 <para>
 FML::Process::Configure から
 FML::Command 経由で
-FML::Command::Admin::コマンド
+「FML::Command::Admin::コマンド」
 を呼び出しています。
 </para>
 
@@ -89,11 +98,30 @@ FML::Command::Admin::コマンド
 	CGI
 	</title>
 
+<warning>
+<para>
+CGI も一般ユーザむけの CGI と管理者用の CGI があります。
+</para>
 
 <para>
+管理者用の CGI については、それを実行できる時点で、
+管理者権限があるとみなされています。
+</para>
+</warning>
+
+<para>
+アドレス登録/削除などのためにある一般ユーザ用の CGI は、
 FML::Process::CGI から
 FML::Command 経由で
-FML::Command::Admin::コマンド
+「FML::Command::User::コマンド」
+を呼び出しています。
+コマンドメールと同様に confirm のための wrapper という位置付けです。
+</para>
+
+<para>
+管理者用の CGI は、FML::Process::CGI から
+FML::Command 経由で
+「FML::Command::Admin::コマンド」
 を呼び出しています。
 </para>
 

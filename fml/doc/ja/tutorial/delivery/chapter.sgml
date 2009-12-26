@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.sgml,v 1.16 2006/01/17 04:46:03 fukachan Exp $
+   $FML: chapter.sgml,v 1.17 2008/08/18 13:21:42 fukachan Exp $
 -->
 
 
@@ -9,15 +9,18 @@
 	</TITLE>
 
 
-<sect1 id="fml8-delivery">
+<sect1 id="delivery.fml8-and-fml4-difference">
 	<title>
 	&fml4; と &fml8; の相違点
 	</title>
 
 <para>
-&fml8; の最大の目的の一つは、メンバーリストの取得操作におけるコードの
-統合と抽象化です。もちろん配送システムも抽象化された IO 層を利用して配
-送先の情報を取得しています。
+&fml8; 最大の目的の一つは、メンバーリストの取得操作におけるコードの
+統合と抽象化です。
+</para>
+
+<para>
+配送システムも抽象化された IO 層を利用して配送先の情報を取得しています。
 </para>
 
 <para>
@@ -62,7 +65,7 @@ Mail::Message
 </sect1>
 
 
-<sect1>
+<sect1 id="delivery.message-object">
 	<title>
 	<link linkend="module.mail.message">
 	Mail::Message
@@ -76,7 +79,7 @@ Mail::Message
 header -> body
 header -> preamble -> part1 -> part2 -> trailor (multipart)
 </screen>
-のようにオブジェクトが数珠つなぎになったデータ構造を作ります。
+のようにオブジェクトが「じゅずつなぎ」になったデータ構造を作ります。
 </para>
 
 <para>
@@ -104,7 +107,9 @@ Mail::Message
 
 <para>
 2004 夏以降、&fml8; の配送システムはキュー管理システムのもとで動いてい
-ます。これにより fml8 自力での再送処理が可能となりました。
+ます。これにより &fml8; 自力での再送処理が可能となりました。
+別の言い方をすれば、
+実質的に &fml8; をメールサーバと言ってよくなったわけです。
 </para>
 
 </sect1>
@@ -117,18 +122,22 @@ Mail::Message
 
 <para>
 FML::Process::QueueManager が使っているのみなので
-独立したモジュールである必要があるだろうか？
+独立したモジュールである必要があるだろうか？という疑問です。
 </para>
 
 <para>
-reply_message() が何でもしてしまうので、
-FML::Mailer を呼ぶことはないかもしれない。
-でも、 reply_message() 以外の送信メソッドがあり得るかもしれないね。
+現状 reply_message() メソッドが何でもしてしまうので、
+FML::Mailer を呼ぶことはないかもしれません。
+もっとも reply_message() 以外の送信メソッドがあり得るかもしれません。
 </para>
 
 <para>
 将来、どうも使ってないようなら
-FML::Process::QueueManager に合併するべきかもしれない。
+FML::Process::QueueManager に合併するべきなのでしょう。
+</para>
+
+<para>
+ねんのため、HOOK などでは FML::Mailer は使わないようにして下さい。
 </para>
 
 </sect1>

@@ -1,5 +1,5 @@
 <!--
- $FML: chapter.www.sgml,v 1.1 2006/01/19 10:18:41 fukachan Exp $
+ $FML: chapter.www.sgml,v 1.2 2008/08/18 02:23:59 fukachan Exp $
 -->
 
 
@@ -9,7 +9,7 @@
 	</title>
 
 <para>
-デフォルトで &fml8; は
+デフォルトで &fml8; はユーザ fml の個人領域
 <screen>
 ~fml/public_html/fml/mlarchive/ドメイン名/ＭＬ名/
 </screen>

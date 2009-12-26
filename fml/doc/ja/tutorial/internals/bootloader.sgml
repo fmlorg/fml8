@@ -1,5 +1,5 @@
 <!--
-   $FML: bootloader.sgml,v 1.13 2005/06/25 15:11:33 fukachan Exp $
+   $FML: bootloader.sgml,v 1.14 2008/08/18 13:21:42 fukachan Exp $
 -->
 
 
@@ -40,30 +40,30 @@ fml (libexec/distribute) が boot していく様子
 	</title>
 
 <para>
-loader から次々と呼ばれていく様子は、例えば配送処理の場合、次のよう
-になります。
+たとえば配送処理の場合、
+loader から次々とモジュールが呼ばれていく様子は次のようになります。
 </para>
 
 <para>
-/usr/local/libexec/fml/distributre (の実体は 
+/usr/local/libexec/fml/distributre (の実体 
 /usr/local/libexec/fml/loader) は /usr/local/etc/fml/main.cf を読みこ
-み、fml_version 変数から使うべきライブラリのバージョンを決めます。例え
-ば fml_vesrion が current-20010501 となっていたら
+み、fml_version 変数から使うべきライブラリのバージョンを決めます。
+たとえば fml_vesrion が current-20010501 となっていたら
 /usr/local/lib/fml/current-20010501/ 以下にあるライブラリを使うといっ
-た具合です。
+たぐあいです。
 </para>
 
 <para>
 @INC を再設定した後、
 loader は FML::Process::Switch をロードし、
-$0 を調べます。
-その名前から自分の仕事は配送処理配送処理なので
+$0 (プロセス名)を調べます。
+その名前から自分の仕事は配送処理なので
 FML::Process::Distribute クラスをロードし、配送処理に移ります。
 </para>
 
 <para>
 なお、プログラム名とクラスの対応関係は 
-etc/fml/defaults/バージョン/modules 
+/usr/local/etc/fml/defaults/バージョン/modules 
 で定義されています。
 </para>
 
@@ -106,10 +106,10 @@ FML::Process::Mead       >-|    |
 
    <listitem>
 	<para>
-	libexec/loader (wrapper)
-	Bootstrap() を実行する。
-	libexec/distribute などは、皆この loader へのシンボリックリンクです。
-	/usr/local/libexec/fml/ 以下を参照して下さい。
+	/usr/local/libexec/fml/loader (wrapper)。
+	これは Bootstrap() を実行します。
+	distribute などは、皆この loader へのシンボリックリンクです。
+	/usr/local/libexec/fml/ 以下を参照してください。
 	</para>
    </listitem>
 
@@ -117,9 +117,10 @@ FML::Process::Mead       >-|    |
    <itemizedlist>
 	<listitem>
 	<para>
-	/usr/local/etc/fml/main.cf を読み込む。
-	読み込むと fml のバージョンが分かる。
-	main.cf の値から @INC を再設定しバージョン依存性を解決します。
+	/usr/local/etc/fml/main.cf を読み込み、
+	fml のバージョンを知ります。
+	また、main.cf の値から @INC (Perl のライブラリサーチパス)を再設定し、
+	読み込むべきライブラリのバージョン依存性を解決します。
 	default_config.cf.{ja,en} はバージョン依存ですので、
 	設定ファイルを読み込む前に、
 	この段階でバージョンを評価しなければいけないことに注意してください。
@@ -128,8 +129,8 @@ FML::Process::Mead       >-|    |
 
 	<listitem>
 	<para>
-	@ARGV を評価し、
-	どのＭＬの config.cf 群をロードすればいいのかを準備します。
+	@ARGV (実行されたプログラムの引数 )を評価し、
+	どのＭＬの config.cf (設定ファイル)群を読み込むのかを判断します。
 	</para>
 	</listitem>
 
@@ -137,18 +138,16 @@ FML::Process::Mead       >-|    |
 	<para>
 	次に
 	FML::Process::Switch
-	(バージョン依存)クラスを
-	ロードします。
+	(バージョン依存)クラスをロードします。
 	</para>
 
 	   <itemizedlist>
 		<listitem>
 		<para>
 		Bootstrap2() および ProcessSwitch() を実行し、
-		配送用、コマンドメール用の各プロセスへ
-		制御を移します。
-		この時は $0 から自分の名前を知り、
-		どのプロセスへ分岐すればいいのかを判断しています。
+		配送用、コマンドメール用などの各プロセスへ制御を移します。
+		この時点で、すでに $0 から、
+		どのプロセスへ成りかわればいいのかは分かっています。
 		</para>
 		</listitem>
 
@@ -161,7 +160,7 @@ FML::Process::Mead       >-|    |
 
 		FML::Process::Flow の中に、
 		どのように fml8 プロセスを実行するかが
-		定義されています。大雑把には
+		定義されています。おおまかには
 <screen>
 $process = new FML::Process::なにか;
 $process->prepare($args);
@@ -171,7 +170,7 @@ $process->finish($args);
 </screen>
 		のような実行順です。
 		各プロセスは、それぞれについて適当なメソッドを
-		FML::Process:: 以下に用意する必要があります。
+		FML::Process:: 以下のクラスで用意する必要があります。
 		</para>
 		</listitem>
 	   </itemizedlist>
@@ -193,7 +192,8 @@ $process->finish($args);
 
 <para>
 以下、内部構造について、２、３の走り書き/おぼえがきを残しておきます。
-一応、こういった構造を鑑みて、prepare() のあたりに持ってきているわけです。 
+一応、こういった構造を考慮して、
+prepare() メソッドあたりに持ってきているわけです。 
 <screen>
 main::Bootstrap()
 

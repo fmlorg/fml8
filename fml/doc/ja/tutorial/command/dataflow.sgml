@@ -1,11 +1,11 @@
 <!--
-   $FML: dataflow.sgml,v 1.5 2005/06/25 15:11:28 fukachan Exp $
+   $FML: dataflow.sgml,v 1.6 2008/08/17 18:28:36 fukachan Exp $
 -->
 
 
 <sect1 id="fml.command.dataflow">
 	<title>
-	コマンドの処理のフロー
+	コマンド処理のフロー
 	</title>
 
 
@@ -14,13 +14,13 @@
 -->
 
 <para>
-すべての処理は最終的に「FML::Command」クラス経由で「FML::Command::モー
-ド::コマンド」クラスを呼び出します。GUI および CUI、コマンドメールは、
-そこに至る前処理の段階が異なるだけです。
+すべてのコマンド(&fml8; への命令)処理は最終的に「FML::Command」クラス
+経由で「FML::Command::モード::コマンド」クラスを呼び出します。GUI およ
+び CUI、コマンドメールは、そこに至る前処理の段階が異なるだけです。
 </para>
 
 
-<sect2>
+<sect2 id="fml.command.dataflow.newframework">
 	<title>
 	コマンドメールの処理
 	</title>
@@ -32,7 +32,13 @@
 </caution>
 
 <para>
-まず、コマンドは行単位で、解析されます。
+本節はコマンドメールの話です。
+メールの本文が複数行あり、それが複数の命令を含むと想定します。
+</para>
+
+<para>
+まず、メールは行単位で解析されます。
+これは、一行に一つのコマンドが書いてあるという想定です。
 </para>
 
 <para>
@@ -41,18 +47,23 @@
 </para>
 
 <para>
-1) guideやsubscribeのようにメンバー以外にも許されるコマンドであれば、
-   直接コマンド呼び出しルーチンへ処理が移ります。
+1) guide や subscribe のようにメンバー以外にも許されるコマンドであれば、
+   そこから直接、コマンド呼び出しルーチンへ処理が移ります。
    ここで許されるコマンドは anonymous_command_mail_allowed_commands
+   変数で定義されているコマンドです。
+</para>
+
+<para>
+2) あらかじめ指定されたユーザだけに許されるコマンドの場合、
+   command_mail_restrictions のルールに従って他の条件を確認し、
+   許されたなら、呼び出しルーチンへ処理が移ります。
+   ここで許されるコマンドは user_command_mail_allowed_commands
    で定義されているコマンドです。
 </para>
 
 <para>
-2) メンバーだけに許されるコマンドの場合、
-   command_mail_restrictionsのルールに従って他の条件を確認し、
-   許されたなら、呼び出しルーチンへ処理が移ります。
-   ここで許されるコマンドは user_command_mail_allowed_commands
-   で定義されているコマンドです。
+「あらかじめ指定されたユーザ」には、一般ユーザと管理者が含まれます。
+ただし、それぞれの処理のフローが異なります。
 </para>
 
 <para>
@@ -64,24 +75,25 @@ FML::Command クラス経由でコマンドが実行されます。
 </para>
 
 <para>
-admin コマンドの実行は、ここでは行なわれません。「admin ...」コマンド
-は、まず一般ユーザ権限の admin コマンド
+admin コマンドも「あらかじめ指定されたユーザ」ですが、
+admin コマンドの実行は、ここでは行なわれません。
+「admin ...」コマンドは、まず一般ユーザ権限の admin コマンド
 <footnote>
 <para>
 注: admin コマンドは user_command_mail_allowed_commands で許されています
 </para>
 </footnote>
-として処理が進められ、最終的に「FML::Command::User::admin」クラスが呼
-び出されます。このクラスの中で、$admin_command_mail_restrictions に基
-づいてリモート権限があるか？が確認され、もう一度「FML::Command」クラス
-経由で管理者権限の「FML::Command::Admin::コマンド」クラスが呼び出され
-ます(つまりトランポリンメカニズムです)。
+の実行として処理が進められ、最終的に「FML::Command::User::admin」クラ
+スが呼び出されます。このクラスの中で、admin_command_mail_restrictions 
+変数 に基づいてリモート権限があるか？が確認され、もう一度
+「FML::Command」クラス経由で管理者権限の「FML::Command::Admin::コマン
+ド」クラスが呼び出されます(つまりトランポリン・メカニズムです)。
 </para>
 
 </sect2>
 
 
-<sect2>
+<sect2 id="fml.command.dataflow.cui">
 	<title>
 	CUI (makefml/fml)の処理
 	</title>
@@ -94,8 +106,9 @@ admin コマンドの実行は、ここでは行なわれません。「admin ...」コマンド
 </para>
 
 <para>
-なお、サーバにリモートで入れるようにする際、SSH で「RSA 2048 bit 鍵の
-み許す」といった設定および運用ルールにしてください。
+なお、サーバへリモートからログインするためには SSH で「RSA 2048 ビット
+以上の鍵のみを許す、パスワード認証は認めない」といった強固な運用ルール
+を課して下さい。
 </para>
 
 </sect2>

@@ -1,5 +1,5 @@
 <!--
- $FML$
+ $FML: recipes.command.sgml,v 1.1 2006/01/18 14:56:35 fukachan Exp $
 
 -->
 
@@ -8,7 +8,7 @@
 
 <question>
 <para>
-help を取り寄せると化けています
+help を取り寄せると文字化けしています
 </para>
 </question>
 
