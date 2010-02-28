@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Jul  4, 2004
+### Revised: Apr 23, 2007
 ###
 
-my $PM_VERSION = "IM::Nntp.pm version 20031028(IM146)";
+my $PM_VERSION = "IM::Nntp.pm version 20100215(IM150)";
 
 package IM::Nntp;
 require 5.003;
@@ -455,13 +455,13 @@ sub nntp_get_message($$) {
     im_notice("accessing to $group on $srvs.\n");
     do {
 	if (($rc = nntp_open(\@servers, 0)) < 0) {
-	    return(-1, "can not connect $srvs.\n");
+	    return(-1, "cannot connect $srvs.\n");
 	}
 	if (($group ne '') && ($rc = nntp_command("GROUP $group")) < 0) {
-	    return(-1, "can not access $group.\n");
+	    return(-1, "cannot access $group.\n");
 	}
     } while (@servers > 0 && $rc > 0);
-    return(-1, "can not access $group on $srvs.\n") if ($rc);
+    return(-1, "cannot access $group on $srvs.\n") if ($rc);
     ($rc, $art) = nntp_article($msg);
     nntp_close();
     return(-1, "no message $msg in -$group.\n") if ($rc);
@@ -555,7 +555,7 @@ sub nntp_get_msg($$$$) {
 	    $msgs = &nntp_xover($art_start, $art_end);
 	    $msgs = &nntp_head($art_start, $art_end) if ($msgs < 0);
 	    if ($msgs < 0) {
-		im_warn("can not get article poster information.\n");
+		im_warn("cannot get article poster information.\n");
 		return -1;
 	    }
 	    im_info("$msgs article(s) in $group at $servers.\n");
@@ -572,7 +572,7 @@ sub nntp_get_msg($$$$) {
 	    im_info("Getting new messages from $group at $servers into $dst...\n");
 	    ($msgs, $last) = &nntp_articles($art_start, $art_end, $dst, $limit);
 	    if ($msgs < 0) {
-		im_warn("can not get articles.\n");
+		im_warn("cannot get articles.\n");
 		return -1;
 	    }
 	    im_info("$msgs message(s).\n");

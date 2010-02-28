@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Jul 02, 1998
-### Revised: Jul  4, 2004
+### Revised: Apr 23, 2007
 ###
 
 BEGIN {
@@ -14,8 +14,8 @@ BEGIN {
 };
 
 $Prog = 'imhsync';
-my $VERSION_DATE = "20040704";
-my $VERSION_NUMBER = "147";
+my $VERSION_DATE = "20100215";
+my $VERSION_NUMBER = "150";
 my $VERSION = "${Prog} version ${VERSION_DATE}(IM${VERSION_NUMBER})";
 my $VERSION_INFORMATION = "${Prog} (IM ${VERSION_NUMBER}) ${VERSION_DATE}
 Copyright (C) 1999 IM developing team
@@ -205,13 +205,13 @@ sub my_history_open($$) {
     }
 
     unless ($db) {
-	im_err "history: can not access $dbfile ($!).\n";
+	im_err "history: cannot access $dbfile ($!).\n";
 	return -1;
     }
     if ($DBtype eq 'DB') {
 	$fd = $db->fd;
 	if ($fd < 0) {
-	    im_err "history: can not access $dbfile (fd = $fd)\n";
+	    im_err "history: cannot access $dbfile (fd = $fd)\n";
 	    return -1;
 	}
     }

@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Aug 31, 1995
-### Revised: Jul  4, 2004
+### Revised: Apr 23, 2007
 ###
 
 BEGIN {
@@ -14,8 +14,8 @@ BEGIN {
 };
 
 $Prog = 'imput';
-my $VERSION_DATE = "20040704";
-my $VERSION_NUMBER = "147";
+my $VERSION_DATE = "20100215";
+my $VERSION_NUMBER = "150";
 $VERSION = "${Prog} version ${VERSION_DATE}(IM${VERSION_NUMBER})";
 my $VERSION_INFORMATION = "${Prog} (IM ${VERSION_NUMBER}) ${VERSION_DATE}
 Copyright (C) 1999 IM developing team
@@ -163,7 +163,7 @@ Usage: $Prog [OPTIONS] [MSG]
     'Lines;i;;Lines_to_partial'	# XXX
 	=> 'Line numbers for splitting into partial messages',
     'Sleep;i;10;Partial_sleep'
-	=> 'Sleep interval for dispatching each splitted messages',
+	=> 'Sleep interval for dispatching each split messages',
     'Log;s;putlog;Log_file'	# XXX
 	=> 'File name to write delivery log',
     'Syslog;b;;'
@@ -240,13 +240,17 @@ Usage: $Prog [OPTIONS] [MSG]
 
 @CmpConfig = (
     ## for compatibility with send/MH
-    'mime;B;;Mime_bcc'				=> '',
+    'mime;b;;Mime_bcc'				=> '',
+    'nomime;B;;Mime_bcc'			=> '',
+    'msgid;b;;Generate_message_id'		=> '',
+    'nomsgid;B;;Generate_message_id'		=> '',
     'watch;b;;opt_verbose'			=> '',
+    'nowatch;B;;opt_verbose'			=> '',
+    'verbose;b;;opt_verbose'			=> '',
+    'noverbose;B;;opt_verbose'			=> '',
     'draftmessage;s;;Draft_message'		=> '',
     'draftf;s;;Draft_folder'			=> '',
-    'verbose;b;;opt_verbose'			=> '',
     'draftfolder;s;;Draft_folder'		=> '',
-    'nowatch;B;;opt_verbose'			=> '',
     'nodraftfolder;s;;Dummy'			=> '',
     'draftm;s;;Draft_message'			=> '',
     'draft;B;;Dummy'				=> '',
@@ -261,12 +265,14 @@ Usage: $Prog [OPTIONS] [MSG]
     'push;b;;Error_report_by_mail'		=> '',
     'nopush;B;;Error_report_by_mail'		=> '',
     'width;i;;Dummy'				=> '',
-    'library;s;;Dummy'				=> '',
+    'split;i;;Partial_sleep'			=> '',
+    'version;b;;opt_version'			=> '',
+    'help;b;;Help'				=> '',
 ## if ISO2022JP
     'hencode;b;;Iso2022jp_header_mime_conv'	=> '',
     'nohencode;B;;Iso2022jp_header_mime_conv'	=> '',
 ## endif
-    'split;i;;Partial_sleep'			=> '',
+    'library;s;;Dummy'				=> '',
     'server;s;;Smtp_servers'			=> '',
     'client;s;;Client_name'			=> '',
     ## temporary solution for compatibility with sendmail
@@ -1181,7 +1187,7 @@ sub read_message {
 	$message_file = &expand_path($d);
     }
     unless (im_open(\*READ, "<$message_file")) {
-	im_err("Can not open: $message_file\n");
+	im_err("Cannot open: $message_file\n");
 	&error_exit;
     }
     if (&read_header(\*READ, \@Header, 0) < 0) {
@@ -1207,7 +1213,7 @@ sub read_mp_message {
 	$message_file = &expand_path($file);
     }
     unless (im_open(\*MP_READ, "<$message_file")) {
-	im_err("Can not open: $message_file\n");
+	im_err("Cannot open: $message_file\n");
 	&error_exit;
     }
     @content = ();
@@ -1351,7 +1357,7 @@ sub pgp_process {
 
 	local($f) = fork;
 	if ($f < 0) {
-	    im_err("Can not fork to exec PGP program.\n");
+	    im_err("Cannot fork to exec PGP program.\n");
 	    &error_exit;
 	}
 	if ($f > 0) {
@@ -1562,7 +1568,7 @@ sub trash_message {
 		unlink("$dir$Trashmark$file");
 	    }
 	    if (!rename("$dir$file", "$dir$Trashmark$file")) {
-		im_err("Can not rename: $dir$file as $dir$Trashmark$file\n");
+		im_err("Cannot rename: $dir$file as $dir$Trashmark$file\n");
 		&error_exit;
 	    }
 	    im_notice("$dir$file was renamed to $dir$Trashmark$file\n");
@@ -1587,7 +1593,7 @@ sub append_dist_header {
     my($message_file) = &expand_path($d);
     local(*DIST);
     unless (im_open(\*DIST, "<$message_file")) {
-	im_err("Can not open: $message_file\n");
+	im_err("Cannot open: $message_file\n");
 	&error_exit;
     }
     if (&read_header(\*DIST, \@Header, 1) < 0) {
@@ -2474,93 +2480,56 @@ Header lines to be added.
 
 For compatibility with the send command (provided by MH/nmh):
 
-	-mime=<on|off> (on)
-		
-	-watch=<on|off> (off)
-		
-	-draftmessage=<string> ()
-		
-	-draftf=<string> ()
-		
-	-verbose=<on|off> (off)
-		
-	-draftfolder=<string> ()
-		
-	-nowatch=<on|off> (off)
-		
-	-nodraftfolder=<string> ()
-		
-	-draftm=<string> ()
-		
-	-draft=<on|off> (off)
-		
-	-alias=<string> (Aliases)
-		
-	-aliasesfile=<string> (Aliases)
-		
-	-filter=<string> ()
-		
-	-nofilter=<on|off> (off)
-		
-	-format=<on|off> (off)
-		
-	-noformat=<on|off> (off)
-		
-	-forward=<on|off> (off)
-		
-	-noforward=<on|off> (off)
-		
-	-push=<on|off> (on)
-		
-	-nopush=<on|off> (on)
-		
-	-width=<num> ()
-		
-	-library=<string> ()
-		
-	-hencode=<on|off> (on)
-		
-	-nohencode=<on|off> (on)
-		
-	-split=<num> (10)
-		
-	-server=<string> (localhost)
-		
-	-client=<string> (localhost)
-		
-	-bs=<on|off> (off)
-		
-	-f=<string> ()
-		
-	-t=<on|off> (off)
-		
-	-v=<on|off> (off)
-		
-	-odb=<on|off> (off)
-		
-	-odi=<on|off> (off)
-		
-	-oem=<on|off> (on)
-		
-	-oi=<on|off> (off)
-		
-	-i=<on|off> (off)
-		
-	-om=<on|off> (off)
-		
-	-m=<on|off> (off)
-		
-	-odq=<on|off> (off)
-		
-	-q=<on|off> (off)
-		
-	-bp=<on|off> (off)
-		
-	-J=<on|off> (off)
-		
-	-h=<on|off> (off)
-		
-	-s=<string> ()
+	-mime
+	-nomime
+	-msgid
+	-nomsgid
+	-watch
+	-nowatch
+	-verbose
+	-noverbose
+	-draftmessage=<string>
+	-draftf=<string>
+	-draftfolder=<string>
+	-nodraftfolder
+	-draftm=<string>
+	-draft
+	-alias=<string>
+	-aliasesfile=<string>
+	-filter=<string>
+	-nofilter
+	-format
+	-noformat
+	-forward
+	-noforward
+	-push
+	-nopush
+	-width=<num>
+	-split=<num>
+	-version
+	-help
+	-hencode
+	-nohencode
+	-library=<string>
+	-server=<string>
+	-client=<string>
+	-bs
+	-f=<string>
+	-t
+	-v
+	-odb
+	-odi
+	-oem
+	-oi
+	-i
+	-om
+	-m
+	-odq
+	-q
+	-bp
+	-J
+	-h
+	-s=<string>
 
 =head1 COPYRIGHT
 

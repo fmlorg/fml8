@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 30, 1997
-### Revised: Jul  4, 2004
+### Revised: Apr 23, 2007
 ###
 
-my $PM_VERSION = "IM::GetPass.pm version 20031028(IM146)";
+my $PM_VERSION = "IM::GetPass.pm version 20100215(IM150)";
 
 package IM::GetPass;
 require 5.003;
@@ -135,7 +135,7 @@ sub connect_agent($) {
 
     my $realuser = im_getlogin();
     unless ($realuser) {
-	im_warn("pwagent: can not get login name\n") unless ($surpresserror);
+	im_warn("pwagent: cannot get login name\n") unless ($surpresserror);
 	return '';
     }
     my $dir = &pwagent_tmp_path() . "-$realuser";
@@ -155,7 +155,7 @@ sub connect_agent($) {
 	my $name = "$dir/pw";
 
 	unless (-S $name) {
-	    im_warn("pwagent: can not access to socket: $name\n")
+	    im_warn("pwagent: cannot access to socket: $name\n")
 		unless ($surpresserror);
 	    return '';
 	}

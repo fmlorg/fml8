@@ -142,6 +142,7 @@ NoSync=@im_nosync@		# Do not need fsync(2) on writing file
 #NamazuV2=yes			# use Namazu version 2 (1.9.x or late)
 #NamazuDir=Namazu		# relative to ~/
 #NamazuLockDir=nmzlock		# lock directory (relative to ~/.im/)
+#MknmzOptions=--decode-base64	# additional options for mknmz
 #MknmzIncludeFile=~/Namazu/mknmz-inc.pl	# mknmz -I <file>
 #MknmzIgnoreFoldersRegex=\+(attach|draft|trash|queue|postq|schedule)
 

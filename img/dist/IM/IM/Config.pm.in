@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Jul  4, 2004
+### Revised: Apr 23, 2007
 ###
 
-my $PM_VERSION = "IM::Config.pm version 20031028(IM146)";
+my $PM_VERSION = "IM::Config.pm version 20100215(IM150)";
 
 package IM::Config;
 require 5.003;
@@ -43,7 +43,7 @@ use vars qw(@ISA @EXPORT);
     usepwagent pwagentport pwagent_tmp_dir pwagent_tmp_path usepwfiles pwfiles
     expand_path use_xdispatcher usetouchfile touchfile
     namazuv2 namazu_dir namazu_path namazu_lock_dir namazu_lock_path
-    mknmz_include_file mknmz_ignore_folders_regex
+    mknmz_options mknmz_include_file mknmz_ignore_folders_regex
     pop_timeout imap_timeout nntp_timeout dns_timeout
     connect_timeout command_timeout rcv_buf_siz
     db_type file_attr ssh_path);
@@ -155,6 +155,7 @@ BEGIN {
     'namazuv2;b;;NamazuV2'		=> 'Use Namazu Version 2 (1.9 or late)',
     'namazudir;s;;NamazuDir'	=> 'A directory to contain Namazu indexes',
     'namazulockdir;s;;NamazuLockDir'	=> 'Lock directory for Namazu',
+    'mknmzoptions;s;;MknmzOptions'	=> 'Options for mknmz',
     'mknmzincludefile;s;;MknmzIncludeFile'	=> 'A file for mknmz -I',
     'mknmzignorefoldersregex;s;;MknmzIgnoreFoldersRegex'	=> 'Folders regex ignored by immknmz',
     );
@@ -998,6 +999,10 @@ sub namazu_path() {
     return expand_home(namazu_dir());
 }
 
+sub mknmz_options() {
+    return $MknmzOptions;
+}
+
 sub mknmz_include_file() {
     return &expand_path($MknmzIncludeFile);
 }
@@ -1124,9 +1129,10 @@ NntpHistory=newshist		# to save last state (relative to ~/.im/)
 # impwagent
 PwAgentTmpDir=pwagtmp		# temporary directory (relative to ~/.im/)
 # namazu
-NamazuV2=off			# use Namazu version 2 (1.9.x or late)
+NamazuV2=yes			# use Namazu version 2 (1.9.x or late)
 NamazuDir=Namazu		# relative to ~/
 NamazuLockDir=nmzlock		# lock directory (relative to ~/.im/)
+#MknmzOptions=--decode-base64	# options for mknmz
 MknmzIncludeFile=~/Namazu/mknmz-inc.pl	# mknmz -I <file>
 MknmzIgnoreFoldersRegex=\+(attach|draft|trash|queue|postq|schedule)
 __END__
@@ -1161,7 +1167,7 @@ popaccount pophistoryfile imapaccount httpproxy noproxy
 usepwagent pwagentport pwagent_tmp_dir pwagent_tmp_path usepwfiles pwfiles
 expand_path use_xdispatcher usetouchfile touchfile
 namazuv2 namazu_dir namazu_path namazu_lock_dir namazu_lock_path
-mknmz_include_file mknmz_ignore_folders_regex
+mknmz_options mknmz_include_file mknmz_ignore_folders_regex
 pop_timeout imap_timeout nntp_timeout dns_timeout
 connect_timeout command_timeout rcv_buf_siz
 db_type file_attr ssh_path

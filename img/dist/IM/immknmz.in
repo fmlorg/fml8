@@ -6,7 +6,7 @@
 ### Author:  Shuichi Kitaguchi <kit@Mew.org>
 ###	Internet Message Group <img@mew.org>
 ### Created: Sep 23, 1999
-### Revised: Jul  4, 2004
+### Revised: Apr 23, 2007
 ###
 
 BEGIN {
@@ -15,8 +15,8 @@ BEGIN {
 };
 
 $Prog = 'immknmz';
-my $VERSION_DATE = "20040704";
-my $VERSION_NUMBER = "147";
+my $VERSION_DATE = "20100215";
+my $VERSION_NUMBER = "150";
 my $VERSION = "${Prog} version ${VERSION_DATE}(IM${VERSION_NUMBER})";
 my $VERSION_INFORMATION = "${Prog} (IM ${VERSION_NUMBER}) ${VERSION_DATE}
 Copyright (C) 1999 IM developing team
@@ -57,7 +57,7 @@ help($EXPLANATION) && exit $EXIT_SUCCESS if $opt_help;
 my $lockdir = namazu_lock_path();
 if ($lockdir) {
     unless (mkdir($lockdir, 0700)) {
-	print STDERR "$Prog: can not create lock directory: $lockdir.\n";
+	print STDERR "$Prog: cannot create lock directory: $lockdir.\n";
 	$lockdir = "";
 	exit $EXIT_ERROR;
     }
@@ -76,6 +76,7 @@ if (! -f $mknmz_incfile) {
 }
 my $mknmz_args = "-q";
 $mknmz_args = "" if $opt_verbose;
+$mknmz_args = $mknmz_args . " " . mknmz_options();
 
 my $tempdir;
 my $tempfile;
@@ -85,7 +86,7 @@ $tempdir =~ s/\/+$//;
 $tempdir = sprintf("%s/immknmz-%d-%d", $tempdir, $$, time());
 rmdir $tempdir;
 unless (mkdir($tempdir, 0700)) {
-    print STDERR "$Prog: can not create directory: $tempdir.\n";
+    print STDERR "$Prog: cannot create directory: $tempdir.\n";
     $tempdir = "";
     exit($EXIT_ERROR);
 }
@@ -150,7 +151,7 @@ sub make_folder_index($) {
     if (scalar(@filelist) > 0) {
 	unless (sysopen(\*TEMPFILE, "$tempfile",
 			O_RDWR()|O_CREAT()|O_EXCL(), 0600)) {
-	    print STDERR "$Prog: can not create file: $tempfile.\n";
+	    print STDERR "$Prog: cannot create file: $tempfile.\n";
 	    exit($EXIT_ERROR);
 	}
 	binmode(\*TEMPFILE);

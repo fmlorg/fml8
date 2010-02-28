@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Sep 13, 1997
-### Revised: Jul  4, 2004
+### Revised: Apr 23, 2007
 ###
 
 BEGIN {
@@ -14,8 +14,8 @@ BEGIN {
 };
 
 $Prog = 'impwagent';
-my $VERSION_DATE = "20040704";
-my $VERSION_NUMBER = "147";
+my $VERSION_DATE = "20100215";
+my $VERSION_NUMBER = "150";
 my $VERSION = "${Prog} version ${VERSION_DATE}(IM${VERSION_NUMBER})";
 my $VERSION_INFORMATION = "${Prog} (IM ${VERSION_NUMBER}) ${VERSION_DATE}
 Copyright (C) 1999 IM developing team
@@ -104,7 +104,7 @@ if ($res eq 'PONG') {
 # preparing socket directory
 my $realuser = im_getlogin();
 unless ($realuser) {
-    print STDERR "$Prog: can not get login name.\n";
+    print STDERR "$Prog: cannot get login name.\n";
     exit $EXIT_ERROR;
 }
 my $dir = &pwagent_tmp_path() . "-$realuser";
@@ -113,7 +113,7 @@ my $port = &pwagentport();
 if ($port > 0) {
     rmdir $dir;
     unless (mkdir($dir, 0700)) {
-	print STDERR "$Prog: can not create directory: $dir.\n";
+	print STDERR "$Prog: cannot create directory: $dir.\n";
 	exit $EXIT_ERROR;
     }
 
@@ -133,7 +133,7 @@ if ($port > 0) {
     unlink $sockname;
     rmdir $dir;
     unless (mkdir($dir, 0700)) {
-	print STDERR "$Prog: can not create directory: $dir.\n";
+	print STDERR "$Prog: cannot create directory: $dir.\n";
 	exit $EXIT_ERROR;
     }
 
@@ -158,7 +158,7 @@ $SIG{'ALRM'} = \&alarm_func;
 #my $ppid = getppid();
 my $id = fork();
 if ($id < 0) {
-    print STDERR "$Prog: can not fork: $!\n";
+    print STDERR "$Prog: cannot fork: $!\n";
     exit $EXIT_ERROR;
 }
 

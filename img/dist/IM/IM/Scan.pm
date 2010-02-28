@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Jul  4, 2004
+### Revised: Apr 23, 2007
 ###
 
-my $PM_VERSION = "IM::Scan.pm version 20031028(IM146)";
+my $PM_VERSION = "IM::Scan.pm version 20100215(IM150)";
 
 package IM::Scan;
 require 5.003;
@@ -907,7 +907,7 @@ header-type as you want. Default valid header-types are
           or raw Newsgroups: is displayed in 'To:xxx' or 'Ng:xxx' 
           format, respectively. Otherwise, friendly From: field is 
           displayed.
-    %P    Similar to %A, but diplay raw address of mail sender
+    %P    Similar to %A, but display raw address of mail sender
           instead of friendly From: field, just like mh-e.            
     %i    indent to display thread
     %s    MIME decoded Subject: field

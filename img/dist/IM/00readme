@@ -3,7 +3,7 @@
 			    Kazu Yamamoto
 			  Tatsuya Kinoshita
 
-			     Jul  4, 2004
+			     Feb 15, 2010
 
 
 			   <<<Copyright>>>
@@ -94,12 +94,15 @@ have the root privilege.
 
 		 <<<Contributions and Bug Reports>>>
 
-Please send comments, bug reports, and patches to <img@mew.org>.
-You can contact the current maintainer (Tatsuya Kinoshita, since
-October 2002) by this e-mail address.
+Please send comments, bug reports, and patches to the current maintainer
+  Tatsuya Kinoshita <tats@vega.ocn.ne.jp>
 
-For the latest news of IM, please see "IM (Internet Message) Official
-Site" (http://tats.hauN.jp/im/).
+For the latest news of IM, please see IM (Internet Message) Official Site
+  http://tats.hauN.org/im/
+
+You can download IM from Debian mirror sites.  For more information of
+the Debian im package, please see
+  http://packages.qa.debian.org/im
 
 
 			  <<<Programmers>>>

@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Dec 31, 1995
-### Revised: Jul  4, 2004
+### Revised: Apr 23, 2007
 ###
 
 BEGIN {
@@ -14,8 +14,8 @@ BEGIN {
 };
 
 $Prog = 'imls';
-my $VERSION_DATE = "20040704";
-my $VERSION_NUMBER = "147";
+my $VERSION_DATE = "20100215";
+my $VERSION_NUMBER = "150";
 my $VERSION = "${Prog} version ${VERSION_DATE}(IM${VERSION_NUMBER})";
 my $VERSION_INFORMATION = "${Prog} (IM ${VERSION_NUMBER}) ${VERSION_DATE}
 Copyright (C) 1999 IM developing team
@@ -195,13 +195,13 @@ sub nntp_messages($@) {
     local(@servers) = split(',', $srvs);
     do {
 	if (($rc = &nntp_open(\@servers, 0)) < 0) {
-	    im_die("can not connect $srvs.\n");
+	    im_die("cannot connect $srvs.\n");
 	}
 	if (($rc = &nntp_command("GROUP $newsgroup", 1)) < 0) {
-	    im_die("can not access $newsgroup.\n");
+	    im_die("cannot access $newsgroup.\n");
 	}
     } while (@servers > 0 && $rc > 0);
-    im_die("can not access $newsgroup on $srvs.\n") if ($rc);
+    im_die("cannot access $newsgroup on $srvs.\n") if ($rc);
     my(@resp) = &nntp_command_response;
     my $error = 0;
     my $i;

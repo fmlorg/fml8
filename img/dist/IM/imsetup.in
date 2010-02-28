@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: May  9, 1997
-### Revised: Jul  4, 2004
+### Revised: Apr 23, 2007
 ###
 
 BEGIN {
@@ -14,8 +14,8 @@ BEGIN {
 };
 
 $Prog = 'imsetup';
-my $VERSION_DATE = "20040704";
-my $VERSION_NUMBER = "147";
+my $VERSION_DATE = "20100215";
+my $VERSION_NUMBER = "150";
 my $VERSION = "${Prog} version ${VERSION_DATE}(IM${VERSION_NUMBER})";
 my $VERSION_INFORMATION = "${Prog} (IM ${VERSION_NUMBER}) ${VERSION_DATE}
 Copyright (C) 1999 IM developing team
@@ -497,6 +497,7 @@ keep=$keep
 #NamazuV2=yes			# use Namazu version 2 (1.9.x or late)
 #NamazuDir=Namazu		# relative to ~/
 #NamazuLockDir=nmzlock		# lock directory (relative to ~/.im/)
+#MknmzOptions=--decode-base64	# additional options for mknmz
 #MknmzIncludeFile=~/Namazu/mknmz-inc.pl	# mknmz -I <file>
 #MknmzIgnoreFoldersRegex=\+(attach|draft|trash|queue|postq|schedule)
 

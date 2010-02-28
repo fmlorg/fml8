@@ -1,4 +1,21 @@
-		Differences between IM147 and IM146
+		Differences between IM 150 and IM 149
+
+* NamazuV2=yes by default.
+* New option MknmzOptions for immknmz. (e.g. MknmzOptions=--decode-base64)
+* For compatibility with MH/nmh's send command, -msgid, -nomsgid, -nomime,
+  -noverbose, -version and -help options are added to imput.
+* Bug fix for IM/Pop.pm and IM/EncDec.pm.
+
+		Differences between IM 149 and IM 148
+
+* As a security countermeasure, reject non-ASCII characters for APOP
+  timestamp. [CVE-2007-1558]
+
+		Differences between IM 148 and IM 147
+
+* Fix that imget fails to fetch imap message.
+
+		Differences between IM 147 and IM 146
 
 * New config variable `MboxFilter'.  e.g. `MboxFilter=bogofilter -p -M -I'
   directs that the bogofilter command be invoked when retrieving mails
@@ -6,11 +23,11 @@
 * New imput option `--msgiduser'.
 * im* commands accept `--version'.
 
-		Differences between IM146 and IM145
+		Differences between IM 146 and IM 145
 
 * Fix that TCP transaction fails with Perl 5.8.1.
 
-		Differences between IM145 and IM144
+		Differences between IM 145 and IM 144
 
 * Fix that imget fails when modern delivery identifiers are used in a
   maildir, according to `http://cr.yp.to/proto/maildir.html'.
@@ -20,29 +37,29 @@
   `MknmzIgnoreFoldersRegex', and `UseXDispatcher'.
 * Revised regexp for Form=%b.
 
-		Differences between IM144 and IM143
+		Differences between IM 144 and IM 143
 
 * Supporting Darwin.
 * Regexp fix for Form=%b.
 * Bug fix for configure options.
 * Doc/message fix.
 
-		Differences between IM143 and IM142
+		Differences between IM 143 and IM 142
 
 * The number of the fsync system call is guessed on run time by default.
   If `FsyncNumber' is set to non-0 in Config, it is preferred.
 * New config variable, `SshPath'.
 
-		Differences between IM142 and IM141
+		Differences between IM 142 and IM 141
 
-* Local security fix for impwagent and immknmz.
+* Local security fix for impwagent and immknmz. [CAN-2002-1395]
 * IM/TcpTransaction.pm: Socket6.pm support for IPv6.
 * IM/MD5.pm: Fix 64bit integer problem.
 * imsetup: Support `User' and `MBoxStyle=qmail'.
 * imsetup: Bug fix for Perl 5.8.0.
 * Minor bug fixes.
 
-		Differences between IM141 and IM140
+		Differences between IM 141 and IM 140
 
 * immknmz: New option, `--timestamp'.
 * IM/Nntp.pm: Bug fix for NNTP authuser for queue.

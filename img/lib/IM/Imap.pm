@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Jul  4, 2004
+### Revised: Apr 23, 2007
 ###
 
-my $PM_VERSION = "IM::Imap.pm version 20031028(IM146)";
+my $PM_VERSION = "IM::Imap.pm version 20100215(IM150)";
 
 package IM::Imap;
 require 5.003;
@@ -192,7 +192,7 @@ sub imap_get($$) {
     im_notice("getting message $num.\n");
     my $resp = &send_command($HANDLE, "im$seq UID FETCH $num RFC822", '');
     my $failed = 0;
-    if ($resp =~ /^\* \d+ FETCH \((UID $num )?RFC822 \{(\d+)\}/i) {
+    if ($resp =~ /^\* \d+ FETCH \((.*)RFC822 \{(\d+)\}/i) {
 	my $size = $2;
 	alarm(imap_timeout()) unless win95p();
 	while (<$HANDLE>) {
@@ -234,7 +234,7 @@ sub imap_head($$) {
     my(%head);
     undef %head;
     if ($resp =~
-    /^\* \d+ FETCH \((UID $num )?RFC822.SIZE (\d+) RFC822.HEADER \{(\d+)\}/i) {
+    /^\* \d+ FETCH \((.*)RFC822\.SIZE (\d+) RFC822\.HEADER \{(\d+)\}/i) {
 	my($size, $len) = ($2, $3);
 	my $field = '';
 	alarm(imap_timeout()) unless win95p();
@@ -290,7 +290,7 @@ sub imap_from($$) {
 #     "im$seq UID FETCH $num RFC822.HEADER.LINES (From Date Subject)", '');
     my $resp = &send_command($HANDLE,
       "im$seq UID FETCH $num RFC822.HEADER.LINES (From)", '');
-    if ($resp =~ /^\* \d+ FETCH \((UID $num )?RFC822.* \{(\d+)\}/i) {
+    if ($resp =~ /^\* \d+ FETCH \((.*)RFC822.* \{(\d+)\}/i) {
 	my $size = $2;
 	my $found = 0;
 	my $f;
@@ -783,7 +783,7 @@ sub imap_scan_folder($$@) {
     my $resp = &send_command($HANDLE,
 	"im$seq UID FETCH $msgset (RFC822.SIZE RFC822.HEADER)", '');
     while ($resp =~
-  /^\* \d+ FETCH \((UID (\d+) )?RFC822.SIZE (\d+) RFC822\.HEADER \{(\d+)\}/i) {
+  /^\* \d+ FETCH \([^0-9]*(UID (\d+) )?[^0-9]*RFC822\.SIZE (\d+) RFC822\.HEADER \{(\d+)\}/i) {
 	($uid, $size, $len) = ($2, $3, $4);
 	my @hdr;
 	alarm(imap_timeout()) unless win95p();

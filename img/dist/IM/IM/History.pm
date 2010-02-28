@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Jul 6, 1997
-### Revised: Jul  4, 2004
+### Revised: Apr 23, 2007
 ###
 
-my $PM_VERSION = "IM::History.pm version 20031028(IM146)";
+my $PM_VERSION = "IM::History.pm version 20100215(IM150)";
 
 package IM::History;
 require 5.003;
@@ -88,13 +88,13 @@ sub history_open($) {
     }
 
     unless ($db) {
-	im_err "history: can not access $dbfile ($!)\n";
+	im_err "history: cannot access $dbfile ($!)\n";
 	return -1;
     }
     if ($DBtype eq 'DB') {
 	$fd = $db->fd;
 	if ($fd < 0) {
-	    im_err "history: can not access $dbfile (fd = $fd)\n";
+	    im_err "history: cannot access $dbfile (fd = $fd)\n";
 	    return -1;
 	}
     }

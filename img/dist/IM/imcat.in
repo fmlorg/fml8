@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: May  5, 1997
-### Revised: Jul  4, 2004
+### Revised: Apr 23, 2007
 ###
 
 BEGIN {
@@ -14,8 +14,8 @@ BEGIN {
 };
 
 $Prog = 'imcat';
-my $VERSION_DATE = "20040704";
-my $VERSION_NUMBER = "147";
+my $VERSION_DATE = "20100215";
+my $VERSION_NUMBER = "150";
 my $VERSION = "${Prog} version ${VERSION_DATE}(IM${VERSION_NUMBER})";
 my $VERSION_INFORMATION = "${Prog} (IM ${VERSION_NUMBER}) ${VERSION_DATE}
 Copyright (C) 1999 IM developing team
@@ -105,7 +105,7 @@ if ($msg =~ /^http:/i) {
 	    import IM::History qw(history_open history_lookup history_close);
 
 	if (history_open(0) < 0) {
-	    im_die("can not open history.\n");
+	    im_die("cannot open history.\n");
 	    exit $EXIT_ERROR;
 	}
 	my $msg = history_lookup($msg, 'LookUpMsg');
@@ -247,7 +247,7 @@ sub join_msg($) {
 
     # get Message-IDs of partial
     if (history_open(0) < 0) {
-	im_err("can not open history.\n");
+	im_err("cannot open history.\n");
 	exit $EXIT_ERROR;
     }
     my $ids = history_lookup("partial:$master", 'LookUpMsg');

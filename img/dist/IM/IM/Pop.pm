@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Jul  4, 2004
+### Revised: Apr 23, 2007
 ###
 
-my $PM_VERSION = "IM::Pop.pm version 20031028(IM146)";
+my $PM_VERSION = "IM::Pop.pm version 20100215(IM150)";
 
 package IM::Pop;
 require 5.003;
@@ -98,7 +98,7 @@ sub pop_open($$$$) {
 	    return -1;
 	}
     } elsif ($auth eq 'APOP') {
-	if ($resp !~ /^\+.*(<.+>)/i) {
+	if ($resp !~ /^\+.*(<[=!-;?-~]+\@[=!-;?-~]+>)/) {
 	    im_err("APOP is not supported by the server.\n");
 	    return -1;
 	}
@@ -164,8 +164,6 @@ sub pop_retr($$$) {
     }
 
     return -1 if (store_message(\@Message, $dst, $noscan) < 0);
-    &exec_getsbrfile($dst);
-
     return 0;
 }
 
@@ -512,6 +510,7 @@ sub pop_inc($$$$$$$$) {
     flush('STDOUT');
     if ($got > 0) {
 	im_info("$got message(s).\n");
+	&exec_getsbrfile($dst);
     } else {
 	im_info("no new message at $host.\n");
     }

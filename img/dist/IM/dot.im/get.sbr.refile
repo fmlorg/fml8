@@ -46,19 +46,21 @@ sub get_sub ($$$) {
 	    $/ = $tmp_str;
 
 	    $new_folder = $folder;
-	    if ($header =~ /(^|\n)X-Bogosity: Yes/) {
+	    if ($header =~ /(^|\n)X-Bogosity: Yes/i) {
 		$new_folder = '+spam';
-	    } elsif ($header =~ /(^|\n)X-Spam-Flag: Yes/) {
+	    } elsif ($header =~ /(^|\n)X-Spam-Flag: Yes/i) {
 		$new_folder = '+spam';
-	    } elsif ($header =~ /(^|\n)X-Spam: yes/) {
+	    } elsif ($header =~ /(^|\n)X-Spam: yes/i) {
 		$new_folder = '+spam';
-#	    } elsif ($header =~ /(^|\n)X-ML-Name: mew-dist/) {
+#	    } elsif ($header =~ /(^|\n)X-ML-Name: mew-dist/i) {
 #		$new_folder = '+mew-dist';
 	    }
 	    if ($new_folder ne $folder) {
-		$new_file = &message_name($new_folder, 'new') || die $!;
-		&im_notice("refiling $folder/$msg to $new_folder.\n");
-		&im_rename($file, $new_file) || die $!;
+		if (&create_folder($new_folder) == 0) {
+		    $new_file = &message_name($new_folder, 'new') || die $!;
+		    &im_notice("refiling $folder/$msg to $new_folder.\n");
+		    &im_rename($file, $new_file) || die $!;
+		}
 	    }
 	    close(MSG);
 	}

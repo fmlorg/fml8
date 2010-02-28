@@ -147,6 +147,7 @@ ToDomain=_domain_when_domain_part_is_omitted_
 #NamazuV2=yes			# use Namazu version 2 (1.9.x or late)
 #NamazuDir=Namazu		# relative to ~/
 #NamazuLockDir=nmzlock		# lock directory (relative to ~/.im/)
+#MknmzOptions=--decode-base64	# additional options for mknmz
 #MknmzIncludeFile=~/Namazu/mknmz-inc.pl	# mknmz -I <file>
 #MknmzIgnoreFoldersRegex=\+(attach|draft|trash|queue|postq|schedule)
 
