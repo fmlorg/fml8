@@ -45,6 +45,15 @@
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
 
+2010/02/28
+
+   fml-7.98.14-20100228 released as a mile stone before further development.
+	same as fml-7.98.14-20090809 excluding documentation.
+
+	ドキュメンテーション以外は fml-7.98.14-20090809 と同じです。
+	安全のため、ライブラリのアップデートを始める前に作成した
+	スナップショット。
+
 2009/12/26
 
     fml/utils/bin/version_replace.pl 
@@ -10519,4 +10528,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.320 2009/08/09 12:10:29 fukachan Exp $
+$FML: CHANGES.txt,v 1.321 2009/12/26 14:43:13 fukachan Exp $
