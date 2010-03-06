@@ -3,9 +3,11 @@
 
   [最近のまとめ]
 
-  FML_CURRENT_VERSION=7.98.14
+  FML_CURRENT_VERSION=7.98.15
 
   8.0 PRE_ALPHA
+	7.98.15 IM updated to IM-150.
+		fix wrong ID incrementation in article to html conversion.
 	7.98.14 www interface for anonymous users.
 		Anyone can submit a subscribe/unsubscribe request via
 		www interface. 
@@ -43,6 +45,23 @@
 
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
+
+
+2010/03/06
+
+   FML::Process::Distribute 
+	seems incorrect that increment_id() in calling HTML-ify
+	function since already the article ID is incremated at _
+	deliver_article_prep(). changed to use $article->id(); by
+	fetching the current article ID.
+
+2010/03/01
+
+   bump up to the version 7.98.15.
+
+2010/02/28
+
+   import IM-150.
 
 
 2010/02/28
@@ -10528,4 +10547,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.321 2009/12/26 14:43:13 fukachan Exp $
+$FML: CHANGES.txt,v 1.322 2010/02/28 06:11:33 fukachan Exp $
