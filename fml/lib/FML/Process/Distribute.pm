@@ -1,9 +1,10 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2008 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
+# Copyright (C) 2008,2009,2010 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.182 2008/07/20 09:15:55 fukachan Exp $
+# $FML: Distribute.pm,v 1.183 2009/07/14 15:02:11 tmu Exp $
 #
 
 package FML::Process::Distribute;
@@ -381,7 +382,7 @@ sub finish
 
     unless ($curproc->is_refused()) {
 	my $article = $curproc->_build_article_object();
- 	my $id = $article->increment_id;
+ 	my $id = $article->id();
 	if ($config->yes('use_html_archive')) {
 	    $curproc->log("htmlify article $id");
 	    $curproc->_htmlify();
@@ -870,7 +871,8 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2008 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
+Copyright (C) 2008,2009,2010 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
