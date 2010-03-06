@@ -5,12 +5,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: scramble.pl,v 1.3 2004/03/28 13:11:59 fukachan Exp $
+# $FML: scramble.pl,v 1.4 2006/11/24 06:51:15 fukachan Exp $
 #
 
 use strict;
 use Carp;
 
+my $mode        = $ENV{ MODE }          || "post";
 my $from        = $ENV{ FML_EMUL_FROM } || undef;
 my $from_found  = 0;
 my $date_found  = 0;
@@ -54,11 +55,13 @@ while (<>) {
     print $_;
 }
 
-# avoid body loop check.
-require 'ctime.pl';
-print "\n";
-print "XXX AVOID BODY CHECKSUM LOOP CHECK: ";
-print ctime(time);
-print "\n";
+if ($mode eq "post") {
+    # avoid body loop check.
+    require 'ctime.pl';
+    print "\n";
+    print "XXX AVOID BODY CHECKSUM LOOP CHECK: ";
+    print ctime(time);
+    print "\n";
+}
 
 exit 0;

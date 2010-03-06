@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML: emul_command.sh,v 1.4 2004/03/12 15:54:43 fukachan Exp $
+# $FML: emul_command.sh,v 1.5 2004/03/14 07:01:08 fukachan Exp $
 #
 
 buf=$PWD/__command$$__
@@ -27,7 +27,7 @@ DO () {
 		regress/simulation/main.cf > $maincf
 
 
-	regress/message/scramble.pl $msg |\
+	env MODE=COMMAND regress/message/scramble.pl $msg |\
 	${PERL:-perl} -w fml/libexec/loader -c $maincf \
 		-o $option \
 		--ctladdr \
