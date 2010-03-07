@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML: emul_fmlpl_command.sh,v 1.1 2004/11/24 02:15:11 fukachan Exp $
+# $FML: emul_fmlpl_command.sh,v 1.2 2004/12/29 10:27:30 fukachan Exp $
 #
 
 buf=$PWD/__command$$__
@@ -29,7 +29,7 @@ DO () {
 
 	cp fml/libexec/loader /tmp/fml.pl
 
-	regress/message/scramble.pl $msg |\
+	env MODE=command regress/message/scramble.pl $msg |\
 	${PERL:-perl} -w /tmp/fml.pl -c $maincf \
 		-o $option \
 		--ctladdr \
