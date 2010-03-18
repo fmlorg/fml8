@@ -1,5 +1,5 @@
 <!--
-   $FML: design.sgml,v 1.11 2004/10/06 09:07:38 fukachan Exp $
+   $FML: design.sgml,v 1.12 2008/07/12 12:53:05 fukachan Exp $
 -->
 
 
@@ -21,52 +21,39 @@
 
 <para>
 <ulink url="http://www.fml.org/software/fml8/">
-fml-devel
+&fml8; プロジェクト(初期コードネーム fml-devel)
 </ulink>
-とも呼ばれている &fml8; プロジェクトは、
-&fml4; の再構想(refactoring)とその実装(例)の構築
-を行なっています。
-</PARA>
+は、
+&fml4; の再構想(refactoring)です。
+</para>
 
 <para>
-<ulink url="http://www.fml.org/software/fml8/">
-http://www.fml.org/software/fml8/
-</ulink>
-は将来の fml-current についてのデザインや実装例を紹介しています。
-</PARA>
-
+&fml8; はβ版ですが、何年ものあいだ安定した試験運用を続けています。
+変数名もアーキテクチャアも、おおむね固まったと思います。
+</para>
 
 <para>
-現状の fml-devel はアイデアを実装し、運用テストするための fml 8.0 のア
-ルファ版です。ですが、すでに動く実装例をダウンロードできますし、fml
-1.2 相当ないしはそれ以上の機能を使うこともできます。しかしながら、変数
-名もアーキテクチャアも本決まりではないので、将来変わる可能性があります。
-でも、概ね固まったと思う。
-</PARA>
+自分が使うには全然困らないのですが、
+&fml4; との互換性は不十分かもしれません。
+&fml4; の全ての機能を実装する必要があるとは思えませんが、
+&fml4; の対応機能は、すでにかなりの部分が &fml8; にあります。
+</para>
 
 <para>
-自分がふだん使うには全然困らないのですが、&fml4; との互換性をいいだす
-と、まだ多くの機能が実装されていないといえます。これは、デザインを最初
-から考え直すに当たり、アイデアや意見を募集するためにまだまだ原型にとど
-まっているためでもあります。
-</PARA>
-
-<para>
-ものによっては &fml8; 用に作られたモジュールを &fml4; へ輸入/輸出
-することも検討しています。IPv6 はすでに輸出されました。たとえば 4.0 で
-も独立性の高い mead (エラーメール解析プログラム)などはその良い例だろう
-し、新機能を提供するモジュールなども再輸入(輸出)可能なものは順次マージ
-していきます。
-</PARA>
+ものによっては &fml8; 用に作られたモジュールを &fml4; へ輸入/輸出しています。
+IPv6 はすでに輸出されました。
+たとえば 4.0 でも独立性の高い 
+mead (エラーメール解析プログラム)などは輸出可能な例でしょう。
+</para>
 
 <para>
 これらのマージおよび 4.0 自体のコードの保守をしつつ 4.0 および &fml8; は
 並行開発されていく予定です。
 そのため 4.0 系は stable に近い current という位置付けになります。
-そして 4.0 の bug fix は 4.0.x (4.0.1 4.0.2 …)としてまとめられリリー
-スれていく予定です。
+そして 4.0 の bug fix は 4.0.x (4.0.1 4.0.2 …)としてまとめられ
+リリースれていく予定です。
 逆に &fml8; は本当の開発用のコード( fml-current )ということになります。
-</PARA>
+</para>
 
 </sect1>
 
@@ -75,7 +62,7 @@ http://www.fml.org/software/fml8/
 
 <sect1 id="design.idea.detail">
 	<title>
-	構想（詳細)
+	初期構想（詳細)
 	</title>
 
 <itemizedlist>
@@ -88,7 +75,7 @@ http://www.fml.org/software/fml8/
 
    <listitem>
 	<para>
-	全部 perl module 形式 (要 perl 5.00504 以降)
+	すべて perl module 形式 (要 perl 5.00504 以降)
 	</para>
    </listitem>
 
@@ -162,7 +149,7 @@ http://www.fml.org/software/fml8/
 
 		   <listitem>
 			<para>
-				SQL (MySQL は実装済み)
+				SQL (MySQL、PostgreSQL 実装済み)
 			</para>
 		   </listitem>
 
@@ -194,11 +181,11 @@ http://www.fml.org/software/fml8/
 <!-- ======================================================== -->
 <sect1 id="design.refactoring">
 	<title>
-	fml をリファクトリングするアイデア
+	fml をリファクタリングするアイデア
 	</title>
 
 <table>
- <title> リファクトリング TODO </title>
+ <title> リファクタリング TODO </title>
  <tgroup cols=3>
 
   <thead>
@@ -217,7 +204,7 @@ http://www.fml.org/software/fml8/
 	</row>
 
 	<row>
-	<entry>	</entry>
+	<entry>	done. </entry>
 	<entry> イメージ/モティーフ</entry>
 	<entry>
 		&fml4; から &fml8; へは、
@@ -237,7 +224,7 @@ http://www.fml.org/software/fml8/
 	</row>
 
 	<row>
-	<entry>	</entry>
+	<entry>	done. </entry>
 	<entry> 再利用性(自主開発はできるだけ避ける) </entry>
 	<entry>
 		可能な限りあらゆる CPAN モジュールなどを使う。
@@ -251,7 +238,7 @@ http://www.fml.org/software/fml8/
 
 
 	<row>
-	<entry>	</entry>
+	<entry>	done. </entry>
 	<entry>
 	設定ファイルの形式は
 		cf と config.ph を統合化したようなもので、
@@ -312,7 +299,7 @@ http://www.fml.org/software/fml8/
 
 
 	<row>
-	<entry>  </entry>
+	<entry>  done. </entry>
 	<entry> tools </entry>
 	<entry>
 		BSD make を使わない。

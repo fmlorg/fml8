@@ -1,5 +1,5 @@
 <!--
-   $FML: errormail.sgml,v 1.7 2005/06/25 14:43:08 fukachan Exp $
+   $FML: errormail.sgml,v 1.8 2008/08/18 13:21:42 fukachan Exp $
 -->
 
 
@@ -9,13 +9,16 @@
 	</title>
 
 <para>
-libexec/error は &fml4; の libexec/mead に相当するものです。
+/usr/local/libexec/fml/error は &fml4; の 
+mead (libexec/mead) に相当するエラー解析プログラムです。
 </para>
 
 <para>
-$use_error_mail_analyzer_function を yes にすると、エラー解析機能が有効にな
-ります。ちなみに、デフォルトで $use_error_mail_analyzer_function は yes つま
-りエラー解析機能は有効になっています。このあたりは &fml4; と異なります。
+$use_error_mail_analyzer_function を yes にすると、
+エラー解析機能が有効になります。
+ちなみに、デフォルトで $use_error_mail_analyzer_function は yes 
+つまりエラー解析機能は有効になっています。
+このあたりは &fml4; と異なります。
 </para>
 
 <para>
@@ -30,14 +33,16 @@ $use_error_mail_analyzer_function を yes にすると、エラー解析機能が有効にな
 	</title>
 
 <para>
-ＭＬ作成時に $ml-admin のアドレスは libexec/error を呼び出すように設定
-されます。
+ＭＬ作成時に $ml-admin アドレス宛のメールは
+/usr/local/libexec/fml/error を呼び出すように設定されます。
 </para>
 
 <para>
-libexec/distribute などと同様に libexec/error は標準入力からメールを読
-みこみ、それを解析し、Mail::Message オブジェクトの鎖を作ります。そして、
-Mail::Bounce クラスがエラー内容の解析をします。
+/usr/local/libexec/fml/distribute などと同様に 
+/usr/local/libexec/fml/error 
+は標準入力からメールを読みこみ、
+それを解析し、Mail::Message オブジェクトの鎖を作ります。
+そして Mail::Bounce クラスがエラー内容の解析をします。
 </para>
 
 <para>
@@ -50,9 +55,15 @@ Mail::Bounce は、エラーメールについて「どの MTA が生成したものか？」
 </para>
 
 <para>
-一定時間以上経過すると、$error_mail_analyzer_function がキャッシュのデータ
-を解析し、あるメールアドレスが存在しないように思えるか否か？を判定しま
-す。その結果、消すべきだと判断されると、削除されます。
+一定時間以上経過すると、
+$error_mail_analyzer_function がキャッシュのデータを解析し、
+あるメールアドレスが存在しないように思えるか否か？を判定します。
+その結果、消すべきだと判断されると、削除されます。
+</para>
+
+<para>
+「一定時間」と「消すべきか？という判断」
+の二つが主なチューニングパラメータになります。
 </para>
 
 </sect1>
@@ -64,9 +75,11 @@ Mail::Bounce は、エラーメールについて「どの MTA が生成したものか？」
 	</title>
 
 <para>
-$error_mail_analyzer_function_select_list にある関数名が利用し得るアル
-ゴリズムです。現在は simple_count histgram という２つのアルゴリズムが
-あり、histgram がデフォルトです。
+$error_mail_analyzer_function_select_list 
+にある関数名が利用し得るアルゴリズムです。
+デフォルトでは 
+simple_count と histgram という２つのアルゴリズムが用意されており、
+histgram がデフォルトです。
 </para>
 
 
@@ -76,14 +89,17 @@ $error_mail_analyzer_function_select_list にある関数名が利用し得るアル
 	</title>
 
 <para>
-単純にエラーが返ってきたメールの総数で、エラーか否かを判定します。
+単純にエラーが返ってきたメールの総数で「削除するか否か」の決断を判定します。
 </para>
 
 <para>
-単純にエラーの数ですので、たまたま受信者が設定を少しの間だけ間違えてい
-て、たまたまその日の流量が多い場合には、その受信者はエラーとみなされる
-でしょう。
-そういった場合にも、ようしゃなく削除するのが、この方法の問題点です。
+単純にエラー数なので、”たまたま”受信者が設定を少しの間だけ間違えていて、
+”たまたま”その日の流量が多い場合、
+その受信者は「削除対象」とみなされることになります。
+</para>
+
+<para>
+そういった場合にも、ようしゃなく削除してしまうのが、この方法の問題点です。
 </para>
 
 </sect2>
@@ -95,8 +111,9 @@ $error_mail_analyzer_function_select_list にある関数名が利用し得るアル
 	</title>
 
 <para>
-エラーが連続してＮ日続いた時に限り、削除を行ないます。
-デフォルトでは14日連続してエラーの場合に削除が行なわれます。
+エラーが連続してＮ日続いた時に限り削除を行ないます。
+デフォルトでは 14 日(つまり二週)のあいだ連続してエラーの場合に、
+はじめてアドレスの削除が行なわれます。
 </para>
 
 <para>
@@ -113,8 +130,8 @@ $error_mail_analyzer_function_select_list にある関数名が利用し得るアル
 </para>
 
 <para>
-注意: 当然のことながら、流量が一日一通に満たないような、まったりとした
-ＭＬでは、このアルゴリズムは動作しません:-)
+注意: 当然のことながら、流量が一日一通に満たないような、
+まったりとしたＭＬでは、このアルゴリズムは動作しません:-)
 </para>
 
 </sect2>
@@ -128,19 +145,21 @@ $error_mail_analyzer_function_select_list にある関数名が利用し得るアル
 	</title>
 
 <para>
-解析結果は $error_mail_analyzer_cache_dir ディレクトリに格納されます。
+各エラーメール(らしきもの)の解析結果は 
+$error_mail_analyzer_cache_dir ディレクトリに格納されます。
 </para>
 
 <para>
 現在、キャッシュの入出力には Tie::JournaledDir クラスを使っていますが、
-正確には FML::Error::Cache 経由で Tie::JournaledDir への IO を行ないま
-す。
+正確には FML::Error::Cache 経由で Tie::JournaledDir 
+への IO を行なっています。
 </para>
 
 <para>
-FML::Error::Cache が Tie::JournaledDir の直前に位置し、アダプタとなり
-ます。すべての IO は、FML::Error::Cache が提供する primitive なメソッ
-ドを通じてのみ行なわなければなりません。
+FML::Error::Cache が Tie::JournaledDir の直前に位置し、
+アダプタ層となっています。
+すべての IO は、FML::Error::Cache が提供する 
+primitive なメソッドを通じてのみ行なわなければなりません。
 </para>
 
 </sect1>
@@ -155,14 +174,16 @@ FML::Error::Cache が Tie::JournaledDir の直前に位置し、アダプタとなり
 <screen>
 $maintainer_recipient_maps
 </screen>
-で、エラーメッセージの転送先を指定することができます。
-デフォルトは未定義で、転送は行なわれません。
-&fml8; がログを残すだけです。
+を使うと、エラーメッセージの転送先を指定することができます。
+デフォルトは「未定義」で、転送は行なわれません。
+つまり &fml8; がエラーメールのログを残すだけです(安全ですので推奨)。
 </para>
 
 <para>
-現在は、単にエラーメールをフォワーディングしてるだけです。中身は
-message/rfc822 一通だけの無味乾燥な mime/multipart です。
+フォワードする設定をした場合は？というと、
+単にエラーメールのフォワーディングが行なわれるだけです。
+エラーメール( message/rfc822 )を一通だけ含む無味乾燥な 
+mime/multipart がＭＬの管理者へ送信されます。
 </para>
 
 <!--

@@ -1,5 +1,5 @@
 <!--
-   $FML: userctl.sgml,v 1.2 2004/04/07 11:07:08 fukachan Exp $
+   $FML: userctl.sgml,v 1.3 2004/10/06 09:07:40 fukachan Exp $
 -->
 
 
@@ -15,9 +15,9 @@
 	</title>
 
 <para>
-ユーザの追加と削除は何に対して行なうか？というと
-追加は primary_*_map に対しておこないます。
-削除も primary_*_map に対しておこないます。
+ユーザの追加と削除は、
+ともに「primary_*_map に対して」
+おこないます。
 </para>
 
 <para>
@@ -30,20 +30,22 @@ primary_admin_member_map と primary_admin_recipient_map から
 </para>
 
 <para>
-これを admin_member_maps と admin_recipient_maps にすると問題があります。
+操作対象を 
+admin_member_maps と admin_recipient_maps 
+にしてしまうのは問題があります
+(ここには  &fml4; の反省がいかされています ;-)。
 </para>
 
 <para>
-追加は、明らかに複数の map に追加してしまうので、一つに限定するべきです。
+追加対象は一つに限定しなくてはいけません。
 だから、primary_*_map 一つに対して行なう。
-つまり、メンバーは primary_xxx_member_map ひとつに、
-受信者は primary_xxx_recipient_map 一つに対して行ないます。
+操作対象が *_maps では複数の map のどれに追加してよいのか曖昧です。
 </para>
 
 <para>
-削除は、一見 *_maps でもよいような気がしますが、
+逆に、削除は、いっけん *_maps が操作対象で問題ない気がしますが、
 実は駄目です。消し過ぎになってしまうことがあるからです。
-特に問題になるのは、権限の異なる map が混在している場合です。
+特に問題になるのは、*_maps に「権限の異なる map 」が混在している場合です。
 </para>
 
 <para>
@@ -52,8 +54,15 @@ primary_admin_member_map と primary_admin_recipient_map から
 member_maps		=	$primary_member_map
 				$admin_member_maps
 </screen>
-そのため、member_maps に対して削除を試みると、勢いあまってリモート管理
-者の分も削除してしまうことになるというわけです。
+そのため、member_maps に対して削除を試みると、
+勢いあまってリモート管理者の分も削除してしまうことになるというわけです。
+</para>
+
+<para>
+こういった曖昧さを避けるために、
+primary_XXX_map と XXX_maps
+という分離が考案されたいというわけです
+(ようするに  &fml4; の反省がいかされています ;-)。
 </para>
 
 </sect1>

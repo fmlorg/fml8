@@ -1,5 +1,5 @@
 <!--
-   $FML: restriction.sgml,v 1.10 2005/08/03 13:45:11 fukachan Exp $
+   $FML: restriction.sgml,v 1.11 2008/08/18 20:52:59 fukachan Exp $
 -->
 
 
@@ -9,8 +9,14 @@
 	</title>
 
 <para>
-入力データ(特にコマンドなど)は FML::Restriction クラスが提供する
-正規表現で検査します。
+当然、
+入力データ(特にコマンドなど)に対する正当性の検査( input validation )
+が行なわれています。
+</para>
+
+<para>
+全プログラムで統一された検査を行なうため、
+FML::Restriction クラスに基づいて検査が行なわれます。
 </para>
 
 
@@ -21,27 +27,33 @@
 
 <sect2>
 	<title>
-	投稿
+	投稿メールに対して
 	</title>
 
 <para>
 そもそも記事に対する入力制限(入力データの表現範囲の制限)というものは考
-えにくいです。実際 FML::Restriction クラスによる入力データチェックはあ
-りません。
+えにくい概念です。
+実際 FML::Restriction クラスによる入力データチェックは行なわれていません。
+</para>
+
+<caution>
+<para>
+(SPAM であろうと思われる)一行メールなどをはじくために 
+FML::Filter クラスによるフィルタチェックが行なわれ得ます。
 </para>
 
 <para>
-(FML::Restriction の対象としている操作とは意味合いが異なりますが)一行
-メールなどをはじくために FML::Filter クラスによるフィルタチェックがデ
-フォルトで適用されています。
+ただし、これは記事の内容に対するチェックではないので、
+FML::Restriction の対象としている操作とは意味合いが異なります。
 </para>
+</caution>
 
 </sect2>
 
 
 <sect2>
 	<title>
-	コマンドメール
+	コマンドメールに対して
 	</title>
 
 <para>
@@ -56,12 +68,12 @@ FML::Command::{User,Admin}::コマンド の実行に進むことができます。
 
 <sect2>
 	<title>
-	CGI
+	CGI に対して
 	</title>
 
 <para>
-CGI の各プログラムでは、safe_param_XXX() という関数経由でのみ HTTP セッ
-ションからのデータを受けとることができます。
+CGI の各プログラムでは、safe_param_XXX() 
+という関数経由でのみ HTTP セッションからのデータを受けとることができます。
 </para>
 
 <para>
@@ -86,9 +98,10 @@ FML::Restriction::Base を継承している)経由でパターンの検査をし、
 	</title>
 
 <para>
-コマンドラインで実行するので「入力チェックなし」がデフォルトです。つま
-り、そのシェルが取れる時点で正規のユーザであると認証されているはずなの
-で「正しいユーザ/そのユーザのすることはすべて正しい」と信じています。
+コマンドラインで実行する(シェルの上での操作が可能である)ので
+「入力チェックをしない」のがデフォルトです。
+つまり、そのシェルが取れる時点で正規のユーザであると認証されているはず
+なので「正しいユーザ/そのユーザのすることはすべて正しい」と信じています。
 </para>
 
 <para>
@@ -122,7 +135,8 @@ FML::Restriction::CGI クラスのモジュールを用いて
 
 <para>
 FML::Restriction 以下では Base を継承していますが、他のモジュールでは、
-FML::Restriction クラスを object composition して使って下さい。例えば、
+FML::Restriction クラスを object composition して使って下さい。
+たとえば、
 <screen>
 use FML::Restriction::CGI;
 $safe = new FML::Restriction::CGI;
@@ -160,7 +174,7 @@ for my $dirty_buf (param()) {
    ... check ...
 }
 </screen>
-のような構文は許す必要はあるでしょうが、
+のような構文を許す必要があるでしょうが、
 <screen>
 param($dirtty_buf)
 </screen>
@@ -182,22 +196,25 @@ for my $key (param()) {
 
 <sect1>
 	<title>
-	議論: FML::Restriction の制限はきびし過ぎる？
+	議論: FML::Restriction の制限はきびし過ぎるか？
 	</title>
 
 <para>
-FML::Restriction のクラスでは RFC などで許されている表現のごく一部だけ
-を許しています。
+FML::Restriction のクラスでは 
+RFC などで許されている表現のごく一部だけを許しています。
 </para>
 
 <para>
-RFC の定義が広すぎるんで…手抜きといえば手抜きといわれちゃいますが、
-安全側に倒しています。
+そもそも RFC の定義が広すぎるので、
+手抜きといえば手抜きになりますが、
+コードは安全側にたおしています。
 </para>
 
 <para>
-FML::Restriction::Command はコマンドのシンタックスチェックはもうちょっ
-と粒度を上げるべきなのかもしれませんが、現状ではしていません。
+ただし
+FML::Restriction::Command はコマンドのシンタックスチェックは、
+もうちょっと粒度を上げるべきなのかもしれません。
+現状では未実装。
 </para>
 
 </sect1>

@@ -1,5 +1,5 @@
 <!--
-   $FML: filter.sgml,v 1.10 2008/08/18 20:52:59 fukachan Exp $
+   $FML: filter.sgml,v 1.11 2008/08/19 03:22:17 fukachan Exp $
 -->
 
 
@@ -17,14 +17,23 @@
 <caution>
 
 <para>
-ここでいうフィルタとは、特にこだわらない限り、投稿された記事に対するフィ
-ルタです。このフィルタは FML::Filter クラスに実装されています。
+本章でいうフィルタとは、
+特にこだわらない限り「投稿された記事に対するフィルタ」を指します。
 </para>
 
 <para>
-また、記事ではなくコマンドメール特有の特別なフィルタなども考えられます。
-この場合 FML::Filter にあるとはかぎりません。
-たとえばコマンドメールのコマンドの長さ制限などは
+この「記事に対するフィルタ」システムは 
+FML::Filter クラスに実装されています。
+</para>
+
+<para>
+もちろん「記事」ではなく
+「コマンドメール」を対象としたフィルタシステムなども考えられます。
+この場合、その特殊なフィルタシステムが 
+FML::Filter のサブクラスにあるとはかぎりませんので注意して下さい。
+コマンドメールが対象であれば、
+コマンド処理のクラス中に実装されたフィルタシステムを呼び出しています。
+たとえばコマンドメールのコマンドの長さを制限する機能(フィルタ)は
 FML::Command::Filter クラスが担当しています。
 </para>
 
@@ -37,13 +46,19 @@ FML::Command::Filter クラスが担当しています。
 	</title>
 
 <para>
-コンテンツを検査するフィルタには大きく分けて３種類あります。それは、
-ヘッダ、
-メール本文、
-MIME 構造を元にしたフィルタ(mime component filter)の３つです。
-メール本文に対するフィルタには MIME でないものをどうするか？
-text/plain に対してより厳しいシンタックスチェックを行なうフィルタも
-あるので、大きく分けると４つというほうがよいかもしれません。
+コンテンツを検査するフィルタには大きく分けて三種類あります。それは、
+「ヘッダに対するフィルタ」
+「メール本文に対するフィルタ」
+「MIME 構造を元にしたフィルタ(mime component filter)」の３つです。
+</para>
+
+<para>
+もっとも「メール本文に対するフィルタ」にも、
+「 MIME でないメールに対するフィルタ」
+と
+「text/plain に対するフィルタ」
+の二種類があるので、
+大きく分けると四種類が正しい説明かもしれません。
 <screen>
 大まかな区分け
 
@@ -51,16 +66,16 @@ text/plain に対してより厳しいシンタックスチェックを行なうフィルタも
 
   body
 	non-mime
-		permit / reject (4.0 の content filter の !MIME)
+		permit / reject (fml 4.0 の content filter の !MIME)
 
 	mime component filter
-		4.0 の content filter
+		(fml 4.0 でいうところ content filter 相当)
 
 	text/plain filter
-			ja, en, ... (言語依存)
-			非言語依存パート (M$ GUID scanner みたいな)
-		先頭部分の text/plain パートに対する
-		シンタックスチェック
+			ja, en, ... (言語依存フィルタ)
+			非言語依存パート (M$ GUID scanner のたぐい)
+		先頭部分の text/plain パートに対するフィルタ
+			(シンタックスチェック)
 
 	外部フィルタ (ウィルス/SPAM チェッカを呼び出す)
 		clamav
@@ -68,14 +83,14 @@ text/plain に対してより厳しいシンタックスチェックを行なうフィルタも
 		bogofilter
 </screen>
 本当はこれ以外に、SMTP もしくは LMTP を使って、外部の virus scanner な
-りに飛ばす迂回路(postfix の content_filter 相当)が必要だと思うんだけど
-今はまだ考えていません。とりあえず、それは postfix でやってください。
+りに飛ばす迂回路(postfix の content_filter 相当)が必要だと思うのですが、
+(それは Postfix でやればいいとおもいますので)実装していません。
 </para>
 
 <!-- XXX-TODO トラフィックベースのフィルタ -->
 <para>
-また、これら以外にトラフィックベースのフィルタがあります（まだかなりの
-部分が未実装なので省略します）。
+また、これら以外にトラフィックベースのフィルタがあります
+(ほとんど未実装なので解説は省略 _o_)。
 </para>
 
 </sect1>
@@ -83,12 +98,14 @@ text/plain に対してより厳しいシンタックスチェックを行なうフィルタも
 
 <sect1 id="internals.filter.config">
 	<title>
-	設定変数
+	フィルタに関する設定
 	</title>
 
 <para>
-配送やコマンドメールといった機能別に「フィルタを使うか使わないか？」
-「使うフィルタルールは？」などが定義されています。
+配送やコマンドメールといった機能別に
+「フィルタを使うか使わないか？」
+「使うフィルタルールは？」
+などの変数が定義されています。
 </para>
 
 <para>
@@ -109,19 +126,21 @@ use_機能A   = yes か no
 
 <sect1 id="internals.filter.size">
 	<title>
-	サイズ制限
+	フィルタ: サイズ制限
 	</title>
 
 <para>
-ヘッダ部分およびメール本文の部分のサイズに制限がかけられます。また、変
-数は記事とコマンドメールについてそれぞれ別に存在します。必要なケースで
-だけ使うとか、○○の場合だけサイズ制限の機能を切るといった使い方も可能
-です。
+ヘッダ部分およびメール本文の部分のサイズに制限がかけられます。
+また、変数は記事とコマンドメールについてそれぞれ別に存在します。
+必要なフィルタのみを有効にするとか、
+○○の場合だけサイズ制限の機能を切るといった使い方も可能です(
+もっとも、あまり複雑な条件下でのみフィルタといったことをしようとすると
+HOOK による対応になるとおもいますが…)。
 </para>
 
 <para>
-余談:
- parse() する時にサイズもはかっているので、このフィルタの実装は簡単です:)
+余談: Mail::Message クラスがメールを解析したさいに、
+メールの各部分のサイズも分析済みなので、このフィルタの実装は簡単です:)
 </para>
 
 &var.filter.size;
@@ -131,13 +150,16 @@ use_機能A   = yes か no
 
 <sect1 id="internals.filter.command">
 	<title>
-	コマンドメールへの制限
+	フィルタ: コマンドメールへの制限
 	</title>
 
 <para>
-コマンドメールには「一通当たりのコマンド数」とか「コマンド依存の制限一
-回のコマンドメールで get できるファイルは100個まで」といったコマンド固
-有の制限があります。
+コマンドメールには
+「一通当たりのコマンド数」
+や、
+コマンド依存の制限、
+たとえば「一回のコマンドメールで get できるファイルは 100 個までとする」
+がありえます。
 </para>
 
 <!-- &table.list.filter.commandmail; -->
@@ -147,24 +169,24 @@ use_機能A   = yes か no
 
 <sect1 id="internals.filter.mimecomponent">
 	<title>
-	mime component filter のルール構成法
+	フィルタ: mime component filter のルール構成法
 	</title>
 
 <para>
 &fml4; の content filter とは異なり、
-&fml8; の mime component filter は
+&fml8; の mime component filter のルールは
 <screen>
 text/plain 	permit
 text/html	reject
 *		permit
 </screen>
-みたいな空白区切りのフォーマットで書きます。
+のような空白区切りのフォーマットで書いてあります。
 </para>
 
 <para>
-MIME が前提なので、!MIME (MIME 以外を対象とする)という命令はありません
-が、text/plain と multipart/mixed 中の text/plain を区別するために、こ
-ういう書き方である必要があるとおもうわけです。
+MIME が前提なので、!MIME (MIME 以外を対象とする)という命令はありませんが、
+text/plain と multipart/mixed 中の text/plain を区別するために、
+こういう書き方である必要があるとおもうわけです。
 <screen>
 全体			部分		アクション
 ----------------------------------------------
@@ -174,7 +196,7 @@ multipart/mixed		text/html	reject
 multipart/mixed		image/*		cutoff
 *			*		permit
 </screen>
-さらに、将来はこういうのもありか？
+さらに、将来はこういうのもありえるでしょうか？(未実装)
 <screen>
 text/plain 		:uuencoded:	cutoff
 text/plain 		:size>500k	cutoff
@@ -182,7 +204,7 @@ text/plain 		:size>500k	cutoff
 </para>
 
 <para>
-ルールの構成上の問題点はいくつかあります。
+ただし、このルールに関しても構成上の問題点がいくつかあります。
 </para>
 
 <sect2>
@@ -192,7 +214,8 @@ text/plain 		:size>500k	cutoff
 
 <para>
 アクションには first match のものとそうでないものがあります。reject は 
-大抵 first match ですが、cutoff は first match ではないとおもわれます。
+たいてい first match ですが、
+cutoff は first match ではないとおもわれます。
 さて？
 </para>
 
@@ -205,13 +228,14 @@ text/plain 		:size>500k	cutoff
 	</title>
 
 <para>
-では、permit はどうでしょう？実のところ文脈依存と考えられますが、何が
-正しいのかよくわかりません。たとえば、multipart のメールの中身が
+では、permit はどうでしょう？実のところ文脈依存と考えられますが、
+何が正しいのかよくわかりません。
+たとえば、multipart のメールの中身が
 <screen>
 text/plain + image/jpeg + text/html
 </screen>
-のように３つの異なるタイプのパートからなる場合、どういうルールなら曖昧
-さがないでしょうか？
+のように３つの異なるタイプのパートからなる場合、
+どういうルールなら「あいまいさ」がないでしょうか？
 </para>
 
 <para>
@@ -222,7 +246,7 @@ text/plain + image/jpeg + text/html
 
 <para>
 『permit は「個別に許す」という意味である』説と、『permit は「メール全
-体を許す」という意味である』説の両方があります。たとえば、
+体を許す」という意味である』説の両方がありえます。たとえば、
 <screen>
 text/plain	*	permit
 *		*	reject
@@ -232,9 +256,9 @@ text/plain	*	permit
 </para>
 
 <para>
-一方、『permit は「メール全体を許す」という意味である』説があります。
-たとえば text/plain のメールだけを許したいとしましょう。 直観的にはこ
-う書くとおもいます。
+一方で『permit は「メール全体を許す」という意味である』説がありえます。
+たとえば text/plain のメールだけを許したいとしましょう。 
+直観的には、次のようなルールを書くとおもいます。
 <screen>
 text/plain	*	permit
 *		*	reject
@@ -243,9 +267,9 @@ text/plain	*	permit
 <screen>		
 *	*	reject
 </screen>
-と一緒になってしまうわけです。だから permit は"メール全体を OK として
-ルールとの照らし合わせ処理をそこで終りにする"という意味にしないといけ
-ません。よって、次のようなルールはありえないことになります。
+と一緒になってしまうわけです。だから permit は「メール全体を OK として
+ルールとの照らし合わせ処理をそこで終りにする」という意味にとらないとい
+けません。よって、次のようなルールはありえないことになります。
 <screen>
 text/plain 		*		permit
 multipart/mixed		text/plain	permit
@@ -368,7 +392,7 @@ multipart/*	text/html	reject
 	</title>
 
 <para>
-じゃ、これはどうよ？これは簡単なルールが書けない例でんな。
+これはどうでしょう？これは簡単なルールが書けない例です。
 <screen>
 text/plain	*		permit
 multipart/*	text/plain	permit
@@ -384,8 +408,8 @@ text/plain + text/plain + text/plain
 text/plain + text/plain + image/jpeg
 text/plain + image/jpeg + text/html
 </screen>
-これらも 2 番めのルールで permit されてしまう。
-だめじゃん。
+これらも二番目のルールで permit されてしまいます。
+うまく書けない例です。
 </para>
 
 </sect2>
@@ -393,11 +417,11 @@ text/plain + image/jpeg + text/html
 
 <sect2>
 	<title>
-	ケーススタディ: 前の例のバリエーションで reject ではなく cutoff
+	ケーススタディ: 前例のバリエーションで reject ではなく cutoff
 	</title>
 
 <para> 
-前の例のバリエーションで reject ではなく cutoff。
+前例のバリエーションで reject ではなく cutoff の場合。
 <screen>   
 text/plain	*		permit
 multipart/*	image/*		cutoff
@@ -412,11 +436,12 @@ text/plain + text/plain + text/plain
 <screen>
 text/plain + text/plain + image/jpeg
 </screen>
-のメールは image/jpeg 部分を削って、3番めのルールで permit される。でも、
+のメールは image/jpeg 部分を削って、3番めのルールで permit される。
+もっとも、これだけだと
 <screen>
 text/plain + image/jpeg + text/html
 </screen>
-も通過しちゃいます。
+が通過可能ですが…
 </para>
 
 </sect2>

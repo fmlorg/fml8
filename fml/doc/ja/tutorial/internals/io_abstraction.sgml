@@ -1,16 +1,21 @@
 <!--
-   $FML: io_abstraction.sgml,v 1.5 2005/06/25 15:11:34 fukachan Exp $
+   $FML: io_abstraction.sgml,v 1.6 2008/08/18 20:52:59 fukachan Exp $
 -->
 
 
 <chapter id="io.abstraction">
 	<title>
-	IO インターフェイスとオペレーション
+	IO インターフェイス
 	</title>
 
 <para>
-移植性や拡張性のためには UNIX における Vnode/VFS interface (vnode(9)参
-照)のような構造をあらゆるレイヤーに導入する必要があります。
+将来の移植性/拡張性を見据えるなら、ＭＬサーバの設計においても
+UNIX における Vnode/VFS interface (vnode(9)参照)
+のような構造をあらかじめ導入しておくべきでしょう。
+</para>
+
+<para>
+例: NetBSD の vnode 構造体。
 <screen>
 struct vnode {
 		...
@@ -27,28 +32,33 @@ v_op の先に、
 vop_open()
 vop_read()
 vop_getattr()
-などが定義されています。
+などが定義されます。
 </para>
 
 <para>
 つまり struct vnode の **v_op (vnode operation vector) にあたるものが
-IO に使われるクラスの各メソッドです。たとえば、IO::Adapter はユーザリ
-ストというオブジェクトに対する IO インターフェイスを抽象化したものです。
+IO に使われるクラスの各メソッドです。
+</para>
+
+<para>
+&fml8; では IO::Adapter クラスという抽象化されたインターフェイスを使います。
+このクラスはユーザリストというオブジェクトに対する 
+IO インターフェイスを抽象化したものです。
 </para>
 
 
 <sect1 id="io.abstraction.overview">
 	<title>
-	基本形としての IO::Adapter
+	IO::Adapter の基本形
 	</title>
 
 <para>
-&fml8; 全体の基調となる型は 
+&fml8; の設計上の手本となるクラスは 
 <link linkend="module.io.adapter">
 IO::Adapter
 </link>
-といえるでしょう。実装もすでに完成形であり、primitive なメソッドは何か
-などについて十分考えられています。
+といえるでしょう。実装もすでに完成形であり、primitive なメソッドは何か？
+などについても十分考えぬかれています。
 </para>
 
 <para>
@@ -64,7 +74,7 @@ KEY => VALUE
 KEY => [ VALUE, VALUE2, VALUE3 ]
 </screen>
 のいづれかの型のデータ構造を抽象化していると考えられます。
-つまり、これは RDBMS の基礎理論同様の表型のデータ構造です。
+つまり、これは RDBMS の基礎理論同様の表型データ構造です。
 </para>
 <screen>
 KEY1 VALUE1-1 ""     ""
@@ -75,7 +85,7 @@ KEY4 VALUE4-1 VALUE4-2 VALUE4-3
 
 <para>
 ユーザリストを管理する上で必要最低限の基本メソッド群は、
-IO::Adapter の裏にあるオブジェクト本体を呼びだすための
+IO::Adapter の
 <screen>
 open()
 close()
@@ -88,7 +98,7 @@ find(KEY or REGEXP)
 get_next_key()
 </screen>
 があれば十分のようです。
-少なくとも、ユーザ管理はこれらだけで十分書けます。
+少なくとも、ユーザ管理は、これらのメソッドだけで十分書けます。
 </para>
 
 </sect1>
@@ -96,7 +106,7 @@ get_next_key()
 
 <sect1 id="io.abstraction.ops">
 	<title>
-	メソッド / operation vector
+	メソッド
 	</title>
 
 <para>
@@ -117,15 +127,34 @@ get_next_key()
 必要なら適宜、ディストラクタも定義して下さい。
 </para>
 
+
+<sect2>
+	<title>
+	new()
+	</title>
+
 <para>
 オブジェクトを生成するのは new() です。
 たとえば IO::Adapter であれば、
 <screen>
 $obj = new IO::Adapter マップ;
+もしくは
+$obj = new IO::Adapter マップ, パラメータ(ハッシュリファレンス);
 </screen>
 などとオブジェクトタイプを引数(マップ)で指定するため、
-それに応じた初期化を行ないます。
+マップに応じた初期化を行ないます。
 </para>
+
+<para>
+呼び出しの基本形は引数の多い方に合わせるので、次のようになります。
+<screen>
+my $config = $curproc->config();
+my $obj    = new IO::Adapter $map, $config;
+</screen>
+HOOK なので利用する際にも、つねに、この形で書いておくべきです。
+</para>
+
+</sect2>
 
 
 <sect2>
@@ -134,7 +163,8 @@ $obj = new IO::Adapter マップ;
 	</title>
 
 <para>
-ファイルであれば open(2)、RDBMS であれば SQL サーバへの接続を確立する
+ファイルであれば open(2)、
+RDBMS であれば SQL サーバへの接続を確立する、
 といった具合です。
 </para>
 
@@ -147,7 +177,7 @@ $obj = new IO::Adapter マップ;
 	</title>
 
 <para>
-すなおに open() の逆です。
+すなおに open() の逆の動作をします。
 </para>
 
 </sect2>
@@ -159,20 +189,21 @@ $obj = new IO::Adapter マップ;
 	</title>
 
 <para>
-KEY (プライマリキー)もしくは、KEY および KEY に付随するデータをオブジェ
-クトに書き込みます。なお、ARGV はクラス依存のデータ渡しのためにある引
-数で、この引数が使われないこともあります。
+KEY (プライマリキー)もしくは
+KEY および KEY に付随するデータをオブジェクトに書き込みます。
+なお、ARGV はクラス依存のデータ渡しのためにある引数で、
+この引数が使われないこともあります。
 </para>
 
 <para>
-UNIX と異なり、オブジェクトの構造に一定の型があります。型とは RDBMS の
-ようなテーブルの形です。
+UNIX と異なり、オブジェクトの構造に一定の型があります。
+型とは RDBMS のようなテーブルの形です。
 </para>
 
 <para>
-また、プライマリキーとなるのは通常メールアドレスです。この前提が多くの
-場面で正しいため、メールアドレスをプライマリキーにしたテーブル型が基本
-的なデータ構造といえるわけです。
+また、プライマリキーとなるのは通常メールアドレスです。
+この前提が多くの場面で正しいため、メールアドレスをプライマリキーにした
+テーブル型が基本的なデータ構造といえます。
 </para>
 
 </sect2>
@@ -248,7 +279,7 @@ XXX すなおに、key() もしくは get_key() でも良い気がする？
 
 <sect2>
 	<title>
-	ARRAY_REF でほしい？
+	返り値を ARRAY_REF 型で欲しい場合？
 	</title>
 
 <para>
@@ -267,15 +298,15 @@ PRIMARY KEY の一覧くらいか？
 <para>
 定石は全部読んでみること、つまり get_next_key() を呼びまくるコードです。
 専用のメソッドがあった方が便利でしょうけど、
-滅多にそんなコードは必要ないようなので、
-専用メソッドがなくても問題はないようです。
+めったにそんなコードは書かないので、
+専用メソッドがなくても問題はないと考えます。
 </para>
 
 <para>
 もし、あるとしたら get_primary_keys() みたいな名前のメソッド？で、
 ARRAY_REF で返すのでしょうかね？でも、find('*', { all => 1 }) などとす
-ると全部の KEY の値がARRAY_REF で返りますんで、別のメソッドも不要な気
-がするねぇ。
+ると全部の KEY の値がARRAY_REF で返りますんで、
+別のメソッドも不要な気がします。
 <screen>
 (KEY1 KEY2)
 </screen>
@@ -290,27 +321,19 @@ ARRAY_REF で返すのでしょうかね？でも、find('*', { all => 1 }) などとす
 	</title>
 
 <para>
-これこそ、どういうデータ構造が欲しいんでしょうねぇ？
-返り値が HASH_REF であるようなメソッドが欲しいのだろうか？
+これこそ、どういうデータ構造が欲しい場合なんでしょうか？
+返り値が HASH_REF とは、次のような構造が返り値になる場合です。
 <screen>
 返り値 = {
 	変数１ => 値１、 
 	変数２ => 値２、 
 }
 </screen>
-って、つまり getattr(KEY) とかいうメソッドかなぁ。だが、HASH_REF 中の
-属性のキーがオブジェクトに強く依存するわけですが…そんなので modular 
-といえるのか？
 </para>
 
 <para>
-単に、表のＮ番めじゃなくて、Ｎ番目の名前はこれこれ…っていう情報のタグ
-をつけて返すと思えば、あまり変わらないといえば変わらない。
-</para>
-
-<para>
-メールアドレスに属性をつけることを考えるとこういったものが必要でしょう。
-たとえば、まとめ送りがその例といえる。
+メールアドレスに属性をつける場合、こういった型での返り値が欲しいでしょうか。
+たとえば、まとめ送り(&fml4; の例)。
 <screen>
 メールアドレス => {
 	送り間隔	=> 	３時間、
@@ -318,18 +341,13 @@ ARRAY_REF で返すのでしょうかね？でも、find('*', { all => 1 }) などとす
 	フォーマット	=>	mime/multipart
 };
 </screen>
+注意: 
+&fml8; では、まとめ送りの複雑なオプションはサポートしていませんので、
+この操作は不要です。
 </para>
 
 <para>
-ただ、キャッシュを抽象化したアダプタ層はこの形になりうるでしょう。
-たとえば
-<screen>
-FML::Error -> FML::Error::Cache -> Tie::JournaledDir
-</screen>
-こういったキャッシュのアダプター層のために、標準規格があるとよいです。
-全部 Tie でやるってのもあるけど、Tie で書きまくると、どんどん HASH の
-中身が複雑になって、一番下の Tie:: の替えがきかなかったりしそうで、な
-んかいやなかんじではあります。
+結局、実装する必要がないというのが現状。
 </para>
 
 </sect2>

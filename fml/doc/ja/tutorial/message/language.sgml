@@ -1,5 +1,5 @@
 <!--
-   $FML: language.sgml,v 1.7 2005/06/25 15:11:35 fukachan Exp $
+   $FML: language.sgml,v 1.8 2008/08/19 03:16:56 fukachan Exp $
 -->
 
 
@@ -36,21 +36,22 @@ $curproc->reply_message_nl('error.already_member',
 <screen>
 $_arg_address
 </screen>
-は reply_message_nl の引数のハッシュリファレンスとして与えられた値へ展
-開されます。上の例でいえば、メッセージテンプレート中の $_arg_address 
+は reply_message_nl() 
+の引数のハッシュリファレンスとして与えられた値へ展開されます。
+上の例でいえば、メッセージテンプレート中の $_arg_address 
 が引数中の _arg_address の値で展開されます。
 </para>
 
 <para>
-また config.cf 中で定義されている変数も同様に展開可能です。
-例えばテンプレート中の $ml_name はＭＬ名に展開されるようになっています。
+また config.cf 中で定義されている変数はメッセージ中でも展開可能です。
+たとえばテンプレート中の $ml_name は 
+config.cf 中と同様にＭＬ名に自動展開されます。
 </para>
 
 <para>
-こういったことがあるので、渡す引数に $_arg_ などという prefix をつけて
-いるわけです。つまり、config.cf の変数群とぶつからないようにするため。
+このため、
+つまり config.cf の変数群とぶつからないようにするため、
+渡す引数に $_arg_ などという prefix をつけているわけです。
 </para>
 
 </sect1>
-
-

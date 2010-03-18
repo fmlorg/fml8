@@ -1,10 +1,16 @@
 <!--
-   $FML$
+   $FML: encode.sgml,v 1.2 2003/04/15 14:51:42 fukachan Exp $
 -->
 
 <chapter id="module.mail.message.encode">
 	<title>
 	Mail::Message::Encode クラス
+	</title>
+
+
+<sect1 id="module.mail.message.encode.examplee">
+	<title>
+	Mail::Message::Encode の使い方の見本
 	</title>
 
 <para>
@@ -14,6 +20,8 @@ fml-help ML's Count: 02012, 02013, 02016 など
 
 <screen>
 [使い方の例]
+
+   * fml 8.0 風の使い方 
 
 	use Mail::Message::Encode;
 	my $encode  = new Mail::Message::Encode;
@@ -27,19 +35,22 @@ fml-help ML's Count: 02012, 02013, 02016 など
 	my $fp = sub { ... };
 	$encode->run_in_chcode( $fp, $oout, $in );
 
-   * 4.0 互換
+   * fml 4.0 互換風の使い方
+
 	ues Mail::Message::Encode qw(STR2EUC);
 	my $euc_s = STR2EUC( $s );
 </screen>
 
+</sect1>
 
-<sect1>
+
+<sect1 id="module.mail.message.encode.specification">
 	<title>
-	Mail::Message::Encode の仕様
+	Mail::Message::Encode の仕様の粗筋
 	</title>
 
 <para>
-本体は _convert_str_ref() にまとめる。
+本体はプライベートメソッド _convert_str_ref() にまとめてある。
 
 <screen>
    sub convert # 引数が STR
@@ -100,29 +111,56 @@ $x = $encode->base64($s);
 </sect1>
 
 
-<sect1>
+<sect1 id="module.mail.message.encode.run.in.code">
 	<title>
-	run_in_chcode()
+	ユーティリティ run_in_chcode()
 	</title>
 
 <para>
-言語依存処理の過程では、プログラムの扱いやすいコードに変換し、処理を行
-なう関数が多数存在します。そこで、そういった関数を用意すると便利です。
+言語依存処理の過程では、プログラムの扱いやすい文字コードに変換し、
+処理を行なう関数が多数存在します。
+そこで、そういった処理のための下請け関数を用意すると便利です。
+</para>
+
+<para>
+run_in_chcode() は、
+関数 $proc を実行します。
+引数は、あらかじめ指定された文字コードに変換後、
+関数 $proc に渡されるという仕様です。
+</para>
+
+<para>
 <screen>
-run_in_chcode の実装例
-
-sub run_in_chcode
+sub run_in_code
 {
-   my ($self, $proc, $s, $out_code, $in_code) = @_;
+    my ($self, $proc, $s, $args, $out_code, $in_code) = @_;
+    my $proc_status = undef;
 
-   my $conv_status = convert_str_ref($s, $EUC_JP, $in_code);
-   my $proc_status = &$proc($s, @_);
-   convert_str_ref($s, $out_code, $EUC_JP) if $conv_status && $out_code;
-   return wantarray ? ($conv_status, $proc_status): $conv_status;
+    my $obj         = new Mail::Message::Encode;
+    my $conv_status = $obj->convert_str_ref(\$s, $out_code, $in_code);
+
+    # XXX-TODO: validate $proc name regexp.
+    eval q{
+        $proc_status = &$proc($s, $args);
+    };
+
+    # XXX-TODO: correct ?
+    if ($conv_status && $out_code) {
+        $obj->convert_str_ref($s, $out_code, $in_code);
+    }
+
+    return wantarray ? ($conv_status, $proc_status): $conv_status;
 }
+</screen>
+これは、次のように動作します。
+<screen>
+$s は EUC-JP へ変換。
+$proc($s, $args); を実行
+$proc の実行結果を返す。
 </screen>
 </para>
 
 </sect1>
+
 
 </chapter>

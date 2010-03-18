@@ -1,5 +1,5 @@
 <!--
-   $FML: create.sgml,v 1.3 2005/06/25 15:11:36 fukachan Exp $
+   $FML: create.sgml,v 1.4 2008/08/19 03:16:57 fukachan Exp $
 -->
 
 <chapter id="module.create">
@@ -9,9 +9,36 @@
 
 
 <para>
-ここでは、単純なスケジュール表示ソフトを例にとり、&fml8; のフレームワー
-クの中で新しいプログラムを追加するにはどうすれば良いのかを説明します。 
+ここでは、単純なスケジュール表示ソフトを例にとり、
+&fml8; のフレームワーク中で
+新しいプログラムを追加するにはどうすれば良いのかを説明します。 
 以下、プログラム名は fmlsch とし、その CGI 版が fmlsch.cgi です。
+</para>
+
+<para>
+なお、&fml8; ＋サードパーティ拡張として出荷するソフトウエアでは、
+3rdparty/ 以下に同様の配置でファイルを生成し、
+<footnote>
+
+<para>
+とはいえ、さすがに設定ファイルは、
+さすがに fml リポジトリ以下の設定を変更する必要がありますね。
+「追加で済むもの」
+であればサードパーティ以下にスクリプトを作ればすむかと…
+</para>
+
+<para>
+たぶん、そういった場合は、
+サードパーティ以下に fml リポジトリ以下を参考に、
+インストーラを一式作るほうが楽でしょう。
+</para>
+
+<para>
+それでも、トップディレクトリの Makefile と configure の変更は必要ですなぁ。
+</para>
+
+</footnote>
+インストーラ等の設定ファイルを変更して下さい。
 </para>
 
 
@@ -29,12 +56,13 @@
 <para>
 fml/bin/fmlsch.in シェルスクリプトを用意し、
 fml/etc/install.cf.in の bin_programs 変数に fmlsch を追加します。
-bin_programs にあるスクリプトはインストーラがインストールしてくれます。
+bin_programs にあるスクリプトはインストーラが 
+$prefix/bin/ へインストールする対象です。
 </para>
 
 <para>
 fml/bin/fmlsch および fml/etc/install.cf の生成は
-configure が行ないます。
+configure (GNU configure)が行ないます。
 configure.in に、この２つのファイルの変数展開をするように登録し、
 autoconf を実行して configure を生成して下さい。
 </para>
@@ -54,10 +82,10 @@ fml/lib/FML/Demo/Calendar.pm を書きます。
 </para>
 
 <para>
-また、必要な他にライブラリがあれば適宜輸入してください。
+また、ほかに必要なライブラリがあれば適宜輸入してください。
 今回は CPAN から
 HTML-CalendarMonthSimple-1.02.tar.gz
-を輸入します。
+をインストールする必要があります。
 </para>
 
 <para>
@@ -75,8 +103,16 @@ Date-Calc も必要なので適宜インストールしてください。
 <para>
 仕事のほとんどの部分は FML::Demo::Calendar が実行しますが、
 &fml8; のブートローダから FML::Demo::Calendar を呼び出すために
-FML::Process:: クラスを修正する必要があります。
+FML::Process::Calender クラスを作成します。
 </para>
+
+<caution>
+<para>
+クラスの階層は fml/etc/modules の設定次第なので、
+FML::Process::Calender である必要はなく、
+どの階層でも(もちろん FML:: 以外でも)かまいません。
+</para>
+</caution>
 
 <para>
 まず、fmlsch プロセスの初期化から実行といった大まかな一連の手順を
@@ -89,12 +125,12 @@ fml/lib/FML/Process/Calender.pm
 </para>
 
 <para>
-そして、ブートローダーへ fmlsch の場合は FML::Process::Calender を呼び
-出せば良いことを教えるために
-etc/modules
+そして、ブートローダーへ fmlsch プログラムが起動された場合には
+FML::Process::Calender を呼び出すことを教えるために
+fml/etc/modules ファイル
 と
-etc/command_line_options
-に fmlsch のモジュール名との対応関係を追加します。
+fml/etc/command_line_options ファイルに 
+fmlsch のモジュール名との対応関係を追加します。
 </para>
 
 
@@ -120,15 +156,22 @@ FML::Process::Calender::run() メソッドだけ用意すればおしまいです。
 
 
 <para>
-改造の仕方はモジュールが FML::CGI:: クラスになる以外は fmlsch の場合と
-同様です。FML::CGI::Calender は FML::Process::CGI のサブクラスです。
+改造の仕方はモジュールが 
+FML::CGI:: クラスになる以外は fmlsch の場合と同様です。
+FML::CGI::Calender は FML::Process::CGI のサブクラスです。
 </para>
 
 <para>
-未定義のものについては FML::Process::CGI や FML::Process::Kernel がよ
-きにはからいます。また、CGI.pm は FML::Process::CGI が使い、HTTP
-header を生成しています。あくまでも最低限の処理なので
-FML::CGI:: のモジュールで適宜 HTML の出力を補佐してあげます。 
+未定義のものについては FML::Process::CGI や FML::Process::Kernel 
+がよきにはからいます。
+</para>
+
+<para>
+また、HTML 言語のほとんどは FML::Process::CGI が 
+Perl デフォルトの CGI.pm を使っています。
+HTTP header などの生成も CGI.pm モジュールです。
+これらは、あくまでも最低限の処理なので
+FML::CGI:: 以下のモジュール群が適宜 HTML の出力を補正しています。 
 </para>
 
 </sect1>

@@ -1,5 +1,5 @@
 <!--
-   $FML: nativelanguage.sgml,v 1.3 2003/04/15 14:51:43 fukachan Exp $
+   $FML: nativelanguage.sgml,v 1.4 2008/08/19 03:16:57 fukachan Exp $
 -->
 
 <chapter id="nativelanguage">
@@ -8,14 +8,18 @@
 	</title>
 
 <para>
-fml 内部では言語に依存した変換処理が必要です。
-例えば、JIS と EUC の相互変換は随所で必要です。
-これはメールでは JIS が使われますが、
-プログラムでは EUC の方が扱いやすいためです。
+&fml8; 内部では言語と文字コードに依存した変換処理が必要です。
+たとえば、JIS (ISO-2022-JP)と EUC の相互変換は随所で行なわれています。
+これはメールでは JIS コードが使われますが、
+プログラムでは EUC コードの方が扱いやすいためです。
 </para>
 
 <para>
-コマンドの返事の言語依存性については
+本章では、言語依存の処理関数について解説します。
+</para>
+
+<para>
+なお、コマンドに対する返事の言語依存性については
 <link linkend="message.nl">
 『メッセージの他国語化』
 </link>
@@ -25,22 +29,22 @@ fml 内部では言語に依存した変換処理が必要です。
 
 <sect1 id="nativelanguage.overview">
 	<title>
-	何か::Language::
+	クラス::Language::
 	</title>
 
 <para>
-言語依存のクラス名は「なにか::Language::」となります。これらの階層以下
-に言語依存モジュール群が配置されます。
+言語依存のクラス名は「クラス::Language::」となります。
+これらの階層以下に言語依存モジュール群が配置されます。
 </para>
 
 <para>
-例えば以下のようなモジュールがあります。
+たとえば次のようなモジュールがあります。
 <screen>
 FML::Language::Japanese::String.pm
 Mail::Bounce::Language::Japanese.pm
 </screen>
-前者は、FML モジュール群のために日本語依存の文字列処理関数を
-提供しています。
+前者は、FML モジュール群のために、
+日本語依存の文字列処理関数を提供しています。
 後者は Mail::Bounce 階層以下のモジュールに対して、
 日本語に依存したエラーメール解析ルーチンを提供しています。
 </para>

@@ -1,11 +1,11 @@
 <!--
-   $FML: merge.sgml,v 1.3 2005/06/25 15:11:34 fukachan Exp $
+   $FML: merge.sgml,v 1.4 2008/08/18 20:52:59 fukachan Exp $
 -->
 
 
 <chapter id="merge.internal.to.fml8">
 	<title>
-	他のＭＬシステムの設定を &fml8; へ変換する処理について
+	ケーススタディ: 他のＭＬシステムの設定を &fml8; へ変換するには？
 	</title>
 
 
@@ -33,7 +33,7 @@
 2) makefml --force newml elena 相当の処理を行なう。&fml8; で必要なファ
 イルをいろいろと作る必要があるので、newml を実行してしまうほうがよい。
 本当に makefml newml を実行するか、newml の実体の処理を呼び出すように
-するかはどっちでもよい。たぶん後者でよい。
+するかはどちらでもよい(が、たぶん後者の実装でよい)。
 </para>
 
 <para>
@@ -44,8 +44,7 @@
 <para>
 3-1)
 IO::Adapter は ^# の行はコメントだと思って無視している。
-よって、actives で off されているアドレスは消えているように
-見える。
+よって、actives で off されているアドレスは消えているように見える。
 </para>
 
 <para>

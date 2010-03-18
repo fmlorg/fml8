@@ -1,5 +1,5 @@
 <!--
-   $FML: lock.sgml,v 1.5 2005/06/25 15:11:34 fukachan Exp $
+   $FML: lock.sgml,v 1.6 2008/08/18 20:52:59 fukachan Exp $
 -->
 
 
@@ -9,9 +9,9 @@
 	</title>
 
 <para>
-プロセス間の同期化はロックを用いて行ないます。&fml8; でサポートされて
-いるロックメカニズムは flock(2) もしくは lockf(2) を元にしたロック機構
-のみです。
+プロセス間の同期化はロックを用いて行ないます。
+&fml8; でサポートされているロックメカニズムは 
+flock(2) もしくは lockf(2) を元にしたロック機構のみです。
 </para>
 
 
@@ -29,8 +29,8 @@
 </para>
 
 <para>
-たとえば、Mail::Delivery 関連はメンバーリストにアクセスするので、いろ
-いろとロックが必要です。
+たとえば、Mail::Delivery 関連はメンバーリストにアクセスするので、
+いろいろとロックが必要です。
 </para>
 
 <para>
@@ -40,26 +40,27 @@ FML::Process::Delivery の２箇所しかない)の中でロック処理をしています。
 </para>
 
 <para>
-一方、Mail::Delivery::Queue は見るだけ (mailq コマンド)か、並列操作可
-能なものだけなので、ロックは考えなくて良いはずです。
+一方、Mail::Delivery::Queue は見るだけ (mailq コマンド)か、
+並列操作可能なものだけなので、ロックは考えなくて良いはずです。
 </para>
 
 <para>
-そして、write lock とは限らないが、一般に map を使うモジュールには
-ロックが必要です。write が必要とは限りません。
+そして、reader writer lock まで大げさでなくとも
+一般に map を使うモジュールにはロックが必要です。
+write 用の lock が必要とは限りません。
 たとえば
 FML/Command/UserControl.pm 
 や
 FML/Command/Auth.pm
-には write lock が必要ですが、
+には write 用の lock が必要ですが、
 FML/Credential.pm
-は read lock だけでよいです。
+は read 用の lock だけでよいです。
 </para>
 
 <para>
 しかしながら、いまのところ reader writer lock は実装されていませんので、
-リソースごとの細かいロック制御で critical region の時間を短くするよう
-になっています。
+リソースごとの細かいロック制御で critical region 
+の時間を短くするようになっています。
 </para>
 
 </sect1>
@@ -71,7 +72,7 @@ FML/Credential.pm
 	</title>
 
 <para>
-*_maps をよぶまえには MUTEX でロックをする。いや、やりすぎかもしれません。
+*_maps をよぶ前には MUTEX でロックをする。いや、やりすぎかもしれません。
 </para>
 
 <para>

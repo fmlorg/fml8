@@ -1,5 +1,5 @@
 <!--
-   $FML: Message.sgml,v 1.3 2005/06/25 15:11:36 fukachan Exp $
+   $FML: Message.sgml,v 1.4 2008/08/19 03:16:57 fukachan Exp $
 -->
 
 <chapter id="module.mail.message">
@@ -13,8 +13,8 @@
 	</title>
 
 <para>
-このオブジェクトモジュールはメールの解析と、
-解析されたデータ構造へのさまざまな操作手段を提供しています。
+Mail::Message クラスはメールの解析と、
+解析されたデータ構造へのさまざまな操作手段を提供します。
 </para>
 
 <para>
@@ -39,18 +39,18 @@ header -> preamble -> part1 -> part2 -> trailor
 </para>
 
 <para>
-header は Mail::Message のタイプが text/rfc822-headers で、
-data が Mail::Header オブジェクトになります。
+メールヘッダは Mail::Message のタイプが text/rfc822-headers で、
+その data が Mail::Header オブジェクトになります。
 一方 part1 は
 text/plain
 で、
-data 部分が文字列へのリファレンスです。
+data 部分が文字列(テキスト)へのリファレンスです。
 </para>
 
 <para>
 参照:
 <ulink url="../../en/modules/Mail/Message.txt">
-Mail::Message モジュールのマニュアル
+Mail::Message モジュールのマニュアル(英語)
 </ulink>
 </para>
 
@@ -64,12 +64,13 @@ Mail::Message モジュールのマニュアル
 
 <para>
 parse() メソッドは引数で与えられたファイル(名)かファイルディスクリプタ
-に対しメッセージの解析をします。
+に対しメッセージの解析を試みます。
 </para>
 
 <para>
 data_type_list() は鎖の列の情報を返します。情報は ARRAY REFERENCE の形
-で返されます。例えば MIME/Multipart は次のように表現されています。
+で返されます。例えば MIME/Multipart は次のように表現されています
+(ちなみに、以下の表示はデバッグモードで出力されるものです)。
 <screen>
   type[ 1]: text/rfc822-headers       | multipart/mixed
   type[ 2]: multipart/mixed           | multipart/mixed
@@ -82,7 +83,7 @@ data_type_list() は鎖の列の情報を返します。情報は ARRAY REFERENCE の形
   type[ 9]: text/plain                | multipart/mixed
 </screen>
 真中の列が各オブジェクトの種別を表しています。
-右端は全体の mime type です。
+右端はメール全体の mime type です。
 </para>
 
 </sect1>
@@ -98,21 +99,21 @@ new() メソッドは通常、新しいメッセージを作る際に使われます。
 </para>
 
 <para>
-MIME/multipart 専用のためのメソッドもあります。
+MIME/multipart 作成専用のメソッドもあります。
 <screen>
 build_mime_multipart_chain($args)
 parse_and_build_mime_multipart_chain($args)
 build_mime_header($args)
 </screen>
-これらのメソッドを直接呼び出すことは実際ないので、
-これらは private に移行するかもしれません。
-だから、とりえあずこれらは使わないでください。
+注意: これらのメソッドを直接呼び出すことは実際ないので、
+将来、これらは private methods に移行するかもしれません。
+これらのメソッドは使わないでください。
 </para>
 
 <para>
-しかしながら、MIME/mulitpart の作成には
-Mail::Message::Compose クラスがあります。
-実のところ、このクラスの実態は MIME::Lite そのものです :-)
+実際のところ MIME/mulitpart の作成には
+Mail::Message::Compose クラスを使っています。
+実のところ、このクラスの実態は CPAN の MIME::Lite そのものです :-)
 </para>
 
 </sect1>
@@ -125,39 +126,45 @@ Mail::Message::Compose クラスがあります。
 
 <para>
 dup_header() メソッドは
-RFC822 型のメッセージのヘッダ部分のみのコピーを行ないます。
-メールの本体の部分はそのままです。
+RFC822 型メッセージのヘッダ部分のみをコピーします。
+メール本体の部分はそのままです。
 複製されたヘッダオブジェクトからのリンクは
 メールの本体です。
 <screen>
+$header1 = $message0->dup_header0;
+
               |<--------------- メール本体 ------------->
-header0 ----> part1 -> part2 -> ...
-               A
-               |
-dup_header0 ---
+$header0 ---> part1 -> part2 -> ...
+                A
+                |
+$header1 ------+
 </screen>
 </para>
 
 
 <para>
-whole_message_header()
-はメッセージの中のヘッダ部分のオブジェクトを返します。
-文字列ではないことに注意して下さい。
+whole_message_header() 
+メソッドはメッセージ中の「ヘッダ部分のオブジェクト」を返します。
+「文字列ではない」ことに注意して下さい。
 </para>
 
 <para>
 __head_message() は鎖の先頭のオブジェクトを返します。
 __last_message() は鎖の最後のオブジェクトを返します。
-プライベートなので、これらのメソッドは使わないで下さい。
-__head_message() は、通常、図の header オブジェクトを返すことになりま
-すので、多くの場合 whole_message_header() と等価です。
+モジュールの中で使われていますが、
+これらはプライベート・メソッドなので、
+これらのメソッドは使わないで下さい。
+将来、これらのコードは消去します。
+なお __head_message() は、
+通常、図の header オブジェクトを返すことになりますので、
+多くの場合 whole_message_header() と等価です。
 </para>
 
 <para>
 header_data_type()
-はメール全体のタイプ(文字列)を返します。
-つまり、このメッセージは単なるテキストなのかマルチパートなのか？などを
-教えてくれます。
+メソッドはメール全体のタイプ(文字列)を返します。
+つまり、このメッセージは単なるテキストなのかマルチパートなのか？
+などの情報を教える関数です。
 </para>
 
 </sect1>
@@ -169,7 +176,7 @@ header_data_type()
 	</title>
 
 <para>
-以下では、このような鎖を例にとることにします。
+本節では、次のようなオブジェクトの鎖を例にとることにします。
 <screen>
 (multipart でない場合)
 
@@ -181,19 +188,20 @@ header -> preamble -> part1 -> part2 -> trailor
 </screen>
 </para>
 
+<para>
+(一部、前述の繰り返しになります)。
+</para>
 
 <para>
-まず header_data_type()
-はメール全体のタイプ(文字列)を返します。
-つまり、このメッセージは単なるテキストなのかマルチパートなのか？などを
-教えてくれます。
-つまり header の Content-Type で得られる情報です。
+header_data_type()
+メソッドはメール全体のタイプ(文字列)を返します。
+つまり、header の Content-Type で得られる情報です。
 </para>
 
 <para>
 whole_message_body() メソッドは
 body ないしは part1 の部分のオブジェクトを返します。
-whole_message_body_head() メソッドも同じ操作をします。
+whole_message_body_head() メソッドも同じ返り値です。
 </para>
 
 <para>
@@ -222,8 +230,10 @@ plain/text タイプのメッセージ部分に着目することが多いので
 	</title>
 
 <para>
-find() メソッドは Mail::Message の特定のタイプを探し、
+find() メソッドは Mail::Message オブジェクトの特定のタイプを探し、
 最初に見つけたオブジェクトを返します。
+ヘッダの Content-Type: ではありません。
+注意。
 </para>
 
 </sect1>
@@ -264,7 +274,7 @@ reset_print_mode()
 <para>
 size()
 は(鎖の一つ一つの Mail::Message)オブジェクトのサイズを返します。
-メール全体ではありません。
+メール全体ではありません。注意。
 header_size()
 や
 body_size()
@@ -273,8 +283,13 @@ body_size()
 
 <para>
 is_empty()
-はオブジェクトが空かどうかを教えてくれます。
+はオブジェクトのデータが空かどうかを教えてくれます。
 </para>
+
+<para>
+これらはフィルタリングで有用です。
+</para>
+
 </sect2>
 
 
@@ -285,25 +300,25 @@ is_empty()
 
 <para>
 envelope_sender()
-は
-メールの送信者情報(文字列)を返します。
+はメールの送信者情報(文字列)を返します。
+文字通り、いわゆる Envelope Sender 情報です。
 </para>
 
 <para>
 data_type()
-は
+メソッドは
 Mail::Message オブジェクトのタイプ(文字列)を返します。
-これは、メール全体のタイプ（マルチパートとか text/plain)
-どではなく、鎖の各部分のオブジェクトのタイプであることに注意して下さい。
+これは、メール全体のタイプ（マルチパートとか text/plain)ではなく、
+鎖の各部分のオブジェクト・タイプであることに注意して下さい。
 </para>
 
 <para>
 encoding_mechanism()
-は
+メソッドは
 Mail::Message オブジェクトのエンコーディングメカニズム(文字列)を返します。
-エンコーディングされていないなら undef が返ります。
-これは、メール全体のタイプ（マルチパートとか text/plain)
-ではなく、鎖の各部分のオブジェクトのタイプであることに注意して下さい。
+エンコーディングされていない場合 undef が返ります。
+これは、メール全体のタイプ（マルチパートとか text/plain)ではなく、
+鎖の各部分のオブジェクト・タイプであることに注意して下さい。
 </para>
 
 </sect2>
@@ -311,12 +326,12 @@ Mail::Message オブジェクトのエンコーディングメカニズム(文字列)を返します。
 
 <sect2>
 	<title>
-	Mail::Message 内の構造
+	Mail::Message オブジェクト内部の構造を知る
 	</title>
 
 <para>
 num_paragraph()
-は
+メソッドは、
 その Mail::Message オブジェクトの中に
 何個のパラグラフがあるか(数字)を返します。
 </para>
@@ -324,23 +339,25 @@ num_paragraph()
 
 <para>
 nth_paragraph(数字)
-は
+メソッドは
 「数字」番目のパラグラフの内容を文字列として返します。
 例えば、一番目のパラグラフは 0 ではなく 1 と指定して下さい。
-ここは、わざとＣ言語風ではなく人間に分かりやすいようにしてあります。
+ここは、わざとＣ言語風ではなく人間に分かりやすいように
+「 1から始まる仕様」としてあります。
 </para>
 
 
 <para>
 header()
-は
+メソッドは
 MIME/multipart の各ブロックにあるヘッダ部分を返します。
 data()
-は、データの部分です。
+メソッドは、データの部分です。
 それぞれ
 message_fields($size)
+および
 message_text($size)
-の alias です。
+メソッドの alias になっています。
 </para>
 
 </sect2>
@@ -356,7 +373,7 @@ message_text($size)
 <para>
 
 <ulink url="../../en/modules/Mail/Message.txt">
-Mail::Message モジュールの(英語)マニュアル
+Mail::Message モジュールマニュアル(英語)
 </ulink>
 </para>
 </sect1>
