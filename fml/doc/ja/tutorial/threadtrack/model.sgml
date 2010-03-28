@@ -1,5 +1,5 @@
 <!--
-   $FML: model.sgml,v 1.1 2002/12/30 07:38:08 fukachan Exp $
+   $FML: model.sgml,v 1.2 2008/08/19 03:22:18 fukachan Exp $
 -->
 
 <sect1 id="threadtrack.model.minimal">
@@ -14,43 +14,45 @@
 	</title>
 
 <para>
-   open
-	チケット番号らしきものを含まないメールが投稿されたら
-	自動的に open
+open ...
+チケット番号らしきものを含まないメールが投稿されたら
+自動的に open
 </para>
 
 <para>
-  going
-	誰か返事をしたら、対応中
+going ...
+誰か返事をしたら、対応中
 </para>
 
 <para>
-  closed
-	close 宣言がなされたら、クローズ
+closed ...
+close 宣言がなされたら、クローズ
 </para>
 
 </sect2>
 
 <sect2>
 	<title>
-	close 宣言は以下のいずれかの実行である。
+	close 宣言は以下のいずれかの実行のはず
 	</title>
 
 <para>
-1)	Subject: が close ではじまる
+(1) Subject: が close ではじまる。
 </para>
 
 <para>
-   2)	メール本文の行頭が close ではじまる。
-		先頭の空白は無視されます。
-		正規表現では \s*close です。
-
-		multipart メールの場合は最初の text/plain パートの
-		行頭が close で始まる場合です。
+(2) メール本文の行頭が close ではじまる。
 </para>
 
 <para>
-   3)	メールヘッダで X-Ticket-Pragma: close が指定されていた時
+先頭の空白は無視されます。
+正規表現では \s*close です。
+multipart メールの場合は、
+最初の text/plain パートの行頭が close で始まる場合です。
+</para>
+
+<para>
+(3) メールヘッダで X-Ticket-Pragma: close が指定されていた時。
 </para>
 
 </sect2>
@@ -63,15 +65,19 @@
 
 <para>
 X-Ticket-Pragma: ignore
+</para>
 
-	新たにチケットを割り当てない
-	すべてのチケットに関する操作を抑制する。
+<para>
+新たにチケットを割り当てません。
+すべてのチケットに関する操作を抑制します。
 </para>
 
 <para>
 X-Ticket-Pragma: close
+</para>
 
-	チケットをクローズする。
+<para>
+チケットをクローズします。
 </para>
 
 </sect2>

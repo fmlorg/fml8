@@ -1,5 +1,5 @@
 <!--
-   $FML: tools.sgml,v 1.4 2003/04/15 14:51:45 fukachan Exp $
+   $FML: tools.sgml,v 1.5 2010/03/28 10:48:09 fukachan Exp $
 -->
 
 <appendix id="pmtools">
@@ -14,8 +14,8 @@
 	</title>
 
 <para>
-bug tracking システムとチケットシステムは微妙に目的が違うと思うが、
-ここでは広く problem report という観点でまとめてみようとおもう。
+bug tracking システムとトラブルチケットシステムは微妙に目的が違うと思いますが、
+ここでは広く problem report という観点でまとめています。
 </para>
 
 <para>
@@ -31,17 +31,21 @@ http://www.daveeaton.com/scm/PMTools.html
 	に昔あった？
 	</para>
 	</footnote>
-がある。特に売りもの一覧についてはここをまず見られたい。
-Free のものもいくつかある。
-最も有名なものは GNATS かもしれないが、
+があります。
+特に売りもの一覧については、ここをまず見るとよいようです…
+って、この三年くらい更新してませんね。
+</para>
+
+<para>
+Free のものもいくつかあります。
+最も有名というか歴史のあるツールは GNATS でしょうか。
 あとは
-jitterbug
-がよくみるだろうか？
-他に
+jitterbug、
 Bugzilla
-とか
-debuggs (Debian Bug Tracking System)
-とか OpenTrack PTS WREK Wreq (?) などというのもある。
+debuggs (Debian Bug Tracking System)、
+OpenTrack PTS WREK Wreq (?) など。
+最近は、なんでもウエブで〜という人たちばかりだからか、
+Bugzilla が多いですかね？
 </para>
 
 <para>
@@ -49,17 +53,18 @@ debuggs (Debian Bug Tracking System)
 <ulink url="http://linas.org/linux/pm.html">
 http://linas.org/linux/pm.html
 </ulink>
-の方がよくまとまってるかもしれない。
+の方がよくまとまってるかも…いえ、これも更新してませんね。
 </para>
 
 <para>
-どちらかというと有名なものは特定のプロジェクトと bind されていて
+いずれにせよ、
+たいてい有名なものは特定のプロジェクトと bind されていて
 そこから派生したという趣が多いようにおもえます。
 たとえば perl.org のバグトラックツールである perlbug (CPAN を見よ) は
 他であまり使われているような気がしないわけで、
 どうも project が発生するたびに、
 『既存の bug tracking system は使いにくい、作ろう』
-という project が付随して発生しているような気もします(笑)
+という project が付随して発生しているような雰囲気も感じられます(笑)。
 </para>
 
 </sect1>
@@ -72,18 +77,22 @@ http://linas.org/linux/pm.html
 
 <para>
 Call Tracking は主にお客からの問題の指摘についての扱いであり、
-人の割り当てとステータス管理とレポートを行なう必要があります。
+「人の割り当て」
+「ステータス管理」
+そして
+レポートを行なう必要があります。
 </para>
 
 <para>
-一方 Problem Tracking は開発プロセスの管理などであり、その管理対象には
-タスクやさまざまな統計やレポートだけでなく、インテグレーションやそのテ
-ストまでも含まれえます。
+一方 Problem Tracking は「開発プロセスの管理」などであり、
+その管理対象にはタスクやさまざまな統計、レポートだけでなく、
+インテグレーションやそのテストまでも含まれえます。
 </para>
 
 <para>
-なお Configuration Management という単語も Problem Tracking の
-近隣に位置するが、これは CVS などのツール系のことです。
+なお Configuration Management という単語も 
+Problem Tracking の近隣に位置しますが、
+これは CVS などのツール系のことです。
 </para>
 
 </sect1>
@@ -250,7 +259,7 @@ diff -u -u -b -r1.93.2.7 pcmciadevs
 http://samba.anu.edu.au/jitterbug/
 </ulink>
 を参照。
-割と simple is best 指向なものといえるだろうか。
+割と simple is best 指向なものといえるでしょうか。
 もともとは samba の bug tracking をする目的からスタート。
 C 言語で、WWW インターフェイスのみ
 (URL みりゃわかるとおり)。
