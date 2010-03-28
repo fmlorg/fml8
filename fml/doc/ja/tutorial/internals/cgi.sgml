@@ -1,5 +1,5 @@
 <!--
-   $FML: cgi.sgml,v 1.14 2005/06/25 15:11:33 fukachan Exp $
+   $FML: cgi.sgml,v 1.15 2009/12/26 13:33:26 fukachan Exp $
 -->
 
 
@@ -179,7 +179,7 @@ Mach のトランポリン機構のように、いったりきたりしています。
 	</title>
 
 <para>
-例えば FML::CGI::Admin::User では
+たとえば FML::CGI::Admin::User では
 $comname と maps の関係がハードコーディングされてるけれど、
 でも、これはある程度はしかたないでしょう。
 </para>

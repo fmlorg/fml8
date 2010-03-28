@@ -1,5 +1,5 @@
 <!--
- $FML: recipes.sgml,v 1.5 2008/08/19 07:11:02 fukachan Exp $
+ $FML: recipes.sgml,v 1.6 2009/12/26 13:33:26 fukachan Exp $
 -->
 
 
@@ -82,9 +82,9 @@ WWW サーバの処理の段階で何かがおかしいです。
 </para>
 
 <para>
-中途半端にＭＬがセットアップされている（例えばホームディレクトリはある
-が、aliases に反映されていない）場合には、fml のログファイル(例:
-/var/spool/ml/elena/log)を見てみて下さい。
+中途半端にＭＬがセットアップされている
+(たとえばホームディレクトリはあるが、aliases に反映されていない)
+場合には、fml のログファイル(例: /var/spool/ml/elena/log)を見てみて下さい。
 </para>
 
 </answer>

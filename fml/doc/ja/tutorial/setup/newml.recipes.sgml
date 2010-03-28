@@ -1,5 +1,5 @@
 <!--
-   $FML: newml.recipes.sgml,v 1.4 2005/11/19 03:45:07 fukachan Exp $
+   $FML: newml.recipes.sgml,v 1.5 2008/09/28 03:31:00 fukachan Exp $
 -->
 
 
@@ -17,7 +17,7 @@
 
 <question>
 <para>
-newml 時に、aliasに使われるＭＬの管理者のメールアドレスを指定したい。
+newml 時にＭＬ管理者のメールアドレスを指定したい。
 </para>
 </question>
 
@@ -31,17 +31,18 @@ ${ml_name}-admin: 管理者のメールアドレス
 $newml_command_ml_admin_default_address 
 変数の値が入ります。
 
-デフォルトでは、どのＭＬでも /usr/local/etc/fml/main.cf で定義されてい
-る管理者のアドレス $fml_owner が使われます。
+デフォルトでは、
+どのＭＬでも /usr/local/etc/fml/main.cf 
+で定義されている管理者のアドレス $fml_owner が使われます。
 
-それ以外のものにしたい場合、site_default_config.cf で
+それ以外のアドレスに変更したい場合、site_default_config.cf で
 $newml_command_ml_admin_default_address 
 にメールアドレスを設定して下さい。
 <screen>
 $newml_command_ml_admin_default_address = メールアドレス
 </screen>
 
-また、$ml_name など、他の変数に依存した値も可です。
+また、$ml_name など、他の変数に依存した値も変更可です。
 <screen>
 $newml_command_ml_admin_default_address = $ml_name-owner@$ml_domain
 </screen>
@@ -57,19 +58,22 @@ $newml_command_ml_admin_default_address = $ml_name-owner@$ml_domain
 
 <question>
 <para>
-使わないMTA用のファイルの生成を止めたい。
+使わない MTA 用の見本生成を止めたい。
 </para>
 </question>
 
 <answer>
 <para>
-newml_command_mta_config_list に MTA のリストが定義されています。
-そこから、不要の MTA を抜いて下さい。
+newml_command_mta_config_list にインストールされる
+MTA のリストが定義されています。
+そこから不要の MTA を抜いて下さい。
 </para>
 
 <para>
 たとえば、qmail が不要であれば
 <screen>
+[/usr/local/etc/fml/site_default_config.cf]
+
 newml_command_mta_config_list -= qmail
 </screen>
 としてください。~/.qmail-* ファイルの生成がされなくなります。
@@ -90,16 +94,17 @@ newml_command_mta_config_list -= qmail
 <answer>
 	<para>
 	2008/09/09 以降の &fml8; は、newml 時に、
-	一般ユーザ向けに入会/退会用の CGI を作成しています。
+	一般ユーザ向け入会/退会用 CGI を作成しています。
 	その CGI の URL を案内に入れてみて下さい。
 	</para>
 
 	<para>
-	デフォルトでは CGI は使えないようになっているので、CGI の設定は
+	なお、
+	デフォルトでは CGI が使えないようになっているので、CGI の設定は
 	<link linkend="setupcgi">
 	<xref linkend="setupcgi">
 	</link>
-	の章を参照して下さい。
+	の章を参照して CGI を有効に下さい。
 	</para>
 
 </answer>

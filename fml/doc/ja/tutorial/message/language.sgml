@@ -1,5 +1,5 @@
 <!--
-   $FML: language.sgml,v 1.8 2008/08/19 03:16:56 fukachan Exp $
+   $FML: language.sgml,v 1.9 2010/03/18 20:28:05 fukachan Exp $
 -->
 
 
@@ -32,7 +32,7 @@ $curproc->reply_message_nl('error.already_member',
 </para>
 
 <para>
-メッセージ中の $_arg_変数名、例えば、
+メッセージ中の $_arg_変数名、たとえば、
 <screen>
 $_arg_address
 </screen>

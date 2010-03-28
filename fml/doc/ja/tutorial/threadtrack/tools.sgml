@@ -1,5 +1,5 @@
 <!--
-   $FML: tools.sgml,v 1.3 2002/04/01 23:41:07 fukachan Exp $
+   $FML: tools.sgml,v 1.4 2003/04/15 14:51:45 fukachan Exp $
 -->
 
 <appendix id="pmtools">
@@ -55,7 +55,7 @@ http://linas.org/linux/pm.html
 <para>
 どちらかというと有名なものは特定のプロジェクトと bind されていて
 そこから派生したという趣が多いようにおもえます。
-例えば perl.org のバグトラックツールである perlbug (CPAN を見よ) は
+たとえば perl.org のバグトラックツールである perlbug (CPAN を見よ) は
 他であまり使われているような気がしないわけで、
 どうも project が発生するたびに、
 『既存の bug tracking system は使いにくい、作ろう』

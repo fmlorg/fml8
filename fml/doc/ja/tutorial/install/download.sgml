@@ -1,5 +1,5 @@
 <!--
-   $FML: download.sgml,v 1.5 2008/08/07 01:03:16 fukachan Exp $
+   $FML: download.sgml,v 1.6 2008/08/18 13:21:42 fukachan Exp $
 -->
 
 
@@ -30,7 +30,7 @@
 fml-VERSION-DATA.tar.gz
 </screen>
 形です。
-VERSION は 8.0 正式リリース以前なのでなので 8.0 より少し小さい値
+VERSION は 8.0 正式リリース前なので 8.0 より少し小さい値
 7.98.x などとなっています。
 ファイル名に日付が入っていますので、
 日付の新しいものを選んでダウンロードして下さい。

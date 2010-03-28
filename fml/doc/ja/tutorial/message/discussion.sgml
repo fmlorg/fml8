@@ -1,5 +1,5 @@
 <!--
-   $FML: discussion.sgml,v 1.7 2008/08/19 03:16:56 fukachan Exp $
+   $FML: discussion.sgml,v 1.8 2010/03/18 20:28:05 fukachan Exp $
 -->
 
 
@@ -42,7 +42,7 @@ Mesg() は /usr/local/fml/messages/Japanese/ 以下にあるファイル群に対し
 </para>
 
 <para>
-例えば、キーワードが not_found の場合、
+たとえば、キーワードが not_found の場合、
 /usr/local/fml/messages/Japanese/kern
 ファイルの not_found という欄が該当します。
 </para>

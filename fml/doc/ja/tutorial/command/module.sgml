@@ -1,5 +1,5 @@
 <!--
-   $FML: module.sgml,v 1.6 2008/08/17 18:28:36 fukachan Exp $
+   $FML: module.sgml,v 1.7 2009/12/26 13:33:25 fukachan Exp $
 -->
 
 
@@ -22,7 +22,7 @@ FML::Command		FML::Command クラス以下への入口、dispatcher
 FML::Command::User	ユーザ用コマンド群
 FML::Command::Admin	管理者用コマンド群
 </screen>
-例えば、(コマンドメールでの)ユーザ用コマンドの場合
+たとえば、(コマンドメールでの)ユーザ用コマンドの場合
 FML::Command を経由して
 FML::Command::User::コマンド
 モジュールを呼び出しています。

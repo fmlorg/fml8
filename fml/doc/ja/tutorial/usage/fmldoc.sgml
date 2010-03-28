@@ -1,5 +1,5 @@
 <!--
-   $FML: fmldoc.sgml,v 1.3 2002/07/28 06:26:58 fukachan Exp $
+   $FML: fmldoc.sgml,v 1.4 2004/10/06 09:07:44 fukachan Exp $
 -->
 
 
@@ -15,7 +15,7 @@ fml の任意のモジュールに対し、そのドキュメントを表示します。
 </para>
 
 <para>
-例えば、FML::Process::Kernel のドキュメントが見たい場合、
+たとえば、FML::Process::Kernel のドキュメントが見たい場合、
 <screen>
 % fmldoc FML::Process::Kernel
 </screen>

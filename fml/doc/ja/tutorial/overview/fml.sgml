@@ -1,5 +1,5 @@
 <!--
-   $FML: fml.sgml,v 1.12 2008/08/19 03:22:17 fukachan Exp $
+   $FML: fml.sgml,v 1.13 2008/08/19 07:11:02 fukachan Exp $
 -->
 
 
@@ -21,13 +21,12 @@
 <!-- ======================================================== -->
 <sect1 id="overview.fml8">
 	<title>
-	&fml8; でできること
+	&fml8; で出来ること
 	</title>
 
 <para>
 &fml4; の再実装にあたっての山場は越えたと思います。
-CGI 関係以外は RC (Release Candidate) の気分…
-あぁ、うそ makefml config ができてない。
+メニュー関連項目以外は RC (Release Candidate) の気分です。
 </para>
 
 <para>
@@ -49,7 +48,7 @@ CGI 関係以外は RC (Release Candidate) の気分…
     <listitem>
 	<para>
 	<link linkend="usage.onhost">
-	makefml によるコマンド操作
+	シェル上でのコマンド(makefml なしいは fml)による操作
 	</link>
 	は &fml4; と同様です:
 		ＭＬの作成/削除、
@@ -110,7 +109,7 @@ CGI 関係以外は RC (Release Candidate) の気分…
 	コマンドメール(リモート管理者):
 		メンバーの登録/削除/変更(chaddr)、
 		リモート管理者の登録/削除、
-		ログを見る、
+		ログを見る。
 	</para>
     </listitem>
 
@@ -134,7 +133,7 @@ CGI 関係以外は RC (Release Candidate) の気分…
 
     <listitem>
 	<para>
-	IPv6 による配送
+	IPv6 による配送。
 	</para>
     </listitem>
 
@@ -185,8 +184,8 @@ CGI 関係以外は RC (Release Candidate) の気分…
 	</para>
 
 	<para>
-	注意: ただし、代表的な機能だけで、全ての変数の互換性があるわけ
-	ではありません。
+	注意: ただし、代表的な機能だけで、
+	全機能に対する互換性があるわけではありません。
 	</para>
     </listitem>
 
@@ -194,7 +193,7 @@ CGI 関係以外は RC (Release Candidate) の気分…
     <listitem>
 	<para>
 	2004 夏以降: 配送キュー管理システムにより再送処理。
-	事実上 MTA の役割をしています。
+	事実上 &fml8; は MTA です。
 	</para>
     </listitem>
 
@@ -204,8 +203,9 @@ CGI 関係以外は RC (Release Candidate) の気分…
 	<link linkend="module.io.adapter">
 	抽象化 IO 層
 	</link>
-	メンバーファイルをファイル、/etc/group, NIS, MySQL
-	から取り出すことができます。
+	メンバーリストなどの取り扱いにおいて、
+	ファイル、/etc/group、 NIS、MySQL、PostgreSQL、LDAP などを
+	同列に扱います(設定ファイルに追加設定は必要)。
 	</para>
     </listitem>
     </itemizedlist>
@@ -226,15 +226,15 @@ CGI 関係以外は RC (Release Candidate) の気分…
 <para>
 インスール方法は GNU autoconf を使うデファクトスタンダード(configure 
 そして make)なものとなっています。&fml4; にあまり似ていません。ですが、
-OS 附属のパッケージシステムなどにはやさしくなっているといえるでしょう。
+OS 附属のパッケージシステムとの親和性は高くなりました。
 </para>
 
 <para>
 &fml8; のインストールにおける主な注意点(&fml4;との相違点)は、
 「root での作業」、
 「configure の使用」、
-/usr/local/etc/fml/
-のファイル編集です。
+「/usr/local/etc/fml/ 以下にあるファイルの編集」
+です。
 <footnote>
 <para>
 &fml8; の
@@ -244,7 +244,7 @@ OS 附属のパッケージシステムなどにはやさしくなっているといえるでしょう。
 /usr/local/fml/.fml 以下のファイル群
 および
 /usr/local/etc/fml/site_default_config.ph
-などに相当していますが、必ずしも一対一対応するわけではありません。
+などに相当していますが、必ずしも一対一対応しているわけではありません。
 </para>
 </footnote>
 </para>
@@ -253,8 +253,9 @@ OS 附属のパッケージシステムなどにはやさしくなっているといえるでしょう。
 
 
 <para>
-さて、いつものように Unix 上で elena ＭＬ(elena@fml.org)を作成するケー
-スを例にとりましょう。インストールのおおまかな流れは次のようになります。
+さて、いつものように 
+Unix 上で elena ＭＬ(elena@fml.org)を作成するケースを例にとりましょう。
+インストールのおおまかな流れは次のようになります。
 </para>
 
 
@@ -295,7 +296,7 @@ OS 附属のパッケージシステムなどにはやさしくなっているといえるでしょう。
 	<link linkend="install.fml.unix.configure">
 	configure のオプション
 	</link>
-	で変更が可能です。
+	で変更可能です。
 	</para>
 
 	<para>
@@ -357,7 +358,7 @@ OS 附属のパッケージシステムなどにはやさしくなっているといえるでしょう。
 
 <warning>
 <para>
-&fml4; と異なり root でインストールすることに注意して下さい。
+&fml4; と異なりユーザ root でインストール作業をすることに注意して下さい。
 </para>
 </warning>
 
@@ -372,7 +373,7 @@ OS 附属のパッケージシステムなどにはやさしくなっているといえるでしょう。
 
 <para>
 makefml コマンドを使ってＭＬを作成します。
-デフォルトのドメイン(例: fml.org)の場合、
+デフォルト・ドメイン(例: fml.org)の場合、
 makefml の使い方は &fml4; の時と同様です。
 elena@fml.org ＭＬを作るには
 <screen>
@@ -392,7 +393,7 @@ elena@fml.org ＭＬを作るには
 <link linkend="virtualdomain">
 バーチャルドメイン(nuinui.net)
 </link>
-の場合は、ＭＬのアドレスを全部指定して下さい。
+の場合は、ＭＬのアドレスをすべて指定して下さい。
 たとえば elena@nuinui.net を作る場合は、次のように実行します。
 <screen>
 初回
@@ -408,14 +409,17 @@ elena@fml.org ＭＬを作るには
 </para>
 
 <para>
-いまどき一人で複数ドメインを持つなんて普通だと思うので、全ＭＬをバーチャ
-ルドメインにしておくほうが統一感があって良いと思いますね。
+最近では、一人で複数のドメインを持つことはありふれていますので、
+全ＭＬをバーチャルドメインとして作成するほうが統一感のある運用方式になる
+と思われます。
+実際 fml.org 自身もそのような運用方式です。
 </para>
 
 <warning>
 <para>
-バーチャルドメイン(nuinui.net)のＭＬを作る場合、最初の一回目には、「そ
-のドメインを使う」ための宣言(おまじない?)が必要です。くわしくは
+バーチャルドメイン(nuinui.net)のＭＬを作る場合、最初の一回目には、
+「そのドメインを使う」ための宣言(おまじない?)が必要です。
+くわしくは
 <link linkend="virtualdomain">
 <xref linkend="virtualdomain">
 </link>
@@ -438,9 +442,9 @@ elena@fml.org ＭＬを作るには
 % su fml
 % makefml subscribe elena rudo@nuinui.net
 </screen>
-で構いません。
+でＯＫです(elena だけでＯＫ、つまり @fml.org なしでもＯＫ)。
 一方、バーチャルドメイン(nuinui.net)の場合は、
-ＭＬのアドレスを全部指定して下さい。
+ＭＬのアドレスをすべて指定して下さい。
 <screen>
 % su fml
 % makefml subscribe elena@nuinui.net fukachan@sapporo.iij.ad.jp
@@ -462,9 +466,9 @@ elena@fml.org ＭＬを作るには
 % su fml
 % makefml unsubscribe elena rudo@nuinui.net
 </screen>
-で構いません。
+でかまいません。
 一方、バーチャルドメイン(nuinui.net)の場合は、
-アドレスを全部指定して下さい。
+アドレスをドメインまで含めてすべて指定して下さい。
 <screen>
 % su fml
 % makefml unsubscribe elena@nuinui.net fukachan@sapporo.iij.ad.jp
@@ -477,13 +481,13 @@ elena@fml.org ＭＬを作るには
 <!-- ============================================================= -->
 <sect1 id="guide.config.cf">
 	<title>
-	ＭＬの設定のカスタマイズ
+	ＭＬ設定のカスタマイズ
 	</title>
 
 <warning>
 <para>
 makefml config は実装途中で、まだイマイチです。ごめんなさい。
-いまは、まだ config.cf ファイルを手で編集して下さい。
+いまは、まだ config.cf ファイルを手動で編集して下さい。
 </para>
 </warning>
 
@@ -495,11 +499,37 @@ makefml config は実装途中で、まだイマイチです。ごめんなさい。
 
 <para>
 /usr/local/etc/fml/site_default_config.cf
-は、このホストで動く fml すべてに影響を与えます。
+は、このホストで動く &fml8; すべてに影響を与えます。
 <footnote>
 <para>
-これは &fml4; の site_force.ph に相当するものです。
+これは &fml4; の site_init.ph に相当するものです。
 </para>
+
+<para>
+&fml4; では次のように設定ファイルを読み込んでいきます。
+<screen>
+InitConfig {
+   SetDefaults { ... };
+   LoadConfig {
+      include default_config.ph;
+      include site_init.ph;
+      include config.ph;
+      include site_force.ph;
+      include sitedef.ph;
+   }
+}
+</screen>
+&fml8; では
+<screen>
+/usr/local/etc/fml/$fml_version/default_config.cf
+/usr/local/etc/fml/site_default_config.cf
+/usr/local/etc/fml/domains/$DOMAIN/default_config.cf
+/var/spool/ml/elena/config.cf
+</screen>
+のようになっています。
+site_force.ph がありませんが、困ってないので、今のところ作る予定なし。
+</para>
+
 </footnote>
 </para>
 
@@ -523,17 +553,24 @@ site_default_config.cf のフォーマットは、config.cf (後述)と同様で、
 <para>
 elena ＭＬの設定のカスタマイズは 
 /var/spool/ml/elena/config.cf
-を編集して下さい。
+を編集することで行ないます。
 <link linkend="internal.config.cf">
-フォーマットは postfix の設定ファイル
+config.cf のフォーマットは Postfix の設定ファイル
 </link>
-とかなり似ています(&fml4; の config.ph よりは cf にやや近いですが、フォー
-マットが違うことに変わりはない)。
-HOOK (perl script)を書く場合は、
-(perl script ファイルのように) =cut より後に書いて下さい。
+とかなり似ています
+(&fml4; の config.ph よりは &fml4; の cf にやや近いですが、
+フォーマットが違うことに変わりはない)。
 </para>
 
 <para>
+&fml8; で HOOK (perl script)を書く場合は、
+(perl script ファイルのように) 
+/var/spool/ml/elena/config.cf 
+ファイルの =cut 行以下に書いて下さい。
+</para>
+
+<para>
+=cut 行より上には設定( 変数 = 値 )を書いて下さい。
 適宜、必要な項目だけを追加して下さい。
 指定しない場合はデフォルト値が使われます。
 デフォルト値はインストールしたバージョンに依存しており、

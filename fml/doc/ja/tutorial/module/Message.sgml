@@ -1,5 +1,5 @@
 <!--
-   $FML: Message.sgml,v 1.4 2008/08/19 03:16:57 fukachan Exp $
+   $FML: Message.sgml,v 1.5 2010/03/18 20:28:05 fukachan Exp $
 -->
 
 <chapter id="module.mail.message">
@@ -69,7 +69,7 @@ parse() メソッドは引数で与えられたファイル(名)かファイルディスクリプタ
 
 <para>
 data_type_list() は鎖の列の情報を返します。情報は ARRAY REFERENCE の形
-で返されます。例えば MIME/Multipart は次のように表現されています
+で返されます。たとえば MIME/Multipart は次のように表現されています
 (ちなみに、以下の表示はデバッグモードで出力されるものです)。
 <screen>
   type[ 1]: text/rfc822-headers       | multipart/mixed
@@ -341,7 +341,7 @@ num_paragraph()
 nth_paragraph(数字)
 メソッドは
 「数字」番目のパラグラフの内容を文字列として返します。
-例えば、一番目のパラグラフは 0 ではなく 1 と指定して下さい。
+たとえば、一番目のパラグラフは 0 ではなく 1 と指定して下さい。
 ここは、わざとＣ言語風ではなく人間に分かりやすいように
 「 1から始まる仕様」としてあります。
 </para>

@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.sgml,v 1.17 2008/08/18 13:21:42 fukachan Exp $
+   $FML: chapter.sgml,v 1.18 2009/12/26 13:33:25 fukachan Exp $
 -->
 
 
@@ -38,7 +38,7 @@ SMTP、ESMTP
 </para>
 
 <para>
-例えば次のように使います。
+たとえば次のように使います。
 <screen>
     use Mail::Delivery::SMTP;
     my $service = new Mail::Delivery::SMTP;

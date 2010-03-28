@@ -1,5 +1,5 @@
 <!--
-   $FML: qmail.sgml,v 1.5 2004/10/06 09:07:37 fukachan Exp $
+   $FML: qmail.sgml,v 1.6 2008/08/19 03:22:17 fukachan Exp $
 -->
 
 
@@ -11,41 +11,120 @@
 <warning>
 <para>
 &fml8; の qmail 設定は、
-バーチャルドメインなのかデフォルトのドメインなのか？を問わず、
-常に
+バーチャルドメインなのかデフォルト・ドメイン(のみ)なのか？を問わず、
+つねに
 /var/qmail/control/virtualdomains
 の利用を前提としています。
+&fml4; の流儀とは異なりますので注意して下さい。
 </para>
+
+<para>
+[ナビゲーション] qmail 設定変更点のまとめ
+<screen>
+(1) 新ドメインを使い始める初回に newdomain (makefml もしくは fml コマンド)
+
+(2) newml で、ひとつＭＬを作成してみる(makefml もしくは fml コマンド)
+
+(3) 作成された見本を元に、/var/qmail/control/virtualdomains を編集。
+    見本は「newdomainで指定したスプール名」/etc/qmail/virtualdomains 。
+
+(4) qmail-send に HUP シグナル。
+</screen>
+ＭＬごとには「無し」です
+(ＭＬの新規作成・削除に伴う qmail の設定変更は不要)。
+</para>
+
 </warning>
 
 <para>
-makefml newml を実行するだけでＭＬが自動的に有効になるように、あらかじ
-め qmail の設定を変更しておいて下さい。
+makefml newml ないしは fml ML newml
+を実行するだけでＭＬが自動的に有効となるように、
+あらかじめ qmail の設定を変更しておいて下さい。
 /var/qmail/control/virtualdomains の設定見本は
 (ドメインごとに) /var/spool/ml/etc/qmail に作成されます。
+</para>
+
+<para>
+以下、そのドメインの最初のＭＬを作る際に必要な手順について説明します。
 </para>
 
 
 <sect2>
 	<title>
-	デフォルトのドメイン(例: fml.org)の場合
+	デフォルトのドメイン(例: example.org)の場合
 	</title>
 
 <para>
-デフォルトのドメイン(例: fml.org)は使えないと思うのですが、嘘？
-ml.fml.org などとＭＬ専用のサブドメインを作って使うのが良いと思ってい
-ます。
+デフォルトのドメイン(例: example.org)は使えないと思うのですが、嘘？
 </para>
 
 <para>
+デフォルトドメインではなく、
+ml.example.org などとＭＬ専用のサブドメインを作って使うのが良いと思っています。
+</para>
+
+<para>
+→ 次節へ:
+</para>
+
+<caution>
+<para>
+デフォルトドメインに対しては
+/var/qmail/control/virtualdomains
+の見本(例: /var/spool/ml/etc/qmail/virtualdomains)も”作成されません”。
+</para>
+</caution>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	バーチャルドメイン(例: ml.example.org)
+	</title>
+
+<para>
+ml.example.org での最初のＭＬを作成する際に
+qmail の virtualdomains ファイルの見本が作成されます。
+それを見て、
 <screen>
 /var/qmail/control/virtualdomains
 </screen>
-に、あらかじめ次のような設定を仕込んでおけば、
-makefml newml を実行するだけで自動的にＭＬが有効になります。
+を編集してください。
+また、そのドメインを /var/qmail/control/rcpthosts にも追加してください。
 <screen>
-ml.fml.org:fml-ml.fml.org
+[/var/qmail/control/rcpthosts]
+
+ml.example.org
 </screen>
+</para>
+
+<para>
+各ドメインごとに、初回に一回 
+/var/qmail/control/virtualdomains と
+/var/qmail/control/rcpthosts 
+を編集すれば、あとは全自動でＭＬ新規作成・削除が行なえるようになります。
+</para>
+
+<para>
+例( qmail 1.03 on NetBSD/i386 5.0.2 ):
+<screen>
+% su root
+# makefml newdomain ml.example.org /var/spool/ml.example.org
+# su fml
+% makefml newml test@ml.example.org
+  ... 出力 ...
+% exit
+# echo ml.example.org >> /var/qmail/control/rcpthosts
+# cat /var/spool/ml.example.org/etc/qmail/virtualdomains \
+      >> /var/qmail/control/virtualdomains
+# pkill -HUP qmail-send (qmail-send に HUP シグナルを送る)
+</screen>
+注意:
+/var/qmail/control/virtualdomains を制御しているのは qmail-send です。
+qmail-send はスタートする際にのみ virtualdomains ファイルを読み込みます。
+virtualdomains ファイルを再読み込みさせるためには
+qmail-send に HUP シグナルを送る必要があります。
 </para>
 
 <para>
@@ -56,20 +135,26 @@ makefml newml の qmail に関する節
 を参照してください。
 </para>
 
-</sect2>
-
-
-<sect2>
-	<title>
-	バーチャルドメイン(例: nuinui.net)
-	</title>
+<para>
+qmail の設定の要点は
+<screen>
+/var/qmail/control/virtualdomains
+</screen>
+に、あらかじめ次のような設定
+<screen>
+ml.example.org:fml-ml.example.org
+</screen>
+を仕込んでおけば、
+makefml ないしは fml コマンドが、
+このバーチャルドメインに該当する ~fml/.qmail-* ファイル群を生成するので、
+これだけでＭＬ設定が有効になる、というところです。
+</para>
 
 <para>
-nuinui.net ドメインのＭＬは
-<screen>
-nuinui.net:fml-nuinui.net
-</screen>
-などとしてください。
+ま、root で qmail の設定を修整する必要があるのは他のＭＴＡと一緒なので、
+とりたてて楽とかいうことはないですね。
+.qmail-* ファイル群を自動化したから気にしてないけど、
+毎回一から書いたら気が(ピー)そうです。
 </para>
 
 </sect2>

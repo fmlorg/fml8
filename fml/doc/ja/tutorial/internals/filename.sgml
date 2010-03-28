@@ -1,5 +1,5 @@
 <!--
-   $FML: filename.sgml,v 1.4 2004/10/06 09:07:39 fukachan Exp $
+   $FML: filename.sgml,v 1.5 2010/03/18 20:28:04 fukachan Exp $
 -->
 
 
@@ -26,7 +26,8 @@
 <screen>
 ファイル名-役割
 </screen>
-です。例えば、配送リストは次のようになります。
+です。
+たとえば、配送リストは次のようになります。
 <screen>
 recipients-役割
 members-役割

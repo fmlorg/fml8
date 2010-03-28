@@ -1,5 +1,5 @@
 <!--
- $FML: recipes.sgml,v 1.2 2008/08/18 13:21:42 fukachan Exp $
+ $FML: recipes.sgml,v 1.3 2008/08/23 00:59:51 fukachan Exp $
 -->
 
 <qandaset>
@@ -9,25 +9,29 @@
 
 <question>
 <para>
-ユーザ fml 以外(例えば自分)で fml を使いたい
+ユーザ fml 以外(たとえば自分名義)で fml を使いたい
 </para>
 </question>
 
 <answer>
 <para>
-fml を動かすプロセスのユーザ fml を他のユーザにしたいのであれば、
+fml を動かすプロセスのユーザ fml を
+他のユーザ(たとえば another)にしたいのであれば、
 configure オプションの  --with-fml-owner で変更できます。
+<screen>
+./configure --with-fml-owner=another
+</screen>
 </para>
 
 <para>
-自分のアカウントで実行するのはやめましょう。fml 専用ユーザを用意するこ
-とが推奨です。
+ただ、自分のアカウントで実行するのはやめましょう。
+fml 専用ユーザを用意することが推奨です。
 </para>
 
 <para>
 aliases からの起動ではなく、
 一般ユーザの権限としてＭＬを実行するのであれば
-procmail の利用を考えてみて下さい。
+procmail の利用を考えてみるのも一つの手でしょう。
 設定は /var/spool/ml/etc/procmail/procmailrc を参考にして下さい。
 </para>
 </answer>
@@ -39,7 +43,7 @@ procmail の利用を考えてみて下さい。
 
 <question>
 <para>
-インストールの際にユーザ fml になるタイミングは？
+インストール作業の際、ユーザ fml になるタイミングは？
 </para>
 </question>
 
@@ -50,7 +54,8 @@ procmail の利用を考えてみて下さい。
 </para>
 
 <para>
-ダウンロードからインストールまで全てユーザ root で行なっても問題ありません。
+逆に、すべての作業(ダウンロードからインストールまですべて)を
+ユーザ root で行なっても問題ありません。
 </para>
 </answer>
 
@@ -67,9 +72,11 @@ procmail の利用を考えてみて下さい。
 
 <answer>
 <para>
-現在、&fml8; はドキュメントをインストールしません。 逆に、ドキュメント
-が必要ならソースの Documentation/ 以下を適切な場所(たとえば 
-/usr/local/share/doc/fml8/バージョン番号/)にコピーして下さい。
+現在、&fml8; はドキュメントをインストールしません。 
+逆に、ドキュメントが必要ならソースの 
+Documentation/ 以下を適切な場所
+(たとえば /usr/local/share/doc/fml8/バージョン番号/)
+にコピーして下さい。
 </para>
 </answer>
 
@@ -107,7 +114,7 @@ jperl で fml を使いたい
 
 <answer>
 <para>
-動くかどうかまったく分かりません。
+動くかどうか、まったく分かりません。
 </para>
 </answer>
 
@@ -164,7 +171,7 @@ elena ML を上書き(再生成)したい
 
 <answer>
 <para>
-注意: テストしていないです。
+注意: テストしていません。
 </para>
 
 <para>
@@ -199,35 +206,35 @@ MTA を Unix で動かせば良いでしょう。
 
 <qandaentry>
 <question>
-	<para>
-	間違えて rmml してしまったＭＬを復活させたい
-	</para>
+<para>
+間違えて rmml してしまったＭＬを復活させたい
+</para>
 </question>
 
 <answer>
-	<para>
-	reviveml コマンドを使って下さい。
-	</para>
+<para>
+reviveml コマンドを使って下さい。
+</para>
 </answer>
 </qandaentry>
 
 
 <qandaentry>
 <question>
-	<para>
-	loader や Bootstrap() がど〜っとかいうエラーが出る
-	</para>
+<para>
+loader や Bootstrap() がど〜っとかいうエラーが出る
+</para>
 </question>
 
 <answer>
 <para>
-ブートストラップのやり方がまだ収束してないので、稀に
+ブートストラップのコードがまだ収束してないので、まれに
 fml の boot loader (/usr/local/fml/libexec/loader)
-を入れ替える必要がある時があります。
+を入れ替える必要があることもありえます。
 </para>
 
 <para>
-そういう場合は、make install 時に
+そういった場合は、make install 時に
 <screen>
 You must upgrade loader. Replace it ? [y/n]
 </screen>

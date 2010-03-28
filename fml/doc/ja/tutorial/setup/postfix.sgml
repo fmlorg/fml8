@@ -1,21 +1,29 @@
 <!--
-   $FML: postfix.sgml,v 1.4 2004/04/07 11:07:12 fukachan Exp $
+   $FML: postfix.sgml,v 1.5 2005/06/25 15:11:37 fukachan Exp $
 -->
 
 <sect1 id="setup.postfix.aliases">
 	<title>
-	メールサーバの設定 (postfix)
+	メールサーバの設定 (Postfix)
 	</title>
+
 
 <important>
 <para>
-alias_maps が適切に設定されていれば、
-ＭＬ作成時にも特別な作業はありません。
-postfix の設定は自動的に更新されています。
+対象となるドメインを増やす際、
+ドメインごとに /etc/postfix/main.cf への設定追加作業が一回必要です。
 </para>
 
 <para>
-postfix の設定については
+ドメインごとに一度 &fml8; の作成する見本に従って
+alias_maps (バーチャルドメインの場合は、alias_maps と virtual_maps 両方)
+を変更しておけば、
+ＭＬの作成・削除時に特別な作業はありません(
+&fml8; の設定ツールにより Postfix の設定は自動的に更新されます)。
+</para>
+
+<para>
+Postfix の設定については
 <link linkend="install.postfix">
 <xref linkend="install.postfix">
 </link>
@@ -23,22 +31,27 @@ postfix の設定については
 </para>
 </important>
 
-
+<warning>
 <para>
-makefml はシステムの aliases (例: /etc/mail/aliases)を変更することはあ
-りません。各ドメインごとに用意されている alias ファイル 
-$ml_home_prefix/etc/mail/aliases へ必要な設定を追加することと、そのファ
-イルから aliases.db を再生成する作業を行ないます。
+&fml8; は OS の 
+aliases (例: /etc/mail/aliases)を変更することはありません。
 </para>
 
+<para>
+&fml8; の設定ツールは、各ドメインごとに用意されている alias ファイル 
+$ml_home_prefix/etc/mail/aliases へ必要な設定を追加し、
+そのファイルから aliases.db を再生成する作業を行ないます
+(ＭＬの作成・削除に必要な作業は設定ツールにおまかせです)。
+</para>
+</warning>
 
 <sect2>
 	<title>
-	補足: /var/spool/ml/etc/mail/aliases のフォーマット
+	補足情報: /var/spool/ml/etc/mail/aliases のフォーマット
 	</title>
 
 <para>
-fml が管理しているＭＬの aliases のエントリは
+&fml8; が管理しているＭＬの aliases のエントリは
 $ml_home_prefix/etc/mail/aliases
 に追加されます。
 <screen>

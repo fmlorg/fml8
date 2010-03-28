@@ -1,5 +1,5 @@
 <!--
-   $FML: apache.sgml,v 1.3 2004/10/06 09:07:42 fukachan Exp $
+   $FML: apache.sgml,v 1.4 2005/06/25 15:11:36 fukachan Exp $
 -->
 
 
@@ -22,22 +22,33 @@ fml8 CGI の内部構造については
 </warning>
 
 
+<!-- TODO: suexec on apache 2.2 -->
 <sect1 id="setup.apache.suexec">
 	<title>
 	apache で suexec を使う
 	</title>
 
 <para>
-suexec 利用可能な apache を作る必要があります。 
+suexec 機能を利用可能な apache を作る必要があります。 
 configure を実行する際に、
 <screen>
 (apache 1.x の場合)
-configure --enable-suexec --suexec-caller=www
+# ./configure --enable-suexec --suexec-caller=www (...その他のオプション...)
 </screen>
 などとします。
-ここでは suexec を呼びだすことが可能なユーザが www です。
-このユーザには、この用途専用のものを用意して下さい。
 </para>
+
+<important>
+<para>
+この例では suexec を呼び出すことが可能なユーザが www です。
+CGI ユーザには、CGI 用途専用のユーザを用意して下さい。
+</para>
+
+<para>
+suexec を呼び出すことが可能なユーザが www です。
+CGI ユーザには、CGI 用途専用のユーザを用意して下さい。
+</para>
+</important>
 
 <para>
 インストール後、~ユーザ/cgi-bin/ を許すように httpd.conf を

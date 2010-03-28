@@ -1,5 +1,5 @@
 <!--
-   $FML: config.cf.sgml,v 1.6 2005/06/25 15:11:37 fukachan Exp $
+   $FML: config.cf.sgml,v 1.7 2008/08/19 07:11:02 fukachan Exp $
 -->
 
 
@@ -12,9 +12,11 @@
 makefml は、
 makefml newml を実行した際に、
 そのＭＬの config.cf などの設定ファイル群を一式を作り、
-さらに MTA が fml を起動する際に使う include 類( postfix 用)および
-~fml/.qmail-* ( qmail 用 )
-などの必要な設定ファイル一式を用意します。
+さらに MTA が fml を起動する際に使う設定ファイル一式を用意します。
+MTA 用の設定ファイルとは、
+Postfix/Sendmail 用の include ファイル群および
+qmail 用の ~fml/.qmail-* 
+などの必要な設定ファイル一式です。
 <screen>
 % su fml
 % makefml newml elena
@@ -28,17 +30,19 @@ config.cf include include-ctl include-error
 <warning>
 
 <para>
-現状、設定支援ツールが未完成なので、ＭＬのカスタマイズは config.cf を
-エディタで編集して下さい。
+現状、
+メニュー方式の設定支援ツールが未完成なので、
+ＭＬのカスタマイズは config.cf をエディタで編集して下さい。
 </para>
 
 </warning>
 
 <para>
-makefml newml が作る config.cf には、ほとんど何も定義されていません(つ
-まりデフォルト値を使うことになっています)。
+makefml newml が作る config.cf には、ほとんど何も定義されていません
+(つまりデフォルト値を使うことになっています)。
 config.cf の先頭の ml_domain と ml_name もコメントになっていますが、
-それらはコマンドの引数から自動的に決定されるのでコメントで OK です。
+それらはコマンドの引数から自動的に決定されるものです
+(よって、コメントのままで OK)。
 </para>
 
 <para>
@@ -53,13 +57,8 @@ config.cf の先頭の ml_domain と ml_name もコメントになっていますが、
 などとなっています。MTA から起動された 
 /usr/local/libexec/fml/distribute
 コマンドなどが、このコマンド引数の elena@fml.org の部分から
-ml_domain と ml_name を自動的に設定します。
-そのため config.cf ではコメントのままで問題ありません。
-</para>
-
-<para>
-include include-ctl aliases の書き方は &fml4; と同様です。
-コマンドの PATH がちょっと違いますが、aliases の設定の仕方は一緒です。
+ml_domain と ml_name を自動的に設定します
+(そのため config.cf ではコメントのままで問題ありません)。
 </para>
 
 </sect1>

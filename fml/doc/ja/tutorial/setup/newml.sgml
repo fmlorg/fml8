@@ -1,12 +1,23 @@
 <!--
-   $FML: newml.sgml,v 1.9 2005/06/25 15:11:37 fukachan Exp $
+   $FML: newml.sgml,v 1.10 2008/08/19 07:11:02 fukachan Exp $
 -->
 
 
 <chapter id="setup.newml">
 	<title>
-	UNIX 上でＭＬを作成する
+	Unix 上でＭＬを作成する
 	</title>
+
+<para>
+コマンドラインの設定支援ツールには makefml と fml があります。
+makefml は &fml4; と同じシンタックスです。
+fml は引数の並び順が違うだけの同じコマンドです。
+<screen>
+makefml COMMAND ML      (optional arguments)
+fml     ML      COMMAND (optional arguments)
+</screen>
+以下では makefml を例にして説明します。
+</para>
 
 
 <sect1 id="setup.newml.default">
@@ -16,9 +27,12 @@
 
 <caution>
 <para>
-デフォルトドメインの場合、&fml4 と同じで構いません。
-バーチャルドメインを使う場合、ちょっと違います。
-バーチャルドメインについては
+デフォルトドメインの場合、&fml4 と同じです。
+</para>
+
+<para>
+バーチャルドメインを使う場合、&fml4; とはＭＬ名の扱いが異なります。
+バーチャルドメインの詳細については
 <link linkend="setup.newml.nondefault">
 <xref linkend="setup.newml.nondefault">
 </link>
@@ -34,8 +48,17 @@
 % makefml newml elena
    ... 処理の様子が出力される(略) ...
 </screen>
-デフォルトの /var/spool/ml 以外のパスを使いたい場合は
-makefml newdomain コマンドでパスを指定して下さい。
+</para>
+
+<para>
+デフォルトの /var/spool/ml 以外のパスを使いたい場合は、
+次のいづれかの方法を使って下さい。
+(1) インストール時の configure オプションで変更しておく、
+(2)
+<link linkend="virtualdomain">
+(バーチャルドメインの仕組みを援用して)
+</link>
+makefml newdomain コマンドで使いたいパスを指定する、
 <screen>
 % su root
 # makefml newdomain fml.org /var/spool/virtual/fml.org
@@ -44,12 +67,15 @@ makefml newdomain コマンドでパスを指定して下さい。
 % makefml newml elena
    ... 処理の様子が出力される(略) ...
 </screen>
-
+注意: 
+本ドキュメントの他の場所でも言及しているように、
+(運用するドメインは増えていくと仮定して)
+全ＭＬをバーチャルドメインで運用しておく方が素直だと考えてます。
 </para>
 
 
 <para>
-makefml newml は実行時、次のような処理を行ないます。
+「makefml newml elena」を実行すると次のような処理を行ないます。
 
 <itemizedlist>
 
@@ -61,27 +87,30 @@ makefml newml は実行時、次のような処理を行ないます。
 	include
 	include-ctl
 	</screen>
-	などを作る(適宜、elena やドメインの値を変換しながら)。
+	ファイルなどを作る(適宜、ＭＬ名やドメイン名を変換しながら)。
         </para>
    </listitem>
 
    <listitem>
         <para>
-	/var/spool/ml/etc/mail/aliases に elena の設定を仕込む。
+	/var/spool/ml/etc/mail/aliases に elena ＭＬの設定を仕込む。
 	postalias コマンドで
-	/var/spool/ml/etc/mail/aliases.db を再生成する。
+	/var/spool/ml/etc/mail/aliases.db を再生成する
+	(Postfix 用の設定)。
         </para>
    </listitem>
 
    <listitem>
         <para>
-	~fml/.qmail-* ファイル群を生成する。
+	~fml/.qmail-* ファイル群を生成する
+	(qmail 用の設定)。
         </para>
    </listitem>
 
    <listitem>
         <para>
-	procmailrc の見本を作る。
+	procmailrc の見本を作る
+	(これは見本を作るだけ)。
         </para>
    </listitem>
 
@@ -91,21 +120,23 @@ makefml newml は実行時、次のような処理を行ないます。
 	<screen>
 	~fml/public_html/fml/mlarchive/$domain/$ml/
 	</screen>
-	例えば elena@fml.org なら
+	たとえば elena@fml.org なら
 	<screen>
 	~fml/public_html/fml/mlarchive/fml.org/elena/
 	</screen>
 	を用意する。
 	デフォルトでは、
-	ここに HTML 化された記事が自動的に作られることになる。
+	ここに HTML 化された記事が自動的に作られる(
+	ただし、デフォルトでは apache の設定が無効のはずなので
+	インターネットには見えない)。
         </para>
    </listitem>
 
    <listitem>
         <para>
 	CGI インターフェイスを用意する。
-	ドメインで一番偉いインターフェイス(そのドメインのＭＬは全部操
-	作できる)が
+	ドメインで一番偉いインターフェイス
+	(そのドメインのＭＬは全部操作できる)が
 	<screen>
 	~fml/public_html/cgi-bin/fml/$domain/admin/config.cgi
 	</screen>
@@ -129,66 +160,86 @@ makefml newml は実行時、次のような処理を行ないます。
 
 <caution>
 <para>
-デフォルトドメインではない場合、&fml4 と異なります。
-注意点は、最初に newdomain コマンドを使うところとＭＬ名です。
+デフォルトドメインではない場合、&fml4; と大きく異なります。
+注意点は
+(1) 最初に newdomain コマンドを使う、
+(2) 操作時、ＭＬ名にはドメインをつける、
+の二点です。
 </para>
 </caution>
 
 <para>
 ＭＬ作成には makefml を使います。
 使い方は &fml4; と同様です。
-しかしながらＭＬ名にきちんとドメインまでつけるところが異なります。
+しかしながら「ＭＬ名にきちんとドメインまでつける」ところが異なります。
 注意して下さい。
 </para>
 
 <para>
+(新しいドメインを使いはじめる際)
 初回は newdomain コマンドによるドメイン定義も必要です。
 <screen>
+例: nuinui.net ドメインでのＭＬを使いはじめる時。
+
 % su root
 # makefml newdomain nuinui.net /var/spool/virtual/nuinui.net
 # exit
 % su fml
 % makefml newml elena@nuinui.net
 </screen>
-二回目以降の場合は
+二回目以降は
 <screen>
 % su fml
 % makefml newml rudo@nuinui.net
 </screen>
-だけでかまいません。
+だけでＭＬを作成できます。
 </para>
 
 <para>
-newdomainコマンドでは、ドメインと使う ml_home_prefix ディレクトリのペ
-アを指定します。このコマンドは /usr/local/etc/fml/ml_home_prefix ファ
-イルの編集を代行します。上の例では ml_home_prefix ファイルに次の行が追
-加されます。
+newdomain コマンドでは、
+「ドメイン」と「使う ml_home_prefix ディレクトリ」のペアを指定します。
+上の例はハッシュで書けば
+<screen>
+{ nuinui.net => /var/spool/virtual/nuinui.net }
+</screen>
+を意味します。
+このコマンドは /usr/local/etc/fml/ml_home_prefix ファイルの編集を代行します。
+上の例では ml_home_prefix ファイルに次の行が追加されます。
 <screen>
 nuinui.net /var/spool/virtual/nuinui.net
 </screen>
-ちなみに、この対応関係を消す場合は rmdomain コマンドです。
+ちなみに、この対応関係を解消するコマンドは rmdomain です。
 </para>
 
 <para>
-newml コマンドは、引数のＭＬ名をドメイン名つきにする以外、デフォルトド
-メインの場合と操作方法は同じです。
+newml コマンドは、引数のＭＬ名を「ドメイン名つき」にする以外、
+デフォルトドメインの場合と操作方法は同じです。
 </para>
 
 <para>
-また、バーチャルドメインの場合、makefml newml は各 MTA ごとのバーチャ
-ルドメイン用設定見本を作ります。たとえば
+また、バーチャルドメインの場合、
+makefml newml は各 MTA ごとのバーチャルドメイン用設定見本を作ります。
+たとえば
 <screen>
-/var/spool/ml/etc/sendmail/virtusertable
-/var/spool/ml/etc/postfix/virtual
+/var/spool/nuinui.net/etc/sendmail/virtusertable
+/var/spool/nuinui.net/etc/postfix/virtual
+/var/spool/nuinui.net/etc/qmail/virtualdomains
+/var/spool/nuinui.net/etc/procmail/procmailrc
 </screen>
 が作られます。
-qmail 用の見本は作られません。
-な procmail は.procmailrcの見本がドメイン名つきなので別途バーチャル用
-という設定はありません。
+MTA の設定変更時の参考にして下さい。
 </para>
 
 <para>
-詳しくは、
+ちなみに procmail は、見本(
+/var/spool/nuinui.net/etc/procmail/procmailrc
+)自体がドメイン名つきなので、
+特別バーチャルドメイン用ではありません。
+いずれにせよ、見本に御利用下さい。
+</para>
+
+<para>
+技術的な詳細は、
 <link linkend="virtualdomain">
 バーチャルドメイン
 </link>

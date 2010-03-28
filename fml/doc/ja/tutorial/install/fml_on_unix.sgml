@@ -1,5 +1,5 @@
 <!--
-   $FML: fml_on_unix.sgml,v 1.12 2005/11/19 03:45:07 fukachan Exp $
+   $FML: fml_on_unix.sgml,v 1.13 2008/08/18 13:21:42 fukachan Exp $
 -->
 
 
@@ -17,7 +17,7 @@
 
 <para>
 configure を実行する(後述)前に、
-適宜、ユーザ fml とグループ fml を作ってください。
+ユーザ fml とグループ fml を作ってください。
 <screen>
 例
 
@@ -38,9 +38,9 @@ configure を実行する(後述)前に、
 
 
 <para>
-configure (GNU autoconf) および make を実行して下さい。
-configure の前に、適宜、ユーザ fml とグループ fml を作っておく必要があ
-りますので注意して下さい。
+configure (by GNU autoconf) および make を実行して下さい。
+configure の前に、
+ユーザ fml とグループ fml を作っておく必要がありますので注意して下さい。
 ここまでの作業をまとめて書くと、次のようになります。
 <screen>
 % su root
@@ -49,13 +49,13 @@ configure の前に、適宜、ユーザ fml とグループ fml を作っておく必要があ
 # ./configure
 # make install
 </screen>
-configure が適宜、script 群や .cf 群の変数を書き換えます。
+configure が適宜 script 群や .cf 群の変数を書き換えます。
 </para>
 
 <para>
-make install を実行すると、configure が生成した etc/fml/install.cf を
-元に、configure が生成した install.pl (perl script) がインストールを行
-ないます。
+make install を実行する際には、
+configure が生成した etc/fml/install.cf を元に、
+configure が生成した install.pl (perl script) がインストールを行ないます。
 </para>
 
 <para>
@@ -96,13 +96,56 @@ configure --help
 で表示されます。
 <screen>
 例
- 
+
+./configure --help
+
+`configure' configures this package to adapt to many kinds of systems.
+
+	... snip ...
+
+Installation directories:
+  --prefix=PREFIX         install architecture-independent files in PREFIX
+                          [/usr/local]
+  --exec-prefix=EPREFIX   install architecture-dependent files in EPREFIX
+                          [PREFIX]
+
+	... snip ...
+
+Fine tuning of the installation directories:
+  --bindir=DIR            user executables [EPREFIX/bin]
+  --sbindir=DIR           system admin executables [EPREFIX/sbin]
+  --libexecdir=DIR        program executables [EPREFIX/libexec]
+  --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
+  --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
+  --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
+  --libdir=DIR            object code libraries [EPREFIX/lib]
+  --includedir=DIR        C header files [PREFIX/include]
+  --oldincludedir=DIR     C header files for non-gcc [/usr/include]
+  --datarootdir=DIR       read-only arch.-independent data root [PREFIX/share]
+  --datadir=DIR           read-only architecture-independent data [DATAROOTDIR]
+  --infodir=DIR           info documentation [DATAROOTDIR/info]
+  --localedir=DIR         locale-dependent data [DATAROOTDIR/locale]
+  --mandir=DIR            man documentation [DATAROOTDIR/man]
+  --docdir=DIR            documentation root [DATAROOTDIR/doc/PACKAGE]
+  --htmldir=DIR           html documentation [DOCDIR]
+  --dvidir=DIR            dvi documentation [DOCDIR]
+  --pdfdir=DIR            pdf documentation [DOCDIR]
+  --psdir=DIR             ps documentation [DOCDIR]
+
+Optional Packages:
+  --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
+  --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
   --without-warning       run perl as perl without -w
   --with-fmlconfdir=DIR   use DIR instead of SYSCONFDIR/fml
   --with-mlspooldir=DIR   use DIR instead of /var/spool/ml
   --with-fml-owner=USER   use USER instead of fml
   --with-fml-group=GROUP  use GROUP instead of fml
-  --with-default-domain=DOMAIN  use DOMAIN as the ML domain
+  --with-default-domain=DOMAIN     use DOMAIN as the default ML domain
+  --with-default-hostname=HOSTNAME use HOSTNAME as the default hostname
+  --without-mime-component-filter  disable mime_component_filter
+  --with-group-writable-fmlconfdir=DIR   instead of \$fmlconfdir/config.gw
+  --with-ml-home-prefix-map=PATH   use PATH as primary_ml_home_prefix_map
+  --with-group-writable-ml-home-prefix-map
 </screen>
 
 </para>
@@ -132,78 +175,120 @@ configure --help
 例:	main.cf の置き場所として
 	/etc/fml を使うなら、こうする(Debian だとこうするべし？)。
 <screen>
-# ./configure --with-fmlconfdir=/etc/fml
-loading cache ./config.cache
-checking for perl... (cached) perl
-checking for perl... (cached) /usr/local/bin/perl
-checking whether optional useful commands are available or not
-checking for cksum... (cached) /usr/bin/cksum
-checking for md5... (cached) /usr/bin/md5
-checking for ls... (cached) /bin/ls
-checking for tar... (cached) /usr/bin/tar
-checking for gzip... (cached) /usr/bin/gzip
-checking for zcat... (cached) /usr/bin/zcat
-checking for gunzip... (cached) /usr/bin/gunzip
-checking for lha... (cached) /usr/pkg/bin/lha
+#  ./configure --with-fmlconfdir=/etc/fml
+checking for perl... perl
+checking for perl... /usr/bin/perl
+"checking whether optional useful commands are available or not"
+checking for cc... /usr/bin/cc
+checking for install... /usr/bin/install
+checking for cksum... /usr/bin/cksum
+checking for sum... /usr/bin/sum
+checking for md5... /usr/bin/md5
+checking for digest... /usr/bin/digest
+checking for ls... /bin/ls
+checking for tar... /bin/tar
+checking for gzip... /usr/bin/gzip
+checking for zcat... /usr/bin/zcat
+checking for gzcat... /usr/bin/gzcat
+checking for gunzip... /usr/bin/gunzip
+checking for lha... no
 checking for ish... no
-checking for bzip2... (cached) /usr/bin/bzip2
-checking for bunzip2... (cached) /usr/bin/bunzip2
-checking for uuencode... (cached) /usr/bin/uuencode
-checking for compress... (cached) /usr/bin/compress
-checking for sendmail... (cached) /usr/sbin/sendmail
-checking for newaliases... (cached) /usr/bin/newaliases
-checking for postfix... (cached) /usr/sbin/postfix
-checking for postalias... (cached) /usr/sbin/postalias
-checking for postconf... (cached) /usr/sbin/postconf
-checking for postmap... (cached) /usr/sbin/postmap
-checking for nkf... (cached) /usr/pkg/bin/nkf
+checking for bzip2... /usr/bin/bzip2
+checking for bunzip2... /usr/bin/bunzip2
+checking for uuencode... /usr/bin/uuencode
+checking for compress... /usr/bin/compress
+checking for sendmail... /usr/sbin/sendmail
+checking for makemap... no
+checking for newaliases... /usr/bin/newaliases
+checking for postfix... /usr/sbin/postfix
+checking for postalias... /usr/sbin/postalias
+checking for postconf... /usr/sbin/postconf
+checking for postmap... /usr/sbin/postmap
+checking for nkf... /usr/bin/nkf
 checking for kakasi... no
 checking for namazu... no
-checking for pgp... (cached) /usr/pkg/bin/pgp
-checking for pgp5... no
-checking for pgpe... no
-checking for pgpk... no
-checking for pgps... no
-checking for pgpv... no
-checking for gpg... no
-checking for less... (cached) /usr/bin/less
-checking for more... (cached) /usr/bin/more
-checking for w3m... (cached) /usr/pkg/bin/w3m
-updating cache ./config.cache
-creating ./config.status
-creating config.sh
-creating fml/etc/main.cf
-creating fml/etc/default_config.cf.ja
-creating fml/etc/site_default_config.cf
-creating fml/libexec/loader
-creating fml/bin/fmlalias
-creating fml/bin/fmlconf
-creating fml/bin/fmldoc
-creating fml/bin/fmlhtmlify
-creating fml/bin/fmlsch
-creating fml/bin/fmlthread
-creating fml/bin/fmlspool
-creating fml/bin/makefml
-enabled perl -w
+checking for pgp... /usr/bin/pgp
+checking for pgp5... /usr/bin/pgp5
+checking for pgpe... /usr/bin/pgpe
+checking for pgpk... /usr/bin/pgpk
+checking for pgps... /usr/bin/pgps
+checking for pgpv... /usr/bin/pgpv
+checking for gpg... /usr/bin/gpg
+checking for gpgv... /usr/bin/gpgv
+checking for gpgsplit... /usr/bin/gpgsplit
+checking for less... /usr/bin/less
+checking for more... /usr/bin/more
+checking for w3m... /usr/bin/w3m
+checking for spamassassin... no
+checking for spamd... no
+checking for spamc... no
+checking for bogofilter... no
+checking for clamscan... /usr/bin/clamscan
+checking for vi... /usr/bin/vi
+checking for ng... /usr/bin/ng
+checking for mule... /usr/bin/mule
+checking for emacs... no
+checking for xemacs... no
+configure: creating ./config.status
+config.status: creating install.pl
+config.status: creating config.sh
+config.status: creating fml/etc/install.cf
+config.status: creating fml/etc/main.cf
+config.status: creating fml/etc/default_config.cf.ja
+config.status: creating fml/etc/default_config.cf.en
+config.status: creating fml/etc/site_default_config.cf
+config.status: creating fml/libexec/loader
+config.status: creating fml/bin/fmladdr
+config.status: creating fml/bin/fmlalias
+config.status: creating fml/bin/fmlconf
+config.status: creating fml/bin/fmldoc
+config.status: creating fml/bin/fmlhtmlify
+config.status: creating fml/bin/fmlsch
+config.status: creating fml/bin/fmlproj
+config.status: creating fml/bin/fmlpgp
+config.status: creating fml/bin/fmlpgp5
+config.status: creating fml/bin/fmlpgpe
+config.status: creating fml/bin/fmlpgpk
+config.status: creating fml/bin/fmlpgps
+config.status: creating fml/bin/fmlpgpv
+config.status: creating fml/bin/fmlgpg
+config.status: creating fml/bin/fmlgpgv
+config.status: creating fml/bin/fml
+config.status: creating fml/bin/makefml
+enabled: perl -w
 
-fml has been configure with the following options:
+fml has been configured with the following options:
 
-                 prefix: /usr/local
-            exec_prefix: ${prefix}
-                 bindir: ${exec_prefix}/bin
-                sbindir: ${exec_prefix}/sbin
-                lib_dir: ${exec_prefix}/lib
-            libexec_dir: ${exec_prefix}/libexec
-                 mandir: ${prefix}/man
-                datadir: ${prefix}/share
+                    prefix: /usr/local
+               exec_prefix: ${prefix}
+                    bindir: ${exec_prefix}/bin
+                   sbindir: ${exec_prefix}/sbin
+                   lib_dir: ${exec_prefix}/lib
+               libexec_dir: ${exec_prefix}/libexec
+                    mandir: ${datarootdir}/man
+               datarootdir: ${prefix}/share
+                   datadir: ${datarootdir}
+   
+         fml process owner: fml
+         fml process group: fml
+                fmlconfdir: /etc/fml
+        ml_home_prefix_map: /etc/fml/ml_home_prefix
+                mlspooldir: /var/spool/ml
+            default domain: home.fml.org
+          default hostname: elena.home.fml.org
+   
+         mime based filter: yes
+   
+Now you must run "make install" as user "root".
 
-      fml process owner: fml
-      fml process group: fml
-             fmlconfdir: /etc/fml
-             mlspooldir: /var/spool/ml
-         default domain: home.fml.org
+</screen>
+</para>
 
-Now you must run "make install".
+<para>
+補足: いや、こういうタイプの設定をする OS の場合
+/usr/local ではなく /usr 直下に入れるですかね？
+<screen>
+# ./configure --prefix=/usr --with-fmlconfdir=/etc/fml
 </screen>
 </para>
 
@@ -247,16 +332,17 @@ Now you must run "make install".
           <entry>
 	基本設定ファイルを置く場所。
 	&fml4; の /usr/local/fml/.fml や default_config.ph を置く場所に
-	相当する。
+	相当します。
 	/usr/local/etc/fml/main.cf では、
-	バージョンやライブラリの場所(ディレクトリ)などを指定する。
+	使用する &fml8; のバージョンや
+	ライブラリの場所(ディレクトリ)などが指定可能です。
           </entry>
         </row>
 
         <row>
           <entry> /usr/local/libexec/fml 		</entry>
           <entry>
-	実行ファイル ( &fml4; の /usr/local/fml )
+	実行ファイル ( &fml4; の /usr/local/fml 相当)
 	  </entry>
         </row>
 
@@ -265,7 +351,7 @@ Now you must run "make install".
 		/usr/local/lib/fml
 	  </entry>
           <entry>
-	perl module 群を置く場所 ( &fml4; の /usr/local/fml )
+	perl module 群を置く場所 ( &fml4; の /usr/local/fml 相当)
 	  </entry>
         </row>
 
@@ -286,7 +372,7 @@ Now you must run "make install".
 	  </entry>
           <entry>
 		デフォルトドメインのＭＬ群のトップディレクトリ。
-		&fml4; と同じ目的に使われます。
+		&fml4; と同じ目的で使われます。
 
 		注意: /var/spool/ml のオーナは configure で指定した
 		owner 変数(デフォルトはユーザ fml)に設定されます。
@@ -300,9 +386,10 @@ Now you must run "make install".
 			バーチャルドメインの節
 			</link>
 			を参照
-		)に記述して下さい。
+		)に記述します(
+		makefml/fml の newdomain コマンドで設定されます)。
 
-		また、バーチャルドメインについて、くわしくは
+		バーチャルドメインの詳細は
 		<link linkend="virtualdomain">
 		<xref linkend="virtualdomain">
 		</link>
@@ -334,13 +421,14 @@ configure を実行後、ユーザ root になり、make install を実行して下さい。
 <warning>
 <para>
 configure はユーザ root で実行する必要はありませんが、
-make install はユーザ root で実行して下さい。
-間違えないように、configure も root で実行するほうがいいのかもしれません。
+make install は必ずユーザ root で実行して下さい。
 <screen>
 % su root
 # ./configure
 # make install
 </screen>
+間違えないように、はじめから 
+configure も root で実行するほうがいいのかもしれません。
 </para>
 </warning>
 
@@ -355,16 +443,15 @@ make install はユーザ root で実行して下さい。
 <para>
 必要なら /usr/local/etc/fml/main.cf を編集して下さい。
 
-configure が、あなたの環境に合わせて main.cf を書換えしているはずなの
-で configure のオプション指定が正しければ、編集の必要は、まずないはず
-です。
+configure が、あなたの環境に合わせて main.cf を書換えしているはずなので 
+configure のオプション指定が正しければ、編集の必要は、まずないはずです。
 </para>
 
 <para>
-mani.cf は大枠の最も基本的な設定です。より細かな設定、たとえばサイト共
-通の fml の動作指定などは site_default_config.cf の役割です。各ＭＬ固
-有の設定は、各ＭＬのホームディレクトリにある config.cf ファイルを編集
-して下さい。
+mani.cf は大枠の最も基本的な設定です。より細かな設定、
+たとえばサイト共通の fml の動作指定などは site_default_config.cf の役割です。
+各ＭＬ固有の設定は、
+各ＭＬのホームディレクトリにある config.cf ファイルを編集して下さい。
 </para>
 
 <!-- main.cf の見本 -->
@@ -375,12 +462,12 @@ mani.cf は大枠の最も基本的な設定です。より細かな設定、たとえばサイト共
 
 <sect1 id="install.fml.unix.edit.site.default.config.cf">
 	<title>
-	site_default_config.cf を編集する (オプショナル)
+	site_default_config.cf を編集する (オプション)
 	</title>
 
 <para>
-そのホスト共通の設定ファイルがあります。
-/usr/local/etc/fml/site_default_config.cf 
+/usr/local/etc/fml/site_default_config.cf  は、
+そのホスト共通の設定ファイル
 <footnote>
 <para>
 これは &fml4; の site_force.ph に相当するものです。
@@ -398,7 +485,7 @@ mani.cf は大枠の最も基本的な設定です。より細かな設定、たとえばサイト共
 デフォルトでは &fml4; と合わせるために、および見本として:)
 subject のタグをつけない設定とフィルタ関連の設定だけが入っています。
 <screen>
-# $FML: fml_on_unix.sgml,v 1.12 2005/11/19 03:45:07 fukachan Exp $
+# $FML: fml_on_unix.sgml,v 1.13 2008/08/18 13:21:42 fukachan Exp $
 #
 #               site default_config.cf EXAMPLE
 #
@@ -449,21 +536,21 @@ use_mime_component_filter	=	yes
 </para>
 
 <para>
-まぁフィルタのかけすぎという見解もあるかもしれませんが、
-デフォルトは厳しい方にしてあります。
+「フィルタのかけすぎ」という見解もあるかもしれませんが、
+あえてデフォルトは厳しい設定にしてあります。
 </para>
 
 <para>
-フィルタがかかっているのはよいのですが、mime component filter のデフォ
-ルトをどうすれば良いのかは基準が曖昧です。デフォルトではＭＬへの投稿が
-許されるのは text/plain のメールのみとしてあります。これで text/html 
-な惚けメールも、添付ファイルで送られてくるウィルスもデフォルトでは通り
-ません。
+フィルタがかかっているのはよいのですが、
+mime component filter のデフォルトをどうすれば良いのかは基準が曖昧です。
+デフォルトではＭＬへの投稿が許されるのは text/plain のメールのみとして
+あります。これで text/html で送ってくる寝ぼけたメールも、
+添付ファイルで送られてくるウィルスもデフォルトでは通りません。
 </para>
 
 <para>
-(すべてのＭＬで)
- mime component filter を無効にするには
+なお、(すべてのＭＬで)
+mime component filter を無効にするには
 site_default_config.cf で
 <screen>
 use_mime_component_filter	=	no
@@ -472,9 +559,8 @@ use_mime_component_filter	=	no
 </para>
 
 <para>
-mime component filter を有効にしたいが、
-ルールをカスタマイズしたいという場合は
-site_default_config.cf は
+mime component filter を有効にしたいがルールをカスタマイズしたいという場合、
+site_default_config.cf では
 <screen>
 use_mime_component_filter	=	yes
 </screen>
@@ -506,9 +592,14 @@ use_mime_component_filter	=	no
 	</title>
 
 <para>
-そのドメインでのＭＬを作る前に、newdomain コマンドで 
+最初に(つまり、そのドメインでＭＬを作る前に)、newdomain コマンドで 
 ml_home_prefix_maps に利用したいドメインと ml_home_prefix の対応関係を
 定義してください。
+<screen>
+[/var/spool/ml/etc/fml/ml_home_prefix]
+
+nuinui.net /var/spool/nuinui.net
+</screen>
 newdomain コマンドについては
 <link linkend="setup.newml">
 「ＭＬの作成」
@@ -518,13 +609,15 @@ newdomain コマンドについては
 
 <warning>
 <para>
-ml_home_prefix_maps のパスを変更したいなら別ですが、
-/usr/local/etc/fml/main.cf の編集は必要ありません。
+ml_home_prefix_maps のパスを変更したい場合は
+/usr/local/etc/fml/main.cf を編集して下さい
+(もっとも、たいてい、編集は不要です)。
 </para>
 
 <para>
-site_default_config.cf はドメインに関わらず適用されることに注意してく
-ださい。バーチャルドメインにも適用されます。
+なお、
+site_default_config.cf はドメインに関わらず適用されることに注意してください。
+つまり、この設定はバーチャルドメインにも適用されます。
 </para>
 </warning>
 
@@ -538,7 +631,7 @@ site_default_config.cf はドメインに関わらず適用されることに注意してく
 <!-- recipes -->
 <sect1 id="install.recipes">
 	<title> 
-	recipes
+	レシピ’s
 	</title> 
 
 	<!-- TABLE_OF_RECIPES -->

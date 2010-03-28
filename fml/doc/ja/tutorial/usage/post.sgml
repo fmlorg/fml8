@@ -1,5 +1,5 @@
 <!--
-   $FML: post.sgml,v 1.11 2008/08/19 07:11:02 fukachan Exp $
+   $FML: post.sgml,v 1.12 2009/12/26 13:33:26 fukachan Exp $
 -->
 
 
@@ -92,7 +92,7 @@ symlink(2) で結ばれ、同一のファイルです。
 /usr/local/libexec/fml/distribute が起動されると、つまり loader が起動
 されると、/usr/local/libexec/fml/loader は /usr/local/etc/fml/main.cf 
 を読みこみます。そして fml_version 変数から使うべきライブラリのバージョ
-ンを決めます。例えば fml_vesrion が current-20010501 となっていたら
+ンを決めます。たとえば fml_vesrion が current-20010501 となっていたら
 /usr/local/lib/fml/current-20010501/ 以下にあるライブラリを使うといっ
 た具合です。
 </para>

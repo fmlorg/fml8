@@ -1,5 +1,5 @@
 <!--
-   $FML: qmail.sgml,v 1.4 2005/06/25 15:11:37 fukachan Exp $
+   $FML: qmail.sgml,v 1.5 2006/05/17 13:13:19 fukachan Exp $
 -->
 
 
@@ -8,68 +8,38 @@
 	メールサーバの設定 (qmail)
 	</title>
 
-<para>
-makefml newml は次のような qmail 用の設定ファイルを作ります。
-<screen>
-~fml/.qmail-fml:org-elena
-~fml/.qmail-fml:org-elena-ctl
-</screen>
-よって
-<screen>
-/var/qmail/control/virtualdomains
-</screen>
-に、あらかじめ次のような設定を仕込んでおけば、
-makefml newml を実行するだけで自動的にＭＬが有効になります。
-<screen>
-fml.org:fml-fml.org
-</screen>
-</para>
-
 <warning>
 <para>
-この設定は、ＭＬ用に一つのドメインをまるまる使うことを前提としています。
+qmail の設定は、
+ＭＬ用に一つのドメインをまるまる使うことを前提としています。
 </para>
+
 </warning>
 
-<sect2>
-	<title>
-	バーチャルドメインの場合
-	</title>
-
 <para>
-makefml newml を実行するだけで自動的にＭＬが有効になるようにするには
-/var/qmail/control/virtualdomains
-に設定が必要です。しかしながら、このファイルは通常ユーザ fml さんには
-編集する権限がないので、ＭＬ管理者が設定を追加して下さい。
-<screen>
-ドメイン:fml-ドメイン
-
-例:
-
-[/var/qmail/control/virtualdomains]
-
-virtual.example.com:fml-virtual.example.com
-</screen>
-この追加は全てのドメイン分必要なことに注意して下さい。
+ＭＬ用のドメインを増やすたびに、追加設定が必要ですが、
+fml 固有の qmail 設定は不要です。
 </para>
 
 <para>
-また、そのドメインを /var/qmail/control/rcpthosts にも追加する必要があ
-ります。
-<screen>
-[/var/qmail/control/rcpthosts]
-
-virtual.example.com
-</screen>
+ＭＬ用にドメインを増やす際には
+/var/qmail/control/virtualdomains 
+と
+/var/qmail/control/rcpthosts
+に設定を追加し qmail-send に HUP シグナルを送る必要があります。
 </para>
 
 <para>
-この２つのファイルを編集したら qmail-send に HUP シグナルを送ってください。
-<screen>
-# kill -HUP qmail-sendのプロセスID
-</screen>
+ただし、初回に一回やればよいだけで、それ以降ＭＬの作成・削除は
+&fml8; の設定ツールが全自動で行ないます。おまかせでＯＫ。
 </para>
 
-</sect2>
+<para>
+詳細は、qmail におけるＭＬ作成方法
+<link linkend="install.qmail">
+<xref linkend="install.qmail">)
+</link>
+節を参照して下さい。
+</para>
 
 </sect1>
