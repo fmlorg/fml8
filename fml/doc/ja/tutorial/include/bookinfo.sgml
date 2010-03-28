@@ -1,5 +1,5 @@
 <!--
-   $FML: bookinfo.sgml,v 1.18 2008/08/17 12:36:06 fukachan Exp $
+   $FML: bookinfo.sgml,v 1.19 2009/12/26 13:33:26 fukachan Exp $
 -->
 
 <bookinfo>
@@ -26,7 +26,7 @@
      </author>
 
      <copyright>
-   	<year> 2001,2002,2003,2004,2005,2006,2008,2009 </year>
+   	<year> 2001,2002,2003,2004,2005,2006,2008,2009,2010 </year>
    	<holder> Ken'ichi Fukamachi </holder>
      </copyright>
 
@@ -38,12 +38,18 @@
 	redistribute it and/or modify it under the same terms as Perl itself.
     </para>
 
+	<para>
+	本ドキュメントは、
+	メーリングリストサーバ(ドライバ) fml バージョン 8 (&fml8;)
+	のマニュアルです。
+	</para>
 
 	<para>
 	&fml8; 自体は、すでにプロダクションクオリティと考えていますが、
-	一応、現在のステータスは PRE ALPHA です。
+	一応、現在のステータスは、かぎりなく Release Candidate (RC)
+	だが一応βという位置づけです。
 	そのためバージョン番号として 7.98.x という番号をつけています。
-	&fml8; ALPHA 〜 &fml8; BETA および &fml8; RC の間は 7.99.x の予定です。
+	本当に &fml8; RC になれば 7.99.x の予定です。
 	</para>
 
 	<para>
@@ -67,6 +73,7 @@
 	</ulink>
 	ドキュメントを参照して下さい)。
 <screen>
+	perl 5.10.0  on NetBSD 5.0.2 
 	perl 5.10.0  on NetBSD 5.0 
 	perl 5.8.8   on NetBSD 4.0 
 	perl 5.8.8   on NetBSD 2.0.2
