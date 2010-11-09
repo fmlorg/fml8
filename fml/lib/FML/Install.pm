@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Install.pm,v 1.20 2007/01/16 11:12:23 fukachan Exp $
+# $FML: Install.pm,v 1.21 2008/06/28 21:16:12 fukachan Exp $
 #
 
 package FML::Install;
@@ -171,6 +171,35 @@ In addition, chmod() if $mode specified.
 sub convert
 {
     my ($self, $src, $dst, $mode) = @_;
+
+    if ($src =~ /__VENDOR__/) {
+	my $config  = $self->{ _config };
+	my $vendors = $config->get_as_array_ref('vendors');
+	for my $vendor (@$vendors) {
+	    my $src = sprintf("%s", $src);
+	    $src =~ s/__VENDOR__/$vendor/g;
+	    if (-f $src) {
+		print STDERR "        copying from $src\n" if $debug;
+		$self->_convert($src, $dst, $mode);
+	    }
+	    else {
+		print STDERR "            ignoring $src\n" if $debug;
+	    }
+	}
+    }
+    else {
+	$self->_convert($src, $dst, $mode);
+    }
+}
+
+
+# Descriptions: create $dst file from $src with variable substitutions.
+#    Arguments: OBJ($self) STR($src) STR($dst) NUM($mode)
+# Side Effects: create $dst file.
+# Return Value: none
+sub _convert
+{
+    my ($self, $src, $dst, $mode) = @_;
     my $tmp = sprintf("%s.%s.%s", $dst, "new", $$);
     my $in  = new FileHandle $src;
     my $out = new FileHandle "> $tmp";
@@ -237,7 +266,7 @@ sub install_main_cf
     my ($self) = @_;
 
     # XXX src = relative path, dst = absolute path
-    my $src        = File::Spec->catfile("fml", "etc", "main.cf");
+    my $src        = File::Spec->catfile("__VENDOR__", "etc", "main.cf");
     my $config_dir = $self->path( 'config_dir' );
     my $dst        = File::Spec->catfile($install_root,
 					 $config_dir, "main.cf");
@@ -274,7 +303,7 @@ sub install_sample_cf_files
 
     for my $file (@$samples) {
 	# XXX src = relative path, dst = absolute path
-	my $src = File::Spec->catfile("fml", "etc", $file);
+	my $src = File::Spec->catfile("__VENDOR__", "etc", $file);
 	my $dst = File::Spec->catfile($install_root, $config_dir, $file);
 
 	if (-f $dst) {
@@ -328,7 +357,7 @@ sub install_default_config_files
     my $nl_language       = $config->{ nl_default_language } || 'en';
     for my $file (@$nl_template_files) {
 	# XXX src = relative path, dst = absolute path
-	my $src = File::Spec->catfile("fml", "etc", $file);
+	my $src = File::Spec->catfile("__VENDOR__", "etc", $file);
 	my $dst = File::Spec->catfile($install_root, $config_dir, $file);
 
 	# always override.
@@ -347,7 +376,7 @@ sub install_default_config_files
     my $template_files = $config->get_as_array_ref('template_files');
     for my $file (@$template_files) {
 	# XXX src = relative path, dst = absolute path
-	my $src = File::Spec->catfile("fml", "etc", $file);
+	my $src = File::Spec->catfile("__VENDOR__", "etc", $file);
 	my $dst = File::Spec->catfile($install_root, $config_dir, $file);
 
 	# always override.
@@ -371,7 +400,7 @@ sub install_mtree_dir
     my $dst_dir = File::Spec->catfile($install_root,
 				      $self->path( 'default_config_dir' ),
 				      "mtree");
-    my $src_dir = File::Spec->catfile("fml", "etc", "mtree");
+    my $src_dir = File::Spec->catfile("__VENDOR__", "etc", "mtree");
 
     print STDERR "updating $dst_dir\n" if $debug;
     $self->copy_dir( $src_dir, $dst_dir );
@@ -391,7 +420,7 @@ sub install_compat_dir
     my $dst_dir = File::Spec->catfile($install_root,
 				      $self->path( 'default_config_dir' ),
 				      "compat");
-    my $src_dir = File::Spec->catfile("fml", "etc", "compat");
+    my $src_dir = File::Spec->catfile("__VENDOR__", "etc", "compat");
 
     print STDERR "updating $dst_dir\n" if $debug;
     $self->copy_dir( $src_dir, $dst_dir );
@@ -422,17 +451,10 @@ sub install_lib_dir
     my ($self)  = @_;
     my $config  = $self->{ _config };
     my $dst_dir = File::Spec->catfile($install_root, $self->path('lib_dir'));
-    my $src_dir = '';
+    my $src_dir = File::Spec->catfile("__VENDOR__", "lib");
 
     print STDERR "updating $dst_dir\n";
-
-    my $vendors = $config->get_as_array_ref('vendors');
-    for my $vendor (@$vendors) {
-	# XXX src = relative path, dst = absolute path
-	$src_dir = File::Spec->catfile($vendor, "lib");
-	print STDERR "    copy from $src_dir\n";
-	$self->copy_dir( $src_dir, $dst_dir );
-    }
+    $self->copy_dir( $src_dir, $dst_dir );
 }
 
 
@@ -445,7 +467,7 @@ sub install_libexec_dir
     my ($self) = @_;
 
     # XXX src = relative path, dst = absolute path
-    my $src_dir = File::Spec->catfile("fml", "libexec");
+    my $src_dir = File::Spec->catfile("__VENDOR__", "libexec");
     my $dst_dir = File::Spec->catfile($install_root,
 				      $self->path( 'libexec_dir' ));
 
@@ -463,7 +485,7 @@ sub install_data_dir
     my ($self) = @_;
 
     # XXX src = relative path, dst = absolute path
-    my $src_dir = File::Spec->catfile("fml", "share");
+    my $src_dir = File::Spec->catfile("__VENDOR__", "share");
     my $dst_dir = File::Spec->catfile($install_root,
 				      $self->path( 'data_dir' ));
 
@@ -920,11 +942,43 @@ sub mkdir
 my @_cache = ();
 
 
-# Descriptions: copy all files recursively.
+# Descriptions: copy all files recursively (entrance).
+#               expand vendor list in $src_dir and
+#               apply installation for all vendor files.
 #    Arguments: OBJ($self) STR($src_dir) STR($dst_dir)
 # Side Effects: update $dst_dir
 # Return Value: none
 sub copy_dir
+{
+    my ($self, $src_dir, $dst_dir) = @_;
+
+    if ($src_dir =~ /__VENDOR__/) {
+	my $config  = $self->{ _config };
+	my $vendors = $config->get_as_array_ref('vendors');
+	for my $vendor (@$vendors) {
+	    my $src_dir = sprintf("%s", $src_dir);
+	    $src_dir =~ s/__VENDOR__/$vendor/g;
+	    if (-d $src_dir) {
+		print STDERR "        copying from $src_dir\n";
+		$self->_copy_dir($src_dir, $dst_dir);
+	    }
+	    else {
+		print STDERR "            ignoring $src_dir\n" if $debug;
+	    }
+	}
+    }
+    else {
+	$self->_copy_dir($src_dir, $dst_dir);
+    }
+}
+
+
+
+# Descriptions: copy all files recursively (actual function).
+#    Arguments: OBJ($self) STR($src_dir) STR($dst_dir)
+# Side Effects: update $dst_dir
+# Return Value: none
+sub _copy_dir
 {
     my ($self, $src_dir, $dst_dir) = @_;
 
