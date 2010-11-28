@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Install.pm,v 1.21 2008/06/28 21:16:12 fukachan Exp $
+# $FML: Install.pm,v 1.22 2010/11/09 08:22:10 fukachan Exp $
 #
 
 package FML::Install;
@@ -178,7 +178,7 @@ sub convert
 	for my $vendor (@$vendors) {
 	    my $src = sprintf("%s", $src);
 	    $src =~ s/__VENDOR__/$vendor/g;
-	    if (-f $src) {
+	    if (-f $src && ! -f $dst) {
 		print STDERR "        copying from $src\n" if $debug;
 		$self->_convert($src, $dst, $mode);
 	    }
@@ -514,7 +514,7 @@ sub install_bin_programs
 
     for my $prog (@$progs) {
 	# XXX src = relative path, dst = absolute path
-	my $src = File::Spec->catfile("fml", "bin", $prog);
+	my $src = File::Spec->catfile("__VENDOR__", "bin", $prog);
 	my $dst = File::Spec->catfile($install_root, $dst_dir, $prog);
 
 	print STDERR "updating $dst\n" if $debug;
@@ -1107,7 +1107,7 @@ sub message_nl
     use File::Spec;
     $class =~ s@\.@/@g; # XXX . -> /
 
-    my $msg_dir  = File::Spec->catfile("fml", "share", "message");
+    my $msg_dir  = File::Spec->catfile("__VENDOR__", "share", "message");
     my $msg_file = File::Spec->catfile($msg_dir, $charset, $class);
 
     if (-f $msg_file) {
