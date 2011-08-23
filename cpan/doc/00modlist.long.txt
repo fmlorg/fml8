@@ -139,8 +139,8 @@ IMPORTANT NOTICE
     Editorial Information and Copyright
 
    This document is Copyright (c) 1997-2000 by Tim Bunce and Andreas
-   KAP:nig. All rights reserved. Permission to distribute this document,
-   in full or part, via electronic means (emailed, posted or archived) or
+   Koenig. All rights reserved. Permission to distribute this document, in
+   full or part, via electronic means (emailed, posted or archived) or
    printed copy is granted providing that no charges are involved,
    reasonable attempt is made to use the most current version, and all
    credits and copyright notices are retained. Requests for other
