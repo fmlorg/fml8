@@ -48,6 +48,17 @@
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
 
+2010/11/28
+	
+   FML::Install 
+	fix vendor expansion bug (bug fix previous commit).
+	
+	***important changes***
+	do not overwrite file in installation. changes for the further
+	enhancement, e.g. in other softowares. Actually, the current
+	fml installation does not chanes since the file::directory
+	names do not conflict. 
+	
 2010/11/09
 
    bump up to the version 7.98.16.
@@ -10556,4 +10567,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.323 2010/03/06 13:38:50 fukachan Exp $
+$FML: CHANGES.txt,v 1.324 2010/11/09 08:22:10 fukachan Exp $
