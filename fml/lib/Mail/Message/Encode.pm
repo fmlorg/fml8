@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Encode.pm,v 1.21 2005/05/30 00:05:00 fukachan Exp $
+# $FML: Encode.pm,v 1.22 2005/08/17 10:31:32 fukachan Exp $
 #
 
 package Mail::Message::Encode;
@@ -488,7 +488,6 @@ by $options->{ charset }.
 
 =cut
 
-
 # Descriptions: decode MIME string.
 #    Arguments: OBJ($self) STR($str) STR($out_code) STR($in_code)
 # Side Effects: croak() if language is unknown.
@@ -502,13 +501,16 @@ sub decode_mime_string
     unless ($str) { return $str;}
 
     if ($lang eq 'japanese') {
-	eval q{
-	    use IM::EncDec;
-	    $str_out = mime_decode_string( $str );
-	};
+	if($str =~ /=\?utf-8\?[bq]\?/i)  {
+	    $str_out = $self->decode_mime_utf8_to_euc($str);
+	} else {
+	    eval q{
+		use IM::EncDec;
+		$str_out = mime_decode_string( $str );
+	    };
 
-	return $str if $@;
-
+	    return $str if $@;
+	}
 	# XXX IM returns "ESC$(B ... " string but
 	# XXX mule 2.3 cannot read "ESC$(B ... ESC(B" string as JIS.
 	# XXX ng detects it as ASCII.
@@ -621,6 +623,28 @@ sub raw_decode_qp
     return( $rbuf || $buf );
 }
 
+# Descriptions: decode mime encoded string for utf8.
+#    Arguments: OBJ($self) STR($buf)
+# Side Effects: none
+# Return Value: STR
+sub decode_mime_utf8_to_euc
+{
+    my ($self, $str) = @_;
+
+    if($str =~ /=\?utf-8\?(\w)\?/i) {
+	if($1 =~ /B/i) {
+	    $str =~ s/=\?utf-8\?B\?([A-Za-z0-9+\/]+=*)\?=/$1/gi;
+	    $str = $self->raw_decode_base64($str);
+	} elsif  ($1 =~ /Q/i)  {
+	    $str =~ s/=\?utf-8\?q\?([A-Fa-f0-9=]+)\?=/$1/gi;
+	    $str = $self->raw_decode_qp($str);
+	}
+    }
+
+    $str =~ s/\n//g;
+    use Jcode;
+    return Jcode->new($str,"utf8")->euc;
+}
 
 =head1 DEBUG
 
