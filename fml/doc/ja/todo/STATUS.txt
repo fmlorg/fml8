@@ -17,6 +17,8 @@
 	perl 5.00503 on FreeBSD 4.7 RELEASE-p3
 	perl ?       on FreeBSD 4.6 RELEASE
 	perl 5.00503 on FreeBSD 4.3 STABLE
+	perl 5.10.1  on Ubuntu 10.04 LTS			*  
+	perl 5.10.1  on Scientific Linux 6			*
 	perl 5.6.1   on Turbolinux Server 8 (qmail)		*
 	perl 5.6.1   on Redhat Linux 7.2 (postfix)		*
 	perl 5.00503 on Redhat Linux 6.2 (sendmail8.11.6)	*
@@ -842,4 +844,4 @@ VIII…Ù°°…’œø
 
 
 ------------------------------------------------------------
-$FML: STATUS.txt,v 1.44 2008/10/31 00:58:45 fukachan Exp $
+$FML: STATUS.txt,v 1.45 2008/11/30 00:52:54 fukachan Exp $
