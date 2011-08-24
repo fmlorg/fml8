@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003,2004,2005,2007,2008 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004,2005,2007,2008,2010,2011 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Install.pm,v 1.22 2010/11/09 08:22:10 fukachan Exp $
+# $FML: Install.pm,v 1.23 2010/11/28 06:59:35 fukachan Exp $
 #
 
 package FML::Install;
@@ -1206,7 +1206,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003,2004,2005,2007,2008 Ken'ichi Fukamachi
+Copyright (C) 2003,2004,2005,2007,2008,2010,2011 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
