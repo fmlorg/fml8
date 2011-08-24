@@ -246,6 +246,14 @@
 ○		FNF-ify およびドキュメント
 
 
+[TODO]	fundamental policy ?
+
+    1. Have minimal impact on users
+    2. Limit spammers ability to circumvent the blocking
+    3. Require minimal maintenance at both the user and administrator
+       level
+
+
 [TODO]	変数名なんだが… *_mta_config_list は困ったな
 
 		newml_command_mta_config_list
@@ -332,4 +340,4 @@
 	FML::Sys::Alias
 
 ----------
-$FML: 00_MEMO,v 1.136 2008/09/09 11:22:58 fukachan Exp $
+$FML: 00_MEMO,v 1.137 2008/10/31 00:58:45 fukachan Exp $
