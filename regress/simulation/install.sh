@@ -1,10 +1,11 @@
 #!/bin/sh
 #
-# $FML: install.sh,v 1.17 2004/12/08 06:43:08 fukachan Exp $
+# $FML: install.sh,v 1.18 2005/05/27 04:41:13 fukachan Exp $
 #
 
-prefix=/usr/local
-conf_dir=$prefix/etc
+prefix=${FML_EMUL_PREFIX:-/usr/local}
+conf_dir=${FML_EMUL_CONF_DIR:-$prefix/etc}
+spool_dir=${FML_EMUL_SPOOL_DIR:-/var/spool/ml}
 
 if [ ! -f .this_is_a_test_machine ];then
 	echo "touch .this_is_a_test_machine here if you use this script"
@@ -15,12 +16,17 @@ fi
 	rm -f config.log config.cache ;\
 	./configure \
 	--prefix=$prefix \
+	--with-mlspooldir=$spool_dir \
 	--with-warning \
 	--with-fmlconfdir=$conf_dir/fml \
 	--with-fml-owner=fukachan \
 	--with-fml-group=wheel \
 	--with-group-writable-ml-home-prefix-map \
 	)
+
+echo ""
+printenv | grep FML_EMUL_ | awk '{print "\t", $0}'
+echo ""
 
 # config.cf
 sudo -v
