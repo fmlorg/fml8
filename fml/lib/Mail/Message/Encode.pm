@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Encode.pm,v 1.23 2011/08/24 22:49:44 tmu Exp $
+# $FML: Encode.pm,v 1.24 2011/08/25 00:39:58 fukachan Exp $
 #
 
 package Mail::Message::Encode;
@@ -638,7 +638,7 @@ sub decode_mime_utf8_to_euc
 	    $str = $self->raw_decode_base64($str);
 	}
 	elsif ($1 =~ /Q/i)  {
-	    $str =~ s/=\?utf-8\?q\?([A-Fa-f0-9=]+)\?=/$1/gi;
+	    $str =~ s/=\?utf-8\?q\?([\x20-\x7e\t]+?)\?=/$1/gi;
 	    $str = $self->raw_decode_qp($str);
 	}
     }
