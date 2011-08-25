@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004,2005,2011 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Encode.pm,v 1.22 2005/08/17 10:31:32 fukachan Exp $
+# $FML: Encode.pm,v 1.23 2011/08/24 22:49:44 tmu Exp $
 #
 
 package Mail::Message::Encode;
@@ -501,9 +501,10 @@ sub decode_mime_string
     unless ($str) { return $str;}
 
     if ($lang eq 'japanese') {
-	if($str =~ /=\?utf-8\?[bq]\?/i)  {
+	if ($str =~ /=\?utf-8\?[bq]\?/i)  {
 	    $str_out = $self->decode_mime_utf8_to_euc($str);
-	} else {
+	}
+	else {
 	    eval q{
 		use IM::EncDec;
 		$str_out = mime_decode_string( $str );
@@ -624,18 +625,19 @@ sub raw_decode_qp
 }
 
 # Descriptions: decode mime encoded string for utf8.
-#    Arguments: OBJ($self) STR($buf)
+#    Arguments: OBJ($self) STR($str)
 # Side Effects: none
 # Return Value: STR
 sub decode_mime_utf8_to_euc
 {
     my ($self, $str) = @_;
 
-    if($str =~ /=\?utf-8\?(\w)\?/i) {
-	if($1 =~ /B/i) {
+    if ($str =~ /=\?utf-8\?(\w)\?/i) {
+	if ($1 =~ /B/i) {
 	    $str =~ s/=\?utf-8\?B\?([A-Za-z0-9+\/]+=*)\?=/$1/gi;
 	    $str = $self->raw_decode_base64($str);
-	} elsif  ($1 =~ /Q/i)  {
+	}
+	elsif ($1 =~ /Q/i)  {
 	    $str =~ s/=\?utf-8\?q\?([A-Fa-f0-9=]+)\?=/$1/gi;
 	    $str = $self->raw_decode_qp($str);
 	}
@@ -735,7 +737,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005,2011 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
