@@ -47,6 +47,10 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2011/08/25	
+
+   Mail::Message::Encode 
+	bugfix quoted-printable pattern at decode_mime_utf8_to_euc().
 
 2010/11/28
 	
@@ -10567,4 +10571,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.324 2010/11/09 08:22:10 fukachan Exp $
+$FML: CHANGES.txt,v 1.325 2011/08/23 15:11:37 fukachan Exp $
