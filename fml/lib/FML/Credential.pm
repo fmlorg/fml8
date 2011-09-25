@@ -1,17 +1,17 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004,2005,2006,2008 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004,2005,2006,2008,2011 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.71 2008/06/28 20:05:56 fukachan Exp $
+# $FML: Credential.pm,v 1.72 2008/06/28 20:55:36 fukachan Exp $
 #
 
 package FML::Credential;
 use strict;
 use Carp;
 use vars qw(%Credential @ISA @EXPORT @EXPORT_OK);
-use ErrorStatus qw(errstr error error_set error_clear);
+
 
 #
 # XXX-TODO: methods of FML::Credential validates input always ?
@@ -817,6 +817,70 @@ sub set
 }
 
 
+=head1 ERROR METHODS
+
+=head2 error_set($message)
+
+save $message as an error message.
+
+=head2 error()
+
+return $message which is saved by C<error_set($msg)>.
+
+=head2 error_clear()
+
+clear the error message buffer.
+
+=cut
+
+
+# Descriptions: set the error message within $self object.
+#    Arguments: OBJ($self) STR($mesg)
+# Side Effects: update OBJ
+# Return Value: STR
+sub error_set
+{
+    my ($self, $mesg) = @_;
+    $self->{'_error_reason'} = $mesg if defined $mesg;
+}
+
+
+# Descriptions: get the error message.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub error
+{
+    my ($self) = @_;
+    return $self->{'_error_reason'} ? $self->{'_error_reason'} : undef;
+}
+
+
+# Descriptions: get the error message.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub errstr
+{
+    my ($self) = @_;
+    return $self->error();
+}
+
+
+# Descriptions: clear the error message buffer.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR (cleared message)
+sub error_clear
+{
+    my ($self) = @_;
+    my $msg = $self->{'_error_reason'};
+    undef $self->{'_error_reason'} if defined $self->{'_error_reason'};
+    undef $self->{'_error_action'} if defined $self->{'_error_action'};
+    return $msg;
+}
+
+
 #
 # debug
 #
@@ -856,7 +920,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004,2005,2006,2008 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004,2005,2006,2008,2011 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
