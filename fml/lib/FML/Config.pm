@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2011 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.105 2006/05/02 11:22:43 fukachan Exp $
+# $FML: Config.pm,v 1.106 2006/07/09 12:11:11 fukachan Exp $
 #
 
 package FML::Config;
@@ -19,7 +19,6 @@ use vars qw($need_expansion_variables
 	    $_fml_user_hooks
 	    $current_context
 	    );
-use ErrorStatus qw(error_set error error_clear);
 
 my $debug = 0;
 
@@ -1402,6 +1401,70 @@ sub NEXTKEY
 }
 
 
+=head1 ERROR METHODS
+
+=head2 error_set($message)
+
+save $message as an error message.
+
+=head2 error()
+
+return $message which is saved by C<error_set($msg)>.
+
+=head2 error_clear()
+
+clear the error message buffer.
+
+=cut
+
+
+# Descriptions: set the error message within $self object.
+#    Arguments: OBJ($self) STR($mesg)
+# Side Effects: update OBJ
+# Return Value: STR
+sub error_set
+{
+    my ($self, $mesg) = @_;
+    $self->{'_error_reason'} = $mesg if defined $mesg;
+}
+
+
+# Descriptions: get the error message.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub error
+{
+    my ($self) = @_;
+    return $self->{'_error_reason'} ? $self->{'_error_reason'} : undef;
+}
+
+
+# Descriptions: get the error message.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub errstr
+{
+    my ($self) = @_;
+    return $self->error();
+}
+
+
+# Descriptions: clear the error message buffer.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR (cleared message)
+sub error_clear
+{
+    my ($self) = @_;
+    my $msg = $self->{'_error_reason'};
+    undef $self->{'_error_reason'} if defined $self->{'_error_reason'};
+    undef $self->{'_error_action'} if defined $self->{'_error_action'};
+    return $msg;
+}
+
+
 #
 # debug
 #
@@ -1463,7 +1526,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2011 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
