@@ -1,3 +1,94 @@
+2011.0517:
+	Bugfix from Sophie Hamilton: call tzset() when changing timezones.
+
+	Bugfix: bail out of tests cleanly when tzset doesn't work.
+2011.0505:
+	Bugfix: make sure $ampm is defined so no undefined string warnings
+	are issued.
+
+	Honor the GMT flag when parsing time specs.  Patch from
+	kris at shannon.id.au.
+
+	Bugfix: RT#31477 noon & midnight would match in the middle of strings.
+
+	Added %v conversion for Time::CTime
+
+	Added tests to disprove invalid bug reports.
+2006.0814:
+	A bugfix for negative offsets that overflowed (from Vernon Lyon 
+	<vlyon at uk.yahoo-inc.com>)
+
+	Add a few more timezones (from Peter Ludemann <ludemann at yahoo-inc.com>
+	and Alex Bowley <kilinrax at cpan.org>)
+
+	Recognize fractional times counts like "1.5 minutes ago" 
+	(from Simon Wistow <simon@thegestalt.org>)
+
+	Recognize Dow "before last" (from Ole Craig <ocraig at stillsecure.com>)
+
+	Change various __DATA__ to __END__ (from Nick Ing-Simmons 
+	<nick at ing-simmons.net>)
+2003.1125:
+	Various folks have complained that JulianDay isn't correct.  An
+	errata section has been added to the documentation.
+
+	Mark Ivey <mivey@r2tech.com> add '@' as a synonym for 'at'.
+	Fixed typos.  
+
+	Bryan Henderson <bryanh@giraffe-data.com> sent in a patch to
+	allow NOW => 0 so that ParseDate can be used to parse relative
+	times. 
+
+	ewan@baremetal.com sent in a patch adding a bit of ISO 8601
+	support.
+
+	David Alban <david@responsible.com> doesn't like allowing the
+	hour 24:00.  I agree.  Gone if you have VALIDATE=>1.
+
+	Still to be done: the support the large number of ISO 8601 
+	date formats: http://hydracen.com/dx/iso8601.htm
+2003.0211:
+	Mike Cramer <cramer@webkist.com> sent a patch to Timezone to
+	handle changes in $ENV{TZ}. 
+
+	Rani Pinchuk <rani@cpan.org> sent in a definition for the
+	CEST timezone.
+
+	On Phil.Moore@msdw.com's behalf the timezone 'MET DST' is now
+	supported.
+
+2002.1001:
+	No real changes, just added a license.
+
+101.062001:
+	Paul Zimmer <pzimmer@bepress.com> found that '7/17/01' with
+	PREFER_FUTURE failed badly.  Fixed.  This was also submitted
+	by Dana Burd <DBurd@cpr.org>.
+
+	Ben Daglish <bdaglish@yahoo.com> noted that array context
+	was implying WHOLE and DATE_REQUIRED.  Fixed.
+
+	Streppone Cosimo <cstrep@idgroup.it> requested support for
+	postgresql's date format ("dd/mm/yyyy hh:mn:ss +tzo")
+
+	Ameeth Linus Daniel <linus@teil.soft.net> found that IST wasn't 
+	a defined timezone.  I've defined it as +0530, but I'm not 
+	positive that's correct.
+
+	Gautam Tripathi <dayalpura@hotmail.com> sent in a fix for
+	timezone offset calculations making them consistent across
+	all systems (no more problems with differing interpretations
+	of negative modulus operations).
+
+	Mike Nerone <mnerone@idworld.net> requested the syntax 
+	"4 days ago".  He says that that syntax is suppored by
+	GNU date.  This was also requested by Townsend, John E. 
+	<John.Townsend@lexis-nexis.com>.
+
+	Anton Berezin <tobez@heechee.tobez.org> notice that ParseDate
+	couldn't handle "Sunday, 06-Nov-94 08:49:37 GMT" and sent
+	in a patch.
+
 100.010301:
 	W. Phillip Moore <Phil.Moore@msdw.com> reproted a Y2K bug: it could
 	not parse 'Jan  1 2000 10:30:30AM'.  Fixed.  This is embarassing

@@ -19,14 +19,13 @@ use integer;
 # constants
 use vars qw($brit_jd $jd_epoch $jd_epoch_remainder $VERSION);
 
-$VERSION = 99.061501;
+$VERSION = 2011.0505;
 
 # calculate the julian day, given $year, $month and $day
 sub julian_day
 {
     my($year, $month, $day) = @_;
     my($tmp);
-    my($secs);
 
     use Carp;
 #    confess() unless defined $day;
@@ -157,7 +156,7 @@ sub jd_timegm
 
 1;
 
-__DATA__
+__END__
 
 =head1 NAME
 
@@ -189,12 +188,37 @@ using julian days...
 The day_of_week returned by day_of_week() is 0 for Sunday, and 6 for
 Saturday and everything else is in between.
 
+=head1 ERRATA
+
+Time::JulianDay is not a correct implementation.  There are two
+problems.  The first problem is that Time::JulianDay only works
+with integers.  Julian Day can be fractional to represent time
+within a day.  If you call inverse_julian_day() with a non-integer
+time, it will often give you an incorrect result.
+
+The second problem is that Julian Days start at noon rather than
+midnight.  The julian_day() function returns results that are too
+large by 0.5.
+
+What to do about these problems is currently open for debate.  I'm
+tempted to leave the current functions alone and add a second set
+with more accurate behavior.
+
+There is another implementation in Astro::Time that may be more accurate.
+
 =head1 GENESIS
 
-Written by David Muir Sharnoff <muir@idiom.com> with help from
+Written by David Muir Sharnoff <cpan@dave.sharnoff.org> with help from
 previous work by 
 Kurt Jaeger aka PI <zrzr0111@helpdesk.rus.uni-stuttgart.de>
  	based on postings from: Ian Miller <ian_m@cix.compulink.co.uk>;
 Gary Puckering <garyp%cognos.uucp@uunet.uu.net>
 	based on Collected Algorithms of the ACM ?;
 and the unknown-to-me author of Time::Local.
+
+=head1 LICENSE
+
+Copyright (C) 1996-1999 David Muir Sharnoff.  License hereby
+granted for anyone to use, modify or redistribute this module at
+their own risk.  Please feed useful changes back to cpan@dave.sharnoff.org.
+

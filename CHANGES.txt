@@ -3,9 +3,10 @@
 
   [最近のまとめ]
 
-  FML_CURRENT_VERSION=7.98.16
+  FML_CURRENT_VERSION=7.98.17
 
   8.0 PRE_ALPHA
+	7.98.17 update modules: cpan modules, IM et.al (to be planned).
 	7.98.16 FML::Install is enhanced.
 	7.98.15 IM updated to IM-150.
 		fix wrong ID incrementation in article to html conversion.
@@ -46,6 +47,26 @@
 
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
+
+2012/02/18
+
+  update Time-modules to 2011.0517 (sync w/ pkgsrc/time/p5-Time-modules).
+
+  bump up the FML_CURRENT_VERSION to 7.98.17
+	to clarify the dependence among the version and modules.
+
+2011/09/26
+
+   FML::Config 
+	include ErrorStatus module within it.
+	remove "use ErrorStatus".
+	
+   FML::Credential 
+	include ErrorStatus module within it.
+	remove "use ErrorStatus".
+	
+   ErrorStatus
+	modified to not use this top level package. remove this.
 
 2011/08/25	
 
@@ -10571,4 +10592,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.325 2011/08/23 15:11:37 fukachan Exp $
+$FML: CHANGES.txt,v 1.326 2011/08/31 03:17:16 fukachan Exp $
