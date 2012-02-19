@@ -1,3 +1,41 @@
+2006-05-23  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm: Version 1.27.
+
+	* MMagic.pm (readMagicLine): Changed regex for magic entry.
+	  (Reported by Dylan Vanderhoof, thank you)
+
+2006-05-17  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm: Added a new line at the end of file.
+	  (Reported by Vilmos Soti, thank you.)
+
+2006-02-08  Yukio USUDA  <usu@namazu.org>
+
+	* MMagic.pm (magicMatch, dumpMagic): Fixed time waste problem.
+
+2006-01-30  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm: Version 1.26.
+
+2006-01-12  Yukio USUDA  <usu@namazu.org>
+
+	* MMagic.pm (magicMatchStr): Fixed Bug. Enbuged at Chageset 194.
+
+2006-01-11  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* README.* : Added the Trac URL.
+
+2006-01-05  Yukio USUDA  <usu@namazu.org>
+
+	* MMagic.pm (checktype_data): performance improve.
+	  http://www.namazu.org/trac-namazu/trac.cgi/ticket/8
+
+	* MMagic.pm (magicMatchStr): Fixed time waste problem.
+
+	* MMagic.pm (__DATA__): Perfomance tuning for mknmz.
+	  http://www.namazu.org/pipermail/namazu-devel-ja/2005-December/000793.html
+
 2005-08-27  NOKUBI Takatsugu  <knok@daionet.gr.jp>
 
 	* Version 1.25.

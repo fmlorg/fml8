@@ -1,6 +1,8 @@
 File::MMagic
 
-Copyright(C) 1999-2001 NOKUBI Takatsugu <knok@daionet.gr.jp>
+Copyright(C) 1999-2006
+ NOKUBI Takatsugu <knok@daionet.gr.jp>
+ Yukio USUDA  <usu@namazu.org>
 
 1. Abstract
 
@@ -23,14 +25,6 @@ See "perldoc File::MMagic".
 
 See COPYING file.
 
-5. Notice
+5. See also
 
-If you want to use the module under mod_perl environment, you'll need
-to divide the module into module part and magic entry file part, and use
-the magic file explicitly.
-Built-in magic entry does not work correctly under mod_perl.
-
-Ex.
-
-my $magic = File::MMagic::new('/etc/mime-magic');
-   # /etc/mime-magic is separated file from MMagic.pm
+http://www.namazu.org/trac-namazu/trac.cgi/wiki/File-MMagic.en
