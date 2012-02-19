@@ -48,6 +48,18 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2012/02/19
+
+   update CPAN modules successively:
+	Jcode       to 2.07.
+	File-MMagic to 1.27.
+	Socket6     to 0.23 (not used, holded in cpan/dist for reference).
+	HTML-Template is removed since it is not used.
+	Log-ErrLogger is removed since it is not used.
+	Text-CSV      is removed since it is not used.
+	Rcs           is removed since it is not used.
+	VCS-CSV       is removed since it is not used.
+
 2012/02/18
 
   update Time-modules to 2011.0517 (sync w/ pkgsrc/time/p5-Time-modules).
@@ -10592,4 +10604,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.326 2011/08/31 03:17:16 fukachan Exp $
+$FML: CHANGES.txt,v 1.327 2012/02/18 10:01:34 fukachan Exp $

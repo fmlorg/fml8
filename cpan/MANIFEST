@@ -7,15 +7,12 @@ Crypt-TripleDES			0.24		perl itself
 Crypt-UnixCrypt			1.0		perl itself
 
 File-Spec			0.85_03		perl itself
-File-MMagic			1.25		bsd + apache ?
+File-MMagic			1.27		bsd + apache ?
 
 HTML-CalendarMonthSimple	1.02		? (freesoftware, unlimited)
 HTML-FromText			1.005		perl itself
-HTML-Template			2.5		perl (GNU or Artistic)
 
-Jcode				0.83		perl itself
-
-Log-ErrLogger			1.5		perl itself
+Jcode				2.07		perl itself
 
 MIME-Base64-Perl		1.0		perl itself
 MIME-Lite			2.108		perl itself
@@ -24,16 +21,10 @@ MIME-Types			1.004		perl itself
 
 MailTools			1.52		perl itself
 
-Rcs				0.09		perl itself
-
-Socket6				0.07		WIDE (BSD flabour)
+Socket6				0.23		WIDE (BSD flabour)
 
 Time-modules			2011.0517	unknown (your own risk)
 
-VCS-CVS				2.00		perl itself
-
-Text-CSV			0.01		perl itself
-
 Unicode-Japanese		0.09		perl itself
 
-$FML: MANIFEST,v 1.16 2008/08/20 21:14:33 fukachan Exp $
+$FML: MANIFEST,v 1.17 2012/02/18 10:01:35 fukachan Exp $
