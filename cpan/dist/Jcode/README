@@ -1,20 +1,32 @@
 #
-# $Id: README,v 0.77 2002/01/14 11:06:55 dankogai Exp $
+# $Id: README,v 2.0 2005/05/16 19:08:09 dankogai Exp $
 #
 
-Jcode:
-------
+Jcode
 
-This is a Perl extension interface to convert Japanese text.
+    This is a Perl extension interface to convert Japanese text.
 
-To build the extensions, unpack this distribution somewhere, create
-the Makefile by running 'perl Makefile.PL' and do a 'make', 'make
-test', and if successful 'make install'.
+Requirements
 
-You will need perl version 5.004 or better to install these modules.
-Further documentation is embedded in the individual modules.
+    You  need perl version 5.005 or better.
+    MIME header support requires MIME::Base64 module.
+    Some extended features require perl 5.8.1 or better
 
-Copyright 1999 Dan Kogai.
+Install
 
-This library is free software; you can redistribute it
-and/or modify it under the same terms as Perl itself.
+    Do the following via shell.
+
+        perl Makefile.PL
+        make
+        make test
+        make install
+
+    If your perl is 5.8.1 or better, you can simply copy Jcode.pm to
+    anywhere you want, a la jcode.pl.
+
+COPYRIGHT
+
+   Copyright 1999-2005 Dan Kogai <dankogai@dan.co.jp>
+
+   This library is free software; you can redistribute it and/or modify it
+   under the same terms as Perl itself.

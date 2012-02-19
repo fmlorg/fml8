@@ -1,41 +1,29 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
+#
 
 use strict;
-use diagnostics;
-$| = 1; # autoflush
-use vars qw(@ARGV $ARGV);
 use Jcode;
+use Test;
+BEGIN { plan tests => 10 }
 
-my ($NTESTS, @TESTS) ;
-
-sub profile {
-    no strict 'vars';
-    my $profile = shift;
-    print $profile if $ARGV[0];
-    $profile =~ m/(not ok|ok) (\d+)$/o;
-    $profile = "$1 $2\n";
-    $NTESTS = $2;
-    push @TESTS, $profile;
+my $seq = 0;
+sub myok{ # overloads Test::ok;
+    my ($a, $b, $comment) = @_;
+    print "not " if $a ne $b;
+    ++$seq;
+    print "ok $seq # $comment\n";
 }
 
-
-my $n = 0;
 my $file;
 
 my $hiragana; $file = "t/hiragana.euc"; open F, $file or die "$file:$!";
 read F, $hiragana, -s $file;
-profile(sprintf("prep:  hiragana ok %d\n", ++$n));
 
 my $katakana; $file = "t/zenkaku.euc"; open F, $file or die "$file:$!";
 read F, $katakana, -s $file;
-profile(sprintf("prep:  katakana ok %d\n", ++$n));
 
 my $stripped; $file = "t/stripped.euc"; open F, $file or die "$file:$!";
 read F, $stripped, -s $file;
-profile(sprintf("prep:  stripped ok %d\n", ++$n));
-
-#print jcode($katakana)->tr('A-Za-z¥¡-¥óŽ§-ŽÝ','a-zA-Z¤¡-¤óŽ§-ŽÝ');
-#__END__
 
 my %code2str = 
     (
@@ -47,34 +35,33 @@ my %code2str =
 
 for my $icode (keys %code2str){
     for my $ocode (keys %code2str){
-	my $ok;
-	my $str = $code2str{$icode};
-	my $out = jcode(\$str)->tr($icode, $ocode)->euc;
-	if ($out eq $code2str{$ocode}){
-	    $ok = "ok";
-	}else{
-	    $ok = "not ok";
-	    print $out;
-	}
-	profile(sprintf("H2Z: %s -> %s %s %d\n", 
-			$icode, $ocode, $ok, ++$n ));
+        my $ok;
+        my $str = $code2str{$icode};
+        my $out = jcode(\$str)->tr($icode, $ocode)->euc;
+        myok($out,$code2str{$ocode}, 
+             "H2Z: $icode -> $ocode");
     }
 }
 
 # test tr($s,'','d');
 
-my $ok = (jcode($hiragana)->tr('¤¡-¤ó','','d')->euc eq $stripped) ?
-"ok" : "not ok";
+myok(jcode($hiragana)->tr('¤¡-¤ó','','d')->euc, $stripped,
+      "H2Z: '¤¡-¤ó', '', d");
 
-profile(sprintf("H2Z: %s -> %s %s %d\n", 
-		'¤¡-¤ó', "\'\' \'d\'", $ok, ++$n ));
+my $s = '£Á£Â£Ã¡¿£Ä£Å£Æ';
+my $from = '£Á-£Ú¡¿';
 
-print 1, "..", $NTESTS, "\n";
-for my $TEST (@TESTS){
-    print $TEST; 
-}
+myok(jcode( $s, 'euc' )->tr( $from, 'A-Z/' )->euc,  'ABC/DEF', "tr");
+myok(jcode( $s, 'euc' )->tr( $from, 'A-Z\/' )->euc, 'ABC\DEF', "tr");
 
-
-
-
-
+local($SIG{__WARN__}) = sub{}; # suppress eval error
+our $T_FLAG = 0;
+my $p = __PACKAGE__;
+my $j = Jcode->new('a');
+$j->tr("//;\$$p\:\:T_FLAG+=1;", "", "");
+$j->tr("", "/;\$$p\:\:T_FLAG+=2;", "");
+$j->tr("", "", ";\$$p\:\:T_FLAG+=4;");
+myok($T_FLAG & 1, 0, "tr/// from escape test");
+myok($T_FLAG & 2, 0, "tr/// to escape test");
+myok($T_FLAG & 4, 0, "tr/// flag escape test");
+__END__

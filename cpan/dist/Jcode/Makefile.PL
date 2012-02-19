@@ -1,9 +1,20 @@
 #!/usr/local/bin/perl
 #
-# $Id: Makefile.PL,v 0.77 2002/01/14 11:06:55 dankogai Exp $
+# $Id: Makefile.PL,v 2.1 2005/06/20 06:21:06 dankogai Exp $
 #
-
+use strict;
 use ExtUtils::MakeMaker;
+
+my @EXTRA;
+if ($] >= 5.008001){
+    @EXTRA = (
+	      NORECURS => 1,
+	      PM => { 'Jcode.pm' =>  '$(INST_LIB)/Jcode.pm',
+		      'Jcode/Nihongo.pod'
+			  => '$(INST_LIB)/Jcode/Nihongo.pod'
+		      },
+	      );
+}
 
 WriteMakefile
     (
@@ -16,5 +27,6 @@ WriteMakefile
       (ABSTRACT_FROM => 'Jcode.pm', # retrieve abstract from module
        AUTHOR     => 'Dan Kogai <dankogai@dan.co.jp>') : ()
       ),
+     @EXTRA,
      );	       
 

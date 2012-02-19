@@ -1,5 +1,5 @@
 #
-# $Id: Tr.pm,v 0.78 2002/05/03 00:20:16 dankogai Exp $
+# $Id: Tr.pm,v 2.0 2005/05/16 19:08:00 dankogai Exp $
 #
 
 package Jcode::Tr;
@@ -7,13 +7,12 @@ package Jcode::Tr;
 use strict;
 use vars qw($VERSION $RCSID);
 
-$RCSID = q$Id: Tr.pm,v 0.78 2002/05/03 00:20:16 dankogai Exp $;
-$VERSION = do { my @r = (q$Revision: 0.78 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
+$RCSID = q$Id: Tr.pm,v 2.0 2005/05/16 19:08:00 dankogai Exp $;
+$VERSION = do { my @r = (q$Revision: 2.0 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
 
 use Carp;
 
 use Jcode::Constants qw(:all);
-use vars qw(%_TABLE);
 
 sub tr {
     # $prev_from, $prev_to, %table are persistent variables
@@ -21,8 +20,8 @@ sub tr {
     my (@from, @to);
     my $n = 0;
 
-    undef %_TABLE;
-    &_maketable($from, $to, $opt);
+    my %_TABLE;
+    _maketable($from, $to, $opt, \%_TABLE);
 
     $$r_str =~ s(
 		 ([\x80-\xff][\x00-\xff]|[\x00-\xff])
@@ -34,7 +33,7 @@ sub tr {
 }
 
 sub _maketable{
-    my( $from, $to, $opt ) = @_;
+    my( $from, $to, $opt, $tbl ) = @_;
  $opt ||= '';
     $from =~ s/($RE{EUC_0212}-$RE{EUC_0212})/&_expnd3($1)/geo;
     $from =~ s/($RE{EUC_KANA}-$RE{EUC_KANA})/&_expnd2($1)/geo;
@@ -49,7 +48,7 @@ sub _maketable{
     my @to   = $to   =~ /$RE{EUC_0212}|$RE{EUC_KANA}|$RE{EUC_C}|[\x00-\xff]/go;
 
     push @to, ($opt =~ /d/ ? '' : $to[-1]) x ($#from - $#to) if $#to < $#from;
-    @_TABLE{@from} = @to;
+    @$tbl{@from} = @to;
 
 }
 

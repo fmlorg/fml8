@@ -75,8 +75,8 @@ EOF
     }else{
 	$ok = "not ok";
 	print <<"EOF";
-D:>$decoded<
-D:>$t_decoded<
+Di:>$decoded<
+Do:>$t_decoded<
 EOF
 }
     profile(sprintf("MIME decode: %s -> %s %s %d\n", 
@@ -87,8 +87,8 @@ EOF
     }else{
 	$ok = "not ok";
 	print <<"EOF";
-E>$encoded<
-E>$t_encoded<
+Ei>$encoded<
+Eo>$t_encoded<
 EOF
     }
     profile(sprintf("MIME encode: %s -> %s %s %d\n", 
