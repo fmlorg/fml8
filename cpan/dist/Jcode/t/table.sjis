@@ -1,0 +1,294 @@
+0x0020:    ! " # $ % & ' ( ) * + , - . / 0 1 2 3 4 5 6 7 8 9 : ; < = >
+0x0040:  @ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z [ \ ] ^
+0x0060:  ` a b c d e f g h i j k l m n o p q r s t u v w x y z { | } ~
+0x8ea0:    ¡ ¢ £ ¤ ¥ ¦ § ¨ © ª « ¬ ­ ® ¯ ° ± ² ³ ´ µ ¶ · ¸ ¹ º » ¼ ½ ¾
+0x8ec0:  À Á Â Ã Ä Å Æ Ç È É Ê Ë Ì Í Î Ï Ð Ñ Ò Ó Ô Õ Ö × Ø Ù Ú Û Ü Ý Þ
+0x8ee0:                                                               
+0xa0a0:                                                               
+0xa0c0:                                                               
+0xa0e0:                                                               
+0xa1a0:   @ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]
+0xa1c0: _`abcdefghijklmnopqrstuvwxyz{|}
+0xa1e0: €‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œž
+0xa2a0:   Ÿ ¡¢£¤¥¦§¨©ª«¬                      ¸¹º»¼
+0xa2c0: ¾¿                ÈÉÊËÌÍÎ                      ÚÛÜ
+0xa2e0: Þßàáâãäåæçè              ðñòóôõö÷        ü
+0xa3a0:                                 ‚O‚P‚Q‚R‚S‚T‚U‚V‚W‚X          
+0xa3c0:   ‚`‚a‚b‚c‚d‚e‚f‚g‚h‚i‚j‚k‚l‚m‚n‚o‚p‚q‚r‚s‚t‚u‚v‚w‚x‚y        
+0xa3e0:   ‚‚‚‚ƒ‚„‚…‚†‚‡‚ˆ‚‰‚Š‚‹‚Œ‚‚Ž‚‚‚‘‚’‚“‚”‚•‚–‚—‚˜‚™‚š        
+0xa4a0:   ‚Ÿ‚ ‚¡‚¢‚£‚¤‚¥‚¦‚§‚¨‚©‚ª‚«‚¬‚­‚®‚¯‚°‚±‚²‚³‚´‚µ‚¶‚·‚¸‚¹‚º‚»‚¼
+0xa4c0: ‚¾‚¿‚À‚Á‚Â‚Ã‚Ä‚Å‚Æ‚Ç‚È‚É‚Ê‚Ë‚Ì‚Í‚Î‚Ï‚Ð‚Ñ‚Ò‚Ó‚Ô‚Õ‚Ö‚×‚Ø‚Ù‚Ú‚Û‚Ü
+0xa4e0: ‚Þ‚ß‚à‚á‚â‚ã‚ä‚å‚æ‚ç‚è‚é‚ê‚ë‚ì‚í‚î‚ï‚ð‚ñ                      
+0xa5a0:   ƒ@ƒAƒBƒCƒDƒEƒFƒGƒHƒIƒJƒKƒLƒMƒNƒOƒPƒQƒRƒSƒTƒUƒVƒWƒXƒYƒZƒ[ƒ\ƒ]
+0xa5c0: ƒ_ƒ`ƒaƒbƒcƒdƒeƒfƒgƒhƒiƒjƒkƒlƒmƒnƒoƒpƒqƒrƒsƒtƒuƒvƒwƒxƒyƒzƒ{ƒ|ƒ}
+0xa5e0: ƒ€ƒƒ‚ƒƒƒ„ƒ…ƒ†ƒ‡ƒˆƒ‰ƒŠƒ‹ƒŒƒƒŽƒƒƒ‘ƒ’ƒ“ƒ”ƒ•ƒ–                
+0xa6a0:   ƒŸƒ ƒ¡ƒ¢ƒ£ƒ¤ƒ¥ƒ¦ƒ§ƒ¨ƒ©ƒªƒ«ƒ¬ƒ­ƒ®ƒ¯ƒ°ƒ±ƒ²ƒ³ƒ´ƒµƒ¶            
+0xa6c0:   ƒ¿ƒÀƒÁƒÂƒÃƒÄƒÅƒÆƒÇƒÈƒÉƒÊƒËƒÌƒÍƒÎƒÏƒÐƒÑƒÒƒÓƒÔƒÕƒÖ            
+0xa6e0:                                                               
+0xa7a0:   „@„A„B„C„D„E„F„G„H„I„J„K„L„M„N„O„P„Q„R„S„T„U„V„W„X„Y„Z„[„\„]
+0xa7c0: „_„`                              „p„q„r„s„t„u„v„w„x„y„z„{„|„}
+0xa7e0: „€„„‚„ƒ„„„…„†„‡„ˆ„‰„Š„‹„Œ„„Ž„„„‘                          
+0xa8a0:   „Ÿ„ „¡„¢„£„¤„¥„¦„§„¨„©„ª„«„¬„­„®„¯„°„±„²„³„´„µ„¶„·„¸„¹„º„»„¼
+0xa8c0: „¾                                                            
+0xa8e0:                                                               
+0xa9a0:                                                               
+0xa9c0:                                                               
+0xa9e0:                                                               
+0xaaa0:                                                               
+0xaac0:                                                               
+0xaae0:                                                               
+0xaba0:                                                               
+0xabc0:                                                               
+0xabe0:                                                               
+0xaca0:                                                               
+0xacc0:                                                               
+0xace0:                                                               
+0xada0:                                                               
+0xadc0:                                                               
+0xade0:                                                               
+0xaea0:                                                               
+0xaec0:                                                               
+0xaee0:                                                               
+0xafa0:                                                               
+0xafc0:                                                               
+0xafe0:                                                               
+0xb0a0:   ˆŸˆ ˆ¡ˆ¢ˆ£ˆ¤ˆ¥ˆ¦ˆ§ˆ¨ˆ©ˆªˆ«ˆ¬ˆ­ˆ®ˆ¯ˆ°ˆ±ˆ²ˆ³ˆ´ˆµˆ¶ˆ·ˆ¸ˆ¹ˆºˆ»ˆ¼
+0xb0c0: ˆ¾ˆ¿ˆÀˆÁˆÂˆÃˆÄˆÅˆÆˆÇˆÈˆÉˆÊˆËˆÌˆÍˆÎˆÏˆÐˆÑˆÒˆÓˆÔˆÕˆÖˆ×ˆØˆÙˆÚˆÛˆÜ
+0xb0e0: ˆÞˆßˆàˆáˆâˆãˆäˆåˆæˆçˆèˆéˆêˆëˆìˆíˆîˆïˆðˆñˆòˆóˆôˆõˆöˆ÷ˆøˆùˆúˆûˆü
+0xb1a0:   ‰@‰A‰B‰C‰D‰E‰F‰G‰H‰I‰J‰K‰L‰M‰N‰O‰P‰Q‰R‰S‰T‰U‰V‰W‰X‰Y‰Z‰[‰\‰]
+0xb1c0: ‰_‰`‰a‰b‰c‰d‰e‰f‰g‰h‰i‰j‰k‰l‰m‰n‰o‰p‰q‰r‰s‰t‰u‰v‰w‰x‰y‰z‰{‰|‰}
+0xb1e0: ‰€‰‰‚‰ƒ‰„‰…‰†‰‡‰ˆ‰‰‰Š‰‹‰Œ‰‰Ž‰‰‰‘‰’‰“‰”‰•‰–‰—‰˜‰™‰š‰›‰œ‰‰ž
+0xb2a0:   ‰Ÿ‰ ‰¡‰¢‰£‰¤‰¥‰¦‰§‰¨‰©‰ª‰«‰¬‰­‰®‰¯‰°‰±‰²‰³‰´‰µ‰¶‰·‰¸‰¹‰º‰»‰¼
+0xb2c0: ‰¾‰¿‰À‰Á‰Â‰Ã‰Ä‰Å‰Æ‰Ç‰È‰É‰Ê‰Ë‰Ì‰Í‰Î‰Ï‰Ð‰Ñ‰Ò‰Ó‰Ô‰Õ‰Ö‰×‰Ø‰Ù‰Ú‰Û‰Ü
+0xb2e0: ‰Þ‰ß‰à‰á‰â‰ã‰ä‰å‰æ‰ç‰è‰é‰ê‰ë‰ì‰í‰î‰ï‰ð‰ñ‰ò‰ó‰ô‰õ‰ö‰÷‰ø‰ù‰ú‰û‰ü
+0xb3a0:   Š@ŠAŠBŠCŠDŠEŠFŠGŠHŠIŠJŠKŠLŠMŠNŠOŠPŠQŠRŠSŠTŠUŠVŠWŠXŠYŠZŠ[Š\Š]
+0xb3c0: Š_Š`ŠaŠbŠcŠdŠeŠfŠgŠhŠiŠjŠkŠlŠmŠnŠoŠpŠqŠrŠsŠtŠuŠvŠwŠxŠyŠzŠ{Š|Š}
+0xb3e0: Š€ŠŠ‚ŠƒŠ„Š…Š†Š‡ŠˆŠ‰ŠŠŠ‹ŠŒŠŠŽŠŠŠ‘Š’Š“Š”Š•Š–Š—Š˜Š™ŠšŠ›ŠœŠŠž
+0xb4a0:   ŠŸŠ Š¡Š¢Š£Š¤Š¥Š¦Š§Š¨Š©ŠªŠ«Š¬Š­Š®Š¯Š°Š±Š²Š³Š´ŠµŠ¶Š·Š¸Š¹ŠºŠ»Š¼
+0xb4c0: Š¾Š¿ŠÀŠÁŠÂŠÃŠÄŠÅŠÆŠÇŠÈŠÉŠÊŠËŠÌŠÍŠÎŠÏŠÐŠÑŠÒŠÓŠÔŠÕŠÖŠ×ŠØŠÙŠÚŠÛŠÜ
+0xb4e0: ŠÞŠßŠàŠáŠâŠãŠäŠåŠæŠçŠèŠéŠêŠëŠìŠíŠîŠïŠðŠñŠòŠóŠôŠõŠöŠ÷ŠøŠùŠúŠûŠü
+0xb5a0:   ‹@‹A‹B‹C‹D‹E‹F‹G‹H‹I‹J‹K‹L‹M‹N‹O‹P‹Q‹R‹S‹T‹U‹V‹W‹X‹Y‹Z‹[‹\‹]
+0xb5c0: ‹_‹`‹a‹b‹c‹d‹e‹f‹g‹h‹i‹j‹k‹l‹m‹n‹o‹p‹q‹r‹s‹t‹u‹v‹w‹x‹y‹z‹{‹|‹}
+0xb5e0: ‹€‹‹‚‹ƒ‹„‹…‹†‹‡‹ˆ‹‰‹Š‹‹‹Œ‹‹Ž‹‹‹‘‹’‹“‹”‹•‹–‹—‹˜‹™‹š‹›‹œ‹‹ž
+0xb6a0:   ‹Ÿ‹ ‹¡‹¢‹£‹¤‹¥‹¦‹§‹¨‹©‹ª‹«‹¬‹­‹®‹¯‹°‹±‹²‹³‹´‹µ‹¶‹·‹¸‹¹‹º‹»‹¼
+0xb6c0: ‹¾‹¿‹À‹Á‹Â‹Ã‹Ä‹Å‹Æ‹Ç‹È‹É‹Ê‹Ë‹Ì‹Í‹Î‹Ï‹Ð‹Ñ‹Ò‹Ó‹Ô‹Õ‹Ö‹×‹Ø‹Ù‹Ú‹Û‹Ü
+0xb6e0: ‹Þ‹ß‹à‹á‹â‹ã‹ä‹å‹æ‹ç‹è‹é‹ê‹ë‹ì‹í‹î‹ï‹ð‹ñ‹ò‹ó‹ô‹õ‹ö‹÷‹ø‹ù‹ú‹û‹ü
+0xb7a0:   Œ@ŒAŒBŒCŒDŒEŒFŒGŒHŒIŒJŒKŒLŒMŒNŒOŒPŒQŒRŒSŒTŒUŒVŒWŒXŒYŒZŒ[Œ\Œ]
+0xb7c0: Œ_Œ`ŒaŒbŒcŒdŒeŒfŒgŒhŒiŒjŒkŒlŒmŒnŒoŒpŒqŒrŒsŒtŒuŒvŒwŒxŒyŒzŒ{Œ|Œ}
+0xb7e0: Œ€ŒŒ‚ŒƒŒ„Œ…Œ†Œ‡ŒˆŒ‰ŒŠŒ‹ŒŒŒŒŽŒŒŒ‘Œ’Œ“Œ”Œ•Œ–Œ—Œ˜Œ™ŒšŒ›ŒœŒŒž
+0xb8a0:   ŒŸŒ Œ¡Œ¢Œ£Œ¤Œ¥Œ¦Œ§Œ¨Œ©ŒªŒ«Œ¬Œ­Œ®Œ¯Œ°Œ±Œ²Œ³Œ´ŒµŒ¶Œ·Œ¸Œ¹ŒºŒ»Œ¼
+0xb8c0: Œ¾Œ¿ŒÀŒÁŒÂŒÃŒÄŒÅŒÆŒÇŒÈŒÉŒÊŒËŒÌŒÍŒÎŒÏŒÐŒÑŒÒŒÓŒÔŒÕŒÖŒ×ŒØŒÙŒÚŒÛŒÜ
+0xb8e0: ŒÞŒßŒàŒáŒâŒãŒäŒåŒæŒçŒèŒéŒêŒëŒìŒíŒîŒïŒðŒñŒòŒóŒôŒõŒöŒ÷ŒøŒùŒúŒûŒü
+0xb9a0:   @ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]
+0xb9c0: _`abcdefghijklmnopqrstuvwxyz{|}
+0xb9e0: €‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œž
+0xbaa0:   Ÿ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼
+0xbac0: ¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜ
+0xbae0: Þßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûü
+0xbba0:   Ž@ŽAŽBŽCŽDŽEŽFŽGŽHŽIŽJŽKŽLŽMŽNŽOŽPŽQŽRŽSŽTŽUŽVŽWŽXŽYŽZŽ[Ž\Ž]
+0xbbc0: Ž_Ž`ŽaŽbŽcŽdŽeŽfŽgŽhŽiŽjŽkŽlŽmŽnŽoŽpŽqŽrŽsŽtŽuŽvŽwŽxŽyŽzŽ{Ž|Ž}
+0xbbe0: Ž€ŽŽ‚ŽƒŽ„Ž…Ž†Ž‡ŽˆŽ‰ŽŠŽ‹ŽŒŽŽŽŽŽŽ‘Ž’Ž“Ž”Ž•Ž–Ž—Ž˜Ž™ŽšŽ›ŽœŽŽž
+0xbca0:   ŽŸŽ Ž¡Ž¢Ž£Ž¤Ž¥Ž¦Ž§Ž¨Ž©ŽªŽ«Ž¬Ž­Ž®Ž¯Ž°Ž±Ž²Ž³Ž´ŽµŽ¶Ž·Ž¸Ž¹ŽºŽ»Ž¼
+0xbcc0: Ž¾Ž¿ŽÀŽÁŽÂŽÃŽÄŽÅŽÆŽÇŽÈŽÉŽÊŽËŽÌŽÍŽÎŽÏŽÐŽÑŽÒŽÓŽÔŽÕŽÖŽ×ŽØŽÙŽÚŽÛŽÜ
+0xbce0: ŽÞŽßŽàŽáŽâŽãŽäŽåŽæŽçŽèŽéŽêŽëŽìŽíŽîŽïŽðŽñŽòŽóŽôŽõŽöŽ÷ŽøŽùŽúŽûŽü
+0xbda0:   @ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]
+0xbdc0: _`abcdefghijklmnopqrstuvwxyz{|}
+0xbde0: €‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œž
+0xbea0:   Ÿ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼
+0xbec0: ¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜ
+0xbee0: Þßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûü
+0xbfa0:   @ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]
+0xbfc0: _`abcdefghijklmnopqrstuvwxyz{|}
+0xbfe0: €‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œž
+0xc0a0:   Ÿ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼
+0xc0c0: ¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜ
+0xc0e0: Þßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûü
+0xc1a0:   ‘@‘A‘B‘C‘D‘E‘F‘G‘H‘I‘J‘K‘L‘M‘N‘O‘P‘Q‘R‘S‘T‘U‘V‘W‘X‘Y‘Z‘[‘\‘]
+0xc1c0: ‘_‘`‘a‘b‘c‘d‘e‘f‘g‘h‘i‘j‘k‘l‘m‘n‘o‘p‘q‘r‘s‘t‘u‘v‘w‘x‘y‘z‘{‘|‘}
+0xc1e0: ‘€‘‘‚‘ƒ‘„‘…‘†‘‡‘ˆ‘‰‘Š‘‹‘Œ‘‘Ž‘‘‘‘‘’‘“‘”‘•‘–‘—‘˜‘™‘š‘›‘œ‘‘ž
+0xc2a0:   ‘Ÿ‘ ‘¡‘¢‘£‘¤‘¥‘¦‘§‘¨‘©‘ª‘«‘¬‘­‘®‘¯‘°‘±‘²‘³‘´‘µ‘¶‘·‘¸‘¹‘º‘»‘¼
+0xc2c0: ‘¾‘¿‘À‘Á‘Â‘Ã‘Ä‘Å‘Æ‘Ç‘È‘É‘Ê‘Ë‘Ì‘Í‘Î‘Ï‘Ð‘Ñ‘Ò‘Ó‘Ô‘Õ‘Ö‘×‘Ø‘Ù‘Ú‘Û‘Ü
+0xc2e0: ‘Þ‘ß‘à‘á‘â‘ã‘ä‘å‘æ‘ç‘è‘é‘ê‘ë‘ì‘í‘î‘ï‘ð‘ñ‘ò‘ó‘ô‘õ‘ö‘÷‘ø‘ù‘ú‘û‘ü
+0xc3a0:   ’@’A’B’C’D’E’F’G’H’I’J’K’L’M’N’O’P’Q’R’S’T’U’V’W’X’Y’Z’[’\’]
+0xc3c0: ’_’`’a’b’c’d’e’f’g’h’i’j’k’l’m’n’o’p’q’r’s’t’u’v’w’x’y’z’{’|’}
+0xc3e0: ’€’’‚’ƒ’„’…’†’‡’ˆ’‰’Š’‹’Œ’’Ž’’’‘’’’“’”’•’–’—’˜’™’š’›’œ’’ž
+0xc4a0:   ’Ÿ’ ’¡’¢’£’¤’¥’¦’§’¨’©’ª’«’¬’­’®’¯’°’±’²’³’´’µ’¶’·’¸’¹’º’»’¼
+0xc4c0: ’¾’¿’À’Á’Â’Ã’Ä’Å’Æ’Ç’È’É’Ê’Ë’Ì’Í’Î’Ï’Ð’Ñ’Ò’Ó’Ô’Õ’Ö’×’Ø’Ù’Ú’Û’Ü
+0xc4e0: ’Þ’ß’à’á’â’ã’ä’å’æ’ç’è’é’ê’ë’ì’í’î’ï’ð’ñ’ò’ó’ô’õ’ö’÷’ø’ù’ú’û’ü
+0xc5a0:   “@“A“B“C“D“E“F“G“H“I“J“K“L“M“N“O“P“Q“R“S“T“U“V“W“X“Y“Z“[“\“]
+0xc5c0: “_“`“a“b“c“d“e“f“g“h“i“j“k“l“m“n“o“p“q“r“s“t“u“v“w“x“y“z“{“|“}
+0xc5e0: “€““‚“ƒ“„“…“†“‡“ˆ“‰“Š“‹“Œ““Ž“““‘“’“““”“•“–“—“˜“™“š“›“œ““ž
+0xc6a0:   “Ÿ“ “¡“¢“£“¤“¥“¦“§“¨“©“ª“«“¬“­“®“¯“°“±“²“³“´“µ“¶“·“¸“¹“º“»“¼
+0xc6c0: “¾“¿“À“Á“Â“Ã“Ä“Å“Æ“Ç“È“É“Ê“Ë“Ì“Í“Î“Ï“Ð“Ñ“Ò“Ó“Ô“Õ“Ö“×“Ø“Ù“Ú“Û“Ü
+0xc6e0: “Þ“ß“à“á“â“ã“ä“å“æ“ç“è“é“ê“ë“ì“í“î“ï“ð“ñ“ò“ó“ô“õ“ö“÷“ø“ù“ú“û“ü
+0xc7a0:   ”@”A”B”C”D”E”F”G”H”I”J”K”L”M”N”O”P”Q”R”S”T”U”V”W”X”Y”Z”[”\”]
+0xc7c0: ”_”`”a”b”c”d”e”f”g”h”i”j”k”l”m”n”o”p”q”r”s”t”u”v”w”x”y”z”{”|”}
+0xc7e0: ”€””‚”ƒ”„”…”†”‡”ˆ”‰”Š”‹”Œ””Ž”””‘”’”“”””•”–”—”˜”™”š”›”œ””ž
+0xc8a0:   ”Ÿ” ”¡”¢”£”¤”¥”¦”§”¨”©”ª”«”¬”­”®”¯”°”±”²”³”´”µ”¶”·”¸”¹”º”»”¼
+0xc8c0: ”¾”¿”À”Á”Â”Ã”Ä”Å”Æ”Ç”È”É”Ê”Ë”Ì”Í”Î”Ï”Ð”Ñ”Ò”Ó”Ô”Õ”Ö”×”Ø”Ù”Ú”Û”Ü
+0xc8e0: ”Þ”ß”à”á”â”ã”ä”å”æ”ç”è”é”ê”ë”ì”í”î”ï”ð”ñ”ò”ó”ô”õ”ö”÷”ø”ù”ú”û”ü
+0xc9a0:   •@•A•B•C•D•E•F•G•H•I•J•K•L•M•N•O•P•Q•R•S•T•U•V•W•X•Y•Z•[•\•]
+0xc9c0: •_•`•a•b•c•d•e•f•g•h•i•j•k•l•m•n•o•p•q•r•s•t•u•v•w•x•y•z•{•|•}
+0xc9e0: •€••‚•ƒ•„•…•†•‡•ˆ•‰•Š•‹•Œ••Ž•••‘•’•“•”•••–•—•˜•™•š•›•œ••ž
+0xcaa0:   •Ÿ• •¡•¢•£•¤•¥•¦•§•¨•©•ª•«•¬•­•®•¯•°•±•²•³•´•µ•¶•·•¸•¹•º•»•¼
+0xcac0: •¾•¿•À•Á•Â•Ã•Ä•Å•Æ•Ç•È•É•Ê•Ë•Ì•Í•Î•Ï•Ð•Ñ•Ò•Ó•Ô•Õ•Ö•×•Ø•Ù•Ú•Û•Ü
+0xcae0: •Þ•ß•à•á•â•ã•ä•å•æ•ç•è•é•ê•ë•ì•í•î•ï•ð•ñ•ò•ó•ô•õ•ö•÷•ø•ù•ú•û•ü
+0xcba0:   –@–A–B–C–D–E–F–G–H–I–J–K–L–M–N–O–P–Q–R–S–T–U–V–W–X–Y–Z–[–\–]
+0xcbc0: –_–`–a–b–c–d–e–f–g–h–i–j–k–l–m–n–o–p–q–r–s–t–u–v–w–x–y–z–{–|–}
+0xcbe0: –€––‚–ƒ–„–…–†–‡–ˆ–‰–Š–‹–Œ––Ž–––‘–’–“–”–•–––—–˜–™–š–›–œ––ž
+0xcca0:   –Ÿ– –¡–¢–£–¤–¥–¦–§–¨–©–ª–«–¬–­–®–¯–°–±–²–³–´–µ–¶–·–¸–¹–º–»–¼
+0xccc0: –¾–¿–À–Á–Â–Ã–Ä–Å–Æ–Ç–È–É–Ê–Ë–Ì–Í–Î–Ï–Ð–Ñ–Ò–Ó–Ô–Õ–Ö–×–Ø–Ù–Ú–Û–Ü
+0xcce0: –Þ–ß–à–á–â–ã–ä–å–æ–ç–è–é–ê–ë–ì–í–î–ï–ð–ñ–ò–ó–ô–õ–ö–÷–ø–ù–ú–û–ü
+0xcda0:   —@—A—B—C—D—E—F—G—H—I—J—K—L—M—N—O—P—Q—R—S—T—U—V—W—X—Y—Z—[—\—]
+0xcdc0: —_—`—a—b—c—d—e—f—g—h—i—j—k—l—m—n—o—p—q—r—s—t—u—v—w—x—y—z—{—|—}
+0xcde0: —€——‚—ƒ—„—…—†—‡—ˆ—‰—Š—‹—Œ——Ž———‘—’—“—”—•—–———˜—™—š—›—œ——ž
+0xcea0:   —Ÿ— —¡—¢—£—¤—¥—¦—§—¨—©—ª—«—¬—­—®—¯—°—±—²—³—´—µ—¶—·—¸—¹—º—»—¼
+0xcec0: —¾—¿—À—Á—Â—Ã—Ä—Å—Æ—Ç—È—É—Ê—Ë—Ì—Í—Î—Ï—Ð—Ñ—Ò—Ó—Ô—Õ—Ö—×—Ø—Ù—Ú—Û—Ü
+0xcee0: —Þ—ß—à—á—â—ã—ä—å—æ—ç—è—é—ê—ë—ì—í—î—ï—ð—ñ—ò—ó—ô—õ—ö—÷—ø—ù—ú—û—ü
+0xcfa0:   ˜@˜A˜B˜C˜D˜E˜F˜G˜H˜I˜J˜K˜L˜M˜N˜O˜P˜Q˜R˜S˜T˜U˜V˜W˜X˜Y˜Z˜[˜\˜]
+0xcfc0: ˜_˜`˜a˜b˜c˜d˜e˜f˜g˜h˜i˜j˜k˜l˜m˜n˜o˜p˜q˜r                      
+0xcfe0:                                                               
+0xd0a0:   ˜Ÿ˜ ˜¡˜¢˜£˜¤˜¥˜¦˜§˜¨˜©˜ª˜«˜¬˜­˜®˜¯˜°˜±˜²˜³˜´˜µ˜¶˜·˜¸˜¹˜º˜»˜¼
+0xd0c0: ˜¾˜¿˜À˜Á˜Â˜Ã˜Ä˜Å˜Æ˜Ç˜È˜É˜Ê˜Ë˜Ì˜Í˜Î˜Ï˜Ð˜Ñ˜Ò˜Ó˜Ô˜Õ˜Ö˜×˜Ø˜Ù˜Ú˜Û˜Ü
+0xd0e0: ˜Þ˜ß˜à˜á˜â˜ã˜ä˜å˜æ˜ç˜è˜é˜ê˜ë˜ì˜í˜î˜ï˜ð˜ñ˜ò˜ó˜ô˜õ˜ö˜÷˜ø˜ù˜ú˜û˜ü
+0xd1a0:   ™@™A™B™C™D™E™F™G™H™I™J™K™L™M™N™O™P™Q™R™S™T™U™V™W™X™Y™Z™[™\™]
+0xd1c0: ™_™`™a™b™c™d™e™f™g™h™i™j™k™l™m™n™o™p™q™r™s™t™u™v™w™x™y™z™{™|™}
+0xd1e0: ™€™™‚™ƒ™„™…™†™‡™ˆ™‰™Š™‹™Œ™™Ž™™™‘™’™“™”™•™–™—™˜™™™š™›™œ™™ž
+0xd2a0:   ™Ÿ™ ™¡™¢™£™¤™¥™¦™§™¨™©™ª™«™¬™­™®™¯™°™±™²™³™´™µ™¶™·™¸™¹™º™»™¼
+0xd2c0: ™¾™¿™À™Á™Â™Ã™Ä™Å™Æ™Ç™È™É™Ê™Ë™Ì™Í™Î™Ï™Ð™Ñ™Ò™Ó™Ô™Õ™Ö™×™Ø™Ù™Ú™Û™Ü
+0xd2e0: ™Þ™ß™à™á™â™ã™ä™å™æ™ç™è™é™ê™ë™ì™í™î™ï™ð™ñ™ò™ó™ô™õ™ö™÷™ø™ù™ú™û™ü
+0xd3a0:   š@šAšBšCšDšEšFšGšHšIšJšKšLšMšNšOšPšQšRšSšTšUšVšWšXšYšZš[š\š]
+0xd3c0: š_š`šašbšcšdšešfšgšhšišjškšlšmšnšošpšqšršsštšušvšwšxšyšzš{š|š}
+0xd3e0: š€šš‚šƒš„š…š†š‡šˆš‰šŠš‹šŒššŽššš‘š’š“š”š•š–š—š˜š™ššš›šœššž
+0xd4a0:   šŸš š¡š¢š£š¤š¥š¦š§š¨š©šªš«š¬š­š®š¯š°š±š²š³š´šµš¶š·š¸š¹šºš»š¼
+0xd4c0: š¾š¿šÀšÁšÂšÃšÄšÅšÆšÇšÈšÉšÊšËšÌšÍšÎšÏšÐšÑšÒšÓšÔšÕšÖš×šØšÙšÚšÛšÜ
+0xd4e0: šÞšßšàšášâšãšäšåšæšçšèšéšêšëšìšíšîšïšðšñšòšóšôšõšöš÷šøšùšúšûšü
+0xd5a0:   ›@›A›B›C›D›E›F›G›H›I›J›K›L›M›N›O›P›Q›R›S›T›U›V›W›X›Y›Z›[›\›]
+0xd5c0: ›_›`›a›b›c›d›e›f›g›h›i›j›k›l›m›n›o›p›q›r›s›t›u›v›w›x›y›z›{›|›}
+0xd5e0: ›€››‚›ƒ›„›…›†›‡›ˆ›‰›Š›‹›Œ››Ž›››‘›’›“›”›•›–›—›˜›™›š›››œ››ž
+0xd6a0:   ›Ÿ› ›¡›¢›£›¤›¥›¦›§›¨›©›ª›«›¬›­›®›¯›°›±›²›³›´›µ›¶›·›¸›¹›º›»›¼
+0xd6c0: ›¾›¿›À›Á›Â›Ã›Ä›Å›Æ›Ç›È›É›Ê›Ë›Ì›Í›Î›Ï›Ð›Ñ›Ò›Ó›Ô›Õ›Ö›×›Ø›Ù›Ú›Û›Ü
+0xd6e0: ›Þ›ß›à›á›â›ã›ä›å›æ›ç›è›é›ê›ë›ì›í›î›ï›ð›ñ›ò›ó›ô›õ›ö›÷›ø›ù›ú›û›ü
+0xd7a0:   œ@œAœBœCœDœEœFœGœHœIœJœKœLœMœNœOœPœQœRœSœTœUœVœWœXœYœZœ[œ\œ]
+0xd7c0: œ_œ`œaœbœcœdœeœfœgœhœiœjœkœlœmœnœoœpœqœrœsœtœuœvœwœxœyœzœ{œ|œ}
+0xd7e0: œ€œœ‚œƒœ„œ…œ†œ‡œˆœ‰œŠœ‹œŒœœŽœœœ‘œ’œ“œ”œ•œ–œ—œ˜œ™œšœ›œœœœž
+0xd8a0:   œŸœ œ¡œ¢œ£œ¤œ¥œ¦œ§œ¨œ©œªœ«œ¬œ­œ®œ¯œ°œ±œ²œ³œ´œµœ¶œ·œ¸œ¹œºœ»œ¼
+0xd8c0: œ¾œ¿œÀœÁœÂœÃœÄœÅœÆœÇœÈœÉœÊœËœÌœÍœÎœÏœÐœÑœÒœÓœÔœÕœÖœ×œØœÙœÚœÛœÜ
+0xd8e0: œÞœßœàœáœâœãœäœåœæœçœèœéœêœëœìœíœîœïœðœñœòœóœôœõœöœ÷œøœùœúœûœü
+0xd9a0:   @ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]
+0xd9c0: _`abcdefghijklmnopqrstuvwxyz{|}
+0xd9e0: €‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œž
+0xdaa0:   Ÿ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼
+0xdac0: ¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜ
+0xdae0: Þßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûü
+0xdba0:   ž@žAžBžCžDžEžFžGžHžIžJžKžLžMžNžOžPžQžRžSžTžUžVžWžXžYžZž[ž\ž]
+0xdbc0: ž_ž`žažbžcždžežfžgžhžižjžkžlžmžnžožpžqžržsžtžužvžwžxžyžzž{ž|ž}
+0xdbe0: ž€žž‚žƒž„ž…ž†ž‡žˆž‰žŠž‹žŒžžŽžžž‘ž’ž“ž”ž•ž–ž—ž˜ž™žšž›žœžžž
+0xdca0:   žŸž ž¡ž¢ž£ž¤ž¥ž¦ž§ž¨ž©žªž«ž¬ž­ž®ž¯ž°ž±ž²ž³ž´žµž¶ž·ž¸ž¹žºž»ž¼
+0xdcc0: ž¾ž¿žÀžÁžÂžÃžÄžÅžÆžÇžÈžÉžÊžËžÌžÍžÎžÏžÐžÑžÒžÓžÔžÕžÖž×žØžÙžÚžÛžÜ
+0xdce0: žÞžßžàžážâžãžäžåžæžçžèžéžêžëžìžížîžïžðžñžòžóžôžõžöž÷žøžùžúžûžü
+0xdda0:   Ÿ@ŸAŸBŸCŸDŸEŸFŸGŸHŸIŸJŸKŸLŸMŸNŸOŸPŸQŸRŸSŸTŸUŸVŸWŸXŸYŸZŸ[Ÿ\Ÿ]
+0xddc0: Ÿ_Ÿ`ŸaŸbŸcŸdŸeŸfŸgŸhŸiŸjŸkŸlŸmŸnŸoŸpŸqŸrŸsŸtŸuŸvŸwŸxŸyŸzŸ{Ÿ|Ÿ}
+0xdde0: Ÿ€ŸŸ‚ŸƒŸ„Ÿ…Ÿ†Ÿ‡ŸˆŸ‰ŸŠŸ‹ŸŒŸŸŽŸŸŸ‘Ÿ’Ÿ“Ÿ”Ÿ•Ÿ–Ÿ—Ÿ˜Ÿ™ŸšŸ›ŸœŸŸž
+0xdea0:   ŸŸŸ Ÿ¡Ÿ¢Ÿ£Ÿ¤Ÿ¥Ÿ¦Ÿ§Ÿ¨Ÿ©ŸªŸ«Ÿ¬Ÿ­Ÿ®Ÿ¯Ÿ°Ÿ±Ÿ²Ÿ³Ÿ´ŸµŸ¶Ÿ·Ÿ¸Ÿ¹ŸºŸ»Ÿ¼
+0xdec0: Ÿ¾Ÿ¿ŸÀŸÁŸÂŸÃŸÄŸÅŸÆŸÇŸÈŸÉŸÊŸËŸÌŸÍŸÎŸÏŸÐŸÑŸÒŸÓŸÔŸÕŸÖŸ×ŸØŸÙŸÚŸÛŸÜ
+0xdee0: ŸÞŸßŸàŸáŸâŸãŸäŸåŸæŸçŸèŸéŸêŸëŸìŸíŸîŸïŸðŸñŸòŸóŸôŸõŸöŸ÷ŸøŸùŸúŸûŸü
+0xdfa0:   à@àAàBàCàDàEàFàGàHàIàJàKàLàMàNàOàPàQàRàSàTàUàVàWàXàYàZà[à\à]
+0xdfc0: à_à`àaàbàcàdàeàfàgàhàiàjàkàlàmànàoàpàqàràsàtàuàvàwàxàyàzà{à|à}
+0xdfe0: à€àà‚àƒà„à…à†à‡àˆà‰àŠà‹àŒààŽààà‘à’à“à”à•à–à—à˜à™àšà›àœààž
+0xe0a0:   àŸà à¡à¢à£à¤à¥à¦à§à¨à©àªà«à¬à­à®à¯à°à±à²à³à´àµà¶à·à¸à¹àºà»à¼
+0xe0c0: à¾à¿àÀàÁàÂàÃàÄàÅàÆàÇàÈàÉàÊàËàÌàÍàÎàÏàÐàÑàÒàÓàÔàÕàÖà×àØàÙàÚàÛàÜ
+0xe0e0: àÞàßàààáàâàãàäàåàæàçàèàéàêàëàìàíàîàïàðàñàòàóàôàõàöà÷àøàùàúàûàü
+0xe1a0:   á@áAáBáCáDáEáFáGáHáIáJáKáLáMáNáOáPáQáRáSáTáUáVáWáXáYáZá[á\á]
+0xe1c0: á_á`áaábácádáeáfágáháiájákálámánáoápáqárásátáuáváwáxáyázá{á|á}
+0xe1e0: á€áá‚áƒá„á…á†á‡áˆá‰áŠá‹áŒááŽááá‘á’á“á”á•á–á—á˜á™ášá›áœááž
+0xe2a0:   áŸá á¡á¢á£á¤á¥á¦á§á¨á©áªá«á¬á­á®á¯á°á±á²á³á´áµá¶á·á¸á¹áºá»á¼
+0xe2c0: á¾á¿áÀáÁáÂáÃáÄáÅáÆáÇáÈáÉáÊáËáÌáÍáÎáÏáÐáÑáÒáÓáÔáÕáÖá×áØáÙáÚáÛáÜ
+0xe2e0: áÞáßáàáááâáãáäáåáæáçáèáéáêáëáìáíáîáïáðáñáòáóáôáõáöá÷áøáùáúáûáü
+0xe3a0:   â@âAâBâCâDâEâFâGâHâIâJâKâLâMâNâOâPâQâRâSâTâUâVâWâXâYâZâ[â\â]
+0xe3c0: â_â`âaâbâcâdâeâfâgâhâiâjâkâlâmânâoâpâqârâsâtâuâvâwâxâyâzâ{â|â}
+0xe3e0: â€ââ‚âƒâ„â…â†â‡âˆâ‰âŠâ‹âŒââŽâââ‘â’â“â”â•â–â—â˜â™âšâ›âœââž
+0xe4a0:   âŸâ â¡â¢â£â¤â¥â¦â§â¨â©âªâ«â¬â­â®â¯â°â±â²â³â´âµâ¶â·â¸â¹âºâ»â¼
+0xe4c0: â¾â¿âÀâÁâÂâÃâÄâÅâÆâÇâÈâÉâÊâËâÌâÍâÎâÏâÐâÑâÒâÓâÔâÕâÖâ×âØâÙâÚâÛâÜ
+0xe4e0: âÞâßâàâáâââãâäâåâæâçâèâéâêâëâìâíâîâïâðâñâòâóâôâõâöâ÷âøâùâúâûâü
+0xe5a0:   ã@ãAãBãCãDãEãFãGãHãIãJãKãLãMãNãOãPãQãRãSãTãUãVãWãXãYãZã[ã\ã]
+0xe5c0: ã_ã`ãaãbãcãdãeãfãgãhãiãjãkãlãmãnãoãpãqãrãsãtãuãvãwãxãyãzã{ã|ã}
+0xe5e0: ã€ãã‚ãƒã„ã…ã†ã‡ãˆã‰ãŠã‹ãŒããŽããã‘ã’ã“ã”ã•ã–ã—ã˜ã™ãšã›ãœããž
+0xe6a0:   ãŸã ã¡ã¢ã£ã¤ã¥ã¦ã§ã¨ã©ãªã«ã¬ã­ã®ã¯ã°ã±ã²ã³ã´ãµã¶ã·ã¸ã¹ãºã»ã¼
+0xe6c0: ã¾ã¿ãÀãÁãÂãÃãÄãÅãÆãÇãÈãÉãÊãËãÌãÍãÎãÏãÐãÑãÒãÓãÔãÕãÖã×ãØãÙãÚãÛãÜ
+0xe6e0: ãÞãßãàãáãâãããäãåãæãçãèãéãêãëãìãíãîãïãðãñãòãóãôãõãöã÷ãøãùãúãûãü
+0xe7a0:   ä@äAäBäCäDäEäFäGäHäIäJäKäLäMäNäOäPäQäRäSäTäUäVäWäXäYäZä[ä\ä]
+0xe7c0: ä_ä`äaäbäcädäeäfägähäiäjäkälämänäoäpäqäräsätäuäväwäxäyäzä{ä|ä}
+0xe7e0: ä€ää‚äƒä„ä…ä†ä‡äˆä‰äŠä‹äŒääŽäää‘ä’ä“ä”ä•ä–ä—ä˜ä™äšä›äœääž
+0xe8a0:   äŸä ä¡ä¢ä£ä¤ä¥ä¦ä§ä¨ä©äªä«ä¬ä­ä®ä¯ä°ä±ä²ä³ä´äµä¶ä·ä¸ä¹äºä»ä¼
+0xe8c0: ä¾ä¿äÀäÁäÂäÃäÄäÅäÆäÇäÈäÉäÊäËäÌäÍäÎäÏäÐäÑäÒäÓäÔäÕäÖä×äØäÙäÚäÛäÜ
+0xe8e0: äÞäßäàäáäâäãäääåäæäçäèäéäêäëäìäíäîäïäðäñäòäóäôäõäöä÷äøäùäúäûäü
+0xe9a0:   å@åAåBåCåDåEåFåGåHåIåJåKåLåMåNåOåPåQåRåSåTåUåVåWåXåYåZå[å\å]
+0xe9c0: å_å`åaåbåcådåeåfågåhåiåjåkålåmånåoåpåqåråsåtåuåvåwåxåyåzå{å|å}
+0xe9e0: å€åå‚åƒå„å…å†å‡åˆå‰åŠå‹åŒååŽååå‘å’å“å”å•å–å—å˜å™åšå›åœååž
+0xeaa0:   åŸå å¡å¢å£å¤å¥å¦å§å¨å©åªå«å¬å­å®å¯å°å±å²å³å´åµå¶å·å¸å¹åºå»å¼
+0xeac0: å¾å¿åÀåÁåÂåÃåÄåÅåÆåÇåÈåÉåÊåËåÌåÍåÎåÏåÐåÑåÒåÓåÔåÕåÖå×åØåÙåÚåÛåÜ
+0xeae0: åÞåßåàåáåâåãåäåååæåçåèåéåêåëåìåíåîåïåðåñåòåóåôåõåöå÷åøåùåúåûåü
+0xeba0:   æ@æAæBæCæDæEæFæGæHæIæJæKæLæMæNæOæPæQæRæSæTæUæVæWæXæYæZæ[æ\æ]
+0xebc0: æ_æ`æaæbæcædæeæfægæhæiæjækælæmænæoæpæqæræsætæuævæwæxæyæzæ{æ|æ}
+0xebe0: æ€ææ‚æƒæ„æ…æ†æ‡æˆæ‰æŠæ‹æŒææŽæææ‘æ’æ“æ”æ•æ–æ—æ˜æ™æšæ›æœææž
+0xeca0:   æŸæ æ¡æ¢æ£æ¤æ¥æ¦æ§æ¨æ©æªæ«æ¬æ­æ®æ¯æ°æ±æ²æ³æ´æµæ¶æ·æ¸æ¹æºæ»æ¼
+0xecc0: æ¾æ¿æÀæÁæÂæÃæÄæÅæÆæÇæÈæÉæÊæËæÌæÍæÎæÏæÐæÑæÒæÓæÔæÕæÖæ×æØæÙæÚæÛæÜ
+0xece0: æÞæßæàæáæâæãæäæåæææçæèæéæêæëæìæíæîæïæðæñæòæóæôæõæöæ÷æøæùæúæûæü
+0xeda0:   ç@çAçBçCçDçEçFçGçHçIçJçKçLçMçNçOçPçQçRçSçTçUçVçWçXçYçZç[ç\ç]
+0xedc0: ç_ç`çaçbçcçdçeçfçgçhçiçjçkçlçmçnçoçpçqçrçsçtçuçvçwçxçyçzç{ç|ç}
+0xede0: ç€çç‚çƒç„ç…ç†ç‡çˆç‰çŠç‹çŒççŽççç‘ç’ç“ç”ç•ç–ç—ç˜ç™çšç›çœççž
+0xeea0:   çŸç ç¡ç¢ç£ç¤ç¥ç¦ç§ç¨ç©çªç«ç¬ç­ç®ç¯ç°ç±ç²ç³ç´çµç¶ç·ç¸ç¹çºç»ç¼
+0xeec0: ç¾ç¿çÀçÁçÂçÃçÄçÅçÆçÇçÈçÉçÊçËçÌçÍçÎçÏçÐçÑçÒçÓçÔçÕçÖç×çØçÙçÚçÛçÜ
+0xeee0: çÞçßçàçáçâçãçäçåçæçççèçéçêçëçìçíçîçïçðçñçòçóçôçõçöç÷çøçùçúçûçü
+0xefa0:   è@èAèBèCèDèEèFèGèHèIèJèKèLèMèNèOèPèQèRèSèTèUèVèWèXèYèZè[è\è]
+0xefc0: è_è`èaèbècèdèeèfègèhèièjèkèlèmènèoèpèqèrèsètèuèvèwèxèyèzè{è|è}
+0xefe0: è€èè‚èƒè„è…è†è‡èˆè‰èŠè‹èŒèèŽèèè‘è’è“è”è•è–è—è˜è™èšè›èœèèž
+0xf0a0:   èŸè è¡è¢è£è¤è¥è¦è§è¨è©èªè«è¬è­è®è¯è°è±è²è³è´èµè¶è·è¸è¹èºè»è¼
+0xf0c0: è¾è¿èÀèÁèÂèÃèÄèÅèÆèÇèÈèÉèÊèËèÌèÍèÎèÏèÐèÑèÒèÓèÔèÕèÖè×èØèÙèÚèÛèÜ
+0xf0e0: èÞèßèàèáèâèãèäèåèæèçèèèéèêèëèìèíèîèïèðèñèòèóèôèõèöè÷èøèùèúèûèü
+0xf1a0:   é@éAéBéCéDéEéFéGéHéIéJéKéLéMéNéOéPéQéRéSéTéUéVéWéXéYéZé[é\é]
+0xf1c0: é_é`éaébécédéeéfégéhéiéjékéléménéoépéqérésétéuévéwéxéyézé{é|é}
+0xf1e0: é€éé‚éƒé„é…é†é‡éˆé‰éŠé‹éŒééŽééé‘é’é“é”é•é–é—é˜é™éšé›éœééž
+0xf2a0:   éŸé é¡é¢é£é¤é¥é¦é§é¨é©éªé«é¬é­é®é¯é°é±é²é³é´éµé¶é·é¸é¹éºé»é¼
+0xf2c0: é¾é¿éÀéÁéÂéÃéÄéÅéÆéÇéÈéÉéÊéËéÌéÍéÎéÏéÐéÑéÒéÓéÔéÕéÖé×éØéÙéÚéÛéÜ
+0xf2e0: éÞéßéàéáéâéãéäéåéæéçéèéééêéëéìéíéîéïéðéñéòéóéôéõéöé÷éøéùéúéûéü
+0xf3a0:   ê@êAêBêCêDêEêFêGêHêIêJêKêLêMêNêOêPêQêRêSêTêUêVêWêXêYêZê[ê\ê]
+0xf3c0: ê_ê`êaêbêcêdêeêfêgêhêiêjêkêlêmênêoêpêqêrêsêtêuêvêwêxêyêzê{ê|ê}
+0xf3e0: ê€êê‚êƒê„ê…ê†ê‡êˆê‰êŠê‹êŒêêŽêêê‘ê’ê“ê”ê•ê–ê—ê˜ê™êšê›êœêêž
+0xf4a0:   êŸê ê¡ê¢ê£ê¤                                                
+0xf4c0:                                                               
+0xf4e0:                                                               
+0xf5a0:                                                               
+0xf5c0:                                                               
+0xf5e0:                                                               
+0xf6a0:                                                               
+0xf6c0:                                                               
+0xf6e0:                                                               
+0xf7a0:                                                               
+0xf7c0:                                                               
+0xf7e0:                                                               
+0xf8a0:                                                               
+0xf8c0:                                                               
+0xf8e0:                                                               
+0xf9a0:                                                               
+0xf9c0:                                                               
+0xf9e0:                                                               
+0xfaa0:                                                               
+0xfac0:                                                               
+0xfae0:                                                               
+0xfba0:                                                               
+0xfbc0:                                                               
+0xfbe0:                                                               
+0xfca0:                                                               
+0xfcc0:                                                               
+0xfce0:                                                               
+0xfda0:                                                               
+0xfdc0:                                                               
+0xfde0:                                                               
+0xfea0:                                                               
+0xfec0:                                                               
+0xfee0:                                                               
+0xffa0:                                                               
+0xffc0:                                                               
+0xffe0:                                                               

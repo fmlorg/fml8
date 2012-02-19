@@ -1,5 +1,5 @@
 #
-# $Id: length.t,v 0.1 2002/05/03 00:20:47 dankogai Exp $
+# $Id: length.t,v 2.0 2005/05/16 19:08:35 dankogai Exp $
 #
 # This script is in EUC-JP
 
