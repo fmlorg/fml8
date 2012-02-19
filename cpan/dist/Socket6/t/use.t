@@ -1,4 +1,6 @@
-# Copyright (C) 2000-2005 Hajimu UMEMOTO <ume@mahoroba.org>.
+#!/usr/bin/env perl -w
+
+# Copyright (C) 2003 Hajimu UMEMOTO <ume@mahoroba.org>.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -25,49 +27,22 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: configure.in,v 1.19 2005/08/27 16:38:00 ume Exp $
+# $Id$
 
-AC_PREREQ(2.57)
-AC_INIT(Socket6.pm)
-AC_CONFIG_SRCDIR(Socket6.pm)
-AC_CONFIG_HEADER(config.h)
+use strict;
+use Test;
+use Socket;
+BEGIN { plan tests => 3 }
 
-AC_PROG_CC
-
-changequote(<<, >>)
-default_perl_path=`which perl | sed -e 's/\/\/*[^\/]*$//'`
-changequote([,])
-
-AC_ARG_WITH(perl,[  --with-perl=path-to-perl],
-[	ac_cv_path_perl=$withval
-],[
-AC_PATH_PROGS(perl,perl5 jperl5 perl jperl,,/usr/local/bin:/opt/local/bin:/usr/bin:$default_perl_path:.)
-])
-
-if test x"$ac_cv_path_perl" = x""; then
-	AC_MSG_ERROR([Cannot find perl; please use --with-perl=/path/to/perl option.])
-fi
-PERLPATH=$ac_cv_path_perl
-
-SOCKET6_CHECK_PL_SV_UNDEF(AC_DEFINE(HAVE_PL_SV_UNDEF,[1],[Do we have a pl_sv_undef?]), , $ac_cv_path_perl)
-
-IPv6_CHECK_FUNC(getaddrinfo)
-IPv6_CHECK_FUNC(getnameinfo)
-IPv6_CHECK_FUNC(gethostbyname2)
-IPv6_CHECK_FUNC(getipnodebyname)
-IPv6_CHECK_FUNC(getipnodebyaddr)
-IPv6_CHECK_FUNC(inet_pton)
-IPv6_CHECK_FUNC(inet_ntop)
-
-if test $ac_cv_lib_inet6_getaddrinfo = yes; then
-	INET6LIBS="-L$ipv6_cv_dir/lib -linet6"
-fi
-
-IPv6_CHECK_SA_LEN()
-IPv6_CHECK_SIN6_SCOPE_ID()
-IPv6_CHECK_SOCKLEN_T()
-
-AC_SUBST(DEFINES)
-AC_SUBST(INET6LIBS)
-AC_SUBST(PERLPATH)
-AC_OUTPUT(config.pl gailookup.pl)
+use Socket6; ok(1);
+my @tmp = getaddrinfo("localhost", "", AF_INET, SOCK_STREAM, 0, 0);
+if ($#tmp >= 1) {
+    ok(2);
+}
+my($family, $socktype, $protocol, $sin, $canonname) = splice(@tmp, $[, 5);
+my($addr, $port) = getnameinfo($sin, NI_NUMERICHOST | NI_NUMERICSERV);
+if ($addr eq "127.0.0.1" && $port eq "0") {
+    ok(3);
+}
+exit;
+__END__

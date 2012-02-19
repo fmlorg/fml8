@@ -1,5 +1,8 @@
 #! @PERLPATH@
 
+;# Copyright (C) 2000-2005 Hajimu UMEMOTO <ume@mahoroba.org>.
+;# All rights reserved.
+;#
 ;# Copyright (C)2000 Hideaki YOSHIFUJI <yoshfuji@ecei.tohoku.ac.jp>
 ;# All rights reserved.
 ;#
@@ -27,7 +30,7 @@
 ;# OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 ;# SUCH DAMAGE.
 
-;# $Id: gailookup.pl.in,v 1.5 2000/05/03 14:20:41 ume Exp $
+;# $Id: gailookup.pl.in,v 1.12 2005/10/11 06:57:21 ume Exp $
 
 use Getopt::Std;
 use Socket;
@@ -37,16 +40,20 @@ use strict;
 my $inet6 = defined(eval 'PF_INET6');
 
 my %opt;
-getopts(($inet6 ? 'chpsn46' : 'chpsn4'), \%opt);
+getopts(($inet6 ? 'achpsnNqS46' : 'chpsnNqS4'), \%opt);
 
 if ($opt{'h'}){
-    print STDERR ("Usage: $0 [-h | [-c] [-n] [-p] [-s] [-4" .
+    print STDERR ("Usage: $0 [-h | [-a] [-c] [-n] [-N] [-p] [-q] [-s] [-S] [-4" .
 		  ($inet6 && "|-6") . "] [host [serv]]]\n" .
 		  "-h   : help\n" .
+		  "-a   : AI_ADDRCONFIG flag\n" .
 		  "-c   : AI_CANONNAME flag\n" .
 		  "-n   : AI_NUMERICHOST flag\n" .
+		  "-N   : AI_NUMERICSERV flag\n" .
 		  "-p   : AI_PASSIVE flag\n" .
+		  "-q   : only show IP address\n" .
 		  "-s   : NI_WITHSCOPEID flag\n" .
+		  "-S   : suppress scopeid\n" .
 		  ($inet6 ? "-4|-6: PF_INET | PF_INET6" : "-4   : PF_INET") . 
 		  "\n");
     exit(4);
@@ -62,21 +69,35 @@ $af = PF_INET if ($opt{'4'});
 $af = PF_INET6 if ($inet6 && $opt{'6'});
 
 my $flags = 0;
+eval('$flags |= AI_ADDRCONFIG') if ($opt{'a'});
 $flags |= AI_PASSIVE if ($opt{'p'});
 $flags |= AI_NUMERICHOST if ($opt{'n'});
+$flags |= AI_NUMERICSERV if ($opt{'N'});
 $flags |= AI_CANONNAME if ($opt{'c'});
 
 my $nflags = NI_NUMERICHOST | NI_NUMERICSERV;
-$nflags |= NI_WITHSCOPEID if ($opt{'s'});
+eval('$nflags |= NI_WITHSCOPEID') if ($opt{'s'});
 
 
 my $socktype = SOCK_STREAM;
 my $protocol = 0;
 
 my @tmp = getaddrinfo($host, $serv, $af, $socktype, $protocol, $flags);
+if ($#tmp < 1) {
+    print(STDERR "${host}: @tmp[0]\n");
+    exit 1;
+}
 while (my($family,$socktype,$protocol,$sin,$canonname) = splice(@tmp, $[, 5)){
+    if ($opt{'S'} && $family == AF_INET6) {
+	my($port, $flowinfo, $addr, $scopeid) = unpack_sockaddr_in6_all($sin);
+	$sin = pack_sockaddr_in6_all($port, $flowinfo, $addr, 0);
+    }
     my($addr, $port) = getnameinfo($sin, $nflags);
-    print("family=$family, socktype=$socktype, protocol=$protocol, addr=$addr, port=$port");
-    print(" canonname=$canonname") if ($opt{'c'});
+    if ($opt{'q'}) {
+	print("$addr");
+    } else {
+	print("family=$family, socktype=$socktype, protocol=$protocol, addr=$addr, port=$port");
+	print(" canonname=$canonname") if ($opt{'c'});
+    }
     print("\n");
 }

@@ -4,7 +4,6 @@ Makefile.PL
 README
 Socket6.pm
 Socket6.xs
-acconfig.h
 aclocal.m4
 config.h.in
 config.pl.in
@@ -15,4 +14,8 @@ gailookup.pl.in
 getaddrinfo.c
 getnameinfo.c
 ftpmirror-1.96.diff
+inet_ntop.c
+inet_pton.c
 im-140.diff
+t/use.t
+META.yml                                 Module meta-data (added by MakeMaker)

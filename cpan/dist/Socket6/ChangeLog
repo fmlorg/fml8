@@ -1,3 +1,256 @@
+2008-11-02  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.23.
+
+	* Makefile.PL (configure_mswin32): Added a conditional #define for
+	HAVE_INET_(PTON|NTOP) to make the module.
+	Change was necessary because the SDK for Vista now includes
+	inet_(pton|ntop) in ws2tcpip.h
+
+	Submitted by:	"David M. Town" <dtown@cpan.org>
+
+	* Makefile.PL (configure_mswin32): Added a line to #define
+	HAVE_SOCKLEN_T since it is defined for MSWin32
+
+	Submitted by:	"David M. Town" <dtown@cpan.org>
+
+	* Socket6.pm: Added @EXPORT_OK to export AF_INET6 and PF_INET6 if
+	requested.  This allows the use of the Socke6 module without
+	having to perform the same conditional check that was added to
+	avoid conflicts with the Socket module default exports (i.e. use
+	Socket6 qw(AF_INET6 inet_pton inet_ntop); )
+
+	Submitted by:	"David M. Town" <dtown@cpan.org>
+
+	* Socket6.pm (AUTOLOAD): Explicitly set $! = 0 before calling
+	constant().  This should not be required since errno was being set
+	to 0 in the C function, but Perl 5.10.0 Win32 Vista needed this to
+	be done or all constants reported unsupported.
+
+	Submitted by:	"David M. Town" <dtown@cpan.org>
+
+2008-08-18  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Use strict environment.
+
+	* Socket6.pm: Bump version number to 0.22.
+
+	* Socket6.pm: Make AF_INET6 check actually work.
+
+	Submitted by:	Tatsuya Noda <topia@clovery.jp>
+
+	* Makefile.PL: Make sure to include config.pl in current
+	directory.
+
+2008-08-17  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.21.
+
+	* Socket6.xs: Make it buildable on the following environment by
+	defining WINVER as 0x0501:
+		- Windows XP SP3
+		- ActivePerl-5.10.0.1003-MSWin32-x86-285500
+		- MinGW-5.1.4
+		- nmake 9.00.21022.08 (shipped with VisualStudio 2008 Express)
+
+	Submitted by:	"IWAMURO Motonori" <vmi@nifty.com>
+
+2008-02-16  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.20.
+
+	* Socket6.pm: Make the AF_INET6 and PF_INET6 exports optional.
+	They are exported from Socket on 5.10.0, and it contlicts with
+	Socket6.
+
+	PR:		http://rt.cpan.org/Public/Bug/Display.html?id=32362
+	Reported by:	"Shlomi Fish via RT" <bug-Socket6@rt.cpan.org>
+	Submitted by:	"KONDOU, Kazuhiro" <kazuhiro@alib.jp>
+
+2008-01-27  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.xs, Socket6.pm: Make getaddrinfo() return the string
+	error or the numeric value according to the context.
+	Make getnameinfo() return error value.
+	Export the EAI_* error constants.
+
+	Submitted by:	Paul LeoNerd Evans <leonerd@leonerd.org.uk>
+
+	* Socket6.xs: FreeBSD 7 and later don't have KAME IPsec anymore.
+
+	* Socket6.xs: gai_strerror() returns `const char *'.
+
+2005-08-28  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.19.
+
+	* Socket6.xs: the "sin6_scope_id" field of the "sockaddr_in6"
+	structure is expected to passed and is returned in host byte
+	order.
+
+	Submitted by:	"Town, David" <David.Town@marconi.com>
+
+2005-03-28  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.18.
+
+	* getaddrinfo.c (getaddrinfo): Support for AI_NUMERICSERV.
+
+	* aclocal.m4: use Autoconf 2.59.
+
+2004-07-14  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Fix documentation of the gethostbyname2.  The
+	gethostbyname2 function takes a FAMILY, not a SERVNAME.
+
+		Reported by:	Bernard Massot <bernard@massot.ath.cx>
+
+2004-03-24  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.17.
+
+	* Socket6.xs: Shut up signed/unsigned mismatch warning from
+	Microsoft C++.
+
+		Reported by:	"David Town" <dtown@cpan.org>
+
+	* Makefile.PL: CC is not a valid parameter for WriteMakefile().
+	Use CONFIGURE instead.
+
+		Submitted by:	"David Town" <dtown@cpan.org>
+
+	* Socket6.pm: Correct typos (inaddr6_* -> in6addr_*).
+
+		Submitted by:	"David Town" <dtown@cpan.org>
+
+2004-03-23  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Provide substitutes for systems the lack support for inet_ntop()
+	and inet_pton().
+
+		Submitted by:	"David Town" <dtown@cpan.org>
+
+	* Add support for MSWin32.  It was tested with the following
+	configuration:
+
+	  - ActivePerl 5.8.0 (805)
+	  - Windows 2000
+	  - Microsoft IPv6 Technology Preview for Windows 2000 (not needed
+	    for XP)
+	    (http://msdn.microsoft.com/downloads/sdks/platform/tpipv6.asp)
+	  - Microsoft Visual C++ v6.0
+	  - Microsoft Platform SDK February 2003 (must have at least
+	    August 2001)
+	    (http://www.microsoft.com/msdownload/platformsdk/sdkupdate/downlevel.htm)
+
+		Submitted by:	"David Town" <dtown@cpan.org>
+
+	* t/use.t: Pass an empty string as the SERVICENAME to
+	getaddrinfo().  MSWin32's getaddrinfo() doesn't like "0" as a
+	numeric servname.
+
+		Submitted by:	"David Town" <dtown@cpan.org>
+
+2004-02-21  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.16.
+
+	* aclocal.m4: inet_ntop and inet_pton are in libnsl on Solaris.
+
+	Submitted by:	Mike McCauley <mikem@open.com.au>
+
+2004-01-05  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.14.
+
+	* gailookup.pl.in: Though some systems has NI_WITHSCOPEID, RFC
+	2553 doesn't mention it, and RFC 3493 deprecated it.  So, make use
+	of NI_WITHSCOPEID optional.
+
+	* gailookup.pl.in: Add -S option which suppress scopeid.  RFC 3493
+	system always adds scopeid in a result of getnameinfo().
+
+	* Socket6.xs: Make pack_sockaddr_in6() and pack_sockaddr_in6_all()
+	actual work on systems which have sin6_len in struct sockaddr_in6.
+
+2004-01-04  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* aclocal.m4: getaddrinfo() is a macro on some systems.
+
+	* Socket6.pm: Bump version number to 0.13.
+
+	* getaddrinfo.c (getaddrinfo): EAI_NODATA was deprecated in RFC
+	3493.  return EAI_NONAME instead.
+
+	* getnameinfo.c (getnameinfo): add support for NI_NAMEREQD.
+
+2003-12-29  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* add simple test.
+
+2003-10-28  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Bump version number to 0.12.
+
+	* Socket6.pm: Mention that getipnodeby*() was deprecated in
+	RFC3493.
+
+2001-09-20  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* getaddrinfo.c (getaddrinfo): Correct AI_PASSIVE parsing bug.
+
+	Reported by:	Rob Siemborski <rjs3@andrew.cmu.edu>
+
+2001-09-18  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.11.
+
+	* getaddrinfo.c (getaddrinfo), gai.h: Add support of AI_NUMERICHOST.
+
+	* getnameinfo.c (getnameinfo): Use socklen_t rather than size_t.
+
+	* getnameinfo.c (getnameinfo): Fix buffer overflow problem.
+
+2001-09-17  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm, Socket6.xs, config.h.in, configure.in: Add glue
+	functions for getipnodeby*() and gai_strerror().
+
+	* Socket6.xs: inet_pton() should work as it is.
+
+	* Socket6.xs: Better documentation of inet_pton() and inet_ntop().
+
+	* Socket6.pm: Description was filled.
+
+	* Socket6.pm, Socket6.xs: Return an error message string if
+	getaddrinfo() fails.
+
+	Submitted by:   Jeff Okamoto <okamoto@best.com>
+
+2001-03-27  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.10.
+
+	* Socket6.xs: Make compilable under OpenBSD.  Though OpenBSD has
+	KAME, OpenBSD doesn't have netinet6/ipsec.h.
+	Reported by:	Tim Ayers <cpantest@quaday.com>
+
+2001-03-21  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.09.
+
+	* aclocal.m4 (IPv6_CHECK_FUNC): There is getaddrinfo(3) in
+	libsocket under Solaris8.
+	Reported by:	Tomohide Nagashima <tomohide@japan-telecom.co.jp>,
+			TAKANO Yuji <takachan@running-dog.net>
+
+2001-01-26  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm:
+		- Fix typo in sample code.
+		  Reported by:	Matsumura Naoki <mat@pfu.co.jp>
+		- Bump version number to 0.08.
+
 2000-05-28  Hajimu UMEMOTO  <ume@mahoroba.org>
 
 	* Socket6.pm: Bump version number to 0.07.

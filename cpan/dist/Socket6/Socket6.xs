@@ -1,8 +1,8 @@
 /*
  * Socket6.xs
- * $Id: Socket6.xs,v 1.8 2000/05/27 07:44:14 ume Exp $
+ * $Id: Socket6.xs,v 1.29 2008/08/16 16:47:00 ume Exp $
  *
- * Copyright (C) 2000 Hajimu UMEMOTO <ume@mahoroba.org>.
+ * Copyright (C) 2000-2008 Hajimu UMEMOTO <ume@mahoroba.org>.
  * All rights reserved.
  *
  * This moduled is besed on perl5.005_55-v6-19990721 written by KAME
@@ -10,7 +10,7 @@
  *
  * Copyright (C) 1995, 1996, 1997, 1998, and 1999 WIDE Project.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -22,7 +22,7 @@
  * 3. Neither the name of the project nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -36,34 +36,73 @@
  * SUCH DAMAGE.
  */
 
-#include "EXTERN.h"
-#include "perl.h"
-#include "XSUB.h"
+#ifdef WIN32
+
+#define	WINVER		0x0501
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#ifndef NI_NUMERICSERV
+#error Microsoft Platform SDK (Aug. 2001) or later required.
+#endif
+const struct in6_addr in6addr_any = IN6ADDR_ANY_INIT;
+const struct in6_addr in6addr_loopback = IN6ADDR_LOOPBACK_INIT;
+#define	WSA_DECLARE					\
+	WSADATA wsaData;				\
+	int wsa = 0
+#define	WSA_STARTUP()					\
+	wsa = WSAStartup(MAKEWORD(2,2), &wsaData)
+#define	WSA_CLEANUP()					\
+	if (!wsa) WSACleanup()
+
+#else /* WIN32 */
 
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #ifdef __KAME__
+# include <sys/param.h>
 # include <net/route.h>
-# include <netinet6/ipsec.h>
+# if defined(__FreeBSD__) && __FreeBSD_version >= 700048
+#  include <netipsec/ipsec.h>
+# elif !defined(__OpenBSD__)
+#  include <netinet6/ipsec.h>
+# endif
 #endif
 #include <netdb.h>
+#define	WSA_DECLARE
+#define	WSA_STARTUP()
+#define	WSA_CLEANUP()
+
+#endif /* WIN32 */
+
+#include "EXTERN.h"
+#include "perl.h"
+#include "XSUB.h"
 
 #include "config.h"
 
 #ifndef HAVE_GETADDRINFO
 #include "getaddrinfo.c"
-#define	NI_MAXHOST	1025
-#define	NI_MAXSERV	32
-#define HAVE_GETADDRINFO
+#define	NI_MAXHOST		1025
+#define	NI_MAXSERV		32
+#define	HAVE_GETADDRINFO	1
 #endif
-#ifndef HAVE_GETNAMEINFO
+#ifndef	HAVE_GETNAMEINFO
 #include "getnameinfo.c"
-#define HAVE_GETNAMEINFO
+#define	HAVE_GETNAMEINFO	1
+#endif
+
+#ifndef HAVE_INET_NTOP
+#include "inet_ntop.c"
+#define	HAVE_INET_NTOP		1
+#endif
+#ifndef HAVE_INET_PTON
+#include "inet_pton.c"
+#define	HAVE_INET_PTON		1
 #endif
 
 #ifndef HAVE_PL_SV_UNDEF
-#define PL_sv_undef	sv_undef
+#define	PL_sv_undef		sv_undef
 #endif
 
 static int
@@ -109,6 +148,12 @@ constant(char *name, int arg)
 #else
 	    goto not_there;
 #endif
+	if (strEQ(name, "AI_NUMERICSERV"))
+#ifdef AI_NUMERICSERV
+	    return AI_NUMERICSERV;
+#else
+	    goto not_there;
+#endif
 	if (strEQ(name, "AI_DEFAULT"))
 #ifdef AI_DEFAULT
 	    return AI_DEFAULT;
@@ -136,6 +181,86 @@ constant(char *name, int arg)
 	if (strEQ(name, "AI_V4MAPPED_CFG"))
 #ifdef AI_V4MAPPED_CFG
 	    return AI_V4MAPPED_CFG;
+#else
+	    goto not_there;
+#endif
+	break;
+    case 'E':
+	if (strEQ(name, "EAI_ADDRFAMILY"))
+#ifdef EAI_ADDRFAMILY
+	    return EAI_ADDRFAMILY;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "EAI_AGAIN"))
+#ifdef EAI_AGAIN
+	    return EAI_AGAIN;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "EAI_BADFLAGS"))
+#ifdef EAI_BADFLAGS
+	    return EAI_BADFLAGS;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "EAI_FAIL"))
+#ifdef EAI_FAIL
+	    return EAI_FAIL;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "EAI_FAMILY"))
+#ifdef EAI_FAMILY
+	    return EAI_FAMILY;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "EAI_MEMORY"))
+#ifdef EAI_MEMORY
+	    return EAI_MEMORY;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "EAI_NODATA"))
+#ifdef EAI_NODATA
+	    return EAI_NODATA;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "EAI_NONAME"))
+#ifdef EAI_NONAME
+	    return EAI_NONAME;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "EAI_SERVICE"))
+#ifdef EAI_SERVICE
+	    return EAI_SERVICE;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "EAI_SOCKTYPE"))
+#ifdef EAI_SOCKTYPE
+	    return EAI_SOCKTYPE;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "EAI_SYSTEM"))
+#ifdef EAI_SYSTEM
+	    return EAI_SYSTEM;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "EAI_BADHINTS"))
+#ifdef EAI_BADHINTS
+	    return EAI_BADHINTS;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "EAI_PROTOCOL"))
+#ifdef EAI_PROTOCOL
+	    return EAI_PROTOCOL;
 #else
 	    goto not_there;
 #endif
@@ -317,7 +442,7 @@ gethostbyname2(host, af)
 	struct hostent *phe;
 	int count, i;
 
-	if (phe = gethostbyname2(host, af)) {
+	if ((phe = gethostbyname2(host, af)) != NULL) {
 		for (count = 0; phe->h_addr_list[count]; ++count);
 		EXTEND(sp, 4 + count);
 		PUSHs(sv_2mortal(newSVpv((char *) phe->h_name,
@@ -350,30 +475,23 @@ inet_pton(af, host)
 		struct in_addr addr4;
 	} ip_address;
 	int len;
-	struct hostent * phe;
 	int ok;
 
-	if (phe = gethostbyname2(host, af)) {
-		Copy( phe->h_addr, &ip_address, phe->h_length, char );
-		len = phe->h_length;
-		ok = 1;
-	} else {
-		switch (af) {
+	switch (af) {
 #ifdef INET6_ADDRSTRLEN
-		case AF_INET6:
-			len = sizeof(struct sockaddr_in6);
-			break;
+	case AF_INET6:
+		len = sizeof(struct in6_addr);
+		break;
 #endif
-		case AF_INET:
-			len = sizeof(struct sockaddr_in);
-			break;
-		default:
-	    		croak("Bad address family for %s, got %d",
-				"Socket6::inet_pton", af);
-			break;
-		}
-		ok = inet_pton(af, host, &ip_address);
+	case AF_INET:
+		len = sizeof(struct in_addr);
+		break;
+	default:
+		croak("Bad address family for %s, got %d",
+			"Socket6::inet_pton", af);
+		break;
 	}
+	ok = inet_pton(af, host, &ip_address);
 
 	ST(0) = sv_newmortal();
 	if (ok == 1) {
@@ -391,7 +509,7 @@ inet_ntop(af, address_sv)
 	CODE:
 {
 #ifdef HAVE_INET_NTOP
-	STRLEN addrlen;
+	STRLEN addrlen, alen;
 #ifdef INET6_ADDRSTRLEN
 	struct in6_addr addr;
 	char addr_str[INET6_ADDRSTRLEN];
@@ -400,7 +518,6 @@ inet_ntop(af, address_sv)
 	char addr_str[16];
 #endif
 	char * address = SvPV(address_sv,addrlen);
-	int alen;
 
 	switch (af) {
 	case AF_INET:
@@ -443,6 +560,9 @@ pack_sockaddr_in6(port,ip6_address)
 	struct sockaddr_in6 sin;
 
 	Zero( &sin, sizeof sin, char );
+#ifdef SIN6_LEN
+	sin.sin6_len = sizeof sin;
+#endif
 	sin.sin6_family = AF_INET6;
 	sin.sin6_port = htons(port);
 	Copy( ip6_address, &sin.sin6_addr, sizeof sin.sin6_addr, char );
@@ -465,12 +585,15 @@ pack_sockaddr_in6_all(port,flowinfo,ip6_address,scope_id)
 	struct sockaddr_in6 sin;
 
 	Zero( &sin, sizeof sin, char );
+#ifdef SIN6_LEN
+	sin.sin6_len = sizeof sin;
+#endif
 	sin.sin6_family = AF_INET6;
 	sin.sin6_port = htons(port);
 	sin.sin6_flowinfo = htonl(flowinfo);
 	Copy( ip6_address, &sin.sin6_addr, sizeof sin.sin6_addr, char );
 #ifdef HAVE_SOCKADDR_IN6_SIN6_SCOPE_ID
-	sin.sin6_scope_id = htonl(scope_id);
+	sin.sin6_scope_id = scope_id;
 #endif
 
 	ST(0) = sv_2mortal(newSVpv((char *)&sin, sizeof sin));
@@ -501,7 +624,7 @@ unpack_sockaddr_in6(sin_sv)
 		      "Socket6::unpack_sockaddr_in6",
 		      addr.sin6_family,
 		      AF_INET6);
-	} 
+	}
 	port = ntohs(addr.sin6_port);
 	ip6_address = addr.sin6_addr;
 
@@ -537,12 +660,12 @@ unpack_sockaddr_in6_all(sin_sv)
 		      "Socket6::unpack_sockaddr_in6",
 		      addr.sin6_family,
 		      AF_INET6);
-	} 
+	}
 	port = ntohs(addr.sin6_port);
 	flowinfo = ntohl(addr.sin6_flowinfo);
 	ip6_address = addr.sin6_addr;
 #ifdef HAVE_SOCKADDR_IN6_SIN6_SCOPE_ID
-	scope_id = ntohl(addr.sin6_scope_id);
+	scope_id = addr.sin6_scope_id;
 #else
 	scope_id = 0;
 #endif
@@ -590,17 +713,21 @@ getaddrinfo(host,port,family=0,socktype=0,protocol=0,flags=0)
 	int	flags
 	PPCODE:
 {
-#ifdef HAVE_GETADDRINFO  
+#ifdef HAVE_GETADDRINFO
 	struct addrinfo hints, * res;
 	int	err;
 	int	count;
+	const char	*error;
+	WSA_DECLARE;
 
 	Zero( &hints, sizeof hints, char );
 	hints.ai_flags = flags;
 	hints.ai_family = family;
 	hints.ai_socktype = socktype;
 	hints.ai_protocol = protocol;
+	WSA_STARTUP();
 	err = getaddrinfo(*host ? host : 0, *port ? port : 0, &hints, &res);
+	WSA_CLEANUP();
 
 	if (err == 0) {
 		struct addrinfo * p;
@@ -621,6 +748,13 @@ getaddrinfo(host,port,family=0,socktype=0,protocol=0,flags=0)
 				PUSHs(&PL_sv_undef);
 		}
 		freeaddrinfo(res);
+	} else  {
+		SV *error_sv = sv_newmortal();
+		SvUPGRADE(error_sv, SVt_PVNV);
+		error = gai_strerror(err);
+		sv_setpv(error_sv, error);
+		SvIV_set(error_sv, err); SvIOK_on(error_sv);
+		PUSHs(error_sv);
 	}
 #else
 	ST(0) = (SV *) not_here("getaddrinfo");
@@ -633,13 +767,16 @@ getnameinfo(sin_sv, flags = 0)
 	int flags;
 	PPCODE:
 {
-#ifdef HAVE_GETNAMEINFO  
+#ifdef HAVE_GETNAMEINFO
 	STRLEN sockaddrlen;
 	struct sockaddr * sin = (struct sockaddr *)SvPV(sin_sv,sockaddrlen);
 	char host[NI_MAXHOST];
 	char port[NI_MAXSERV];
 	int	err;
+	const char	*error;
+	WSA_DECLARE;
 
+	WSA_STARTUP();
 	if (items < 2) {
 		err = getnameinfo(sin, sockaddrlen, host, sizeof host,
 				  port, sizeof port, 0);
@@ -653,16 +790,151 @@ getnameinfo(sin_sv, flags = 0)
 			err = getnameinfo(sin, sockaddrlen, host, sizeof host,
 					  port, sizeof port,
 					  NI_NUMERICHOST|NI_NUMERICSERV);
-	} else
+	} else {
 		err = getnameinfo(sin, sockaddrlen, host, sizeof host,
 				  port, sizeof port, flags);
+	}
+	WSA_CLEANUP();
 
 	if (err == 0) {
 		EXTEND(sp, 2);
 		PUSHs(sv_2mortal(newSVpv(host, strlen(host))));
 		PUSHs(sv_2mortal(newSVpv(port, strlen(port))));
+	} else  {
+		SV *error_sv = sv_newmortal();
+		SvUPGRADE(error_sv, SVt_PVNV);
+		error = gai_strerror(err);
+		sv_setpv(error_sv, error);
+		SvIV_set(error_sv, err); SvIOK_on(error_sv);
+		PUSHs(error_sv);
 	}
 #else
 	ST(0) = (SV *) not_here("getnameinfo");
+#endif
+}
+
+char *
+gai_strerror(errcode = 0)
+	int	errcode;
+	CODE:
+	RETVAL = (char *)gai_strerror(errcode);
+	OUTPUT:
+	RETVAL
+
+void
+getipnodebyname(hostname, family=0, flags=0)
+	char *	hostname
+	int	family
+	int	flags
+	PREINIT:
+#ifdef HAVE_GETIPNODEBYNAME
+	struct hostent	*he;
+	int		err;
+	char		**p;
+	SV		*temp, *address_ref, *alias_ref;
+	AV		*address_list, *alias_list;
+#endif
+	PPCODE:
+{
+#ifdef HAVE_GETIPNODEBYNAME
+	he = getipnodebyname(hostname, family, flags, &err);
+
+	if (err == 0) {
+		XPUSHs(sv_2mortal(newSVpv(he->h_name, strlen(he->h_name))));
+		XPUSHs(sv_2mortal(newSViv(he->h_addrtype)));
+		XPUSHs(sv_2mortal(newSViv(he->h_length)));
+
+		address_list = newAV();
+		for(p = he->h_addr_list; *p != NULL; p++) {
+			temp = newSVpv(*p, he->h_length);
+			av_push(address_list, temp);
+		}
+		address_ref = newRV_noinc((SV*) address_list);
+		XPUSHs(address_ref);
+
+		alias_list = newAV();
+		for(p = he->h_aliases; *p != NULL; p++) {
+			temp = newSVpv(*p, strlen(*p));
+			av_push(alias_list, temp);
+		}
+		alias_ref = newRV_noinc((SV*) alias_list);
+		XPUSHs(alias_ref);
+		freehostent(he);
+	} else {
+		XPUSHs(sv_2mortal(newSViv(err)));
+	}
+#else
+	ST(0) = (SV *) not_here("getipnodebyname");
+#endif
+}
+
+void
+getipnodebyaddr(family, address_sv)
+	int	family
+	SV *	address_sv
+	PREINIT:
+#ifdef HAVE_GETIPNODEBYADDR
+	STRLEN		addrlen;
+	struct hostent	*he;
+	int		err, alen;
+	char		**p;
+	SV		*temp, *address_ref, *alias_ref;
+	AV		*address_list, *alias_list;
+	struct in6_addr	addr;
+	char		*addr_buffer;
+#endif
+	PPCODE:
+{
+#ifdef HAVE_GETIPNODEBYADDR
+	addr_buffer = SvPV(address_sv, addrlen);
+
+	switch(family) {
+
+	case AF_INET:
+		alen = sizeof(struct in_addr);
+		break;
+	case AF_INET6:
+		alen = sizeof(struct in6_addr);
+		break;
+	default:
+		croak("Unsupported address family for %s, af is %d",
+		    "Socket6::getipnodebyaddr", family);
+	}
+
+	if (alen > sizeof(addr) || alen != addrlen) {
+		croak("Arg length mismatch in %s, length is %d, should be %d\n",
+		    "Socket6::getipnodebyaddr", addrlen, alen);
+	}
+
+	Copy(addr_buffer, &addr, sizeof(addr), char);
+
+	he = getipnodebyaddr(addr_buffer, alen, family, &err);
+
+	if (err == 0) {
+		XPUSHs(sv_2mortal(newSVpv(he->h_name, strlen(he->h_name))));
+		XPUSHs(sv_2mortal(newSViv(he->h_addrtype)));
+		XPUSHs(sv_2mortal(newSViv(he->h_length)));
+
+		address_list = newAV();
+		for(p = he->h_addr_list; *p != NULL; p++) {
+			temp = newSVpv(*p, he->h_length);
+			av_push(address_list, temp);
+		}
+		address_ref = newRV_noinc((SV*) address_list);
+		XPUSHs(address_ref);
+
+		alias_list = newAV();
+		for(p = he->h_aliases; *p != NULL; p++) {
+			temp = newSVpv(*p, strlen(*p));
+			av_push(alias_list, temp);
+		}
+		alias_ref = newRV_noinc((SV*) alias_list);
+		XPUSHs(alias_ref);
+		freehostent(he);
+	} else {
+		XPUSHs(sv_2mortal(newSViv(err)));
+	}
+#else
+	ST(0) = (SV *) not_here("getipnodebyaddr");
 #endif
 }

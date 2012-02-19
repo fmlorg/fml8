@@ -18,7 +18,7 @@
 -	@he_infos = im_getaddrinfo($s, $remoteport, AF_UNSPEC, SOCK_STREAM);
 +	$0 = progname() . ": getaddrinfo($s)";
 +	@he_infos = getaddrinfo($s, $remoteport, AF_UNSPEC, SOCK_STREAM);
- 	if ($#he_infos < 0) {
+ 	if ($#he_infos < 1) {
  	    im_warn("address unknown for $s\n");
  	    @Response = ("address unknown for $s");
 @@ -147,7 +150,7 @@

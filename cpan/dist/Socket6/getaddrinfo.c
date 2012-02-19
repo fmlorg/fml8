@@ -1,6 +1,6 @@
 /*
  * Mar  8, 2000 by Hajimu UMEMOTO <ume@mahoroba.org>
- * $Id: getaddrinfo.c,v 1.6 2000/05/27 19:16:43 ume Exp $
+ * $Id: getaddrinfo.c,v 1.13 2005/08/27 16:33:10 ume Exp $
  *
  * This module is besed on ssh-1.2.27-IPv6-1.5 written by
  * KIKUCHI Takahiro <kick@kyoto.wide.ad.jp>
@@ -27,8 +27,9 @@ malloc_ai(int port, u_long addr, int socktype, int proto)
 {
     struct addrinfo *ai;
 
-    if (ai = (struct addrinfo *)malloc(sizeof(struct addrinfo) +
-				       sizeof(struct sockaddr_in))) {
+    ai = (struct addrinfo *)malloc(sizeof(struct addrinfo) +
+				   sizeof(struct sockaddr_in));
+    if (ai) {
 	memset(ai, 0, sizeof(struct addrinfo) + sizeof(struct sockaddr_in));
 	ai->ai_addr = (struct sockaddr *)(ai + 1);
 	/* XXX -- ssh doesn't use sa_len */
@@ -51,12 +52,12 @@ char *
 gai_strerror(int ecode)
 {
     switch (ecode) {
-    case EAI_NODATA:
-	return "no address associated with hostname.";
     case EAI_MEMORY:
 	return "memory allocation failure.";
     case EAI_FAMILY:
 	return "ai_family not supported.";
+    case EAI_NONAME:
+	return "hostname nor servname provided, or not known.";
     case EAI_SERVICE:
 	return "servname not supported for ai_socktype.";
     default:
@@ -74,7 +75,7 @@ freeaddrinfo(struct addrinfo *ai)
     do {
 	next = ai->ai_next;
 	free(ai);
-    } while (ai = next);
+    } while ((ai = next) != NULL);
 }
 
 int
@@ -83,8 +84,8 @@ getaddrinfo(const char *hostname, const char *servname,
 {
     struct addrinfo *cur, *prev = NULL;
     struct hostent *hp;
+    struct in_addr in;
     int i, port = 0, socktype, proto;
-    char *pe_proto;
 
     if (hints && hints->ai_family != PF_INET && hints->ai_family != PF_UNSPEC)
 	return EAI_FAMILY;
@@ -107,12 +108,14 @@ getaddrinfo(const char *hostname, const char *servname,
 	}
     }
     if (servname) {
-	if (isdigit(*servname))
+	if (isdigit((int)*servname))
 	    port = htons(atoi(servname));
 	else {
 	    struct servent *se;
 	    char *pe_proto;
 
+	    if (hints && hints->ai_flags & AI_NUMERICSERV)
+		    return EAI_NONAME;
 	    switch (socktype) {
 	    case SOCK_DGRAM:
 		pe_proto = "udp";
@@ -129,21 +132,25 @@ getaddrinfo(const char *hostname, const char *servname,
 	    port = se->s_port;
 	}
     }
-    if (hints && hints->ai_flags & AI_PASSIVE)
-	if (*res = malloc_ai(port, htonl(0x00000000), socktype, proto))
+    if (!hostname) {
+	if (hints && hints->ai_flags & AI_PASSIVE)
+	    *res = malloc_ai(port, htonl(0x00000000), socktype, proto);
+	else
+	    *res = malloc_ai(port, htonl(0x7f000001), socktype, proto);
+	if (*res)
 	    return 0;
 	else
 	    return EAI_MEMORY;
-    if (!hostname)
-	if (*res = malloc_ai(port, htonl(0x7f000001), socktype, proto))
+    }
+    if (inet_aton(hostname, &in)) {
+	*res = malloc_ai(port, in.s_addr, socktype, proto);
+	if (*res)
 	    return 0;
 	else
 	    return EAI_MEMORY;
-    if (inet_addr(hostname) != -1)
-	if (*res = malloc_ai(port, inet_addr(hostname), socktype, proto))
-	    return 0;
-	else
-	    return EAI_MEMORY;
+    }
+    if (hints && hints->ai_flags & AI_NUMERICHOST)
+	return EAI_NONAME;
     if ((hp = gethostbyname(hostname)) &&
 	hp->h_name && hp->h_name[0] && hp->h_addr_list[0]) {
 	for (i = 0; hp->h_addr_list[i]; i++) {
@@ -168,5 +175,5 @@ getaddrinfo(const char *hostname, const char *servname,
 	}
 	return 0;
     }
-    return EAI_NODATA;
+    return EAI_NONAME;
 }

@@ -1,6 +1,6 @@
 /*
  * Mar  8, 2000 by Hajimu UMEMOTO <ume@mahoroba.org>
- * $Id: gai.h,v 1.4 2000/05/27 19:16:43 ume Exp $
+ * $Id: gai.h,v 1.10 2005/08/27 16:33:10 ume Exp $
  *
  * This module is besed on ssh-1.2.27-IPv6-1.5 written by
  * KIKUCHI Takahiro <kick@kyoto.wide.ad.jp>
@@ -12,11 +12,14 @@
  * See getaddrinfo.c and getnameinfo.c.
  */
 
+#ifndef _GAI_H_
+#define _GAI_H_
+
 /* for old netdb.h */
-#ifndef EAI_NODATA
-#define EAI_NODATA	1
+#ifndef EAI_SERVICE
 #define EAI_MEMORY	2
 #define EAI_FAMILY	5	/* ai_family not supported */
+#define EAI_NONAME	8	/* hostname nor servname provided, or not known */
 #define EAI_SERVICE	9	/* servname not supported for ai_socktype */
 #endif
 
@@ -24,6 +27,8 @@
 #ifndef AI_PASSIVE
 #define AI_PASSIVE	1
 #define AI_CANONNAME	2
+#define AI_NUMERICHOST	4
+#define AI_NUMERICSERV	8
 #define NI_NUMERICHOST	2
 #define NI_NAMEREQD	4
 #define NI_NUMERICSERV	8
@@ -37,4 +42,6 @@ struct addrinfo {
 	struct sockaddr *ai_addr;	/* binary address */
 	struct addrinfo *ai_next;	/* next structure in linked list */
 };
+#endif
+
 #endif
