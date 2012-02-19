@@ -1,27 +1,24 @@
 #
-# $Id: Constants.pm,v 1.2 2001/05/18 05:14:38 dankogai Exp $
+# $Id: Constants.pm,v 2.0 2005/05/16 19:07:56 dankogai Exp $
 #
 
 package Jcode::Constants;
 
-use strict;
 use vars qw($RCSID $VERSION);
 
-$RCSID = q$Id: Constants.pm,v 1.2 2001/05/18 05:14:38 dankogai Exp $;
-$VERSION = do { my @r = (q$Revision: 1.2 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
+$RCSID = q$Id: Constants.pm,v 2.0 2005/05/16 19:07:56 dankogai Exp $;
+$VERSION = do { my @r = (q$Revision: 2.0 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
 
 use Carp;
 
-BEGIN {
-    use Exporter;
-    use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
-    @ISA         = qw(Exporter);
-    @EXPORT      = qw();
-    @EXPORT_OK   = qw(%CHARCODE %ESC %RE);
-    %EXPORT_TAGS = ( 'all' => [ @EXPORT_OK, @EXPORT ] );
-}
+use Exporter;
+use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
+@ISA         = qw(Exporter);
+@EXPORT      = qw();
+@EXPORT_OK   = qw(%CHARCODE %ESC %RE);
+%EXPORT_TAGS = ( 'all' => [ @EXPORT_OK, @EXPORT ] );
 
-use vars @EXPORT_OK;
+use vars qw(%CHARCODE %ESC %RE);
 
 my %_0208 = (
 	       1978 => '\e\$\@',
