@@ -1,0 +1,202 @@
+#
+# $Id$
+#
+$Revision$ $Date$
+! Jcode/Tr.pm
+  Conversion table is now cached -- patch by Hawakawa
+
+0.88 2004/12/03 12:04:22
+! Unicode/uni.c
+  Patch by OHARA Shigeki that fixes segmentation fault when malformed
+  encoding is fed to utf8 (en|de)coder applied.  Message-Id:
+  <w0gfz2p3t1n.wl%os@iij.ad.jp>
+! Jcode.pm
+  Uninitialized values in jfold() now initialized.
+  Message-Id: <27BF6F48-38BE-11D9-9307-000A95DBB50A@dan.co.jp>
+
+0.87 2004/07/24 02:58:27
+! Jcode.pm
+  * Document Fix by shigeno@iij-mc.co.jp
+  Message-Id: <20040708.175523.131609260.shigeno@iij-mc.co.jp>
+  * getcode() reverted to pre-0.84 because the new algorithm is prone
+    to false positive cases, reported by inu@kc5.so-net.ne.jp.
+  Message-Id: <20040723.233005.78712771.inu@mail.design.co.jp>
+
+0.86 2004/06/20 09:54:33
+! Unicode/uni.c Unicode/uni2euc.h
+  Flat-table representation of uni2euc is now segmented to paged
+  tables so Visual C++ is happy.  Also pages that contain only undefined 
+  characters are aggregated to shrink the table by more than 50%.
+  Thank you, Takahashi-san.
+  Message-Id: <006301c45664$a048cb20$0401a8c0@makoto>
+
+0.85 2004/06/18 18:32:19
+! Jcode.pm
+  getcode() is now less likely to fail to detect utf-8
+  Message-Id: <001901c45541$234adb00$0401a8c0@makoto>
+
+2003/06/21 07:37:54
+! Unicode/* Manifest
+  Unicode XS is completely rewritten from scratch.  It is now
+  even faster than Encode (but less general, of course).
+  Instead of bsearch(), Unicode XS now uses flat lookup table
+  Which makes it not only faster but (hopefully) more portable.
+  Its only price is slightly larger size of the shared library
+  (360kb on FreeBSD 4-Stable)
+
+0.83 2003/03/16 16:15:34
+! Jcode.pm
+  Addresses the issue that mime_encode() stalls when fed w/ bogus data.  
+  Found by Hisashi Nishimura <hisashin@hotsync.co.jp>
+  Message-Id: <09AE8891-5773-11D7-AA19-000393AE4244@dan.co.jp>
+
+0.82 2002/09/23 18:30:03
+! Jcode.pm
+  pod typo fix and better jcode.pl compatibility
+  by MORIYAMA Masayuki <msyk@mtg.biglobe.ne.jp>
+  Message-Id: <20020923190414.2134.MSYK@mtg.biglobe.ne.jp>
+
+0.81 2002/09/18 13:45:32
+! Jcode.pm
+  jfold() fix by SATOH Fumiyasu <fumiya@samba.gr.jp>
+  Message-Id: <878z1zv2l3.wl@sugar.net-thrust.com.net-thrust.com>
+
+0.80 2002/05/03 00:19:55
+! Jcode.pm    MANIFEST
++ t/length.t
+  Jcode->jlength() method added by Miyagawa-kun
+  Message-Id: <863cxal6c5.wl@mail.edge.co.jp>
+! Changes
+  More like that is used in Encode
+
+0.79	2002/01/15
+	* Typecast patches for AIX applied to Unicode/*.{xs,c}
+	  KUSANO Takayuki <AE5T-KSN@asahi-net.or.jp>
+0.78	2002/01/15
+	As suggested by Tatsuhiko Miyagawa <miyagawa@edge.co.jp>
+	* pod linting in a podchecker-compliant manner
+	* HISTORY -> Changes to be more CPAN-compliant	
+0.77	2002/01/14
+	* pod linting
+	* Mention to Encode module added to pod
+0.76	2001/12/17
+	* mime_encode bug fixed
+	  (jun.k <jun.k@isite.homeip.net>)
+0.75    2001/07/19
+	* (:?) -> (?:) (Tatsuhiko Miyagawa <miyagawa@edge.co.jp>)
+	* fixed file permissions 
+	  (Takahiro Kambe <taca@sky.yamashina.kyoto.jp>)
+0.74    2001/07/17
+	* optimization of debug (()->(:?))
+	  (Hiroki Ohzaki <ohzaki@iod.ricoh.co.jp>)
+	* H2Z bugfix (Mutsutoshi Yoshimoto <riku@freedom.co.jp>)
+0.73    2001/06/13
+        * euc -> jis conversion fails when it encounters
+          consecutive hankaku kana then zenkaku kana
+          (Mikage Sawatari<mikage@mikage.to>)
+0.72    2001/06/01
+        * $j->tr("a-Z", '', 'd') fixed
+          (Tatsuhiko Miyagawa <miyagawa@edge.co.jp>)
+	* t/tr.t rewritten to test that
+0.71    2001/05/18
+        * VERSIONing glitches on Jcode::Constants fixed
+          (Tatsuhiko Miyagawa <miyagawa@edge.co.jp>)
+        * _mkbuf is gone!
+          -> Jcode::Constants is now sub free!
+        * all *.pm passes podchecker(1) now
+0.70	2001/05/16
+	* euc -> jis code optimized
+	  (Kazuto Ichimura <ichimura@shimada.nuee.nagoya-u.ac.jp>)
+	* VERSIONing glitches on Jcode::Unicode fixed
+	  (Tatsuhiko Miyagawa <miyagawa@edge.co.jp>)
+0.69	2001/05/12
+	* lots of code beautification done in response to
+	Kazuto Ichimura <ichimura@shimada.nuee.nagoya-u.ac.jp>
+0.68	2000/12/27
+	* mime_encode(): regex bug that may spill hankaku kana
+	  is fixed (ohzaki@iod.ricoh.co.jp)
+          - t/mime.t modified to check this
+	* mime_decode(): (?i:=\?ISO-2022-JP\?B\?) replaced with
+	  =\?[Ii][Ss][Oo]-2022-[Jj][Pp]\?[Bb]\? to keep backward
+	  compatibilty with perl 5.004 (shino@ifnet.or.jp)
+0.67	2000/12/26
+	* all bugs on mime_encode() reported by 
+          shusuke@pop01.odn.ne.jp is fixed
+	  - useless $bpl is now useful
+	  - RE{EUC_0212} -> $RE{EUC_0212} at a regexp
+0.66	2000/12/21
+	* =?iso-2022-jp?b? is now case insensitive
+	  (toshihiro.kayama@toshiba.co.jp)
+	* documentation bug fixed (miyagawa@edge.co.jp)
+	* $mime_header = $j->mime_encode() now accepts optional arguments
+	* \x0a -> \n, \x0d -> \r unless suitable (ohzaki@iod.ricoh.co.jp)
+0.65	2000/12/11
+	* $jcode->mime_(de|en)code debug
+	* t/mime.t added
+0.64	2000/11/24
+	* Same as 0.63; just misuploaded CPAN
+0.63	2000/11/24
+	* $jcode->mime_(de|en)code bugfix
+          (thank you, ohzaki@iod.ricoh.co.jp;
+	   I shamelessly stole your code)
+0.62	2000/11/23
+	* Jcode/Tr.pm -- allows 3-byte tr (maybe slow!)
+        * $jcode->jfold() added
+        * $jcode->mime_(de|en)code is more RFC2045-compliant
+0.61	2000/11/15 (Unreleased)
+	* Unicode/unicode.c -> Unicode/uni.c
+          to avoid namespace breach on windoze
+0.60	1999/10/18
+	* all $& exterminated due to popular demand
+0.59	1999/10/17
+	* fixed jperl incompatibiliy (Thanx, watanabe!)
+0.58	1999/07/28
+	* (mac|win)_install.pl now deletes old files before installing
+	  new ones.
+	* ActivePerl Support (Win_Install.PL)
+	* t/ scripts are now more compatible with Non-unix platforms
+	* *_Install.PL renamed to *_install.pl to prevent MakeMaker
+          from executing these files.
+0.57	1999/07/27
+	* Access Methods to misc. Jcode objecsts added
+	* UTF8 detection supported by getcode
+	* POD correction
+0.56	1999/07/24
+	* Jcode::getcode();  SJIS detection is now faster for MOST cases
+	* POD correction
+0.55	1999/07/23
+	* Due to the popular demands, Non-XS version of modules are back!
+	* Jcode::NKF dropped
+        * Non-XS version of utf8 -> ucs2 conversion is much faster!
+0.50    1999/07/21
+        * Conversion routines are now all XS!
+        * Significant Performance improvement everywhere
+        * Especially Unicode-related routines
+0.40    1999/07/16 (Internal only)
+	* suggestion by ISHINO k16 <k16@softvision.co.jp>
+	*  Unicode conversion now leaves ascii as it is
+	*  unless $Jcode::Unicode::PEDANTIC is set
+	* POD integrated in all .pm files
+0.36    1999/07/15 (Internal only)
+	* All modules has $VERSION now! (to make CPAN.pm happier)
+	* All Octals are gone!
+          (Hiroki Ohzaki <ohzaki@iod.ricoh.co.jp>)
+	* Remarks on jcode.pl is moved from COPYRIGHT to ACKNOWLEDGEMENTS
+        * (C) of Unicode, Inc. added
+0.35	1999/07/15
+	* Jcode now internally stores a reference to string, not string
+	* Furthur performance optimization. Jcode::convert() is now faster
+          than jcode::convert() for most cases.
+	* documentation fixes
+0.30	1999/07/12
+	* Regexp bug fixed (Jcode::Constants, $RE{JIS_0212})
+	* H2Z bug fixed
+	* Significant Code Optimization
+	* Jcode->set() and Jcode->append() added for repeated use
+0.21	1999/07/10
+	* Typo correction
+0.20	1999/07/10	2nd Preview Release
+	* Code optimization
+	* Unicode Support
+	* Lots of Bug Fixes
+0.10	1999/07/08	First Preview Release

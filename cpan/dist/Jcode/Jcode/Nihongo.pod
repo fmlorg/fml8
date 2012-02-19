@@ -1,0 +1,379 @@
+=encoding euc-jp
+
+=head1 名前
+
+Jcode - 日本語文字集合ハンドラ
+
+=head1 概要
+
+ use Jcode;
+ # 
+ # 古式ゆかしく
+ Jcode::convert($str, $ocode, $icode, "z");
+ # もしくはオブジェクト指向で！
+ print Jcode->new($str)->h2z->tr($from, $to)->utf8;
+
+=head1 説明
+
+Jcode.pmはオブジェクト的なアプローチと従来からのアプローチの両方を
+サポートしています。オブジェクト的なアプローチを使えばこんな感じで；
+
+  $iso_2022_jp = Jcode->new($str)->h2z->jis;
+
+こちらよりエレガントでしょう：
+
+  $iso_2022_jp = $str;
+  &jcode::convert(\$iso_2022_jp, 'jis', &jcode::getcode(\$str), "z");
+
+オブジェクトに馴染みの無い人のために、Jcode.pmはまだC<getcode()>と
+C<convert()>をサポートしています。
+
+Perlのバージョンが5.8.1以上なら、Jcodeは、Perl 5.8以降の標準的な文字集合
+ハンドラモジュールであるL<Encode>のラッパーとして振る舞います。
+
+=head1 メソッド
+
+特に言及しない限り、ここで挙げるメソッドは全てJcodeオブジェクトを返します。
+
+=head2 コンストラクタ
+
+=over 2
+
+=item $j = Jcode-E<gt>new($str [, $icode])
+
+$strからJcodeオブジェクト$jを生成します。明示的に$icodeをセットしなければ、
+入力コードは自動的に判定されます。利用可能な文字集合については、下の
+L<getcode>を参照してください。
+
+Perl 5.8.1以降では、C<$icode>にはL<Encode>が理解できる
+I<どんなエンコーディング名>も使えます。
+
+  $j = Jcode->new($european, 'iso-latin1');
+
+オブジェクトを文字列化すると、EUCに変換された文字列が返ります。ですから
+C<< print $j->euc >>とする代わりに、C<< print $j >>とできます。
+
+=over 2
+
+=item リファレンス渡し
+
+スカラー値の代わりに、以下のようにリファレンスを渡せます。
+
+ Jcode->new(\$str);
+
+これはほんの少し時間を節約します。その代償として、$strの値そのものが
+変換されます（ある意味、$strはjcodeオブジェクトに"tieされる"のです）。
+
+=back
+
+=item $j-E<gt>set($str [, $icode])
+
+$jの内部文字列に$strをセットします。繰り返しJcodeオブジェクトを使うときに
+便利です（オブジェクトを生成する時間とメモリの節約になります）。
+
+ # mailboxをSJIS形式に変換
+ my $jconv = new Jcode;
+ $/ = 00;
+ while(<>){
+     print $jconv->set(\$_)->mime_decode->sjis;
+ }
+
+=item $j-E<gt>append($str [, $icode]);
+
+$jの内部文字列に$strを加えます。
+
+=item $j = jcode($str [, $icode]);
+
+Jcode-E<gt>new() の短縮形。以下のようにできます；
+
+ $sjis = jcode($str)->sjis;
+
+=back
+
+=head2 文字列のエンコード
+
+一般に、$j-E<gt>I<encoded>とすることでI<encoded>に変換された文字列を得ます。
+
+=over 2
+
+=item $sjis = $j-E<gt>sjis
+
+=item $euc = $j-E<gt>euc
+
+=item $jis = $j-E<gt>jis
+
+=item $sjis = $j-E<gt>sjis
+
+=item $ucs2 = $j-E<gt>ucs2
+
+=item $utf8 = $j-E<gt>utf8
+
+自明でしょう。
+WYCIWYG = What you code is what you get :)
+
+=item $iso_2022_jp = $j-E<gt>iso_2022_jp
+
+C<< $j->h2z->jis >>と同じです。
+半角カナは強制的に全角に変換されます。
+
+Perl 5.8.1以降では、Encodeがサポートするどんなエンコーディング名と
+エイリアスでも利用できます。例えば：
+
+  $european = $j->iso_latin1; # メソッド名用に'-'は'_'に置き換えます
+
+B<参考>：L<Encode::Encoder>がこれと同じ小技を使っています。
+
+=over 2
+
+=item $j-E<gt>fallback($fallback)
+
+Perl 5.8.1以降では、Jcodeは内部の文字列をUTF-8で保持します。
+I<< -E<gt>encoding >>にマップできない文字は'?'に置き換えられますが、
+これはL<Encode>での標準動作です。
+
+  my $unistr = "\x{262f}"; # 陰陽マーク
+  my $j = jcode($unistr);  # $j->euc の結果は '?' に
+
+この振る舞いは、L<Encode>同様、フォールバックを指定することで変更できます。
+値はL<Encode>のものと一緒です。便宜のため、C<Jcode::FB_PERLQQ>、
+C<Jcode::FB_XMLCREF>、C<Jcode::FB_HTMLCREF>がL<Encode>のそれらへの
+エイリアスになっています。
+
+  print $j->fallback(Jcode::FB_PERLQQ)->euc;   # '\x{262f}'
+  print $j->fallback(Jcode::FB_XMLCREF)->euc;  # '&#x262f;'
+  print $j->fallback(Jcode::FB_HTMLCREF)->euc; # '&#9775;'
+
+グローバル変数C<$Jcode::FALLBACK>にデフォルトのフォールバックが保持
+されていますので、この値を代入することでオーバーライドできます。
+
+  $Jcode::FALLBACK = Jcode::FB_PERLQQ; # デフォルトのフォールバックスキーマを設定
+
+=back
+
+=item [@lines =] $jcode-E<gt>jfold([$width, $newline_str, $kref])
+
+$width（デフォルト：72）毎にjcode文字列内の行を折り返します。
+$widthは”半角”文字の数です。全角文字は2文字としてカウントします。
+
+$newline_str（デフォルトは"\n"）で指定された改行文字が加わります。
+折り返された全行をリストで返します。
+
+Perl 5.8.1以降は3番目の引数$krefにEUCの文字列の配列リファレンスを
+渡すことで、簡易的な行頭禁則処理（ぶら下がり）を行えます。
+
+=item $length = $jcode-E<gt>jlength();
+
+バイト長ではなく、全角文字も一文字として数えた場合の文字数を返します。
+
+=back
+
+=head2 MIME::Base64を使うメソッド
+
+下記のメソッドを使うには、L<MIME::Base64>が必要です。インストールは単純に
+
+   perl -MCPAN -e 'CPAN::Shell->install("MIME::Base64")'
+
+とします。お使いのPerlが5.6以降であるなら、L<MIME::Base64>は
+バンドルされているので、インストールの必要はありません。
+
+=over 2
+
+=item $mime_header = $j-E<gt>mime_encode([$lf, $bpl])
+
+$strをRFC1522にあるMIME-Headerに変換します。$lfを指定すると、
+行の折り返しに$lfが使われます（デフォルト：\n）。
+$bplを指定すると、折り返すバイト数に$bplが使われます（デフォルト：76；
+この数値は76以下でなければなりません）。
+
+Perl 5.8.1以降では、以下のようにしてもMIME Headerエンコードができます：
+
+  $mime_header = $j->MIME_Header;
+
+この場合C<$mime_header>の戻り値はMIME-B-encoded UTF-8になります。
+一方、C<< $j->mime_encode() >>はMIME-B-encoded ISO-2022-JPを返します。
+最近のほとんどのメーラーはどちらもサポートしています。
+
+=item $j-E<gt>mime_decode;
+
+Jcodeオブジェクトの内部文字列をMIME-Headerデコードします。Perl 5.8.1
+以降なら、以下のようにして同じことができます：
+
+  Jcode->new($str, 'MIME-Header');
+
+こちらの場合、ISO-2022-JPだけではなくUTF-8などにも対応しており、
+さらにMIME B EncodingのみならずMIME Q Encodingにも対応している
+ので、Perl 5.8.1以降であればこちらを使うべきでしょう。
+
+=back
+
+=head2 半角 ←→ 全角
+
+=over 2
+
+=item $j-E<gt>h2z([$keep_dakuten])
+
+X201カナ（半角）をX208カナ（全角）に変換します。
+$keep_dakutenに真値をセットすると、濁点をそのままにします
+(これはつまり、「カ＋゛」は「ガ」に変換されずにそのまま
+になるということです)
+
+$j->nmatchを通じてマッチした数を取得できます。
+
+=item $j-E<gt>z2h
+
+X208カナ（全角）をX201カナ（半角）に変換します。
+
+$j->nmatchを通じてマッチした数を取得できます。
+
+=back
+
+=head2 正規表現エミュレータ
+
+C<< -E<gt>m() >>とC<< -E<gt>s() >>を使うには、Perl 5.8.1以降が
+必要です。
+
+=over 2
+
+=item $j-E<gt>tr($from, $to, $opt);
+
+JcodeオブジェクトにC<tr/$from/$to/>を適用します。$fromと$toは
+EUC-JPの文字列です。Perl 5.8.1以降では、flag付きのUTF-8文字列
+も受け付けます。
+
+C<$opt>をセットすると、C<tr/$from/$to/$opt>が適用されます。C<$opt>は
+'c'、'd'あるいはそれらの組み合わせでなければなりません。
+
+$j->nmatchを通じてマッチした数を取得できます。
+
+Perl 5.8.1以降では、trの形式に誤りのあった場合に-E<gt>error_trを通じて、
+$@を取得できます。
+
+以下のメソッドはPerl 5.8.1以降でのみ利用可能です。
+
+=item $j-E<gt>s($patter, $replace, $opt);
+
+個々にC<s/$pattern/$replace/$opt>を適用します。C<$opt>は正規表現オプションと
+同じです。正規表現のオプションについてはL<perlre>を参照ください。
+
+C<< $j->tr() >>、C<< $j->s() >>はそのオブジェクト自身を返すので、
+以下のように操作を連結できます。
+
+  $j->tr("A-Z", "a-z")->s("foo", "bar");
+
+=item  [@match = ] $j-E<gt>m($pattern, $opt);
+
+C<m/$patter/$opt>を適用します。このメソッドは”オブジェクトを返さない”
+ので、C<< $j->s() >>のようにメソッドを連結できないことに注意してください。
+
+正規表現の形式に誤りのあった場合、-E<gt>error_m、-E<gt>error_sを通じて
+$@を取得できます。
+
+=back
+
+=head2 インスタンス変数
+
+もしJcodeオブジェクトのインスタンス変数にアクセスしたいなら、直接それら
+にアクセスするのではなく、アクセスメソッドを利用しましょう（これぞOOP
+です）。
+
+参考までに、Jcodeは（一般的な方法である）ハッシュリファレンスの代わりに、
+配列リファレンスを使うことで、スピードを最適化しています（実際のところ、
+アクセスメソッドを使う限りこのことを知る必要はありません； もう一度
+いいますが、これはOOPなのです）。
+
+Perl 5.8.1以降では、ハッシュリファレンスを使うように変更されました。
+これにより、Jcodeの拡張はものすごく簡単になります。
+
+=over 2
+
+=item $j-E<gt>r_str
+
+EUC文字列へのリファレンス。
+
+Perl 5.8.1以降ではUTF-8フラグの立ったUTF-8文字列へのリファレンスです。
+
+=item $j-E<gt>icode
+
+直近の操作における入力文字コード。
+
+=item $j-E<gt>nmatch
+
+マッチした数（$j->tr等を使ったとき）。
+
+=back
+
+=head1 サブルーチン
+
+=over 2
+
+=item ($code, [$nmatch]) = getcode($str)
+
+$strの文字コードを返します。返るコードは以下の通りです。
+
+ ascii   Ascii （日本語コードを含まない）
+ binary  Binary （テキストファイルではない）
+ euc     EUC-JP
+ sjis    SHIFT_JIS
+ jis     JIS (ISO-2022-JP)
+ ucs2    UCS2 (Raw Unicode)
+ utf8    UTF8
+
+スカラーコンテキストの代わりに配列コンテキストを使うと、何文字分の
+コードが見つかったのかも返します。上の方で述べたように、$strは\$str
+でも構いません。
+
+B<jcode.pl 利用者の方へ：> この関数はjcode::getcode()と100%上位互換が
+あります。――まあ、ほぼ100%；
+
+ * 戻り値が配列のとき、その順番は逆となります；
+   jcode::getcode()は$nmatchを最初に返します。
+
+ * jcode::getcode()は、EUC文字とSJIS文字の数が等しいとき、'undef'を
+   返します。 Jcode::getcode()はEUCを返します。これはJcode.pmには
+   中間がないためです。
+
+=item Jcode::convert($str, [$ocode, $icode, $opt])
+
+$strを$ocodeで指定した文字コードに変換します。$icodeも指定すると、
+入力文字列をgetcode()でチェックする代わりに、$icodeと仮定します。
+上の方で述べたように、$strは\$strでも構いません。
+
+B<jcode.pl 利用者の方へ：> この関数はjcode::convert()と100%上位互換が
+あります！
+
+=back
+
+=head1 バグ
+
+Perlが5.8.1以降の場合、JcodeはL<Encode>のラッパーとして振る舞います。
+つまり、JcodeはEncode内のバグの影響を受けます。
+
+=head1 謝辞
+
+このパッケージは、動機、デザインそしてコードの多くの点で、
+歌代 和正 <utashiro@iij.ad.jp>氏のPerl4ライブラリjcode.plに負っています。
+
+大崎 博基 <ohzaki@iod.ricoh.co.jp>氏は、開発の非常に初期の段階から
+正規表現を磨きあげる手助けをしてくれました。
+
+makamaka@donzoko.net の JEncode には、JcodeとEncodeをどう融合させれば
+いいか大変大きな啓示を受けました。また、本日本語マニュアルも寄贈して
+いただきました。
+
+そしてJcode ML <jcode5@ring.gr.jp>の皆さん。この方達なしには、
+ここまで完成しなかったことでしょう。
+
+=head1 参考
+
+L<Encode>
+
+L<http://www.iana.org/assignments/character-sets>
+
+=head1 著作権
+
+Copyright 1999-2005 Dan Kogai <dankogai@dan.co.jp>
+
+This library is free software; you can redistribute it
+and/or modify it under the same terms as Perl itself.
+
+
