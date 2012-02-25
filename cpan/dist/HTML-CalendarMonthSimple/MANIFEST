@@ -2,3 +2,4 @@ MANIFEST
 Makefile.PL
 CalendarMonthSimple.pm
 README
+test.pl
