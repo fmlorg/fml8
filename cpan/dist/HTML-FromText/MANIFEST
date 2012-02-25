@@ -1,6 +1,17 @@
-FromText.pm
-MANIFEST
+bin/text2html
+Changes
+ext/emacs-macros.el
+lib/HTML/FromText.pm
 Makefile.PL
+MANIFEST
+MANIFEST.SKIP
+META.yml			Module meta-data in YAML
 README
-TODO
-t/text2html.t
+t/01_features.t
+t/02_v2.01.t
+t/03_v2.02.t
+t/04_v2.03.t
+t/05_v2.04.t
+t/06_v2.05.t
+t/99_pod.t
+t/files/paras.txt
