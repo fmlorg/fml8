@@ -1,11 +1,144 @@
 Revision history for Perl extension Unicode::Japanese.
 
+0.47 Mon Dec 14 11:45:31 JST 2009
+    - fix, libunijp did not work on non-devel release.
+
+0.46 Fri Aug 29 16:55:29 JST 2008
+    - libunijp, erlang-support.
+    - fix, static methods are failed until creattion of an instance.
+
+0.45 Mon Jan 21 17:32:36 JST 2008
+    - Fixed enormous english error messages and documentation which were
+      grammatically incorrect or way too hard to be understood.
+    - fix, old perl compatibility (now available on perl-5.004 and later).
+    - add, utf8-imode encoding.
+    - fix, null chars were show when input is invalid sjis-imode.
+    - fix, guess ordering on xs (imode-doti-au => au-imode-doti to comform to doing on pp)
+    - fix, some doti text was guessed as au text on pp mode when it begin with au text.
+
+0.44 Fri Sep 14 14:26:22 JST 2007
+	- fix, broken emoji convert on alpha cpu.
+	- fix, t/pod.t failed before perl 5.8.0.
+
+0.43 Mon Sep 10 16:17:09 JST 2007
+	- add, jsky encoding with no ending escape.
+
+0.42 Mon Sep  3 16:39:31 JST 2007
+	- fix, broken sjis-au convert in some case.
+
+0.41 Fri Aug 31 18:11:40 JST 2007
+	- add sjis-au, sjis-au1, sjis-au2 encodings.
+	- add utf8-jsky, utf8-jsky1, utf8-jsky2 encodings.
+
+0.40_01
+        - fix, broken on perl-5.6.1.
+
+0.40 Tue Jan 16 09:54:13 JST 2007
+        - fix, pod.
+
+0.39 Fri Jan 12 18:33:54 JST 2007
+        - fix, getcode could not detect imode-pictgrams extend 61st-63rd.
+
+0.38 Tue Sep  5 14:53:19 JST 2006
+        - fix, netinet/in.h not required.
+
+0.37 Mon Jul  3 10:38:01 JST 2006
+        - fix, sparc sigbus. thx kohju ;)
+
+0.36 Tue Jun 20 19:09:43 JST 2006
+        - fix, japanese document was shown on cpan.
+
+0.35 Mon Jun 19 17:47:54 JST 2006
+        - made validate_utf8 available in XS.
+        - add, -l switch for ujconv(1).
+        - fix, au mapping broken.
+
+0.34 Thu Mar 23 17:16:32 JST 2006
+	- fix, JIS-X6226-1979 escape sequence (\e$@) on xsubs.
+
+0.33 Sat Feb  4 15:51:37 JST 2006
+	- fix,  typos in pod.
+	- add,  unijp, a short-named constructor.
+
+0.32 Fri Nov  4 12:01:37 JST 2005
+	- fix, some au/vodafone emoji mapping failure.
+
+0.31 Wed Sep 28 22:15:42 JST 2005
+	- fix, getcode of jis-kana on xs was broken.
+
+0.30 Mon Sep  5 12:53:51 JST 2005
+	- add, au emoji.
+	- rewrite mmap code on XSubs.
+	- reduce mem/cpu on huge string and most of that is ascii.
+
+0.27 Sun May 15 18:57:51 JST 2005
+	- support for x86_64 (EM64T)
+	- fix, surrogate pair was not worked
+
+0.26 Tue Feb 15 13:16:30 JST 2005
+	- fix, 0.25 was not updated on xs data.
+	- add, cp932([fa-fc]xx) map into jis.
+
+0.25 Tue Feb 15 13:00:16 JST 2005
+        - bin/ujconv and bin/ujguess added.
+	- unicode char converted into smaller CP932 code.
+
+0.24 Mon Jan 24 11:23:05 JST 2005
+        - avoid unexpected upgrade to imode2/jsky2 from imode1/jsky1.
+
+0.23 Thu Nov  4 16:16:48 JST 2004
+        - avoid illegal utf-8 sequence
+        - add mapping, U+301C (WAVE TILDE) into CP932:8160
+
+0.22 Mon May 31 18:48:42 JST 2004
+        - Bug Fix, on 5.8.4, join_csv/split_csv raise SEGV.
+
+0.21 Tue May 25 23:59:15 JST 2004
+        - Bug Fix, jis.roman escape sequence is not processed on XS code.
+
+0.20 Sun Mar  7 19:08:55 JST 2004
+        - Bug Fix, when pure-perl, make test had failed.
+	- untaint.
+
+0.19 Fri Jan 16 19:48:46 JST 2004
+	- Bug Fix, decoding empty string from jis becomes "\0".
+
+0.18 Wed Nov  6 18:54:32 JST 2002
+        - Bug Fix, Bus Error on sparc.
+
+0.17 Thu Oct 31 20:46:45 JST 2002
+	- Bug Fix, compile failure on perl-5.6.0 prior.
+        - support MSWin32 XS.
+	
+0.16 Tue Oct 29 16:25:11 JST 2002
+        - excludes c++ code, now XS is written only c.
+        
+0.15  Mon Oct 28 00:00:32 JST 2002
+        - new emoji characters. imode2(imode extended chars), jsky2(jsky
+          page 3 to 6).
+        - fix warning at used in -w environment.
+        - new method, getu().
+
+0.14  Sat Aug 31 15:30:20 JST 2002
+        - Supports in `use utf8' scope.
+        - Fix h2z's miss-conversion for "'".
+
+0.13  Wed Jul 24 01:26:53 JST 2002
+	- Fix problem which fails in compile in some environments.
+
+0.12  Mon Jul 15 15:29:16 JST 2002
+	- Fix problem which fails in compile in some environments.
+
+0.10  Tue Jul  9 18:00:52 JST 2002
+	- Fix creates duplicate copies of blib/lib under blib/script,
+	  all of which are owned by root.
+
 0.09  Mon Jul  8 16:54:01 JST 2002
-	- many fixes (included vulnerability of DoS)
-	- supports imode's extended EMOJI only with mapped charcters.
-	  (convertion among each model is not supported yet)
-	- new implementation; convertion utf8<->ucs2 on XS-mode
-	- can specify PurePerl mode when loading with 'PurePrel' keyword.
+	- Many fixes (included vulnerability of DoS)
+	- Supports imode's extended EMOJI (they only can be mapped to
+	  Unicode area. Convertion among each model is not supported yet)
+	- New XS mode implementation; convertion utf8<->ucs2.
+	- Can specify PurePerl mode when loading with 'PurePrel' keyword.
 
 0.08  Tue Jun 18 13:45:18 JST 2002
 	- Supports XS. 

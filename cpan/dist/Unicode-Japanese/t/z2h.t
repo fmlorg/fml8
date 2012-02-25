@@ -1,52 +1,72 @@
 
+use strict;
 use Test;
+BEGIN { plan tests => 8*2; }
 
 use Unicode::Japanese;
+use lib 't';
+require 'esc.pl';
 
-BEGIN { plan tests => 8 }
+#Unicode::Japanese->new();
+#$Unicode::Japanese::xs_loaderror and print STDERR "$Unicode::Japanese::xs_loaderror\n";
 
+# -----------------------------------------------------------------------------
+# h2z convert
+# 
 
-## h2z/z2h convert
+my $string   = Unicode::Japanese->new();
+my $ppstring = Unicode::Japanese::PurePerl->new();
+my ($set,$expected);
 
 # h2z num
-$string = new Unicode::Japanese "0129";
-$string->h2z;
-ok($string->get, "\xef\xbc\x90\xef\xbc\x91\xef\xbc\x92\xef\xbc\x99");
+$set = "0129";
+$expected = "\xef\xbc\x90\xef\xbc\x91\xef\xbc\x92\xef\xbc\x99";
+ok($string->set($set)->h2z()->utf8(),$expected);
+ok($ppstring->set($set)->h2z()->utf8(),$expected);
 
 # h2z alpha
-$string = new Unicode::Japanese "abzABZ";
-$string->h2z;
-ok($string->get, "\xef\xbd\x81\xef\xbd\x82\xef\xbd\x9a\xef\xbc\xa1\xef\xbc\xa2\xef\xbc\xba");
+$set = "abzABZ";
+$expected = "\xef\xbd\x81\xef\xbd\x82\xef\xbd\x9a\xef\xbc\xa1\xef\xbc\xa2\xef\xbc\xba";
+ok($string->set($set)->h2z()->utf8(),$expected);
+ok($ppstring->set($set)->h2z()->utf8(),$expected);
 
 # h2z symbol
-$string = new Unicode::Japanese "!#^*(-+~{]>?";
-$string->h2z;
-ok($string->get, "\xef\xbc\x81\xef\xbc\x83\xef\xbc\xbe\xef\xbc\x8a\xef\xbc\x88\xe2\x88\x92\xef\xbc\x8b\xe3\x80\x9c\xef\xbd\x9b\xef\xbc\xbd\xef\xbc\x9e\xef\xbc\x9f");
+$set = "!#^*(-+~{]>?_";
+$expected = "\xef\xbc\x81\xef\xbc\x83\xef\xbc\xbe\xef\xbc\x8a\xef\xbc\x88\xef\xbc\x8d\xef\xbc\x8b\xef\xbd\x9e\xef\xbd\x9b\xef\xbc\xbd\xef\xbc\x9e\xef\xbc\x9f\xef\xbc\xbf";
+ok($string->set($set)->h2z()->utf8(),$expected);
+ok($ppstring->set($set)->h2z()->utf8(),$expected);
 
-# h2z kana
-$string = new Unicode::Japanese "\xef\xbd\xa1\xef\xbd\xab\xe3\x81\x89\xef\xbd\xb3\xef\xbe\x9e";
-$string->h2z;
-ok($string->get, "\xe3\x80\x82\xe3\x82\xa9\xe3\x81\x89\xe3\x83\xb4");
+# h2z kana / KUTEN KATA-SMALL-O HIRA-SMALL-O KANA-VU
+$set = "\xef\xbd\xa1\xef\xbd\xab\xe3\x81\x89\xef\xbd\xb3\xef\xbe\x9e";
+$expected = "\xe3\x80\x82\xe3\x82\xa9\xe3\x81\x89\xe3\x83\xb4";
+ok($string->set($set)->h2z()->utf8(),$expected);
+ok($ppstring->set($set)->h2z()->utf8(),$expected);
+
+# -----------------------------------------------------------------------------
+# z2h convert
+# 
 
 # z2h num
-$string = new Unicode::Japanese "\xef\xbc\x90\xef\xbc\x91\xef\xbc\x92\xef\xbc\x99";
-$string->z2h;
-ok($string->get, "0129");
+$set = "\xef\xbc\x90\xef\xbc\x91\xef\xbc\x92\xef\xbc\x99";
+$expected = "0129";
+ok($string->set($set)->z2h()->utf8(),$expected);
+ok($ppstring->set($set)->z2h()->utf8(),$expected);
 
 # z2h alpha
-$string = new Unicode::Japanese "\xef\xbd\x81\xef\xbd\x82\xef\xbd\x9a\xef\xbc\xa1\xef\xbc\xa2\xef\xbc\xba";
-$string->z2h;
-ok($string->get, "abzABZ");
+$set = "\xef\xbd\x81\xef\xbd\x82\xef\xbd\x9a\xef\xbc\xa1\xef\xbc\xa2\xef\xbc\xba";
+$expected = "abzABZ";
+ok($string->set($set)->z2h()->utf8(),$expected);
+ok($ppstring->set($set)->z2h()->utf8(),$expected);
 
 # z2h symbol
-$string = new Unicode::Japanese "\xef\xbc\x81\xef\xbc\x83\xef\xbc\xbe\xef\xbc\x8a\xef\xbc\x88\xe2\x88\x92\xef\xbc\x8b\xe3\x80\x9c\xef\xbd\x9b\xef\xbc\xbd\xef\xbc\x9e\xef\xbc\x9f";
-$string->z2h;
-ok($string->get, "!#^*(-+~{]>?");
+$set = "\xef\xbc\x81\xef\xbc\x83\xef\xbc\xbe\xef\xbc\x8a\xef\xbc\x88\xef\xbc\x8d\xef\xbc\x8b\xef\xbd\x9e\xef\xbd\x9b\xef\xbc\xbd\xef\xbc\x9e\xef\xbc\x9f";
+$expected = "!#^*(-+~{]>?";
+ok($string->set($set)->z2h()->utf8(),$expected);
+ok($ppstring->set($set)->z2h()->utf8(),$expected);
 
-# z2h kana
-$string = new Unicode::Japanese "\xe3\x80\x82\xe3\x82\xa9\xe3\x81\x89\xe3\x83\xb4";
-$string->z2h;
-ok($string->get, "\xef\xbd\xa1\xef\xbd\xab\xe3\x81\x89\xef\xbd\xb3\xef\xbe\x9e");
-
-
+# z2h kana, HIRAGANA LETTER SMALL O is kept.
+$set = "\xe3\x80\x82\xe3\x82\xa9\xe3\x81\x89\xe3\x83\xb4";
+$expected = "\xef\xbd\xa1\xef\xbd\xab\xe3\x81\x89\xef\xbd\xb3\xef\xbe\x9e";
+ok($string->set($set)->z2h()->utf8(),$expected);
+ok($ppstring->set($set)->z2h()->utf8(),$expected);
 

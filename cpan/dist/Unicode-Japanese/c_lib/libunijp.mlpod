@@ -1,0 +1,109 @@
+
+=head1 NAME
+
+Unicode::Japanese - Convert encoding of japanese text
+J<< ja; Unicode::Japanese::JA - 日本語文字コード変換 >>
+
+=head1 SYNOPSIS
+
+ #include "unijp.h"
+
+ unijp_t* uj = uj_new(str, str_len, ujc_auto);
+ uj_uint8* utf8  = uj_to_utf8(uj);
+ uj_uint8* sjis  = uj_to_sjis(uj);
+ uj_uint8* eucjp = uj_to_eucjp(uj);
+ uj_uint8* jis   = uj_to_jis(uj);
+ free(utf8);
+ free(sjis);
+ free(eucjp);
+ free(jis);
+ uj_delete(uj);
+
+ uj_charcode_t code = uj_getcode(str, str_len);
+ printf("charset is %s\n", uj_charcode_str(code));
+
+=head1 SUPPORTED ENCODINGS
+J<< ja; サポートされているエンコーディング >>
+
+ +---------------+----+-----+-------+
+ |encoding       | in | out | guess |
+ +---------------+----+-----+-------+
+ |ujc_auto       : OK : --  | ----- |
+ +---------------+----+-----+-------+
+ |ujc_utf8       : OK : OK  | OK    |
+ |ucs2           : OK : OK  | ----- |
+ |utf16          : OK : OK  | OK(#) |
+ +---------------+----+-----+-------+
+ |ujc_sjis       : OK : OK  | OK    |
+ |ujc_eucjp      : OK : OK  | OK    |
+ |ujc_jis        : OK : OK  | OK    |
+ |ujc_ascii      : OK : --  | OK    |
+ |ujc_binary     : OK : OK  | ----- |
+ |ujc_undefined  : -- : --  | (OK)  |
+ +---------------+----+-----+-------+
+
+=head1 BUGS
+
+Please report bugs and requests to C<bug-unicode-japanese at rt.cpan.org> or
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Unicode-Japanese>. If you
+report them to the web interface, any progress to your report will be
+automatically sent back to you.
+J<< ja;
+バグや要望は C<bug-unicode-japanese at rt.cpan.org> 宛に
+報告してください. 若しくは
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Unicode-Japanese>.
+にある web インターフェースからでもかまいません.
+そこから私に通知され, そして私が変更を行うことで報告頂いたバグの進捗は
+自動的にあなたに伝わります.
+>>
+
+=head1 SUPPORT
+
+You can find documentation for this module with the perldoc command.
+J<< ja;
+このモジュールのドキュメントは man コマンドで見ることが出来ます.
+>>
+
+    man libunijp
+
+You can find more information at:
+J<< ja;
+また, 以下の場所でも見ることが出来ます:
+>>
+
+
+=over 4
+
+=item * AnnoCPAN: Annotated CPAN documentation
+
+L<http://annocpan.org/dist/Unicode-Japanese>
+
+=item * CPAN Ratings
+
+L<http://cpanratings.perl.org/d/Unicode-Japanese>
+
+=item * RT: CPAN's request tracker
+
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Unicode-Japanese>
+
+=item * Search CPAN
+
+L<http://search.cpan.org/dist/Unicode-Japanese>
+
+=back
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2001-2008
+SANO Taku (SAWATARI Mikage) and YAMASHINA Hio,
+all rights reserved.
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+J<< ja;
+このプログラムはフリーソフトウェアです。あなたは Perl と同じ
+ライセンスの 元で再配布及び変更を行うことが出来ます.
+>>
+
+=cut
+

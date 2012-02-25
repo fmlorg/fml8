@@ -1,20 +1,34 @@
 Changes
-Japanese.pm           Unicode::Japanese パッケージ
-Makefile.PL
 MANIFEST
 MANIFEST.noxs
+Makefile.PL
+README
+SIGNATURE             module signature; you can verify the module with cpansign
+bin/ujconv            iconv-like tool with Unicode::Japanese
+bin/ujguess           tool for charset detection
+inc/ExtUtils/MY_Metafile.pm
+lib/Unicode/Japanese.mlpod        Unicode::Japanese multilingual pod
+lib/Unicode/Japanese.pm           Unicode::Japanese perl module
+lib/Unicode/Japanese/JA.pod       Unicode::Japanese pod in Japanese.
+t/00-load.t
 t/allchar_utf8.pl
 t/base.t
 t/emoji.t
+t/esc.pl              method that escapes control characters (like quotemeta)
 t/fromutf8.t
+t/getcode.t
 t/hirakata.t
 t/illlet.t
-t/toutf8.t
-t/util.t
-t/z2h.t
-t/getcode.t
+t/jis.t
 t/outrange.t
+t/pod-coverage.t
+t/pod.t
 t/random.pl
 t/random_redo.pl
+t/toutf8.t
 t/ucs2_utf8.pl
+t/utf16.t
+t/utf8flag.t
+t/util.t
 t/verify_sjis_ucs2.pl
+t/z2h.t

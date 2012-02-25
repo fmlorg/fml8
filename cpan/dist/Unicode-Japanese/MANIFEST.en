@@ -1,0 +1,68 @@
+Changes
+Japanese.h            forward declarations for XS-Unicode::Japanese
+Japanese.xs           XS declarations for Unicode::Japanese
+MANIFEST              MANIFEST in Japanese
+MANIFEST.en           MANIFEST in English
+MANIFEST.noxs
+META.yml                                 Module meta-data (added by MakeMaker)
+Makefile.PL
+README
+SIGNATURE             module signature; you can verify the module with cpansign
+bin/ujconv            iconv-like tool with Unicode::Japanese
+bin/ujguess           tool for charset detection
+conv.c                sjis<=>utf8 conversion
+eucjp.c               sjis<=>eucjp conversion
+getcode.c             getcode method
+getcode.h
+getcode_map.c         state transition disgram table for getcode
+hints/freebsd.pl      hints file (FreeBSD)
+hints/linux.pl        hints file (Linux)
+hints/solaris.pl      hitns file (Solaris 8 and later)
+hints/sunos.pl        hints file (SunOS, Solaris 2.6 and prior)
+inc/ExtUtils/MY_Metafile.pm
+jis.c                 sjis<=>jis conversion
+lib/Unicode/Japanese.mlpod        Unicode::Japanese multilingual pod
+lib/Unicode/Japanese.pm           Unicode::Japanese perl module
+lib/Unicode/Japanese/JA.pod       Unicode::Japanese pod in Japanese.
+memmap_common.c       mmapping of mapping table
+memmap_unix.c         mmap in UNIX
+memmap_win32.c        mmap in Win32
+sjis.c                validation table for sjis
+sjis.h                forward decls for sjis validator
+sjis_doti.c           sjis(dot-i)<=>utf8 conversion
+sjis_imode1.c         sjis(i-mode1)<=>utf8 conversion
+sjis_imode2.c         sjis(i-mode2)<=>utf8 conversion
+sjis_jsky1.c          sjis(j-sky1)<=>utf8 conversion
+sjis_jsky2.c          sjis(j-sky2)<=>utf8 conversion
+str.h                 SV* manipulator class
+t/0.loadxs.t
+t/00-load.t
+t/allchar_utf8.pl
+t/base.t
+t/emoji.t
+t/esc.pl              method that escapes control characters (like quotemeta)
+t/fromutf8.t
+t/getcode.t
+t/hirakata.t
+t/illegal.t
+t/illlet.t
+t/jis.t
+t/outrange.t
+t/pod-coverage.t
+t/pod.t
+t/random.pl
+t/random_redo.pl
+t/toutf8.t
+t/ucs2_utf8.pl
+t/utf16.t
+t/utf8flag.t
+t/util.t
+t/verify_sjis_ucs2.pl
+t/z2h.t
+ucs2_utf8.c
+utf16.c
+utf8.c
+win32/Japanese.rc
+win32/resource.h
+wordsize.c
+xs_test.c             compilation test for xs.

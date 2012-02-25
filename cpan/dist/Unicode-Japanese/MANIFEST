@@ -1,39 +1,159 @@
+bin/ujconv			iconv-like tool with Unicode::Japanese
+bin/ujguess			Unicode::Japanese による文字コード判定ツール
+c_lib/alloc.c
+c_lib/any_to_utf8.c
+c_lib/autogen.pl
+c_lib/charcode.c
+c_lib/chk_sjis.c
+c_lib/conv.c
+c_lib/eucjp.c
+c_lib/getcode.c
+c_lib/getcode_map.c
+c_lib/jis.c
+c_lib/libunijp.mlpod
+c_lib/Makefile
+c_lib/patchlevel.h
+c_lib/sjis.c
+c_lib/t/00_load.c
+c_lib/t/00_load.t
+c_lib/t/01_new.c
+c_lib/t/01_new.t
+c_lib/t/02_utf8.c
+c_lib/t/02_utf8.t
+c_lib/t/03_sjis.c
+c_lib/t/03_sjis.t
+c_lib/t/04_eucjp.c
+c_lib/t/04_eucjp.t
+c_lib/t/05_jis.c
+c_lib/t/05_jis.t
+c_lib/t/06_ucs2.c
+c_lib/t/06_ucs2.t
+c_lib/t/07_utf16.c
+c_lib/t/07_utf16.t
+c_lib/t/08_ucs4.c
+c_lib/t/08_ucs4.t
+c_lib/t/Makefile
+c_lib/table_ea2u1.c
+c_lib/table_ea2u1s.c
+c_lib/table_ea2u2.c
+c_lib/table_ea2u2s.c
+c_lib/table_ed2u.c
+c_lib/table_ei2u1.c
+c_lib/table_ei2u2.c
+c_lib/table_ej2u1.c
+c_lib/table_ej2u2.c
+c_lib/table_eu2a1.c
+c_lib/table_eu2a1s.c
+c_lib/table_eu2a2.c
+c_lib/table_eu2a2s.c
+c_lib/table_eu2d.c
+c_lib/table_eu2i1.c
+c_lib/table_eu2i2.c
+c_lib/table_eu2j1.c
+c_lib/table_eu2j2.c
+c_lib/table_s2u.c
+c_lib/table_u2s.c
+c_lib/ucs2.c
+c_lib/ucs4.c
+c_lib/ujconv.c
+c_lib/ujguess.c
+c_lib/unijp.c
+c_lib/unijp.h
+c_lib/unijp_build.h
+c_lib/unijp_int.h
+c_lib/unijp_table.h
+c_lib/unijp_types.h
+c_lib/unijp_version.h
+c_lib/utf16.c
+c_lib/utf8.c
+c_lib/utf8_to_any.c
+c_lib/xs_compat.c
+c_lib/xs_compat.h
 Changes
-Japanese/u2s-s2u.dat  sjis<=>utf8変換テーブル
-Japanese/emoji.dat    i-mode/j-sky/dot-i<=>utf8変換テーブル
-Japanese.pm           Unicode::Japanese パッケージ
-Japanese.xs           Unicode::Japanese XS宣言
-Japanese.h            XS-Unicode::Japanese の各種前方宣言
-Makefile.PL
-MANIFEST
-MANIFEST.noxs
-conv.cpp              sjis<=>utf8 変換コード
-eucjp.cpp             sjis<=>eucjp 変換コード
-getcode.cpp           getcode
+conv.c				sjis<=>utf8 変換コード
+erlang/decode_term.c
+erlang/Makefile
+erlang/test1.erl
+erlang/unijp.erl
+erlang/unijp.pod
+erlang/unijp_driver.c
+eucjp.c				sjis<=>eucjp 変換コード
+getcode.c			getcode
 getcode.h
-getcode_map.cpp       getcode用状態遷移テーブル
-jis.cpp               sjis<=>jis 変換コード
-memmap.cpp            データファイルのメモリマップコード
-sjis.cpp              sjis有効判定テーブル
-sjis.h                sjis有効判定テーブル 前方宣言
-sjis_doti.cpp         sjis(dot-i)<=>utf8 変換コード
-sjis_imode.cpp        sjis(i-mode)<=>utf8 変換コード
-sjis_jsky.cpp         sjis(j-sky)<=>utf8 変換コード
-str.h                 SV* 操作用クラス
-ucs2_utf8.cpp
+getcode_map.c			getcode用状態遷移テーブル
+hints/freebsd.pl		hints ファイル (FreeBSD)
+hints/linux.pl			hints ファイル (Linux)
+hints/MSWin32.pl		hints ファイル (MSWin32)
+hints/solaris.pl		hitns ファイル (Solaris 8 以降)
+hints/sunos.pl			hints ファイル (SunOS 及び Solaris 2.6 以前)
+inc/ExtUtils/MY_Metafile.pm
+Japanese.h			XS-Unicode::Japanese の各種前方宣言
+Japanese.xs			Unicode::Japanese XS宣言
+jis.c				sjis<=>jis 変換コード
+lib/Unicode/Japanese.mlpod	Unicode::Japanese 多言語POD
+lib/Unicode/Japanese.pm		Unicode::Japanese パッケージ
+lib/Unicode/Japanese/JA.pod	Unicode::Japanese 日本語ドキュメント
+Makefile.PL
+MANIFEST			MANIFEST in Japanese
+MANIFEST.en			MANIFEST in English
+MANIFEST.noxs
+memmap_common.c			データファイルの振り分け
+memmap_unix.c			データファイルのメモリマップコード(UNIX)
+memmap_win32.c			データファイルのメモリマップコード(Win32)
+META.yml			Module meta-data (added by MakeMaker)
+README
+SIGNATURE			module signature; you can verify the module with cpansign
+sjis.c				sjis有効判定テーブル
+sjis.h				sjis有効判定テーブル 前方宣言
+sjis_doti.c			sjis(dot-i)<=>utf8 変換コード
+sjis_imode1.c			sjis(i-mode1)<=>utf8 変換コード
+sjis_imode2.c			sjis(i-mode2)<=>utf8 変換コード
+sjis_jsky1.c			sjis(j-sky1)<=>utf8 変換コード
+sjis_jsky2.c			sjis(j-sky2)<=>utf8 変換コード
+str.h				SV* 操作用クラス
+t/0.loadxs.t
+t/00-load.t
+t/allchar_eucjp_sjis.t
+t/allchar_sjis_eucjp.t
+t/allchar_ucs4.t
 t/allchar_utf8.pl
 t/base.t
+t/emoji-imode-utf8.t
+t/emoji-jsky-chopped.t
+t/emoji-jsky-utf8.t
 t/emoji.t
+t/esc.pl			制御文字をエスケープする関数. t/*.t 用.
 t/fromutf8.t
-t/hirakata.t
-t/illlet.t
-t/toutf8.t
-t/util.t
-t/z2h.t
 t/getcode.t
+t/hirakata.t
+t/illegal.t
+t/illlet.t
+t/jis.t
 t/outrange.t
+t/pod-coverage.t
+t/pod.t
 t/random.pl
 t/random_redo.pl
+t/sjis_extras.t
+t/toutf8.t
 t/ucs2_utf8.pl
+t/utf16.t
+t/utf8flag.t
+t/util.t
+t/v031_getcode_jiskana.t
+t/v038_guess_imode2.t
+t/v041_sjisau.t
+t/v045_getcode_doti.t
+t/v045_imodexs.t
+t/v046_earlycall.t
 t/verify_sjis_ucs2.pl
-xs_test.c             xsコンパイルテスト用コード
+t/wavedash.t
+t/z2h.t
+ucs2_utf8.c
+ucs4.c
+utf16.c
+utf8.c
+win32/Japanese.rc
+win32/resource.h
+wordsize.c
+xs_test.c			xsコンパイルテスト用コード

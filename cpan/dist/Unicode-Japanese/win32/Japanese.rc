@@ -1,0 +1,19 @@
+/* ----------------------------------------------------------------------------
+ * Japanese.rc
+ *   Unicode::Japanese リソーススクリプト
+ * ----------------------------------------------------------------------------
+ * Mastering programed by YAMASHINA Hio
+ *
+ * Copyright 2003 YMIRLINK,Inc.
+ * ----------------------------------------------------------------------------
+ * $Id$
+ * ----------------------------------------------------------------------------
+ */
+
+#include <windows.h>
+#include "resource.h"
+
+LANGUAGE LANG_INVARIANT,0 
+
+RC_U2STABLE RCDATA "Japanese\u2s-s2u.dat"
+RC_EMJTABLE RCDATA Japanese\emoji.dat

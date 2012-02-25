@@ -1,5 +1,5 @@
 
-/* $Id: Japanese.xs,v 1.9 2002/06/30 23:15:45 hio Exp $ */
+/* $Id: Japanese.xs 41491 2008-02-15 07:21:13Z hio $ */
 
 #include "Japanese.h"
 
@@ -7,6 +7,7 @@ EXTERN_C SV* test(SV* str);
 
 
 MODULE = Unicode::Japanese		PACKAGE = Unicode::Japanese
+PROTOTYPES: DISABLE
 
 #========================#
 # SJIS <=> utf8          #
@@ -37,6 +38,28 @@ getcode(this_,str)
     SV* str;
 CODE:
     RETVAL = xs_getcode(str);
+OUTPUT:
+    RETVAL
+
+#========================#
+# getcode_list           #
+#========================#
+
+void
+getcode_list(this_,str)
+    SV* str;
+CODE:
+    XSRETURN(xs_getcode_list(str));
+
+#=======================#
+# utf-8 validation      #
+#=======================#
+
+SV*
+_validate_utf8(this_,str)
+    SV* str;
+CODE:
+    RETVAL = xs_validate_utf8(str);
 OUTPUT:
     RETVAL
 
@@ -86,18 +109,34 @@ OUTPUT:
 #========================#
 
 SV*
-_si2u(this_,str)
+_si2u1(this_,str)
     SV* str;
 CODE:
-    RETVAL = xs_sjis_imode_utf8(str);
+    RETVAL = xs_sjis_imode1_utf8(str);
 OUTPUT:
     RETVAL
 
 SV*
-_u2si(this_,str)
+_si2u2(this_,str)
     SV* str;
 CODE:
-    RETVAL = xs_utf8_sjis_imode(str);
+    RETVAL = xs_sjis_imode2_utf8(str);
+OUTPUT:
+    RETVAL
+
+SV*
+_u2si1(this_,str)
+    SV* str;
+CODE:
+    RETVAL = xs_utf8_sjis_imode1(str);
+OUTPUT:
+    RETVAL
+
+SV*
+_u2si2(this_,str)
+    SV* str;
+CODE:
+    RETVAL = xs_utf8_sjis_imode2(str);
 OUTPUT:
     RETVAL
 
@@ -106,18 +145,34 @@ OUTPUT:
 #========================#
 
 SV*
-_sj2u(this_,str)
+_sj2u1(this_,str)
     SV* str;
 CODE:
-    RETVAL = xs_sjis_jsky_utf8(str);
+    RETVAL = xs_sjis_jsky1_utf8(str);
 OUTPUT:
     RETVAL
 
 SV*
-_u2sj(this_,str)
+_sj2u2(this_,str)
     SV* str;
 CODE:
-    RETVAL = xs_utf8_sjis_jsky(str);
+    RETVAL = xs_sjis_jsky2_utf8(str);
+OUTPUT:
+    RETVAL
+
+SV*
+_u2sj1(this_,str)
+    SV* str;
+CODE:
+    RETVAL = xs_utf8_sjis_jsky1(str);
+OUTPUT:
+    RETVAL
+
+SV*
+_u2sj2(this_,str)
+    SV* str;
+CODE:
+    RETVAL = xs_utf8_sjis_jsky2(str);
 OUTPUT:
     RETVAL
 
@@ -158,6 +213,46 @@ _utf8_ucs2(this_,str)
     SV* str;
 CODE:
     RETVAL = xs_utf8_ucs2(str);
+OUTPUT:
+    RETVAL
+
+#========================#
+# ucs4 <=> utf8          #
+#========================#
+
+SV*
+_ucs4_utf8(this_,str)
+    SV* str;
+CODE:
+    RETVAL = xs_ucs4_utf8(str);
+OUTPUT:
+    RETVAL
+
+SV*
+_utf8_ucs4(this_,str)
+    SV* str;
+CODE:
+    RETVAL = xs_utf8_ucs4(str);
+OUTPUT:
+    RETVAL
+
+#========================#
+# utf-16 <=> utf-8       #
+#========================#
+
+SV*
+_utf16_utf8(this_,str)
+    SV* str;
+CODE:
+    RETVAL = xs_utf16_utf8(str);
+OUTPUT:
+    RETVAL
+
+SV*
+_utf8_utf16(this_,str)
+    SV* str;
+CODE:
+    RETVAL = xs_utf8_utf16(str);
 OUTPUT:
     RETVAL
 

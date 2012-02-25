@@ -6,6 +6,7 @@ use Unicode::Japanese;
 BEGIN { plan tests => 6 }
 
 ## check from utf8 convert
+## U+2665 BLACK HEART SUIT (in Miscellaneous Symbols) into some charsets.
 
 my $string;
 

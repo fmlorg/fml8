@@ -1,0 +1,45 @@
+
+=encoding utf-8
+
+=head1 NAME
+
+unijp - Unicode::Japanese for erlang
+
+=head1 SYNOPSIS
+
+ 1> unijp:start().
+ #Port<0.99>
+ 2> unijp:conv(utf8, ucs4, "text").
+ [0,0,0,116,0,0,0,101,0,0,0,120,0,0,0,116]
+ 3> unijp:conv(ucs4, utf8, [0,0,0,116,0,0,0,101,0,0,0,120,0,0,0,116]).
+ "text"
+
+
+=head1 DESCRIPTION
+
+Unicode::Japanese perl モジュールのerlang版.
+
+UniJPのc言語バインディングであるlibunijpを利用.
+
+=head1 FUNCTIONS
+
+=head2 conv/3
+
+ conv(InCode, OutCode, Text) -> Result
+ InCode  = atom() | string()
+ OutCode = atom() | string()
+ Text    = iolist() | binary()
+ Result  = string()
+
+=head2 version_str/0
+
+=head2 version_tuple/0
+
+ version_str() -> string()
+ version_str() -> {Major, Minor, Devel}
+ Major = int()
+ Minor = int()
+ Devel = int()
+
+=cut
+
