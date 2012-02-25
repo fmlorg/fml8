@@ -1,0 +1,54 @@
+2.05
+
+  - blockparas uses <p> as its inner tag, instead of <div>
+  - blockparas and blockcode are consolidated when they are found in
+    groups.  blocklines are left out because they're so literal.
+
+2.04
+
+  - Fixed bug when run under 5.8.1 and always-random hashes.
+  - Emacs macros enhanced.
+
+2.03
+
+  - Working toward standards compliance.
+    - blockcode now uses pre tags.
+    - blockparas and blockquotes use div tags.
+  - Remove dependency on Regexp::Common.
+  - XHTML 1.1 valid output.
+  - CSS Class names for every option type.
+  - Fixed a but in tables where duplicate breakpoints were being
+    entered (reported by Dan Wright).
+  - Fixed but in tables where breakpoints of two spaces were ignored.
+  - text2html command line utility ensures output ends in newline.
+  - Add example emacs macros for modifying regions with text2html.
+
+2.02
+
+  - Added command line utility called 'text2html'.  It will be
+    installed when this version of HTML::FromText is built and
+    installed.
+  - Fixed but in blockcode, wasn't preserving spaces.
+
+2.01
+
+  - Fixed URLS, they were broken because Regexp::Common::URI was much
+    too restrictive (reported by Wim Kerkhoff).
+  - Fixed bullets. Mixing '*' and '-' were previously allowed and caused
+    problems. They can't be mixed within paragraphs that are bulleted
+    lists any longer (reported by Wim Kerkhoff).
+  - Fixed bold and underline, they were broken and matching, but not
+    substituting, across line boundaries. They no longer match across
+    line boundaries (reported by Wim Kerkhoff).
+  - Fixed bold and underline, they were too greedy.  Now they require
+    some non-word character before and after them (or the beginning or
+    ending of a line). (reported by Wim Kerkhoff).
+  - Nasty bug in lists where a nested list can cause an infinite loop
+    when bullets don't line up quite right vertically (reported by Wim
+    Kerkhoff).
+
+2.00
+
+  - Initial release as complete rewrite of version 1.005 by GDR.
+  - Inadvertently created a new feature, nested bulleted and
+    numbered lists.

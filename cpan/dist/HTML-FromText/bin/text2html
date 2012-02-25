@@ -1,0 +1,89 @@
+#!/usr/bin/perl
+# -*- cperl -*-
+use HTML::FromText;
+
+my %options, @files;
+
+my $options_done = 0;
+while ( $_ = shift @ARGV ) {
+    if ( /^--\w/ && ! $options_done ) {
+        s/^--//;
+        my ($option, $val) = split /=/, $_, 2;
+        $val = 1 unless defined $val;
+        $options{$option} = $val;
+    } elsif ( /^--$/ ) {
+        $options_done = 1;
+    } else {
+        push @files, $_;
+    }
+}
+
+@ARGV = @files;
+
+my $html = text2html
+  do {undef $/; <>},
+  %options;
+
+$html .= "\n" unless $html =~ /\n$/;
+
+print $html;
+
+exit 0;
+
+__END__
+
+=head1 NAME
+
+B<text2html> - Convert plain text to HTML
+
+=head1 SYNOPSIS
+
+B<text2html [options...]> [file ...]
+
+=head1 DESCRIPTION
+
+The C<text2html> utility converts text to HTML. Text can come from
+standard input or files listed on the command line.
+
+The available options are outlined in L<HTML::FromText>. The option
+syntax is slightly different. Options are prefixed with two dashes
+(C<-->) and may have an option value following an equals sign (C<=>).
+The default value is on (<1>).
+
+=head1 EXAMPLES
+
+Convert the C<README> file using C<paras> and C<blockcode>.
+
+  text2html --paras --blockcode README
+
+Convert a file called C<--stupid-name>.
+
+  text2html --paras -- --stupid-name
+
+Convert text on standard input.
+
+  text2html --paras --urls --email --bold --underline
+
+Convert text on standard input but turn off C<metachars>.
+
+  text2html --metachars=0 --lines
+
+=head1 DIAGNOSTICS
+
+The C<text2html> utility exits 0 on success, and >0 if an error occurs.
+
+=head1 SEE ALSO
+
+L<perl(1)>, L<HTML::FromText(3)>.
+
+=head1 AUTHOR
+
+Casey West <F<casey@geeknest.com>>.
+
+=head1 COPYRIGHT
+
+  Copyright (c) 2003 Casey West. All rights reserved. This module is
+  free software; you can redistribute it and/or modify it under the same
+  terms as Perl itself.
+
+=cut
