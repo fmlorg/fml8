@@ -48,6 +48,13 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2012/02/25
+
+   update CPAN modules successively:
+	Unicode-Japanese         to 0.47.
+	HTML-FromText            to 2.05.
+	HTML-CalendarMonthSimple to 1.25.
+
 2012/02/19
 
    update CPAN modules successively:
@@ -10604,4 +10611,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.327 2012/02/18 10:01:34 fukachan Exp $
+$FML: CHANGES.txt,v 1.328 2012/02/19 12:17:59 fukachan Exp $

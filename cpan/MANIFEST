@@ -9,8 +9,8 @@ Crypt-UnixCrypt			1.0		perl itself
 File-Spec			0.85_03		perl itself
 File-MMagic			1.27		bsd + apache ?
 
-HTML-CalendarMonthSimple	1.02		? (freesoftware, unlimited)
-HTML-FromText			1.005		perl itself
+HTML-CalendarMonthSimple	1.25		? (freesoftware, unlimited)
+HTML-FromText			2.05		perl itself
 
 Jcode				2.07		perl itself
 
@@ -25,6 +25,6 @@ Socket6				0.23		WIDE (BSD flabour)
 
 Time-modules			2011.0517	unknown (your own risk)
 
-Unicode-Japanese		0.09		perl itself
+Unicode-Japanese		0.47		perl itself
 
-$FML: MANIFEST,v 1.17 2012/02/18 10:01:35 fukachan Exp $
+$FML: MANIFEST,v 1.18 2012/02/19 12:17:59 fukachan Exp $
