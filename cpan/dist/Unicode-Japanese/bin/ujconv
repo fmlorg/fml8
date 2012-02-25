@@ -1,0 +1,244 @@
+#!/usr/local/ymir/perl/bin/perl -w
+## ----------------------------------------------------------------------------
+#  ujconv
+# -----------------------------------------------------------------------------
+# Mastering programmed by YAMASHINA Hio
+#
+# Copyright 2005 YAMASHINA Hio
+# -----------------------------------------------------------------------------
+# $Id$
+# -----------------------------------------------------------------------------
+package Unicode::Japanese::UJConv;
+use strict;
+use Unicode::Japanese;
+our $VERSION = '0.02';
+
+if( !caller )
+{
+  __PACKAGE__->do_work(@ARGV);
+}
+
+# -----------------------------------------------------------------------------
+# main.
+#
+sub do_work
+{
+  my $pkg = shift;
+  
+  my $from = 'auto';
+  my $to = 'auto';
+  my $string;
+  my @files;
+  
+  while(@_)
+  {
+    my $key = shift;
+    if( $key !~ /^-/ )
+    {
+      push(@files,$key);
+      next;
+    }elsif( $key eq '--' )
+    {
+      push(@files,@_);
+      last;
+    }
+    if( $key eq '-f' )
+    {
+      $from = shift;
+      next;
+    }elsif( $key eq '-t' )
+    {
+      $to = shift;
+      next;
+    }elsif( $key eq '-s' )
+    {
+      my $value = shift;
+      push(@files,[$key,$value]);
+      next;
+    }elsif( $key =~ /^(-h|--help)$/ )
+    {
+      print_usage();
+      return 1;
+    }elsif( $key =~ /^(-V|--version)$/ )
+    {
+      print_version();
+      return 1;
+    }elsif( $key =~ /^(-l|--list)$/ )
+    {
+      print_list();
+      return 1;
+    }else
+    {
+      die "unkown argument [$key]";
+    }
+  }
+  
+  if( $to eq 'auto' )
+  {
+    my $lang = $ENV{LANG};
+    if( $lang && $lang=~/\.(.*)/ )
+    {
+      my $code = $1;
+      if( $code=~/^(ujis|jis|iso-2022-jp)$/i )
+      {
+        $to = 'jis';
+      }elsif( $code=~/^(ujis|eucJP)$/i )
+      {
+        $to = 'euc';
+      }elsif( $code=~/^(sjis|shift_?jis)$/i )
+      {
+        $to = 'sjis';
+      }elsif( $code=~/^(utf-?8)$/i )
+      {
+        $to = 'utf8';
+      }
+    }
+    if( $to eq 'auto' )
+    {
+      $to = $^O eq 'MSWin32' ? 'sjis' : 'euc';
+    }
+  }
+  
+  local($/) = undef;
+  if( !@files )
+  {
+    my $text = <STDIN>;
+    print Unicode::Japanese->new($text,$from)->conv($to);
+  }
+  foreach my $file (@files)
+  {
+    my $text;
+    if( ref($file) )
+    {
+      $text = $file->[1];
+    }elsif( $file eq '-' )
+    {
+      $text = <STDIN>;
+    }else
+    {
+      open(FILE,$file) or die "could not open file [$file] : $!";
+      $text = <FILE>;
+      close(FILE);
+    }
+    print Unicode::Japanese->new($text,$from)->conv($to);
+  }
+  1;
+}
+
+# -----------------------------------------------------------------------------
+# print_usage();
+#
+sub print_usage
+{
+  print "usage: ujconv [-f from_encode] [-t to_encode] [-s string] [files...]\n";
+  print "see \`perldoc ujconv' for details.\n";
+}
+
+# -----------------------------------------------------------------------------
+# print_version();
+#
+sub print_version
+{
+  print "ujconv $VERSION\n";
+  print "Unicode::Janaese $Unicode::Japanese::VERSION\n";
+}
+
+# -----------------------------------------------------------------------------
+# print_list();
+#
+sub print_list
+{
+  foreach my $enc (qw(
+      utf8
+      ucs2
+      ucs4
+      utf16
+      jis
+      euc
+      euc-jp
+      sjis
+      cp932
+      sjis-imode
+      sjis-doti
+      sjis-jsky
+      jis-jsky
+      jis-au
+      sjis-icon-au
+      euc-icon-au
+      jis-icon-au
+      utf8-icon-au
+  ))
+  {
+    print "$enc\n";
+  }
+}
+
+__END__
+
+=head1 NAME
+
+ujconv -- reinvented iconv(1) using Unicode::Japanese
+
+=head1 SYNOPSIS
+
+  ujconv [-f from_encoding] [-t to_encoding] [-s string] [files...]
+  ujconv -l
+  ujconv -h
+  ujconv -V
+
+=head1 VERSION
+
+ujconv 0.02
+
+=head1 DESCRIPTION
+
+B<ujconv> is an iconv-like tool which is written in perl using
+Unicode::Japanese.
+
+B<ujconv> reads text from STDIN or files, convert them, and print them to
+STDOUT.
+
+Available options are as follows. Each options can be in short form (-f) or long
+form (--from):
+
+=over 4
+
+=item -f,--from I<from_encoding>
+
+Convert characters from I<from_encoding>. Unlike B<iconv> this option can be
+omitted. In that case, the encoding of the input is guessed by B<ujconv>.
+
+=item -t,--to I<to_encoding>
+
+Convert characters to I<to_encoding>.
+
+=item -s,--string I<string>
+
+Input from the argument string instead of file or STDIN.
+
+=item -l,--list
+
+List all available encodings, one name per each lines.
+
+=item -h,--help
+
+Print a short help message.
+
+=item -V,--version
+
+Print the version of B<ujconv>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Unicode::Japanese>,
+L<piconv(1)>,
+L<iconv(1)>,
+L<ujguess>
+
+=cut
+
+# -----------------------------------------------------------------------------
+# End of File.
+# -----------------------------------------------------------------------------
