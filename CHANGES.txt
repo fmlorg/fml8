@@ -48,6 +48,12 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2012/04/15
+
+   not use obsolete library.
+	timelocal.pl and ctime.pl, which is removed in Perl 5.16
+	release. switched to use Time::Local and Time::localtime. 
+
 2012/02/25
 
    update CPAN modules successively:
@@ -10611,4 +10617,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.328 2012/02/19 12:17:59 fukachan Exp $
+$FML: CHANGES.txt,v 1.329 2012/02/25 13:08:13 fukachan Exp $

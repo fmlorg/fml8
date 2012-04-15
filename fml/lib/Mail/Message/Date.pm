@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
 # Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
-# Copyright (C) 2009,2010 Ken'ichi Fukamachi
+# Copyright (C) 2009,2010,2012 Ken'ichi Fukamachi
 #
-# $FML: Date.pm,v 1.30 2009/06/10 00:50:31 tmu Exp $
+# $FML: Date.pm,v 1.31 2010/04/10 06:26:34 fukachan Exp $
 #
 
 package Mail::Message::Date;
@@ -541,7 +541,8 @@ sub date_to_unixtime
     $shift   = ($pm eq '+' ? -1 : +1) * $shift;
 
     # conversion to gmtime (UTC)
-    require 'timelocal.pl';
+    # require 'timelocal.pl'; # which will be removed from perl 5.16 release.
+    use Time::Local;
 
     if ($debug_mti) {
 	print STDERR
@@ -600,7 +601,10 @@ if ($0 eq __FILE__) {
     print $dstr, "\n";
     $date->set($dstr);
     my $time = $date->unixtime();
-    require 'ctime.pl';
+
+    # require 'ctime.pl'; # will be removed from Perl 5.16.
+    use Time::localtime;
+
     my $ctime = ctime($time); chomp $ctime;
     printf "unixtime=%s\n", $time;
     printf "   ctime=%s\n", $ctime;
@@ -620,7 +624,7 @@ Ken'ichi Fukamachi
 =head1 COPYRIGHT
 
 Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
-Copyright (C) 2009,2010 Ken'ichi Fukamachi
+Copyright (C) 2009,2010,2012 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
