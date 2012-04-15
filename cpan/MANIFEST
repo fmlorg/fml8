@@ -6,6 +6,10 @@ Crypt-RandPasswd		0.02		perl itself
 Crypt-TripleDES			0.24		perl itself
 Crypt-UnixCrypt			1.0		perl itself
 
+Email-Find			0.10		perl itself
+
+Exporter-Lite			0.02		perl itself
+
 File-Spec			0.85_03		perl itself
 File-MMagic			1.27		bsd + apache ?
 
@@ -27,4 +31,4 @@ Time-modules			2011.0517	unknown (your own risk)
 
 Unicode-Japanese		0.47		perl itself
 
-$FML: MANIFEST,v 1.18 2012/02/19 12:17:59 fukachan Exp $
+$FML: MANIFEST,v 1.19 2012/02/25 13:08:13 fukachan Exp $
