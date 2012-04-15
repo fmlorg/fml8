@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
 # Copyright (C) 2009,2010,2012 Ken'ichi Fukamachi
 #
-# $FML: Date.pm,v 1.31 2010/04/10 06:26:34 fukachan Exp $
+# $FML: Date.pm,v 1.32 2012/04/15 06:42:52 fukachan Exp $
 #
 
 package Mail::Message::Date;
@@ -550,7 +550,7 @@ sub date_to_unixtime
     }
 
     my $t;
-    eval('$t = &timegm($sec,$min,$hour,$day,$month,$year) + $shift*3600');
+    eval('$t = timegm($sec,$min,$hour,$day,$month,$year) + $shift*3600');
     _log($@) if $@;
 
     return $t;
