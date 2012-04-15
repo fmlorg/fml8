@@ -1,0 +1,12 @@
+Changes
+MANIFEST
+Makefile.PL
+README
+lib/Email/Find.pm
+lib/Email/Find/addrspec.pm
+t/Find.t
+t/RFC822.t
+t/addr-spec.t
+t/new-api.t
+t/rfc822.txt
+META.yml                                 Module meta-data (added by MakeMaker)
