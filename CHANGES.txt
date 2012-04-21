@@ -48,6 +48,11 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2012/04/21
+
+   Mail::Delivery::Net::INET6
+	not duplicated loading of Socket related classes.
+
 2012/04/15
 
    not use obsolete library.
@@ -10621,4 +10626,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.330 2012/04/15 06:42:52 fukachan Exp $
+$FML: CHANGES.txt,v 1.331 2012/04/15 07:24:03 fukachan Exp $
