@@ -1,16 +1,19 @@
 #-*- perl -*-
 #
 #  Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
+#  Copyright (C) 2012 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: INET6.pm,v 1.20 2006/04/20 04:02:30 fukachan Exp $
+# $FML: INET6.pm,v 1.21 2006/07/09 12:11:13 fukachan Exp $
 #
 
 package Mail::Delivery::Net::INET6;
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
+use vars qw(@ISA @EXPORT @EXPORT_OK $is_module_checked);
 use Carp;
+use IO::Handle;
+use IO::Socket;
 
 require Exporter;
 @ISA    = qw(Exporter);
@@ -36,11 +39,18 @@ sub check_ipv6_module_available
 {
     my ($self) = @_;
 
+    if ($is_module_checked) {
+	return;
+    }
+    $is_module_checked = 1;
+
+    if (defined \&pack_sockaddr_in6) {
+	return;
+    }
+
     eval q{
-	use Socket;
 	use Socket6;
     };
-
     if ($@ =~ /Can\'t locate Socket6.pm/o) {
 	$self->set_ipv6_ready("no");
     }
@@ -178,10 +188,6 @@ sub connect6
 
     my $fh = undef;
     eval q{
-	use IO::Handle;
-	use Socket;
-	use Socket6;
-
 	my ($family, $type, $proto, $saddr, $canonname);
 
 	# resolve socket info by getaddrinfo()
@@ -286,7 +292,6 @@ $mta is a hostname or [raw_ipv6_addr]:port form, for example,
 
 L<Mail::Delivery::SMTP>,
 L<Socket6>,
-L<Socket>,
 L<IO::Handle>,
 L<IO::Socket>
 
@@ -301,6 +306,7 @@ Ken'ichi Fukamachi
 =head1 COPYRIGHT
 
 Copyright (C) 2001,2002,2003,2004,2005,2006 Ken'ichi Fukamachi
+Copyright (C) 2012 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
