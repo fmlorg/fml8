@@ -1,10 +1,11 @@
 #-*- perl -*-
 #
 #  Copyright (C) 2001,2002,2004,2005,2006 Ken'ichi Fukamachi
+#  Copyright (C) 2012 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: INET4.pm,v 1.13 2006/03/26 14:58:08 fukachan Exp $
+# $FML: INET4.pm,v 1.14 2006/07/09 12:11:13 fukachan Exp $
 #
 
 package Mail::Delivery::Net::INET4;
@@ -103,7 +104,6 @@ $mta is a hostname or [raw_ipv4_addr]:port form, for example,
 =head1 SEE ALSO
 
 L<Mail::Delivery::SMTP>,
-L<Socket>,
 L<IO::Socket>
 
 =head1 CODING STYLE
@@ -117,6 +117,7 @@ Ken'ichi Fukamachi
 =head1 COPYRIGHT
 
 Copyright (C) 2001,2002,2004,2005,2006 Ken'ichi Fukamachi
+Copyright (C) 2012 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
