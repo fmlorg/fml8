@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.48 2006/04/22 08:55:33 fukachan Exp $
+# $FML: SMTP.pm,v 1.49 2006/07/09 12:11:13 fukachan Exp $
 #
 
 
@@ -213,7 +213,7 @@ sub _read_reply
 
       SMTP_REPLY:
 	while (1) {
-	    $buf = $socket->getline;
+	    defined ( $buf = $socket->getline ) || next SMTP_REPLY;
 	    $self->smtplog($buf);
 
 	    # check smtp attributes
