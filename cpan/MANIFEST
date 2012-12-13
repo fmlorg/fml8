@@ -31,4 +31,13 @@ Time-modules			2011.0517	unknown (your own risk)
 
 Unicode-Japanese		0.47		perl itself
 
-$FML: MANIFEST,v 1.19 2012/02/25 13:08:13 fukachan Exp $
+
+#
+# below, hacked by fukachan@fml.org.
+#
+
+# defined from HTML-Parser-3.69.
+HTML-EntitiesLite		3.69p1		perl itself
+
+
+$FML: MANIFEST,v 1.20 2012/04/15 07:24:03 fukachan Exp $

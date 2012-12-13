@@ -1,736 +1,846 @@
-require 5.004;
-use strict;
-
 package HTML::FromText;
-use Carp;
-use Exporter;
-use Text::Tabs 'expand';
-use vars qw($RCSID $VERSION $QUIET @EXPORT @ISA);
 
-@ISA = qw(Exporter);
-@EXPORT = qw(text2html);
-$RCSID = q$Id: FromText.pm,v 1.14 1999/10/06 10:53:37 garethr Exp $;
-$VERSION = '1.005';
-$QUIET = 0;
+=head1 NAME
 
-# This list of protocols is taken from RFC 1630: "Universal Resource
-# Identifiers in WWW".  The protocol "file" is omitted because
-# experience suggests that it results in many false positives; "https"
-# postdates RFC 1630.  The protocol "mailto" is handled separately, by
-# the email address matching code.
+HTML::FromText - Convert plain text to HTML.
 
-my $protocol = join '|',
-  qw(afs cid ftp gopher http https mid news nntp prospero telnet wais);
+=head1 SYNOPSIS
 
-# The regular expressions matching email addresses use the following
-# syntax elements from RFC 822.  I can't use the full details of
-# structured field bodies, because that would give too many false
-# positives.  (See Tom Christiansen's ckaddr.gz for a full
-# implementation of the RFC 822.)
-#
-#   addr-spec   =  local-part "@" domain
-#   local-part  =  word *("." word)
-#   word        =  atom
-#   domain      =  sub-domain *("." sub-domain)
-#   sub-domain  =  domain-ref
-#   domain-ref  =  atom
-#   atom        =  1*<any CHAR except specials, SPACE and CTLs>
-#   specials    =  "(" / ")" / "<" / ">" / "@" /  "," / ";" / ":" / "\"
-#   		   / <"> /  "." / "[" / "]"
-#
-# I have ignored quoting, domain literals and comments.
-#
-# Note that '&' can legally appear in email addresses (for example,
-# 'fred&barney@stonehenge.com').  If the 'metachars' option is passed to
-# text2html then I must use '&amp;' to recognize '&'.  Thus the regular
-# expression $atom[0] recognizes an atom in the case where the option
-# 'metachars' is false; $atom[1] recognizes an atom in the case where
-# 'metachars' is true.  Similarly for the regular expressions $email[0]
-# and $email[1], which recognize email addresses.
+    use HTML::FromText;
+    text2html( $text, %options );
 
-my @atom =
-  ( '[!#$%&\'*+\\-/0123456789=?ABCDEFGHIJKLMNOPQRSTUVWXYZ^_`abcdefghijklmnopqrstuvwxyz{|}~]+',
-    '(?:&amp;|[!#$%\'*+\\-/0123456789=?ABCDEFGHIJKLMNOPQRSTUVWXYZ^_`abcdefghijklmnopqrstuvwxyz{|}~])+' );
+    # or
 
-my @email = ( "$atom[0](\\.$atom[0])*\@$atom[0](\\.$atom[0])*",
-	      "$atom[1](\\.$atom[1])*\@$atom[1](\\.$atom[1])*" );
+    use HTML::FromText ();
+    my $t2h  = HTML::FromText->new( \%options );
+    my $html = $t2h->parse( $html );
 
-my @alignments = ( '', '', ' ALIGN="RIGHT"', ' ALIGN="CENTER"' );
+=cut
 
-sub string2html ($$) {
-  my $options = $_[1];
-  for ($_[0]) {			# Modify in-place.
+use strict;
+use Scalar::Util          qw[blessed];
+use HTML::EntitiesLite    qw[encode_entities];
+use Text::Tabs            qw[expand];
+use Email::Find::addrspec qw[$Addr_spec_re];
+use Exporter::Lite;
 
-    # METACHARS: mark up HTML metacharacters as corresponding entities.
-    if ($options->{metachars}) {
-      s/&/&amp;/g;
-      s/</&lt;/g;
-      s/>/&gt;/g;
-      s/\"/&quot;/g;
-    }
+use vars qw[$VERSION @EXPORT @DECORATORS $PROTOCOLS];
 
-    # EMAIL, URLS: spot electronic mail addresses and turn them into
-    # links.  Note (1) if `urls' is set but not `email', then only
-    # addresses prefixed by `mailto:' will be marked up; (2) that we leave
-    # the `mailto:' prefix in the anchor text.
-    if ($options->{email} or $options->{urls}) {
-      s|((?:mailto:)?)($email[$options->{metachars}?1:0])|
-	($options->{email} or $1)
-	  ? "<TT><A HREF=\"mailto:$2\">$1$2</A></TT>" : $2|gex;
-    }
+$VERSION    = '2.05';
+@EXPORT     = qw[text2html];
+@DECORATORS = qw[urls email bold underline];
+$PROTOCOLS  = qr/
+                 afs      | cid      | ftp      | gopher   |
+                 http     | https    | mid      | news     |
+                 nntp     | prospero | telnet   | wais
+                /x;
 
-    # URLS: mark up URLs as links (note that `mailto' links are handled
-    # above).
-    if ($options->{urls}) {
-      s|\b((?:$protocol):\S+[\w/])|<TT><A HREF="$1">$1</A></TT>|g;
-    }
+=head1 DESCRIPTION
 
-    # BOLD: mark up words in *asterisks* as bold.
-    if ($options->{bold}) {
-      s#(^|\s)\*([^*]+)\*(?=\s|$)#$1<B>$2</B>#g;
-    }
+C<HTML::FromText> converts plain text to HTML. There are a handfull of
+options that shape the conversion. There is a utility function,
+C<text2html>, that's exported by default. This function is simply a short-
+cut to the Object Oriented interface described in detail below.
 
-    # UNDERLINE: mark up words in _underscores_ as underlined.
-    if ($options->{underline}) {
-      s#(^|\s)_([^_]+?)_(?=\s|$)#$1<U>$2</U>#g;
-    }
-  }
+=head2 Methods
 
-  return $_[0];
+The following methods may be used as the public interface.
+
+=head3 new
+
+    my $t2h = HTML::FromText->new({
+        paras      => 1,
+        blockcode  => 1,
+        tables     => 1,
+        bullets    => 1,
+        numbers    => 1,
+        urls       => 1,
+        email      => 1,
+        bold       => 1,
+        underline  => 1,
+    });
+
+Constructs a new C<HTML::FromText> object using the given
+configuration. The resulting object can parse lots of objects using the
+C<parse> method.
+
+Options to C<new> are passed by name, with the value being either true
+or false. If true, the option will be turned on. If false, it will be
+turned off.  The following outlines all the options.
+
+=head4 Decorators
+
+=over 5
+
+=item metachars
+
+This option is on by default.
+
+All characters that are unsafe for HTML display will be encoded using
+C<HTML::Entities::encode_entities()>.
+
+=item urls
+
+This option is off by default.
+
+Replaces URLs with links.
+
+=item email
+
+This option is off by default.
+
+Replaces email addresses with C<mailto:> links.
+
+=item bold
+
+This option is off by default.
+
+Replaces text surrounded by asterisks (C<*>) with the same text
+surrounded by C<strong> tags.
+
+=item underline
+
+This option is off by default.
+
+Replaces text surrownded by underscores (C<_>) with the same text
+surrounded by C<span> tags with an underline style.
+
+=back
+
+=head4 Output Modes
+
+The following are three output modes and the options associated with
+them. They are listed in order of precidence. If none of these modes are
+supplied, the basic decorators are applied to the text in whole.
+
+=over 5
+
+=item B<pre>
+
+This option is off by default.
+
+Wraps the entire text in C<pre> tags.
+
+=item B<lines>
+
+This option is off by default.
+
+Preserves line breaks by inserting C<br> tags at the end of each line.
+
+This mode has further options.
+
+=over 5
+
+=item spaces
+
+This option is off by default.
+
+All spaces are HTML encoded.
+
+=back
+
+=item B<paras>
+
+This option is off by default.
+
+Preserves paragraphs by wrapping them in C<p> tags.
+
+This mode has further options.
+
+=over 5
+
+=item bullets
+
+This option is off by default.
+
+Convert bulleted lists into unordered lists (C<ul>). Bullets can be
+either an asterisk (C<*>) or a hyphen (C<->). Lists can be nested.
+
+=item numbers
+
+This option is off by default.
+
+Convert numbered lists into ordered lists (C<ol>). Numbered lists are
+identified by numerals. Lists may be nested.
+
+=item headings
+
+This option is off by default.
+
+Convert paragraphs identified as headings into HTML headings at
+the appropriate level. The heading C<1. Top> would be heading
+level one (C<h1>). The heading C<2.5.1. Blah> would be heading
+level three (C<h3>).
+
+=item title
+
+This option is off by default.
+
+Convert the first paragraph to a heading level one (C<h1>).
+
+=item tables
+
+This option is off by default.
+
+Convert paragraphs identified as tables to HTML tables. Tables are two
+or more rows and two or more columns. Columns should be separated by two
+or more spaces.
+
+=back
+
+The following options apply specifically to indented paragraphs. They
+are listed in order of precidence.
+
+=over 5
+
+=item blockparas
+
+This option is off by default.
+
+Convert indented paragraphs to block quotes using the C<blockquote> tag.
+
+=item blockquotes
+
+Convert indented paragraphs as C<blockparas> would, but also preserving
+line breaks.
+
+=item blockcode
+
+Convert indented paragraphs as C<blockquotes> would, but also preserving
+spaces using C<pre> tags.
+
+=back
+
+=back
+
+=cut
+
+sub new {
+    my ($class, $options) = @_;
+    $options ||= {};
+    $class->_croak("Options must be a hash reference")
+      if ref($options) ne 'HASH';
+
+    my %options = (
+                   metachars    => 1,
+                   urls         => 0,
+                   email        => 0,
+                   bold         => 0,
+                   underline    => 0,
+
+                   pre          => 0,
+
+                   lines        => 0,
+                   spaces       => 0,
+
+                   paras        => 0,
+                   bullets      => 0,
+                   numbers      => 0,
+                   headings     => 0,
+                   title        => 0,
+                   blockparas   => 0,
+                   blockquotes  => 0,
+                   blockcode    => 0,
+                   tables       => 0,
+
+                   %{ $options },
+                  );
+
+    my %self    = (
+                   options => \%options,
+                   text    => '',
+                   html    => '',
+                  );
+
+    return bless \%self, blessed($class) || $class;
 }
 
+=head3 parse
+
+  my $html = $t2h->parse( $text );
+
+Parses text supplied as a single scalar string and returns the HTML as a
+single scalar string.  All the tabs in your text will be expanded using
+C<Text::Tabs::expand()>.
+
+=cut
+
+sub parse {
+    my ($self, $text) = @_;
+
+    $text = join "\n", expand( split /\n/, $text );
+
+    $self->{text}  = $text;
+    $self->{html}  = $text;
+    $self->{paras} = undef;
+
+    my $options = $self->{options};
+
+    $self->metachars if $options->{metachars};
+
+       if ( $options->{pre}   ) { $self->pre   }
+    elsif ( $options->{lines} ) { $self->lines }
+    elsif ( $options->{paras} ) { $self->paras }
+
+    $options->{$_} and $self->$_ foreach @DECORATORS;
+
+    return $self->{html};
+}
+
+=head2 Functions
+
+=head3 text2html
+
+    my $html = text2html(
+                         $text,
+                         urls  => 1,
+                         email => 1,
+                        );
+
+Functional interface that just wraps the OO interface. This function is
+exported by default. If you don't want it you can C<require> the module
+or C<use> it with an empty list.
+
+    require HTML::FromText;
+    # or ...
+    use HTML::FromText ();
+
+=cut
+
 sub text2html {
-  local $_ = shift;		# Take a copy; don't modify in-place.
-  return $_ unless $_;
+    my ($text, %options) = @_;
+    HTML::FromText->new(\%options)->parse($text);
+}
 
-  my %options = ( metachars => 1, @_ );
+=head2 Subclassing
 
-  # Check options for sanity.
-  unless ($QUIET) {
-    carp "text2html: `spaces' will be ignored since `lines' is not specified"
-      if $options{spaces} and not $options{lines};
-    if ($options{paras}) {
-      if ($options{blockparas}) {
-	foreach my $o (qw(blockquotes blockcode)) {
-	  carp "text2html: `$o' will be ignored since `blockparas' is specified" if $options{$o};
-	}
-      } elsif ($options{blockcode} and $options{blockquotes}) {
-	carp "text2html: `blockquotes' will be ignored since `blockcode' is specified";
-      }
-    } else {
-      foreach my $o (qw(bullets numbers blockquotes blockparas blockcode
-		        title headings tables)) {
-	carp "text2html: `$o' will be ignored since `paras' is not specified"
-	  if $options{$o};
-      }
-    }
-  }
+B<Note:> At the time of this release, the internals of C<HTML::FromText>
+are in a state of development and cannot be expected to stay the same
+from release to release. I expect that release version B<3.00> will be
+analogous to a C<1.00> release of other software. This is because the
+current maintainer has rewritten this distribution from the ground up
+for the C<2.x> series.  You have been warned.
 
-  # Expand tabs.
-  $_ = join "\n", expand(split /\r?\n/);
+The following methods may be used for subclassing C<HTML::FromText>
+to create your own text to HTML conversions. Each of these methods
+is passed just one argument, the object (C<$self>), unless
+otherwise stated.
 
-  # PRE: put text in <PRE> element.
-  if ($options{pre}) {
-    string2html($_, \%options);
-    s|^|<PRE>|;
-    s|$|</PRE>|;
-  }
+The structure of C<$self> is as follows for this release.
 
-  # LINES: preserve line breaks from original text.
-  elsif ($options{lines}) {
-    string2html($_, \%options);
-    s/\n/<BR>\n/gm;
-
-    # SPACES: preserve spaces from original text.
-    s/ /&nbsp;/g if $options{spaces};
-  }
-
-  # PARAS: treat text as sequence of paragraphs.
-  elsif ($options{paras}) {
-    my @paras;
-
-    # Remove initial and final blank lines.
-    s/^(?:\s*?\n)+//;
-    s/(?:\n\s*?)+$//;
-
-    # Split on a different regexp depending on what kinds of paragraphs
-    # will be recognised later.  The idea is that bulleted lists like
-    # this:
-    #
-    #     * item 1
-    #     * item 2
-    #
-    # will be recognised as multiple paragraphs if the 'bullets' option
-    # is supplied, but as a single paragraph otherwise.  (Similarly for
-    # numbered lists).
-    if ($options{bullets} and $options{numbers}) {
-      @paras = split
-	/(?:\s*\n)+                  # (0 or more blank lines, followed by LF)
-         (?:\s*\n                    # Either 1 or more blank lines, or
-          |(?=\s*[*-]\s+             #   bulleted item follows, or
-            |\s*(?:\d+)[.\)\]]?\s+)) #   numbered item follows
-        /x;
-    } elsif ($options{bullets}) {
-      @paras = split
-	/(?:\s*\n)+                  # (0 or more blank lines, followed by LF)
-         (?:\s*\n                    # Either 1 or more blank lines, or
-          |(?=\s*[*-]\s+))           #   bulleted item follows.
-        /x;
-    } elsif ($options{numbers}) {
-      @paras = split
-	/(?:\s*\n)+                  # (0 or more blank lines, followed by LF)
-         (?:\s*\n                    # Either 1 or more blank lines, or
-         |(?=\s*(?:\d+)[.\)\]]?\s+)) #   numbered item follows.
-        /x;
-    } else {
-      @paras = split
-	/\s*\n(?:\s*\n)+	     # 1 or more blank lines.
-        /x;
+    {
+     options => {
+                 option_name => $value,
+                 ...
+                },
+     text    => $text, # as passed to parse(), with tabs expanded
+     html    => $html, # the HTML that will be returned from parse()
     }
 
-    my $last = '';		# List type (OL/UL) of last paragraph
-    my $this;			# List type (OL/UL) of this paragraph
-    my $first = 1;		# True if this is first paragraph
+=head3 pre
 
-    foreach (@paras) {
-      my (@rows,@starts,@ends);
-      $this = '';
+Used when C<pre> mode is specified.
 
-      # TITLE: mark up first paragraph as level-1 heading.
-      if ($options{title} and $first) {
-	string2html($_,\%options);
-	s|^|<H1>|;
-	s|$|</H1>|;
-      }
+Should set C<< $self->{html} >>.
 
-      # HEADINGS: mark up paragraphs with numbers at the start of the
-      # first line as headings.
-      elsif ($options{headings} and /^(\d+(\.\d+)*)\.?\s/) {
-	my $number = $1;
-	my $level = 1 + ($number =~ tr/././);
-	$level = 6 if $level > 6;
-	string2html($_,\%options);
-	s|^|<H$level>|;
-	s|$|</H$level>|;
-      }
+Return value is ignored.
 
-      # BULLETS: mark up paragraphs starting with bullets as items in an
-      # unnumbered list.
-      elsif ($options{bullets} and /^\s*[*-]\s+/) {
-	string2html($_,\%options);
-        s/^\s*[*-]\s+/<LI><P>/;
-	s|$|</P>|;
-	$this = 'UL';
-      }
+=cut
 
-      # NUMBERS: mark up paragraphs starting with numbers as items in a
-      # numbered list.
-      elsif ($options{numbers} and /^\s*(\d+)[.\)\]]?\s+/) {
-	string2html($_,\%options);
-        s/^\s*(\d+)[.\)\]]?\s+/<LI VALUE="$1"><P>/;
-	s|$|</P>|;
-	$this = 'OL';
-      }
+sub pre {
+    my ($self) = @_;
+    $self->{html} = join $self->{html}, '<pre class="hft-pre">', '</pre>';
+}
 
-      # TABLES: spot and mark up tables.  We combine the lines of the
-      # paragraph using the string bitwise or (|) operator, the result
-      # being in $spaces.  A character in $spaces is a space only if
-      # there was a space at that position in every line of the
-      # paragraph.  $space can be used to search for contiguous spaces
-      # that occur on all lines of the paragraph.  If this results in at
-      # least two columns, the paragraph is identified as a table.
-      #
-      # Note that this option appears before the various 'blockquotes'
-      # options because a table may well have whitespace to the left, in
-      # which case it must not be incorrectly recognised as a
-      # blockquote.
-      elsif ($options{tables} and do {
-	@rows = split /\n/, $_;
-	my $spaces;
-	my $max = 0;
-	my $min = length;
-	foreach my $row (@rows) {
-	  ($spaces |= $row) =~ tr/ /\xff/c;
-	  $min = length $row if length $row < $min;
-	  $max = length $row if $max < length $row;
-	}
-	$spaces = substr $spaces, 0, $min;
-	push(@starts, 0) unless $spaces =~ /^ /;
-	while ($spaces =~ /((?:^| ) +)(?=[^ ])/g) {
-	  push @ends, pos($spaces) - length $1;
-	  push @starts, pos($spaces);
-	}
-	shift(@ends) if $spaces =~ /^ /;
-	push(@ends, $max);
+=head3 lines
 
-	# Two or more rows and two or more columns indicate a table.
-	2 <= @rows and 2 <= @starts
-      }) {
-	# For each column, guess whether it should be left, centre or
-	# right aligned by examining all cells in that column for space
-        # to the left or the right.  A simple majority among those cells
-        # that actually have space to one side or another decides (if no
-        # alignment gets a majority, left alignment wins by default).
+Used when C<lines> mode is specified.
 
-	my @align;
-	foreach my $col (0 .. $#starts) {
-	  my @count = (0, 0, 0, 0);
-          foreach my $row (@rows) {
-	    my $width = $ends[$col] - $starts[$col];
-	    my $cell = substr $row, $starts[$col], $width;
-	    ++ $count[($cell =~ /^ / ? 2 : 0)
-		      + ($cell =~ / $/ || length($cell) < $width ? 1 : 0)];
-	  }
-	  $align[$col] = 0;
-	  my $population = $count[1] + $count[2] + $count[3];
-	  foreach (1 .. 3) {
-	    if ($count[$_] * 2 > $population) {
-	      $align[$col] = $_;
-	      last;
-	    }
-	  }
+Implements the C<spaces> option internally when the option is set to a
+true value.
+
+Should set C<< $self->{html} >>.
+
+Return value is ignored.
+
+=cut
+
+sub lines {
+    my ($self) = @_;
+    $self->{html} =~ s[ ][&nbsp;]g if $self->{options}->{spaces};
+    $self->{html} =~ s[$][<br />]gm;
+    $self->{html} =~ s[^][<div class="hft-lines">];
+    $self->{html} =~ s[$][</div>];
+}
+
+=head3 paras
+
+Used when the C<paras> mode is specified.
+
+Splits C<< $self->{text} >> into paragraphs internally and sets up
+C<< $self->{paras} >> as follows.
+
+    paras => {
+              0 => {
+                    text => $text, # paragraph text
+                    html => $html, # paragraph html
+                   },
+              ... # and so on for all paragraphs
+             },
+
+Implements the C<title> option internally when the option is turned on.
+
+Converts any normal paragraphs to HTML paragraphs (surrounded by C<p>
+tags) internally.
+
+Should set C<< $self->{html} >>.
+
+Return value is ignored.
+
+=cut
+
+sub paras {
+    my ($self) = @_;
+
+    my $options = $self->{options};
+    my @paras   = split /\n{2,}/, $self->{html};
+    my %paras   = map { $_, { text => $paras[$_], html => undef } } 0 .. $#paras;
+    $self->{paras} = \%paras;
+
+    $self->{paras}->{0}->{html} = join(
+                                       $self->{paras}->{0}->{text},
+                                       q[<h1 class="hft-title">], "</h1>\n"
+                                      ) if $options->{title};
+
+    $self->headings if $options->{headings};
+    $self->bullets  if $options->{bullets};
+    $self->numbers  if $options->{numbers};
+
+    $self->tables   if $options->{tables};
+
+       if ( $options->{blockparas}  ) { $self->blockparas  }
+    elsif ( $options->{blockquotes} ) { $self->blockquotes }
+    elsif ( $options->{blockcode}   ) { $self->blockcode   }
+
+    $self->_manipulate_paras(sub { qq[<p class="hft-paras">$_[0]</p>\n] });
+
+    $self->{html} = join "\n", map $paras{$_}->{html},
+      sort { $a <=> $b } keys %paras;
+}
+
+=head3 headings
+
+Used to format headings when the C<headings> option is turned on.
+
+Return value is ignored.
+
+=cut
+
+sub headings {
+    my ($self) = @_;
+    my $heading = qr/\d+\./;
+
+    $self->_manipulate_paras(sub{
+        my ($text) = @_;
+        return unless $text =~ m[^((?:$heading)+)\s+];
+
+        my $depth; $depth++ for split /\./, $1;
+
+        qq[<h$depth class="hft-headings">$text</h$depth>\n];
+    });
+}
+
+=head3 bullets
+
+Format bulleted lists when the C<bullets> option is turned on.
+
+Return value is ignored.
+
+=cut
+
+sub bullets {
+    my ($self) = @_;
+    $self->_format_list( qr/[*]/, 'ul', 'hft-bullets' );
+    $self->_format_list( qr/[-]/, 'ul', 'hft-bullets' );
+}
+
+=head3 numbers
+
+Format numbered lists when the C<numbers> option is turned on.
+
+Return value is ignored.
+
+=cut
+
+sub numbers {
+    my ($self) = @_;
+    $self->_format_list( qr/[0-9]/, 'ol', 'hft-numbers');
+}
+
+=head3 tables
+
+Format tables when the C<tables> option is turned on.
+
+Return value is ignored.
+
+=cut
+
+sub tables {
+    my ($self) = @_;
+
+    $self->_manipulate_paras(sub{
+        my ($text) =  $self->_remove_indent( $_[0] );
+
+        my @lines   = split /\n/, $text;
+        my $columns = $self->_table_find_columns(
+                        $self->_table_initial_spaces( split //, $lines[0] ),
+                        [ @lines[1 .. $#lines] ],
+                      );
+
+        return unless $columns;
+        $self->_table_create( $columns, \@lines );
+    });
+}
+
+=head3 blockparas
+
+Used when the C<blockparas> option is turned on.
+
+Return value is ignored.
+
+=cut
+
+sub blockparas {
+    my ($self) = @_;
+    my $paras = $self->{paras};
+
+    $self->_manipulate_paras(sub{
+        my ($text) = $self->_remove_indent( $_[0], 1 );
+        my ($pnum, $paras) = @_[1,2];
+        return unless $text;
+
+        $self->_consolidate_blocks(
+                                   ( exists $paras->{$pnum - 1} ? $paras->{$pnum -1} : undef ),
+                                   'blockparas', 1,
+                                   qq[<blockquote class="hft-blockparas"><p>$text</p></blockquote>\n],
+                                  );
+    });
+}
+
+=head3 blockquotes
+
+Used when the C<blockquotes> option is turned on.
+
+Return value is ignored.
+
+=cut
+
+sub blockquotes {
+    my ($self) = @_;
+    my $paras = $self->{paras};
+
+    $self->_manipulate_paras(sub {
+        my ($text) = $self->_remove_indent( $_[0], 1 );
+        return unless $text;
+
+        $text =~ s[\n|$][<br />\n]g;
+
+        qq[<blockquote class="hft-blockquotes"><div>$text</div></blockquote>\n];
+    });
+}
+
+=head3 blockcode
+
+Used when the C<blockcode> option is turned on.
+
+Return value is ignored.
+
+=cut
+
+sub blockcode {
+    my ($self) = @_;
+    my $paras = $self->{paras};
+
+    $self->_manipulate_paras(sub {
+        my ($text) = $self->_remove_indent( $_[0], 1 );
+        my ($pnum, $paras) = @_[1,2];
+        return unless $text;
+
+        $text =~ s[^][<pre>];
+        $text =~ s[$][</pre>];
+        $self->_consolidate_blocks(
+                                   ( exists $paras->{$pnum - 1} ? $paras->{$pnum -1} : undef ),
+                                   'blockcode', 0,
+                                   qq[<blockquote class="hft-blockcode">$text</blockquote>\n],
+                                  );
+    });
+}
+
+=head3 urls
+
+Turn urls into links when C<urls> option is turned on.
+
+Should operate on C<< $self->{html} >>.
+
+Return value is ignored.
+
+=cut
+
+sub urls {
+    my ($self) = @_;
+    $self->{html} =~ s[\b((?:$PROTOCOLS):[^\s<]+[\w/])]
+                      [<a href="$1" class="hft-urls">$1</a>]og;
+}
+
+=head3 email
+
+Turn email addresses into C<mailto:> links when C<email> option is
+turned on.
+
+Should operate on C<< $self->{html} >>.
+
+Return value is ignored.
+
+=cut
+
+sub email {
+    my ($self) = @_;
+    $self->{html} =~ s[($Addr_spec_re)]
+                      [<a href="mailto:$1" class="hft-email">$1</a>]og;
+}
+
+=head3 underline
+
+Underline things between _underscores_ when C<underline> option is
+turned on.
+
+Should operate on C<< $self->{html} >>.
+
+Return value is ignored.
+
+=cut
+
+sub underline {
+    my ($self) = @_;
+    $self->{html} =~ s[(?:^|(?<=\W))((_)([^\\_\n]*(?:\\.[^\\_\n]*)*)(_))(?:(?=\W)|$)]
+                      [<span class="hft-underline" style="text-decoration: underline">$3</span>]g;
+}
+
+=head3 bold
+
+Bold things between *asterisks* when C<bold> option is turned on.
+
+Should operate on C<< $self->{html} >>.
+
+Return value is ignored.
+
+=cut
+
+sub bold {
+    my ($self) = @_;
+    $self->{html} =~ s[(?:^|(?<=\W))((\*)([^\\\*\n]*(?:\\.[^\\\*\n]*)*)(\*))(?:(?=\W)|$)]
+                      [<strong class="hft-bold">$3</strong>]g;
+}
+
+=head3 metachars
+
+Encode meta characters when C<metachars> option is turned on.
+
+Should operate on C<< $self->{html} >>.
+
+Return value is ignored.
+
+=cut
+
+sub metachars {
+    my ($self) = @_;
+    $self->{html} = encode_entities( $self->{html} );
+}
+
+# private
+
+sub _croak {
+    my ($class, @error) = @_;
+    require Carp;
+    Carp::croak(@error);
+}
+
+sub _carp {
+    my ($class, @error) = @_;
+    require Carp;
+    Carp::carp(@error);
+}
+
+sub _format_list {
+    my ($self, $identifier, $parent, $class) = @_;
+
+    $self->_manipulate_paras(sub {
+        my ($text) = @_;
+        return unless $text =~ m[^\s*($identifier)\s+];
+
+        my ($pos, $html, @open) = (-1, '');
+        foreach my $line ( split /\n(?=\s*$identifier)/, $text ) {
+            $line =~ s[(\s*)$identifier][];
+            my $line_pos = length $1;
+            if ($line_pos > $pos) {
+                $html .= (' ' x $line_pos) . qq[<$parent class="$class">\n];
+                push @open, $line_pos;
+            } elsif ($line_pos < $pos) {
+                until ( $open[-1] <= $line_pos ) {
+                    $html .= (' ' x pop @open) . "</$parent>\n";
+                }
+            }
+            $html .= (' ' x ($pos = $line_pos)) . "<li>$line</li>\n";
         }
+        $html .= "</$parent>\n"x@open;
+    });
+}
 
-	foreach my $row (@rows) {
-	  $row = join '', '<TR>', (map {
-	    my $cell = substr $row, $starts[$_], $ends[$_] - $starts[$_];
-	    $cell =~ s/^ +//;
-	    $cell =~ s/ +$//;
-            string2html($cell,\%options);
-	    ('<TD', $alignments[$align[$_]], '>', $cell, '</TD>')
-	  } 0 .. $#starts), '</TR>';
-	}
-	my $tag = $starts[0] == 0 ? 'P' : 'BLOCKQUOTE';
-	$_ = join "\n", "<$tag><TABLE>", @rows, "</TABLE></$tag>";
-      }
+sub _manipulate_paras {
+    my ($self, $action) = @_;
 
-      # BLOCKPARAS, BLOCKCODE, BLOCKQUOTES: mark up indented paragraphs
-      # as block quotes of various kinds.
-      elsif (($options{blockparas} or $options{blockquotes}
-		or $options{blockcode}) and /^(\s+).*(?:\n\1.*)*$/) {
-	string2html($_,\%options);
+    my  $paras = $self->{paras};
 
-	# Every line in the paragraph starts with at white space, the common
-	# whitespace being in $1.  Remove the common initial whitespace,
-	s/^$1//gm;
-
-	# BLOCKPARAS: treat as a paragraph.
-	if ($options{blockparas}) {
-          s|^|<P>|;
-          s|$|</P>|;
-	}
-
-	# BLOCKCODE, BLOCKQUOTES: preserve line breaks.
-	else {
-	  s/\n/<BR>\n/gm;
-
-	  # BLOCKCODE: preserve spaces, use fixed-width font.
-	  if ($options{blockcode}) {
-	    s| |&nbsp;|g;
-            s|^|<TT>|;
-	    s|$|</TT>|;
-	  }
-	}
-        s|^|<BLOCKQUOTE>|;
-        s|$|</BLOCKQUOTE>|;
-      }
-
-      # Didn't match any of the above, so just an ordinary paragraph.
-      else {
-        string2html($_,\%options);
-	s|^|<P>|;
-	s|$|</P>|;
-      }
-
-      # Insert <UL>, </UL>, <OL> or </OL> if this paragraph belongs to a
-      # different list type than the previous one.
-      if ($this ne $last) {
-	s|^|<$this>| if ($this ne '');
-	s|^|</$last>| if ($last ne '');
-      }
-      $last = $this;
-      $first = 0;
+    foreach my $pnum ( sort { $a <=> $b } keys %{$paras}) {
+        my $para = $paras->{$pnum};
+        $para->{html} = $action->($para->{text}, $pnum,  $paras)
+          unless $para->{html};
     }
-    if ($this ne '') {
-      push @paras, "</$this>";
-    }
-    $_ = join "\n", @paras;
-  }
+}
 
-  # None of PRE, LINES, PARAS specified: apply basic transformations.
-  else {
-    string2html($_,\%options);
-  }
-  return $_;
+sub _table_initial_spaces {
+    my ($self, @chars) = @_;
+
+    my %spaces;
+    foreach ( 0 .. $#chars ) {
+        my ($open_space) = grep { !defined( $_->{end} ) } values %spaces;
+        if ( $chars[$_] eq ' ' ) {
+            $spaces{$_} = {start => $_, end => undef} unless $open_space;
+        } else {
+            if ( $open_space && $_ - $open_space->{start} > 1 ) {
+                $open_space->{end} = $_ - 1;
+            } else {
+                delete $spaces{$open_space->{start}} if $open_space;
+            }
+        }
+    }
+    return \%spaces;
+}
+
+sub _table_find_columns {
+    my ($self, $spaces, $lines) = @_;
+    return unless keys %{$spaces};
+    my %spots;
+    foreach my $line ( @{$lines} ) {
+        foreach my $pos ( sort { $a <=> $b } keys %{$spaces} ) {
+            my $key;
+               $key = $spaces->{$pos}->{start}
+                 if substr( $line, $spaces->{$pos}->{start}, 1 ) eq ' ';
+               $key = $spaces->{$pos}->{end}
+                 if substr( $line, $spaces->{$pos}->{end}, 1 )   eq ' ' && ! $key;
+            if ( $key ) {
+                $spots{$key}++;
+                $spots{$spaces->{$pos}->{start}}++
+                  if $spots{$spaces->{$pos}->{start}} && $key ne $spaces->{$pos}->{start};
+                $spots{$spaces->{$pos}->{end}}++
+                  if $key ne $spaces->{$pos}->{end};
+            } else {
+                delete $spaces->{$pos};
+            }
+        }
+        foreach my $spot (sort {$b <=> $a} keys %spots) {
+            if ( substr( $line, $spot, 1 ) ne ' ' ) {
+                delete $spots{$spot};
+            }
+            if ( exists $spaces->{$spot}) {
+                my $space = $spaces->{$spot};
+                if ( exists $spots{$space->{start}} && $spots{$space->{end}}) {
+                    delete $spots{$spot};
+                }
+            }
+        }
+    }
+
+
+    my @spots = grep { $spots{$_} == @{$lines} } sort { $a <=> $b } keys %spots;
+    return @spots ? join( '', (
+                      map {
+                          my $ret = 'A' . ( $spots[$_] - ( $_ == 0 ? 0 : $spots[$_ - 1] ) );
+                          $ret eq 'A0' ? () : $ret;
+                      } 0 .. $#spots
+                    ), 'A*' ) : undef;
+}
+
+sub _table_create {
+    my ($self, $columns, $lines) = @_;
+
+    my $table = qq[<table class="hft-tables">\n];
+    foreach my $line ( @{$lines} ) {
+        $table .= join( '',
+                        '  <tr><td>',
+                        join(
+                             '</td><td>',
+                             map { s/^\s+//; s/\s$//; $_ } unpack $columns, $line
+                            ),
+                        "</td></tr>\n",
+                      );
+    }
+    $table .= "</table>\n";
+}
+
+sub _remove_indent {
+    my ($self, $text, $strict) = @_;
+    return if $text !~ m[^(\s+).+(?:\n\1.+)*$] && $strict;
+    $text =~ s[^$1][]mg if $1;
+    return $text;
+}
+
+sub _consolidate_blocks {
+    my ($self, $prev_para, $class, $keep_inner, $html) = @_;
+    if ( $prev_para && $prev_para->{html} =~ m[<blockquote class="hft-$class"><(\w+)>] ) {
+        my $inner_tag = $keep_inner ? '' : qr[</?$1>];
+        $prev_para->{html} =~ s[$inner_tag</blockquote>][];
+        $html =~ s[<blockquote class="hft-$class">$inner_tag][];
+    }
+    return $html;
 }
 
 1;
 
 __END__
 
-=head1 NAME
-
-HTML::FromText - mark up text as HTML
-
-=head1 SYNOPSIS
-
-    use HTML::FromText;
-    print text2html($text, urls => 1, paras => 1, headings => 1);
-
-=head1 DESCRIPTION
-
-The C<text2html> function marks up plain text as HTML.  By default it
-expands tabs and converts HTML metacharacters into the corresponding
-entities.  More complicated transformations, such as splitting the text
-into paragraphs or marking up bulleted lists, can be carried out by
-setting the appropriate options.
-
-=head1 SUMMARY OF OPTIONS
-
-These options always apply:
-
-    metachars    Convert HTML metacharacters to entity references
-    urls         Convert URLs to links
-    email        Convert email addresses to links
-    bold         Mark up words with *asterisks* in bold
-    underline    Mark up words with _underscores_ as underlined
-
-You can then choose to treat the text according to one of these options:
-
-    pre          Treat text as preformatted
-    lines        Treat text as line-oriented
-    paras        Treat text as paragraph-oriented
-
-(If more than one of these is specified, C<pre> takes precedence over
-C<lines> which takes precedence over C<paras>.)  The following option
-applies when the C<lines> option is specified:
-
-    spaces       Preserve spaces from the original text
-
-The following options apply when the C<paras> option is specified:
-
-    blockparas   Mark up indented paragraphs as block quote
-    blockquotes  Ditto, also preserve lines from original
-    blockcode    Ditto, also preserve spaces from original
-    bullets      Mark up bulleted paragraphs as unordered list
-    headings     Mark up headings
-    numbers      Mark up numbered paragraphs as ordered list
-    tables       Mark up tables
-    title        Mark up first paragraph as level 1 heading
-
-C<text2html> will issue a warning if it is passed nonsensical options,
-for example C<headings> but not C<paras>.  These warnings can be
-supressed by setting $HTML::FromText::QUIET to true.
-
-=head1 OPTIONS
-
-=over 4
-
-=item blockparas
-
-=item blockquotes
-
-=item blockcode
-
-These options cause to C<text2html> to spot paragraphs where every line
-begins with whitespace, and mark them up as block quotes.  If more than
-one of these options is specified, C<blockparas> takes precedence over
-C<blockcode>, which takes precedence over C<blockquotes>.  All three
-options are ignored unless the C<paras> option is also set.
-
-The C<blockparas> option marks up the paragraph as a block quote with no
-other changes.  For example,
-
-    Turing wrote,
-
-        I propose to consider the question,
-        "Can machines think?"
-
-becomes
-
-    <P>Turing wrote,</P>
-    <BLOCKQUOTE>I propose to consider the question,
-    &quot;Can machines think?&quot;</BLOCKQUOTE>
-
-The C<blockquotes> option preserves line breaks in the original text.
-For example,
-
-    From "The Waste Land":
-
-        Phlebas the Phoenecian, a fortnight dead,
-        Forgot the cry of gulls, and the deep sea swell
-
-becomes
-
-    <P>From &quot;The Waste Land&quot;:</P>
-    <BLOCKQUOTE>Phlebas the Phoenecian, a fortnight dead,<BR>
-    Forgot the cry of gulls, and the deep sea swell</BLOCKQUOTE>
-
-The C<blockcode> option preserves line breaks and spaces in the original
-text and renders the paragraph in a fixed-width font.  For example:
-
-    Here's how to output numbers with commas:
-
-        sub commify {
-          local $_ = shift;
-          1 while s/^(-?\d+)(\d{3})/$1,$2/;
-          $_;
-        }
-
-becomes
-
-    <P>Here's how to output numbers with commas:</P>
-    <BLOCKQUOTE><TT>sub&nbsp;commify&nbsp;{<BR>
-    &nbsp;&nbsp;local&nbsp;$_&nbsp;=&nbsp;shift;<BR>
-    &nbsp;&nbsp;1&nbsp;while&nbsp;s/^(-?\d+)(\d{3})/$1,$2/;<BR>
-    &nbsp;&nbsp;$_;<BR>
-    }</TT></BLOCKQUOTE>
-
-=item bold
-
-Words surrounded with asterisks are marked up in bold, so C<*abc*>
-becomes C<E<lt>BE<gt>abcE<lt>/BE<gt>>.
-
-=item bullets
-
-Spots bulleted paragraphs (beginning with optional whitespace, an
-asterisk or hyphen, and whitespace) and marks them up as an unordered
-list.  Bulleted paragraphs don't have to be separated by blank lines.
-For example,
-
-    Shopping list:
-
-      * apples
-      * pears
-
-becomes
-
-    <P>Shopping list:</P>
-    <UL><LI><P>apples</P>
-    <LI><P>pears</P>
-    </UL>
-
-This option is ignored unless the C<paras> option is set.
-
-=item email
-
-Spots email addresses in the text and converts them to links.  For example
-
-    Mail me at web@perl.com.
-
-becomes
-
-    Mail me at <TT><A HREF="mailto:web@perl.com">web@perl.com</A></TT>.
-
-=item headings
-
-Spots headings (paragraphs starting with numbers) and marks them up as
-headings of the appropriate level.  For example,
-
-    1. Introduction
-
-    1.1 Background
-
-    1.1.1 Previous work
-
-    2. Conclusion
-
-becomes
-
-    <H1>1. Introduction</H1>
-    <H2>1.1 Background</H2>
-    <H3>1.1.1 Previous work</H3>
-    <H1>2. Conclusion</H1>
-
-This option is ignored unless the C<paras> option is set.
-
-=item lines
-
-Formats the text so as to preserve line breaks.  For example,
-
-    Line 1
-    Line 2
-
-becomes
-
-    Line 1<BR>
-    Line 2
-
-If two or more of the options C<pre>, C<lines> and C<paras> are set,
-then C<pre> takes precedence over C<lines>, which takes precedence over
-C<paras>.
-
-=item metachars
-
-Converts HTML metacharacters into their corresponding entity references.
-Ampersand (C<E<amp>>) becomes C<E<amp>amp;>, less than (C<E<lt>>)
-becomes C<E<amp>lt;>, greater than (C<E<gt>>) becomes C<E<amp>gt;>, and
-quote (") becomes C<E<amp>quot;>.  This option is 1 by default.
-
-=item numbers
-
-Spots numbered paragraphs (beginning with whitespace, digits, an
-optional period/parenthesis/bracket, and whitespace) and marks them up
-as an ordered list.  Numbered paragraphs don't have to be separated by
-blank lines.  For example,
-
-    To do:
-
-       1. Write thesis
-       2. Submit it
-       3. Celebrate
-
-becomes
-
-    <P>To do:</P>
-    <OL><LI VALUE="1"><P>Write thesis</P>
-    <LI VALUE="2"><P>Submit it</P>
-    <LI VALUE="3"><P>Celebrate</P>
-    </OL>
-
-This option is ignored unless the C<paras> option is set.
-
-=item paras
-
-Format the text into paragraphs.  Paragraphs are separated by one or
-more blank lines.  For example,
-
-    Paragraph 1
-
-    Paragraph 2
-
-becomes
-
-    <P>Paragraph 1</P>
-    <P>Paragraph 2</P>
-
-If two or more of the options C<pre>, C<lines> and C<paras> are set,
-then C<pre> takes precedence over C<lines>, which takes precedence over
-C<paras>.
-
-=item pre
-
-Wrap the whole input in a C<E<lt>PREE<gt>> element.  For example,
-
-    preformatted
-    text
-
-becomes
-
-    <PRE>preformatted
-    text</PRE>
-
-If two or more of the options C<pre>, C<lines> and C<paras> are set,
-then C<pre> takes precedence over C<lines>, which takes precedence over
-C<paras>.
-
-=item spaces
-
-Preserves spaces throughout the text.  For example,
-
-    Line 1
-     Line  2
-      Line   3
-
-becomes
-
-    Line 1<BR>
-    &nbsp;Line&nbsp;&nbsp;2<BR>
-    &nbsp;&nbsp;Line&nbsp;&nbsp;&nbsp;3
-
-This option is ignored unless the C<lines> option is set.
-
-=item tables
-
-Spots tables and marks them up appropriately.  Columns must be separated
-by two or more spaces (this prevents accidental incorrect recognition of
-a paragraph where interword spaces happen to line up).  If there are two
-or more rows in a paragraph and all rows share the same set of (two or
-more) columns, the paragraph is assumed to be a table.  For example
-
-    -e  File exists.
-    -z  File has zero size.
-    -s  File has nonzero size (returns size).
-
-becomes
-
-    <P><TABLE>
-    <TR><TD>-e</TD><TD>File exists.</TD></TR>
-    <TR><TD>-z</TD><TD>File has zero size.</TD></TR>
-    <TR><TD>-s</TD><TD>File has nonzero size (returns size).</TD></TR>
-    </TABLE></P>
-
-C<text2html> guesses for each column whether it is intended to be left,
-centre or right aligned.
-
-This option is ignored unless the C<paras> option is set.
-
-=item title
-
-Formats the first paragraph of the text as a first-level heading.
-For example,
-
-    Paragraph 1
-
-    Paragraph 2
-
-becomes
-
-    <H1>Paragraph 1</H1>
-    <P>Paragraph 2</P>
-
-This option is ignored unless the C<paras> option is set.
-
-=item underline
-
-Words surrounded with underscores are marked up with underline, so C<_abc_>
-becomes C<E<lt>UE<gt>abcE<lt>/UE<gt>>.
-
-=item urls
-
-Spots Uniform Resource Locators (URLs) in the text and converts them
-to links.  For example
-
-    See https://perl.com/.
-
-becomes
-
-    See <TT><A HREF="https://perl.com/">https://perl.com/</A></TT>.
-
-=back
+=head2 Output
+
+The output from C<HTML::FromText> has been updated to pass XHTML 1.1
+validation. Every HTML tag that should have a CSS class name does. They
+are prefixed with C<hft-> and correspond to the names of the options to
+C<new()> (or C<text2html()>). For example C<hft-lines>, C<hft-paras>,
+and C<hft-urls>.
+
+One important note is the output for C<underline>. Because the <u> tag
+is deprecated in this specification a C<span> is used with a style
+attribute of C<text-decoration: underline>. The class is C<hft-
+underline>. If you want to override the C<text-decoration> style in the
+CSS class you'll need to do so like this.
+
+    text-decoration: none !important;
 
 =head1 SEE ALSO
 
-The C<HTML::Entities> module (part of the LWP package) provides
-functions for encoding and decoding HTML entities.
-
-Tom Christiansen has a complete implementation of RFC 822 structured
-field bodies.  See
-C<http://www.perl.com/CPAN/authors/Tom_Christiansen/scripts/ckaddr.gz>.
-
-Seth Golub's C<txt2html> utility does everything that C<HTML::FromText>
-does, and a few things that it would like to do.  See
-C<http://www.thehouse.org/txt2html/>.
-
-RFC 822: "Standard for the Format of ARPA Internet Text Messages"
-describes the syntax of email addresses (the more esoteric features of
-structured field bodies, in particular quoted-strings, domain literals
-and comments, are not recognized by C<HTML::FromText>).  See
-C<ftp://src.doc.ic.ac.uk/rfc/rfc822.txt>.
-
-RFC 1630: "Universal Resource Identifiers in WWW" lists the protocols
-that may appear in URLs.  C<HTML::FromText> also recognizes "https:",
-but ignores "file:" because experience suggests that it results in too
-many false positives.  See C<ftp://src.doc.ic.ac.uk/rfc/rfc1630.txt>.
+L<text2html(1)>.
 
 =head1 AUTHOR
 
-Gareth Rees C<E<lt>garethr@cre.canon.co.ukE<gt>>.
+Casey West <F<casey@geeknest.com>>.
+
+=head1 AUTHOR EMERITUS
+
+Gareth Rees <F<garethr@cre.canon.co.uk>>.
 
 =head1 COPYRIGHT
 
-Copyright (c) 1999 Canon Research Centre Europe. All rights reserved.
-This module is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+  Copyright (c) 2003 Casey West.  All rights reserved.
+  This module is free software; you can redistribute it and/or modify it
+  under the same terms as Perl itself.
 
 =cut
