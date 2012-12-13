@@ -3,9 +3,10 @@
 
   [最近のまとめ]
 
-  FML_CURRENT_VERSION=7.98.17
+  FML_CURRENT_VERSION=7.98.18
 
   8.0 PRE_ALPHA
+	7.98.18 hack base to catch up perl 5.16 changes, cpan modules ..
 	7.98.17 update modules: cpan modules, IM et.al (to be planned).
 	7.98.16 FML::Install is enhanced.
 	7.98.15 IM updated to IM-150.
@@ -47,6 +48,23 @@
 
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
+
+2012/12/13
+
+  Mail::Delivery::SMTP
+	catch up IO::Handle changes in Perl 5.16 to avoid a lot of
+	warnings. see RT#66474
+	https://rt.cpan.org/Public/Bug/Display.html?id=66474
+
+2012/12/13
+
+  HTML::EntitiesLite added to make HTML::FromText work.
+	non-XS-ified HTML::Entities module derived from HTML::Parser
+	3.69. HTML::FromText is modified to use it.
+
+	HTML::EntitiesLite is enough for HTML::FromText since we can
+	use only encode_entities() not decode_entities, which depends
+	HTML::Parse XS engine.
 
 2012/04/21
 
@@ -10626,4 +10644,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.331 2012/04/15 07:24:03 fukachan Exp $
+$FML: CHANGES.txt,v 1.332 2012/04/21 15:09:14 fukachan Exp $
