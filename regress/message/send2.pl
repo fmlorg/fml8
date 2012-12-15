@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: send2.pl,v 1.4 2001/05/09 00:55:56 fukachan Exp $
+# $FML: send2.pl,v 1.5 2005/07/27 12:16:21 fukachan Exp $
 #
 
 use strict;
@@ -13,7 +13,8 @@ use Carp;
 use lib qw(../../cpan/lib ../../fml/lib);
 use Mail::Message;
 use FileHandle;
-require 'ctime.pl';
+use Time::localtime; # require 'ctime.pl';
+
 
 my $sender = 'elena-admin@sapporo.iij.ad.jp';
 my $rcpt   = 'fukachan@sapporo.iij.ad.jp';

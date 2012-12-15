@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: scramble.pl,v 1.4 2006/11/24 06:51:15 fukachan Exp $
+# $FML: scramble.pl,v 1.5 2010/03/06 13:18:40 fukachan Exp $
 #
 
 use strict;
@@ -57,7 +57,8 @@ while (<>) {
 
 if ($mode eq "post") {
     # avoid body loop check.
-    require 'ctime.pl';
+    # require 'ctime.pl';
+    use Time::localtime;
     print "\n";
     print "XXX AVOID BODY CHECKSUM LOOP CHECK: ";
     print ctime(time);
