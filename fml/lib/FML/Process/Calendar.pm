@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
+# Copyright (C) 2002,2003,2004,2005,2006,2012 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Calendar.pm,v 1.19 2006/10/11 14:54:49 fukachan Exp $
+# $FML: Calendar.pm,v 1.20 2006/10/14 00:43:46 fukachan Exp $
 #
 
 package FML::Process::Calendar;
@@ -160,7 +160,7 @@ sub run
     }
     # if "month" option is specified as an argument,
     # show the corresponding calendar.
-    elsif (defined(@$argv) && @$argv) {
+    elsif (@$argv) {
 	# ($month, $yeer) = @$argv;
 	$schedule->print_specific_month($wh, @$argv);
     }
@@ -231,7 +231,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004,2005,2006 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005,2006,2012 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
