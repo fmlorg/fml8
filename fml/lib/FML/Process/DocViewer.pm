@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002,2003,2004,2005,2012 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DocViewer.pm,v 1.35 2005/06/04 08:49:10 fukachan Exp $
+# $FML: DocViewer.pm,v 1.36 2005/08/10 15:03:25 fukachan Exp $
 #
 
 package FML::Process::DocViewer;
@@ -102,7 +102,7 @@ sub verify_request
     my $eval = $config->get_hook( 'fmldoc_verify_request_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
-    if (length(@$argv) == 0) {
+    if (scalar(@$argv) == 0) {
 	$curproc->help();
 	exit(0);
     }
@@ -230,7 +230,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003,2004,2005,2012 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

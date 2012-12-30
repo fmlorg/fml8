@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002,2003,2004,2005,2012 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ConfViewer.pm,v 1.33 2005/06/04 08:49:09 fukachan Exp $
+# $FML: ConfViewer.pm,v 1.34 2005/08/10 15:03:24 fukachan Exp $
 #
 
 package FML::Process::ConfViewer;
@@ -105,7 +105,7 @@ sub verify_request
 	$curproc->logwarn($@) if $@;
     }
 
-    if (length(@$argv) == 0 || (not $argv->[0])) {
+    if (scalar(@$argv) == 0 || (not $argv->[0])) {
 	$curproc->help();
 	exit(0);
     }
@@ -234,7 +234,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002,2003,2004,2005 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003,2004,2005,2012 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
