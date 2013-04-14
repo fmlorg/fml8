@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML$
+# $FML: sgml_compile.sh,v 1.1 2005/06/25 10:03:38 fukachan Exp $
 #
 
 #
@@ -84,7 +84,7 @@ if [ "X$mode" = "Xhtml" -o "X$mode" = "Xonehtml" ];then
 	-t sgml \
 	-c $fml_catalog_path  \
 	-d $dsssl#$mode \
-	-d $fml_sgml_dir/fml.dsl \
+	-d ${FML_DSL:-$fml_sgml_dir/fml.dsl} \
 	> $out_html < $source
 
 elif [ "X$mode" = "Xlynx" ];then

@@ -49,6 +49,12 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2013/04/14
+
+  fml/utils/bin/sgml_compile.sh
+	inherit FML_DSL environmental variable if exists,
+	enhanced to catch up www.fml.org framework changes.
+
 2012/12/30
    FML::Process::Calendar
 	catch up perl changes: defined(hashes and arrays) is
@@ -10655,4 +10661,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.333 2012/12/13 13:47:34 fukachan Exp $
+$FML: CHANGES.txt,v 1.334 2012/12/30 10:02:53 fukachan Exp $
