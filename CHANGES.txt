@@ -6,6 +6,7 @@
   FML_CURRENT_VERSION=7.98.18
 
   8.0 PRE_ALPHA
+	7.98.18 mark 7.98.18-2015-08-15 as the further reference point.
 	7.98.18 hack base to catch up perl 5.16 changes, cpan modules ..
 	7.98.17 update modules: cpan modules, IM et.al (to be planned).
 	7.98.16 FML::Install is enhanced.
@@ -48,6 +49,11 @@
 
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
+
+2017/03/04
+
+  fml-7.98.18-2015-08-15 snapshot is created as the further reference point.
+  XXX used as a reference only.
 
 2013/04/14
 
@@ -10661,4 +10667,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.334 2012/12/30 10:02:53 fukachan Exp $
+$FML: CHANGES.txt,v 1.335 2013/04/14 05:13:12 fukachan Exp $
