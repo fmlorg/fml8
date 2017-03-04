@@ -1,5 +1,5 @@
-<!--
-   $FML: bookinfo.sgml,v 1.19 2009/12/26 13:33:26 fukachan Exp $
+<!-- -*- text -*-
+   $FML: bookinfo.sgml,v 1.20 2010/03/28 10:33:56 fukachan Exp $
 -->
 
 <bookinfo>
@@ -26,7 +26,7 @@
      </author>
 
      <copyright>
-   	<year> 2001,2002,2003,2004,2005,2006,2008,2009,2010 </year>
+   	<year> 2001-2017 </year>
    	<holder> Ken'ichi Fukamachi </holder>
      </copyright>
 
@@ -73,7 +73,12 @@
 	</ulink>
 	ドキュメントを参照して下さい)。
 <screen>
-	perl 5.10.0  on NetBSD 5.0.2 
+	perl 5.24.0  on NetBSD 7.0
+	perl 5.22.1  on NetBSD 7.0
+	perl 5.20.1  on NetBSD 5.1.2_PATCH
+	perl 5.18.1  on NetBSD 5.1.2_PATCH
+	perl 5.16    on NetBSD 5.1.2_PATCH
+	perl 5.10.0  on NetBSD 5.0.2
 	perl 5.10.0  on NetBSD 5.0 
 	perl 5.8.8   on NetBSD 4.0 
 	perl 5.8.8   on NetBSD 2.0.2
