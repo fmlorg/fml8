@@ -50,6 +50,16 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2017/08/18
+
+  apply patch to fix charset handling in Content-Type header
+  Thanks to <mizuki@myokoo.jp>. 
+
+2017/08/01
+
+  fml.org servers are being currenty re-designed to implement github mirror.
+   
+
 2017/03/04
 
   fml-7.98.18-2015-08-15 snapshot is created as the further reference point.
@@ -10667,4 +10677,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.335 2013/04/14 05:13:12 fukachan Exp $
+$FML: CHANGES.txt,v 1.336 2017/03/04 02:39:21 fukachan Exp $

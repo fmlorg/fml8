@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.104 2006/01/09 14:00:55 fukachan Exp $
+# $FML: Message.pm,v 1.105 2006/04/15 06:33:01 fukachan Exp $
 #
 
 package Mail::Message;
@@ -2211,10 +2211,14 @@ sub charset
 	return $self->{ charset };
     }
     # content-type: text/plain; charset=ISO-2022-JP
+    #  patch: <mizuki@myokoo.jp> 2017/02/09
+    #  XXX /.*?/ vs /\S+/, strange MUA exists ? e.g. charset="ISO 2022 JP"
     elsif (defined($buf) && $buf) {
 	my $_buf = $buf;
 	$_buf =~ s/\s*//gm;
-	if ($_buf =~ /Content-Type:.*charset=\"(\S+)\"/i ||
+	if ($_buf =~ /Content-Type:.*charset=\"(.*?);\"/i ||
+	    $_buf =~ /Content-Type:.*charset=(.*?);/i  ||
+	    $_buf =~ /Content-Type:.*charset=\"(\S+)\"/i ||
 	    $_buf =~ /Content-Type:.*charset=(\S+)/i) {
 	    my $charset = $1;
 	    $charset =~ tr/A-Z/a-z/;
