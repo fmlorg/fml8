@@ -1,3 +1,24 @@
+		Differences between IM 153 and IM 152
+
+* Support SMTP Authentication (experimental)
+  - To specify a submission server, add "/587" to Smtpservers
+  - To use AUTH LOGIN, set SmtpAccount=/PLAIN:user@host (PLAIN only)
+  - With a bug fix for "SIZE="
+* Prevent errors for Perl 5.24
+* Update config.guess and config.sub
+
+		Differences between IM 152 and IM 151
+
+* Prevent warnings for Perl 5.22
+* Update config.guess and config.sub
+
+		Differences between IM 151 and IM 150
+
+* Tiny changes for Perl 5.12.
+* Build scripts are updated.
+  - Use `sysconfdir' instead of `libdir' for the configuration file.
+  - $(DESTDIR) is prepended to each installed target.
+
 		Differences between IM 150 and IM 149
 
 * NamazuV2=yes by default.

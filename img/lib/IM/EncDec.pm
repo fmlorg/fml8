@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Apr 23, 2007
+### Revised: Feb 15, 2010
 ###
 
-my $PM_VERSION = "IM::EncDec.pm version 20100215(IM150)";
+my $PM_VERSION = "IM::EncDec.pm version 20161010(IM153)";
 
 package IM::EncDec;
 require 5.003;
@@ -217,8 +217,8 @@ sub cn_gb_to_ctext($) {
 sub hz_to_ctext($) {
     my $str = shift;
     $str =~ s/(~~)/~/g;
-    $str =~ s/(~{)/\e\$(A/g;
-    $str =~ s/(~})/\e(B/g;
+    $str =~ s/(~\{)/\e\$(A/g;
+    $str =~ s/(~\})/\e(B/g;
     return $str;
 }
 

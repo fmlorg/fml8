@@ -3,7 +3,7 @@
 			    Kazu Yamamoto
 			  Tatsuya Kinoshita
 
-			     Feb 15, 2010
+			     Oct 10, 2016
 
 
 			   <<<Copyright>>>
@@ -78,7 +78,7 @@ specify the "--prefix" option as follows:
 
 	% ./configure --prefix=/your/home
 
-The "--bindir", "--with-perldir", and "--libdir" option overrides for
+The "--bindir", "--with-perldir", and "--sysconfdir" option overrides for
 each. For instance, if you want install the IM perl modules to
 "/other/place/perl/IM", do as follows:
 
@@ -95,14 +95,14 @@ have the root privilege.
 		 <<<Contributions and Bug Reports>>>
 
 Please send comments, bug reports, and patches to the current maintainer
-  Tatsuya Kinoshita <tats@vega.ocn.ne.jp>
+	Tatsuya Kinoshita <tats@vega.ocn.ne.jp>
 
 For the latest news of IM, please see IM (Internet Message) Official Site
-  http://tats.hauN.org/im/
+	http://tats.hauN.org/im/
 
 You can download IM from Debian mirror sites.  For more information of
 the Debian im package, please see
-  http://packages.qa.debian.org/im
+	http://packages.qa.debian.org/im
 
 
 			  <<<Programmers>>>

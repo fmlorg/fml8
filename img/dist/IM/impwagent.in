@@ -14,8 +14,8 @@ BEGIN {
 };
 
 $Prog = 'impwagent';
-my $VERSION_DATE = "20100215";
-my $VERSION_NUMBER = "150";
+my $VERSION_DATE = "20161010";
+my $VERSION_NUMBER = "153";
 my $VERSION = "${Prog} version ${VERSION_DATE}(IM${VERSION_NUMBER})";
 my $VERSION_INFORMATION = "${Prog} (IM ${VERSION_NUMBER}) ${VERSION_DATE}
 Copyright (C) 1999 IM developing team
@@ -88,7 +88,7 @@ If you wish to use the feature supplied by $Prog, put "UsePwAgent=yes"
 in your Config file, and start $Prog manually before using im* commands
 which require passwords.
 
-Report bugs to <img\@mew.org>
+Report bugs to <tats\@vega.ocn.ne.jp>
 EOF
     exit $EXIT_SUCCESS;
 }

@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Apr 23, 2007
+### Revised: May 25, 2011
 ###
 
-my $PM_VERSION = "IM::Config.pm version 20100215(IM150)";
+my $PM_VERSION = "IM::Config.pm version 20161010(IM153)";
 
 package IM::Config;
 require 5.003;
@@ -39,7 +39,7 @@ use vars qw(@ISA @EXPORT);
     msgdbfile msgdbtype
     mbox_style mbox_filter
     nntpservers nntphistoryfile nntpauthuser set_nntpauthuser
-    popaccount pophistoryfile imapaccount httpproxy noproxy
+    popaccount pophistoryfile imapaccount smtpaccount httpproxy noproxy
     usepwagent pwagentport pwagent_tmp_dir pwagent_tmp_path usepwfiles pwfiles
     expand_path use_xdispatcher usetouchfile touchfile
     namazuv2 namazu_dir namazu_path namazu_lock_dir namazu_lock_path
@@ -58,7 +58,7 @@ use vars qw($CURRENT_DIR $HOME_DIR $IM_SYS_DIR
 	    $O_FOPT %C_DESC %C_VNAM
 	    %WHO_SET
 	    @SELECTORS
-	    $IM_LIBDIR $IM_DB_TYPE $FSYNC_NO
+	    $IM_SYSCONFDIR $IM_DB_TYPE $FSYNC_NO
 	    $prefix $exec_prefix $SSH_PATH);
 
 ##
@@ -67,7 +67,7 @@ use vars qw($CURRENT_DIR $HOME_DIR $IM_SYS_DIR
 
 $prefix="@prefix@";
 $exec_prefix= "@exec_prefix@";
-$IM_LIBDIR  = "@libdir@/im";
+$IM_SYSCONFDIR  = "@sysconfdir@/im";
 $IM_DB_TYPE = '@im_db_type@';
 $FSYNC_NO = @im_fsync_no@;
 $SSH_PATH = "@im_path_ssh@";
@@ -87,7 +87,7 @@ $HOME_DIR = $ENV{'HOME'} || $ENV{'LOGDIR'} || (getpwuid($<))[7] ||
 $HOME_DIR =~ s:\\:/:g;     # "\home\user" -> "/home/user"
 $HOME_DIR =~ s/\/$//;      # "/home/" -> "/home"
 
-$IM_SYS_DIR = $ENV{'IM_SYS_DIR'} || "$IM_LIBDIR";
+$IM_SYS_DIR = $ENV{'IM_SYS_DIR'} || "$IM_SYSCONFDIR";
 $IM_USER_DIR = &expand_home($ENV{'IM_USER_DIR'} || '.im');
 
 $IM_SYS_PROFILE = "$IM_SYS_DIR/SiteConfig";
@@ -135,6 +135,7 @@ BEGIN {
     'popaccount;s;;POPaccount'		=> 'Account info for POP access',
     'pophistory;s;;POPhistory'		=> 'Status file of POP access',
     'imapaccount;s;;IMAPaccount'	=> 'Account info for IMAP access',
+    'smtpaccount;s;;SMTPaccount'	=> 'Account info for SMTP authentication',
     'httpproxy;s;;HTTPproxy'		=> 'Proxy server for HTTP access',
     'noproxy;s;;Noproxy'		=> 'URL regex not to use Proxy server',
     'usepwagent;b;;UsePwAgent'		=> 'Use password agent',
@@ -362,7 +363,7 @@ sub read_cfg() {
 	    s/\s*$//;
 	    if (/^case\s*(.*)/) {
 		($case = $1) =~ s/\s*//g;
-		# make sure defined(%{$case}) is true
+		# make sure %{$case} is true
 		foreach (split(',', $case)) {
 		    $_->{0} = '';
 		    delete $_->{0};
@@ -487,7 +488,7 @@ sub set_selector($;$) {
 
     foreach $s (split(',', $selector)) { ### xxx lc
 	next if ($s eq 'default');
-	unless (defined(%{$s})) {
+	unless (%{$s}) {
 	    im_err("no 'case $s' in config file.\n");
 	    return -1;
 	} else {
@@ -564,7 +565,7 @@ sub help($) {
     if ($O_FOPT) {
 	print "\nNote that +xxx is equivalent to $O_FOPT=+xxx.\n";
     }
-    print "\nReport bugs to <img\@mew.org>.\n";
+    print "\nReport bugs to <tats\@vega.ocn.ne.jp>.\n";
     return 1;
 }
 
@@ -576,7 +577,7 @@ sub set_value_cfg($$$) {
     my($name, $val, $case) = @_;
     my($mnam, $desc, $vnam);
 
-    $val =~ s/\${(\w+)}/$ENV{$1}/ge;
+    $val =~ s/\$\{(\w+)\}/$ENV{$1}/ge;
     if ($val =~ /^\$(.*)/) {
 	# $InboxFolder -> +inbox
 	$val = ${$C_VNAM{lc($1)}};
@@ -907,6 +908,10 @@ sub imapaccount() {
     return $IMAPaccount;
 }
 
+sub smtpaccount() {
+    return $SMTPaccount;
+}
+
 sub httpproxy() {
     return $HTTPproxy;
 }
@@ -1163,7 +1168,7 @@ address addresses_regex
 msgdbfile msgdbtype
 mbox_style mbox_filter
 nntpservers nntphistoryfile nntpauthuser set_nntpauthuser
-popaccount pophistoryfile imapaccount httpproxy noproxy
+popaccount pophistoryfile imapaccount smtpaccount httpproxy noproxy
 usepwagent pwagentport pwagent_tmp_dir pwagent_tmp_path usepwfiles pwfiles
 expand_path use_xdispatcher usetouchfile touchfile
 namazuv2 namazu_dir namazu_path namazu_lock_dir namazu_lock_path

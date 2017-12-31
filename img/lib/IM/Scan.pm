@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Apr 23, 2007
+### Revised: May 25, 2011
 ###
 
-my $PM_VERSION = "IM::Scan.pm version 20100215(IM150)";
+my $PM_VERSION = "IM::Scan.pm version 20161010(IM153)";
 
 package IM::Scan;
 require 5.003;
@@ -509,7 +509,7 @@ sub friendly_addr($$) {
     my($a, $f, $p);
     while (($a, $addr, $f) = &fetch_addr($addr, 1), $a ne '') {
 	$a =~ s/\/[^@]*//;
-	if (defined(%petnames) && $petnames{lc($a)}) {
+	if (%petnames && $petnames{lc($a)}) {
 	    $p = $petnames{lc($a)};
 	} elsif (!$need_addr && $f) {
 	    $p = &mime_decode_string($f);

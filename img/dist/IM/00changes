@@ -1,3 +1,32 @@
+153 (2016/10/10)
+
+* Fix redeclaring my in my for Perl 5.24
+* Update config.guess and config.sub with autotools-dev 20160430.1
+* Support SMTP Authentication (experimental)
+  - To specify a submission server, add "/587" to Smtpservers
+  - To use AUTH LOGIN, set SmtpAccount=/PLAIN:user@host (PLAIN only)
+  - With a bug fix for "SIZE="
+	Murata Takashi <tmurata>
+* Update gitlog2imchanges to fix version tags
+
+152 (2015/12/20)
+
+* Fix unescaped left brace in regex is deprecated for Perl 5.22
+* Update config.guess and config.sub with autotools-dev 20150820.1
+* Add gitlog2imchanges to easily generate 00changes
+
+151 (2011/05/25)
+
+* IM/Config.pm.in, IM/Scan.pm: Don't use defined(%hash) for Perl 5.12.
+* Makefile.in, IM/Config.pm.in: Use `sysconfdir' instead of `libdir' for
+  the configuration file.
+* Makefile.in: $(DESTDIR) is prepended to each installed target.
+* impwagent.in, IM/Config.pm.in: Use tats@vega.ocn.ne.jp instead of
+  img@mew.org to report bugs.
+* config.guess, config.sub: Updated with Debian autotools-dev 20110511.1.
+* configure: Updated with Debian autoconf 2.68-1.
+* install-sh: Updated with Debian libtool 2.4-2.
+
 150 (2010/02/15)
 
 * IM/Pop.pm: Move exec_getsbrfile() from pop_repr() to pop_inc() to work

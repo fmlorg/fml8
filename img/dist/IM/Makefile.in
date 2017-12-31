@@ -24,13 +24,13 @@ exec_prefix=@exec_prefix@
 
 # --bindir
 bindir=@bindir@
-# --libdir
-libdir=@libdir@
+# --sysconfdir
+sysconfdir=@sysconfdir@
 # --with-perldir
 perldir=@im_path_siteperl@
 
-# If you modify imlibdir, you should also modify IM/Config.
-imlibdir= $(libdir)/im
+# If you modify imsysconfdir, you should also modify IM/Config.
+imsysconfdir= $(sysconfdir)/im
 moddir=	  $(perldir)/IM
 
 RPOP=	@im_rpop@
@@ -51,35 +51,35 @@ all:
 install:: installbin installdata
 
 installbin::
-	-if test ! -d $(bindir); then \
-		$(mkdir) -p $(bindir) && $(chmod) 755 $(bindir); \
+	-if test ! -d $(DESTDIR)$(bindir); then \
+		$(mkdir) -p $(DESTDIR)$(bindir) && $(chmod) 755 $(DESTDIR)$(bindir); \
 	fi
 	for f in $(PROG); do \
 		$(sed) -e '/###DELETE-ON-INSTALL###/d' $${f} > $${f}.tmp ; \
-		$(INSTALL) -m 755 $${f}.tmp $(bindir)/$${f} ; \
+		$(INSTALL) -m 755 $${f}.tmp $(DESTDIR)$(bindir)/$${f} ; \
 		$(rm) -f $${f}.tmp ; \
 	done
 	$(sed) -e '/###DELETE-ON-INSTALL###/d' imget > imget.tmp
-	$(INSTALL) $(RPOP) imget.tmp $(bindir)/imget
+	$(INSTALL) $(RPOP) imget.tmp $(DESTDIR)$(bindir)/imget
 	$(rm) -f imget.tmp
 
 installdata::
-	-if test ! -d $(moddir); then \
-		$(mkdir) -p $(moddir); \
+	-if test ! -d $(DESTDIR)$(moddir); then \
+		$(mkdir) -p $(DESTDIR)$(moddir); \
 	fi
-	$(chmod) 755 $(moddir)
+	$(chmod) 755 $(DESTDIR)$(moddir)
 	for f in IM/*.pm; do \
-		$(INSTALL_DATA) $${f} $(moddir) ; \
+		$(INSTALL_DATA) $${f} $(DESTDIR)$(moddir) ; \
 	done
-	-if test ! -d $(imlibdir); then \
-		$(mkdir) -p $(imlibdir); \
+	-if test ! -d $(DESTDIR)$(imsysconfdir); then \
+		$(mkdir) -p $(DESTDIR)$(imsysconfdir); \
 	fi
-	$(chmod) 755 $(imlibdir)
+	$(chmod) 755 $(DESTDIR)$(imsysconfdir)
 	for cnf_im in SiteConfig ; do \
-		if test ! -f $(imlibdir)/$$cnf_im; then \
-			$(INSTALL_DATA) cnf.im/$$cnf_im $(imlibdir); \
+		if test ! -f $(DESTDIR)$(imsysconfdir)/$$cnf_im; then \
+			$(INSTALL_DATA) cnf.im/$$cnf_im $(DESTDIR)$(imsysconfdir); \
 		else \
-			$(INSTALL_DATA) cnf.im/$$cnf_im $(imlibdir)/$$cnf_im.new; \
+			$(INSTALL_DATA) cnf.im/$$cnf_im $(DESTDIR)$(imsysconfdir)/$$cnf_im.new; \
 		fi ;\
 	done
 

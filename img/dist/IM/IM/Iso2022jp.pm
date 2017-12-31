@@ -8,7 +8,7 @@
 ### Revised: Apr 23, 2007
 ###
 
-my $PM_VERSION = "IM::Iso2022jp.pm version 20100215(IM150)";
+my $PM_VERSION = "IM::Iso2022jp.pm version 20161010(IM153)";
 
 package IM::Iso2022jp;
 require 5.003;

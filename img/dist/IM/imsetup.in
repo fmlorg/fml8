@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: May  9, 1997
-### Revised: Apr 23, 2007
+### Revised: Feb 15, 2010
 ###
 
 BEGIN {
@@ -14,8 +14,8 @@ BEGIN {
 };
 
 $Prog = 'imsetup';
-my $VERSION_DATE = "20100215";
-my $VERSION_NUMBER = "150";
+my $VERSION_DATE = "20161010";
+my $VERSION_NUMBER = "153";
 my $VERSION = "${Prog} version ${VERSION_DATE}(IM${VERSION_NUMBER})";
 my $VERSION_INFORMATION = "${Prog} (IM ${VERSION_NUMBER}) ${VERSION_DATE}
 Copyright (C) 1999 IM developing team

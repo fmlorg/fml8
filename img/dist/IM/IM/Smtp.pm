@@ -8,7 +8,7 @@
 ### Revised: Apr 23, 2007
 ###
 
-my $PM_VERSION = "IM::Smtp.pm version 20100215(IM150)";
+my $PM_VERSION = "IM::Smtp.pm version 20161010(IM153)";
 
 package IM::Smtp;
 require 5.003;
@@ -20,6 +20,9 @@ use IM::Log;
 use IM::Message qw(message_size put_header put_body put_mimed_bcc
 		   put_mimed_partial put_mimed_error_notify set_crlf);
 use IM::TcpTransaction;
+use IM::EncDec;
+use IM::GetPass;
+use IM::MD5;
 use integer;
 use strict;
 use vars qw(@ISA @EXPORT);
@@ -74,6 +77,8 @@ sub smtp_open($$$) {
 	foreach (@resp) {
 	    if (/^250[ \-]([A-Z0-9]+)$/) {
 		$ESMTP{$1} = 1;
+	    } elsif (/^250[ \-]([A-Z0-9]+) ([-A-Z0-9 ]+)$/) {
+		$ESMTP{$1} = $2;
 	    }
 	}
 	$Smtp_opened = 1;
@@ -175,6 +180,10 @@ sub smtp_transact_sub($$$$$$$) {
     } else {
         $btype = '';
     }
+    if ($server =~ m|/587$| && $ESMTP{'AUTH'}) { # Submission port ... use AUTH
+	$rc = &smtp_authentication();
+	return $rc if ($rc);
+    }
     if ($ESMTP{'SIZE'}) {
 	$msg_size = &message_size($Header, $Body, $part);
 	$rc = &tcp_command(\*SMTPd,
@@ -247,6 +256,31 @@ sub smtp_transact_sub($$$$$$$) {
 	}
     }
     return 0;
+}
+
+sub smtp_authentication() {
+    my $rc = 0;
+    my $s = smtpaccount();
+    my($s, $auth, $user, $host) = split(m|[/:@]|, $s);
+    my($pass) = getpass('smtp', $auth, $host, $user);
+    if ($auth eq "PLAIN" && $ESMTP{'AUTH'} =~ /PLAIN/) {
+	$rc = &tcp_command(\*SMTPd, "AUTH PLAIN", '');
+	return $rc if ($rc);
+	my(@resp) = &command_response;
+      	if (@resp[0] !~ /^334/) {
+	    im_warn("AUTH PLAIN command failed.\n");
+	    return 1;
+	}
+	my $b = &b_encode_string("$user\@$host\0$user\@$host\0$pass");
+	$rc = &tcp_command(\*SMTPd, "$b", '********');
+	return $rc if ($rc);
+	my(@resp) = &command_response;
+	if (@resp[0] !~ /^235/) {
+	    im_warn("AUTH PLAIN authentication error.\n");
+	    return 1;
+	}
+    }
+    return $rc;
 }
 
 ##### SMTP TRANSACTION MANAGEMENT FOR RETURN ERROR NOTIFY #####
