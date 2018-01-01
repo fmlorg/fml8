@@ -6,53 +6,14 @@
   FML_CURRENT_VERSION=7.98.18
 
   8.0 PRE_ALPHA
-	7.98.18 mark 7.98.18-2015-08-15 as the further reference point.
-	7.98.18 hack base to catch up perl 5.16 changes, cpan modules ..
-	7.98.17 update modules: cpan modules, IM et.al (to be planned).
-	7.98.16 FML::Install is enhanced.
-	7.98.15 IM updated to IM-150.
-		fix wrong ID incrementation in article to html conversion.
-	7.98.14 www interface for anonymous users.
-		Anyone can submit a subscribe/unsubscribe request via
-		www interface. 
-	7.98.13 "isolate" instead of "reject" spam or unknown messages
-		by default.
-	7.98.12 delivery system error handling fixed.
-	7.98.11 ignore in restrictions supported.
-	7.98.10	delivery system overhaul sequal.
-	7.98.9	delivery system overhaul
-	7.98.8	correct context switch.
-		address validation in smtp transaction.
-	7.98.7	confirmation + manual subscribe/chaddr/unsubscribe
-		manual subscribe/chaddr/unsubscribe
-	7.98.6	fundamentals of moderator mode implemented.
-	7.98.5	add reviveml command (to revive a removed ML).
-		add PostgreSQL support.
-		add LDAP support.
-	7.98.4	minor fixes. clean up. 
-		clean up method naming convension.
-	7.98.3	Japanese/English document overhaul/revised.
-	7.98.2	queuing system revised. fetchfml added.
-		PGP/GPG authentication.
-		bug fix method naming convension (FNF).
-		MIME-Base64 removed from cvs tree.
-	7.98.1	overhaul.
-
-  [注意]
-	コマンドメールのコードを全面的に書き直しました。
-
-	fml-devel-20040303 が、このコマンドメールの変更が"入っていない"
-	最後のスナップショットです。
-
-	fml-devel-20040313 では、変数命名のルールが大きく変わりました。
-	気をつけてください。
-
-	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
-	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
+	7.98.18 minor updates continue ...
+	        mark 7.98.18-2015-08-15 as the further reference point.
+	        hack base to catch up perl 5.16 changes, cpan modules ..
+	7.98.xx ... # See Appendix at the last of this file.
 
 2018/01/01
 
-  fml8 (BETA;-) monthly rollout campaign starts.
+  fml8 season (monthly for a while) rollout campaign starts.
 
   updated to MailTools-2.19.
 
@@ -10686,5 +10647,52 @@
 2001/07/15
 
    このファイルを創設する:)
+
+
+----------------------------------------------------------------
+Appendix
+
+	7.98.17 update modules: cpan modules, IM et.al (to be planned).
+	7.98.16 FML::Install is enhanced.
+	7.98.15 IM updated to IM-150.
+		fix wrong ID incrementation in article to html conversion.
+	7.98.14 www interface for anonymous users.
+		Anyone can submit a subscribe/unsubscribe request via
+		www interface. 
+	7.98.13 "isolate" instead of "reject" spam or unknown messages
+		by default.
+	7.98.12 delivery system error handling fixed.
+	7.98.11 ignore in restrictions supported.
+	7.98.10	delivery system overhaul sequal.
+	7.98.09	delivery system overhaul
+	7.98.08	correct context switch.
+		address validation in smtp transaction.
+	7.98.07	confirmation + manual subscribe/chaddr/unsubscribe
+		manual subscribe/chaddr/unsubscribe
+	7.98.06	fundamentals of moderator mode implemented.
+	7.98.05	add reviveml command (to revive a removed ML).
+		add PostgreSQL support.
+		add LDAP support.
+	7.98.04	minor fixes. clean up. 
+		clean up method naming convension.
+	7.98.03	Japanese/English document overhaul/revised.
+	7.98.02	queuing system revised. fetchfml added.
+		PGP/GPG authentication.
+		bug fix method naming convension (FNF).
+		MIME-Base64 removed from cvs tree.
+	7.98.01	overhaul.
+
+  [注意]
+	コマンドメールのコードを全面的に書き直しました。
+
+	fml-devel-20040303 が、このコマンドメールの変更が"入っていない"
+	最後のスナップショットです。
+
+	fml-devel-20040313 では、変数命名のルールが大きく変わりました。
+	気をつけてください。
+
+	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
+	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
+
 
 $FML: CHANGES.txt,v 1.336 2017/03/04 02:39:21 fukachan Exp $
