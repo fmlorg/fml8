@@ -1,10 +1,9 @@
 require Mail::Header;
 
-print "1..22\n";
+print "1..34\n";
 
-$h = new Mail::Header;
-
-$t = 0;
+my $h = Mail::Header->new;
+my $t = 0;
 
 $h->header_hashref({hhrtest1 => 1, 
 	hhrtest2 => [1, "this test line was written by TobiX\n"]});
@@ -47,7 +46,6 @@ print "not "
 	unless $href->{Hhrtest1}->[0];
 printf "ok %d\n",++$t;
 
-
 $h->fold(30);
 
 print "not "
@@ -59,7 +57,7 @@ print "not "
 printf "ok %d\n",++$t;
 
 print "not "
-	unless $h->get(Date => 2) eq "an even longer test\n    header\n";
+	unless $h->get(Date => 2) eq "an even longer test\n header\n";
 printf "ok %d\n",++$t;
 
 $h->fold(20);
@@ -69,11 +67,25 @@ print "not "
 printf "ok %d\n",++$t;
 
 print "not "
-	unless $h->get(Date => 1) eq "a longer\n    test header\n";
+	unless $h->get(Date => 1) eq "a longer\n test header\n";
 printf "ok %d\n",++$t;
 
 print "not "
-	unless $h->get(Date => 2) eq "an even\n    longer test\n    header\n";
+	unless $h->get(Date => 2) eq "an even\n longer test\n header\n";
+printf "ok %d\n",++$t;
+
+$h->fold(30);
+
+print "not "
+       unless $h->get(Date => 0) eq "a test header\n";
+printf "ok %d\n",++$t;
+
+print "not "
+       unless $h->get(Date => 1) eq "a longer test header\n";
+printf "ok %d\n",++$t;
+
+print "not "
+       unless $h->get(Date => 2) eq "an even longer test\n header\n";
 printf "ok %d\n",++$t;
 
 $h->unfold;
@@ -133,25 +145,23 @@ test1: _abc _def _ghi _fdjhfd _fhdjkfh _dkhaaaaaaaaaaakjdfdjkfdshfdksfhdjfdkhfkd
 EOF
 $headout = <<EOF;
 Content-Type: multipart/mixed;
-    boundary="---- =_NextPart_000_01BDBF1F.DA8F77EE"
+ boundary="---- =_NextPart_000_01BDBF1F.DA8F77EE"
 Content-Type: multipart/mixed;
-    boundary="---- =_NextPart_000_01BDBF1F.DA8F77EE"hkjhgkfhgfhgf"hfkjdhf fhjf fghjghf fdshjfhdsj"
-    hgjhgfjk
+ boundary="---- =_NextPart_000_01BDBF1F.DA8F77EE"hkjhgkfhgfhgf"hfkjdhf fhjf fghjghf fdshjfhdsj" hgjhgfjk
 Content-Type: multipart/mixed;
-    boundary="---- =_NextPart_000_01BDBF1F.DA8F77EE"hkjhg
-    kfhgfhgf"hfkjdhf fhjf fghjghf fdshjfhdsj"
-    hgjhgfjk
+ boundary="---- =_NextPart_000_01BDBF1F.DA8F77EE"hkjhg
+ kfhgfhgf"hfkjdhf fhjf fghjghf fdshjfhdsj" hgjhgfjk
 Content-Type: multipart/mixed;
-    boundary="---- =_NextPart_000_01BDBF1F.DA8F77EE"hhhhhhhhhhhhhhhhhhhhhhhhh
-    fjsdhfkjsd fhdjsfhkj
+ boundary="---- =_NextPart_000_01BDBF1F.DA8F77EE"hhhhhhhhhhhhhhhhhhhhhhhhh
+ fjsdhfkjsd fhdjsfhkj
 Content-Type: multipart/mixed;
-    boundary="---- =_NextPart_000_01BDBF1F.DA8F77EE"
-    abc def ghfdgfdsgj fdshfgfsdgfdsg hfsdgjfsdg fgsfgjsg
+ boundary="---- =_NextPart_000_01BDBF1F.DA8F77EE" abc
+ def ghfdgfdsgj fdshfgfsdgfdsg hfsdgjfsdg fgsfgjsg
 MIME-Type: text/plain
 Test1: _abc _def _ghi _fdjhfd _fhdjkfh _dkhkjd _fdjkf _dshfdks _fhdjfdkhfk
-    _dshfds _fdsjk _fdkhfdks _fdsjf _dkf
+ _dshfds _fdsjk _fdkhfdks _fdsjf _dkf
 Test1: _abc _def _ghi _fdjhfd _fhdjkfh _dkhaaaaaaaaaaakjdfdjkfdshfdksfhdjfdkhfkdshfdsfdsjkfdkhfdksfdsjf
-    _dkf
+ _dkf
 EOF
 @mail = map { "$_\n" } split /\n/, $headin;
 
@@ -162,3 +172,50 @@ printf "ok %d\n",++$t;
 print $h->as_string,"\n----\n",$headout,"\nnot "
 	unless $h->as_string eq $headout;
 printf "ok %d\n",++$t;
+
+{   # Contributed by Thomas Sibley, introduced in v2.12
+    my $bad_continuation = "foo\@example.com\nBcc: evil\@example.com\n";
+    my $bad_header       = "To: $bad_continuation";
+
+    my @warnings;
+    local $SIG{__WARN__} = sub { push @warnings, "@_" };
+
+    print "not "
+        unless $h = new Mail::Header [$bad_header];
+    printf "ok %d\n",++$t;
+
+    print "not "
+        unless @warnings == 1 and shift(@warnings) =~ /bad header continuation/i;
+    printf "ok %d\n",++$t;
+
+    print "not "
+        if $h->get("To") or $h->get("Bcc");
+    printf "ok %d\n",++$t;
+
+    print "not "
+        unless $h = new Mail::Header [$bad_header], Modify => 1;
+    printf "ok %d\n",++$t;
+
+    print "not "
+        if @warnings;
+    printf "ok %d\n",++$t;
+
+    (my $to = $bad_continuation) =~ s/\n//; # replace the first newline only
+    print "not "
+        unless $h->get("To") eq $to;
+    printf "ok %d\n",++$t;
+     
+    print "not "
+        if $h->get("Bcc");
+    printf "ok %d\n",++$t;
+
+    my $continued = "foo\@example.com,\n bar\@example.com\n";
+    print "not "
+        unless $h = new Mail::Header ["To: $continued"];
+    printf "ok %d\n",++$t;
+
+    print "not "
+        unless $h->get("To") eq $continued;
+    printf "ok %d\n",++$t;
+}
+

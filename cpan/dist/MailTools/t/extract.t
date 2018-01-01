@@ -14,11 +14,10 @@ $i = 1;
 foreach $ln (@line) {
  next unless($ln =~ /\S/);
 
- ($test,$format,$name) = (split(/\n+/,$ln));
-
+ ($test,$format,$name) = split /\n+/, $ln;
  $q = (Mail::Address->parse($test))[0];
 
- $ename = $q->name || "";
+ $ename   = $q->name || "";
  $eformat = $q->format || "";
  $name = $ename unless defined $name;
  if($ename eq $name && $eformat eq $format) {
@@ -117,7 +116,7 @@ Dick Alstein
 
 mserv@rusmv1.rus.uni-stuttgart.de (RUS Mail Server)
 mserv@rusmv1.rus.uni-stuttgart.de (RUS Mail Server)
-Rus Mail Server
+RUS Mail Server
 
 Suba.Peddada@eng.sun.com (Suba Peddada [CONTRACTOR])
 Suba.Peddada@eng.sun.com (Suba Peddada [CONTRACTOR])
@@ -153,15 +152,11 @@ Graham Barr
 
 a909062@node_cb83.node_cb83 (Colin x Maytum         (0013 bro5))
 a909062@node_cb83.node_cb83 (Colin x Maytum         (0013 bro5))
-Colin X Maytum
+Colin x Maytum
 
 a909062@node_cb83.node_cb83 (Colin Maytum         (0013 bro5))
 a909062@node_cb83.node_cb83 (Colin Maytum         (0013 bro5))
 Colin Maytum
-
-fred@john (Level iii support)
-fred@john (Level iii support)
-Level III Support
 
 Derek.Roskell%dero@msg.ti.com
 Derek.Roskell%dero@msg.ti.com
@@ -195,13 +190,22 @@ hjl@nynexst.com (H.J. Lu)
 hjl@nynexst.com (H.J. Lu)
 H.J. Lu
 
-berg@POOL.Informatik.RWTH-Aachen.DE (Stephen R. van den Berg) 
-berg@POOL.Informatik.RWTH-Aachen.DE (Stephen R. van den Berg)
-Stephen R. Van Den Berg
-
 @oleane.net:hugues@afp.com a!b@c.d foo!bar!foobar!root
 @oleane.net:hugues@afp.com
 Oleane Net:Hugues
 
 (foo@bar.com (foobar), ned@foo.com (nedfoo) ) <kevin@goess.org>
 kevin@goess.org (foo@bar.com (foobar), ned@foo.com (nedfoo) )
+
+
+eBay's Half <half@ebay.com>
+eBay's Half <half@ebay.com>
+eBay's Half
+
+outlook@example.com; semicolons@example.com
+outlook@example.com
+
+
+"Foo; Bar" <both@example.com>, Baz <baz@example.com>
+"Foo; Bar" <both@example.com>
+Foo; Bar

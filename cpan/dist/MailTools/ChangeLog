@@ -1,4 +1,476 @@
 
+==== version history for MailTools
+
+version 2.19: Tue 22 Aug 13:30:41 CEST 2017
+
+	Improvements:
+	- block namespace MailTools rt.cpan.org#120905 [Karen Etheridge]
+
+version 2.18: Wed 18 May 23:52:30 CEST 2016
+
+	Fixes:
+	- Mail::Header should accept \r in empty line which ends the
+	  header.  rt.cpan.org#114382 [Ricardo Signes]
+
+version 2.17: Wed 11 May 17:20:21 CEST 2016
+
+	Fixes:
+	- Mail::Header should only accept totally empty lines as header
+	  terminator, not to break MIME::Tools regression tests.
+	  rt.cpan.org#113918 [David Cantrell]
+
+version 2.16: Mon 18 Apr 17:58:23 CEST 2016
+
+	Fixes:
+	- Mail::Header regression in parsing files.
+	  rt.cpan.org#113874 [John L Berger]
+
+version 2.15: Mon 18 Apr 13:55:30 CEST 2016
+
+	Fixes:
+	- Mail::Header continue reading after wrongly folders line
+	  rt.cpan.org#113464 [Mark Sapiro]
+
+	Improvements:
+	- Mail::Mailer::open call of exec() explained [Malte Stretz]
+	- fix example in Mail::Address [peter77]
+
+version 2.14: Fri Nov 21 17:12:42 CET 2014
+
+	Fixes:
+	- threads and Mail::Field initiation
+	  rt.cpan.org#99153 [Autumn Lansing] and [Arne Becker]
+
+	Improvements:
+	- warn when loading of some Mail::Field::* fails [Arne Becker]
+
+version 2.13: Sun Jan  5 18:52:25 CET 2014
+
+	Fixes:
+
+	- optional 'from' and 'on' component in in-reply-to are comments
+	  rt.cpan.org#89371 [Ward Vandewege]
+	- mailcap \\\\ -> \\
+	  rt.cpan.org#89802 [Kevin Ryde]
+
+	Improvements:
+
+	- fix typos  rt.cpan.org#87188 [D Steinbrunner]
+
+version 2.12: Fri Dec 21 12:18:51 CET 2012
+
+	Fixes:
+
+	- default for Mail::Header::new(Modify) is 'false', not 'true'
+	  rt.cpan.org#79985 [Thomas Sibley]
+
+	- Mail::Address take username with rindex(), a bit better than
+	  index() but still poor.
+	  rt.cpan.org#82056 [Filipe Gonçalves]
+
+	Improvements:
+
+	- check for bad folding of header lines
+	  rt.cpan.org#79993 [Thomas Sibley]
+
+	- add a note about better to avoid Mail::Address->name(),
+	  in response to a question by
+	  rt.cpan.org#81459 [Moritz Lenz]
+
+version 2.11: Wed Aug 29 09:09:47 CEST 2012
+
+	Fixes:
+
+	- typo in Mail::Mailer::smtp, which only shows up in >5.14
+	  [cpantesters]
+
+version 2.10: Tue Aug 28 09:41:52 CEST 2012
+
+	Fixes:
+
+	- Mail::Mailer::smtp set from address twice.
+	  rt.cpan.org#77161 [Vladimir Goshev]
+
+	- Mail::Mailer::smtps did not support the From option.
+	  rt.cpan.org#77161 [Vladimir Goshev]
+
+	Improvements:
+
+	- Mail::Util::mailaddress has now an optional parameter to
+	  set the returned value explicitly.
+	  rt.cpan.org#75975 [Rolf G]
+
+version 2.09: Sat Feb 25 14:47:39 CET 2012
+
+	Improvements:
+
+	- remove dependency to Test::Pod by moving 99pod.t from t/
+	  to xt/ as result of rt.cpan.org#69918 [Martin Mokrejs]
+
+version 2.08: Wed Jun  1 13:55:34 CEST 2011
+
+	Fixes:
+
+	- respect errors on closing an Mail::Mailer::smtp/::smtps connection.
+	  [Tristam Fenton-May]
+
+	- Mail::Internet should accept Net::SMTP::SSL as well.
+	  rt.cpan.org#68590 [Jonathan Kamens]
+
+	Improvements:
+
+	- document that Mail::Mailer::smtps needs Authen::SASL
+	  [Marcin WMP Janowski]
+
+version 2.07: Fri Oct  1 12:39:43 CEST 2010
+
+	Improvements:
+
+	- update README: MailTools 2.* require 5.8.1
+	  rt.cpan.org#61753 [Alexandre Bouillot]
+
+	- add "MAIL FROM" to Mail::Mailer::smtp, to be able to
+	  communicate with Comcast [David Myers]
+
+version 2.06: Tue Jan 26 10:01:22 CET 2010
+
+	Improvements:
+
+	- express more clearly that Authen::SASL needs to be installed
+	  manually if you need the functionality
+
+	- support for smtps via Net::SMTP::SSL, by [Maciej Żenczykowski]
+
+version 2.05: Fri Dec 18 22:39:21 CET 2009
+
+	Fixes:
+
+	- no de-ref error when index out of range in Mail::Header::get()
+	  [Bob Rogers]
+
+	- repaired fixed selection of smtp for non-unix systems.
+
+	Improvements:
+
+	- do not run pod.t in devel environment.
+
+	- set default output filename for Mail::Mailer::testfile::PRINT
+	  [Kaare Rasmussen[
+
+	- warn when no mailers were found.
+	  rt.cpan.org#52901 [Christoph Zimmermann]
+
+version 2.04: Tue Jul 29 11:44:26 CEST 2008
+
+	Fixes:
+
+	- Mail::Field::_require_dir complained on 5.10 about a closed
+	  dirhandle.  rt.cpan.org#37114 [Manuel Hecht]
+
+	- Bcc line removed before collecting addresses. [Jørgen Thomsen]
+
+	Improvements:
+
+	- add "die" to "close()" in synopsis of Mail::Send and
+	  Mail::Mailer.  rt.cpan.org#36103 [Ed Avis]
+
+version 2.03: Mon Apr 14 11:13:31 CEST 2008
+
+	Fixes:
+
+	- Netware needs to use smtp as well [Günter Knauf]
+
+	- Mail::Field::extract() fixed.  Reported by [Andrea Venturol]
+
+version 2.02: Fri Nov 30 09:57:48 CET 2007
+
+	Fixes:
+
+	- Mail::Internet uses Mail::Util::mailaddress, which is
+	  not exported by default.
+	  rt.cpan.org#31082 [Dave], rt.cpan.org#31070 [Friedrich Haubensak]
+	  and [Slaven Rezic]
+
+	Improvements:
+
+	- use 3-arg open() in Mail::Util.
+	  rt.cpan.org#20726 [Steve@sliug] and [Paul@city-fan]
+
+version 2.01: Wed Nov 28 10:48:24 CET 2007
+
+	Changes:
+
+	- Remove work-around for Perl 5.8.0. unicode bug from
+	  Mail::Address::_extract_name().
+	  Result of rt.cpan.org#30661 [Josh Clark]
+
+	- Requires on Perl 5.8.1 minimum
+
+	Fixes:
+
+	- Mail::Mailer::testfile now also shows Cc destinations, the
+	  setting of 'outfile' now works, and it will produce an error
+	  when the data cannot be written.  All thanks to [Slaven Rezic]
+
+version 2.00_03: Tue Sep 25 12:27:28 CEST 2007
+
+	- folding of header fields sometimes ended prematurely.
+	  Reported by [Anthony W. Kay]
+
+	- add $sender as 4th argument to Mail::Mailer::*::exec() where
+	  missing.  Discovered by [David Hand]
+
+	- add Date::Format and Date::Parse to Makefile.PL.
+
+version 2.00_02: Sat Jul 21 12:29:20 CEST 2007
+
+	- parts of the documentation were lost, discovered by [Ricardo Signes]
+
+	- rt.cpan.org #28093 smtp timeout
+	  check for local mail server can have short timeout.
+	  Patch by [Alexandr Ciornii]
+
+	- rt.cpan.org #28411 syntax error in Mail::Mailer::smtp
+	  reported by [Andreas Koenig]
+
+version 2.00_01: Wed Jun 20 14:42:35 CEST 2007
+
+	- reorganized installation of MailTools, in a modern way.  This
+	  may break installation on very old releases of Perl.
+
+	- added t/pod.t
+
+	- restructured most code, no functional changes.
+
+	- added and cleaned a lot of documentation, using OODoc to
+	  generate nice manuals in POD and HTML.
+
+	- extracted Mail::Field::Generic from Mail::Field
+
+	- added misteriously missing Mail::Field::AddrList::addr_list()
+
+version 1.77: Fri May 11 14:16:01 CEST 2007
+
+	- fixed syntax error in qmail.pm, patch by [Alexey Tourbin]
+	  also reported by [Volker Paulsen]
+
+	- die if qmail's exec fails.
+
+	- require Data::Format
+
+	- corrected header field folding according to rfc2822, which
+	  may break some ancient (poor) applications.
+	  Patch by [Christopher Madsen]
+
+version 1.76: Tue Apr 10 09:25:29 CEST 2007
+
+	- The tag (field label) casing is "normalized" which is not
+	  required (as the comment in the code told), but a mis-
+	  feature.  The feature will not change, to avoid breaking
+	  existing code. Original report by [Matt Swift]
+
+	- Do not ignore unknown argument to Mail::Internet::new(),
+	  but complain about it [JPBS]
+
+	- Document that the \n is still after a header line, but folding
+	  is removed. Suggested by [Roberto Jimenoca]
+
+	- Document that unfolding is too greading, taking all leading
+	  blanks where only one should be taken. Suggested by
+	  [Roberto Jimenoca]
+
+version 1.75: Wed Jun 14 15:30:25 CEST 2006
+
+	- [Mike Lerley] reported that environment variables are not
+	  thread-safe in mod_perl.  Therefore, we must pass the
+	  sender of the message explictly on qmail's command-line.
+	  His addapted patch included.
+
+version 1.74: Tue Feb 28 08:39:14 CET 2006
+
+	- Finally fixed exec with SMTP, with help from [Jun Kuriyama]
+
+version 1.73: Sat Jan 21 09:54:13 CET 2006
+
+	- Added 'use Mail::Util' to Mail::Mailer::testfile to produce
+	  mailaddress();
+
+	- Improved exec() call from version 1.67 a little more.  Let's hope
+	  that SMTP works again.
+
+version 1.72: Tue Jan 17 09:04:37 CET 2006
+
+	- release 1.70 broke SMTP sending.  Detected by [J Meyers]
+
+version 1.71: Thu Jan  5 11:20:52 CET 2006
+
+	- grrrr tests failed
+
+version 1.70: Thu Jan  5 11:17:05 CET 2006
+
+	- Mail::Mailer::testfile.pm adds "from" display to trace output.
+	  [wurblzap]
+
+	- fixed regex in Mail::Address [J Meyers]
+
+version 1.68: Thu Jan  5 10:29:25 CET 2006
+
+	- Updated copyright year.
+
+	- Removed 'use locale' from Mail::Address, which tainted the
+	  parsed address.  E-mail addresses are ASCII, so this 'locale'
+	  thing seems flawed.
+
+	- $adr->name will refuse charset-encoded names.  Found by [kappa]
+
+	- Improve parse-regexes in Mail::Address. By [J Meyers] and me.
+
+version 1.67: Thu Mar 31 12:05:31 CEST 2005
+
+	- Mail::Mailer unfolded the header before sending, which is
+	  incorrect. Reported by [Byron Jones]
+
+	- Mail::Header refolded already folded lines destroying
+	  blanks.  Signaled by [Byron Jones]
+
+	- Mail::Utils::maildomain now understands DM$m.  Patch by
+	  [Nate Mueller]
+
+	- When a Mail::Mailer exec() failes, DESTROY is called on all
+	  parential files.  Not anymore thanks to [Randall Lucas]
+	  
+version 1.66: Thu Jan 20 10:16:10 CET 2005
+
+	- Extended explanation that Mail::Address is limited.
+
+	- Added examples/mail-mailer.pl, contributed by [Bruno Negrão]
+
+	- use Mail::Mailer qw(mail) sets default mailer.  Doc update by
+	  [Slavan Rezic]
+
+	- Mail::Mailer::smtp now can authenticate SSL [Aaron J. Mackey]
+
+version 1.65: Wed Nov 24 15:43:17 CET 2004
+
+	- Remove "minimal" comments from Mail::Address
+
+        - [Dan Grillo] suggested some improvements to Mail::Address::name(),
+	  and some more were added.
+
+	- [Slavan Rezic] small typo.
+
+version 1.64: Tue Aug 17 22:24:22 CEST 2004
+
+	- CPAN failed to index 1.63 correctly, so hopefully it will
+	  work now.
+
+version 1.63: Mon Aug 16 17:28:15 CEST 2004
+
+	- [Craig Davison] Fixed date format in Mail::Field::Date to
+	  comply to the RFC
+
+	- [Alex Vandiver] patched the email address parser to be able
+	  to understand a list of addresses separated by ';', as Outlook
+	  does. The ';' is the group separator, which was not understood
+	  by MailTools before, but valid according to the RFCs.
+
+	- [Torsten Luettgert] found that field labels like '-' where not
+	  beautified correctly.
+
+	- [Slavan Rezic] Updated doc in Mail::Mailer: referred to $command 
+	  which doesn't mean anything, and "testfile" is working differently.
+
+	- [chris] Mail::Message::Field::wellformedName() will upper-case
+	  *-ID as part in the fieldname.
+
+version 1.62: Wed Mar 24 13:29:27 CET 2004
+
+	- [Reuven M. Lerner], removed warning by Mail::Address::host()
+	  when no e-mail address is provided.
+
+	- [Ville Skytta] contributed another Mail::Mailer::testfile fix
+
+version 1.61: Wed Mar 10 10:51:44 CET 2004
+
+	- [Erik Van Roode] Mail::Mailer::test.pm -> Mail::Mailer::testfile.pm
+
+	- [Jérôme Dion] corrected the folding of lines: folds start only
+	  with one blank according to rfc2822.
+
+	- Added a big warning against automatic sender email address
+	  detection as provided by Mail::Util::mailaddress().  Please
+	  explicitly set MAILADDRESS. This after a discussion with
+	  [Wolfgang Friebel].
+
+	- Mail::Address->format should quote phrases with weird character.
+	  Patched based on patch by [Marc 'HE' Brockschmidt]
+
+	- [Ruslan U. Zakirov] reported confusing error message when no
+	  MailerType was specified.
+
+	- [Steve Roberts] fixed folding to produce longer lines.
+
+version 1.60: Wed Sep 24 09:20:30 CEST 2003
+
+	- [Henrique Martins] found that enclosing parenthesis where not
+	  correctly stripped when processing a Mail::Address.
+
+	- [Tony Bowden] asked for a change in Mail::Address::name, where
+	  existing (probably correct) capitization is left intact.  The
+	  _extract_name() can be called as method, is needed, such that
+	  it can be extended.
+
+version 1.59: Wed Aug 13 08:13:00 CEST 2003
+
+	- Patch by [Shafiek Rasdien] which adds Mail::Internet::smtpsend
+	  option MailFrom.
+
+	- [Ziya Suzen] extended Mail::Mailer::test to provide more
+	  test information.
+
+	- Added SWE (Sender Waranted E-mail) as abbreviation in field
+	  names which is always in caps, on request by [Ronnie Paskin]
+
+	- Added SOAP and LDAP as abbreviation in field names which is
+	  always in caps.
+
+version 1.58: Tue Jan 14 14:42:29 CET 2003
+
+	- And again utf8 [Philip Molter]
+
+version 1.57: Tue Jan 14 09:47:46 CET 2003
+
+	- Added myself to the copyright notices... dates needed an update
+	  as well.
+
+	- Typos in Mail::Internet [Florian Helmberger]
+
+	- More tries to program around perl5.8.0's uc/lc-utf8 bugs in
+	  regexps [Autrijus Tang and Philip Molter]
+
+version 1.56: Mon Jan  6 17:13:17 CET 2003
+
+	- And again, the patches of Autrijus had to be adapted to run on
+	  a perl 5.6.1 installation.  Thanks to [Philip Molter]
+
+version 1.55: Mon Jan  6 08:05:58 CET 2003
+
+	- One explicit utf8::downgrade for 5.8.0, this time for
+	  Mail::Address by [Autrijus Tang].
+
+version 1.54: Mon Jan  6 08:00:00 CET 2003
+
+	- Another try to avoid the utf8 problems, this time by
+	  [Philip Molter]
+
+	- Two explicit utf8::downgrades for 5.8.0, this time for
+	  Mail::Field by [Autrijus Tang].
+
+version 1.53: Mon Dec  9 17:53:27 CET 2002
+
+	- New try on work-around for bug in perl 5.8.0 unicode \U within
+	  s/// Patched in Mail::Header by [Autrijus Tang]
+
 version 1.52: Fri Nov 29 13:52:00 CET 2002
 
 	- Work-around for bug in perl 5.8.0 unicode \U within s///
@@ -48,7 +520,7 @@ version 1.48: Wed Aug  7 22:54:56 CEST 2002
 	  time ago, broke the parser.  As example
 	   "Mark Overmeer <mailtools@overmeer.net> (mailtools maintainer)"
 	  was parsed into two separate objects.... wrong.
-          [Nicholas Oxh�j] reversed the patch.
+          [Nicholas Oxhøj] reversed the patch.
 
 version 1.47: Fri Jul  5 12:02:55 CEST 2002
 
@@ -148,7 +620,6 @@ version 1.40: Fri Aug 24 20:15:30 CEST 2001
 
 	  All packages in this bundle with have the same version!!!
 	  The highest number used was 1.33.
-
 
 version 1.16: Wed Aug  8 11:28:26 CEST 2001
 	by Mark Overmeer <mailtools@overmeer.net>
@@ -343,7 +814,7 @@ Change 291 on 1999/03/31 by <gbarr@pobox.com> (Graham Barr)
 	- check in $ENV{HOME} is defined
 	
 	Mail::Address
-	- Fix capitalization problems with names like "Lie�egang"
+	- Fix capitalization problems with names like "Ließegang"
 
 Change 290 on 1999/03/31 by <gbarr@pobox.com> (Graham Barr)
 

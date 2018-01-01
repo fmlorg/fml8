@@ -1,13 +1,16 @@
-#!/usr/local/bin/perl -w
+#!/usr/bin/env perl
 
 require Mail::Cap;
+use warnings;
+use strict;
 
-print "1..5\n";
+use Test::More tests => 6;
 
 # First we create a mailcap file to test
-$mcfile = "mailcap-$$";
+my $mcfile = "mailcap-$$";
 
-open(MAILCAP, ">$mcfile") || die "Can't create $mcfile: $!";
+open MAILCAP, '>', $mcfile
+    or die "Can't create $mcfile: $!";
 
 print MAILCAP <<EOT;
 
@@ -23,35 +26,38 @@ text/plain; smartcat %s; copiousoutput
 
 local;cat %s;print=lpr %{foo} %{bar} %t %s
 
+video/example; echo \\"; none
+
 EOT
-close(MAILCAP);
+close MAILCAP;
 
 # OK, lets parse it
-$mc = new Mail::Cap $mcfile;
+my $mc = Mail::Cap->new($mcfile);
 unlink($mcfile);  # no more need for this file
 
-$desc = $mc->description('image/gif');
+my $desc = $mc->description('image/gif');
 
 print "GIF desc: $desc\n";
-print "ok 1\n" if $desc eq "Simple image format";
+is($desc, "Simple image format");
 
-$cmd1 = $mc->viewCmd('text/plain; charset=iso-8859-1', 'file.txt');
-$cmd2 = $mc->viewCmd('text/plain; charset=iso-8859-2', 'file.txt');
-$cmd3 = $mc->viewCmd('image/gif', 'gisle.gif');
-$cmd4 = $mc->printCmd('local; foo=bar', 'myfile');
-
+my $cmd1 = $mc->viewCmd('text/plain; charset=iso-8859-1', 'file.txt');
 print "$cmd1\n";
+is($cmd1, "cat file.txt");
 
-print "ok 2\n" if $cmd1 eq "cat file.txt";
-
+my $cmd2 = $mc->viewCmd('text/plain; charset=iso-8859-2', 'file.txt');
 print "$cmd2\n";
-print "ok 3\n" if $cmd2 eq "smartcat file.txt";
+is($cmd2, "smartcat file.txt");
 
+my $cmd3 = $mc->viewCmd('image/gif', 'gisle.gif');
 print "$cmd3\n";
-print "ok 4\n" if $cmd3 eq qq(xv gisle.gif ; echo "Showing image gisle.gif");
+is($cmd3, qq(xv gisle.gif ; echo "Showing image gisle.gif"));
 
+my $cmd4 = $mc->printCmd('local; foo=bar', 'myfile');
 print "$cmd4\n";
-print "ok 5\n" if $cmd4 =~ /^lpr\s+bar\s+local\s+myfile$/;
+like($cmd4, qr/^lpr\s+bar\s+local\s+myfile$/);
 
+my $cmd5 = $mc->viewCmd('video/example', 'myfile');
+print "$cmd5\n";
+is($cmd5, 'echo \"');
 
 #$mc->dump;

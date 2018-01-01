@@ -1,5 +1,5 @@
 #!/usr/local/bin/perl -w
-print "1..8\n";
+print "1..9\n";
 require Mail::Address;
 print "ok 1\n";
 require Mail::Cap;
@@ -16,4 +16,6 @@ require Mail::Send;
 print "ok 7\n";
 require Mail::Util;
 print "ok 8\n";
+require MailTools;
+print "ok 9\n";
 
