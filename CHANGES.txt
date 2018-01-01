@@ -50,6 +50,12 @@
 	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
 	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
 
+2018/01/01
+
+  fml8 (BETA;-) monthly rollout campaign starts.
+
+  updated to MailTools-2.19.
+
 2017/12/31
 
   updated to im-153.
