@@ -2,15 +2,17 @@
 #  For other contributors see ChangeLog.
 # See the manual pages for details on the licensing terms.
 # Pod stripped from pm file by OODoc 2.02.
+# Based on smtp.pm, adapted by Maciej Żenczykowski
+
 use strict;
 
-package Mail::Mailer::smtp;
+package Mail::Mailer::smtps;
 use vars '$VERSION';
 $VERSION = '2.19';
 
 use base 'Mail::Mailer::rfc822';
 
-use Net::SMTP;
+use Net::SMTP::SSL;
 use Mail::Util qw(mailaddress);
 use Carp;
 
@@ -21,8 +23,9 @@ sub exec {
     my %opt   = @$args;
     my $host  = $opt{Server} || undef;
     $opt{Debug} ||= 0;
+    $opt{Port}  ||= 465;
 
-    my $smtp = Net::SMTP->new($host, %opt)
+    my $smtp = Net::SMTP::SSL->new($host, %opt)
 	or return undef;
 
     if($opt{Auth})
@@ -32,12 +35,12 @@ sub exec {
 
     ${*$self}{sock} = $smtp;
 
-    $smtp->mail($opt{From} || mailaddress());
+    $smtp->mail($opt{From} || mailaddress);
     $smtp->to($_) for @$to;
     $smtp->data;
 
     untie *$self if tied *$self;
-    tie *$self, 'Mail::Mailer::smtp::pipe', $self;
+    tie *$self, 'Mail::Mailer::smtps::pipe', $self;
     $self;
 }
 
@@ -46,7 +49,9 @@ sub set_headers($)
     $self->SUPER::set_headers
      ( { From => "<" . mailaddress() . ">"
        , %$hdrs
-       , 'X-Mailer' => "Mail::Mailer[v$Mail::Mailer::VERSION] Net::SMTP[v$Net::SMTP::VERSION]"
+       , 'X-Mailer' => "Mail::Mailer[v$Mail::Mailer::VERSION] "
+           . " Net::SMTP[v$Net::SMTP::VERSION]"
+           . " Net::SMTP::SSL[v$Net::SMTP::SSL::VERSION]"
        }
      );
 }
@@ -83,7 +88,7 @@ sub close(@)
     $ok;
 }
 
-package Mail::Mailer::smtp::pipe;
+package Mail::Mailer::smtps::pipe;
 use vars '$VERSION';
 $VERSION = '2.19';
 

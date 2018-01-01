@@ -1,20 +1,29 @@
+# Copyrights 1995-2017 by [Mark Overmeer <perl@overmeer.net>].
+#  For other contributors see ChangeLog.
+# See the manual pages for details on the licensing terms.
+# Pod stripped from pm file by OODoc 2.02.
+use strict;
+
 package Mail::Mailer::rfc822;
-use vars qw(@ISA);
-@ISA = qw(Mail::Mailer);
+use vars '$VERSION';
+$VERSION = '2.19';
 
-sub set_headers {
-    my $self = shift;
-    my $hdrs = shift;
-    local($\)="";
-    foreach(keys %$hdrs) {
-	next unless m/^[A-Z]/;
+use base 'Mail::Mailer';
 
-        my ($h);
-        foreach $h ($self->to_array($hdrs->{$_}))
+sub set_headers
+{   my ($self, $hdrs) = @_;
+
+    local $\ = "";
+
+    foreach (keys %$hdrs)
+    {   next unless m/^[A-Z]/;
+
+        foreach my $h ($self->to_array($hdrs->{$_}))
         {   $h =~ s/\n+\Z//;
-            print $self "$_: ", $h, "\n";
+            print $self "$_: $h\n";
         }
     }
+
     print $self "\n";	# terminate headers
 }
 
