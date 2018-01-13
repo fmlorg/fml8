@@ -1,7 +1,371 @@
-Revision history for Perl extension MIME::Types.
+======= version history for MIME::Types
 
 Unless explicitly stated differently are all changes produced by
-Mark Overmeer <mimetypes@overmeer.net>
+Mark Overmeer.
+
+TODO:
+ . Add source http://www.ltsw.se/knbase/internet/mime.htp ?
+
+version 2.14: Wed  8 Nov 17:45:22 CET 2017
+
+	Fixes:
+	- MojoX should not die on missing types.
+	  rt.cpan.org#123298 [Dmitry Latin]
+
+version 2.13: Mon  7 Mar 15:48:28 CET 2016
+
+	Fixes:
+	- not all information was extracted from the Apache tables.
+	  [Thomas Eckardt]
+
+version 2.12: Wed 11 Nov 12:24:55 CET 2015
+
+	Improvements:
+	- downgrade prereq perl to 5.6 [Peter Rabbitson]
+	- update IANA
+
+version 2.11: Tue Jun 16 17:16:20 CEST 2015
+
+	Improvements:
+	- strict Perl 5.8
+	  rt.cpan.org #105267 [Miyagawa], cpantesters
+
+version 2.10: Mon Jun 15 17:32:22 CEST 2015
+
+	Fixes:
+	- accept field 'q' weights [Theo van Hoesel]
+
+	Improvements:
+	- introduce PERL_MIME_TYPE_DB
+	  rt.cpan.org#104945 [Philip Gwyn]
+
+version 2.09: Sun Sep 14 18:12:08 CEST 2014
+
+	Improvements:
+	- documentation use consistent parameter casing
+	- do not use '//' to support 5.8.*
+	  rt.cpan.org#98664 [Paul]
+
+version 2.08: Fri Sep  5 15:29:52 CEST 2014
+
+	Fixes:
+	- fix test t/40mojo.t which mojo is not installed
+	  rt.cpan.org#98639 [Chris]
+
+	Improvements:
+	- remove dependency on Scalar::Util
+	- documentation fixes
+
+version 2.07: Fri Sep  5 12:08:06 CEST 2014
+
+	Fixes:
+	- MIME::Type::equals() did cmp not eq
+
+	Improvements:
+	- new httpAccept() wth tests in t/21accept.t
+	- new httpAcceptBest() and httpAcceptSelect() with tests
+	  in t/22accbest.t
+	- add MojoX::MIME::Types with tests in t/40mojo.t
+	- now depends on List::Util and Scalar::Util
+
+version 2.06: Thu Aug 28 16:28:43 CEST 2014
+
+	Improvements:
+	- needed other file from broofa :(
+	  rt.cpan.org#98308 [Lars Dɪᴇᴄᴋᴏᴡ]
+	- fix scan of freedesktop definitions
+	  rt.cpan.org #98385 [Russell Jenkins]
+
+version 2.05: Wed Aug 27 09:43:03 CEST 2014
+
+	Improvements:
+	- rename ::Type::isAscii() into ::Type::isText()
+	- add source table broofa
+	  rt.cpan.org#98308 [Lars Dɪᴇᴄᴋᴏᴡ]
+	- add source table freedesktop
+	  rt.cpan.org#98309 [Lars Dɪᴇᴄᴋᴏᴡ]
+	- update iana types
+
+version 2.04: Thu Sep 12 15:46:28 CEST 2013
+	Fixes:
+	- one more localize $_ in ::Types::_read_db()
+	  rt.cpan.org#87856 [Gerda Shank]
+
+version 2.03: Wed Sep  4 17:12:27 CEST 2013
+	Improvements:
+	- typo in docs, rt.cpan.org#88394 [Gregor Herrmann, Debian]
+	- require perl 5.8.8, because <:encoding [cpantesters]
+	- updated IANA
+	- a bit more DESCRIPTION
+
+version 2.02: Sun Aug 18 12:49:23 CEST 2013
+	Fixes:
+	- localize DB and $_ in ::Types::_read_db()
+	  rt.cpan.org#87856 [Gerda Shank]
+
+version 2.01: Sat Aug  3 01:07:27 CEST 2013
+	Improvements:
+	- add dummy ::Types::create_type_index() because
+	  Catalyst-Plugin-Static-Simple calls it :(
+
+version 2.00: Fri Aug  2 17:44:53 CEST 2013
+	Changes:
+	- the mime information is now collected from various sources, amongst
+	  them IANA.  Therefore, some types may use different x-'s
+	  #types up from 995 to 2096
+	- a separate table is built for the extension-to-type mapping.
+	  #exts  up from 734 to 1425
+	- the memory foot-print and start-up speed should have improved
+	  considerably.
+
+	Improvements:
+	- added bin/collect_types
+	- 3 typos. rt.cpan.org#86847 [D Steinbrunner]
+	- add ::Type::isVendor(), ::isExperimental(), ::isPersonal on request
+	  by rt.cpan.org#87062 [Lars Dɪᴇᴄᴋᴏᴡ 迪拉斯]
+	- cleaned-up Exporter syntax of (very) old interface.
+	- added ::Types::listTypes()
+
+version 1.38: Fri Jan 11 09:58:08 CET 2013
+	- add application/vnd.ms-excel.template.macroEnabled.12 and five
+	  related from http://filext.com/faq/office_mime_types.php
+	  rt.cpan.org#82616 [M Jemmeson]
+
+version 1.37: Fri Dec 21 11:33:53 CET 2012:
+	- all mime.types files agree that perl scripts should use
+	  application/x-perl.  Hence removed text/x-perl
+	  rt.cpan.org#82100 [Kent Fredric]
+
+version 1.36: Wed Oct 31 20:34:42 CET 2012
+	- xlsx and friends had encoding 'binary' (since version 1.30),
+	  but should have been 'base64'
+	  rt.cpan.org#80529 [Douglas Wilson]
+
+version 1.35: Tue Jun 19 20:37:21 CEST 2012
+	- added video/webm and audio/webm, although not (yet) IANA registered.
+	  [Kurian Jose Aerthail]
+
+version 1.34: Thu Jan 12 11:16:07 CET 2012
+	- subType() did not handle subType's with '+' in them.
+	  [Roman V. Nikolaev]
+
+version 1.33: Thu Jan 12 08:46:05 CET 2012
+	- all openxmlformats are binary [Beverly Wang]
+	- mediaType() and subType() did not handle subType's with dots
+	  in them correctly. [Roman V. Nikolaev]
+
+version 1.32: Thu Aug 18 23:30:25 CEST 2011
+	- explain how to use MIME::Types in mod_perl, after complains
+	  from [Steve Simms], [Nicolas Mendoza], [Yves Orton] and
+	  [Hans Dieter Pearcey]
+	- when you do not read the documentation about mod_perl/fork,
+	  then it will work as ever but still inefficient.
+
+version 1.31: Tue Sep 21 15:38:58 CEST 2010
+	- moved POD test to xt directory, reducing the number of
+	  dependencies. [Alexis Sukrieh]
+
+version 1.30: Thu Jun  3 12:00:37 CEST 2010
+	- typo.  rt.cpan.org#55655 [Salvatore.Bonaccorso]
+	- xlsx must be encoded binary [Ben Prew]
+	- added f4v, f4p, f4a, f4b extensions for mpeg4
+	  rt.cpan.org#55168 [Oskari Ojala]
+
+version 1.29: Tue Mar 16 23:28:00 CET 2010
+
+	- added a zillions of new types from debian's /etc/mime.types.
+	  implemented by [Roman V. Nikolaev]
+
+	- changed table format, hopefully to speed-up load times per
+	  type, slightly compensating for the increased list.
+
+version 1.28: Mon Sep  7 00:12:53 CEST 2009
+
+	- fix initiation when using by_mediatype().
+	  rt.cpan.org#49111 [GENEHACK]
+
+version 1.27: Tue Feb  3 12:23:08 CET 2009
+
+	- fix application/ogg to .ogx.  Add other oggs [John Drago]
+
+	- alternative for ogg in test scripts, 
+
+	- test by_mediatype with regexp parameter.
+
+	- do not use /bin/pwd in t/pod.t
+
+version 1.26: Wed Dec 17 09:01:27 CET 2008
+
+	- added many ooxml types [Joe Spooner]
+
+version 1.25: Sat Nov 29 15:00:20 CET 2008
+
+	- added application/jsoni
+	  rt.cpan.org #36812 [Christopher H. Laco]
+
+	- added text/x-component
+	  rt.cpan.org#41293 [Stephen Steneker]
+
+version 1.24: Fri May 23 09:43:28 CEST 2008
+
+	- message/rfc822 relates to .eml [Jonas Liljegren]
+
+	- application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+	  is an .xlsx [Jonas Liljegren]
+
+	- added zillion of application/vnd.oasis.opendocument.* and
+	  application/vnd.stardevision.* names [Michiel Leenaars]
+
+version 1.23: Mon Dec 17 16:12:52 CET 2007
+
+	- /xml file attributes were separated by blanks, not commas.
+	  [Alex Kapranoff]
+
+version 1.22: Wed Nov 14 17:20:22 CET 2007
+
+	- use RFC4180 text/csv, not text/comma-separated-values
+	  Reported by [Mike Eldridge]
+
+	- refer to File::TypeInfo for access to mime.types files.
+
+version 1.21: Mon Sep 10 21:18:08 CEST 2007
+
+	- patch tests to work on VMS [Peter (Stig) Edwards]
+
+	- patch for image/pjpeg bug IE6 [Nicolas Mendosa]
+
+version 1.20: Fri Jun  8 16:21:33 CEST 2007
+
+	- added application/xslt+xml (.xslt) [David Dierauer]
+
+	- moved extension .xml from text/xml (deprecated) to
+	  application/xml, and added .xsl to it [David Dierauer]
+
+	- Moved .dtd from text/xml to application/xml-dtd
+
+	- added t/pod.t
+
+version 1.19: Sun Mar 25 17:09:38 CEST 2007
+
+	- converted to use OODoc 0.99
+
+	- removed mkdist, mkdoc, README.oodoc, version
+
+version 1.18: Fri Nov 17 21:20:20 CET 2006
+
+	- [David Nesting] application/atom+xml and image/svg+xml
+
+	- [Islue Hu] audio/3gpp2 and video/3gpp2
+
+	- [Stephen Steneker] application/octet-stream += dmg, so, dll
+	  and video/x-flv.
+
+version 1.17: Sun Aug 13 10:32:37 CEST 2006
+
+	- [Hailin Hu] application/rdf+xml
+
+	- reprocessed manual-pages because FUNCTIONS chapers was lost
+	  (bug in OODoc) [Schwern]
+
+	- use 'version' file for version
+
+	- added kml and kmz types by Google-Earth
+
+version 1.16: Thu Sep 29 17:42:24 CEST 2005
+
+	- [Jan Kratochvil]  application/smil is 8bit
+
+	- [Jan Kratochvil]  application/x-javascript becomes
+	  application/javascript.  New is application/ecmascript
+
+	- Adapted to new behavior on stringification introduced by
+	  Test::Builder v0.31, reported by [Jurgen Pletinckx]
+
+version 1.15: Thu Mar 31 14:12:54 CEST 2005
+
+	- [Ave Wringeley] contributed MIME::Types methods types() and
+	  extensions()
+
+	- [Kjetil Kjernsmo] Added non-registered but useful OpenOffice/
+	  StarOffice types application/vnd.sun.xml.*
+
+	- [Tatsuhiko Miyagawa] contributed audio/3gpp and video/3gpp
+	  from RFC3839.
+
+version 1.14: Wed Nov 24 18:09:49 CET 2004
+
+	- [Ville Skyttä] provided some minor fixes and two new types
+
+	- [Ave Wringley] contributed video/x-ms-wmv
+
+	- [Ave Wringley] reported a bug in MIME::Types->addType, which
+	  produced a warning about double declaration where it shoudln't
+
+version 1.13: Sat Apr 24 00:15:09 CEST 2004
+
+	- [Ville Skyttä] and [Austing Ziegler] updated the type list to
+	  IANA registry dated 2004-04-09.  Many changes to clean-up the
+	  list, trying to find a good balance between IANA's rules and
+	  common practice.
+
+version 1.12: Wed Jan 21 10:09:43 CET 2004
+
+	- [Ville Skyttä] requested removal of application/excel, because
+	  it is not IANA registered.  Applied.
+
+	- Documented that alternative types for a certain extension will
+	  be used at random in mimeTypeOf()
+
+	- Documentation fix: only_complete returns all types with defined
+	  extensions. Transfer-encoding is optional.
+
+version 1.11: Tue Jan 13 10:36:41 CET 2004
+
+	- [Ville Skyttä] contributed a large set of new mime-types, and
+	  applied some fixes. New IANA names are now all included.
+
+version 1.10: Wed Dec 17 12:47:00 CET 2003
+
+	- [Miha Lampret] and [Jean-Marc Delafont] bumped into __DATA__
+	  conflict between MIME::Types table and mod_perl.
+
+version 1.09: Wed Nov  5 10:51:52 CET 2003
+
+	- Translated tests to use Test::More
+
+	- tests failed for detection '.doc', because OS-detection
+	  failed, which (with 5.8.1 random hash order) made VMS'es
+	  version of doc (plain/text) prevail in some situations.
+
+version 1.08: Mon Nov  3 17:44:57 CET 2003
+
+	- [Tuomas Salo] removed warning on "undef".
+
+	- .txt extension preferred over .asc for plain text
+
+version 1.07: Mon Jul 28 18:38:59 CEST 2003
+
+	- Translated documentation to newest version of OODoc
+
+	- Moved modules to lib/*, which removes the need for a nested
+	  Makefile.PL.
+
+version 1.06: Thu May  1 18:45:55 CEST 2003
+
+	- [NN Poster] updated the attributes for the PGP types.
+
+	- Converted documentation to be generated with OODoc.
+
+version 1.005: Tue Dec 24 13:01:00 CET 2002
+
+	- [Guangzu Wang] pointed to typos in the Synopsis of both packages:
+	  $mimetype   -->  $mimetypes
+
+	- [Ville Skyttä] some doc patches and many tweaks and additions
+	  to the type list.
+
+	- [Ville Skyttä] fixed bug, where the third column was taken as
+	  second if that one was empty.
 
 version 1.004: Tue Oct 22 19:22:43 CEST 2002
 

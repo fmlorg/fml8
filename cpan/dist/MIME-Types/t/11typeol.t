@@ -1,14 +1,14 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 #
 # Test overloading on MIME::Type objects.
 #
 
-use Test;
 use strict;
+use warnings;
 
-use lib qw(. t);
+use lib qw(lib t);
 
-BEGIN {plan tests => 21}
+use Test::More tests => 21;
 
 use MIME::Type;
 
@@ -32,11 +32,11 @@ ok(!$c->isRegistered);
 ok( $d->isRegistered);
 ok( $e->isRegistered);
 
-ok("$a" eq 'x-appl/x-zip');
-ok("$b" eq 'appl/x-zip');
-ok("$c" eq 'x-appl/zip');
-ok("$d" eq 'appl/zip');
-ok("$e" eq 'text/plain');
+is("$a", 'x-appl/x-zip');
+is("$b", 'appl/x-zip');
+is("$c", 'x-appl/zip');
+is("$d", 'appl/zip');
+is("$e", 'text/plain');
 
 ok($a eq 'appl/zip');
 ok($b eq 'APPL/ZIP');

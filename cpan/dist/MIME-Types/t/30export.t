@@ -1,15 +1,15 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 #
 # Test exported interface.
 # Tests originally by Jeff Okamato
 #
 
-use Test;
+use Test::More;
 use strict;
 
 use lib qw(. t);
 
-BEGIN {plan tests => 34}
+BEGIN {plan tests => 40}
 
 use MIME::Types;
 
@@ -18,69 +18,79 @@ use MIME::Types;
 #
 
 my ($mt, $cte) = MIME::Types::by_suffix("Pdf");
-ok($mt eq "application/pdf");
-ok($cte eq "base64");
+is($mt, "application/pdf");
+is($cte, "base64");
 
 ($mt, $cte) = MIME::Types::by_suffix("foo.Pdf");
-ok($mt eq "application/pdf");
-ok($cte eq "base64");
+is($mt, "application/pdf");
+is($cte, "base64");
 
 ($mt, $cte) = MIME::Types::by_suffix("flurfl");
-ok($mt eq "");
-ok($cte eq "");
+is($mt, "");
+is($cte, "");
 
-my @c = MIME::Types::by_mediatype("pdF");
-ok(@c == 1);
-ok($c[0]->[0] eq "pdf");
-ok($c[0]->[1] eq "application/pdf");
-ok($c[0]->[2] eq "base64");
+#pkcs7-mime          p7m,p7c
+
+my @c = MIME::Types::by_mediatype("pkcs7-mime");
+cmp_ok(scalar @c, '==', 2);
+cmp_ok(scalar @{$c[0]}, '>', 2);
+is($c[0]->[0], "p7m");
+is($c[0]->[1], "application/pkcs7-mime");
+is($c[0]->[2], "base64");
+cmp_ok(scalar @{$c[1]}, '>', 2);
+is($c[1]->[0], "p7c");
+is($c[1]->[1], "application/pkcs7-mime");
+is($c[1]->[2], "base64");
 
 @c = MIME::Types::by_mediatype("Application/pDF");
-ok(@c == 1);
-ok($c[0]->[0] eq "pdf");
-ok($c[0]->[1] eq "application/pdf");
-ok($c[0]->[2] eq "base64");
+cmp_ok(scalar @c, '<', 2);
+cmp_ok(scalar @{$c[0]}, '==', 3);
+is($c[0]->[0], "pdf");
+is($c[0]->[1], "application/pdf");
+is($c[0]->[2], "base64");
 
 @c = MIME::Types::by_mediatype("e");
-ok(@c > 1);
+cmp_ok(scalar @c, '>', 1);
 
 @c = MIME::Types::by_mediatype("xyzzy");
-ok(@c == 0);
+cmp_ok(scalar @c, '==', 0);
 
 #
 # These tests assume you want an array reference returned
 #
 
 my $aref = MIME::Types::by_suffix("Pdf");
-ok($aref->[0] eq "application/pdf");
-ok($aref->[1] eq "base64");
+is($aref->[0], "application/pdf");
+is($aref->[1], "base64");
 
 $aref = MIME::Types::by_suffix("foo.Pdf");
-ok($aref->[0] eq "application/pdf");
-ok($aref->[1] eq "base64");
+is($aref->[0], "application/pdf");
+is($aref->[1], "base64");
 
 $aref = MIME::Types::by_suffix("flurfl");
-ok($aref->[0] eq "");
-ok($aref->[1] eq "");
+is($aref->[0], "");
+is($aref->[1], "");
 
-$aref = MIME::Types::by_mediatype("pdF");
-ok(@$aref == 1);
-ok($aref->[0]->[0] eq "pdf");
-ok($aref->[0]->[1] eq "application/pdf");
-ok($aref->[0]->[2] eq "base64");
+$aref = MIME::Types::by_mediatype(qr!/zip!);
+cmp_ok(scalar @$aref, '==', 1);
+#use Data::Dumper;
+#warn Dumper $aref;
+is($aref->[0]->[0], "zip");
+is($aref->[0]->[1], "application/zip");
+is($aref->[0]->[2], "base64");
 
 $aref = MIME::Types::by_mediatype("Application/pDF");
-ok(@$aref == 1);
-ok($aref->[0]->[0] eq "pdf");
-ok($aref->[0]->[1] eq "application/pdf");
-ok($aref->[0]->[2] eq "base64");
+cmp_ok(scalar @$aref, '==', 1);
+is($aref->[0]->[0], "pdf");
+is($aref->[0]->[1], "application/pdf");
+is($aref->[0]->[2], "base64");
 
 $aref = MIME::Types::by_mediatype("e");
-ok(@$aref > 1);
+cmp_ok(scalar @$aref, '>', 1);
 
 $aref = MIME::Types::by_mediatype("xyzzy");
-ok(@$aref == 0);
+cmp_ok(scalar @$aref, '==', 0);
 
 $aref = MIME::Types::by_suffix("foo.tsv");
-ok($aref->[0] eq "text/tab-separated-values");
-ok($aref->[1] eq "quoted-printable");
+is($aref->[0], "text/tab-separated-values");
+is($aref->[1], "quoted-printable");

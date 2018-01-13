@@ -1,44 +1,44 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 #
 # Test reporting warnings, errors and family.
 #
 
-use Test;
 use strict;
+use warnings;
 
-use lib qw(. t);
-
-BEGIN {plan tests => 25}
+use Test::More tests => 25;
+use lib qw(lib t);
 
 use MIME::Type;
 
 my $a = MIME::Type->new(type => 'x-appl/x-zip', extensions => [ 'zip', 'zp' ]);
-ok($a);
-ok($a->type eq 'x-appl/x-zip');
-ok($a->simplified eq 'appl/zip');
-ok($a->simplified('text/plain') eq 'text/plain');
-ok(MIME::Type->simplified('x-xyz/abc') eq 'xyz/abc');
-ok($a->mainType eq 'appl');
-ok($a->subType eq 'zip');
+ok(defined $a);
+
+is($a->type, 'x-appl/x-zip');
+is($a->simplified, 'appl/zip');
+is($a->simplified('text/plain'), 'text/plain');
+is(MIME::Type->simplified('x-xyz/abc'), 'xyz/abc');
+is($a->mainType, 'appl');
+is($a->subType, 'zip');
 ok(!$a->isRegistered);
 
 my @ext = $a->extensions;
-ok(@ext==2);
-ok($ext[0] eq 'zip');
-ok($ext[1] eq 'zp');
-ok($a->encoding eq 'base64');
+cmp_ok(scalar @ext, '==', 2);
+is($ext[0], 'zip');
+is($ext[1], 'zp');
+is($a->encoding, 'base64');
 ok($a->isBinary);
 ok(not $a->isAscii);
 
 my $b = MIME::Type->new(type => 'TEXT/PLAIN', encoding => '8bit');
-ok($b);
-ok($b->type eq 'TEXT/PLAIN');
-ok($b->simplified eq 'text/plain');
-ok($b->mainType eq 'text');
-ok($b->subType eq 'plain');
+ok(defined $b);
+is($b->type, 'TEXT/PLAIN');
+is($b->simplified, 'text/plain');
+is($b->mainType, 'text');
+is($b->subType, 'plain');
 @ext = $b->extensions;
-ok(@ext==0);
-ok($b->encoding eq '8bit');
+cmp_ok(scalar @ext, '==', 0);
+is($b->encoding, '8bit');
 ok(not $b->isBinary);
 ok($b->isAscii);
 ok($b->isRegistered);

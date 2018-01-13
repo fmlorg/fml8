@@ -1,11 +1,24 @@
 ChangeLog
-Makefile.PL
 MANIFEST
-MIME/Type.pm
-MIME/Types.pm
-MIME/Makefile.PL
+Makefile.PL
 README
+bin/collect-types
+bin/update-iana
+lib/MIME/Type.pm
+lib/MIME/Type.pod
+lib/MIME/Types.pm
+lib/MIME/Types.pod
+lib/MIME/types.db
+lib/MojoX/MIME/Types.pm
+lib/MojoX/MIME/Types.pod
 t/10type.t
 t/11typeol.t
 t/20types.t
+t/21accept.t
+t/22accbest.t
 t/30export.t
+t/40mojo.t
+xt/98perl.t
+xt/99pod.t
+META.yml                                 Module YAML meta-data (added by MakeMaker)
+META.json                                Module JSON meta-data (added by MakeMaker)

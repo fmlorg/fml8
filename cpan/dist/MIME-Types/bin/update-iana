@@ -1,0 +1,9 @@
+#!/bin/bash
+
+SOURCE="ftp://ftp.iana.org/assignments/media-types"
+MIRROR="sources/iana-media-types"
+
+[ -d $MIRROR ] || mkdir $MIRROR
+cd $MIRROR
+
+lftp -e "o $SOURCE/ && mirror -c -e -p && quit"
