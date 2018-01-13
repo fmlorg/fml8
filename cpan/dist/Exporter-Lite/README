@@ -1,0 +1,18 @@
+
+    README for Perl module Exporter::Lite
+
+This module is a lightweight version of the core Exporter module,
+providing a subset of that module's functionality.
+
+You can read a nicely formatted version of the documentation for
+this module online:
+
+    https://metacpan.org/pod/Exporter::Lite
+
+You should be able to install this using your usual method for installing
+modules from CPAN. If you don't have a usual method yet, have a look at:
+
+    http://www.cpan.org/modules/INSTALL.html
+
+This module was written by Michael G Schwern.
+It is now being maintained by Neil Bowers <neilb@cpan.org>
