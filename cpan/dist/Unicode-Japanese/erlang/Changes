@@ -1,0 +1,4 @@
+Revision history for Erlang unijp module.
+
+0.03 Tue Nov 16 15:52:55 JST 2010
+    - libunijp update, no erlang code changes.
