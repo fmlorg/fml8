@@ -1,3 +1,6 @@
+2013.0912:
+        Pulled fix from Adam Schobelock that removes timezone offset
+	caching because it was creating incorrect behavor or Moscow.
 2011.0517:
 	Bugfix from Sophie Hamilton: call tzset() when changing timezones.
 

@@ -12,3 +12,4 @@ t/metdate.t
 t/order1.t
 t/order2.t
 META.yml                                 Module meta-data (added by MakeMaker)
+META.json                                Module JSON meta-data (added by MakeMaker)
