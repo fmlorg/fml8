@@ -37,9 +37,8 @@ EXTERN_C
 SV*
 xs_sjis_jsky2_utf8(SV* sv_str)
 {
-  STRLEN src_len;
   UJ_UINT8* src;
-  int len;
+  STRLEN len;
   
   SV_Buf result;
   const UJ_UINT8* src_end;
@@ -48,9 +47,16 @@ xs_sjis_jsky2_utf8(SV* sv_str)
   {
     return newSVsv(&PL_sv_undef);
   }
+  if( SvGMAGICAL(sv_str) )
+  {
+    mg_get(sv_str);
+  }
+  if( !SvOK(sv_str) )
+  {
+    return newSVsv(&PL_sv_undef);
+  }
   
-  src = (UJ_UINT8*)SvPV(sv_str,src_len);
-  len = sv_len(sv_str);
+  src = (UJ_UINT8*)SvPV(sv_str, len);
 #if DISP_S2U
   fprintf(stderr,"Unicode::Japanese::(xs)sjis_utf8_jsky2, len=%d\n",len);
   bin_dump("in ",src,len);
@@ -192,7 +198,7 @@ SV*
 xs_utf8_sjis_jsky2(SV* sv_str)
 {
   UJ_UINT8* src;
-  int len;
+  STRLEN len;
   SV_Buf result;
   const UJ_UINT8* src_end;
 
@@ -200,8 +206,15 @@ xs_utf8_sjis_jsky2(SV* sv_str)
   {
     return newSVsv(&PL_sv_undef);
   }
-  src = (UJ_UINT8*)SvPV(sv_str,PL_na);
-  len = sv_len(sv_str);
+  if( SvGMAGICAL(sv_str) )
+  {
+    mg_get(sv_str);
+  }
+  if( !SvOK(sv_str) )
+  {
+    return newSVsv(&PL_sv_undef);
+  }
+  src = (UJ_UINT8*)SvPV(sv_str, len);
 
   ECHO_U2S((stderr,"Unicode::Japanese::(xs)utf8_sjis_jsky2\n"));
   ON_U2S( bin_dump("in ",src,len) );

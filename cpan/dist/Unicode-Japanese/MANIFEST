@@ -13,6 +13,7 @@ c_lib/jis.c
 c_lib/libunijp.mlpod
 c_lib/Makefile
 c_lib/patchlevel.h
+c_lib/sample.c
 c_lib/sjis.c
 c_lib/t/00_load.c
 c_lib/t/00_load.t
@@ -60,10 +61,8 @@ c_lib/ujguess.c
 c_lib/unijp.c
 c_lib/unijp.h
 c_lib/unijp_build.h
-c_lib/unijp_int.h
 c_lib/unijp_table.h
 c_lib/unijp_types.h
-c_lib/unijp_version.h
 c_lib/utf16.c
 c_lib/utf8.c
 c_lib/utf8_to_any.c
@@ -71,8 +70,9 @@ c_lib/xs_compat.c
 c_lib/xs_compat.h
 Changes
 conv.c				sjis<=>utf8 変換コード
-erlang/decode_term.c
+erlang/Changes
 erlang/Makefile
+erlang/decode_term.c
 erlang/test1.erl
 erlang/unijp.erl
 erlang/unijp.pod
@@ -147,6 +147,7 @@ t/v045_getcode_doti.t
 t/v045_imodexs.t
 t/v046_earlycall.t
 t/verify_sjis_ucs2.pl
+t/v048_xs_internal.t
 t/wavedash.t
 t/z2h.t
 ucs2_utf8.c

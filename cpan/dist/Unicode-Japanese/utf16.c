@@ -19,7 +19,7 @@ SV*
 xs_utf16_utf8(SV* sv_str)
 {
   UJ_UINT8* src;
-  int len;
+  STRLEN len;
   SV_Buf result;
   const UJ_UINT8* src_end;
   UJ_UINT8 buf[4];
@@ -28,9 +28,16 @@ xs_utf16_utf8(SV* sv_str)
   {
     return newSVpvn("",0);
   }
+  if( SvGMAGICAL(sv_str) )
+  {
+    mg_get(sv_str);
+  }
+  if( !SvOK(sv_str) )
+  {
+    return newSVpvn("",0);
+  }
   
-  src = (UJ_UINT8*)SvPV(sv_str,PL_na);
-  len = sv_len(sv_str);
+  src = (UJ_UINT8*)SvPV(sv_str, len);
   src_end = src+(len&~1);
   /*fprintf(stderr,"Unicode::Japanese::(xs)utf16_utf8\n",len);*/
   /*bin_dump("in ",src,len);*/
@@ -114,7 +121,7 @@ SV*
 xs_utf8_utf16(SV* sv_str)
 {
   UJ_UINT8* src;
-  int len;
+  STRLEN len;
   SV_Buf result;
   const UJ_UINT8* src_end;
 
@@ -122,9 +129,16 @@ xs_utf8_utf16(SV* sv_str)
   {
     return newSVpvn("",0);
   }
+  if( SvGMAGICAL(sv_str) )
+  {
+    mg_get(sv_str);
+  }
+  if( !SvOK(sv_str) )
+  {
+    return newSVpvn("",0);
+  }
   
-  src = (UJ_UINT8*)SvPV(sv_str,PL_na);
-  len = sv_len(sv_str);
+  src = (UJ_UINT8*)SvPV(sv_str, len);
   src_end = src+len;
   /*fprintf(stderr,"Unicode::Japanese::(xs)utf8_utf16\n",len); */
   /*bin_dump("in ",src,len); */

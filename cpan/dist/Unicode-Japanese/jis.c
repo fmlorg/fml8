@@ -56,7 +56,7 @@ SV*
 xs_sjis_jis(SV* sv_str)
 {
   unsigned char* src;
-  int len;
+  STRLEN len;
   SV_Buf result;
   int esc_asc;
   const unsigned char* src_end;
@@ -65,9 +65,16 @@ xs_sjis_jis(SV* sv_str)
   {
     return newSVsv(&PL_sv_undef);
   }
+  if( SvGMAGICAL(sv_str) )
+  {
+    mg_get(sv_str);
+  }
+  if( !SvOK(sv_str) )
+  {
+    return newSVsv(&PL_sv_undef);
+  }
   
-  src = (unsigned char*)SvPV(sv_str,PL_na);
-  len = sv_len(sv_str);
+  src = (unsigned char*)SvPV(sv_str, len);
   ECHO_S2J((stderr,"Unicode::Japanese::(xs)sjis_jis, len:%d\n",len));
   ON_S2J(bin_dump("in ",src,len));
   SV_Buf_init(&result,len+8);
@@ -188,7 +195,7 @@ SV*
 xs_jis_sjis(SV* sv_str)
 {
   unsigned char* src;
-  int len;
+  STRLEN len;
   SV_Buf result;
   const unsigned char* src_end;
 
@@ -196,9 +203,16 @@ xs_jis_sjis(SV* sv_str)
   {
     return newSVsv(&PL_sv_undef);
   }
+  if( SvGMAGICAL(sv_str) )
+  {
+    mg_get(sv_str);
+  }
+  if( !SvOK(sv_str) )
+  {
+    return newSVsv(&PL_sv_undef);
+  }
   
-  src = (unsigned char*)SvPV(sv_str,PL_na);
-  len = sv_len(sv_str);
+  src = (unsigned char*)SvPV(sv_str, len);
   ECHO_J2S((stderr,"Unicode::Japanese::(xs)jis_sjis, len:%d\n",len));
   ON_J2S(bin_dump("in ",src,len));
   SV_Buf_init(&result,len);

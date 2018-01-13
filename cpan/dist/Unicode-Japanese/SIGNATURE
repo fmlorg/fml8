@@ -14,30 +14,31 @@ not run its Makefile.PL or Build.PL.
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-SHA1 a4791fbd20cd4c9d1af291d1b2d9a52befba30f3 Changes
+SHA1 c551715d68eee69cef9316f6220cc72e6838479e Changes
 SHA1 00ac1a4b70bc3ee066439eb774f13f3c9e7bac96 Japanese.h
-SHA1 bd4ccba2a5c5dff518841220c0677c8bda7f2287 Japanese.xs
-SHA1 5d18d73de8e62abc0e0febe25d553478c61cbbf5 MANIFEST
+SHA1 682d232abeba49e6a7fbaaab6b327f66009bd55f Japanese.xs
+SHA1 1b39a6a7c90e5bde5e2c1ba0b183c4f789bffbef MANIFEST
 SHA1 0edcc56e470bd78f377ee06dc42e899f15a1b8fc MANIFEST.en
 SHA1 ad151c6cb4b374a73bc8f914ad3af27774c90e00 MANIFEST.noxs
-SHA1 981321e2cef1937accb399f08bf465fa73ab1945 META.yml
+SHA1 d7229e0efa959be3b1e03ac138ffb4b17dedf583 META.yml
 SHA1 47b1db6983ec63236a09274bb2d8d6dab9a3cb59 Makefile.PL
 SHA1 8d6ff82969698abdfbe499497f34b2c79cb8d32e README
 SHA1 0cf078b78ca37b390bd4366d4b4ff07bd088bb3c bin/ujconv
 SHA1 349482b02308360ef16301308bc7c0b83a7e63f5 bin/ujguess
-SHA1 1841adb8cf93b3d86945469024006752186476c8 c_lib/Makefile
+SHA1 28cb13cd90aaf429858b7a8ca7a64bea86a9a6d3 c_lib/Makefile
 SHA1 6910354e9ed6a9b5eb302a133408cf1378a240d1 c_lib/alloc.c
 SHA1 51e7672db2acbd8faf3e6d730141e6222eb70bc6 c_lib/any_to_utf8.c
 SHA1 188dd3d4ae4f23dc95b2c6b1278c9358549ac3e0 c_lib/autogen.pl
 SHA1 8b6d78ed7e2931cc5a58bec9f3fba778e76d580c c_lib/charcode.c
 SHA1 17a104fc99ac8088b92fb1fa4360cdee6b8e67e2 c_lib/chk_sjis.c
-SHA1 4aef23c4ccc5e84bafe2bb75c85822686432b086 c_lib/conv.c
+SHA1 aa238b685c058d6bf38ffc1e1769f61933b362fe c_lib/conv.c
 SHA1 dceafaa97630732aa2bc47c13ed4dc4490219acd c_lib/eucjp.c
 SHA1 d134b12a12d43919d0cbc63e0c617efa2a20bc1d c_lib/getcode.c
 SHA1 5c0ba62f3a32a193e0b54b654336c276cd8112e1 c_lib/getcode_map.c
 SHA1 cc7842e9f8d5d5b3f47cf8521fd7db061bb34a80 c_lib/jis.c
 SHA1 0c26025a49eb9db90d798eb3a91be3ca2a4d8dca c_lib/libunijp.mlpod
 SHA1 4c86040302cb7e08954bcbe7abdc8c783a45d6d5 c_lib/patchlevel.h
+SHA1 f331404f77072d86b0a9d91a7526f5de693ba8fc c_lib/sample.c
 SHA1 a56b0ba8b1a6c6a036f0a8e65d0ab0bb2924a943 c_lib/sjis.c
 SHA1 2fb8702a0fd262c987ad316c0a32cd2654b017c8 c_lib/t/00_load.c
 SHA1 50d2d06382dbe9a1b704d736f15468e243b8dafd c_lib/t/00_load.t
@@ -85,24 +86,23 @@ SHA1 3dcef393d8dff543192a613ab7e69ef3fd0f0bc1 c_lib/ujguess.c
 SHA1 3c266969d86ad9856b76608cd3c4f396fb36fc8a c_lib/unijp.c
 SHA1 5a46c963adcc4337a318567e28fe737bdc3fb700 c_lib/unijp.h
 SHA1 304ef74239db10aae660adf8c25041aef5debab5 c_lib/unijp_build.h
-SHA1 bbd9af0a73040d08a31c5e001722e8a2cd1f60a5 c_lib/unijp_int.h
 SHA1 e4b4e291978f640a8ecd050b2a57a10111f1ed53 c_lib/unijp_table.h
 SHA1 73986fadde26c2ab54754f5708c794ae830a46cb c_lib/unijp_types.h
-SHA1 959bf441b5e8ad050b0f2ca696c06c72808b3a97 c_lib/unijp_version.h
 SHA1 6fb4573e9c2ebc710193368950831bc9da2f37ab c_lib/utf16.c
 SHA1 a300c7beeae571191a28deb15e44f28ecfc65442 c_lib/utf8.c
 SHA1 8f5c1d2e933ae79e130164335536d4c25b5595e7 c_lib/utf8_to_any.c
 SHA1 94b4b3b9e44009dfd97fe62b06e9d15b1b0de2dc c_lib/xs_compat.c
-SHA1 2e4d5bfef99ae5121e3fe18c085cbb6a37def9e6 c_lib/xs_compat.h
-SHA1 89d330a6aef41d5deed2f4493dd335a7b974a66d conv.c
-SHA1 9ca57f83e359b8e870e5bd9811096e6872c5bbfb erlang/Makefile
-SHA1 8d377f206f268370f1591a477204f21cef7a6e92 erlang/decode_term.c
-SHA1 5f3f89aceb208ecd80e9de0300092fcc8583d671 erlang/test1.erl
-SHA1 52b654689a7ed3b87aff7dcfdfee9113f7be7de8 erlang/unijp.erl
+SHA1 8bdecbdd0eaf52b0bff63a501a71d1463fb8bfba c_lib/xs_compat.h
+SHA1 129d00bdef07cbccda3eee83f240446a6820d792 conv.c
+SHA1 cb1d354e15b59740f7eb58f325179e5735389dec erlang/Changes
+SHA1 48a9802612e6b9984bd1c7d673ef1580789baefa erlang/Makefile
+SHA1 1f7406292104748731d7854d4a55ff97dd19f533 erlang/decode_term.c
+SHA1 54edf6992b9dd8446e46675fa67762288bc1540d erlang/test1.erl
+SHA1 4bdca63e59d73ff24705f8c05d9ae58526cc3d53 erlang/unijp.erl
 SHA1 04f1e82e998c9a2847211412d9bea77ea80522b1 erlang/unijp.pod
 SHA1 253fa30d4a955066960c58d316d97608191ce8bf erlang/unijp_driver.c
-SHA1 93ade81b713ee33d5ba79b1b91ddbce3da5c2667 eucjp.c
-SHA1 c336b0a9f6c1abdf8f7412390451e50537aab2a7 getcode.c
+SHA1 841d8381f8a33538419a8276be974afaacbdfaf2 eucjp.c
+SHA1 282c04a82e2fe3ab78ddc2afcb92066c98fd359a getcode.c
 SHA1 03ad986c53a11e79ef517e80b197f97884871ba0 getcode.h
 SHA1 d417c2414406282f062c61b0bbbebb9c460b2579 getcode_map.c
 SHA1 c4c840f2f85dfaad39032429e86cc5d4ea707822 hints/MSWin32.pl
@@ -111,20 +111,20 @@ SHA1 e324966e955fa89e7ab9002386c9d415e0df8e5a hints/linux.pl
 SHA1 968c48aa9b0b989fd9f647187b54829fbf093a08 hints/solaris.pl
 SHA1 b54729e4ce5de2e2ef2884bc712de8b5108e4a35 hints/sunos.pl
 SHA1 80e8631165eda1b36369ff589883c57fc6baee73 inc/ExtUtils/MY_Metafile.pm
-SHA1 2eb5ed4cf5d2c7ffc09c9624e0e437a1172d0ba2 jis.c
+SHA1 31a5f8fe703231998da9b39eb449c39fc6df2953 jis.c
 SHA1 8b6574887effae1711798de3b30fbd795695920f lib/Unicode/Japanese.mlpod
-SHA1 ce8a7483cd4bd76de756f251f86412d38459b750 lib/Unicode/Japanese.pm
+SHA1 bcbafc41c90205eeff11dc7f2ccc828a3e909ae8 lib/Unicode/Japanese.pm
 SHA1 546f882f8db6e9e6440bfe509b215f7292bc1396 lib/Unicode/Japanese/JA.pod
 SHA1 3cf4c56370546c490d3938ef2ba6a5eb6a20adc1 memmap_common.c
 SHA1 4e31b7013d2d6781386ae77e30c0743f3c2ff709 memmap_unix.c
 SHA1 8f11a65faed0e27e600a454b4d69e01a5571765d memmap_win32.c
 SHA1 0a5c01bbc5eaf8f8983992a4fc5f662fd4749f3f sjis.c
 SHA1 b1a79e3579b329c96347724a93bf617947002aae sjis.h
-SHA1 83b891d154ddb180a938bf55e06a46d6f638fce0 sjis_doti.c
-SHA1 6be8401237cf4156f6ae4684b24ee72b48fc8ec0 sjis_imode1.c
-SHA1 5bd70068feba05a14f96b2847afd8351a63240db sjis_imode2.c
-SHA1 c8614225e8c1bb26f47473e874c72b93b5269210 sjis_jsky1.c
-SHA1 311b83654d015b17edb54ed046be240001eaa367 sjis_jsky2.c
+SHA1 5afb74e9a64d43b32cd360c6263ff37a2c340524 sjis_doti.c
+SHA1 d00ee02358c715b658e39fa4d0c3801c63491aba sjis_imode1.c
+SHA1 62d54ffd13ebd2990894a9ed4a478460ccfdcc92 sjis_imode2.c
+SHA1 53f3237873f1851827ec8c6e419b82d40dfcce97 sjis_jsky1.c
+SHA1 6a9a058653acd539d4ebb7287c0b9060bc2e80e2 sjis_jsky2.c
 SHA1 7670733c41c827f761cfaf4cfa4b803e97642208 str.h
 SHA1 af5790509c718ac3f8bcc5648c26bec27b4c1a08 t/0.loadxs.t
 SHA1 a7c3dd1d7f86781a24a56f2fb2766dfd0b88d0b0 t/00-load.t
@@ -161,13 +161,14 @@ SHA1 4c7e0dae4166184d19e38d71fb213d6fb440ec77 t/v041_sjisau.t
 SHA1 cd396bc78a3cdc245ec7098b1dee780b590a4afa t/v045_getcode_doti.t
 SHA1 ba97c7547658d0254690101be99f77871ab03b6e t/v045_imodexs.t
 SHA1 6234ebaaa5bd67f74c5e18413aa74c044c529da6 t/v046_earlycall.t
+SHA1 0331729f31e8163525bf131df21a940f82066e0d t/v048_xs_internal.t
 SHA1 13f4e49b7772da4ea39e21a7164335f1eecbd3dd t/verify_sjis_ucs2.pl
 SHA1 05b221a973bb2df67ac205e9d30f68f9923ade5d t/wavedash.t
 SHA1 44895dce947f98f2d42e6c927149f3aeb053a042 t/z2h.t
-SHA1 723bebc02ecfd8a5b751ae09ee2d1f3b42390e20 ucs2_utf8.c
-SHA1 7e0a56a0d7b4b4197c0390c0ce9e32c2d5cfbca1 ucs4.c
-SHA1 8ce079722c1395877bb59b82317ce10dc608818d utf16.c
-SHA1 e32c240d9dd3efb7aaf52fde6e2222b6c5b791ee utf8.c
+SHA1 cdbc54ceb6e5eb5e8b5edfc6acee898fe8bc779e ucs2_utf8.c
+SHA1 0135d01d993a01392d3909c0a9c4082b76d6692c ucs4.c
+SHA1 78ec0f43ad4e40e9ee2d4ef349a7edd30d44ac43 utf16.c
+SHA1 32c67a2f6cfb234928f9ced75191fbc2b01dd265 utf8.c
 SHA1 62a5d79d1f1d2c82e21fd0923e705c43f7a38a49 win32/Japanese.rc
 SHA1 81fd708b5b0fff4d34fba38e07bc16417e8d9a7c win32/resource.h
 SHA1 1f92522ea91674cbba2ef03642577c4582014259 wordsize.c
@@ -175,7 +176,7 @@ SHA1 f065f2f01a183562f858c0c4e283a13e07d8cd74 xs_test.c
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.2.4 (GNU/Linux)
 
-iD8DBQFLJxkhhkQ+SqeCFQ8RAp9ZAJ9ty6V0ujmLjWs1eeYkH2k4xlZxkQCgqNAA
-Zg7rKiszPwL3T5FR6+biKAo=
-=Q+NA
+iD8DBQFPSkU+hkQ+SqeCFQ8RAh36AJ9oULBWAuJffoD/mmR4o4PkuzvUtgCgpKqB
+GmfMibRgRy/ru9tVJQhNe0M=
+=vnI0
 -----END PGP SIGNATURE-----

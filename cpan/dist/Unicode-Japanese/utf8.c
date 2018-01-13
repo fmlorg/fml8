@@ -13,16 +13,23 @@ EXTERN_C
 SV*
 xs_validate_utf8(SV* sv_str) {
 	  unsigned char* src;
-	  int len;
+	  STRLEN len;
 	  SV_Buf result;
 	  const unsigned char* src_end;
 
 	  if (sv_str == &PL_sv_undef) {
 		  return newSVpvn("", 0);
 	  }
+	  if( SvGMAGICAL(sv_str) )
+	  {
+	    mg_get(sv_str);
+	  }
+	  if( !SvOK(sv_str) )
+	  {
+	    return newSVpvn("", 0);
+	  }
   
-	  src = (unsigned char*)SvPV(sv_str, PL_na);
-	  len = sv_len(sv_str);
+	  src = (unsigned char*)SvPV(sv_str, len);
 	  src_end = src + len;
 	  SV_Buf_init(&result, len);
 

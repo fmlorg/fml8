@@ -49,7 +49,7 @@ INCLUDE_DIR=$(PREFIX)/include
 MANDIR=$(PREFIX)/man
 MAN3DIR=$(MANDIR)/man3
 
-all: libunijp.a ujconv ujguess libunijp.3 libunijp.en.3
+all: libunijp.a ujconv ujguess sample libunijp.3 libunijp.en.3
 
 test:
 	$(MAKE) -C t test
@@ -80,6 +80,8 @@ ujconv:  ujconv.o  libunijp.a
 	$(CC) $(LDFLAGS) ujconv.o  $(LDLIBS) -o $@
 ujguess: ujguess.o libunijp.a
 	$(CC) $(LDFLAGS) ujguess.o $(LDLIBS) -o $@
+sample: sample.o libunijp.a
+	$(CC) $(LDFLAGS) sample.o $(LDLIBS) -o $@
 
 
 libunijp.3: libunijp.pod

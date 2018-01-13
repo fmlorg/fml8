@@ -78,7 +78,8 @@ version_tuple() ->
 %%   Source = iolist()
 %% @doc convert string Source from From to To.
 conv(From, To, Source) ->
-	Result = erlang:port_call(whereis(?REGNAME), ?PORT_CONV_3, {From,To,Source}),
+	Bin = iolist_to_binary(Source),
+	Result = erlang:port_call(whereis(?REGNAME), ?PORT_CONV_3, {From,To,Bin}),
 	{ok, Converted} = Result,
 	Converted.
 

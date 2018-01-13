@@ -9,6 +9,14 @@ EXTERN_C SV* test(SV* str);
 MODULE = Unicode::Japanese		PACKAGE = Unicode::Japanese
 PROTOTYPES: DISABLE
 
+int
+__SvOK(sv)
+    SV* sv;
+CODE:
+    RETVAL = SvOK(sv);
+OUTPUT:
+    RETVAL
+
 #========================#
 # SJIS <=> utf8          #
 #========================#

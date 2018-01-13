@@ -159,14 +159,14 @@ static xbuff_t* xbuff_extend(xbuff_t** pxbuff)
 	unsigned char* old_buf;
 	xbuff_t* new_xbuff;
 	int req, siz;
-	old_buf = xbuff->data;
+	old_buf = (void*)xbuff;
 	req = xbuff->req!=0 ? xbuff->req : 32;
 	siz = ((xbuff->end - (unsigned char*)xbuff) + req + 7) & ~7;
 	new_xbuff = driver_realloc(xbuff, siz);
 	if( new_xbuff!=NULL )
 	{
-		new_xbuff->wptr = new_xbuff->data + (new_xbuff->wptr - old_buf);
-		new_xbuff->end  = ((unsigned char*)new_xbuff->data) + siz;
+		new_xbuff->wptr = new_xbuff->wptr + ((unsigned char*)new_xbuff - old_buf);
+		new_xbuff->end  = (unsigned char*)new_xbuff + siz;
 		new_xbuff->req  = 0;
 		*pxbuff = new_xbuff;
 		return new_xbuff;

@@ -55,6 +55,9 @@ extern uj_conv_t* _uj_xs_SV_Buf_getSv(const uj_conv_t* conv);
 
 #define SvPV(var,len) ((len)=(var)->buf_len,(var)->buf)
 #define sv_len(var)   ((var)->buf_len)
+#define SvGMAGICAL(sv) (0)
+#define mg_get(sv)     ((void)0)
+#define SvOK(sv)       ((sv) != &PL_sv_undef)
 
 #define PL_na                              _uj_xs_PL_na
 #define SV_Buf_append_ch(p_var,ch)         _uj_xs_SV_Buf_append_ch(p_var, ch)

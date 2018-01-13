@@ -9,7 +9,7 @@
 # -----------------------------------------------------------------------------
 
 DISTNAME=unijp
-VERSION=0.01
+VERSION=0.03
 DISTVERNAME=$(DISTNAME)-$(VERSION)
 
 PERLRUN=perl
@@ -23,15 +23,16 @@ ERL_DIR=$(shell $(ERL) -noshell -eval 'io:format("~s~n", [code:root_dir()]), ini
 ERL_LIB_DIR=$(shell $(ERL) -noshell -eval 'io:format("~s~n", [code:lib_dir()]), init:stop().')
 INST_DIR=$(DESTDIR)$(ERL_LIB_DIR)/$(DISTVERNAME)
 ERLEVAL=$(ERL) -noshell -pa $(bdir) -run unijp start -eval
+ERL_INTERFACE_DIR=$(shell $(ERL) -noshell -eval 'io:format("~s~n", [code:lib_dir(erl_interface)]), init:stop()')
 
 OPTIMIZE=-g -O0
 CFLAGS= \
   -Wall $(OPTIMIZE) \
   -I$(ERL_DIR)/usr/include \
-  -I$(ERL_LIB_DIR)/erl_interface-3.5.5.3/include \
+  -I$(ERL_INTERFACE_DIR)/include \
   -I$(WITH_LIBUNIJP)/include 
 LDFLAGS=\
-  -L$(ERL_LIB_DIR)/erl_interface-3.5.5.3/lib \
+  -L$(ERL_INTERFACE_DIR)/lib \
   -L$(WITH_LIBUNIJP)/lib
 LDLIBS=-lerl_interface -lei -lunijp
 
@@ -59,7 +60,7 @@ install: all
 	cp -r $(bdir)/ebin $(bdir)/priv $(bdir)/src $(INST_DIR)/
 
 clean:
-	rm -rf *.so *.o unijp.beam ebin priv
+	rm -rf *.so *.o unijp.beam ebin priv build
 
 docs:
 	$(ERL) -noshell -run edoc_run files '["unijp.erl", "inc/test_more.erl"]' '[{dir,"html"}]'

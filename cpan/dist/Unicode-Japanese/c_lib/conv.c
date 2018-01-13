@@ -27,8 +27,11 @@ uj_uint8* _uj_conv_own_string(uj_conv_t* conv)
     }
     if( buf != NULL )
     {
-      memcpy(buf, conv->buf, conv->buf_len);
-      buf[conv->buf_len] = '\0';
+      if( conv->buf_bufsize == 0 )
+      {
+        memcpy(buf, conv->buf, conv->buf_len);
+        buf[conv->buf_len] = '\0';
+      }
       conv->buf = buf;
       conv->buf_bufsize = new_size;
     }

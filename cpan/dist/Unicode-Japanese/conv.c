@@ -45,9 +45,8 @@ EXTERN_C
 SV*
 xs_sjis_utf8(SV* sv_str)
 {
-  STRLEN src_len;
   UJ_UINT8* src;
-  int len;
+  STRLEN len;
   
   SV_Buf result;
   const UJ_UINT8* src_end;
@@ -56,11 +55,18 @@ xs_sjis_utf8(SV* sv_str)
   {
     return newSVsv(&PL_sv_undef);
   }
+  if( SvGMAGICAL(sv_str) )
+  {
+    mg_get(sv_str);
+  }
+  if( !SvOK(sv_str) )
+  {
+    return newSVsv(&PL_sv_undef);
+  }
   
-  src = (UJ_UINT8*)SvPV(sv_str,src_len);
-  len = sv_len(sv_str);
+  src = (UJ_UINT8*)SvPV(sv_str, len);
 #if DISP_S2U
-  fprintf(stderr,"Unicode::Japanese::(xs)sjis_utf8\n",len);
+  fprintf(stderr,"Unicode::Japanese::(xs)sjis_utf8\n");
   bin_dump("in ",src,len);
 #endif
   SV_Buf_init(&result,len*3/2+4);
@@ -100,7 +106,7 @@ xs_sjis_utf8(SV* sv_str)
       continue;
     }
 
-    ECHO_U2S((stderr,"offset: 0x%04x\n",ptr-g_s2u_table));
+    ECHO_U2S((stderr,"offset: 0x%04x\n",(int)(ptr-g_s2u_table)));
     ECHO_U2S((stderr,"utf8-char : %02x %02x %02x\n",ptr[0],ptr[1],ptr[2]));
     if( ptr[2] )
     {
@@ -120,7 +126,7 @@ xs_sjis_utf8(SV* sv_str)
     }
   }
 #if DISP_S2U
-  bin_dump("out",result.getBegin(),result.getLength());
+  bin_dump("out",SV_Buf_getBegin(&result),SV_Buf_getLength(&result));
 #endif
   SV_Buf_setLength(&result);
 
@@ -136,7 +142,7 @@ SV*
 xs_utf8_sjis(SV* sv_str)
 {
   const UJ_UINT8* src;
-  int len;
+  STRLEN len;
   SV_Buf result;
   const UJ_UINT8* src_end;
   static const UJ_UINT8 char_null[2]    = { '\0', '\0' };
@@ -146,10 +152,19 @@ xs_utf8_sjis(SV* sv_str)
   {
     return newSVsv(&PL_sv_undef);
   }
-  src = (UJ_UINT8*)SvPV(sv_str,PL_na);
-  len = sv_len(sv_str);
+  if( SvGMAGICAL(sv_str) )
+  {
+    mg_get(sv_str);
+  }
+  if( !SvOK(sv_str) )
+  {
+    return newSVsv(&PL_sv_undef);
+  }
+  
+  src = (UJ_UINT8*)SvPV(sv_str, len);
 
-  ECHO_U2S((stderr,"Unicode::Japanese::(xs)utf8_sjis\n"));
+
+  ECHO_U2S((stderr,"Unicode::Japanese::(xs)utf8_sjis (%p:%ld)\n",src,len));
   ON_U2S( bin_dump("in ",src,len) );
 
   SV_Buf_init(&result,len+4);

@@ -227,7 +227,7 @@ static bool _is_acceptable_state(const CodeCheck* check)
 static int getcode_list(SV* sv_str, CodeCheck* check)
 {
   unsigned char* src;
-  int len;
+  STRLEN len;
   const unsigned char* src_end;
   int cc_max;
   
@@ -235,9 +235,16 @@ static int getcode_list(SV* sv_str, CodeCheck* check)
   {
     return 0;
   }
+  if( SvGMAGICAL(sv_str) )
+  {
+    mg_get(sv_str);
+  }
+  if( !SvOK(sv_str) )
+  {
+    return 0;
+  }
   
-  src = (unsigned char*)SvPV(sv_str,PL_na);
-  len = sv_len(sv_str);
+  src = (unsigned char*)SvPV(sv_str, len);
   src_end = src+len;
   
   /* empty string */
@@ -363,6 +370,14 @@ SV* xs_getcode(SV* sv_str)
   {
     return new_SV_UNDEF();
   }
+  if( SvGMAGICAL(sv_str) )
+  {
+    mg_get(sv_str);
+  }
+  if( !SvOK(sv_str) )
+  {
+    return newSVsv(&PL_sv_undef);
+  }
   matches = getcode_list(sv_str, check);
   if( matches>0 )
   {
@@ -413,6 +428,14 @@ int xs_getcode_list(SV* sv_str)
   dSP; dMARK; dAX; /* XSARGS; - items */
   
   if( sv_str==&PL_sv_undef )
+  {
+    return 0;
+  }
+  if( SvGMAGICAL(sv_str) )
+  {
+    mg_get(sv_str);
+  }
+  if( !SvOK(sv_str) )
   {
     return 0;
   }
