@@ -1,8 +1,28 @@
-Revision history for Perl extension Crypt::RandPasswd.
+Revision history for Perl module Crypt::RandPasswd
 
-0.02 Fri Jul 21 14:19:43 EDT 2000
-	- Added README file.
+0.06 2014-05-28
+    - Fixed typo in code comment (thanks dsteinbrunner)
+    - Added github repo to pod
+    - Added intro paragraph to doc and beefed up SEE ALSO section
 
-0.01 Thu Jul 20 17:18:45 EDT 2000
-	- original version; created by h2xs 1.19
+0.05 2014-02-03
+    - Replaced old testsuite (test.pl) with tests in t/
+    - Added "use warnings"
+    - Specified min version of perl 5.6.0
+    - Fixed pod errors
+    - Changed doc for internal funcs from pod to comments
+
+0.04 2013-10-28
+    - github repo and license type (perl) now specified in Makefile.PL
+      so it will appear in the dist's metadata.
+
+0.03 2013-04-10
+    - Fixed bug where word() would sometimes go into an infinite loop
+    - Reformatted according to CPAN::Changes::Spec
+
+0.02 2000-07-21
+    - Added README file.
+
+0.01 2000-07-20
+    - original version; created by h2xs 1.19
 
