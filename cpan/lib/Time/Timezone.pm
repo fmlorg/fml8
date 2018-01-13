@@ -62,18 +62,8 @@ sub tz_local_offset
 	my ($time) = @_;
 
 	$time = time() unless $time;
-	my (@l) = localtime($time);
-	my $isdst = $l[8] || 0;
-	my $tzenv = defined($ENV{TZ}) ? $ENV{TZ} : "__notz";
 
-	if ($Timezone::tz_local{$tzenv} &&
-	    defined($Timezone::tz_local{$tzenv}[$isdst])) {
-		return $Timezone::tz_local{$tzenv}[$isdst];
-	}
-
-	$Timezone::tz_local{$tzenv}[$isdst] = &calc_off($time);
-
-	return $Timezone::tz_local{$tzenv}[$isdst];
+    return &calc_off($time);
 }
 
 sub calc_off
