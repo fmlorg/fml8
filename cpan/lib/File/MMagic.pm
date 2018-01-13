@@ -1,6 +1,6 @@
 # File::MMagic
 #
-# $Id: MMagic.pm 259 2006-05-23 05:55:32Z knok $
+# $Id: MMagic.pm 290 2013-07-02 06:21:39Z knok $
 #
 # This program is originated from file.kulp that is a production of The
 # Unix Reconstruction Projct.
@@ -197,6 +197,8 @@ Add a new magic entry in the object. The format is same as magic(5) file.
 
 =item $mm->checktype_contents
 
+=back
+
 =head1 COPYRIGHT
 
 This program is originated from file.kulp that is a production of The
@@ -339,7 +341,7 @@ BEGIN {
 	    t => "\t",
 	    f => "\f");
 
-$VERSION = "1.27";
+$VERSION = "1.30";
 $allowEightbit = 1;
 }
 
@@ -422,8 +424,9 @@ sub new {
 	     '\.html$' => 'text/html',
 	     '\.htm$' => 'text/html',
     };
-    bless($self);
-    return $self;
+    # content hook
+    $self->{chook} = {};
+    return bless $self, $class;
 }
 
 sub addSpecials {
@@ -490,6 +493,13 @@ sub readMagicHandle {
     $self->{MF}->[1] = undef;
     $self->{MF}->[2] = 0;
     readMagicEntry($self->{magic}, $self->{MF});
+}
+
+sub addContainerHook {
+    my $self = shift;
+    my $mtype = shift;
+    my $funcref = shift;
+    $self->{chook}->{$mtype} = $funcref;
 }
 
 # Not implimented.
@@ -619,6 +629,9 @@ sub checktype_contents {
 
     return 'application/octet-stream' if (length($data) <= 0);
 
+    $mtype = checktype_container($self, $data);
+    return $mtype unless $mtype eq "";
+
     $mtype = checktype_magic($self, $data);
 
     # 4) check if it's text or binary.
@@ -630,6 +643,17 @@ sub checktype_contents {
     $mtype = 'text/plain' if (! defined $mtype);
 
     return $mtype;
+}
+
+sub checktype_container {
+    my $self = shift;
+    my $data = shift;
+    my $href = $self->{chook};
+    foreach my $mtype (keys %$href) {
+	my $ret = &{$href->{$mtype}}($self, $data);
+	return $ret if $ret ne "";
+    }
+    return "";
 }
 
 sub checktype_magic {
@@ -764,6 +788,7 @@ sub magicMatch {
     # this saves time otherwise wasted parsing unused subtests.
     if (@$item == 3){
         my $tmp = readMagicLine(@$item);
+	return unless defined($tmp);
         @$item = @$tmp;
     }
 
@@ -802,7 +827,7 @@ sub magicMatch {
 	$fh->seek($offset,0) or return;
     }
 
-    if ($type =~ /^string/) {
+    if ($type =~ /^string/ || $type =~ /^regex/) {
 	# read the length of the match string unless the
 	# comparison is '>' ($numbytes == 0), in which case 
 	# read to the next null or "\n". (that's what BSD's file does)
@@ -827,12 +852,19 @@ sub magicMatch {
 	elsif ($op eq '>') {
 	    $match = ($data gt $testval);
 	}
+	elsif ($op eq 'match') {
+	    $data = ($data || '') ? $data : '';
+	    $match = $data =~ /$testval/;
+	}
 	# else bogus op, but don't die, just skip
 
 	if ($checkMagic) {
 	    print STDERR "STRING: $data $op $testval => $match\n";
 	}
 
+    }
+    elsif ($type =~ /^search\//)
+    {
     }
     else {
 	#numeric
@@ -962,7 +994,7 @@ sub magicMatchStr {
 	$str = substr($str, $offset);
     }
 
-    if ($type =~ /^string/) {
+    if ($type =~ /^string/ || $type =~ /^regex/) {
 	# read the length of the match string unless the
 	# comparison is '>' ($numbytes == 0), in which case 
 	# read to the next null or "\n". (that's what BSD's file does)
@@ -984,12 +1016,19 @@ sub magicMatchStr {
 	elsif ($op eq '>') {
 	    $match = ($data gt $testval);
 	}
+	elsif ($op eq 'match') {
+	    $match = eval {($data || '') =~ /$testval/};
+	}
+
 	# else bogus op, but don't die, just skip
 
 	if ($checkMagic) {
 	    print STDERR "STRING: $data $op $testval => $match\n";
 	}
 
+    }
+    elsif ($type =~ /^search\//)
+    {
     }
     else {
 	#numeric
@@ -1119,7 +1158,7 @@ sub readMagicEntry {
 	    $$MF[1] = $line;
 	    return length($thisDepth);
 	}
-	elsif (defined(@$entry)) {
+	elsif ('ARRAY' eq ref $entry && @$entry) {
 	    # already have an entry.  this is not a continuation.
 	    # save this line for the next call and exit.
 	    $$MF[1] = $line;
@@ -1225,7 +1264,7 @@ sub readMagicLine {
     }
     
     # check if type is valid
-    if (!exists($TEMPLATES{$type}) && $type !~ /^string/) {
+    if (!exists($TEMPLATES{$type}) && $type !~ /^string/ && $type !~ /^regex/ && $type !~ /^search\//) {
 	warn "Invalid type '$type' at line $line_num\n";
 	return;
     }
@@ -1243,20 +1282,29 @@ sub readMagicLine {
     $line =~ s/\n$//o;
 
     # get the operator.  if 'x', must be alone.  default is '='.
-    if ($line =~ s/^([><&^=!])//o) {
-	$operator = $1;
+    if ($type !~ /regex/)
+    {
+	if ($line =~ s/^([><&^=!])//o) {
+	    $operator = $1;
+	}
+	elsif ($line eq 'x') {
+	    $operator = 'x';
+	}
+	else { $operator = '='; }
+    } else {
+	$operator = 'match';
     }
-    elsif ($line eq 'x') {
-	$operator = 'x';
-    }
-    else { $operator = '='; }
     
 
-    if ($type =~ /string/) {
+    if ($type =~ /^string/ || $type =~ /^regex/)
+    {
 	$testval = $line;
 
 	# do octal/hex conversion
-	$testval =~ s/\\([x0-7][0-7]?[0-7]?)/chr(oct($1))/eg;
+	# manmin
+	$testval =~ s/\\x([0-9a-fA-F][0-9a-fA-F])/pack("H2", $1)/eg;
+	$testval =~ s/\\([0-7][0-7]?[0-7]?)/chr(oct($1))/eg;
+	# end manmin
 
 	# do single char escapes
 	$testval =~ s/\\(.)/$ESC{$1}||$1/eg;
@@ -1276,6 +1324,11 @@ sub readMagicLine {
 	    $numbytes = length($testval);
 	    $operator = '=';
 	}
+	elsif ($operator eq 'match') {
+	    eval {"" =~ /$testval/};	# Check the regex
+	    warn "Invalid regex at line $line_num - $@\n" if ($@);
+	    $numbytes = 0;
+	}
 	else {
 	    # there's a bug in my magic file where there's
 	    # a line that says "0	string	^!<arc..." and the BSD
@@ -1285,6 +1338,9 @@ sub readMagicLine {
 	      if $checkMagic;
 	    return;
 	}
+    }
+    elsif ($type =~ /^search\//)
+    {
     }
     else {
 	# numeric
@@ -1324,6 +1380,7 @@ sub dumpMagic {
 	# delayed evaluation.
         if (@$entry == 3){
             my $tmp = readMagicLine(@$entry);
+	    next if (! $tmp);
             @$entry = @$tmp;
         }
 

@@ -1,3 +1,56 @@
+2013-07-02  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm: Version 1.30.
+
+2013-01-21  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm (checktype_byfilename): Remove Scalar::Util::weaken.
+	  To prevent too much decrement REFCNT.
+
+2012-07-12  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm (checktype_contents): Fix infinity loop bug.
+	Reported by NMOLDAV@cpan.org (#77836)
+	* Version 1.29.
+
+2012-06-29  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm: Add missing =back.
+
+2012-05-31  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm: Version 1.28.
+
+2012-03-15  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm (readMagicEntry): Removed deprecated code
+	  (defined(@array)) reported by wyant@cpan.org (#74252).
+
+2011-07-21  Yukio USUDA  <usu@namazu.org>
+
+	* MMagic.pm (checktype_byfilename): Fixed memory leak.
+
+2007-10-02  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm: Added 'regex' and 'search' support for magic entry,
+	  and fixed fatal error when unknown type in magic entry.
+	  (The patch made by Man Min Yan, thank you).
+
+2006-09-19  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm (readMagicLine): Added Hex representation support.
+	  (The patch made by Man Min Yan, thank you)
+
+2006-07-01  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm (checktype_container): Added container check.
+	  (Powerd by CodeFest 2006 Akihabara
+	   https://members.fsij.org/trac/codefestakihabara2006c)
+
+2006-06-26  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Applied subclass patch, made by Michael Hendricks.
+
 2006-05-23  NOKUBI Takatsugu  <knok@daionet.gr.jp>
 
 	* MMagic.pm: Version 1.27.

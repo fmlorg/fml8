@@ -11,5 +11,8 @@ t/03-typecheck.t
 t/test.html
 t/04-string-mod.t
 t/test-magic
+t/05-subclass.t
+t/06-conthook.t
+t/07-contents.t
 contrib/Build.PL
 META.yml                                 Module meta-data (added by MakeMaker)

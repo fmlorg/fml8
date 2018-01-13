@@ -1,5 +1,5 @@
 # perl-test
-# $Id: 01-selfcheck.t 192 2006-01-04 07:57:15Z knok $
+# $Id: 01-selfcheck.t 182 2003-11-21 02:25:52Z knok $
 
 use strict;
 use Test;
