@@ -12,11 +12,12 @@ require Exporter;
 @EXPORT_OK = qw(pd_raw %mtable %umult %wdays);
 
 use strict;
+#use diagnostics;
 
 # constants
 use vars qw(%mtable %umult %wdays $VERSION);
 
-$VERSION = 2003.0211;
+$VERSION = 2013.0912;
 
 # globals
 use vars qw($debug); 
@@ -49,7 +50,8 @@ CONFIG:	{
 		min 60 minute 60
 		hour 3600
 		day 86400
-		week 604800 );
+		week 604800 
+		fortnight 1209600);
 	%wdays = qw(
 		sun 0 sunday 0
 		mon 1 monday 1
@@ -76,7 +78,7 @@ sub parsedate
 	my $rel; 		# time&|date is relative
 
 	my $isspec;
-	my $now = $options{NOW} || time;
+	my $now = defined($options{NOW}) ? $options{NOW} : time;
 	my $passes = 0;
 	my $uk = defined($options{UK}) ? $options{UK} : 0;
 
@@ -157,7 +159,7 @@ sub parsedate
 				}
 			}
 			if (defined $M or defined $rd) {
-				if ($t =~ s/^\s*(?:at|\+)\s*(\s+|$)//x) {
+				if ($t =~ s/^\s*(?:at|\@|\+)\s*(\s+|$)//x) {
 					$rel = 1;
 					$parse .= " ".__LINE__ if $debug;
 					next;
@@ -253,7 +255,9 @@ sub parsedate
 		}
 
 		print "relative date\n" if $debug;
-		$jd = local_julian_day($now);
+		$jd = $options{GMT}
+			? gm_julian_day($now)
+			: local_julian_day($now);
 		print "jd($now) = $jd\n" if $debug;
 		$jd += $rd;
 	} else {
@@ -327,16 +331,13 @@ sub parsedate
 	}
 
 	$S += $rs if defined $rs;
-	$carry = int($S / 60);
-	my($frac) = $S - int($S);
-	$S = int($S);
-	$S %= 60;
-	$S += $frac;
+	$carry = int($S / 60) - ($S < 0 && $S % 60 && 1);
+	$S -= $carry * 60;
 	$M += $carry;
-	$carry = int($M / 60);
+	$carry = int($M / 60) - ($M < 0 && $M % 60 && 1);
 	$M %= 60;
 	$H += $carry;
-	$carry = int($H / 24);
+	$carry = int($H / 24) - ($H < 0 && $H % 24 && 1);
 	$H %= 24;
 	$jd += $carry;
 
@@ -354,17 +355,28 @@ sub parsedate
 	my $tzadj;
 	if ($tz) {
 		$tzadj = tz_offset($tz, $secs);
-		print "adjusting secs for $tz: $tzadj\n" if $debug;
-		$tzadj = tz_offset($tz, $secs-$tzadj);
-		$secs -= $tzadj;
+		if (defined $tzadj) {
+			print "adjusting secs for $tz: $tzadj\n" if $debug;
+			$tzadj = tz_offset($tz, $secs-$tzadj);
+			$secs -= $tzadj;
+		} else {
+			print "unknown timezone: $tz\n" if $debug;
+			undef $secs;
+			undef $t;
+		}
 	} elsif (defined $tzo) {
 		print "adjusting time for offset: $tzo\n" if $debug;
 		$secs -= $tzo;
 	} else {
 		unless ($options{GMT}) {
 			if ($options{ZONE}) {
-				$tzadj = tz_offset($options{ZONE}, $secs);
+				$tzadj = tz_offset($options{ZONE}, $secs) || 0;
 				$tzadj = tz_offset($options{ZONE}, $secs-$tzadj);
+				unless (defined($tzadj)) {
+					return (undef, "could not convert '$options{ZONE}' to time offset")
+						if wantarray();
+					return undef;
+				}
 				print "adjusting secs for $options{ZONE}: $tzadj\n" if $debug;
 				$secs -= $tzadj;
 			} else {
@@ -391,7 +403,7 @@ sub mkoff
 {
 	my($offset) = @_;
 
-	if (defined $offset and $offset =~ s#^([-+])(\d\d)(\d\d)$##) {
+	if (defined $offset and $offset =~ s#^([-+])(\d\d):?(\d\d)$##) {
 		return ($1 eq '+' ? 
 			  3600 * $2  + 60 * $3
 			: -3600 * $2 + -60 * $3 );
@@ -407,7 +419,7 @@ sub parse_tz_only
 	my $o;
 
 	if ($$tr =~ s#^
-			([-+]\d\d\d\d)
+			([-+]\d\d:?\d\d)
 			\s+
 			\(
 				"?
@@ -430,7 +442,7 @@ sub parse_tz_only
 		return 1;
 	} elsif ($$tr =~ s#^GMT\s*([-+]\d{1,2})(\s+|$)##x) {
 		$o = $1;
-		if ($o <= 24 and $o !~ /^0/) {
+		if ($o < 24 and $o !~ /^0/) {
 			# probably hours.
 			printf "adjusted at %d. ($o 00)\n", __LINE__ if $debug;
 			$o = "${o}00";
@@ -439,7 +451,7 @@ sub parse_tz_only
 		$$tzo = &mkoff($o);
 		printf "matched at %d. ($$tzo, $o)\n", __LINE__ if $debug;
 		return 1;
-	} elsif ($$tr =~ s#^(?:GMT\s*)?([-+]\d\d\d\d)(\s+|$)##x) {
+	} elsif ($$tr =~ s#^(?:GMT\s*)?([-+]\d\d:?\d\d)(\s+|$)##x) {
 		$o = $1;
 		$$tzo = &mkoff($o);
 		printf "matched at %d.\n", __LINE__ if $debug;
@@ -460,7 +472,7 @@ sub parse_date_only
 
 	$$tr =~ s#^\s+##;
 
-	if ($$tr =~ s#^(\d\d\d\d)([-./])(\d\d?)\2(\d\d?)(\s+|$)##) {
+	if ($$tr =~ s#^(\d\d\d\d)([-./])(\d\d?)\2(\d\d?)(\s+|T|$)##) {
 		# yyyy/mm/dd
 
 		($$yr, $$mr, $$dr) = ($1, $3, $4);
@@ -673,7 +685,7 @@ sub parse_time_only
 						)?
 					)
 					\s*
-					([ap]m)?  		(?# $4)
+					([apAP][mM])?  		(?# $4)
 				) | (?:
 					(\d{1,2}) 		(?# $5)
 					(?:
@@ -684,7 +696,7 @@ sub parse_time_only
 							(\d\d)	(?# $7)
 								(
 									(?# don't barf on database sub-second timings)
-									(?:\:|\.)
+									[:.,]
 									\d{1,6}
 								)?	(?# $8)
 						)?
@@ -722,19 +734,18 @@ sub parse_time_only
 			$$sr += $frac;
 		}
 		print "S = $$sr\n" if $debug;
-		$ampm = $4 || $9 || $11;
+		$ampm = $4 || $9 || $11 || '';
 		$$tzr = $12;
 		$$hr += 12 if $ampm and "\U$ampm" eq "PM" && $$hr != 12;
 		$$hr = 0 if $$hr == 12 && "\U$ampm" eq "AM";
-		$$hr = 0 if $$hr == 24;
 		printf "matched at %d, rem = %s.\n", __LINE__, $$tr if $debug;
 		return 1;
-	} elsif ($$tr =~ s#noon(?:\s+|$ )##ix) {
+	} elsif ($$tr =~ s#^noon(?:\s+|$ )##ix) {
 		# noon
 		($$hr, $$mr, $$sr) = (12, 0, 0);
 		printf "matched at %d.\n", __LINE__ if $debug;
 		return 1;
-	} elsif ($$tr =~ s#midnight(?:\s+|$ )##ix) {
+	} elsif ($$tr =~ s#^midnight(?:\s+|$ )##ix) {
 		# midnight
 		($$hr, $$mr, $$sr) = (0, 0, 0);
 		printf "matched at %d.\n", __LINE__ if $debug;
@@ -751,27 +762,40 @@ sub parse_time_offset
 
 	return 0 if $options{NO_RELATIVE};
 
-	if ($$tr =~ s#^(?xi)
-			([-+]?)
+	if ($$tr =~ s{^(?xi)					
+			(?:
+				(-)				(?# 1)
+				|
+				[+]
+			)?
 			\s*
-			(\d+)
+			(?:
+				(\d+(?:\.\d+)?) 		(?# 2)
+				| 		
+				(?:(\d+)\s+(\d+)/(\d+))		(?# 3 4/5)
+			)
 			\s*
-			(sec|second|min|minute|hour)s?
+			(sec|second|min|minute|hour)s?		(?# 6)
 			(
 				\s+
-				ago
+				ago				(?# 7)
 			)?
 			(?:
 				\s+
 				|
 				$
 			)
-			##) {
+			}{}) {
 		# count units
 		$$rsr = 0 unless defined $$rsr;
-		$$rsr += $umult{"\L$3"} * "$1$2";
+		return 0 if defined($5) && $5 == 0;
+		my $num = defined($2)
+			? $2
+			: $3 + $4/$5;
+		$num = -$num if $1;
+		$$rsr += $umult{"\L$6"} * $num;
 
-		$$rsr = -$$rsr if $4 ||
+		$$rsr = -$$rsr if $7 ||
 			$$tr =~ /\b(day|mon|month|year)s?\s*ago\b/;
 		printf "matched at %d.\n", __LINE__ if $debug;
 		return 1;
@@ -1011,6 +1035,19 @@ sub parse_date_offset
 		printf "matched at %d.\n", __LINE__ if $debug;
 		return 1;
 	} elsif ($$tr =~ s#^(?xi)
+			(Mon|Tue|Wed|Thu|Fri|Sat|Sun|Monday|Tuesday
+				|Wednesday|Thursday|Friday|Saturday|Sunday)
+			\s+
+			before
+			\s+
+			last
+			(?: \s+ | $ )
+			##) {
+		# Dow "before last"
+		$$rdr = $wdays{"\L$1"} - $wday - ( $wdays{"\L$1"} < $wday ? 7 : 14);
+		printf "matched at %d.\n", __LINE__ if $debug;
+		return 1;
+	} elsif ($$tr =~ s#^(?xi)
 			next\s+
 			(Mon|Tue|Wed|Thu|Fri|Sat|Sun|Monday|Tuesday
 				|Wednesday|Thursday|Friday|Saturday|Sunday)
@@ -1102,7 +1139,7 @@ sub debug_display
 }
 1;
 
-__DATA__
+__END__
 
 =head1 NAME
 
@@ -1147,6 +1184,7 @@ Date parsing can also use options.  The options are as follows:
 	Month day{st,nd,rd,th}
 	Mon dd yyyy
 	yyyy/mm/dd
+	yyyy-mm-dd	(usually the best date specification syntax)
 	yyyy/mm
 	mm/dd/yy
 	mm/dd/yyyy
@@ -1164,6 +1202,7 @@ Date parsing can also use options.  The options are as follows:
 	count "months"
 	count "years"
 	Dow "after next"
+	Dow "before last"
 	Dow 			(requires PREFER_PAST or PREFER_FUTURE)
 	"next" Dow
 	"tomorrow"
@@ -1174,7 +1213,7 @@ Date parsing can also use options.  The options are as follows:
 	"now"
 	"now" "+" count units
 	"now" "-" count units
-	"+" count units
+	"+" count units		
 	"-" count units
 	count units "ago"
 
@@ -1190,7 +1229,7 @@ Date parsing can also use options.  The options are as follows:
 
 =head2 Relative time formats:
 
-	count "minuts"
+	count "minutes"		(count can be franctional "1.5" or "1 1/2")
 	count "seconds"
 	count "hours"
 	"+" count units
@@ -1223,7 +1262,7 @@ or undef if it was unable to parse the time.
 If a timezone is specified it must be after the time.  Year specifications
 can be tacked onto the end of absolute times.
 
-If C<parsedate()> is called from array contect, then it will return two
+If C<parsedate()> is called from array context, then it will return two
 elements.  On sucessful parses, it will return the seconds and what 
 remains of its input string.  On unsucessful parses, it will return
 C<undef> and an error string.
@@ -1238,17 +1277,16 @@ C<undef> and an error string.
 	$seconds = parsedate("+3 secs", NOW => 796978800);
 	$seconds = parsedate("2 months", NOW => 796720932);
 	$seconds = parsedate("last Tuesday");
+	$seconds = parsedate("Sunday before last");
 
 	($seconds, $remaining) = parsedate("today is the day");
 	($seconds, $error) = parsedate("today is", WHOLE=>1);
 
-=head1 AUTHOR
-
-David Muir Sharnoff <muir@idiom.com>.  
-
 =head1 LICENSE
 
-Copyright (C) 1996-1999 David Muir Sharnoff.  License hereby
+Copyright (C) 1996-2010 David Muir Sharnoff.  
+Copyright (C) 2011 Google, Inc.  
+License hereby
 granted for anyone to use, modify or redistribute this module at
-their own risk.  Please feed useful changes back to muir@idiom.com.
+their own risk.  Please feed useful changes back to cpan@dave.sharnoff.org.
 

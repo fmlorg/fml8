@@ -49,7 +49,7 @@ sub is_leap
 
 1;
 
-__DATA__
+__END__
 
 =head1 NAME
 
@@ -68,11 +68,16 @@ a month.  That's all it does.  Really!
 
 =head1 AUTHOR
 
-David Muir Sharnoff <muir@idiom.com>
+David Muir Sharnoff <muir@idiom.org>
+
+=head1 BUGS
+
+This only deals with the "modern" calendar.  Look elsewhere for 
+historical time and date support.
 
 =head1 LICENSE
 
 Copyright (C) 1996-1999 David Muir Sharnoff.  License hereby
 granted for anyone to use, modify or redistribute this module at
-their own risk.  Please feed useful changes back to muir@idiom.com.
+their own risk.  Please feed useful changes back to muir@idiom.org.
 

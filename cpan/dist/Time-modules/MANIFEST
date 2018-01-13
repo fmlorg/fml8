@@ -8,3 +8,8 @@ lib/Time/JulianDay.pm
 lib/Time/ParseDate.pm
 lib/Time/Timezone.pm
 t/datetime.t
+t/metdate.t
+t/order1.t
+t/order2.t
+META.yml                                 Module meta-data (added by MakeMaker)
+META.json                                Module JSON meta-data (added by MakeMaker)
