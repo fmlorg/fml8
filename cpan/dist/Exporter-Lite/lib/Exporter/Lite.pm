@@ -1,20 +1,18 @@
 package Exporter::Lite;
 
-require 5.004;
+require 5.006;
+use warnings;
+use strict;
 
-# Using strict or vars almost doubles our load time.  Turn them back
-# on when debugging.
-#use strict 'vars';  # we're going to be doing a lot of sym refs
-#use vars qw($VERSION @EXPORT);
-
-$VERSION = 0.02;
-@EXPORT = qw(import);   # we'll know pretty fast if it doesn't work :)
-
+our $VERSION = '0.08';
+our @EXPORT = qw(import);
 
 
 sub import {
     my($exporter, @imports)  = @_;
     my($caller, $file, $line) = caller;
+
+    no strict 'refs';
 
     unless( @imports ) {        # Default import.
         @imports = @{$exporter.'::EXPORT'};
@@ -48,6 +46,8 @@ sub import {
 
 sub _export {
     my($caller, $exporter, @imports) = @_;
+
+    no strict 'refs';
 
     # Stole this from Exporter::Heavy.  I'm sure it can be written better
     # but I'm lazy at the moment.
@@ -83,56 +83,81 @@ __END__
 
 =head1 NAME
 
-Exporter::Lite - Lightweight exporting of variables
+Exporter::Lite - lightweight exporting of functions and variables
 
 =head1 SYNOPSIS
 
   package Foo;
   use Exporter::Lite;
 
-  # Just like Exporter.
-  @EXPORT       = qw($This That);
-  @EXPORT_OK    = qw(@Left %Right);
+  our @EXPORT    = qw($This That);      # default exports
+  our @EXPORT_OK = qw(@Left %Right);    # optional exports
 
+Then in code using the module:
 
-  # Meanwhile, in another piece of code!
-  package Bar;
-  use Foo;  # exports $This and &That.
+  use Foo;
+  # $This and &That are imported here
 
+You have to explicitly ask for optional exports:
+
+ use Foo qw/ @Left %Right /;
 
 =head1 DESCRIPTION
 
-This is an alternative to Exporter intended to provide a lightweight
-subset of its functionality.  It supports C<import()>, C<@EXPORT> and
+Exporter::Lite is an alternative to L<Exporter>,
+intended to provide a lightweight subset
+of the most commonly-used functionality.
+It supports C<import()>, C<@EXPORT> and
 C<@EXPORT_OK> and not a whole lot else.
 
-Unlike Exporter, it is not necessary to inherit from Exporter::Lite
-(ie. no C<@ISA = qw(Exporter::Lite)> mantra).  Exporter::Lite simply
-exports its import() function.  This might be called a "mix-in".
+Unlike Exporter, it is not necessary to inherit from Exporter::Lite;
+Ie you don't need to write:
+
+ @ISA = qw(Exporter::Lite);
+
+Exporter::Lite simply exports its import() function into your namespace.
+This might be called a "mix-in" or a "role".
 
 Setting up a module to export its variables and functions is simple:
 
     package My::Module;
     use Exporter::Lite;
 
-    @EXPORT = qw($Foo bar);
+    our @EXPORT = qw($Foo bar);
 
-now when you C<use My::Module>, C<$Foo> and C<bar()> will show up.
+Functions and variables listed in the C<@EXPORT> package variable
+are automatically exported if you use the module and don't explicitly
+list any imports.
+Now, when you C<use My::Module>, C<$Foo> and C<bar()> will show up.
 
-In order to make exporting optional, use @EXPORT_OK.
+Optional exports are listed in the C<@EXPORT_OK> package variable:
 
     package My::Module;
     use Exporter::Lite;
 
-    @EXPORT_OK = qw($Foo bar);
+    our @EXPORT_OK = qw($Foo bar);
 
-when My::Module is used, C<$Foo> and C<bar()> will I<not> show up.
-You have to ask for them.  C<use My::Module qw($Foo bar)>.
+When My::Module is used, C<$Foo> and C<bar()> will I<not> show up,
+unless you explicitly ask for them:
+
+    use My::Module qw($Foo bar);
+
+Note that when you specify one or more functions or variables to import,
+then you must also explicitly list any of the default symbols you want to use.
+So if you have an exporting module:
+
+    package Games;
+    our @EXPORT    = qw/ pacman defender  /;
+    our @EXPORT_OK = qw/ galaga centipede /;
+
+Then if you want to use both C<pacman> and C<galaga>, then you'd write:
+
+    use Games qw/ pacman galaga /;
 
 =head1 Methods
 
 Export::Lite has one public method, import(), which is called
-automaticly when your modules is use()'d.  
+automatically when your modules is use()'d.  
 
 In normal usage you don't have to worry about this at all.
 
@@ -170,13 +195,55 @@ wasn't recognized).
 
 =back
 
-=head1 BUGS and CAVEATS
 
-Its not yet clear if this is actually any lighter or faster than
-Exporter.  I know its at least on par.
+=head1 SEE ALSO
 
-OTOH, the docs are much clearer and not having to say C<@ISA =
-qw(Exporter)> is kinda nice.
+L<Exporter> is the grandaddy of all Exporter modules, and bundled with Perl
+itself, unlike the rest of the modules listed here.
+
+L<Attribute::Exporter> defines attributes which you use to mark
+which subs and variables you want to export, and how.
+
+L<Exporter::Simple> also uses attributes to control the export of
+functions and variables from your module.
+
+L<Const::Exporter> makes it easy to create a module that exports constants.
+
+L<Constant::Exporter> is another module that makes it easy to create
+modules that define and export constants.
+
+L<Sub::Exporter> is a "sophisticated exporter for custom-built routines";
+it lets you provide generators that can be used to customise what
+gets imported when someone uses your module.
+
+L<Exporter::Tiny> provides the same features as L<Sub::Exporter>,
+but relying only on core dependencies.
+
+L<Exporter::Shiny> is a shortcut for L<Exporter::Tiny> that
+provides a more concise notation for providing optional exports.
+
+L<Exporter::Declare> provides syntactic sugar to make the export
+status of your functions part of their declaration. Kind of.
+
+L<AppConfig::Exporter> lets you export part of an L<AppConfig>-based
+configuration.
+
+L<Exporter::Lexical> lets you export lexical subs from your module.
+
+L<Constant::Export::Lazy> lets you write a module that exports
+function-style constants, which are instantiated lazily.
+
+L<Exporter::Auto> will export everything from your module that
+it thinks is a public function (name doesn't start with an underscore).
+
+L<Class::Exporter> lets you export class methods as regular subroutines.
+
+L<Xporter> is like Exporter, but with persistent defaults and auto-ISA.
+
+
+=head1 REPOSITORY
+
+L<https://github.com/neilb/Exporter-Lite>
 
 =head1 AUTHORS
 
@@ -188,9 +255,5 @@ This program is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 
 See F<http://www.perl.com/perl/misc/Artistic.html>
-
-=head1 SEE ALSO
-
-L<Exporter>, L<Exporter::Simple>, L<UNIVERSAL::exports>
 
 =cut

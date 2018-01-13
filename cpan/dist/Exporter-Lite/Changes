@@ -1,0 +1,47 @@
+Revision history for Perl module Exporter::Lite
+
+0.08 2016-01-13
+    - Fixed typo in name of Constant::Export::Lazy in SEE ALSO. MANWAR++
+    - Simplified Makefile.PL
+
+0.07 2015-10-09
+    - Updated github repo URL after changing my github username
+
+0.06 2014-07-29
+    - Improved the abstract - explicit mention that functions are supported
+    - Improved the SYNOPSIS - split into separate code blocks
+    - Improved the DESCRIPTION. Made clearer that as soon as you specify
+      an import symbol, you have to also specify any you want from @EXPORT.
+    - Removed the BUGS and CAVEATS section from the doc; it was just being
+      self-deprecating about whether it deserved the "lite" moniker.
+
+0.05 2014-03-26
+    - Improved the DESCRIPTION section, particularly the first paragraph.
+    - Added a bunch more Exporter modules to the SEE ALSO section.
+
+0.04 2014-03-26
+    - Added Constant::Exporter::Lazy to SEE ALSO
+    - Had forgotten to put README and Changes in MANIFEST. Sigh.
+
+0.03 2014-03-25
+    - Now maintained by NEILB
+    - Fixed typo reported by dsteinbrunner in RT#87096
+    - Now use strict and warnings
+    - Added github repo to metadata and pod
+    - Added README
+    - Specified min perl version 5.6.0 in metadata
+    - Set PREREQ_PM, TEST_REQUIRES, CONFIGURE_REQUIRES in Makefile.PL
+    - Added a load of modules to SEE ALSO.
+
+0.02_01 2014-03-24
+    - All but the final bullet in 0.03 were first done in this dev release
+
+0.02  Sat Nov 11 18:09:19 CST 2006
+    - Added a Changes file. :)
+    - Added a license notice. (jjore@cpan.org) [rt.cpan.org 20323]
+    - Fixed the version check test for 5.10. [rt.cpan.org 13648]
+    - Now depending on Test::More rather than shipping it.
+
+0.01  Sat Dec 16 2001
+    - First working release
+

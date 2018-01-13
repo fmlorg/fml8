@@ -1,12 +1,29 @@
---- #YAML:1.0
-name:                Exporter-Lite
-version:             0.02
-abstract:            ~
-license:             perl
-generated_by:        ExtUtils::MakeMaker version 6.31
-distribution_type:   module
-requires:     
-    Test::More:                    0.34
+---
+abstract: unknown
+author:
+  - unknown
+build_requires:
+  ExtUtils::MakeMaker: '0'
+  Test::More: '0.34'
+configure_requires:
+  ExtUtils::MakeMaker: '6.3'
+dynamic_config: 1
+generated_by: 'ExtUtils::MakeMaker version 7.02, CPAN::Meta::Converter version 2.150005'
+license: perl
 meta-spec:
-    url:     http://module-build.sourceforge.net/META-spec-v1.2.html
-    version: 1.2
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: '1.4'
+name: Exporter-Lite
+no_index:
+  directory:
+    - t
+    - inc
+requires:
+  Carp: '0'
+  perl: '5.006'
+  strict: '0'
+  warnings: '0'
+resources:
+  repository: https://github.com/neilb/Exporter-Lite.git
+version: '0.08'
+x_serialization_backend: 'CPAN::Meta::YAML version 0.016'

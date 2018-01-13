@@ -1,7 +1,9 @@
+Changes
 MANIFEST
 Makefile.PL
+README
 lib/Exporter/Lite.pm
 t/Exporter-Lite.t
 t/lib/Dummy.pm
-META.yml                                 Module meta-data (added by MakeMaker)
-SIGNATURE                                Public-key signature (added by MakeMaker)
+META.yml                                 Module YAML meta-data (added by MakeMaker)
+META.json                                Module JSON meta-data (added by MakeMaker)
