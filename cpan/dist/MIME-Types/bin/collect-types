@@ -1,0 +1,411 @@
+#!/usr/bin/env perl
+use warnings;
+use strict;
+
+use HTML::Parser ();
+use File::Glob   qw/bsd_glob/;
+use XML::LibXML::Simple;
+
+use Data::Dumper qw/Dumper/;
+$Data::Dumper::Indent = 1;
+
+my $iana_root   = 'sources/iana-media-types';
+my $my_own      = 'sources/my-own';
+my $apache      = 'sources/from-apache';
+my $sitepoint   = 'sources/from-sitepoint';
+my $stdicon     = 'sources/from-stdicon';
+my $broofa      = 'sources/from-broofa';
+my $freedesktop = 'sources/from-freedesktop';
+
+my $history     = 'history';
+my $distributed = 'lib/MIME/types.db';
+
+my @iana_basetypes = qw{
+  text/plain
+  application/octet-stream
+};
+my %iana_basetypes = map +($_ => 1), @iana_basetypes;
+
+sub iana();
+sub my_own();
+sub apache();
+sub sitepoint();
+sub stdicon();
+sub broofa();
+sub freedesktop();
+
+sub simplify();
+sub write_tables();
+sub write_distributed();
+sub keep_sources($);
+sub scan_dist_version();
+sub add_type($$$);
+
+my $dist_version = scan_dist_version;
+print "*** producing for release $dist_version\n";
+
+my $current      = "$history/$dist_version";
+-d $current or mkdir $current or die "$current: $!";
+
+my $types_list   = "$current/types.csv";
+my $ext_list     = "$current/ext.csv";
+my $save_source  = "$current/sources";
+
+# Collect the info, the order is important!
+my (%mimes, %exts);
+my $last_count   = 0;
+iana();
+my_own();
+apache();
+sitepoint();
+stdicon();
+broofa();
+freedesktop();
+#warn Dumper \%mimes;
+
+# Build the tables
+simplify();
+write_tables();
+write_distributed();
+keep_sources($save_source);
+
+exit 0;
+
+#
+### IANA
+#
+# Run updata_iana first
+# The format of the iana files is not standardized, so it is hard to
+# collect other info automatically.  Therefore, that info is manually
+# added to my-own list.
+#
+
+sub iana()
+{   print "* processing iana types\n";
+
+    foreach my $fn (bsd_glob "$iana_root/*/index.html")
+    {   print "  . parsing file $fn\n";
+        my ($major) = $fn =~ m!/([^/]+)/index.html$!;
+
+        open IANA, '<', $fn or die "$fn: $!";
+        my @page    = <IANA>;
+        close IANA;
+
+        my $types_in_page = 0;
+        while(@page)
+        {   $page[0] =~ m!^\<tr! or next;
+            $page[1] =~ m!^\<td\>\&nbsp;! or next;
+            $page[2] =~ m!^\<td\>(?:\<a[^>]*\>)?([^<]+)! or next;
+            my $minor = $1;
+            $page[3] =~ m!^\<td\>! or next;
+            splice @page, 0, 3;
+
+            $minor =~ s/\s+.*//;  # deprecation, etc
+            my $type = "$major/$minor";
+            my $info = add_type $type, 'iana', [];
+            $types_in_page++;
+        }
+        continue
+        {   shift @page;
+        }
+
+        print "    found $types_in_page types for $major\n";
+    }
+
+    $last_count = keys %mimes;
+    print "  . found $last_count registered types\n";
+}
+
+#
+### MY-OWN
+#
+# Based on years of existince of the MIME::Types module
+#
+
+sub my_own()
+{   print "* processing my old list\n";
+
+   # Exceptions
+   # vms:text/plain;doc;8bit
+   # mac:application/x-macbase64;;bin
+   #
+   # IE6 bug
+   # image/pjpeg;;base64
+
+    open OWN, '<', $my_own or die $!;
+    while(<OWN>)
+    {   chomp;
+        next if /^#|^\s*$/;
+        my ($type, $ext, $enc) = split /\;/;
+        my @ext  = $ext ? (split /\,/, $ext) : ();
+        my $info = add_type $type, 'my_own', \@ext;
+        $info->{enc} = $enc if $enc;
+    }
+    close OWN;
+
+    print "  . added ".(keys(%mimes) - $last_count)." types\n";
+    $last_count = keys %mimes;
+    print "  . now $last_count types\n";
+}
+
+#
+### from Apache
+#
+# Apache uses the table to automatically add a mime-type for files on
+# disk, based on the filename extension.
+
+sub apache()
+{   print "* processing apache\n";
+
+    my $found = 0;
+
+    open APACHE, '<', $apache or die $!;
+    while(<APACHE>)
+    {   chomp;
+        next if /^#|^\s*$/;
+        my ($type, $ext) = split ' ', $_, 2;
+        my @ext  = $ext ? (split ' ', $ext) : ();
+        my $info = add_type $type, 'apache', \@ext;
+        $found++;
+    }
+    close APACHE;
+
+    print "  . added ".(keys(%mimes) - $last_count)." new types from $found\n";
+    $last_count = keys %mimes;
+    print "  . now $last_count types\n";
+}
+
+#
+### from Sitepoint
+#
+# The list contains all discovered extension/type combination.  That
+# results in too many options per extension, which should be filtered
+# out later.
+
+sub sitepoint()
+{   print "* processing sitepoint\n";
+
+    my $found = 0;
+
+    open SITEP, '<', $sitepoint or die $!;
+    while(<SITEP>)
+    {   chomp;
+        next if /^#|^\s*$/;
+        my ($ext, $type, $comment) = split /\s+/;
+
+        $ext =~ s/^\.//;
+        my $info = add_type $type, 'sitepoint', [$ext];
+        $found++;
+    }
+    close SITEP;
+
+    print "  . added ".(keys(%mimes) - $last_count)." new types from $found\n";
+    $last_count = keys %mimes;
+    print "  . now $last_count types\n";
+}
+
+#
+### from Stdicon
+#
+
+sub stdicon()
+{   print "* processing stdicon\n";
+
+    my $found = 0;
+
+    open STDICON, '<', $stdicon or die $!;
+    while(<STDICON>)
+    {   chomp;
+        next if /^#|^\s*$/;
+        my ($ext, $type, $comment) = split /\s+/;
+
+        $ext =~ s/^\.//;
+        add_type $type, 'stdicon', [$ext];
+        $found++;
+    }
+    close STDICON;
+
+    print "  . added ".(keys(%mimes) - $last_count)." types from $found\n";
+    $last_count = keys %mimes;
+    print "  . now $last_count types\n";
+}
+
+
+#
+### from github broofa
+#
+
+sub broofa()
+{   print "* processing broofa\n";
+
+    my $found = 0;
+
+    open BROOFA, '<', $broofa or die $!;
+    while(<BROOFA>)
+    {   next if /^\#|^\s*$/;
+        chomp;
+
+        my ($type, @ext) = split;
+        my $info = add_type $type, 'broofa', \@ext;
+        $found++;
+    }
+    close BROOFA;
+
+    print "  . added ".(keys(%mimes) - $last_count)." new types from $found\n";
+    $last_count = keys %mimes;
+    print "  . now $last_count types\n";
+}
+
+#
+### from github freedesktop
+#
+
+sub freedesktop()
+{   print "* processing freedesktop\n";
+
+    my $c = XML::LibXML::Simple->new->XMLin($freedesktop);
+    my $mimes = $c->{'mime-type'} || [];
+    foreach my $record (@$mimes)
+    {   my $type = $record->{type} or die;
+        my $glob = $record->{glob} || [];
+        $glob    = [$glob] if ref $glob eq 'HASH';   # when only one pattern
+        my @patt = map +($_->{pattern} =~ /^\*\.(.*)/ ? $1 : ()), @$glob;
+
+        # remove regex patterns
+        my @ext  = grep !/[^a-zA-Z0-9+\-]/, @patt;
+        my $info = add_type $type, 'freedesktop', \@ext;
+    }
+
+    print "  . added ".(keys(%mimes) - $last_count)." new types from "
+      . @$mimes . "\n";
+    $last_count = keys %mimes;
+    print "  . now $last_count types\n";
+}
+
+#
+### Simplify
+#
+
+sub simplify()
+{   print "* simplifying\n";
+
+    # order extensions
+    my %back = map +($_ => 1), @iana_basetypes;
+    foreach my $ext (keys %exts)
+    {   my %seen;
+        my @types   = grep !$seen{$_}++, @{$exts{$ext}};
+
+        my @last    = grep $back{$_}, @types;
+        $exts{$ext} = [ (grep !$back{$_}, @types), @last ];
+    }
+
+    foreach my $type (keys %mimes)
+    {   my $info = $mimes{$type};
+
+        # remove double extensions
+        my %seen_ext;
+        my @ext = grep !$seen_ext{$_}++, @{$info->{ext} || []};
+
+        if($iana_basetypes{$type})
+        {   @ext = grep $type eq $exts{$_}[0], @ext;
+        }
+
+        $info->{ext} = \@ext;
+    }
+
+    print "  . found ".(keys %exts)." extensions\n";
+}
+
+#
+### Write
+#
+
+sub write_tables()
+{   print "* write $types_list\n";
+    open OUT, '>', $types_list or die $!;
+    foreach my $type (sort keys %mimes)
+    {   my $info = $mimes{$type};
+        my $ext  = join ",", @{$info->{ext}};
+        my $enc  = $info->{enc} || '';
+        print OUT "$type;$ext;$enc\n";
+    }
+    close OUT;
+
+    print "* write $ext_list\n";
+    open OUT, '>', $ext_list or die $!;
+    foreach my $ext (sort keys %exts)
+    {   my $types = $exts{$ext};
+        print OUT $ext, ';', join(',', @$types), "\n";
+    }
+    close OUT;
+}
+
+sub write_distributed()
+{
+    my %sets;
+    foreach my $type (sort keys %mimes)
+    {   my $info   = $mimes{$type};
+        my ($major, $minor) = split m!/!, $type, 2;
+        my @ext    = @{$info->{ext} || []};
+
+        my $isIANA = $major =~ m{^x-} || $minor =~ m{^x-} ? '' : 'I';
+        my $hasExt = @ext ? 'E' : '';
+        my $ext    = join ',', @ext;
+        my $enc    = $info->{enc} || '';
+        push @{$sets{"$major:$isIANA:$hasExt"}}, "$minor;$ext;$enc";
+    }
+    foreach my $ext (sort keys %exts)
+    {   my $types  = $exts{$ext};
+        push @{$sets{EXTENSIONS}}, join(';', $ext, $types->[0]);
+    }
+
+    print "* write $distributed\n";
+    open OUT, '>:encoding(utf8)', $distributed or die "$distributed: $!";
+    foreach my $section (sort keys %sets)
+    {   my $records = $sets{$section};
+        print OUT join "\n"
+           , @$records.":$section"
+           , (sort @$records)
+           , '', '';
+    }
+    close OUT;
+}
+
+sub keep_sources($)
+{   my $fn = shift . '.tjz';
+    print "* saving sources to $fn\n";
+    system "tar cf - sources/| bzip2 -9v >$fn" and die $!;
+}
+
+my %iana_major;
+sub add_type($$$)
+{   my ($type, $from, $ext) = @_;
+ 
+    my $simple = lc $type;
+    my ($major, $minor) = $simple =~ m!^(?:x-)?([^/]+)/(?:x-)?(.+)$!;
+    if($from eq 'iana')
+    {   $iana_major{$major}++;
+    }
+    elsif(!$iana_major{$major})
+    {   $simple = "x-$major/x-$minor";
+    }
+    elsif(!$mimes{$simple} && $minor !~ m/^(vnd|prs|x)\./)
+    {   $simple = "$major/x-$minor";
+    }
+
+    my $info   = $mimes{$simple} ||= {};
+    push @{$info->{ext}}, @$ext;
+    $info->{by}{$from}++;
+
+    push @{$exts{$_}}, $simple for @$ext;
+    $info;
+}
+
+sub scan_dist_version()
+{   open my($mf), '<', 'Makefile.PL' or die $!;
+    while(<$mf>)
+    {   return $1 if m/\$version\s*\=\s*['"]([^'"]+)'\s*;/;
+    }
+    die "version not found";
+}
+
