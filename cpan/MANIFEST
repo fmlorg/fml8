@@ -2,16 +2,18 @@
 
 				version		license	type
 ----------------------------------------------------------------
-Crypt-RandPasswd		0.02		perl itself
+Crypt-RandPasswd		0.06		perl itself
 Crypt-TripleDES			0.24		perl itself
 Crypt-UnixCrypt			1.0		perl itself
 
 Email-Find			0.10		perl itself
 
-Exporter-Lite			0.02		perl itself
+Exporter-Lite			0.08		perl itself
 
-File-Spec			0.85_03		perl itself
-File-MMagic			1.27		bsd + apache ?
+File-Spec			3.62		perl itself
+				PathTools-3.62
+				
+File-MMagic			1.30		bsd + apache ?
 
 HTML-CalendarMonthSimple	1.25		? (freesoftware, unlimited)
 HTML-FromText			2.05		perl itself
@@ -21,15 +23,15 @@ Jcode				2.07		perl itself
 MIME-Base64-Perl		1.0		perl itself
 MIME-Lite			2.108		perl itself
 MIME-Lite-HTML			1.2		?
-MIME-Types			1.004		perl itself
+MIME-Types			2.14		perl itself
 
 MailTools			2.19		perl itself
 
-Socket6				0.23		WIDE (BSD flabour)
+Socket6				0.28		WIDE (BSD flabour)
 
-Time-modules			2011.0517	unknown (your own risk)
+Time-modules			2013.0912	unknown (your own risk)
 
-Unicode-Japanese		0.47		perl itself
+Unicode-Japanese		0.49		perl itself
 
 
 #

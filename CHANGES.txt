@@ -11,11 +11,23 @@
 	        hack base to catch up perl 5.16 changes, cpan modules ..
 	7.98.xx ... # See Appendix at the last of this file.
 
+2018/01/13
+
+  update CPAN modules
+  	 updated to Crypt-RandPasswd 0.06
+	 updated to Exporter-Lite    0.08
+	 updated to Time-modules     2013.0912
+	 updated to Unicode-Japanese 0.49
+	 updated to File-MMagic	     1.30
+	 updated to PathTools	     3.62 (File::Spec)
+	 updated to MIME-Types	     2.14
+
 2018/01/01
 
   fml8 season (monthly for a while) rollout campaign starts.
 
-  updated to MailTools-2.19.
+  update CPAN modules
+  	 updated to MailTools-2.19.
 
 2017/12/31
 
