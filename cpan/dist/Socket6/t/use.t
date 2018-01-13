@@ -31,8 +31,11 @@
 
 use strict;
 use Test;
-use Socket;
-BEGIN { plan tests => 3 }
+eval 'use Socket qw(AF_INET AF_INET6 SOCK_STREAM)';
+if ($@) {
+    use Socket qw(AF_INET SOCK_STREAM);
+}
+BEGIN { plan tests => 9 }
 
 use Socket6; ok(1);
 my @tmp = getaddrinfo("localhost", "", AF_INET, SOCK_STREAM, 0, 0);
@@ -44,5 +47,25 @@ my($addr, $port) = getnameinfo($sin, NI_NUMERICHOST | NI_NUMERICSERV);
 if ($addr eq "127.0.0.1" && $port eq "0") {
     ok(3);
 }
-exit;
-__END__
+
+my $af_inet6 = eval('AF_INET6');
+my $unless_inet6 = !defined($af_inet6) ? 'Skip if not defined AF_INET6' : '';
+
+skip($unless_inet6,
+     sub { inet_ntop($af_inet6, inet_pton($af_inet6, "::")), "::" });
+
+# this fails under darwin
+skip($unless_inet6,
+     sub { inet_ntop($af_inet6, inet_pton($af_inet6, "::21")), "::21" })
+    or print "# ", unpack("H*", inet_pton($af_inet6, "::21")), "\n";
+
+skip($unless_inet6,
+     sub { inet_ntop($af_inet6, inet_pton($af_inet6, "43::")), "43::" });
+skip($unless_inet6,
+     sub { inet_ntop($af_inet6, inet_pton($af_inet6, "1:2:3:4:5:6:7::")),
+	   "1:2:3:4:5:6:7:0" });
+skip($unless_inet6,
+     sub { inet_ntop($af_inet6, inet_pton($af_inet6, "1::8")), "1::8" });
+skip($unless_inet6,
+     sub { inet_ntop($af_inet6, inet_pton($af_inet6, "FF00::FFFF")),
+	   "ff00::ffff" });

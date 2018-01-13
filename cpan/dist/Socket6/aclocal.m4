@@ -1,4 +1,4 @@
-dnl Copyright (C) 2000-2005 Hajimu UMEMOTO <ume@mahoroba.org>.
+dnl Copyright (C) 2000-2016 Hajimu UMEMOTO <ume@mahoroba.org>.
 dnl All rights reserved.
 dnl
 dnl Redistribution and use in source and binary forms, with or without
@@ -25,7 +25,7 @@ dnl LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 dnl OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 dnl SUCH DAMAGE.
 
-dnl $Id: aclocal.m4,v 1.11 2005/08/27 16:37:32 ume Exp $
+dnl $Id: aclocal.m4 682 2016-07-11 05:44:06Z ume $
 
 dnl SOCKET6_CHECK_PL_SV_UNDEF(VALUE-IF-FOUND , VALUE-IF-NOT-FOUND
 dnl                           [, PERL-PATH])
@@ -183,3 +183,34 @@ else
   ifelse([$2], , :, [$2])
 fi
 AC_MSG_RESULT($ipv6_cv_socklen_t)])
+dnl
+dnl Check if darwin inet_ntop is broken
+AC_DEFUN([IPv6_CHECK_INET_NTOP], [
+AC_MSG_CHECKING(for working inet_ntop)
+AC_CACHE_VAL(ipv6_cv_can_inet_ntop, [dnl
+AC_RUN_IFELSE([AC_LANG_SOURCE[
+#include <string.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
+int
+main() {
+  static struct in6_addr addr;
+  static char str[INET6_ADDRSTRLEN];
+
+  addr.s6_addr[15] = 0x21;
+  inet_ntop(AF_INET6, &addr, str, sizeof(str));
+  if (strcmp(str, "::21") && strcmp(str, "::0.0.0.33"))
+    exit(1);
+}
+]], [ipv6_cv_can_inet_ntop=yes], [ipv6_cv_can_inet_ntop=no])])dnl
+dnl
+if test $ipv6_cv_can_inet_ntop = yes; then
+  ifelse([$1], , AC_DEFINE(CAN_INET_NTOP,[1],[Do we have a working inet_ntop?]), [$1])
+else
+  ifelse([$2], , :, [$2])
+fi
+AC_MSG_RESULT($ipv6_cv_can_inet_ntop)])

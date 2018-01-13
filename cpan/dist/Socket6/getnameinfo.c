@@ -1,6 +1,6 @@
 /*
  * Mar  8, 2000 by Hajimu UMEMOTO <ume@mahoroba.org>
- * $Id: getnameinfo.c,v 1.8 2004/01/04 10:13:44 ume Exp $
+ * $Id: getnameinfo.c 99 2004-01-04 10:13:44Z ume $
  *
  * This module is besed on ssh-1.2.27-IPv6-1.5 written by
  * KIKUCHI Takahiro <kick@kyoto.wide.ad.jp>

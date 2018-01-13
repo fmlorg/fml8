@@ -1,7 +1,7 @@
-# Copyright (C) 2000-2008 Hajimu UMEMOTO <ume@mahoroba.org>.
+# Copyright (C) 2000-2016 Hajimu UMEMOTO <ume@mahoroba.org>.
 # All rights reserved.
 #
-# This module is besed on perl5.005_55-v6-19990721 written by KAME
+# This module is based on perl5.005_55-v6-19990721 written by KAME
 # Project.
 #
 # Copyright (C) 1995, 1996, 1997, 1998, and 1999 WIDE Project.
@@ -31,13 +31,13 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: Socket6.pm,v 1.45 2008/11/01 19:08:39 ume Exp $
+# $Id: Socket6.pm 683 2016-07-11 05:45:26Z ume $
 
 package Socket6;
 
 use strict;
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $AUTOLOAD);
-$VERSION = "0.23";
+$VERSION = "0.28";
 
 =head1 NAME
 
@@ -54,7 +54,7 @@ Socket6 - IPv6 related part of the C socket.h defines and structure manipulators
 	($family, $socktype, $proto, $saddr, $canonname, @res) = @res;
 
 	($host, $port) = getnameinfo($saddr, NI_NUMERICHOST | NI_NUMERICSERV);
-	print STDERR "Trying to connect to $host port port $port...\n";
+	print STDERR "Trying to connect to $host port $port...\n";
 
 	socket(Socket_Handle, $family, $socktype, $proto) || next;
         connect(Socket_Handle, $saddr) && last;
@@ -64,7 +64,7 @@ Socket6 - IPv6 related part of the C socket.h defines and structure manipulators
     }
 
     if ($family != -1) {
-	print STDERR "connected to $host port port $port\n";
+	print STDERR "connected to $host port $port\n";
     } else {
 	die "connect attempt failed\n";
     }
@@ -77,6 +77,8 @@ If you use the Socket6 module,
 be sure to specify "use Socket" as well as "use Socket6".
 
 Functions supplied are:
+
+=over
 
 =item inet_pton FAMILY, TEXT_ADDRESS
 
@@ -111,7 +113,7 @@ Functions supplied are:
 =item unpack_sockaddr_in6 NAME
 
     This function takes a sockaddr_in6 structure (as returned by
-    pack_sockaddr_in6()) and returns a list of of two elements:
+    pack_sockaddr_in6()) and returns a list of two elements:
     the port number and the 16-octet IP address.
     This function will croak if it determines it has not been
     passed an IPv6 structure.
@@ -119,7 +121,7 @@ Functions supplied are:
 =item unpack_sockaddr_in6_all NAME
 
     This function takes a sockaddr_in6 structure (as returned by
-    pack_sockaddr_in6()) and returns a list of of four elements:
+    pack_sockaddr_in6()) and returns a list of four elements:
     the port number, the flow information, the 16-octet IP address,
     and the scope information.
     This function will croak if it determines it has not been
@@ -200,11 +202,9 @@ Functions supplied are:
 
     This function returns the 16-octet wildcard address.
 
-=item in6add_loopback
+=item in6addr_loopback
 
     This function returns the 16-octet loopback address.
-
-=over
 
 =back
 

@@ -1,3 +1,75 @@
+2016-07-11  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.28.
+
+	* aclocal.m4 (IPv6_CHECK_INET_NTOP): inet_ntop(3) may returns
+	IPv4-compatible IPv6 address. [cpan #113950]
+
+	Submitted by:	Andrew Galante <spock128 [...] gmail.com>
+
+2016-03-23  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.27.
+
+2016-03-22  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* t/use.t: We still supports an environment where AF_INET6 is not
+	defined.
+
+2016-03-17  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.26.
+
+	* Makefile.PL: Make Socket6 buildable on Android. [cpan #98181]
+
+	Submitted by:	fraserbn [...] gmail.com
+
+	* system inet_ntop broken in darwin. [cpan #113005]
+
+	Submitted by:	RURBAN [...] cpan.org
+
+2015-12-05  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* gailookup.pl.in: Add -r option to do reverse lookup.
+
+2015-11-25  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* gailookup.pl.in: Add awareness of AI_ALL and AI_V4MAPPED.
+
+	* gailookup.pl.in: Add -P option to ease to specify port number.
+
+2013-12-09  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.25.
+
+	* Makefile.PL: Install manpage. [cpan #66811]
+
+	Submitted by:	gavin@openfusion.com.au
+
+	* Socket6.pm: Fix typo. [cpan #86346]
+
+	Submitted by:	dsteinbrunner@pobox.com
+
+	* Socket6.pm: Fix typo. [cpan #71617]
+
+2013-12-08  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.24.
+
+	* Makefile.PL: Fixed [cpan #77665] pass perl cc and ccflags to
+	configure
+
+	Submitted by:	rurban@cpan.org
+
+	* Makefile.PL (configure_mswin32): Fixed [cpan #65710]
+	undefined ref to inet_ntop,inet_pton on Windows XP.
+
+	Submitted by:	APOCAL@cpan.org
+
+	* t/use.t: Fixed [cpan #75211] test redefinition warnings
+
+	Submitted by:	Manoj Kumar <mkmetw@hotmail.com>
+
 2008-11-02  Hajimu UMEMOTO  <ume@mahoroba.org>
 
 	* Socket6.pm: Bump version number to 0.23.

@@ -1,6 +1,6 @@
 #! @PERLPATH@
 
-;# Copyright (C) 2000-2005 Hajimu UMEMOTO <ume@mahoroba.org>.
+;# Copyright (C) 2000-2015 Hajimu UMEMOTO <ume@mahoroba.org>.
 ;# All rights reserved.
 ;#
 ;# Copyright (C)2000 Hideaki YOSHIFUJI <yoshfuji@ecei.tohoku.ac.jp>
@@ -30,7 +30,7 @@
 ;# OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 ;# SUCH DAMAGE.
 
-;# $Id: gailookup.pl.in,v 1.12 2005/10/11 06:57:21 ume Exp $
+;# $Id: gailookup.pl.in 652 2015-12-05 04:40:07Z ume $
 
 use Getopt::Std;
 use Socket;
@@ -40,21 +40,24 @@ use strict;
 my $inet6 = defined(eval 'PF_INET6');
 
 my %opt;
-getopts(($inet6 ? 'achpsnNqS46' : 'chpsnNqS4'), \%opt);
+getopts(($inet6 ? 'aAchpsmnNP:qrS46' : 'AchpsmnNP:qrS4'), \%opt);
 
 if ($opt{'h'}){
-    print STDERR ("Usage: $0 [-h | [-a] [-c] [-n] [-N] [-p] [-q] [-s] [-S] [-4" .
+    print STDERR ("Usage: $0 [-h | [-a] [-A] [-c] [-m] [-n] [-N] [-p] [-P serv] [-q] [-r] [-s] [-S] [-4" .
 		  ($inet6 && "|-6") . "] [host [serv]]]\n" .
 		  "-h   : help\n" .
 		  "-a   : AI_ADDRCONFIG flag\n" .
+		  "-A   : AI_ALL flag\n" .
 		  "-c   : AI_CANONNAME flag\n" .
+		  "-m   : AI_V4MAPPED flag\n" .
 		  "-n   : AI_NUMERICHOST flag\n" .
 		  "-N   : AI_NUMERICSERV flag\n" .
 		  "-p   : AI_PASSIVE flag\n" .
 		  "-q   : only show IP address\n" .
+		  "-r   : do reverse lookup\n" .
 		  "-s   : NI_WITHSCOPEID flag\n" .
 		  "-S   : suppress scopeid\n" .
-		  ($inet6 ? "-4|-6: PF_INET | PF_INET6" : "-4   : PF_INET") . 
+		  ($inet6 ? "-4|-6: PF_INET | PF_INET6" : "-4   : PF_INET") .
 		  "\n");
     exit(4);
 }
@@ -64,12 +67,16 @@ my $serv = shift(@ARGV) if (@ARGV);
 die("Too many arguments\n") if (@ARGV);
 die("Either -4 or -6, not both should be specified\n") if ($opt{'4'} && $opt{'6'});
 
+$serv = $opt{'P'} if ($opt{'P'});
+
 my $af = PF_UNSPEC;
 $af = PF_INET if ($opt{'4'});
 $af = PF_INET6 if ($inet6 && $opt{'6'});
 
 my $flags = 0;
 eval('$flags |= AI_ADDRCONFIG') if ($opt{'a'});
+eval('$flags |= AI_ALL') if ($opt{'A'});
+eval('$flags |= AI_V4MAPPED') if ($opt{'m'});
 $flags |= AI_PASSIVE if ($opt{'p'});
 $flags |= AI_NUMERICHOST if ($opt{'n'});
 $flags |= AI_NUMERICSERV if ($opt{'N'});
@@ -97,7 +104,11 @@ while (my($family,$socktype,$protocol,$sin,$canonname) = splice(@tmp, $[, 5)){
 	print("$addr");
     } else {
 	print("family=$family, socktype=$socktype, protocol=$protocol, addr=$addr, port=$port");
-	print(" canonname=$canonname") if ($opt{'c'});
+	print(", canonname=$canonname") if ($opt{'c'});
+	if ($opt{'r'}) {
+	    my($addr, $port) = getnameinfo($sin);
+	    print(", rev=$addr");
+	}
     }
     print("\n");
 }

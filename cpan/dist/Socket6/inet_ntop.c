@@ -13,6 +13,8 @@
  * FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
  * WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ *
+ * $Id$
  */
 
 
@@ -23,6 +25,12 @@
  * WARNING: Don't even consider trying to compile this on a system where
  * sizeof(int) < 4.  sizeof(int) > 4 is fine; all the world's not a VAX.
  */
+
+#ifdef HAVE_SOCKLEN_T
+#define SOCKLEN_T	socklen_t
+#else
+#define SOCKLEN_T	size_t
+#endif
 
 static const char *inet_ntop4(const unsigned char *src, char *dst,
                               size_t size);
@@ -41,14 +49,14 @@ static const char *inet_ntop6(const unsigned char *src, char *dst,
  *      Paul Vixie, 1996.
  */
 const char *
-inet_ntop(int af, const void *src, char *dst, size_t size)
+inet_ntop(int af, const void *src, char *dst, SOCKLEN_T size)
 {
         switch (af) {
         case AF_INET:
-                return (inet_ntop4(src, dst, size));
+                return (inet_ntop4(src, dst, (size_t)size));
 #ifdef AF_INET6
         case AF_INET6:
-                return (inet_ntop6(src, dst, size));
+                return (inet_ntop6(src, dst, (size_t)size));
 #endif
         default:
                 errno = EAFNOSUPPORT;

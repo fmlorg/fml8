@@ -1,4 +1,4 @@
-# Copyright (C) 2000-2008 Hajimu UMEMOTO <ume@mahoroba.org>.
+# Copyright (C) 2000-2016 Hajimu UMEMOTO <ume@mahoroba.org>.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -25,15 +25,30 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: Makefile.PL,v 1.8 2008/11/01 19:01:10 ume Exp $
+# $Id: Makefile.PL 659 2016-03-17 06:20:36Z ume $
 
+use Config;
 use ExtUtils::MakeMaker;
 
 if ($^O eq 'MSWin32') {
     configure_mswin32();
 } else {
+    local $ENV{TMPDIR} = $ENV{TMPDIR};
     my $path_perl = ($^X =~ m!^/!o) ? $^X : `which $^X`;
-    my $cmd = './configure';
+    my $cmd = "CC='$Config{cc}' CFLAGS='$Config{ccflags}'";
+    if ($^O eq 'android') {
+        # Work around a bug in Android's sh:
+        # http://stackoverflow.com/questions/15283220/android-shell-eof
+        $ENV{TMPDIR} ||= File::Spec->tmpdir();
+
+        # /bin/sh doesn't exist on Android, point it to the right
+        # location for sh
+        $cmd .= " CONFIG_SHELL='$Config{sh}'";
+
+        # Call './configure' as 'sh ./configure'
+        $cmd .= " $Config{sh}";
+    }
+    $cmd .= " ./configure";
     $cmd .= " --with-perl=$path_perl" if ($path_perl);
     system($cmd);
 }
@@ -43,7 +58,6 @@ require './config.pl';
 WriteMakefile(
     NAME	 => 'Socket6',
     VERSION_FROM => 'Socket6.pm',
-    MAN3PODS 	 => {},			# Pods will be built by installman.
     XSPROTOARG	 => '-noprototypes',	# XXX remove later?
     PM		 => {'Socket6.pm' => '$(INST_LIBDIR)/Socket6.pm'},
     CONFIGURE	 => sub { { CC => "${cc}" } },
@@ -53,8 +67,6 @@ WriteMakefile(
 
 sub configure_mswin32
 {
-    require Config;
-
     open(IN, '<config.pl.in') || die "Failed to open file 'config.pl.in' [$!]";
     open(OUT, '>config.pl')   || die "Failed to open file 'config.pl' [$!]";
 
@@ -73,6 +85,10 @@ sub configure_mswin32
 
     open(IN, '<config.h.in') || die "Failed to open file 'config.h.in' [$!]";
     open(OUT, '>config.h')   || die "Failed to open file 'config.h' [$!]";
+
+    print(OUT "#ifndef NTDDI_LONGHORN\n");
+    print(OUT "#  define NTDDI_LONGHORN 0x06000000\n");
+    print(OUT "#endif\n");
 
     while (<IN>) {
 	if (/HAVE_PL_SV_UNDEF/) {

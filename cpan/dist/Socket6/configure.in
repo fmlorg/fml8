@@ -1,4 +1,4 @@
-# Copyright (C) 2000-2005 Hajimu UMEMOTO <ume@mahoroba.org>.
+# Copyright (C) 2000-2016 Hajimu UMEMOTO <ume@mahoroba.org>.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -25,7 +25,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: configure.in,v 1.19 2005/08/27 16:38:00 ume Exp $
+# $Id: configure.in 659 2016-03-17 06:20:36Z ume $
 
 AC_PREREQ(2.57)
 AC_INIT(Socket6.pm)
@@ -63,6 +63,7 @@ if test $ac_cv_lib_inet6_getaddrinfo = yes; then
 	INET6LIBS="-L$ipv6_cv_dir/lib -linet6"
 fi
 
+IPv6_CHECK_INET_NTOP()
 IPv6_CHECK_SA_LEN()
 IPv6_CHECK_SIN6_SCOPE_ID()
 IPv6_CHECK_SOCKLEN_T()

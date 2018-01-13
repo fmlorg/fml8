@@ -1,8 +1,8 @@
 /*
  * Socket6.xs
- * $Id: Socket6.xs,v 1.29 2008/08/16 16:47:00 ume Exp $
+ * $Id: Socket6.xs 662 2016-03-22 16:03:49Z ume $
  *
- * Copyright (C) 2000-2008 Hajimu UMEMOTO <ume@mahoroba.org>.
+ * Copyright (C) 2000-2016 Hajimu UMEMOTO <ume@mahoroba.org>.
  * All rights reserved.
  *
  * This moduled is besed on perl5.005_55-v6-19990721 written by KAME
@@ -80,6 +80,10 @@ const struct in6_addr in6addr_loopback = IN6ADDR_LOOPBACK_INIT;
 #include "XSUB.h"
 
 #include "config.h"
+
+#if defined(HAVE_INET_NTOP) && !defined(CAN_INET_NTOP)
+#undef HAVE_INET_NTOP
+#endif
 
 #ifndef HAVE_GETADDRINFO
 #include "getaddrinfo.c"
@@ -540,7 +544,7 @@ inet_ntop(af, address_sv)
 		      addrlen, alen);
 	}
 
-	Copy( address, &addr, sizeof addr, char );
+	Copy( address, &addr, alen, char );
 	addr_str[0] = 0;
 	inet_ntop(af, &addr, addr_str, sizeof addr_str);
 
