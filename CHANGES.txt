@@ -11,6 +11,10 @@
 	        hack base to catch up perl 5.16 changes, cpan modules ..
 	7.98.xx ... # See Appendix at the last of this file.
 
+2018/02/01
+
+  fml8 monthly release 20180201
+
 2018/01/13
 
   update CPAN modules
@@ -24,8 +28,10 @@
 
 2018/01/01
 
+  fml8 monthly release 20180101
+  
   fml8 season (monthly for a while) rollout campaign starts.
-
+  
   update CPAN modules
   	 updated to MailTools-2.19.
 
