@@ -13,7 +13,9 @@
 
 2018/08/01
 
-  modified tools and documents to reflect scm changes (cvs to github).
+  fml8 monthly release 20180801
+    master repository is moved to github.com/fmlorg.     
+    modified tools and documents to reflect scm changes (cvs to github).
 
 2018/07/04
 
