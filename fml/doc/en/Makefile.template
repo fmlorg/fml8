@@ -17,7 +17,7 @@ UNIQ        = uniq
 PERL        = perl
 FIND        = find
 GREP        = grep
-CVS         = cvs
+GIT         = git
 ENV         = env
 EXPORTER    = rsync -a
 SGML_DIR    = ../../share/sgml
@@ -74,7 +74,7 @@ export: _init html w3m
 	chmod 755 $(TARGET_HTML_DIR)
 
 scan:
-	@ $(CVS) -n update 2>&1 |$(GREP) -v : || echo ''
+	@ $(GIT) status -s
 
 _init:
 	test -d $(TARGET_HTML_DIR) || mkdir $(TARGET_HTML_DIR)

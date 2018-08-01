@@ -18,10 +18,10 @@ install:
 	./install.pl fml/etc/install.cf
 
 scan:
-	@ cvs -n update 2>&1 |grep -v : || echo ''
+	@ git status -s
 
 update:
-	@ cvs update -d -P|grep -v : || echo ''
+	@ git pull --rebase
 
 clean:
 	@ find . |grep '~' |perl -nple unlink

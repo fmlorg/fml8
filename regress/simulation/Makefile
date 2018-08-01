@@ -95,7 +95,7 @@ _link:
 	ln -s ../../fml/share/message/euc-jp  message-euc-jp
 
 diff:
-	@ (cd ../..;cvs diff -ub)
+	@ git diff -u -b
 
 test:
 	@ make _test 2>&1 | tee $(TMPFILE)
