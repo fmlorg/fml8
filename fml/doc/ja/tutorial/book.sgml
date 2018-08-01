@@ -249,7 +249,7 @@ $FML: book.sgml,v 1.72 2006/01/19 14:33:17 fukachan Exp $
 	</title>
 
 	&chapter.glossary;
-	&chapter.cvstree;
+	&chapter.repository;
 	&chapter.docbook;
 	&chapter.inet6;
 

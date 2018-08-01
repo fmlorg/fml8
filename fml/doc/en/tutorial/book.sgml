@@ -251,7 +251,7 @@ to generate various output formats.
 
 <!--
 
-	&chapter.cvstree;
+	&chapter.repository;
 	&chapter.docbook;
 	&chapter.inet6;
 

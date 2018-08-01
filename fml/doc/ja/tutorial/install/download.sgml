@@ -12,7 +12,7 @@
 <!-- ====================================================  -->
 <sect1 id="ftp.fml.org">
 	<title>
-	ftp サーバからダウンロードする。
+	FTP サーバからダウンロードする。
 	</title>
 
 <para>
@@ -25,9 +25,9 @@
 
 <para>
 開発の適当な区切りごとに、不定期に作成されています。
-現在のファイル名は
+現在のファイル名は「fml - バージョン - 日付」
 <screen>
-fml-VERSION-DATA.tar.gz
+fml-VERSION-YYYYMMDD.tar.gz
 </screen>
 形です。
 VERSION は 8.0 正式リリース前なので 8.0 より少し小さい値
@@ -56,46 +56,16 @@ ftp://ftp.fml.org/pub/fml/daily-snapshots/fml-devel/source/
 
 
 <!-- ====================================================  -->
-<sect1 id="anoncvs">
+<sect1 id="github">
 	<title>
-	cvs へのアクセス
+	github へのアクセス
 	</title>
 
 <para>
-anoncvs.fml.org の fmlsrc 以下が &fml8; ブランチです。
-</para>
-
-<para>
-anoncvs.fml.org には cvs over ssh でだれでもアクセスできます。
-<screen>
-cvs -d anoncvs.fml.org:/cvsroot co fmlsrc
-</screen>
-でアクセスできます(注: cvs over ssh のみがサポートされます)。
-</para>
-
-</sect1>
-
-
-<!-- ====================================================  -->
-<sect1 id="cvsweb">
-	<title>
-	cvsweb による cvs へのアクセス
-	</title>
-
-<para>
-<ulink url="http://www.fml.org/cvsweb/fmlsrc/">
-http://www.fml.org/cvsweb/fmlsrc/
+<ulink url="https://github.com/fmlorg/">
+https://github.com/fmlorg/
 </ulink>
-で cvs を見ることができます。
 </para>
-
-<warning>
-<para>
-特定のファイルの特定のバージョンだけをダウンロードするならこの方法が便
-利です。逆に、まとめてアーカイブ全体をダウンロードしたいような場合には
-使わないで下さい。
-</para>
-</warning>
 
 </sect1>
 

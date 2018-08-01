@@ -12,7 +12,7 @@
 <!-- ====================================================  -->
 <sect1 id="ftp.fml.org">
 	<title>
-	Download Via Ftp.
+	Download Via FTP.
 	</title>
 
 <para>
@@ -29,57 +29,20 @@ The file name contains date such as YYYYMMDD form.
 Please get the latest one.
 </para>
 
-<para>
-Also, you can find a daily snapshot at
-<ulink url="ftp://ftp.fml.org/pub/fml/daily-snapshots/fml8/source/">
-ftp://ftp.fml.org/pub/fml/daily-snapshots/fml8/source/
-</ulink>.
-This snapshot is auto-built. 
-So it may not work well.
-</para>
-
 </sect1>
 
 
 <!-- ====================================================  -->
-<sect1 id="anoncvs">
+<sect1 id="github">
 	<title>
-	Access To Cvs.
+	Access To GitHUB.
 	</title>
 
 <para>
-You can find &fml8; under /fmlsrc in anoncvs.fml.org.
-</para>
-
-<para>
-Anonymous cvs over ssh is allowed for anyone.
-<screen>
-cvs -d anoncvs.fml.org:/cvsroot co fmlsrc
-</screen>
-</para>
-
-</sect1>
-
-
-<!-- ====================================================  -->
-<sect1 id="cvsweb">
-	<title>
-	Access To Cvs Via Cvsweb.
-	</title>
-
-<para>
-<ulink url="http://www.fml.org/cvsweb/fmlsrc/">
-http://www.fml.org/cvsweb/fmlsrc/
+<ulink url="https://github.com/fmlorg/">
+https://github.com/fmlorg/
 </ulink>
-provides the cvs acesss via web interface.
 </para>
-
-<warning>
-<para>
-It is useful to retrieve the specified version of the file.
-Instead, it is not useful to get the whole source.
-</para>
-</warning>
 
 </sect1>
 

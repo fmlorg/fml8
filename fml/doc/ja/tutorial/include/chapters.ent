@@ -191,7 +191,7 @@
 
 
 <!-- ³«È¯ -->
-<!entity chapter.cvstree             SYSTEM "devel/cvstree.sgml">
+<!entity chapter.repository          SYSTEM "devel/repository.sgml">
 <!entity chapter.docbook             SYSTEM "devel/docbook.sgml">
 <!entity chapter.inet6               SYSTEM "devel/inet6.sgml">
 <!entity chapter.program.create      SYSTEM "devel/create_program.sgml">
