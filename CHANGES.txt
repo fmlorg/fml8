@@ -11,6 +11,14 @@
 	        hack base to catch up perl 5.16 changes, cpan modules ..
 	7.98.xx ... # See Appendix at the last of this file.
 
+2018/08/01
+
+  modified tools and documents to reflect scm changes (cvs to github).
+
+2018/07/04
+
+  master repository is moved to github.com/fmlorg.
+
 2018/02/01
 
   fml8 monthly release 20180201
