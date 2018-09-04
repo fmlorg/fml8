@@ -70,12 +70,12 @@ sub from_address_to_name
     use Mail::Address;
     my (@addrs) = Mail::Address->parse($address);
 
-    use Mail::Message::Encode;
-    my $encode = new Mail::Message::Encode;
+    use Mail::Message::Encode::Perl;
+    my $encode = new Mail::Message::Encode::Perl;
 
     for my $addr (@addrs) {
 	if (defined( $addr->phrase() )) {
-	    my $phrase = $encode->decode_mime_string( $addr->phrase() );
+	    my $phrase = $encode->mime_header_decode( $addr->phrase() );
 
 	    if ($phrase) {
 		return($phrase);
