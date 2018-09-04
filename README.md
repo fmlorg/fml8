@@ -10,3 +10,10 @@ fml8 version number is yet 7.98.xx (like ancient openssl ? ;_;)
 though fml8 has been stable under normal operation.
 
 Our plan in this year is to assign v8.0.0 to fml8.
+
+## on going developement
+
+Toward 7.98.99, 
+in another development branch (not commited to github yet),
+we are developing the internal encoded message handling 
+to use the current Perl UTF8 internal way.
