@@ -467,7 +467,7 @@ sub rewrite_article_subject_tag
     my $sbj = new Mail::Message::Subject $str;
 
     # mime decode
-    $sbj->mime_decode();
+    $sbj->mime_header_decode();
 
     # de-tag and cut off Re: Re: Re: ... (duplicated reply tag).
     $sbj->delete_dup_reply_tag() if $sbj->has_reply_tag();
@@ -482,7 +482,7 @@ sub rewrite_article_subject_tag
     $sbj->set($new_sbj);
 
     # mime encode and replace subject field.
-    $sbj->mime_encode();
+    $sbj->mime_header_encode();
     $header->replace('Subject', $sbj->as_str());
 }
 
