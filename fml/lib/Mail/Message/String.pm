@@ -11,7 +11,7 @@ package Mail::Message::String;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD $debug);
 use Carp;
-
+use Mail::Message::Encode::Perl;
 
 $debug = 0;
 
@@ -24,11 +24,11 @@ Mail::Message::String - base class of string used in message (header).
 
     use Mail::Message::String $subject;
     my $sbj = new Mail::Message::String $subject;
-    $sbj->mime_decode();                          # euc-jp
-    $sbj->unfold();
+    $sbj->mime_header_decode();
+
      ... delte tag et.al. ...
-    $sbj->unfold();
-    $sbj->charcode_convert_to_external_charset(); # e.g. iso-2022-jp
+
+    $sbj->mime_header_encode();
     $subject = $sbj->as_str();
 
 =head1 DESCRIPTION
@@ -215,6 +215,56 @@ sub get_mime_charset
     else {
 	return '';
     }
+}
+
+
+=head2 mime_header_encode()
+
+encode the given Perl internal UTF8 format to 
+the MIME Header string and return the encoded message.
+
+=head2 mime_header_decode()
+
+decode MIME Header string and return the decoded message
+as Perl internal UTF8 format.
+
+=cut
+
+# Descriptions: encode the given Perl internal UTF8 format to
+#               the MIME Header string and return the encoded message.
+#    Arguments: OBJ($self) STR($pif_str)
+# Side Effects: none
+# Return Value: STR
+sub mime_header_encode
+{
+    my ($self, $pif_str) = @_;
+    my $str = $self->as_str();
+
+    use Mail::Message::Encode::Perl;
+    my $encoder = new Mail::Message::Encode::Perl;
+    $str        = $encoder->mime_header_encode($str);
+    $self->set($str);
+    
+    return $str;
+}
+
+
+# Descriptions: decode MIME Header string and return the decoded message
+#               as Perl internal UTF8 format.
+#    Arguments: OBJ($self) STR($out_code) STR($in_code)
+# Side Effects: none
+# Return Value: STR(Perl Internal Format)
+sub mime_header_decode
+{
+    my ($self, $out_code, $in_code) = @_;
+    my $str = $self->as_str();
+
+    use Mail::Message::Encode::Perl;
+    my $encoder     = new Mail::Message::Encode::Perl;
+    my $dec_pif_str = $encoder->mime_header_decode($str);
+    $self->set($dec_pif_str);
+    
+    return $dec_pif_str;
 }
 
 
