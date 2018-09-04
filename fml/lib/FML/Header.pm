@@ -488,10 +488,11 @@ sub rewrite_article_subject_tag
 
 
 # Descriptions: rewrite subject if needed.
+#               [OBSOLETE] not used now. it should be removed in the future.
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
-sub rewrite_article_subject_tag_orig
+sub rewrite_article_subject_tag_obsolete
 {
     my ($header, $config, $rw_args) = @_;
 
