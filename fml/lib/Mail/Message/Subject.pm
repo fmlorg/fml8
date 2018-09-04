@@ -21,13 +21,13 @@ Mail::Message::Subject - utilities to manipulate subject string.
 
 =head1 SYNOPSIS
 
-
     my $subject = new Mail::Message::Subject $header->get('subject');
+    $subject->mime_header_decode();
     if ($subject->has_reply_tag()) {
 	$subject->delete_dup_reply_tag();
     }
-    $subject->mime_decode();
-    my $subject_str = $subject->as_str();
+    $subject->mime_header_encode();
+    $header->set($subject->as_str());
 
 
 =head1 DESCRIPTION
@@ -180,7 +180,8 @@ sub _debug
 {
     my ($str) = @_;
     my $sbj = new Mail::Message::Subject $str;
-
+    use Encode;
+    
     # start.
     print "\n";
     print $str, " (original)\n";
@@ -189,18 +190,19 @@ sub _debug
     print "# charset = ", $sbj->get_mime_charset() ,"\n";
 
     # mime decode test.
-    $sbj->mime_decode();
-    print $sbj->as_str() ,"\n";
+    $sbj->mime_header_decode();
+    print encode("EUC-JP", $sbj->as_str()), "\n";
 
     # delete subject tag.
     if ($sbj->has_reply_tag()) {
 	print "# looks replied message. try cut off the dup tag.\n";
 	$sbj->delete_dup_reply_tag();
-	print $sbj->as_str(), " (cut off reply tag)\n";
+	print encode("EUC-JP", $sbj->as_str());
+	print " (cut off reply tag)\n";
     }
 
     # mime decode test.
-    $sbj->mime_encode();
+    $sbj->mime_header_encode();
     print $sbj->as_str() ,"\n";
 }
 
