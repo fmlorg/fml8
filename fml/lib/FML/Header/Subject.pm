@@ -48,9 +48,7 @@ sub new
 }
 
 
-=head2 rewrite_article_subject_tag_obsolete($header, $config, $args)
-
-[OBSOLETE] not used now. it should be removed in the future.
+=head2 rewrite_article_subject_tag($header, $config, $args)
 
 add or rewrite the subject tag for C<$header>.
 This mothod cuts off Re: (reply identifier) in subject: and
@@ -60,11 +58,10 @@ replace the subject with the newer content e.g. including the ML tag.
 
 
 # Descriptions: add or rewrite the subject tag.
-#               [OBSOLETE] not used now. it should be removed in the future.
 #    Arguments: OBJ($self) OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: the header subject is rewritten.
 # Return Value: none
-sub rewrite_article_subject_tag_obsolete
+sub rewrite_article_subject_tag
 {
     my ($self, $header, $config, $rw_args) = @_;
     my ($in_code, $out_code);
