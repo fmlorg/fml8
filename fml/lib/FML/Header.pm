@@ -499,7 +499,7 @@ sub rewrite_article_subject_tag_obsolete
     my $pkg = "FML::Header::Subject";
     eval qq{ use $pkg;};
     unless ($@) {
-	$pkg->rewrite_article_subject_tag($header, $config, $rw_args);
+	$pkg->rewrite_article_subject_tag_obsolete($header, $config, $rw_args);
     }
     else {
 	croak("cannot load $pkg");
