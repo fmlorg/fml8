@@ -65,20 +65,21 @@ extract gecos field in $address with shielding the real address.
 sub from_address_to_name
 {
     my ($address) = @_;
-    my ($user);
+    my ($user, $phrase);
 
     use Mail::Address;
     my (@addrs) = Mail::Address->parse($address);
 
     use Mail::Message::Encode::Perl;
-    my $encode = new Mail::Message::Encode::Perl;
+    my $encoder = new Mail::Message::Encode::Perl;
 
     for my $addr (@addrs) {
 	if (defined( $addr->phrase() )) {
-	    my $phrase = $encode->mime_header_decode( $addr->phrase() );
+	    $phrase = $addr->phrase();
+	    $phrase = $encoder->mime_header_decode_as_octets($phrase);
 
 	    if ($phrase) {
-		return($phrase);
+		return ($phrase);
 	    }
 	}
 
