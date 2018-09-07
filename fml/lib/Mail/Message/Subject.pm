@@ -167,52 +167,6 @@ sub _regexp_compile
 }
 
 
-######################################################################
-#
-# debug
-#
-
-# Descriptions: debug function.
-#    Arguments: STR($str)
-# Side Effects: none
-# Return Value: none
-sub _debug
-{
-    my ($str) = @_;
-    my $sbj = new Mail::Message::Subject $str;
-    use Encode;
-    
-    # start.
-    print "\n";
-    print $str, " (original)\n";
-
-    # mime charset
-    print "# charset = ", $sbj->get_mime_charset() ,"\n";
-
-    # mime decode test.
-    $sbj->mime_header_decode();
-    print encode("EUC-JP", $sbj->as_str()), "\n";
-
-    # delete subject tag.
-    if ($sbj->has_reply_tag()) {
-	print "# looks replied message. try cut off the dup tag.\n";
-	$sbj->delete_dup_reply_tag();
-	print encode("EUC-JP", $sbj->as_str());
-	print " (cut off reply tag)\n";
-    }
-
-    # mime decode test.
-    $sbj->mime_header_encode();
-    print $sbj->as_str() ,"\n";
-}
-
-if ($0 eq __FILE__) {
-    my $str = '=?ISO-2022-JP?B?GyRCJDckRCRiJHMbKEI=?=';
-    _debug($str);
-    _debug("Re: $str");
-    _debug("Re: Re: $str");
-}
-
 =head1 CODING STYLE
 
 See C<http://www.fml.org/software/FNF/> on fml coding style guide.
