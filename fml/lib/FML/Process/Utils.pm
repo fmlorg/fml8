@@ -2215,8 +2215,8 @@ sub article_thread_init
     unless (-d $udb_dir) { $curproc->mkdir($udb_dir);}
 
     # hints
-    use FML::Header::Subject;
-    my $subj = new FML::Header::Subject;
+    use Mail::Message::Subject;
+    my $subj = new Mail::Message::Subject;
     my $subject_tag_regexp = $subj->regexp_compile($subject_tag);
 
     # XXX-TODO: care for non Japanese.
