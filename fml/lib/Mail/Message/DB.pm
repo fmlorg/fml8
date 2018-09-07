@@ -917,10 +917,15 @@ sub _head_of_list_str
 sub _decode_mime_string
 {
     my ($self, $str, $out_code, $in_code) = @_;
+    
+    use Mail::Message::Encode::Perl;
+    my $encoder = new Mail::Message::Encode::Perl;
+    return $encoder->mime_header_decode_as_octets($str);
 
-    use Mail::Message::Encode;
-    my $encode = new Mail::Message::Encode;
-    return $encode->decode_mime_string($str, $out_code, $in_code);
+    # [OBSOLETE]
+    # use Mail::Message::Encode;
+    # my $encode = new Mail::Message::Encode;
+    # return $encode->decode_mime_string($str, $out_code, $in_code);
 }
 
 
