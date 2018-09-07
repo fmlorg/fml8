@@ -118,6 +118,27 @@ sub as_str
 }
 
 
+=head2 as_external_form()
+
+return the internal data as the external form string.
+
+=cut
+
+# Descriptions: return the internal data as the external form string.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub as_external_form
+{
+    my ($self) = @_;
+    
+    my $str = $self->{ _string } || '';
+    use Mail::Message::Encode::Perl;
+    my $encoder = new Mail::Message::Encode::Perl;
+    $encoder->convert_from_internal_to_external_form($str);
+}
+
+
 =head1 MIME related utilities
 
 =head2 mime_encode($encode, $out_code, $in_code)
