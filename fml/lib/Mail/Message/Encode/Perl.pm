@@ -102,48 +102,48 @@ we need to handle the string this way.
 =cut
 
 # Descriptions: encode the Perl internal format string to the mime header one.
-#    Arguments: OBJ($self) STR($str)
+#    Arguments: OBJ($self) STR($pif_str)
 # Side Effects: none
 # Return Value: STR
 sub mime_header_encode
 {
-    my ($self, $str) = @_;
+    my ($self, $pif_str) = @_;
     my $m;
 
     # XXX how we specify the encoding ?
     if (1) { # base64 by default
-        $m = encode("MIME-Header", $str, Encode::FB_WARN);
+        $m = encode("MIME-Header", $pif_str, Encode::FB_WARN);
     }
     else {
-        $m = encode("MIME-Q", $str, Encode::FB_WARN);
+        $m = encode("MIME-Q", $pif_str, Encode::FB_WARN);
     }
     return $m;
 }
 
 # Descriptions: decode mime header format string to the Perl internal one.
-#    Arguments: OBJ($self) STR($hdr)
+#    Arguments: OBJ($self) STR($pef_str)
 # Side Effects: none
 # Return Value: STR(perl internal UTF8 format)
 sub mime_header_decode
 {
-    my ($self, $hdr) = @_;
+    my ($self, $pef_str) = @_;
 
-    decode("MIME-Header", $hdr);
+    decode("MIME-Header", $pef_str);
 }
 
 
 # Descriptions: decode mime header format string and return it as 
 #               printable format not the Perl internal one.
-#    Arguments: OBJ($self) STR($hdr)
+#    Arguments: OBJ($self) STR($pef_str)
 # Side Effects: none
 # Return Value: STR
 sub mime_header_decode_as_octets
 {
-    my ($self, $hdr) = @_;
+    my ($self, $pef_str) = @_;
 
     # XXX-TODO hard-coded now anyway.
     my $code = "EUC-JP";
-    encode($code, decode("MIME-Header", $hdr));
+    encode($code, decode("MIME-Header", $pef_str));
 }
 
 
