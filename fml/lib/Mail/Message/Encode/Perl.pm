@@ -132,6 +132,21 @@ sub mime_header_decode
 }
 
 
+# Descriptions: decode mime header format string and return it as 
+#               printable format not the Perl internal one.
+#    Arguments: OBJ($self) STR($hdr)
+# Side Effects: none
+# Return Value: STR
+sub mime_header_decode_as_octets
+{
+    my ($self, $hdr) = @_;
+
+    # XXX-TODO hard-coded now anyway.
+    my $code = "EUC-JP";
+    encode($code, decode("MIME-Header", $hdr));
+}
+
+
 =head1 CODING STYLE
 
 See C<http://www.fml.org/software/FNF/> on fml coding style guide.
