@@ -426,7 +426,7 @@ sub add_x_sequence
 =head2 rewrite_article_subject_tag($config, $rw_args)
 
 add subject tag like [ML_NAME:00010] e.g. [elena:00010] for elena ML.
-The actual function definitions exist in C<FML::Header::Subject>.
+The actual function definitions exist in C<Mail::Message::Subject>.
 
 =cut
 
