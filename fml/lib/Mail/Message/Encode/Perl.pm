@@ -147,6 +147,28 @@ sub mime_header_decode_as_octets
 }
 
 
+=head2 convert_from_internal_to_external_form($pif_str)
+
+convert the given Perl internal form to the external printable one.
+
+=cut
+
+
+# Descriptions: convert the given Perl internal form 
+#               to the external printable one.
+#    Arguments: OBJ($self) STR($pif_str)
+# Side Effects: none
+# Return Value: STR
+sub convert_from_internal_to_external_form
+{
+    my ($self, $pif_str) = @_;
+
+    # XXX-TODO hard-coded now anyway.
+    my $code = "EUC-JP";
+    utf8::is_utf8($pif_str) ? encode($code, $pif_str) : $pif_str;
+}
+
+
 =head1 CODING STYLE
 
 See C<http://www.fml.org/software/FNF/> on fml coding style guide.
