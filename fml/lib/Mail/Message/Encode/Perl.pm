@@ -46,7 +46,7 @@ constructor.
 
 # Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: load Encode or Jcode.
+# Side Effects: none
 # Return Value: OBJ
 sub new
 {
