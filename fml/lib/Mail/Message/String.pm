@@ -525,41 +525,6 @@ sub is_signature
 }
 
 
-#
-# debug
-#
-if ($0 eq __FILE__) {
-    $debug = 1;
-
-    for my $_str ('=?ISO-2022-JP?B?GyRCJDckRCRiJHMbKEI=?=',
-		  '=?ISO-2022-JP?B?GyRCJSshPCVJJS0lYyVXJT8hPCQ1JC8kaRsoQg==?=',
-		  '=?SJIS?B?g0qBW4Nog0yDg4N2g16BW4Kzgq2C5w==?=',
-		  'card captor sakura') {
-	print "\nDATA: $_str\n";
-	my $str  = new Mail::Message::String $_str;
-	print "\tmime charset  = ", $str->get_mime_charset() ,"\n";
-	print "\texternal code = ", $str->_speculate_external_charset(), "\n";
-	print "\tinternal code = ", $str->_speculate_internal_code(), "\n";
-
-	# decode
-	$str->mime_decode();
-	$str->charcode_convert();
-	print " DECODED:", $str->as_str(), "\n";
-	print "\tcurrent code = ", $str->get_charcode(), " (decoded)\n";
-
-	# encode
-	$str->mime_encode();
-	print " ENCODED: ", $str->as_str(), "\n";
-	print "ORIGINAL: ", $_str, "\n";
-	print "\tcurrent code = ", $str->get_charcode(), " (encoded)\n";
-
-	# decode
-	$str->mime_decode();
-	print "\tcurrent code = ", $str->get_charcode(), " (decoded again)\n";
-    }
-}
-
-
 =head1 CODING STYLE
 
 See C<http://www.fml.org/software/FNF/> on fml coding style guide.
