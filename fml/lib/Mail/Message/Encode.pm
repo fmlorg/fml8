@@ -428,41 +428,6 @@ sub encode_mime_string
 }
 
 
-=head2 base64($str, $out_code, $in_code)
-
-encode $str by base64 with out code out_code.
-$in_code is use as a hint.
-
-=head2 qp($str, $out_code, $in_code)
-
-encode $str by quoted-printable with out code out_code.
-$in_code is use as a hint.
-
-=cut
-
-
-# Descriptions: encode $str by base64.
-#    Arguments: OBJ($self) STR($str) STR($out_code) STR($in_code)
-# Side Effects: none
-# Return Value: STR
-sub base64
-{
-    my ($self, $str, $out_code, $in_code) = @_;
-    $self->encode_mime_string($str, 'base64', $out_code, $in_code);
-}
-
-
-# Descriptions: encode $str by quoted-printable.
-#    Arguments: OBJ($self) STR($str) STR($out_code) STR($in_code)
-# Side Effects: none
-# Return Value: STR
-sub qp
-{
-    my ($self, $str, $out_code, $in_code) = @_;
-    $self->encode_mime_string($str, 'qp', $out_code, $in_code);
-}
-
-
 =head2 decode_mime_string(string, [$options])
 
 decode a base64/quoted-printable encoded string to a plain message.
