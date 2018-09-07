@@ -17,7 +17,6 @@ package Mail::Message::Language::Japanese::Outline;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
-use Jcode;
 
 =head1 NAME
 
