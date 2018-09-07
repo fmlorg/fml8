@@ -141,14 +141,6 @@ sub as_external_form
 
 =head1 MIME related utilities
 
-=head2 mime_encode($encode, $out_code, $in_code)
-
-mime encode this object and return the encoded string.
-
-=head2 mime_decode($out_code, $in_code)
-
-mime decode this object and return the decoded string.
-
 =head2 set_mime_charset($charset)
 
 dummy now.
@@ -158,53 +150,6 @@ dummy now.
 return charset information.
 
 =cut
-
-
-# Descriptions: MIME encode of string.
-#    Arguments: OBJ($self) STR($encode) STR($out_code) STR($in_code)
-# Side Effects: none
-# Return Value: STR
-sub mime_encode
-{
-    my ($self, $encode, $out_code, $in_code) = @_;
-    my $str = $self->as_str();
-
-    # base64 encoding by default.
-    $encode   ||= 'base64';
-
-    # speculate charset by a few hints.
-    $out_code ||= $self->_speculate_external_charset();
-
-    if ($debug) {
-	print "\tencode($str, $encode, $out_code, $in_code)\n";
-    }
-
-    # XXX-TODO: we cannot mime-encode non iso-2022-jp string.
-    use Mail::Message::Encode;
-    my $obj = new Mail::Message::Encode;
-    $str    = $obj->encode_mime_string($str, $encode, $out_code, $in_code);
-    $self->set($str);
-
-    return $str;
-}
-
-
-# Descriptions: decode MIME string.
-#    Arguments: OBJ($self) STR($out_code) STR($in_code)
-# Side Effects: none
-# Return Value: STR
-sub mime_decode
-{
-    my ($self, $out_code, $in_code) = @_;
-    my $str = $self->as_str();
-
-    use Mail::Message::Encode;
-    my $encode  = new Mail::Message::Encode;
-    my $dec_string = $encode->decode_mime_string($str, $out_code, $in_code);
-    $self->set($dec_string);
-
-    return $dec_string;
-}
 
 
 # Descriptions: dummy now.
