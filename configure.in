@@ -25,6 +25,7 @@ AC_MSG_RESULT("checking whether optional useful commands are available or not")
 AC_PATH_PROG(CC,       cc)
 AC_PATH_PROG(INSTALL,  install)
 
+AC_PATH_PROG(GIT,      git)
 AC_PATH_PROG(CKSUM,    cksum)
 AC_PATH_PROG(SUM,      sum)
 AC_PATH_PROG(MD5,      md5)
