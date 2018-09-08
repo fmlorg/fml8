@@ -125,7 +125,7 @@ sub delete_tag
             carp($@) if $@;
         }
 
-	my $retag = $self->_regexp_compile($tag);
+	my $retag = $self->regexp_compile($tag);
 	$subject  =~ s/$retag//g;
 	$subject  =~ s/^\s*//;
 	$self->set($subject);
@@ -135,6 +135,14 @@ sub delete_tag
 }
 
 
+=head2 regexp_compile()
+
+create the regexp for a subject tag, 
+for example "[%s %05d]" => "\[\S+ \d+\]".
+
+=cut
+
+
 # Descriptions: create regexp for a subject tag, for example
 #               "[%s %05d]" => "\[\S+ \d+\]"
 #               not OO style.
@@ -142,7 +150,7 @@ sub delete_tag
 #               $s == a subject tag string
 # Side Effects: none
 # Return Value: STR(a regexp for the given tag)
-sub _regexp_compile
+sub regexp_compile
 {
     my ($self, $s) = @_;
 
