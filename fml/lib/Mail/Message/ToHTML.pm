@@ -2207,7 +2207,7 @@ sub _print_li_filename
     $main::opt_mimedecodequoted = $mimeopt;
 
     _PRINT_DEBUG("-- print_li_filename id=$id file=$filename");
-
+    
     if (defined $filename && $filename) {
 	_print_raw_str($wh, "<!-- LI id=$id -->\n", $code);
 
@@ -2268,12 +2268,14 @@ sub _decode_mime_string
     my $code    = _charset_to_code($charset) || 'euc';
 
     if (defined($str) && $str) {
-	use Mail::Message::Encode;
-	my $encode = new Mail::Message::Encode;
-	return $encode->decode_mime_string($str, $code);
+	use Mail::Message::Subject;
+	my $sbj = new Mail::Message::Subject $str;
+	$sbj->mime_header_decode();
+	return $sbj->as_external_form();
     }
-
-    return $str;
+    else {
+	return '';
+    }
 }
 
 
@@ -2298,7 +2300,7 @@ sub _convert
 sub __nc_convert
 {
     my ($str, $out_code, $in_code) = @_;
-
+    
     use Mail::Message::Encode;
     my $encode = new Mail::Message::Encode;
     return $encode->convert($str, $out_code, $in_code);
