@@ -115,8 +115,11 @@ sub _prepare_info
 	}
 
 	# de-tag, unfold, and charset conversion.
+	# XXX as_external_form() returns the "printable" string
+	# XXX which encoding is EUC by default but should be changed to UTF-8.
+	# XXX The "printable" string is used for output to local files
+	# XXX e.g. "summary", "log" NOT mail tranfer.
 	if ($subject) {
-	    # XXX as side effect, converted to internal code e.g. euc-jp.
 	    use Mail::Message::Subject;
 	    my $sbj = new Mail::Message::Subject $subject;
 	    $sbj->mime_header_decode();
