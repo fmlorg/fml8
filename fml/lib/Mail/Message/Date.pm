@@ -136,7 +136,6 @@ sub _date
     $date = new Mail::Message::Date;
     $date->set("Tue Dec 30 17:06:34 JST 2003");
     $date->to_unixtime();
-    print $date->as_str(), "\n";
 
 =cut
 
