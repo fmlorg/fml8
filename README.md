@@ -13,7 +13,7 @@ Our plan in this year is to assign v8.0.0 to fml8.
 
 ## on going developement
 
+2018/09/07:
 Toward 7.99.00 (8.0.0 BETA?), 
-in another development branch (not commited to github yet),
-we are developing the internal encoded message handling 
-to use the current Perl UTF8 internal way.
+fml8 internal mime header handling e.g. "Subject" handling
+is switched to the base on the current Perl UTF8 internal way.
