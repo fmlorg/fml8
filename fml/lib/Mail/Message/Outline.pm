@@ -39,19 +39,16 @@ sub outline
 
     # 1. prepend subject.
     if ($is_hdr eq 'yes' && defined $header) {
-	use Mail::Message::String;
 	my $subject = $header->get('subject') || '';
-	if ($subject =~ /=\?/o) {
-	    my $string  = new Mail::Message::String $subject;
-	    $string->mime_decode();
-	    $string->charcode_convert_to_internal_code();
-	    $result .= $string->as_str();
-	}
-	else {
-	    $result .= $subject;
-	}
+	use Mail::Message::Subject;
+	my $subj = new Mail::Message::Subject $subject;
+	$subj->mime_header_decode();
+	$result .= $subj->as_external_form();
     }
-
+    
+    # XXX-TODO [BUG] we cannot handle the encoded phrase. is it correct?
+    # XXX-TODO       1. decode each paragraph by checking each mime part header
+    # XXX-TODO       2. run _is_useful_for_summary() for each paragraph
     # 2. summarize message to a few lines.
     if ($is_msg && defined $msg) {
 	my $prgbuf = '';
