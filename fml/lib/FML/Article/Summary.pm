@@ -119,12 +119,11 @@ sub _prepare_info
 	    # XXX as side effect, converted to internal code e.g. euc-jp.
 	    use Mail::Message::Subject;
 	    my $sbj = new Mail::Message::Subject $subject;
-	    $sbj->mime_decode();
+	    $sbj->mime_header_decode();
 	    $sbj->unfold();
 	    $sbj->delete_tag($tag);
 	    $sbj->unfold();
-	    $sbj->charcode_convert_to_external_charset(); # e.g. iso-2022-jp
-	    $subject = $sbj->as_str();
+	    $subject = $sbj->as_external_form();
 	}
 
 	my $info = {
