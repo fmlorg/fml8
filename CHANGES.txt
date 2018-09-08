@@ -11,11 +11,220 @@
 	        hack base to catch up perl 5.16 changes, cpan modules ..
 	7.98.xx ... # See Appendix at the last of this file.
 
+2018/09/08
+
+   FML::Article::Summary
+	update comments on subject (mime header) handling.  [b53efe7]
+
+
+	subject handling is changed to mime_header_decode() and 
+	as_external_form() style.  [f295ab8]
+
+
+   FML::Article::Thread
+	subject handling is changed to use Mail::Message::Subject based e.g. 
+	mime_header_decode(). Mail::Message::Subject  [5c85320]
+
+
+   Mail::Message::Date
+	fix document: removed as_str() in it (no such function).  [488eec2]
+
+
+   Mail::Message::Encode
+	removed encode_mime_string(), decode_mime_string() and 
+	decode_mime_utf8_to_euc(). They are moved to 
+	Mail::Message::Encode::Obsolete temporarily.  [90af0ee]
+
+
+   Mail::Message::Encode::Obsolete
+	obsolete Mail::Message::Encode functions are moved to here 
+	temporarily. The functions are encode_mime_string(), 
+	decode_mime_string() and decode_mime_utf8_to_euc().  [7ec22f9]
+
+
+   Mail::Message::Outline
+	subject handling is changed to 
+	Mail::Message::Subject->mime_header_decode() and as_external_form() 
+	style.  [22d2072]
+
+
+   Mail::Message::Subject
+	private _regexp_compile() is elevated to public regexp_compile(). 
+	[4a9246d]
+
+
+   Mail::Message::ToHTML
+	subject handling is changed to mime_header_decode() and 
+	as_external_form() style. XXX bug this module is broken now. XXX it 
+	seems text2html() handles the input as ISO-8859-1 always ?  [1a97212]
+
+
+2018/09/07
+
+   FML::Header
+	fix the document descriptions on rewrite_article_subject_tag(). 
+	[da4a301]
+
+
+   FML::Process::Utils
+	article_thread_init() modified to use Mail::Message::Subject.  [7ed5b19]
+
+
+   Mail::Message::DB
+	_decode_mime_string() switched to use mime_header_decode_as_octets() 
+	of Mail::Message::Encode::Perl class.  [f363713]
+
+
+   Mail::Message::Encode
+	remove base64() and qp().  [c60c819]
+
+
+	remove debug codes.  [b6291a3]
+
+
+   Mail::Message::Encode::Perl
+	clarified each variable is Perl internal or external form.  [3646434]
+
+
+	fixed the new() description: no, we do not use Jcode here.  [be0765b]
+
+
+	define convert_from_internal_to_external_form() which convert the 
+	given Perl internal form to the external printable one.  [ace7de9]
+
+
+	define mime_header_decode_as_octets(). It returns printable form not 
+	Perl internal one.  [e80540b]
+
+
+   Mail::Message::Language::Japanese::Outline
+	just a template. removed not-used "use Jcode".  [4a022ce]
+
+
+   Mail::Message::String
+	removed obsolete mime_encode() and mime_decode().  [e9e8056]
+
+
+	define as_external_form() which return the internal data as the 
+	external form string.  [5b2a5a9]
+
+
+	remove debug.  [63ea732]
+
+
+   Mail::Message::Subject
+	remove debug codes.  [c8801a4]
+
+
+   Mail::Message::Utils
+	return the phrase of from: address by using 
+	mime_header_decode_as_octets().  [de3abe3]
+
+
+2018/09/04
+
+   README.md
+	oops, it was wrong. toward 7.99.00 not 7.98.99 ;_;  [25b49da]
+
+
+	toward 7.98.99, internal encoded message handling overhaul underway. 
+	[01f470e]
+
+
+   FML::Header
+	rewrite_article_subject_tag() switched to use 
+	Mail::Message::Encode::Perl.  [3c7c5ca]
+
+
+	renamed: 
+	s/rewrite_article_subject_tag_orig()/rewrite_article_subject_tag_obsolete()/ 
+	to clarify it is obsolete.  [2b9052a]
+
+
+   FML::Header::Subject
+	clarify FML::Header::Subjectrewrite_article_subject_tag_orig is 
+	obsolete by renaming to rewrite_article_subject_tag_obsolete(). It 
+	should be removed in the future. It will stay with the repository for 
+	a while.  [8bcfa5f]
+
+
+	Revert "FML::Header::Subject->rewrite_article_subject_tag is 
+	obsolete." This reverts commit 
+	e1a83b9afe47ce152788651d0a395ec3cdd39d43.  [ff4866f]
+
+
+	FML::Header::Subject->rewrite_article_subject_tag is obsolete. 
+	Temporarily, renamed to rewrite_article_subject_tag_obsolete() but it 
+	should be removed in the future.  [e1a83b9]
+
+
+   Mail::Message::Encode::Perl
+	add Mail::Message::Encode::Perl for Perl (character-oriented) based 
+	encoding.  [5601fb8]
+
+
+   Mail::Message::String
+	mime header decode/encode switched to use Mail::Message::Encode::Perl. 
+	define new functions: mime_header_encode() and mime_header_decode(). 
+	[e5d7fe1]
+
+
+   Mail::Message::Subject
+	fix documentation and debug codes to use mime_header_decode/encode(). 
+	[5c2490d]
+
+
+   Mail::Message::Utils
+	switched to use Mail::Message::Encode::Perl in From address parsing. 
+	[699772a]
+
+
+2018/08/14
+
+   fml/doc/ja/tutorial/include/bookinfo.sgml
+	+ perl 5.26.2 on NetBSD 7.0  [604501d]
+
+
 2018/08/01
 
   fml8 monthly release 20180801
     master repository is moved to github.com/fmlorg.     
     modified tools and documents to reflect scm changes (cvs to github).
+
+   CHANGES.txt
+	fml8 monthly release 20180801: switch from cvs to git 
+	github.com/fmlorg  [9d5c7a5]
+
+
+	master repository switch from cvs to github.com/fmlorg. master 
+	repository is moved from cvs.fml.org to github.com/fmlorg. modified 
+	tools and documents to reflect scm changes (cvs to github).  [c6316ad]
+
+
+   README.md
+	the least description on fml8  [8e2c2ba]
+
+
+   fml/bin/anoncvs
+	obsolete due to scm changes (cvs to git(github))  [4abd871]
+
+
+   fml/doc/ja/tutorial/devel/cvstree.sgml
+	obsolete due to scm changes (cvs to git(github))  [3ff34d8]
+
+
+   fml/doc/ja/tutorial/devel/repository.sgml
+	repository descriptions, newly created due to scm changes (cvs to 
+	git(github).  [291a147]
+
+
+   fml/doc/ja/tutorial/install/download.sgml
+	modified to catch up the scm changes (cvs to github).  [fb27f88]
+
+
+   regress/simulation/Makefile
+	modified to use git reflecting scm changes (cvs to github).  [64681a8]
+
 
 2018/07/04
 
