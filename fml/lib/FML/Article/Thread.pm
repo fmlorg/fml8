@@ -159,20 +159,15 @@ sub check_if_article_is_reply_message
     my $thread  = $self->{ _thread_object };
     my $article = $self->{ _article_object };
     my $header  = $msg->whole_message_header();
-
+    
     # 1) get subject. mime-decode it if needed.
     my $subject = $header->get('subject');
-    if ($subject =~ /=\?/o) {
-	my $string = new Mail::Message::String $subject;
-	$string->mime_decode();
-	$string->charcode_convert_to_internal_code();
-	$subject = $string->as_str();
-    }
-
+    use Mail::Message::Subject;
+    my $subj = new Mail::Message::Subject $subject;
+    $subj->mime_header_decode();
+    
     # 2) it looks the subject has a reply tag ?
-    use FML::Header::Subject;
-    my $subj = new FML::Header::Subject;
-    if ($subj->is_reply($subject)) {
+    if ($subj->has_reply_tag()) {
 	$thread->set_article_status($id, $state_followed);
     }
     else {
