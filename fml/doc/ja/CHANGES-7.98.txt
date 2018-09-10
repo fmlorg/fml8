@@ -1,0 +1,2686 @@
+# -*- mode:text coding:euc-jp *-*
+
+  CHANGES in fml 7.98.x.
+
+2018/08/14
+
+   fml/doc/ja/tutorial/include/bookinfo.sgml
+	+ perl 5.26.2 on NetBSD 7.0  [604501d]
+
+
+2018/08/01
+
+  fml8 monthly release 20180801
+    master repository is moved to github.com/fmlorg.     
+    modified tools and documents to reflect scm changes (cvs to github).
+
+   CHANGES.txt
+	fml8 monthly release 20180801: switch from cvs to git 
+	github.com/fmlorg  [9d5c7a5]
+
+
+	master repository switch from cvs to github.com/fmlorg. master 
+	repository is moved from cvs.fml.org to github.com/fmlorg. modified 
+	tools and documents to reflect scm changes (cvs to github).  [c6316ad]
+
+
+   README.md
+	the least description on fml8  [8e2c2ba]
+
+
+   fml/bin/anoncvs
+	obsolete due to scm changes (cvs to git(github))  [4abd871]
+
+
+   fml/doc/ja/tutorial/devel/cvstree.sgml
+	obsolete due to scm changes (cvs to git(github))  [3ff34d8]
+
+
+   fml/doc/ja/tutorial/devel/repository.sgml
+	repository descriptions, newly created due to scm changes (cvs to 
+	git(github).  [291a147]
+
+
+   fml/doc/ja/tutorial/install/download.sgml
+	modified to catch up the scm changes (cvs to github).  [fb27f88]
+
+
+   regress/simulation/Makefile
+	modified to use git reflecting scm changes (cvs to github).  [64681a8]
+
+
+2018/07/04
+
+  master repository is moved to github.com/fmlorg.
+
+2018/02/01
+
+  fml8 monthly release 20180201
+
+2018/01/13
+
+  update CPAN modules
+  	 updated to Crypt-RandPasswd 0.06
+	 updated to Exporter-Lite    0.08
+	 updated to Time-modules     2013.0912
+	 updated to Unicode-Japanese 0.49
+	 updated to File-MMagic	     1.30
+	 updated to PathTools	     3.62 (File::Spec)
+	 updated to MIME-Types	     2.14
+
+2018/01/01
+
+  fml8 monthly release 20180101
+  
+  fml8 season (monthly for a while) rollout campaign starts.
+  
+  update CPAN modules
+  	 updated to MailTools-2.19.
+
+2017/12/31
+
+  updated to im-153.
+
+2017/08/18
+
+  apply patch to fix charset handling in Content-Type header
+  Thanks to <mizuki@myokoo.jp>. 
+
+2017/08/01
+
+  fml.org servers are being currenty re-designed to implement github mirror.
+   
+
+2017/03/04
+
+  fml-7.98.18-2015-08-15 snapshot is created as the further reference point.
+  XXX used as a reference only.
+
+2013/04/14
+
+  fml/utils/bin/sgml_compile.sh
+	inherit FML_DSL environmental variable if exists,
+	enhanced to catch up www.fml.org framework changes.
+
+2012/12/30
+   FML::Process::Calendar
+	catch up perl changes: defined(hashes and arrays) is
+	deprecated, instead use a simple test for size:
+	if (@an_array) { ... }
+
+   FML::Process::ConfViewer
+   FML::Process::DocViewer
+	catch up perl changes: not length(@array), use "scalar @array"
+	to find out how many elements these have. 
+
+2012/12/13
+
+  Mail::Delivery::SMTP
+	catch up IO::Handle changes in Perl 5.16 to avoid a lot of
+	warnings. see RT#66474
+	https://rt.cpan.org/Public/Bug/Display.html?id=66474
+
+2012/12/13
+
+  HTML::EntitiesLite added to make HTML::FromText work.
+	non-XS-ified HTML::Entities module derived from HTML::Parser
+	3.69. HTML::FromText is modified to use it.
+
+	HTML::EntitiesLite is enough for HTML::FromText since we can
+	use only encode_entities() not decode_entities, which depends
+	HTML::Parse XS engine.
+
+2012/04/21
+
+   Mail::Delivery::Net::INET6
+	not duplicated loading of Socket related classes.
+
+2012/04/15
+
+   not use obsolete library.
+	timelocal.pl and ctime.pl, which is removed in Perl 5.16
+	release. switched to use Time::Local and Time::localtime. 
+
+   import CPAN modules for HTML::FromText module:
+	import Email-Find 0.10.
+	import Exporter-Lite-0.02.
+
+2012/02/25
+
+   update CPAN modules successively:
+	Unicode-Japanese         to 0.47.
+	HTML-FromText            to 2.05.
+	HTML-CalendarMonthSimple to 1.25.
+
+2012/02/19
+
+   update CPAN modules successively:
+	Jcode       to 2.07.
+	File-MMagic to 1.27.
+	Socket6     to 0.23 (not used, holded in cpan/dist for reference).
+	HTML-Template is removed since it is not used.
+	Log-ErrLogger is removed since it is not used.
+	Text-CSV      is removed since it is not used.
+	Rcs           is removed since it is not used.
+	VCS-CSV       is removed since it is not used.
+
+2012/02/18
+
+  update Time-modules to 2011.0517 (sync w/ pkgsrc/time/p5-Time-modules).
+
+  bump up the FML_CURRENT_VERSION to 7.98.17
+	to clarify the dependence among the version and modules.
+
+2011/09/26
+
+   FML::Config 
+	include ErrorStatus module within it.
+	remove "use ErrorStatus".
+	
+   FML::Credential 
+	include ErrorStatus module within it.
+	remove "use ErrorStatus".
+	
+   ErrorStatus
+	modified to not use this top level package. remove this.
+
+2011/08/25	
+
+   Mail::Message::Encode 
+	bugfix quoted-printable pattern at decode_mime_utf8_to_euc().
+
+2010/11/28
+	
+   FML::Install 
+	fix vendor expansion bug (bug fix previous commit).
+	
+	***important changes***
+	do not overwrite file in installation. changes for the further
+	enhancement, e.g. in other softowares. Actually, the current
+	fml installation does not chanes since the file::directory
+	names do not conflict. 
+	
+2010/11/09
+
+   bump up to the version 7.98.16.
+
+   FML::Install
+	enhanced to try to install all files in all vendors,
+	which is useful for 3rd party.
+
+2010/03/06
+
+   FML::Process::Distribute 
+	seems incorrect that increment_id() in calling HTML-ify
+	function since already the article ID is incremated at _
+	deliver_article_prep(). changed to use $article->id(); by
+	fetching the current article ID.
+
+2010/03/01
+
+   bump up to the version 7.98.15.
+
+2010/02/28
+
+   import IM-150.
+
+
+2010/02/28
+
+   fml-7.98.14-20100228 released as a mile stone before further development.
+	same as fml-7.98.14-20090809 excluding documentation.
+
+	ドキュメンテーション以外は fml-7.98.14-20090809 と同じです。
+	安全のため、ライブラリのアップデートを始める前に作成した
+	スナップショット。
+
+2009/12/26
+
+    fml/utils/bin/version_replace.pl 
+	added: version replacement utility.
+
+    tutorial/Makefile.template
+	replace version in include/bookinfo.sgml always
+	using fml/utils/bin/version_replace.pl utility.
+	
+	catch up the change in clean and export rules.
+	
+    ja/tutorial/include/chapters.ent 
+	define bookinfo.cooked entity.
+	we use it as version-managed bookinfo.sgml.
+	
+    ja/tutorial/book.sgml 
+	use version managed bookinfo entity. clean up a little.
+	
+    ja/tutorial/
+	clean up a little ...
+
+
+2009/08/09
+
+   fml-7.98.14-20090809.tar.gz built.
+
+2009/07/15
+
+   FML::Process::Distribute 
+	move calling _htmlify() from _deliver_article_prep() to finish()
+	
+2009/06/20
+
+   fml-7.98.14-20090620.tar.gz built.
+
+2009/06/10
+
+   Mail::Message::Date 
+	bugfix case timezone +0000
+
+2008/11/30
+
+	開発環境を perl 5.10 ベースへ変更。
+
+   FML::Process::Switch 
+	defined() before eq
+	
+2008/09/29
+
+   FML::Process::CGI::Kernel 
+	verify_request() logs client ip address if could.
+
+2008/09/28
+
+   documentation
+	usage of anonymous cgi.
+
+2008/09/15
+
+   FML::ML::Control 
+	delete scripts in the reverse order of creation.
+	define {get,set}_force_mode().
+	
+   FML::Command::Admin::{newcgi,rmcgi}
+	install/deinstall all CGI scripts for the specified domain.
+
+2008/09/14
+
+   FML::Process::Utils 
+	define ml_name_list(), which returns the list of valid ml in the
+	specified domain.
+	fix documents and todo.
+	
+   FML::ML::Control 
+	fix admin.cgi removing operation bug.
+	count up the number of valid ml,
+	remove admin.cgi only if ensured that no more valid ml exists.
+
+2008/09/13
+
+   variables
+	define $listinfo_template_base_dir
+
+   template files
+	share/listinfo/euc-jp/index.html.ja 
+	change default url for submission of subscribe/unsubscribe request.
+	mailto:... -> ::...::submit.cgi
+	
+	share/listinfo/euc-jp/index.html.en aded.
+
+   FML::ML::Control 
+	listinfo operations fixed::install and deinstall index.html.{ja,en}.
+
+2008/09/12
+
+   variables
+	define $ml_anonymous_cgi_base_url
+
+   FML::Command::Admin::{newml,rmml}
+	clean up.
+	warn() -> ui_message() + logwarn().
+	change variable names to be more proper.
+	fix comments.
+	
+   FML::Command::Admin::rmml 
+   FML::ML::Control 
+	delete cgi scripts and listinfo in runnign rmml.
+
+2008/09/11
+
+   FML::Error::Cache 
+	document: fix typo
+
+2008/09/10
+
+   FML::CGI::Skin::Anonymous 
+	(1) check if the banner image format generator works or not
+	(2) if not, use ascii generator.
+	
+   FML::String::Banner 
+	new() needs $curproc as the argument.
+	as_png() checks if GD perl module is available. if not, return
+	undef.
+
+   FML::ML::Control 
+	clean up setup_cgi_interface() to be more modular.
+
+2008/09/09
+
+   WWW interface for anonymous users is added.
+	Anyone can request subscribe/unsubscribe via WWW interface.
+	After the request processed, the command flow is same as usual
+	command mails ( confirmation is sent back, ...).
+
+	一般ユーザが WWW インターフェイスでＭＬへの「入会」「退会」
+	のリクエストを出すことが出来るようにしました。
+	・ subscribe と unsubscribe しか出来ません。
+	・ リクエストを出すと confirmation のフェイズに入ります。
+	   その後は、いつのもコマンドメールと同じ処理になるだけです。
+	   本当に入口だけ。２つの違う通信路を使うことに意味があります。
+	・ パスワード登録とかはしません。どうせ次に使う時には忘れてる。
+	   無駄にＭＬ側へ情報が集まってしまうと逆に危ないだけ。
+	・ ゆがんだ画像を読みといてもらって「魔法の文字列」を入れさせます。
+	   SPAM よけの軽いおまじないです。
+	   気合いの入った OCR 野郎とかいたら無駄でしょうが、そこまでして
+	   突破したいような価値ある WWW じゃないし(confirmation かえる
+	   だけなんだし)。
+	・ もっといけてる画像の作り方のアイデア(というかコード)募集中。
+
+   variables
+	define variables for anonymous cgi::$use_anonymous_cgi_function,
+	$anonymous_cgi_expire_limit, $anonymous_cgi_base_dir,
+	$ml_anonymous_cgi_base_dir, $html_tmp_dir, and $html_tmp_base_url.
+	
+	define $ml_anonymous_cgi_allowed_commands
+
+	definition changed::$cgi_base_dir, $admin_cgi_base_dir and
+	$ml_admin_cgi_base_dir.
+	
+	renamed::$commands_for_ml_admin_cgi -> $ml_admin_cgi_allowed_commands
+
+   etc/modules
+	add definition "anonymous::*::*::submit.cgi".
+	while space cosmetics.
+
+   share/messages
+	add message templates for anonymous CGI.
+
+   FML::Char::Ascii::Data 
+	ascii presentation of letters.
+	
+   FML::String::Banner
+   FML::String::Banner::{Ascii,Image}
+	banner string generator
+
+   FML::String::Random
+	generates a magic string and the identifier used for the
+	session ID. 
+
+   FML::Restriction::Base 
+	define $alnum_regexp class.
+	define 'session_id' and 'magic_string' regexp.
+
+   FML::CGI::User 
+	define anonymous_cgi_menu().
+	fix and update documents.
+	
+   FML::CGI::Anonymous::{DB.pm,Submit}
+   FML::CGI::Skin::Anonymous
+	anonymous cgi initial version
+
+   FML::Command::User::{chaddr,subscribe,unsubscribe} 
+	show menu for an anonymous user by calling
+	FML::CGI::User->anonymous_cgi_menu();
+	
+   FML::ML::Control 
+	in setting up cgi, install cgi script(s) for anonymous users,
+	too. 
+
+   FML::Process::Kernel 
+	import $fml_owner and $fml_group into $config name space from
+	main.cf.
+
+   FML::Process::Utils 
+	fix how to search main_cf information.
+	
+	define set_allow_reply_message() and get_allow_reply_message().
+	We can enable or disable reply_message*() functions dynamically.
+	
+   FML::Process::CGI::Kernel 
+	generate anonymous session ID always (anyway).
+
+	finish() calls message flush sub-system.
+
+	cgi_execute_command() is enhanced to handle both *admin.cgi
+	  and anonymous cgi case.
+
+	some error messages are natural-languaged.
+
+	use cgi_var_*() and specify -target if could.
+	
+   FML::Process::CGI::Utils 
+	$commands_for_ml_admin_cgi -> $ml_admin_cgi_allowed_commands
+
+	ensure the return value for CGI action to be not "undef".
+
+	menu is enhanced to handle both *admin.cgi and anonymous cgi case.
+
+2008/08/31
+
+   WWW インターフェイスからの subscribe / unsubscribe 他のための準備...
+	隔離メールの「TODO: ワンタイムパスワードつき URL の生成。」
+	も同じフレームワーク上にある(はず)。
+
+2008/08/24
+
+   隔離されたメール(SPAM)を日付名ディレクトリへ奇麗に並べ替える。
+	TODO: レポートメールの生成と送信。
+	TODO: ワンタイムパスワードつき URL の生成。
+	      この URL はレポートメールに含まれるようにする。
+
+   FML::Process::{Flow,Kernel}
+   FML::Isolate 
+	rearrange isolated mails to under
+	$isolated_queue_dir/YYYY/MM/DD dir. 
+	
+   FML::Command::Admin::thread 
+	allow sub-command "outline" load.
+	
+   FML::Article::Outline 
+	fixed::typo: add_outline_to_header_field -> add_outline_to_header
+
+   variables
+	add new entry on "isolatation" related variables.
+	define $isolated_queue_dir and $isolated_queue_expire_limit.
+
+2008/08/23
+
+  clean up documents (continued)
+	remove recipes and faq, tech category.
+	merge recipes to tutorial.
+
+2008/08/21
+
+   clean up cpan/
+	IO::Stringy removed since it is not used.
+
+2008/08/20
+
+   tutorial(jp) overhaul-ed.
+
+2008/08/17
+
+   FML::Process::Command 
+	[bug fix]
+	check isolated or ignored precisely and determine the final action.
+
+2008/08/15
+
+    documents being updated.
+
+2008/08/14
+
+    variables
+	bug fix create-on-post default configuration.
+	update and complete descriptions.
+	sort definitions.
+	remove "permit_createonpost_maintainer_maps", which is not defined.
+	remove duplication in descriptions.
+
+2008/08/13
+
+   FML::Process::CreateOnPost 
+	bug fix::fix internal arguments passing bug to handle sender
+	information correctly.
+	save sender candidates in PCB.
+	
+2008/08/07
+
+   anoncvs.fml.org changed to support anonymous cvs over ssh.
+	   fml/bin/anoncvs changed.
+	   documents updated.
+
+2008/08/03
+
+   bump up version to 7.98.13
+	isolation or quarantine mode implemented and enabled by default.
+	"isolate" instead of "reject" spam or unknown messages
+	by default.
+
+	変なメール(まぁはっきり言えば、ほぼ全部 SPAM)は、今まで
+	*_restrictions のルールの最後が reject のため、敵に返事を
+	送ろうとしてしまっていたが、デフォルトを isolate に変更。
+
+	とりあえず受けとり、隔離キューに入れる動作にした。
+
+	隔離キューのレポートなどは、まだ未実装。
+
+   variables
+	support directives (isolate_system_special_accounts
+	isolate_spammer_maps isolate) for $article_post_restrictions and
+	$command_mail_restrictions.
+	
+   Mail::Delivery::Queue 
+	create isolated queue, too.
+	
+   FML::Process::Command 
+	fixed that isolate operation works.
+
+2008/07/20
+
+   FML::Process::Utils 
+	define incoming_message_dup_content() and
+	incoming_message_isolate_content().
+	
+   FML::Process::{Command,Distribute}
+	isolate the current incoming message if matched
+
+   FML::Restriction::Post 
+	define isolate_system_special_accounts() and
+	isolate_system_accounts().
+	
+2008/07/16
+
+	[isolate_XXX 命令シリーズ創設案]
+
+	2008/07/06 の各 restrictions (例: 投稿、コマンドメール)で 
+	reject のかわりに isolate と ignore を使えるようにし ...
+	は、いいのですが、reject_system_special_accounts 命令は
+	どうすればよいのでしょう？
+
+	isolate_system_special_accounts ってのを創設すれば良いですね？
+
+	ほえ_restrictions にある reject なんとか命令をすべて isolate へ
+	書き換えてしまえば、一番素直な拡張だと思える。
+ 
+		$*_restrictions =~ s/reject/isolate/g;
+
+
+2008/07/06
+
+	各 restrictions (例: 投稿、コマンドメール)で reject のかわりに
+	isolate と ignore を使えるようにし、デフォルトを reject から isolate
+	へ変更します。
+
+	isolate 命令は ignore ＋ 一定期間保存(隔離)相当の機能です。
+	拒否の返事をせずに、メールを保存し、一定期間後に削除します。
+
+	補足: 最初 hold 命令を、この意味で使おうとしましたが、それだと
+	Postfix の hold と意味が違ってしまうので、それは廃止。hold は
+	予約語として、そのまま（実態がない命令なので書いても何も起こら
+	ないので注意）。
+
+   FML::Process::{Distribute,State}
+   FML::Restriction::Post 
+	define "isolate" operation template.
+	
+	"isolate" differs "hold".
+	"isolate" sets apart spam candidates from normal incoming messages,
+	whereas "hold" moves the incoming message to "hold" queue, which does
+	not move until someone changes the state.
+
+2008/07/05
+
+   FML::Restriction::CreateOnPost 
+	fixed: add missing use FML::Restriction::Post
+
+2008/07/04
+
+   FML::Process::State 
+	define restriction_state_{set,get}_hold_reason()
+	
+   FML::Restriction::Post 
+	define hold() and discard()
+
+2008/06/29
+
+	CREATE-ON-POST 機能では、動的にＭＬの作成、メンバーの追加が
+	出来るわけですが、ＭＬの作成が可能なユーザの制限を可能としました。
+
+   FML::Credential 
+	implement is_ml_domain() method.
+	fix debug and pod descriptions.
+	
+   FML::Restriction::Post 
+	implement permit_ml_domain()
+	
+   FML::Restriction::CreateOnPost 
+	define permit_createonpost_newml_maps
+	
+   FML::Process::CreateOnPost 
+	"who can do newml operations" code is rewritten to use of
+	createonpost_newml_restrictions.
+	
+   variables
+	define $createonpost_newml_restrictions.
+	define $createonpost_newml_maps.
+	remove $createonpost_maintainer_maps.
+
+2008/06/08
+
+   create-on-post enhanced.
+	define $createonpost_maintainer_maps
+
+   FML::Process::CreateOnPost 
+	clean up. fix comments.
+	restrict who can create a new ML.
+
+   FML::Credential 
+	define is_valid_map() method
+	
+   configurations	
+	define $createonpost_maintainer_maps
+
+
+2008/05/25
+
+   switched to configure 2.62 based
+		configure.in 
+		configure
+			show datarootdir
+
+		fmlsrc/config.sh.in 
+		fmlsrc/fml/etc/{install.cf.in, main.cf.in}
+		datadir -> datarootdir	
+
+2008/05/11
+
+  project restarts (crash and fsck;) ends, orz).
+	TEST: switched to a new source changes system.
+
+2006/12/03
+
+   overhaul continues ... (slowly ;_;) ...
+	ちょっとずつオーバホール継続中
+
+   FML::Command::Admin::reviveml 
+	fix comments.
+	ensure initial value.
+	add assert.
+	show more error messages.
+	
+   FML::Command::Admin::mergeml newcopml newdomain rmcopml rmdomain 
+	fix comments.
+	ensure initial value.
+
+2006/11/26
+	
+   FML::Sys::Alias 
+	fix comments.
+	remove a unused local variable.
+	set the upper limit of recursive call _expand().
+	
+   FML::Sys::User 
+	fix comments.
+	add the label to a loop.
+	define debug code by myself.
+	
+   FML::Process::Fake 
+	fix comments.
+	fix help message.
+	change a local variable name to more proper one.
+	
+   FML::Credential 
+	fix comments (FNF).
+	ensure initial value.
+	use more proper local variables.
+	
+   FML::Mailer 
+	fix comments.
+	fix error logic.
+	
+   FML::Moderate 
+	fix comments.
+	correct argument definitions.
+
+2006/11/19
+	
+   FML::Error::{Analyze,Cache}
+   FML::Error::Analyze::{histgram,simple_count }
+	fix comments.
+	use more proper variable names.
+	
+   FML::Header::MessageID 
+	fix comments.
+	ensure initial value.
+
+2006/11/13
+	
+   FML::Error 
+	fix comments
+	ensure variable initialization.
+	define $mname and use it in log messages.
+	
+   FML::Envelope 
+	fix comments
+	use FML::Credential->is_same_assress() to compare addresses.
+	move variable definitions to the block using it more nearly.
+
+2006/11/12
+
+   FML::IPC::Queue 
+	more debug messages.
+	enhance debug patterns.
+
+2006/10/22
+
+   FML::Body 
+	more error logs.
+	move $curproc definition to near message logging.
+	
+   FML::PCB 
+	use gloval_ prefix for package gloval variable:
+	current_context -> global_current_context
+	
+   FML::Command::{Auth,DataCheck,Filter,Syntax}
+	clean up. fix comments.
+	
+   FML::Command::DirUtils 
+	fix comments.
+	move definitions to near the codes.
+	use more proper variable names.
+	
+   FML::Command::FileUtils 
+	fix comments.
+	move definitions to near the codes.
+	use more proper variable names.
+	
+   FML::Command::HTMLify 
+	fix comments.
+	use more proper variable names.
+	
+   FML::Command::Message 
+	fix comments.
+	define the default message.
+	
+   FML::Command::QmailExt 
+	fix comments.
+	permit case insensitive commands.
+	more error messages.
+	validate temorary message file more.
+	
+2006/10/14
+
+   etc/command_line_options 
+   FML::Demo::{Chart,Project}
+   FML::Process::Project 
+	fmlproj::GanttProject XML format extension.
+	--xml options
+	dump GanttProject XML format by default.
+	
+   FML::Article::Summary 
+	fix importation
+	
+2006/10/10
+
+   FML::Confirm 
+	fix comments.
+	rename private variables to more proper ones.
+	remove not used private variables.
+
+2006/10/08
+
+	ちょっと体調がよくなってきたので、
+	レビュー、クリーニングを再開しました。
+	
+
+2006/09/24
+
+   FML::Demo::Chart 
+	fix initialization code.
+	_shrink_date() for column list.
+	sort main data before printing.
+	
+   FML::Demo::Project 
+   FML::Demo::Language::Japanese 
+	NL-ify (use FML::Demo::Language if needed)
+	enabled to expand YY::DD-YY::DD form to date list.
+	cosmetics.
+	status and misc support.
+	
+2006/07/09
+
+   オーヴァホールはじめた…
+
+2006/06/10
+
+   TinyMTA
+	デバッグおよび、ちょっと(インチキだけど)MTAもどきを使いたい場
+	合に便利
+
+
+2006/06/25
+
+   へんな SPAM でコマンドが落ちたりするのが直ったはず。
+
+   FML::Command::DataCheck 
+   FML::Process::Command 
+	validate if find_first_plaintext_message() returns object.
+
+2006/05/22
+
+   Mail::Message::ToHTML 
+	_update_montly_thread_index_master() rewrite same logic
+	using _update_id_montly_index_master()
+
+2006/05/17
+
+   fml4 to fml8 変換 97 % 終了
+
+   メッセージテンプレートをいくつか追加
+
+2006/05/16
+
+   登録可能なユーザ数の制限をかけられるようにしました。
+	fml4 の $MAX_MEMBER_LIMIT にあたるものです。
+	＃って、そんな機能欲しいのは ISP くらいかも :-)
+
+   variables
+	define $*_total_limit
+	
+   FML::User::Control 
+	define get_user_total(), return the total number of addresses
+	in list. 
+	
+   FML::Command::Admin::subscribe 
+	check the number of users in {member,recipient}_maps exceeds
+	the limit. 
+	
+2006/05/14
+
+   FML::Envelope 
+	envelop based loop check
+
+2006/05/13
+
+   variables	
+	cksum -> checksum
+
+   FML::Process::Kernel Utils 
+   FML::Body 
+	enable body based loop check
+	
+2006/05/11
+
+   Mail::Message::Checksum 
+	restructured.
+	define md5_str_ref() too, same as md5().
+	implement md5_file()
+	
+2006/05/09
+
+   variables
+	reject_spammer_maps directive available now.
+	define dummy $primary_spammer_map and $spammer_maps.
+
+	add envelope loop checks
+
+   FML::Restriction::Post 
+	implement reject_spammer_maps()
+	
+   FML::Credential 
+	define is_spammer()
+	
+   FML::Process::Error 
+	restructure qmail-ext command emulation.
+	
+	currently libexec::error traps the request and switch the
+	context to command process. FML::Process::QMail no more used. 
+	FML::Command::QmailExt provides qmail-ext emulation functions.
+
+   etc/dot-qmail-admin 
+	bug fix: add missing calling of libexec::error process.
+	
+2006/05/04
+
+   いろいろな機能の expire を整備しました。
+
+   variables
+	define $welcome_file and $deny_file.
+	% format of strftime(3) is available for $log_file
+	
+   FML::Log 
+	expand % format in $log_file by strftime(3).
+	ログファイルに log.%C%y%m%d などといった日付がつけられるように
+	なりました。
+	
+   FML::Process::Debug 
+	define incoming_message(), which returns undef as a dummy.
+	
+   FML::Process::Distribute 
+	expire article under locked
+	
+   FML::Process::Kernel 
+	change default message subject to "message from $ml_name ML
+	$myname system". 
+	call $queue->expire() in incoming_message_cleanup_queue().
+	
+   FML::Article 
+   FML::Article::Summary 
+	expire article summary (remove content, corresponding with expired
+	articles, in summary).
+	
+   FML::Moderate 
+	expire too old submitted queue after $moderate_queue_expire_limit.
+	
+   FML::Command::Admin::subscribe 
+	send back welcome file in subscription when running under
+	CGI/MTA process. 
+	
+   FML::Command::User::confirm 
+	move "send welcome message" code to
+	FML::Command::Admin::subscribe class. 
+	
+   FML::Command::SendFile 
+	bug fix::pass recipient information to reply_message_nl().
+	
+   FML::Command::User::admin 
+	fix typo::$use_admin_command_mail_fucntion
+	
+   Mail::Delivery::Queue 
+	constuctor imports $expire_limit in the argument.
+	
+	delete() and remove() can accept queue id if specified.
+	
+	define expire() which removes too old queue files in the specified
+	queue. It expires all queue if $class unspecified.
+	
+	expire()::cleanup() is overhauled. queue removing is done by remove().
+	
+	define {set,get}_expire_limit() access methods.
+	
+2006/05/03
+
+   variables
+	define $use_article_summary_file_expire
+	define $use_article_expire and $article_expire_limit
+	define $moderate_queue_expire_limit
+	fix typo: $use_admin_command_mail_function
+
+   FML::Article 
+	implement expire(), which function expires too old articles.
+	modify log messages
+	
+   FML::Process::Distribute 
+	try to expire articles once per day if enabled.
+
+2006/05/02
+
+   variables
+	define $confirm_command_expire_limit (= 14d by default).
+	
+   FML::Config 
+	implement as_second($key), which returns the value as seconds
+	such as	86400 for '1d'.
+	
+   FML::Command::User::confirm 
+	modified to use $confirm_command_expire_limit which value is
+	converted to the integer by as_second() method of FML::Config.
+	
+   FML::Restriction::Command 
+	changed that permit_forward_to_moderator() returns 
+	("matched","ignore").
+
+2006/04/30
+
+   FML::Merge::FML4::RULES.txt 
+	83 % checked.
+	
+   FML::Merge::FML4::config_ph 
+	support for LOGFILE_NEWSYSLOG_LIMIT and XMLNAME
+
+2006/04/28
+
+   Mail::Delivery::Queue 
+	fix open() mode::r -> <
+
+2006/04/22
+
+   7.98.12 released.
+
+   配送システムの見直し(1) 2006/04/22 - 2006/04/20
+	エラーリセットのタイミングを変更
+	IPv6 対応部分のエラーを修正
+
+   FML::Process::Utils 
+   FML::File::Rotate 
+	FML::File::Rotate overhaul-ed. access method changed.
+	
+   variables
+	variable name changed due tu overhaul of FML::File::Rotate.
+	$log_rotate_size_limit
+	$log_rotate_archive_file_total
+	
+   FML::Process::QueueManager 
+   Mail::Delivery::SMTP 
+	message modified (unified among modules)
+	
+   FML::Process::Flow Kernel 
+	runs operation on log files (currently log rotation).
+	
+2006/04/21
+
+   Mail::Delivery::SMTP 
+	fix error reset timing.
+	show more useful info in log message.
+	
+   FML::Process::QueueManager 
+	log as status=deferred not status=fail when the delivery fails.
+
+2006/04/20
+
+   Mail::Delivery::SMTP 
+   Mail::Delivery::Net::INET6 
+	try to connect(2) $mta by IPv6 if (1) we can use Socket6 and (2) mta
+	is not pure IPv4 syntax (Iv6 syntax or hostname).
+	
+	IPv6 module, which should be fully rewritten in the future, exports
+	parse_mta6() and is_pure_ipv4_syntax().  rewritten to use them.
+	
+2006/04/18
+
+   FML::Header::MessageID 
+	$Counter -> $global_counter, easily identified as a global
+	variable.
+	base address is ( $article_post_address || $maintainer ).
+	fix style.
+	
+   FML::Process::Kernel 
+	logging system enabled by default
+	
+2006/04/17
+
+   ダミーの rewrite_message_id メソッドを実装した。
+	TODO: 将来、ＭＬオリジナルの Message-Id: をつけられるようにする。
+
+   FML::Header 
+   variables
+	define dummy rewrite_message_id() method and the rewrite rule. 
+	this method does nothing by default (pass the original message
+	id as itself).
+	
+   FML::Process::Debug 
+	define logdebug()
+
+2006/04/16
+
+   変数名を分かりやすくするなど、クリーニング
+
+   FML::Filter::TextPlain 
+   Mail::Bounce::DSN Postfix19991231 Qmail SimpleMatch 
+   Mail::Message 
+   Mail::Message::ToHTML Outline 
+	nuke ambiguous method and variable name.
+	num_paragraph() -> paragraph_total() (XXX see "Code Complete").
+	each variable holding this return value is fixed to $total.
+	
+   FML::Command::User::get 
+	clean up variable name style.
+	
+   Mail::Message::ToHTML 
+	fix variable name syntax::_num_attachment ->  _num_attachments
+	
+   Mail::Delivery::SMTP 
+	fix variable name::num_rcpt -> rcpt_total
+	
+   FML::Article::Spool 
+	fix variable names:
+	num_file -> num_files
+	num_dir  -> num_dirs
+	
+2006/04/11
+
+   投稿時もしくはコマンドメールの処理で不正なリクエストを無視するディ
+   レクティブを書けるようにした。主に SPAM を無視するため。微修正。
+
+   variables
+	${article_post,command_mail}_restrictions support
+	{ignore,ignore_invalid_request}.
+	
+   FML::Process::Distribute 
+	apply filter system to avoid useless work if distribution is
+	allowed. 
+	
+	temporarily disable logging system before calling
+	is_permit_post() at filter check.
+
+   FML::Process::Kernel 
+	define log_{enable,disable}() to enable::disable logging
+	system. 
+
+2006/04/10
+
+   投稿時もしくはコマンドメールの処理で不正なリクエストを無視するディ
+   レクティブを書けるようにした。主に SPAM を無視するため
+
+	例: 有効なコマンドでないなら無視。
+	    メール全体で一つも有効なメールがない場合は返事も返さない。
+	command_mail_restrictions	=	reject_system_special_accounts
+						permit_anonymous_command
+						permit_user_command
+						ignore_invalid_request
+						reject
+
+   FML::Restriction::Post 
+	define ignore() and ignore_invalid_request() methods.
+	
+   FML::Restriction::Command 
+	define ignore() and ignore_invalid_request() methods.
+	assert
+	
+   FML::Process::State 
+	define restriction_state_set_ignore_reason() and
+	restriction_state_get_ignore_reason() methods.
+	
+   FML::Process::Command 
+	enhance restriction checks for invalid contents to determine the
+	action against such content.
+
+2006/04/05
+
+   IO::Adapter 
+   IO::Adapter::File 
+	trylock() (lock( { wait => TIME }) implemented
+	
+   Mail::Delivery::Queue 
+	fix usage of logging.
+	trylock() is available, too.
+	validate stat() object before using it.
+	mask some debug messages
+	
+   Mail::Delivery::SMTP 
+	fix fallback algorithm::we need not do fallback for the queue already
+	on the queue.
+	
+	bug fix loop check counting.
+	bug fix queue_directry info handling.
+	
+	prepare several acess methods::_is_map_in_queue(),
+	_set_queue_directory(), _get_queue_directory(), set_not_done(),
+	get_not_done().
+	
+   FML::Mailer 
+	modifieid to sync w:::Mail::Delivery::Queue changes.
+	+ use recipient_maps as an argument to Mail::Delivery system.
+	+ pass queue object to Mail::Delivery system.
+	+ check if delivery is DONE or not by get_not_done().
+	
+   FML::Process::Kernel 
+	queue_flush() takes no argument
+
+   FML::Process::Distribute 
+	modifieid to sync w:::Mail::Delivery::Queue changes.
+	+ more fast lock
+	+ pass log function pointers.
+	+ pass queue object to Mail::Delivery system.
+	+ check if delivery is DONE or not by get_not_done().
+
+   FML::Process::QueueManager 
+	modifieid to sync w:::Mail::Delivery::Queue changes.
+	pass log function pointer to Mail::Delivery system.
+	
+2006/04/04
+
+   Mail::Delivery::Queue 
+	define set_sleep_count, get_sleep_count, set_retry_count and
+	get_retry_count.
+	rewritten by using them.
+	
+   FML::Process::QueueManager 
+	queue validation logic modified.
+
+2006/04/03
+
+   Mail::Delivery::SMTP 
+	check the number of effective MTA.
+	tune retry max limit (XXX a lot of todo around this).
+	fix retry handling (now we use cost penalty by rollback).
+	style::not use $_xxx in loop
+	
+   Mail::Delivery::Queue 
+	ensure lock::unlock return value
+	bug fixed to lock new or lock queue file, not active queue.
+	
+   IO::Adapter 
+	consider context switch
+	
+   FML::Mailer 
+	enable fallback
+
+2006/04/02
+
+   Mail::Delivery::SMTP 
+	overhaul.
+	o subroutine-ify.
+	o more error check and assertion.
+	o fix comments. et.al.
+	fix error handling (do not trap normal condition)
+	
+   Mail::Delivery::Queue 
+	fix typo.
+	check lock status.
+	
+   FML::Log 
+	clean up input buffer (nuke \s+$)
+
+2006/04/01
+
+   Mail::Delivery::Queue 
+	overhaul
+
+2006/03/29
+
+   Mail::Message::ToHTML 
+	change monthly_index.html's table output in 
+	_update_id_montly_index_master().
+	see also fml-devel 798.
+	
+2006/03/26
+	
+   Mail::Delivery::Base 
+	define [sg]et_address_validate_function()
+	
+   FML::Mailer 
+   FML::Process::Distribute 
+	use $curproc->log() as log_info and $curproc->logdebug() as log_debug
+	in Mail::Delivery, by passing log_debug function pointer to
+	Mail::Delivery class.
+	
+   Mail::Delivery::Net::INET4 INET6 
+	fix arguments:
+	+ connect{4,6}() accepts $mta.
+	+ remove not used arguments.
+
+2006/03/25
+
+   Mail::Delivery::Base 
+	fix comments.
+	fix usage of ->log*()
+
+2006/03/24
+
+   Mail::Delivery overhaul (1).
+
+   Mail::Delivery 
+	fix comments.
+	
+   Mail::Delivery::Net::INET6 
+	overhaul.
+	+ more use of access methods.
+	+ change method name to more proper one.
+	
+   Mail::Delivery::Net::INET4 
+	overhaul.
+	use $self->log*() instead of Mail::Delivery::Utils.
+	
+   Mail::Delivery::Queue SMTP 
+	overhaul.
+	more access method based.
+	
+   FML::Mailer 
+   FML::Process::Distribute QueueManager 
+	rewritten to use access methods to sync w:::Mail::Delivery overhaul.
+
+2006/03/23
+
+   Mail::Delivery::SMTP 
+	if EHLO fails, try HELO.
+
+2006/03/21
+
+   FML::Mailer 
+   FML::Process::Distribute 
+   Mail::Delivery::SMTP 
+	validate format of recipient within smtp transaction.
+	
+   Mail::Delivery::ErrorStatus 
+	define {set,get}_error()
+	
+   Mail::Delivery::Queue 
+	fix type in queue_id generator
+	
+   Mail::Delivery::SMTP 
+	bug fix starting position in fallback process.
+
+2006/03/20
+
+   FML::Merge::FML4::RULES.txt 
+	56.5 % verified. status and rules updated.
+	
+   FML::Merge::FML4::config_ph 
+	fix conversion for address variables.
+	add conversion of REJECT_ADDR and SKIP_FIELDS.
+	fix HOST and PORT handling.
+	apply _fix_path() for *_FILE variables.
+	add conversion of INCOMING_MAIL_SIZE_LIMIT with ATOI suport.
+	
+    etc/compat/fml4/default_config.ph 
+	
+	by default, define ___NULL___ for the following variables:
+	$PERMIT_POST_FROM
+	$REJECT_POST_HANDLER
+	$PERMIT_COMMAND_FROM
+	$REJECT_COMMAND_HANDLER
+	$REMOTE_ADMINISTRATION_REQUIRE_PASSWORD
+	$USE_DISTRIBUTE_FILTER
+	$FILTER_NOTIFY_REJECTION
+	$FILTER_ATTR_REJECT_COMMAND
+	$FILTER_ATTR_REJECT_2BYTES_COMMAND
+	$FILTER_ATTR_REJECT_INVALID_JAPANESE
+	$USE_ERRORS_TO
+	$APPEND_STARDATE
+	$AUTO_HTML_GEN
+	$USE_NEW_HTML_GEN
+
+2006/03/19
+
+   fml 4 から fml 8 への変換
+	56.5 % 確認
+
+   variables
+	define $article_header_list_software
+	define $mail_header_default_list_software
+	$default_umask -> $system_default_umask
+	
+   FML::Header 
+	List-Software: and X-MLServer: is set as 
+	${mail_header_default_list_software} or
+	${article_header_list_software} by definition.
+
+	sort definition order: _get_header_type(), ...
+
+   FML::Process::Distribute 
+	$use_smtp_log enable/disable smtp transaction logging.
+
+2006/03/12
+
+   variables
+	define $maintainer_signature (not used now).
+	define $article_header_* and $mail_header_default_* variables.
+	rewritten to use $mail_header_default_* for outgoing_*.
+
+   FML::Process::Kernel 
+	pass {mode => default} parameters to FML::Header object by default.
+	
+   FML::Header 
+	rewrite logic to generate list-* header field to sync w:::new variable
+	definitions::article_header_list* et.al.
+	
+   FML::Merge::FML4::Makefile 
+	define printok::print_ok rules
+
+   FML::Merge::FML4::config_ph 
+	save default value for later use in evaluating default_config.ph.
+	overhaul algorithm to fix path.
+	changed to use _fix_path() if needed.
+
+2006/03/06
+
+   variables
+	define $use_admin_command_mail_fucntion ("no" by default).
+
+2006/03/05
+
+   refactoring: use of command context object based.
+
+   FML::Command::User::admin 
+   FML::Process::Command State 
+   FML::Restriction::Command 
+   FML::Context::Command 
+	command context information switched to use of
+	FML::Context::Command object. 
+
+   FML::Command::Admin::*
+   FML::Command::User::*
+   FML::Command Error 
+   FML::Article::Spool 
+   FML::CGI::List ML User 
+   FML::CGI::Skin::Base 
+   FML::Command::Auth DirUtils FileUtils Message SendFile Syntax 
+   FML::Context::Command 
+   FML::Fault::Address 
+   FML::ML::Control 
+   FML::Process::Command Configure 
+   FML::Process::CGI::Kernel 
+   FML::User::Control 
+	$command_args -> $command_context (OBJ), method style
+	changed to command_context object based.
+	
+   FML::Command::User::admin 
+	duplicate FML::Context::Command object by object dup method
+	not by myself. 
+	
+   FML::Context::Command 
+	implement dup() method.
+	
+2006/02/18
+
+   FML::User::Control 
+	always update user infomation db.
+	update gecos and action date if operation runs under MTA, but
+	update only date in other cases.
+	
+   FML::User::DB 
+	define add() and set()
+	
+   FML::User::Info 
+	rename method::add(HASH_REF) -> set_header_info($address)
+
+2006/02/15
+
+   FML::Error 
+   FML::Command::Admin::reviveml rmcl rmml 
+   FML::Error::Analyze 
+   FML::Error::Analyze::histgram simple_count 
+   FML::ML::Control 
+   FML::MTA::Control 
+   FML::MTA::Control::Postfix Procmail Qmail Sendmail 
+   FML::Process::Error Kernel Utils 
+   Mail::Message::Utils 
+	fix method name::remove -> delete
+	
+   Mail::Delivery::Queue 
+	define delete() as an alias of remove()
+	
+2006/02/05
+
+   FML::Header 
+	implement raw level insert_message_id_cache() method to access
+	cache more directly.
+	rewritten to use it.
+	
+   FML::Process::Kernel 
+	add a new message-id to the outgoing message fml8 generates and cache
+	it in our message-id database for further loop check.
+	
+   FML::Process::CreateOnPost 
+	ignore *-ctl and *-admin addresses as a ML one.
+	implement reject_list_header_field derective.
+	
+   FML::Process::CreateOnPost 
+	comments on _is_ml_address() logic: if you create xxx-ctl or
+	xxx-admin ML, it should be allowed.
+
+   variables
+	$createonpost_sender_restrictions += reject_list_header_field
+
+2006/02/04
+
+   CREATE-ON-POST implemented.
+	CREATE-ON-POST は「動的にＭＬを生成」する仕組みです。
+
+	存在しないＭＬに投稿すると fault がおき、fault handler が
+	ＭＬの生成処理を行なう。アドレスの登録も fault で行なう。
+	メカニズムとしては fml4 エミュレータの fallback 処理と同じ。
+
+		ml fault	存在しないＭＬなら、ＭＬを作る
+
+		address fault	アドレスが登録されているか？を調べ
+				未登録の場合には登録処理をする
+				(走り始めた配送プロセスが fault を処理)。
+
+   variables	
+	define CREATE-ON-POST function.
+	
+   FML::Config 
+	context switch safe
+	fix comments (FNF)
+	
+   FML::Header 
+	return <> for error mail sender
+	
+   FML::PCB 
+	context switch safe
+	
+   FML::ML::Control 
+   FML::MTA::Control 
+	implement createonpost function dispatcher
+	
+   FML::MTA::Control::Postfix 
+	Postfix specific CREATE-ON-POST operations.
+	
+   FML::MTA::Control::Qmail 
+	qmail_install_alias() install ~fml::.qmail-* files not qmail_setup()
+	method.
+	
+   FML::Process::Utils 
+	define several methods around $0 handling, address fault handling and
+	context switching.
+	+set_process_title()
+	+get_process_title()
+	+set_address_fault()
+	+get_address_fault()
+	+is_address_fault()
+	+set_address_fault_list()
+	+get_address_fault_list()
+	+context_switch_get_context()
+	+context_switch_set_context()
+
+   FML::Process::Distribute 
+   FML::Fault::Address 
+	address fault handling
+	
+   FML::Process::Configure 
+	use $curproc->{ml_name,ml_domain}() method.
+	$command_args includes ml_domain info.
+	
+   FML::Process::Kernel 
+	initialize context information when constructor runs.
+	
+   FML::Process::Switch 
+	prefer $hints if specified for argv, ARGV and options.
+	support context switching in executing new (child) process.
+	
+   FML::Command::Admin::rmml 
+	use $command_args->{ ml_name } and $command_args->{ ml_domain };
+	
+   FML::Command::Admin::newml 
+	use $command_args->{ ml_name } and $command_args->{ ml_domain };
+	not udpate alias relates information if update-alias = no specified.
+
+2006/02/03
+
+   FML::Config 
+	define {set,get}_context() method.
+
+2006/01/24
+
+  各種テスト、オーヴァホール
+
+2006/01/19
+
+  いろいろとレシピ’sを書く、書く、書く…
+
+  fml4 emulator tool added. 
+
+2006/01/15
+
+  いろいろとレシピ’sを書く、書く、書く…
+
+   FML::Process::Utils 
+	implement policy_ignore_this_message(), policy_reject_this_message().
+
+2006/01/13
+
+   FML::Process::Utils 
+	is_config_cf_exist() evals the statements.
+	
+	implement is_fml8_managed_address() which checks the given address is
+	either of fml8 managed ml addresses.
+
+2006/01/12
+
+   ドキュメント: Reply-To: hacks をいろいろ書いておきました。
+
+   FML::Demo::Calendar
+	on the format of files in ~/.schedule/ directory.
+
+2006/01/09
+
+   FML::Header 
+	add rewrite_subject_tag() equal to rewrite_article_subject_tag().
+	rewrite_reply_to_enforce_article_post_address()
+	fix comments.
+	
+   variables
+	$article_header_rewrite_rules supports more 2 rules:
+	+ rewrite_subject_tag
+	+ rewrite_reply_to_enforce_article_post_address
+
+2006/01/08
+
+   FML::Merge::FML4::config_ph 
+	add prototype to translate PERMIT*_FROM and REJECT_*_HANDER
+	combinations.
+
+2006/01/07
+
+   variables
+	+chaddr_command_operation_mode  	=       automatic
+	+subscribe_command_operation_mode       =       automatic
+	+unsubscribe_command_operation_mode     =       automatic
+
+   FML::Command::User::subscribe chaddr unsubscribe 
+   FML::Command::Message 
+	move location of reseting compare_level.
+	
+	rewritten to call FML::Command::Message->send_notification() not
+	direct reply_message() calls in Command::User:::class.
+	
+	send_notification() works differently according to the value of
+	$XXX_command_auth_type variable.
+	
+   FML::Command::User::confirm 
+	Accoding to ${command}_command_operation_mode, it works differently.
+	
+	1. XXX_command_operation_mode == automatic, fml8 do subscription
+	et.al. automatically.
+	
+	2. XXX_command_operation_mode == manual, notify "the request is
+	confirmed" to $maintainer, who do actual subscription et.al.
+	
+   FML::User::Control 
+	use reply_message() in chaddr operations to send back log.
+
+2006/01/04
+
+   fml 4 -> 8 変換ルール生成プログラムのバグを修正した。
+
+   FML::Merge::FML4::config_ph 
+	change diff() return value to ($config, $diff), ARRAY of HASH_REF's.
+	add debug codes.
+	
+   FML::Merge::FML4::Rules 
+	regen::converter fixed.
+	
+   fml4to8::configtest.pl 
+	follow change of diff() return value.
+	croak() if eval() fails.
+	
+   gen_rules.pl 
+	2nd generation prototype::check diff between default_config.ph and
+	config.ph and translate rules bsaed on config.ph vlaues.
+	
+	fix copyright of module header template.
+	
+	modify private function names.
+	fix bug of output indent level.
+	croak() if unknown rule found.
+	
+	modify initialization logic.
+	add missing comments.
+	check the current key in appling if() conditions.
+
+   modules
+	updated to File::MMagic 1.25
+
+2006/01/02
+
+   FML::Merge::FML4::RULES.txt 
+	new keyword system.
+	fix some rules.
+	
+   FML::Merge::FML4::Rules 
+	regen
+
+2006/01/01
+
+   あけましておめでとうございます。今年の目標は official release なん
+   だけど…
+   ＃ fml 4 直接エミュレータ以外は全部できてるつもりなんだけど
+
+   remove not-used modules.
+	Class::NamedParms
+	Class::ParmList
+	AsciiDB::*
+
+   FML::Merge::FML4::config_ph 
+	pass $config to translation*() methods.
+	support MODERATOR_MEMBER_LIST, ADMIN_LOG_DEFAULT_LINE_LIMIT.
+	implement translate_not_yet_implemented().
+	clean up.
+	modify comments.
+
+2005/12/31
+
+   fml 4 to 8 コンバータのルール解釈ルーチンは間違ってます。
+   修正中。冬休み中に直せるかな？
+
+2005/12/19
+
+   モデレータモードのバグとり
+
+   FML::Process::Distribute Kernel 
+	change is_permit_post() retruns action string not number to
+	support 3 permit/ignore/deny states.
+	
+   FML::Moderate 
+	remove moderation queue if distribution succeded.
+	
+   FML::Restriction::Post 
+	permit_forward_to_moderator() returns (matched, ignore)
+
+   モデデータからのメールなら投稿を許す命令を追加。
+   考え用によっては一番単純なメールマガジンはこれを使えば良い(推奨はしない)
+
+   FML::Credential 
+	implement is_moderator_member()
+	
+   FML::Restriction::Post 
+	implement permit_moderator_member_maps().
+
+2005/12/18
+
+   モデレータモードの基本的な実装を行なう
+
+   variables
+	fetchfml_queue_dir = $var_dir/mail/queue-fetchfml
+	define moderation definition::enable, queue_dir
+
+   Mail::Delivery::Queue 
+	enhanced dup_conent() to take two arguments.
+	
+   FML::Process::Switch 
+	NewProcess() takes hints as args to overload configuration in
+	a new process. 
+	
+   FML::Process::Utils 
+	comment on incomplete dup_command_args
+	
+   FML::Restriction::{Command,Post}
+	implement permit_forward_to_moderator.
+	
+   FML::Command::User::confirm 
+	pass _confirm_id information to called process.
+	support "moderate" command.
+	
+   FML::Process::Kernel 
+	workaround::unlock() call lock object via IO::Adapter if saved
+	object undefined.
+	
+	bug fix loop check functions to check enabler variable definition.
+	
+   FML::Moderate 
+	o fix comments.
+	o if (defined ) { .. open .. }
+	
+   FML::Confirm 
+	implement id(), set(), get()
+	
+   FML::Command 
+	add more debug codes
+
+2005/12/17
+
+   FML::Process::FetchFML Switch 
+	not need to pass $args to FML::Process::Switch::NewProcess() which
+	fake $args by $curproc->dup_curproc_args().
+	
+   FML::Process::Utils 
+	implement dup_curproc_args() template
+
+2005/12/16
+
+   FML::Command::User::digest 
+	fix duplicated definition.
+
+2005/12/10
+
+   FML::Credential 
+   IO::Adapter::PCRE 
+	pass hints to IO::Adapter to return matched address.
+
+2005/12/09
+
+   IO::Adapter 
+   IO::Adapter::PCRE 
+	pcre: support
+
+2005/12/01
+
+   FML::Process::Utils 
+	define credential() method
+
+   FML::Command::Admin::changepassword addrecipient digest 
+                        off on addmember 
+   FML::Command::User::admin chaddr digest off on subscribe unsubscribe 
+   FML::Command::Auth 
+   FML::ML::HomePrefix 
+   FML::Process::Command Distribute Kernel QueueManager 
+   FML::Restriction::Command Post 
+   FML::Filter Error 
+   FML::Process::Digest Error Utils 
+	use $curproc->credential();
+	
+   FML::Credential 
+	use $address_compare_function_domain_matching_level
+
+
+2005/11/19
+
+   ドキュメンテーション
+	レシピ一覧を作るようにしてみました。
+	「FML バイブル」のレシピコレクションを参考にしてレシピを追加中
+	ですが、未実装のものは未実装と書いてあります。
+
+   fml/utils/bin/listup_recipes.pl 
+	generate list of recipes
+
+2005/10/29
+
+   variables
+	change naming of $article_thread_outline_rules. fix comments.
+	add $article_thread_outline_*
+
+   ドキュメンテーション
+	「FML バイブル」のレシピコレクションを参考にしてレシピを追加中
+
+2005/09/17
+
+   FML::Filter::TextPlain 
+	is_signature() and is_citation() switched to
+	Mail::Message::String based.
+	
+   FML::Article::Thread 
+	eval use ..
+	
+   FML::Article::Outline 
+	check method existence before calling.
+	rename method names.
+
+2005/09/13
+
+   FML::Article 
+   FML::Article::Outline 
+   FML::Process::Distribute 
+	changed to FML::Article->add_outline($tdb_args) style.
+
+2005/09/11
+
+   スレッドまわりの改造中
+
+   variables
+	rename: $*_overview -> $*_outline
+	
+   Mail::Message::Thread 
+	define DESTROY()
+	
+   Mail::Message 
+   Mail::Message::Outline 
+   Mail::Message::Language::Japanese::Outline 
+	move thread outline generator codes to Mail::Message::Outline.
+	correct error messages (Mail::Message).
+	
+   FML::Process::Distribute 
+   FML::Article::Outline 
+	move thread outline generator to FML::Article::Outline
+
+2005/09/01
+
+   FML::Article::Thread 
+	remove obsolete codes.
+	
+	private-ify::psw_*() -> _psw_*().
+	
+	use article_summary cache as coudl as possible. To clean up
+	around the codes, some codes are separeted to _generate_summary().
+	
+	fix comments and documents.
+	
+	strict check of $status code.
+	
+	implement get_overview($id, $thread_args). It returns string holding
+	article short summaries of a thread for this article $id.
+	
+   FML::Process::Distribute 
+	article_thread_overview support.
+	
+   variables
+	preliminary definitions for article thread overview.
+	+article_thread_overview_greeting
+	+article_thread_overview_greeting_en
+	+article_thread_overview_greeting_ja
+	+article_thread_overview_rules
+	+use_article_thread_overview
+
+2005/08/31
+
+   Mail::Message 
+	implement new method prepend(), append() and
+	whole_message_body_tail(). 
+	fix charset() logic to handle plural header field lines.
+	
+   Mail::Message::DB 
+	implement find_head_key().
+	add() updates article_summary database, too.
+	
+   FML::Article 
+	implement append() and prepend() methods.
+	
+   FML::Process::Utils 
+	langinfo_get_charset() uses Content-Type::information as a hint
+	when Accept-Language::is not specified.
+
+2005/08/27	
+
+   Mail::Message::DB 
+	define open() and close()
+	
+   FML::Filter::TextPlain 
+	use $msg->message_chain_as_array_ref() instead of $mp->{ next } form.
+	
+2005/08/25
+
+   Mail::Message::Thread ToHTML 
+	renamed::db->analyze() => db->add()
+	
+   Mail::Message::DB 
+	renamed methonds:
+	o analyze  -> add
+	o db_open  -> _db_open
+	o db_close -> _db_close
+
+2005/08/23
+
+   IO::Adapter 
+	add PostgreSQL support.
+	add LDAP support.
+	
+   IO::Adapter::MySQL 
+	$sql_server -> $sql_servers.
+	enhanced to handle a list of dsn.
+	fix comments.
+	
+   IO::Adapter::DBI 
+	change dsn to form "DBI:$driver:dbname=$database;host=$host".
+	always $dbh->commit();
+	enhanced to handle a list of dsn and to retry sql servers if needed.
+	DBI->connect with { AutoCommit => 0 } option.
+
+   FML/Command/Admin::reviveml
+	revive a removed ML.
+
+   FML::CGI::ML 
+	add & enable reviveml in cgi
+
+   FML::Process::FetchFML 
+	handle $fetchfml_pop_servers
+	
+   FML::MUA::POP3 
+	remove message when the message retrival succeeded.
+
+   FML::Log 
+	$log_syslog_host -> $log_syslog_servers
+
+   variables
+	$log_syslog_host -> $log_syslog_servers
+	$sql_server -> $sql_servers
+
+2005/08/20
+
+   FML::Filter::MimeComponent 
+   FML::Header::Subject 
+   Mail::Message::Language::Japanese::Subject 
+   Mail::Message::Subject 
+	cut_off -> cutoff
+	
+   FML::Config 
+   FML::Config::Menu 
+	merge_to_file -> merge_into_file
+	
+   FML::Merge::FML4::config_ph 
+	var_dump -> dump_variable
+	
+   FML::Error 
+	deluser() -> remove_address()
+
+2005/08/19
+
+   Mail::Message::DB ToHTML Utils 
+	convension::from_to_name -> from_address_to_name
+	
+   FML::Filter 
+	convert_to_mail_address($list); -> address_resolve($list);
+	
+   FML::Command::Admin::log 
+	$curproc->output_{set,get}_print_style().
+	
+   FML::Header::Subject 
+	bug fixed (forgotten import of module ;-)
+	
+   FML::Process::Kernel 
+   FML::Process::CGI::Kernel 
+	set_print_style() -> output_set_print_style()
+	
+   FML::Process::Utils 
+	which_map    -> map_to_term
+	which_map_nl -> map_to_term_nl
+	
+	convert_to_mail_address -> address_resolve
+	
+	set_print_style  -> output_set_print_style
+	get_print_style  -> output_get_print_style
+	
+   FML::User::Control 
+	which_map    -> map_to_term
+	which_map_nl -> map_to_term_nl
+	
+	set_print_style  -> output_set_print_style
+	get_print_style  -> output_get_print_style
+	
+   FML::Process::FetchFML 
+   FML::MUA::POP3 
+	FNF::pick_up_queue -> pickup_queue
+	
+   FML::Article::Summary 
+   FML::Header 
+   FML::Command::DataCheck 
+   FML::Filter::TextPlain 
+   FML::Header::Subject 
+   FML::Process::Error Kernel State 
+   Mail::Bounce::DSN Exim Postfix19991231 Freeserve GOO Qmail
+                 SimpleMatch Smtpfeed
+   Mail::Delivery::Queue 
+   Mail::Bounce 
+   Mail::Message::DB Address 
+	XXX_clean_up() -> XXX_cleanup()
+
+2005/08/18
+
+   FML::ML::Control 
+	check ::etc::passwd only in the case of default domain.
+	follow changes of ml_home_dir_removed_path() arguments.
+	
+   FML::Process::Utils 
+	change ml_home_dir_removed_path() and
+	ml_home_dir_find_latest_removed_path() argument order:
+	e.g. ml_home_dir_removed_path($curproc, $ml_home_prefix, $ml_name);
+	
+	removed_path format is changed to $ml_name.YYYYMMDD.COUNT style.
+	
+   FML::Header::Subject 
+	exclude explicit code e.g. euc-jp and use
+	Mail::Message::Charset instead. 
+
+   FML::MTA::Control::Postfix 
+	fix typo
+
+2005/08/17
+
+   FNF: adjust method naming convension.
+
+   FML::Article::Thread 
+   FML::Command::Admin::thread 
+   FML::Command::HTMLify 
+   FML::Process::Distribute 
+	$curproc->thread_db_args(); -> $curproc->article_thread_init();
+	
+   Mail::Message::Encode 
+	str_dump() -> dump_string()
+	
+   FML::CGI::Calendar Thread 
+   FML::CGI::Skin::Base 
+   FML::Command::Admin::log 
+   FML::Command::SendFile 
+   FML::Process::CGI::Kernel 
+	langinfo_XXX() e.g. langinfo_get_charset()...
+	
+   FML::Command::Admin::addmoderator addadmin delmoderator deladmin 
+                        addrecipient digest off on subscribe unsubscribe 
+                        addmember 
+	follow changes of FML::User::Control::userXXX() -> user_XXX()
+	
+   FML::User::Info 
+	import_from_mail_header() -> add() with args changed (nuke $curproc).
+	
+   FML::User::Control 
+	align methond name user_XXX::changed userXXX() -> user_XXX().
+	follow FML::User::Info changes (import_from_mail_header() -> add()).
+	
+   FML::MTA::Control::Postfix Procmail Qmail Sendmail 
+	template_files_dir_for_newml() -> newml_command_template_files_dir();
+	
+   FML::Cache::Ring 
+	import_data_from() -> add().
+	
+   FML::ML::Control 
+	template_files_dir_for_newml() -> newml_command_template_files_dir()
+	removed_ml_home_dir_path()     -> ml_home_dir_removed_path()
+	
+   FML::Process::Fake 
+	change {set,get}_emul_XXX() to internal use (_method)
+	
+   FML::Process::Kernel 
+	follow changes of FML::Cache::Ring.
+	
+	use langinfo_XXX().
+	
+	moved lang_to_charset() and remove_too_old_files_in_dir() from
+	FML::Process::Utils to here and change lang_to_charset() and
+	remove_too_old_files_in_dir() to module internal use.
+	
+   FML::Process::Utils 
+	removed_ml_home_dir_path        -> ml_home_dir_removed_path
+	find_latest_removed_ml_home_dir -> ml_home_dir_find_latest_removed_path
+	template_files_dir_for_newml    -> newml_command_template_files_dir
+	
+	set_language_hint        -> langinfo_set_language_hint
+	get_language_hint        -> langinfo_get_language_hint
+	set_charset              -> langinfo_set_charset
+	get_charset              -> langinfo_get_charset
+	set_accept_language_list -> langinfo_set_accept_language_list
+	get_accept_language_list -> langinfo_get_accept_language_list
+	
+	thread_db_args   -> article_thread_init
+	
+	changed to internal use.
+	language_of_html_file -> _language_of_html_file
+	
+	move lang_to_charset() and remove_too_old_files_in_dir() to
+	FML::Process::Kernel.
+
+2005/08/15
+
+   FML::Log 
+	use sprintf instead of "${name}[${pid}]:" to avoid error in
+	perl 5.6.x.
+
+2005/08/10
+
+   FML::Process::CGI::Kernel 
+   FML::Process::Calendar Addr Alias ConfViewer Command 
+		 Distribute Configure Digest DocViewer Error HTMLify 
+		 Kernel Emulate Utils Fake PGP FetchFML 
+	config_files_XXX() -> config_cf_files_XXX() to clarify the meaning.
+
+   FML::Process::Emulate 
+	FNF: 	generate_config_cf_from_config_ph -> 
+		config_cf_generate_from_config_ph
+	
+   FML::Error 
+   FML::Error::Analyze 
+   FML::Error::Analyze::histgram simple_count 
+	module internal variables are changed.
+	o summary() -> get_summary()
+	o removal_address() -> get_address_to_be_removed()
+	
+   FML::Config::Menu 
+   FML::Filter::External::clamscan 
+   FML::Filter::MimeComponent 
+   FML::Process::Flow Kernel 
+	s/temp_file_path/tmp_file_path/g;
+	s/tmp_files_clean_up/tmp_file_cleanup/g;
+	
+   FML::Process::Flow Kernel 
+	s/incoming_message_queue_clean_up/incoming_message_cleanup_queue/g;
+	
+   FML::Process::State 
+	current_process_ml_name_init() -> current_process_init().
+	
+   IO::Adapter::DBI 
+	$sql_QUERY -> $sql_query_QEURY
+
+   variables	
+	$sql_QUERY -> $sql_query_QEURY
+
+2005/08/09
+
+   FML::Filter 
+   FML::Filter::MimeComponent 
+	FNF: rename read_filter_rule_from_file() -> read_filter_rule_file().
+	
+   FML::MUA::POP3 
+   Mail::Delivery::Queue 
+	FNF: content_dup2() -> dup_content()
+
+   Mail::Message::ToHTML 
+	fixed function name:
+	o htmlfy_rfc822_message() -> htmlify_rfc822_message().
+	o html_begin() ->  html_start()
+
+2005/08/08
+
+   FML::Process::Kernel 
+	FNF: if (defined $queue) { $queue->open( ... );}
+	
+   FML::Header 
+	fix comments.
+	fix $addr_for_post -> $article_post_address.
+	enforce use of "return $value" form.
+
+2005/08/06
+
+   Mail::Message::Utils 
+	define get_time_from_header() method (moved from Mail::Message::DB).
+	
+   Mail::Message::ToHTML 
+	switched to use Mail::Message::Utils::get_time_from_header.
+	
+   Mail::Message::DB 
+	overhaul:
+	[sg]et_db_module_name() -> [sg]et_db_module_class().
+	get_time_from_header() -> _get_time_from_header().
+	mov get_time_from_header() to Mail::Message::Utils class.
+	clean up. remove not used variable.
+	fix db_close().
+	fix comments.
+	
+   FML::Process::PGP 
+	bug fix: -h -> -l
+
+2005/08/03
+   7.98.3 English document revised.
+
+2005/07/01
+
+   FML::Process::Kernel 
+	garbage collection runs only when valid ml_home_dir found.
+	
+2005/06/27
+   7.98.3 Japanese document revised.
+
+	日本語のドキュメントをオーバーホールしました。	
+
+2005/06/04
+
+   7.98.2 bug fix method naming convension (FNF).
+
+   FML::MUA::POP3 
+	bug fix::check queue_id value itself, too
+	
+   FML::Process::Kernel 
+	define _get_debug_level(), moved from FML::Process::Utils and
+	made private.
+	
+   FML::Process::Fake 
+	switched to use FML::Process::Switch::NewProcess().
+	bug fix pcb handling.
+
+   FML::Process::Kernel QueueManager Error 
+	$curproc->OBJ_METHOD() form (FNF):
+	[sg]et_event_timeout() -> event_[gs]et_timeout().
+	
+   FML::CGI::User 
+	moved get_address_list(), called only at this module, from
+	FML::Process::Utils to here. Also, it is changed to the private
+	method; get_address_list() -> _get_address_list().
+	
+   FML::Process::CGI::Utils 
+	move get_ml_list definition, used only here, to this module.
+	also it is changed to private.
+	
+   FML::Process::Utils 
+	remove get_ml_home_prefix_maps() definition, which is not used.
+	
+	move definitions to proper module::get_ml_list(), get_address_list()
+	and get_debug_level().
+	
+   FML::Mailer 
+   FML::Article::Sequence 
+   FML::Command::SendFile 
+   FML::Config::Menu 
+   FML::Process::Addr Alias Calendar Command ConfViewer 
+                 Configure Digest Distribute DocViewer Error FetchFML 
+                 Flow HTMLify PGP State Kernel Emulate Fake Utils
+   FML::Process::CGI::Kernel 
+	method naming fixed to $curproc->OBJ_METHOD() form (FNF).
+	get_article_id                 -> article_get_id
+	set_article_id                 -> article_set_id
+	config_files_append_to_list    -> config_files_append
+	append_to_config_files_list    -> config_files_append_to_list
+	get_config_files_list          -> config_files_get_list
+	load_config_files              -> config_files_load
+	set_config_files_list          -> config_files_set_list
+	verify_sender_credential       -> credential_verify_sender
+	get_current_process_ml_name    -> current_process_get_ml_name
+	set_current_process_ml_name    -> current_process_set_ml_name
+	fix_perl_include_path          -> env_fix_perl_include_path
+	parse_exception                -> exception_parse
+	parse_incoming_message         -> incoming_message_parse
+	clean_up_incoming_queue        -> incoming_message_queue_clean_up
+	get_cui_menu                   -> menu_get_cui_config_file_path
+	get_gui_menu                   -> menu_get_gui_config_file_path
+	resolve_ml_specific_variables  -> ml_variables_resolve
+	outgoing_message_open_channel  -> outgoing_message_cache_open
+	open_outgoing_message_channel  -> outgoing_message_open_channel
+	inform_reply_messages          -> reply_message_inform
+	prepare_file_to_return         -> reply_message_prepare_template
+	clean_up_tmpfiles              -> tmp_files_clean_up
+	reset_umask                    -> umask_reset
+	set_umask_as_public            -> umask_set_as_public
+
+2005/06/03
+
+   7.98.2 queuing system revised.
+
+	キューイングシステムの微修正
+
+	POP/IMAP による MTA+ML エミュレーションをサポート (fetchfml)。
+
+	この実装を試すことで、現在のキューイングおよびキャッシュシステ
+	ムが妥当かあるかどうかが分かります。基本構造は、そのままですの
+	で、本質的には変わっていませんが、２、３の拡張が必要でした。
+
+   FML::PCB 
+	fix dump_variables() for context based switching.
+	define {set,get}_current_context().
+
+   fetchfml
+	FML::Process::FetchFML added.
+	FML::MUA::POP3 added.
+	etc/command_line_options modules install.cf.in 
+		add fetchfml definitions.
+
+   variables
+	define fetchfml related variables.	
+	$fetchfml_*_hook added.
+
+   Mail::Delivery::Queue 
+	fix args and comments of *_dir_path().
+	implement local_{dir,file}_path(), content_dup2(), open() and close().
+	queue_id = second + microsecond + pid + counter.
+	now other module can extend class for local use.
+	
+   FML::Process::Switch 
+	alloc shared memory area in $args (shared_hash_get() uses).
+	implement NewProcess().
+	
+   FML::Process::Kernel 
+	incoming queue system revised.
+	o move some log to logdebug.
+	o not use queue file directly. instead use $queue->open() method.
+	o use incoming_message_set_current_queue() instead of
+	mail_queue_set_incoming_queue().
+	o clean up incoming queue removal code.
+	
+   FML::Process::Utils 
+	implement helper functions for incoming cache::queue system.
+	o incoming_message_set_current_queue()
+	o incoming_message_get_current_queue()
+	o incoming_message_stack_queue_for_removal()
+	o incoming_message_remove_queue()
+	
+	shared memory for IPC between parent and child $curproc processes.
+	o shared_hash_get()
+	
+   FML::Process::State 
+	remove mail_queue_set_incoming_queue($queue),
+	mail_queue_get_incoming_queue().
+	XXX alternative methods available in FML::Process::Utils.
+	
+   FML::Article 
+	switched to use $curproc->incoming_message_get_cache_file_path();
+
+2005/06/02
+
+   MIME-Base64 removed.
+
+2005/05/31
+
+   FML::Process::Kernel 
+	"my $path = $obj->cache_file_path();" is wrong. old implementation
+	saves the FML::Cache::Ring file path for later use. But it is
+	ambiguous. When many processes (> modules) runs simultaneously, $path
+	may be overwritten by the next content.  Instead, use $queue_file
+	since $queue_file (queue::incoming::ID) is unique.
+	
+   FML::Process::Kernel Utils 
+   FML::Restriction::Post Command 
+	fix naming convension (FNF).
+	set_incoming_message_cache_file_path -> 
+		incoming_message_set_cache_file_path
+	get_incoming_message_cache_file_path -> 
+		incoming_message_get_cache_file_path
+
+2005/05/30
+
+   Mail::Message::ToHTML 
+   FML::Filter::TextPlain 
+	use Mail::Message::Encode not MIME::Base64.
+	
+   Mail::Message::Encode 
+	switch to use MIME::Base64::Perl not MIME::Base64 module.
+	define raw_decode_{base64,qp}().
+
+2005/05/29
+
+	投稿制限: PGP/GPG の電子署名を元にしたアクセス制御を可能にする
+
+   variables
+	o define PGP related variables
+		pgp_config_dir gpg_config_dir path_gpgv path_gpgsplit
+	o define editors: vi, ng, mule, emacs, xemacs
+
+	+path_gpgv
+	+path_gpgsplit
+
+	remove $gpg_config_dir, $pgp_config_dir.
+	
+	define $article_post_{auth,encrypt}_{pgp,gpg}_config_dir and
+	${admin_,}command_mail_auth_{pgp,gpg}_config_dir.
+	
+	add $fmlpgp_*_hook
+
+   etc/command_line_options
+   etc/modules 
+   etc/install.cf
+	define fmlpgp fmlpgp5 fmlpgpe fmlpgpk fmlpgps fmlpgpv fmlgpg
+	fmlgpgv.
+
+   bin/ utilities added.
+	bin/*	
+	etc/command_line_options modules 
+	etc/install.cf.in 
+
+	add fmlgpg fmlgpgv fmlpgp fmlpgp5 fmlpgpe fmlpgpk fmlpgps
+	fmlpgpv.
+
+   FML::Process::PGP 
+	For convenience, create a conventional named dir (e.g. pgp-admin) and
+	symlink to the current style dir.
+	For example::pgp-admin@ -> pgp-admin-command-mail-auth
+	
+   FML::Restriction::Post 
+	define check_pgp_signature, which permits article post when the
+	article has proper PGP::GPG signature.
+
+	For example:
+
+	article_post_restrictions =	reject_system_special_accounts
+					check_pgp_signature
+					reject
+
+	setup and reset environment more strictly.
+	etc/{pgp,gpg}-$role style naming ("_" -> "-").
+
+   FML::Command::User::admin 
+   FML::Restriction::Command 
+	${admin,}command_mail_restrictions support "check_pgp_signature" rule.
+	Both restrictions uses same rule name but which needs different
+	keyring directories. So, we need to handle carefully the context of
+	two restrictions.
+	
+   FML::Process::State 
+	definie command_context_set_try_admin_auth_request(),
+	command_context_reset_try_admin_auth_request() and
+	command_context_get_try_admin_auth_request() to handle context of
+	$*command_restrictions.
+	
+2005/05/26-27
+
+	fml-devel を fml 7.98.1 とする。
+	スレッドシステムを書き直したら 7.99.x の予定。
+
+   variables
+	o define $use_article_spool (as ${ues_spool:-yes}).
+	o log: define syslog related variables
+	o command:
+		$use_command_mail_reply_preamble = yes
+		$use_command_mail_reply_trailor  = yes
+
+   ErrorStatus 
+	FML::Filter not use this module.
+	
+   FML::Article 
+	use_spool -> use_article_spool
+	
+   FML::Log 
+	preliminary syslog extension support.
+	
+   FML::Article::Summary 
+	FNF.
+	$fh -> $rh
+	
+   FML::Command::Auth 
+	log errors more.
+	
+   FML::Command::User::subscribe unsubscribe 
+	$curproc->allow_reply_message() -> $curproc->is_allow_reply_message().
+	
+   FML::Process::DocViewer 
+   IO::Adapter::AtomicFile 
+   Mail::Message::ToHTML 
+   FML::Command::DirUtils 
+   FML::Config::Convert 
+   FML::Filter::MimeComponent 
+   FML::Config::Tiny 
+   FML::Header::MessageID Subject 
+   FML::MTA::Control::Procmail 
+   FML::Process::DocViewer 
+   IO::Adapter::AtomicFile 
+   Mail::Message::ToHTML 
+	FNF: not use str.str
+
+   FML::Filter::External::clamscan 
+	fixed to work.
+	
+   FML::MTA::Control::Postfix 
+	not use str.str.
+	white space clean up of alias file path.
+	_remove_postfix_style_virtual() -> remove_postfix_style_virtual().
+	
+   FML::MTA::Control::Sendmail 
+	fix the comment of virtual file.
+	not use str.str.
+	_remove_postfix_style_virtual() -> remove_postfix_style_virtual().
+	
+   FML::Process::Configure 
+	fix comments (FNF).
+	$curproc->allow_reply_message() -> $curproc->is_allow_reply_message().
+	
+   FML::Process::Flow 
+	remove _xxx() methods among modules::rename _XXX() to sysflow_XXX().
+	
+   FML::Process::Utils 
+	fix comments (FNF).
+	remove is_safe_syntax(), which is not used.
+	rename allow_reply_message() to is_allow_reply_message().
+	
+   Mail::Delivery 
+	fix typo::EMTP -> ESMTP.
+	
+   Mail::Bounce::Exim Freeserve GOO Qmail Smtpfeed 
+	clean up.
+	FNF.
+	use self->address_clean_up($addr, $addr) to clean up address if could.
+
+   FML::Demo::Calendar 
+	fixed::_Calender -> _calender
+	
+   FML::IPC::Queue 
+	set umask(077) in creating a tmp file.
+	
+   FML::MTA::Control 
+	rename _remove_postfix_style_virtual() to
+	remove_postfix_style_virtual(), which is used among plural
+	modules. 
+	not use str.str form.
+	
+   FML::Process::Command 
+	$use_command_mail_reply_preamble toggles off::on to show the preamble
+	of command reply.  $use_command_mail_reply_trailor toggles command
+	processing summary.
+	
+   FML::Process::Distribute 
+	more strict error handling.
+	more comments.
+	
+   FML::Process::Fake 
+	fix comments.
+	fix error handling.
+	
+   FML::Process::CGI::Kernel 
+	remove the duplicated code.
+	use Mail::Message::Date instead of `date`.
+	fix comments.
+	
+   FML::Restriction::Command 
+	croak() -> logerror().
+	fix comments.
+	
+   Mail::Delivery::Queue 
+	add randam factor into exponential back off.
+	back off is upper limited by 4000 sec.
+	
+   Mail::Delivery::Net::INET4 
+	set timeout for socket(2).
+	
+   Mail::Message::Encode 
+	use Jcode always.
+	
+   Mail::Message::MH 
+	sort the output for a,b,c style input.
+
+   FML::Filter::External Header Size TextPlain 
+   FML::Filter::ErrorStatus 
+   FML::Filter 
+	use FML::Filter::ErrorStatus instead of ErrorStatus.
+
+   FML::Process::Kernel 
+	fml-devel YYYYMMDD -> fml $version (7.9x.y-YYYYMMDD)
+	
+	modified to use incoming_message_header(), temp_file_path() et.al, to
+	avoid raw descrptions.
+	
+	bug fix config.cf search algorithm.
+	
+	defne sysflow_XXX() methods used in FML::Process::Flow.
+	
+	not use str.str form.
+	
+	clean up.
+	
+   Tie::JournaledDir 
+	fix comments, error messages.
+	
+   Tie::JournaledFile 
+	fix comments, error messages.
+	more defined() checks.
+	
+2005/05/01
+
+	現在のソースコードを fml 7.98.1 (cvs tag fml-7-98-1)と定義する。
+	なお、スレッドのコードを修正後に fml 7.99.1 とする。
+
+
+----------------------------------------------------------------
+Appendix
+
+	7.98.17 update modules: cpan modules, IM et.al (to be planned).
+	7.98.16 FML::Install is enhanced.
+	7.98.15 IM updated to IM-150.
+		fix wrong ID incrementation in article to html conversion.
+	7.98.14 www interface for anonymous users.
+		Anyone can submit a subscribe/unsubscribe request via
+		www interface. 
+	7.98.13 "isolate" instead of "reject" spam or unknown messages
+		by default.
+	7.98.12 delivery system error handling fixed.
+	7.98.11 ignore in restrictions supported.
+	7.98.10	delivery system overhaul sequal.
+	7.98.09	delivery system overhaul
+	7.98.08	correct context switch.
+		address validation in smtp transaction.
+	7.98.07	confirmation + manual subscribe/chaddr/unsubscribe
+		manual subscribe/chaddr/unsubscribe
+	7.98.06	fundamentals of moderator mode implemented.
+	7.98.05	add reviveml command (to revive a removed ML).
+		add PostgreSQL support.
+		add LDAP support.
+	7.98.04	minor fixes. clean up. 
+		clean up method naming convension.
+	7.98.03	Japanese/English document overhaul/revised.
+	7.98.02	queuing system revised. fetchfml added.
+		PGP/GPG authentication.
+		bug fix method naming convension (FNF).
+		MIME-Base64 removed from cvs tree.
+	7.98.01	overhaul.
+
+  [注意]
+	コマンドメールのコードを全面的に書き直しました。
+
+	fml-devel-20040303 が、このコマンドメールの変更が"入っていない"
+	最後のスナップショットです。
+
+	fml-devel-20040313 では、変数命名のルールが大きく変わりました。
+	気をつけてください。
+
+	2004/09 以降の fml8 は疑似 MTA 的な動作をしていて、自分のメー
+	ルキューイングシステムを使ってエラー処理や再送処理を行ないます。
