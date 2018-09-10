@@ -475,7 +475,7 @@ sub rewrite_article_subject_tag
     $sbj->delete_dup_reply_tag() if $sbj->has_reply_tag();
 
     # add(prepend) the rewrited tag with mime encoding.
-    my $new_tag = sprintf($tag, $rw_args->{ id });
+    my $new_tag = $tag =~ /\%/ ? sprintf($tag, $rw_args->{ id }) : $tag;
     my $new_sbj = sprintf("%s %s", $new_tag, $sbj->as_str());
 
     # update object.
