@@ -51,7 +51,7 @@
 	(以前の記述と異なり)
 	そのステータスの続きですが
 	7.98 シリーズではないと意識するために、
-	7.99.x というバージョン名に移行しました。
+	7.99.x (GitHUB では v7.99.x というタグ)というバージョン名に移行しました。
 	7.99.x では、RC めざして、critical なバグつぶしや微調整を行います。
 	そのあと &fml8; 8.0.0-rc1 などとなる予定です。
 	</para>
@@ -78,6 +78,7 @@
 	ドキュメントを参照して下さい)。
 <screen>
 	perl 5.26.2  on NetBSD 7.0
+<!--
 	perl 5.24.0  on NetBSD 7.0
 	perl 5.22.1  on NetBSD 7.0
 	perl 5.20.1  on NetBSD 5.1.2_PATCH
@@ -101,7 +102,8 @@
 	perl 5.6.1   on Redhat Linux 7.2 (postfix)		
 	perl 5.00503 on Redhat Linux 6.2 (sendmail8.11.6)	
 	postfix       + perl 5.6.1 on Solaris 7			
-	postfix 2.0.3 + perl 5.6.1 on Solaris 9			
+	postfix 2.0.3 + perl 5.6.1 on Solaris 9
+-->
 </screen>
 	</para>
 
