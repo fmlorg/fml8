@@ -15,7 +15,7 @@
 この方式が統一が取れていて美しいです。
 はじめは一つでも、だんだんドメインが増えていくのはよくあることで、
 それを考えると、
-はじめからバーチャルドメインで統一しておくと扱いやすいと思います。
+はじめからバーチャルドメインで統一しておくほうが、あつかいやすいと思います。
 </para>
 
 <caution>
@@ -25,18 +25,24 @@
 </para>
 
 <para>
-/usr/local/fml/etc/main.cf における virtual_maps は obsolete となりま
-した。今後は virtual_maps の代わりに ml_home_prefix_maps を使うことに
-なります。しかしながら、互換性のため virtual_maps も引続き有効です(
+/usr/local/fml/etc/main.cf
+における
+virtual_maps
+は
+obsolete
+としました。
+今後は virtual_maps の代わりに ml_home_prefix_maps を使うことになります。
+しかしながら、互換性のため virtual_maps も引続き有効です(
 なんのことはない、互換性のため、
 ml_home_prefix_maps の定義に virtual_maps も含めているというだけのことです。
-Postfix の virtual_maps と virtual_alias_maps の関係みたいな感じ)。
+Postfix の virtual_maps と virtual_alias_maps の関係みたいな感じです)。
 </para>
 
 <para>
 また、makefml および fml コマンドには
-ml_home_prefix_maps を操作する newdomain と rmdomain コマンドが
-創設されました。
+ml_home_prefix_maps
+を操作する
+newdomain と rmdomain コマンドが追加されました。
 </para>
 
 </caution>
@@ -49,9 +55,9 @@ ml_home_prefix_maps を操作する newdomain と rmdomain コマンドが
 
 <para>
 「
-&fml8; 全体でドメインを統一的に扱えるようにしたい。
+&fml8; 全体でドメインを統一的にあつかえるようにしたい。
 また、できるだけ &fml4; の素直な拡張であってほしい。
-さらに、引越しなどが出来るだけ楽であると嬉しい。
+さらに、引越しなどが出来るだけ楽であるとうれしい。
 」
 これがバーチャルドメインを設計する上での主要な条件でした。
 </para>
@@ -65,8 +71,8 @@ ml_home_prefix_maps を操作する newdomain と rmdomain コマンドが
 </para>
 </footnote>
 を使うことにします。
-これでデフォルトのドメインかバーチャルドメインかを &fml8; が解釈するこ
-とが可能です。
+これでデフォルトのドメインかバーチャルドメインかを
+&fml8; が解釈することが可能になります。
 </para>
 
 <para>
@@ -74,8 +80,11 @@ ml_home_prefix_maps を操作する newdomain と rmdomain コマンドが
 </para>
 
 <para>
-新ドメインのＭＬを作る際の最初の一回だけは「ドメインとパス」のあいだの設定を
-仕込まないといけないので、MTA への追加設定が必要になりますが、
+新ドメインのＭＬを作る際の最初の一回だけは
+「ドメインとパス」のあいだの設定
+(e.g. home.example.org は /var/spool/example.org 以下に作成)
+を仕込まないといけないので、
+MTA への追加設定が必要になりますが、
 それ以外はデフォルトドメインの場合と同様に操作可能です。
 </para>
 
@@ -100,12 +109,12 @@ ml_home_prefix_maps を操作する newdomain と rmdomain コマンドが
 
 <para>
 新たに、あるドメインを使いはじめる時、
-最初に newdomain コマンドを実行して下さい。
+最初に newdomain コマンドを実行してください。
 このコマンドは
 <link linkend="install.virtual">
 ml_home_prefix_maps 
 </link>
-(正確には primary_ml_home_prefix_map)を適宜、編集してくれます。
+(正確には primary_ml_home_prefix_map)の値を編集します。
 </para>
 
 <para>
@@ -121,8 +130,8 @@ ml_home_prefix_maps
 </para>
 
 <para>
-たとえば、コマンドの操作はＭＬではなく、ＭＬ＠ドメイン名を使うことにな
-ります。つまりコマンドの使い方は
+たとえば、コマンドの操作はＭＬではなく、ＭＬ＠ドメイン名を使うことになります。
+つまりコマンドの使い方は
 <screen>
 makefml newml	ML@virtualdomain
 makefml add	ML@virtualdomain	address
@@ -132,10 +141,14 @@ makefml bye	ML@virtualdomain	address
 </para>
 
 <para>
-なお、CGI での操作ではドメイン名の指定が不要です。これは、config.cgi 
-生成時にドメイン名をスクリプト中に埋め込んでいるためです。画面にもドメ
-イン名が出ているはずですし、そもそも URL にドメイン名が入っている
+なお、CGI での操作ではドメイン名の指定が不要です。これは、
+config.cgi 
+生成時にドメイン名をスクリプト中に埋め込んでいるためです。
+画面にもドメイン名が出ているはずですし、
+そもそも URL にドメイン名が入っている
 <screen>
+例:
+
 http://lists/~fml/cgi-bin/fml/$domain/admin/config.cgi
 </screen>
 ので、どのドメインの操作をしているのかはわかっているはずです。
@@ -143,19 +156,19 @@ http://lists/~fml/cgi-bin/fml/$domain/admin/config.cgi
 
 <warning>
 <para>
-なお、CGI の URL にドメイン名が入っているのは、操作する人にとって分か
-りやすいようにという配慮であって、CGI が URL を元に自分の操作対象ドメ
-イン名を決めているわけではありません(それは危険です)。
+なお、CGI の URL にドメイン名が入っているのは、
+操作する人にとって分かりやすいようにという配慮であって、
+CGI が URL を元に自分の操作対象ドメイン名を決めているわけではありません
+(それは危険です)。
 </para>
 
 <para>
-ＭＬ名やドメイン名は newml 時に作成される .cgi スクリプトにハードコー
-ディングされています。
-URL のドメインや環境変数を CGI スクリプトは無視します。
-ハードコーディングされた設定だけを見ます。
-</para>
-
-<para>
+ＭＬ名やドメイン名は
+newml 時に作成される
+.cgi スクリプトにハードコーディングされています。
+CGI スクリプトはハードコーディングされた設定だけを見ます。
+URL のドメインや環境変数は無視しています。
+よって
 CGI 実行時に、ユーザが HTTP 経由で操作対象を変更することは出来ません
 (させません)。
 </para>
@@ -167,60 +180,90 @@ CGI 実行時に、ユーザが HTTP 経由で操作対象を変更することは出来ません
 
 <sect1 id="virtualdomain.movement">
 	<title>
-	ケーススタディ: FML.ORG サーバ間引越の例
+	ケーススタディ: FML.ORG サーバ間での引越
 	</title>
 
 <para>
-FML.ORG で第四世代から第五世代サーバへ引越しをした時の記録を参考資料と
-してまとめておきます。
+FML.ORG で第四世代から第五世代サーバへ引越しをした時の記録です。
+以下に参考資料としてまとめておきます。
 </para>
 
 <para>
 結論から言えば、&fml4; → &fml8; コンバータは使いませんでした。
 すべてをコピーして MTA 用の設定を生成しました
-(include の類は強制上書きしました)。
+(include のたぐいは強制上書きしました)。
 </para>
 
 <para>
 (1) 新サーバを用意します。
+
 ホスト名は今まで使ったことのない新しいものをつけました。
 この段階では、
-新サーバではインターネットからのメールを受け付けないようにして下さい。
+"新サーバでインターネットからのメールを受け付けない"
+ようにしてください。
 </para>
 
 <para>
-(2) Postfix は localhost と新ホスト名だけを mydestination として受けと
-るように設定します。かつて使ったことのあるドメインすべてをバーチャルド
-メインとして処理するためです。
+(2) 新サーバでの Postifx の設定をしてください。
+
+Postfix
+は
+localhost
+と新ホスト名だけを
+mydestination
+として受けとるように設定します。
+使ったことのあるドメインすべてをバーチャルドメインとして処理するためです
+(あとで &fml8; が生成する virtual_maps の設定で
+ Postfix がバーチャルドメインとしてメールを受信するようになります
+)。
 </para>
 
 <para>
-(3) 旧サーバの Postfix を停止し、新たにメールを受け付けないように設定
-しておいてください。
+(3) 旧サーバでの &fml8; あてメールをすべて処理します。
+
+旧サーバの Postfix でメールを新たに受信しないようにし、
+新たにメールを受け付けないように設定しておいてください
+(
+例:
+smtpd プロセスを止めるか、
+Postfix で inet_interfaces = localhost に設定するなど…
+もちろん smtpd プロセスを止めるほうがよいです。
+)。
 </para>
 
 <para>
-そしてキューをフラッシュしつくします。残っているキューを調べＭＬ宛のも
-のがないことを確認します(mailq と postcat、削除するなら postsuper も使
-う)。ps で走っているプロセスがないか？も確認して下さい。
+そして Postfix のキューを無くしてください(flush しつくしてください)。
+残っているキューを調べＭＬ宛のものがないことを確認します
+(mailq と postcat、削除するなら postsuper も使ってください)。
+ps で走っているプロセスがないか？も確認してください。
 </para>
 
 <para>
-旧サーバで処理されるべきメール(fml へ入力する方向のメール)がすべてなく
-なった、つまりＭＬの更新がいっさいなくなったことに自信ができたら次のス
-テップへ進みます。
+旧サーバで処理されるべきメール
+(fml へ入力する方向のメール)がすべてなくなった、
+つまり、これ以上のＭＬの更新がなくなったことに自信ができたら、
+次のステップへ進んでください。
 </para>
 
 <para>
-(4) 旧サーバから新サーバへＭＬ全体(/var/spool/ml 相当)をコピーします。
-時間をかけないために、もちろん事前にコピーがしてあり、最後の差分だけを 
-コピーするということです(たとえば rsync を使って行なってください)。
+(4) 旧サーバから新サーバへＭＬのデータすべてをコピーします
+(つまり /var/spool/ml 以下すべてのデータをコピーといったことです)。
+
+時間をかけないために、もちろん事前にコピーがしてあり、
+最後の差分だけをコピーするべきです
+(たとえば rsync を使って行なってください)。
 </para>
 
 <para>
 (5) ＭＬのパスを再配置します。
 <screen>
 ベースディレクトリ/ドメイン名/ＭＬ名
+
+例:
+/pub/ml/labs.example.org/
+/pub/ml/test.example.org/info
+/pub/ml/test.example.org/test
+   ...
 </screen>
 として、ドメイン名がはっきり分かるようにしました。
 </para>
@@ -240,27 +283,57 @@ config.cf include ファイル群、ＭＴＡ用の設定ファイルが生成されます。
 </para>
 
 <para>
-(7) ドメインごとに Postfix の alias_maps と virtual_maps へ設定を追加
-し、動作確認をします。
+(7) &fml8; が生成する Postfix の設定ファイルのパスを Postfix へ反映させます。
+
+&fml8; がドメインごとに生成したファイルを
+Postfix の alias_maps と virtual_maps へ設定を追加し、
+動作確認をしてください。
 </para>
 
 <para>
-(8) ドメインの数だけ (6)(7) を繰り返します。
+(8) ドメインの数だけ (6)(7) を繰り返してください。
+</para>
+
+<para>
+例:
+ＭＬで利用するドメインは /vol/ml/ドメイン/ としました。
+この下に各ドメインのＭＬ群が生成されます。
+以下の例では
+bsg.example.org ffs.example.org nsrg.example.org
+の３ドメインがあります。
+
+<screen>
+[/usr/pkg/etc/postfix/main.cf の例]
+
+alias_maps      =       hash:/etc/mail/aliases
+                        hash:/vol/ml/bsg.example.org/etc/mail/aliases
+                        hash:/vol/ml/ffs.example.org/etc/mail/aliases
+                        hash:/vol/ml/nsrg.example.org/etc/mail/aliases
+
+
+virtual_maps    =       hash:/usr/pkg/etc/postfix/virtual
+                        hash:/vol/ml/bsg.example.org/etc/postfix/virtual
+                        hash:/vol/ml/ffs.example.org/etc/postfix/virtual
+                        hash:/vol/ml/nsrg.example.org/etc/postfix/virtual
+
+</screen>
 </para>
 
 <para>
 (9) ローカルでテストをして問題がないようなら、
 新サーバでインターネットからのメールを受け付けるようにします
-(/etc/postfix/main.cf の inet_interfaces か /etc/postfix/master.cf を
-編集し、念のため postfix reload ではなく postfix stop して postfix start)。
+(/etc/postfix/main.cf
+の
+inet_interfaces か /etc/postfix/master.cf を編集し、
+念のため postfix reload ではなく postfix stop して postfix start)。
 </para>
 
 <para>
-これで終りです。奇麗になりましたね。
+これで終りです。きれいになりましたね。
 </para>
 
 <para>
-なお、WWW アーカイブの作りなおしとか必要なら、さらに作業が続きます。
+なお、WWW アーカイブの作りなおしなど必要なら、さらに作業が続きます。
 本ドキュメントの該当する記述を参照して下さい。
 </para>
 
