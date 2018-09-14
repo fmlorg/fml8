@@ -66,7 +66,7 @@
 	</para>
 
 	<para>
-	Uni カーネルで伝統的に使われている省略名の典型例。
+	Unix カーネルで伝統的に使われている省略名の典型例。
 	</para>
 	</glossdef>
    </glossentry>
@@ -96,7 +96,7 @@
 	<glossterm>	arg / args	</glossterm>
 	<glossdef>
 	<para>
-	アーギュメント( argument )の略。
+	引数( アーギュメント: argument )の略。
 	</para>
 	</glossdef>
    </glossentry>
