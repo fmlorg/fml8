@@ -15,7 +15,9 @@
 	</title>
 
 <para>
-設定を /usr/local/etc/fml/site_default_config.cf に書いて下さい。
+設定を
+/usr/local/etc/fml/site_default_config.cf
+に書いて下さい。
 フォーマットは .cf 形式、つまり config.cf と同様です。
 </para>
 
@@ -41,15 +43,15 @@
 </question>
 
 <answer>
-	<para>
-	全部の変数を表示する
+<para>
+全部の変数を表示するには
 <screen>
 % /usr/local/bin/fmlconf elena
 </screen>
-	</para>
+</para>
 
-	<para>
-	デフォルト値と異なる変数を表示する
+<para>
+デフォルト値と異なる変数を表示するには
 <screen>
 % /usr/local/bin/fmlconf -n elena
 </screen>

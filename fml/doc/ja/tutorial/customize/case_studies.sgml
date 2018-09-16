@@ -9,9 +9,16 @@
 	</title>
 
 <para>
-以下の設定を /usr/local/etc/fml/site_default_config.cf に書き、全ＭＬ
-に反映させてください。このファイルに設定を書けば、今あるＭＬも今後作る
-すべてのＭＬも同じ仕様になります。
+会社などでは、
+共通の設定をオフィスの全メーリングリストに適用したい需要があります。
+そういった想定でのカスタマイズ例です。
+</para>
+
+<para>
+以下の設定を /usr/local/etc/fml/site_default_config.cf に書き、
+全ＭＬに反映させてください。
+このファイルに設定を書けば、
+今あるＭＬも今後作るすべてのＭＬも同じ仕様になります。
 </para>
 
 <para>
@@ -42,13 +49,14 @@ outgoing_mail_header_x_ml_name          =       office#$ml_name
 <screen>
 article_post_restrictions		=	permit_anyone
 </screen>
-この例では root さんからのシステムメールなども許していることに注意して
-ください(root などシステムからのメールを弾きたい場合は 
-reject_system_accounts permit_anyone です)。
+この例では
+root さんからのシステムメールなども許していることに注意してください
+(root など特別なシステムアカウントからのメールを弾きたい場合は 
+reject_system_accounts permit_anyone を追加してください)。
 </para>
 
 <para>
-そして、「社内用途のＭＬなのでフィルタの多くは不要」です。
+そして「社内用途のＭＬなのでフィルタの多くは不要」です。
 正確には「フィルタを使うと問題だらけ」になります;)
 <screen>
 use_article_filter                     =        no
@@ -65,7 +73,8 @@ use_article_text_plain_filter		=	no
 
 <para>
 記事のスプールを考えます。
-仕事のメールは数が多いので、長期的な展望をふまえるなら、
+仕事のメールは数が多いので、
+長期的な展望をふまえるなら、
 数万通単位で記事を保存するという仮定が必要です。
 よって、記事のスプールは subdir 形式としました。
 <screen>
@@ -78,11 +87,17 @@ spool_type			=	subdir
 <screen>
 use_command_mail_function	=	no
 </screen>
-コマンドメールそのものを禁止するには、aliases から該当するエントリを省
-くことが確実ですが、ＭＬを作成するたびに、aliases から削除することはミ
-ス操作を誘い易いでしょう。また、CGI 操作の場合、CGI 操作者が aliases 
-の細かな操作をするのは難しいです。そこで、コマンドメール用のプログラム
-が一度は起動しても、すぐ終るという設定にしているわけです。
+コマンドメールそのものを禁止するには、
+aliases から該当するエントリを省くことが確実ですが、
+ＭＬを作成するたびに、
+aliases から削除することはミス操作を誘い易いでしょう。
+また、CGI 操作の場合、
+CGI 操作者が aliases の細かな操作をするのは難しいです。
+そこで、
+まんがいち、
+コマンドメールを受け取ったとしても、
+「コマンドメール用のプログラムが起動して即座に終了する」
+設定にしています。
 </para>
 
 </sect1>
@@ -94,9 +109,16 @@ use_command_mail_function	=	no
 	</title>
 
 <para>
-以下の設定を /usr/local/etc/fml/site_default_config.cf に書き、全ＭＬ
-に反映させてください。このファイルに設定を書けば、今あるＭＬも今後作る
-すべてのＭＬも同じ仕様になります。
+会社などでは、
+共通の設定をオフィスの全メーリングリストに適用したい需要があります。
+そういった想定でのカスタマイズ例です。
+</para>
+
+<para>
+以下の設定を /usr/local/etc/fml/site_default_config.cf に書き、
+全ＭＬに反映させてください。
+このファイルに設定を書けば、
+今あるＭＬも今後作るすべてのＭＬも同じ仕様になります。
 </para>
 
 <para>
@@ -130,6 +152,13 @@ $command_verify_request_end_hook = q{
         }
 };
 </screen>  
+</para>
+
+<para>
+追記:
+ちなみに
+IO::Adapter で PCRE が使えるので、
+それを使う方が楽です。
 </para>
 
 

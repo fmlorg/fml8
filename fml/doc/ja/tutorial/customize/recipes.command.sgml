@@ -34,8 +34,8 @@ help などのメッセージをアップグレードする
 <answer>
 <para>
 &fml8; をアップグレードすれば自動的にアップグレードされます。
-&fml4; と異なり &fml8;  では help コマンドのメッセージテンプレートは
-次のようなパスに存在するからです。
+&fml4; と異なり &fml8; では
+help コマンドのメッセージテンプレートは次のようなパスに存在するからです。
 <screen>
 /usr/local/share/fml/$VERSION/message/euc-jp/user/help
 /usr/local/share/fml/$VERSION/message/us-ascii/user/help
@@ -45,8 +45,7 @@ help などのメッセージをアップグレードする
 <para>
 ただしＭＬのホームディレクトリに help ファイルがある場合は
 それが help コマンドの返事に使われています。
-よって help ファイルを自分で用意しているなら
-自分で編集してください。
+よって help ファイルを自分で用意している場合、自分で編集してください。
 </para>
 
 </answer>
@@ -64,9 +63,10 @@ help メッセージの元ファイルをカスタマイズする。
 
 <answer>
 <para>
-&fml8; では help コマンドのメッセージテンプレートは次のようなパスに存
-在します。これを編集してしまうというのが第一案。ただし、これをするとバー
-ジョンアップをした際に変更点が無効になってしまいます。
+&fml8; では
+help コマンドのメッセージテンプレートは次のようなパスに存在します。
+これを編集してしまうというのが第一案。
+ただし、これをするとバージョンアップをした際に変更点が無効になってしまいます。
 <screen>
 /usr/local/share/fml/$VERSION/message/euc-jp/user/help
 /usr/local/share/fml/$VERSION/message/us-ascii/user/help
@@ -95,6 +95,7 @@ help メッセージの元ファイルをカスタマイズする。
 自分で編集してください。
 この場合も、常にこのファイルが使われるので、
 バージョンアップしても内容は変わりません。
+バージョンアップした場合、変更点を自分でファイルに反映させないといけません。
 逆に言えば、それが欠点です。
 </para>
 
@@ -142,14 +143,15 @@ $ml_home_dir/news というファイルがあるとしましょう。
 </para>
 
 <para>
-一番簡単な作り方は help コマンドをぱくることです:)
+一番簡単な作り方は help コマンドを参考に news コマンドを作成することでしょう。
 たとえば FML::Command::User::help モジュール(
 /usr/local/lib/fml/$VERSION/FML/Command/User/help.pm
-)をコピーして
+)
+をコピーして
 FML::Command::User::news (
 /usr/local/lib/fml/site_local/FML/Command/User/news.pm
 )
-モジュールをつくってください。
+モジュールを作ってください。
 そして、news.pm の中の help という文字列を news に変えるだけです。
 <screen>
 [例]
@@ -214,11 +216,13 @@ get コマンドを mget mp と同じ意味にする
 
 <answer>
 <para>
-&fml8; ではデフォルトで、その意味(MIME/Multipart モード)になっています。
+&fml8; ではデフォルトで、
+その意味(MIME/Multipart モード)になっています。
 </para>
 
 <para>
-正確には、get と mget は同じコマンドで、get コマンドのファイルモードは
+正確には、get と mget は同じコマンドで、
+get コマンドのファイルモードは
 (いまのところ) MIME/Multipart しかありません。
 </para>
 </answer>
@@ -260,8 +264,8 @@ command status report を抑制したい
 
 <para>
 (2) コマンドメール自体のコピーを受けとる。
-たとえば、コマンドメールを受けとる設定のところに管理者も追加しておくと
-いった具合です。
+たとえば、
+コマンドメールを受けとる設定のところに管理者も追加しておくといった具合です。
 <screen>
 elena-ctl: :include:/var/spool/ml/elena/include-ctl, elena-admin
 </screen>

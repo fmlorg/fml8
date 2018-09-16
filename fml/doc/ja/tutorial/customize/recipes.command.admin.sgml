@@ -34,7 +34,9 @@ admin コマンドでＭＬのメンバーリストを一気に削除/登録
 <answer>
 <para>
 いまのところ、便利なコマンドは作ってないので、
-「admin useradd アドレス」や「admin userdel アドレス」
+「admin useradd アドレス」
+や
+「admin userdel アドレス」
 を書き連ねる方法しかありません _o_
 </para>
 
@@ -87,8 +89,8 @@ FML::Restriction::Base をみてください。
 </para>
 
 <para>
-subscribe 可能な人を特定のドメインだけに限りたいといった機能は未実装です(
-いや HOOK を使えば出来ますけど)。
+subscribe 可能な人を特定のドメインだけに限りたいといった機能は未実装です
+(いや HOOK を使えば出来ますけど)。
 </para>
 
 </answer>
@@ -111,7 +113,9 @@ subscribe 可能な人を特定のドメインだけに限りたいといった機能は未実装です(
 </para>
 
 <para>
+<ulink url="http://www.fml.org/software/fml8/">
 http://www.fml.org/software/fml8/
+</ulink>
 </para>
 
 </answer>

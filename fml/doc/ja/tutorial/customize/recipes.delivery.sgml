@@ -23,12 +23,14 @@ maintainer = アドレス
 
 maintainer = admin@example.co.jp
 </screen>
+もちろん、
 設定するアドレス( admin@example.co.jp )でメールを受けとれるように
-しておいてください。
+MTA の設定をしてください。
 </para>
 
 <para>
-なおメールサーバによってはメールの送信者が自ドメイン以外からの場合、
+なおメールサーバによっては、
+メールの送信者が自ドメイン以外からの場合、
 受信を拒否することがあるので注意して下さい。
 </para>
 
@@ -36,22 +38,27 @@ maintainer = admin@example.co.jp
 単にエラーメールなどの受取先を変えたいだけなら、
 maintainer ( elena ML なら elena-admin@fml.org ) 
 のフォワード先を変更する方が簡単です。
-その設定は /etc/mail/aliases を変更するか、
-$maintainer_recipient_maps で行なえます。
+その設定は
+/etc/mail/aliases を変更するか、
+$maintainer_recipient_maps の変更で行なえます。
 </para>
 
 <para>
 前者は MTA がフォワード先を変更していますが、
-後者では一度 elena-admin 宛のメールを &fml8; が受け、
+後者では、
+一度 elena-admin 宛のメールを &fml8; が受け、
 &fml8; が $maintainer_recipient_maps にしたがって再配送を行ないます。
 </para>
 
 <para>
-”エラーメール”を &fml8; が再配送するという意味で若干不安のある実装で
-すが、エラーメールを受けとる管理者リストを MTA ではなく &fml8; 側で管
-理するために必要なので実装されています。これは、たとえば WWW インター
-フェイスでエラーメールを受けとる管理者リストを設定するといったケースを
-想定した機能です。
+後者は、
+”エラーメール”を &fml8; が再配送するという意味で若干不安のある実装ですが、
+エラーメールを受けとる管理者リストを MTA ではなく
+&fml8; 側で管理するために必要なので実装されています。
+これは、
+たとえば WWW インターフェイスで
+「エラーメールを受けとる管理者リストを設定する」
+といったケースを想定した機能です。
 </para>
 
 </answer>
@@ -95,9 +102,9 @@ Subject のキーワードによって受信者を切替えることを考えます。
 </para>
 
 <para>
-たとえば Subject に「資料請求」とあるメールであれば、ＭＬドライバが直
-接資料請求を担当する人たちへフォワードしてあげると効率がよい。
-そういうケースです。
+たとえば Subject に「資料請求」とあるメールであれば、
+ＭＬドライバが直接資料請求を担当する人たちへフォワードしてあげると効率がよい。
+そういったケースです。
 </para>
 
 <para>
@@ -109,10 +116,10 @@ $distribute_run_start_hook = q{
 	my $header  = $curproc->incoming_message_header();
 	my $subject = $header->get('subject') || '';
 
-	use Mail::Message::String;
-	my $sbj = new Mail::Message::String $subject;
-	$sbj->charcode_convert_to_internal_code();
-	$buf = $sbj->as_str();
+	use Mail::Message::Subject;
+	my $sbj = new Mail::Message::Subject $subject;
+	$sbj->mime_header_decode();
+	my $buf = $sbj->as_external_form();
 
 	my $map = '';
 	# 注意: このファイルは EUC-JP で書いて下さい
@@ -131,8 +138,10 @@ $distribute_run_start_hook = q{
 };
 
 </screen>
-ここで $ml_home_dir/recipients.info (/var/spool/ml/elena/recipients.info)
-には資料請求を担当する人たちのアドレスが書かれています。
+ここで
+$ml_home_dir/recipients.info (/var/spool/ml/elena/recipients.info)
+には、
+資料請求を担当する人たちのアドレスが書かれています。
 </para>
 </answer>
 
@@ -193,16 +202,20 @@ $distribute_run_start_hook = q{
 <answer>
 
 <para>
-&fml8; の IO は IO::Adapter による抽象化をしています。たとえば受信者を
-グループ fml に含まれるユーザ宛にするには次のようにするだけで十分です。
+&fml8; の IO は IO::Adapter による抽象化をしています。
+たとえば受信者を、
+グループ fml に含まれるユーザ宛にするには、
+次のようにするだけで十分です。
 <screen>
 [config.cf]
 
 recipient_maps = unix.group:fml
 
 </screen>
-ただし、他ドメインには送れないし、そのサーバにアカウントかエイリアス設
-定がないと配送できないので注意して下さい。
+ただし、
+簡単でよいかわりに、
+他ドメインには送れないし、
+そのサーバにアカウントかエイリアス設定がないと配送できないので注意して下さい。
 </para>
 </answer>
 
@@ -221,8 +234,9 @@ recipient_maps = unix.group:fml
 <answer>
 
 <para>
-この機能が必要なのは、送信したメールの記録が残るメールリーダを使ってい
-る場合、ＭＬから戻ってくる記事は必要ないと思う人がいるからだそうです。
+この機能が必要なのは、
+送信したメールの記録が残るメールリーダを使っている場合、
+ＭＬから戻ってくる記事は必要ないと思う人がいるからだそうです。
 </para>
 
 <para>

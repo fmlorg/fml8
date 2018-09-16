@@ -9,24 +9,27 @@
 	</title>
 
 <para>
-article_post_restrictions 変数は「記事の投稿を許すメンバー」を定義して
-います。これを permit_anyone とすると、だれでも投稿可能になります。
+article_post_restrictions 変数は
+「記事の投稿を許すメンバー」を定義しています。
+これを permit_anyone とすると、だれでも投稿可能になります。
 <screen>
 article_post_restrictions = permit_anyone
 </screen>
 </para>
 
 <para>
-&fml4; と異なり、上のように書くと本当に「誰でも投稿可能」となることに
-注意して下さい。
-*_restrictions 変数には reject_system_special_accounts という root な
-どを弾くルールが別途あります。デフォルトでは、それらを明示的に指定して
-います(&fml4; では、このあたり曖昧でした)。
+&fml4; と異なり、
+上のように書くと本当に「誰でも投稿可能」となることに注意して下さい。
+*_restrictions 変数には
+reject_system_special_accounts という root などを弾くルールが別途あります。
+デフォルトでは、それらを明示的に指定しています
+(&fml4; では、このあたり曖昧でした)。
 </para>
 
 <para>
-&fml4; のように、root などシステムの特別なアカウントは弾き、それ以外の
-ユーザからのメールは受け付けるという場合、次のようにします。
+&fml4; のように、
+root などシステムの特別なアカウントは弾き、
+それ以外のユーザからのメールは受け付けるという場合、次のようにします。
 <screen>
 article_post_restrictions =	reject_system_special_accounts
 				permit_anyone
@@ -40,23 +43,26 @@ article_post_restrictions =	isolate_system_special_accounts
 </para>
 
 <para>
-ちなみに 2008/08/17 以前 の article_post_restrictions のデフォルトは 
-&fml4; 互換のため、次のようになっています
+ちなみに 2008/08/17 以前 の
+article_post_restrictions のデフォルトは &fml4; 互換のため、
+次のようになっています
 <screen>
 article_post_restrictions =	reject_system_special_accounts
 				permit_member_maps
 				reject
 </screen>
 この意味は
-「root  などシステムの特別なアカウントは弾き」
-「member_maps にあるユーザであれば投稿を許す」
-いづれにもマッチしないなら「投稿を拒否する」
+「root  などシステムの特別なアカウントからの投稿は拒否」し、
+「member_maps にあるユーザであれば投稿を許可」
+そうでないなら
+「投稿を拒否する」
 となります。
 </para>
 
 <para>
-なお「reject_なになに」および「permit_なになに」という命令は、マッチし
-たところで処理が終りになります。マッチしない場合には次の条件を試します。
+なお「reject_なになに」および「permit_なになに」という命令は、
+マッチしたところで処理が終りになります。
+マッチしない場合には次の条件を試します。
 </para>
 
 <para>
@@ -87,13 +93,14 @@ article_post_restrictions =	isolate_system_special_accounts
 
 <answer>
 <para>
-&fml4; のように HOOK でグローバル変数をいじくり回すといった
-危ないことは出来せん。
+&fml4; のように
+HOOK でグローバル変数をいじくり回すといった危ないことは出来せん。
 </para>
 
 <para>
-IO::Adapter の pcre サポートを利用すれば example.co.jp ドメインからの
-投稿を許し、それ以外からの投稿を拒否する restrictions が書けます。
+IO::Adapter の PCRE (Perl互換正規表現)サポートを利用すれば
+example.co.jp ドメインからの投稿を許し、
+それ以外からの投稿を拒否する restrictions が書けます。
 <screen>
 [/var/spool/ml/elena/config.cf]
 

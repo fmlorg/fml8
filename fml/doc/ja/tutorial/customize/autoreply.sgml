@@ -11,12 +11,14 @@
 <para>
 配送プロセス( /usr/local/libexec/fml/distribute )を改造し、
 どんなときでも /some/where/help ファイルを送り返すことを考えます。
-たとえば help@fml.org ＭＬを作り、このアドレスにメールを送ると
+たとえば help@fml.org ＭＬを作り、
+このアドレスにメールを送ると
 (うむをいわさず:-)ヘルプファイルを送り返すというものです。
 </para>
 
 <para>
-この場合 config.cf (e.g. /var/spool/ml/help/config.cf)の例は、
+この場合
+config.cf (e.g. /var/spool/ml/help/config.cf)の例は、
 次のようになります。
 <screen>
 article_post_restrictions = permit_anyone
@@ -47,8 +49,8 @@ $curproc->stop_this_process();
 
 <para>
 正確には「身のある処理は何も実行されません」が、
-reply_message() メソッドでメッセージキューに入れられたメッセージを
-送信する処理は行なわれるので、メッセージの送信は行なわれます。
+reply_message() メソッドで、
+メッセージキューに入れられたメッセージを送信する処理が行なわれます。
 </para>
 
 

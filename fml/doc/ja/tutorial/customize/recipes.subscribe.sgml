@@ -277,8 +277,8 @@ fml 3.0 以前の auto_regist を使い続けたい
 <answer>
 <para>
 &fml4; では auto_regist を指定した場合 fml 3.0 以前の挙動になります。
-これはメンバーリストにも配送のリストにも members ファイルだけを使うと
-いうものです。
+これは、
+メンバーリストにも配送のリストにも members ファイルだけを使うというものです。
 </para>
 
 <para>
@@ -291,10 +291,10 @@ fml 3.0 以前の auto_regist を使い続けたい
 primary_recipient_map = $primary_member_map 
 </screen>
 とすればよいことになります。
-ただ、自動登録時にエラーがでます(すでにメンバーですから)。エラーを回避
-するため登録対象である primary_recipient_map はそのままダミーのファイ
-ルとして残し、実際の配送リスト(recipient_maps)は members になるように
-してしまうのがよいでしょう。
+ただ、自動登録時にエラーがでます(すでにメンバーですから)。
+エラーを回避するためには、
+登録対象である primary_recipient_map はそのままダミーのファイルとして残し、
+実際の配送リスト(recipient_maps)は members にしてしまうのがよいでしょう。
 <screen>
 recipient_maps = $primary_member_map 
 </screen>

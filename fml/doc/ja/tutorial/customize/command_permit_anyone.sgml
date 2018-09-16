@@ -9,8 +9,9 @@
 	</title>
 
 <para>
-command_mail_restrictions はコマンドメールの利用を許すメンバーを定義してい
-ます。
+変数
+command_mail_restrictions
+はコマンドメールの利用を許すメンバーを定義しています。
 <screen>
 command_mail_restrictions = permit_anyone
 </screen>
@@ -18,8 +19,9 @@ command_mail_restrictions = permit_anyone
 </para>
 
 <para>
-こんな設定していいのか？
-いつ使うんだ？というのはありますが、理論上、設定は可能です。
+こんな設定をしていいのか？
+いつ使うんだ？
+というのはありますが、理論上、設定は可能です。
 </para>
 
 
@@ -53,7 +55,7 @@ command_mail_restrictions = permit_anyone
 
 <question>
 <para>
-システムアカウントを除き誰でもコマンドメールが使える
+システムアカウントをのぞいて、誰でもコマンドメールが使える
 </para>
 </question>
 

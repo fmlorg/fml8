@@ -33,8 +33,9 @@
 </para>
 
 <para>
-このためには次のように HOOK で常に guide コマンドを実行するようにする
-とよいでしょう。なお、この例では通常の処理は行なわないようにしています。
+このためには、
+次のように HOOK で常に guide コマンドを実行するようにするとよいでしょう。
+なお、この例では通常の処理は行なわないようにしています。
 <screen>
 
 $distribute_run_start_hook = q{
@@ -55,9 +56,12 @@ $distribute_run_start_hook = q{
 $command_mail_run_start_hook = $distribute_run_start_hook;
 
 </screen>
-&fml4; と異なり、配送用とコマンドメール用それぞれのプロセスごとに HOOK 
-が分かれていることに注意して下さい。このため最後に同じ内容のコマンドメー
-ル用の HOOK も定義する必要があります(コピーしてください)。
+&fml4; と異なり、
+配送用とコマンドメール用それぞれのプロセスごとに
+HOOK が分かれていることに注意して下さい。
+このため上のように、
+最後に同じ内容のコマンドメール用の HOOK も定義する必要があります
+(次のように変数をコピーすれば十分です)。
 <screen>
 $command_mail_run_start_hook = $distribute_run_start_hook;
 </screen>
@@ -113,6 +117,7 @@ $distribute_run_start_hook = q{
 
     # ＭＬのメンバーでないならガイドを送り返します。
     # ＭＬのメンバーに対しては普通のＭＬとなります。
+    # この HOOK により、ガイドを送り返す機能が"追加されている"状態です。
     unless ($cred->is_member($sender)) { 
 
 	# guide コマンドを呼び出します。
@@ -133,4 +138,3 @@ $distribute_run_start_hook = q{
 
 
 </qandaset>
-

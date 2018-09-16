@@ -16,8 +16,9 @@ Subject: に [elena:00100] のようなタグをつける
 <answer>
 <para>
 デフォルトではタグはつきません。
-また &fml8; ではタグを sprintf などで使われる形式で指定することになっています
-(strftime(3) を参照)。
+また &fml8; では、
+タグを
+sprintf などで使われる形式(strftime(3) を参照)で指定することになっています。
 <screen>
 [/var/spool/ml/elena/config.cf]
 
@@ -44,8 +45,8 @@ Subject: [elena:00100] の数字部分(00100)の桁数を変える
 
 <answer>
 <para>
-&fml8; ではタグを sprintf 形式で指定することになっています
-(strftime(3) を参照)。
+&fml8; ではタグを
+sprintf 形式(strftime(3) を参照)で指定することになっています。
 たとえば７桁なら %07 などとすればよいだけです。
 <screen>
 [/var/spool/ml/elena/config.cf]
@@ -150,7 +151,8 @@ Subject に [日付] というタグをつけたい。
 
 <answer>
 <para>
-YYYYMMDD (20060101) のような日付をつけたいなら、以下のようにして下さい。
+[YYYYMMDD] (e.g. [20060101]) のような日付をつけたい場合、
+以下のようにして下さい。
 <screen>
 $distribute_verify_request_start_hook = q{
 
@@ -161,7 +163,7 @@ $distribute_verify_request_start_hook = q{
 };
 </screen>
 なお strftime(3) では様々なフォーマットが利用できます。
-詳しくは Unix マニュアル strftime(3) を参照。
+詳しくは Unix マニュアル strftime(3) を参照してください。
 </para>
 </answer>
 
@@ -283,7 +285,8 @@ $article_header_rewrite_end_hook = q{
 
 <question>
 <para>
-To: と Cc: の中にある &fml8; が管理しているＭＬのアドレスだけを
+To: と Cc: の中にある
+&fml8; が管理しているＭＬのアドレスだけを
 Reply-To: に設定する。
 </para>
 </question>
@@ -361,15 +364,16 @@ Sender: を X-Sender: にコピーする。
 
 <para>
 投稿されたメールの Sender: を X-Sender: にコピーしておきます。
-配送後、どこかで Sender: が変更されたとしても、オリジナルの送信者が
-分かるということです。
+&fml8; の配送後、
+配送経路上のどこかで Sender: の変更が行われたとしても、
+オリジナルの送信者が分かるようにしたいということです。
 </para>
 
 <para>
 もっとも Sender: をつけない人もいるので、
 そういったメールに対しては対応できません。
-Sender: がないなら From: を X-Sender: にコピーしておくといった
-条件文も必要かもしれません。
+Sender: がない場合
+From: を X-Sender: にコピーしておくといった条件文も必要かもしれません。
 </para>
 
 <para>
@@ -429,10 +433,16 @@ article_header_rewrite_rules    -=      rewrite_reply_to
 </para>
 
 <para>
-デフォルトでは Reply-To: のないメールヘッダに対し「Reply-To: 投稿用ア
-ドレス」が追加されます。これは $article_header_rewrite_rules にある 
-rewrite_reply_to 命令によります。よって、これをルールから削除してしま
-えば「Reply-To: に対する書き換えルールが無効となる」というわけです。
+デフォルトでは
+Reply-To: のないメールヘッダに対し
+「Reply-To: 投稿用アドレス」が追加されます。
+これは
+$article_header_rewrite_rules にある 
+rewrite_reply_to
+命令によります。
+よって、これをルールから削除してしまえば
+「Reply-To: に対する書き換えルールが無効となる」
+というわけです。
 </para>
 </answer>
 
@@ -453,7 +463,8 @@ To: Cc: Reply-To: を全部そのまま素通しにする。
 </para>
 
 <para>
-To: と Cc: は元々素通しです。そのため config.cf で
+To: と Cc: は元々すどおしです。
+そのため config.cf で
 <screen>
 article_header_rewrite_rules    -=      rewrite_reply_to
 </screen>
@@ -518,7 +529,7 @@ $article_header_rewrite_end_hook = q{
 </para>
 
 <para>
-もともとは某ＭＬで遊び心で始めた話が元ネタ。
+ノート: もともとは某ＭＬで遊び心で始めた話が元ネタです。
 </para>
 
 </answer>
@@ -565,8 +576,13 @@ $article_header_rewrite_end_hook = q{
 <screen>
 outgoing_mail_header_reply_to = アドレス
 </screen>
-でレポートメールの Reply-To: を指定できるのですが、
+変数で、
+レポートメールの Reply-To: を指定できるのですが、
 これは今の実装が間違っていますね _o_
+</para>
+
+<para>
+(これは使わないでください)
 </para>
 </answer>
 
@@ -627,21 +643,25 @@ In-Reply-To: か References: を強制したい。
 
 <answer>
 <para>
-記事への返信であるにも関わらず In-Reply-To: も References: もないメー
-ルを送ってくる人が現実にいます。
-これをされると、いくつかの問題が生じます。
+記事への返信であるにも関わらず
+In-Reply-To: も References: もないメールを送ってくる人が現実にいます。
+これ(スレッド情報の削除)をされると、いくつかの問題が生じます。
 </para>
 
 <para>
 第一に、メール間のスレッド関係が分からなくなるので見づらいです。
 第二に、通常そういったメールは無い(少ない)ので、
-そういったメールは「普通のメール」ではなく 
-「SPAM メール」などの可能性が高いとみなされます。
+そういったメールは
+「普通のメール」
+ではなく 
+「SPAM メール」
+などの可能性が高いとみなされます。
 </para>
 
 <para>
-Subject に返事の印( Re: など)がなく、In-Reply-To: または References: 
-ヘッダがないなら拒否する HOOK です。
+以下の例は
+Subject に返事の印( Re: など)がなく、
+In-Reply-To: または References: ヘッダがないなら拒否する HOOK です。
 <screen>
     $article_post_verify_request_end_hook = q{
 	my $header      = $curproc->incoming_message_header();

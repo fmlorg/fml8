@@ -72,16 +72,21 @@ article_post_restrictions       =       reject_system_special_accounts
 
 <para>
 PGP のキーリングは、
-動作条件ごとに別に保存するようになっています。たとえば記事投稿
-用のキーは $ml_home_dir/etc/pgp-article-post-auth/ ディレクトリ以下に、
-リモート管理用のキーは $ml_home_dir/etc/pgp-admin-command-mail-auth/ 
+動作条件ごとに別に保存するようになっています。
+たとえば記事投稿用のキーは
+$ml_home_dir/etc/pgp-article-post-auth/
+ディレクトリ以下に、
+リモート管理用のキーは
+$ml_home_dir/etc/pgp-admin-command-mail-auth/ 
 ディレクトリ以下に置くといった具合です。
 </para>
 
 <para>
-これらのキーは pgp2 pgp5 gpg コマンドで操作してください。ただ、デフォ
-ルトのディレクトリではないこと、モードごとに異なるディレクトリを使うた
-め、fmlpgp などのユーティリティプログラム( wrapper )を利用すると便利です。
+これらのキーは pgp2 pgp5 gpg コマンドで操作してください。
+ただ、
+デフォルトのディレクトリではないこと、
+モードごとに異なるディレクトリを使うため、
+fmlpgp などのユーティリティプログラム( wrapper )を利用するほうが便利です。
 <screen>
 例: elena ML で記事投稿で使うキーの生成
 

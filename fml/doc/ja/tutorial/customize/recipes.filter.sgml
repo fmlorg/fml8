@@ -59,8 +59,8 @@ $article_filter_start_hook = q{
 
 <answer>
 <para>
-たとえば特定のドメイン(\S+\@example.co.jp)は全部はじきたいといった
-フィルタのことです。
+たとえば、
+特定のドメイン(\S+\@example.co.jp)を全て拒否するフィルタのことです。
 内蔵フィルタの一部として実装しようと考えていますが、
 残念ながら未実装です _o_
 </para>
@@ -110,22 +110,29 @@ multipart/*	!text/plain	reject
 <answer>
 
 <para>
-&fml8; は、あらかじめ入力されたメッセージを解析し、メモリ上に鎖状の 
-Mail::Message オブジェクトの形で持っています。そこで、MIME/Multipart 
+&fml8; は、
+あらかじめ入力されたメッセージを解析し、
+メモリ上に鎖状の Mail::Message オブジェクトの形で持っています。
+そこで、
+MIME/Multipart 
 の各部分のヘッダを取り出して、正規表現で順に確認すればよいだけです。
 </para>
 
 <para>
 HOOK でなんとかする/ごまかす例は次の通りです。
-どちらの例でも、マッチした場合、stop_this_process() 命令で、
+どちらの例でも、
+マッチした場合、stop_this_process() 命令で、
 それ以上の処理を止めています。
-また、この例では何もエラーメッセージを返そうとしていないため、
+また、
+この例では何もエラーメッセージを返そうとしていないため、
 結果として、このメッセージは無視されて終りになっています。
 </para>
 
 <para>
-返事をしてあげたいなら、 reply_message() で、何か返事を返してあげてく
-ださい…が、たぶんウィルスとかなので返事をしないほうが良いでしょう。
+返事をしてあげたいなら、
+reply_message() で、何か返事を返してあげてください。
+ただ、こういったメールはウィルスなどの可能性が高いので、
+返事をしないほうが良いでしょう。
 </para>
 
 <para>
@@ -223,7 +230,7 @@ article_filter_reject_notice_recipient	=	maintainer sender
 
 
 <para>
-返送する先を送信者( From: のアドレス )にするには
+返送する先を送信者( From: のアドレス )"のみ"にするには
 <screen>
 article_filter_reject_notice_recipient	=	sender
 </screen>
@@ -274,7 +281,7 @@ spamassassin で SPAM メールを無視する。
 </para>
 
 <para>
-1. 内蔵フィルタの方の設定です。
+1. 内蔵フィルタの設定例です。
 <screen>
 use_article_spam_filter         =       yes
 article_spam_filter_drivers     =       spamassassin
@@ -282,7 +289,8 @@ article_spam_filter_drivers     =       spamassassin
 </para>
 
 <para>
-2. HOOK でなんとかする/ごまかす例は次の通りです。
+2. 上と同様に spamassassi を呼び出すのですが、
+それを HOOK でなんとかする/ごまかす例は次の通りです。
 <screen>
 $distribute_verify_request_end_hook = q{
         my $spamassassin = '/usr/pkg/bin/spamc -c';
@@ -409,14 +417,17 @@ $article_filter_end_hook = q{
 
 <para>
 HOOK でなんとかすることは出来ます。
-「記事に ML 独自の Message-ID: をつけたい」というレシピを参照して下さい。
+「記事に ML 独自の Message-ID: をつけたい」
+というレシピを参照して下さい。
 </para>
 
 <para>
-&fml4; では「In-Reply-To: や References: をつけてくれない MUA があるた
-めにスレッドがうまく扱えない」という問題を解決するために、ＭＬ独自の 
-Message-ID: をつけて矯正するという機能がありました。現代では、そういっ
-た MUA も死に絶えたでしょうから &fml8; では考慮しないことにします。
+&fml4; では
+「In-Reply-To: や References: をつけてくれない MUA があるために、
+スレッドがうまく扱えない」という問題を解決するために、
+ＭＬ独自の Message-ID: をつけて矯正するという機能がありました。
+現代では、そういった MUA も死に絶えたでしょうから
+&fml8; では考慮しないことにしています。
 </para>
 
 </answer>
