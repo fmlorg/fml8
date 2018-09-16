@@ -1,7 +1,7 @@
-file formats in this directory is SGML (Standard Generalized Markup
+File formats in this directory is SGML (Standard Generalized Markup
 Language).
 
-You can compile it to html format by sgmltools and openjade.
+You can compile it to HTML format by using openjade.
 
 
 
