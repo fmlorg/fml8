@@ -5,7 +5,7 @@
 
 <chapter id="install.fml.unix">
 	<title>
-	Unix 上での fml のインストール
+	Unix 上での &fml8; のインストール
 	</title>
 
 
@@ -54,14 +54,15 @@ configure が適宜 script 群や .cf 群の変数を書き換えます。
 
 <para>
 make install を実行する際には、
-configure が生成した etc/fml/install.cf を元に、
-configure が生成した install.pl (perl script) がインストールを行ないます。
+(configure が生成した) etc/fml/install.cf を元に、
+(configure が生成した) install.pl (perl script) が、
+実際のインストール作業を行ないます。
 </para>
 
 <para>
 ユーザ名や基本的なディレクトリ構成などは configure の引数で変更して下さい。
 変更できる変数は以下のものです。configure --help で表示されます。
-fml では各ディレクトリにさらに /fml といった suffix をつけます。
+fml では各ディレクトリに、さらに /fml といった suffix をつけます。
 変更できるのは、その直前の prefix 部分までです。
 <screen>
 変数            configure のデフォルト値    fml の利用するディレクトリ例
@@ -157,7 +158,7 @@ Optional Packages:
 	</title>
 
 <para>
-例: NetBSD は /usr/pkg 以下へ。
+例: NetBSD では /usr/pkg 以下へインストール。
 <screen>
 % ./configure --prefix=/usr/pkg
 </screen>
@@ -165,7 +166,7 @@ Optional Packages:
 
 
 <para>
-例: FreeBSD は全部 /usr/local 以下でいい？
+例: FreeBSD の場合、/usr/local 以下へインストール(デフォルトのまま)。
 <screen>
 % ./configure
 </screen>
@@ -173,7 +174,7 @@ Optional Packages:
 
 <para>
 例:	main.cf の置き場所として
-	/etc/fml を使うなら、こうする(Debian だとこうするべし？)。
+	/etc/fml を使うなら、こうする(Debian であれば、こうするべき？)。
 <screen>
 #  ./configure --with-fmlconfdir=/etc/fml
 checking for perl... perl
@@ -286,7 +287,8 @@ Now you must run "make install" as user "root".
 
 <para>
 補足: いや、こういうタイプの設定をする OS の場合
-/usr/local ではなく /usr 直下に入れるですかね？
+/usr/local ではなく /usr 直下に入れるのでしょうか？
+その場合は、次のように指定してください。
 <screen>
 # ./configure --prefix=/usr --with-fmlconfdir=/etc/fml
 </screen>
@@ -331,11 +333,15 @@ Now you must run "make install" as user "root".
           <entry> /usr/local/etc/fml	</entry>
           <entry>
 	基本設定ファイルを置く場所。
-	&fml4; の /usr/local/fml/.fml や default_config.ph を置く場所に
-	相当します。
+	&fml4; の
+	/usr/local/fml/.fml や default_config.ph を置く場所に相当します。
 	/usr/local/etc/fml/main.cf では、
-	使用する &fml8; のバージョンや
-	ライブラリの場所(ディレクトリ)などが指定可能です。
+	使用する &fml8; のバージョンやライブラリの場所(ディレクトリ)
+	などが指定可能です
+	(【重要】
+	バージョンアップして問題があった場合には、
+	バージョン変数を編集することで、
+	すぐに古いバージョンへの切り戻しが可能です)。
           </entry>
         </row>
 
@@ -351,7 +357,7 @@ Now you must run "make install" as user "root".
 		/usr/local/lib/fml
 	  </entry>
           <entry>
-	perl module 群を置く場所 ( &fml4; の /usr/local/fml 相当)
+	perl モジュール群を置く場所 ( &fml4; の /usr/local/fml 相当)
 	  </entry>
         </row>
 
@@ -448,10 +454,20 @@ configure のオプション指定が正しければ、編集の必要は、まずないはずです。
 </para>
 
 <para>
-mani.cf は大枠の最も基本的な設定です。より細かな設定、
+mani.cf は大枠の最も基本的な設定です。
+より細かな設定、
 たとえばサイト共通の fml の動作指定などは site_default_config.cf の役割です。
 各ＭＬ固有の設定は、
 各ＭＬのホームディレクトリにある config.cf ファイルを編集して下さい。
+</para>
+
+<para>
+逆にいえば、特定のメーリングリストで優先される順は次のようになります。
+<screen>
+$ml_home_dir/config.cf
+site_default_config.cf
+main.cf
+</screen>
 </para>
 
 <!-- main.cf の見本 -->
@@ -477,12 +493,14 @@ mani.cf は大枠の最も基本的な設定です。より細かな設定、
 </para>
 
 <para>
-もちろん、この設定より各ＭＬの設定(例: /var/spool/ml/elena/config.cf)
-が優先されます。
+もちろん、
+この設定より、
+各ＭＬの設定(例: /var/spool/ml/elena/config.cf)が優先されます。
 </para>
 
 <para>
-デフォルトでは &fml4; と合わせるために、および見本として:)
+デフォルトでは &fml4; と合わせるために、
+および見本として:)
 subject のタグをつけない設定とフィルタ関連の設定だけが入っています。
 <screen>
 # $FML: fml_on_unix.sgml,v 1.13 2008/08/18 13:21:42 fukachan Exp $
@@ -541,10 +559,11 @@ use_mime_component_filter	=	yes
 </para>
 
 <para>
-フィルタがかかっているのはよいのですが、
+フィルタが、かかっているのはよいのですが、
 mime component filter のデフォルトをどうすれば良いのかは基準が曖昧です。
-デフォルトではＭＬへの投稿が許されるのは text/plain のメールのみとして
-あります。これで text/html で送ってくる寝ぼけたメールも、
+デフォルトでは、
+ＭＬへの投稿が許されるのは text/plain のメールのみとしてあります。
+これで text/html で送ってくる寝ぼけたメールも、
 添付ファイルで送られてくるウィルスもデフォルトでは通りません。
 </para>
 
@@ -592,9 +611,10 @@ use_mime_component_filter	=	no
 	</title>
 
 <para>
-最初に(つまり、そのドメインでＭＬを作る前に)、newdomain コマンドで 
-ml_home_prefix_maps に利用したいドメインと ml_home_prefix の対応関係を
-定義してください。
+最初に(つまり、そのドメインでＭＬを作る前に)、
+newdomain コマンドで 
+ml_home_prefix_maps に利用したいドメインと
+ml_home_prefix の対応関係を定義してください。
 <screen>
 [/var/spool/ml/etc/fml/ml_home_prefix]
 
@@ -616,7 +636,8 @@ ml_home_prefix_maps のパスを変更したい場合は
 
 <para>
 なお、
-site_default_config.cf はドメインに関わらず適用されることに注意してください。
+site_default_config.cf は、
+ドメインに関わらず適用されることに注意してください。
 つまり、この設定はバーチャルドメインにも適用されます。
 </para>
 </warning>

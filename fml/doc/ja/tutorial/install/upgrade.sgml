@@ -32,13 +32,27 @@
 
 <warning>
 <para>
-インストールするだけでは何も変化は起こりません。
-main.cf を編集した瞬間にアップグレードが有効になります。
+main.cf で利用するバージョンを変更後に、
+はじめてアップグレードが有効になります。
 </para>
+
+<para>
+&fml8; は、
+バージョンごとに異なるディレクトリにインストールされます。
+どのバージョンを利用するかは
+main.cf の fml_version 変数で決まります。
+</para>
+
+<para>
+つまり、
+(アップグレード)インストールするだけでは何も変化は起こりません。
+</para>
+
 </warning>
 
 <para>
-まずは、単に、もう一度 &fml8; を
+まず、アップグレードしたいバージョンの &fml8; を、
+普通に
 <link linkend="install.fml.unix">
 インストール
 </link>
@@ -46,8 +60,9 @@ main.cf を編集した瞬間にアップグレードが有効になります。
 </para>
 
 <para>
-そして、インストール後、/usr/local/etc/fml/main.cf の fml_version 行を
-今インストールしたバージョンに変更して下さい。
+そして、インストール後、
+/usr/local/etc/fml/main.cf の fml_version 行を、
+インストールしたバージョンに変更して下さい。
 ファイルをセーブした瞬間から新しい &fml8; に切り替わります
 (注: エディタで編集中は古い内容)。
 </para>
@@ -66,8 +81,9 @@ main.cf を編集した瞬間にアップグレードが有効になります。
 
 <para>
 ソースのインストールし直しなどは必要ありません。
-/usr/local/etc/fml/main.cf の編集だけです。/usr/local/etc/fml/main.cf 
-の fml_verison をアップグレード前のものに戻して下さい。
+/usr/local/etc/fml/main.cf の編集だけです。
+/usr/local/etc/fml/main.cf の fml_verison を、
+アップグレード前のものに戻して下さい。
 </para>
 
 <para>
