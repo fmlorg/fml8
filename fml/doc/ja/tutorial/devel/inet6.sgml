@@ -25,8 +25,8 @@ NetBSD の IPv6 の解説
 </para>
 
 <para>
-次に IPv6 がルータモードの NetBSD を作り gif0 で IIJ のルータと
-トンネルを張ります。
+次に IPv6 がルータモードの NetBSD を作り
+gif0 で IIJ のルータとトンネルを張ります。
 <screen>
    IIJ NOC 側ルータ
       |
@@ -47,8 +47,9 @@ NetBSD の IPv6 の解説
 
 <warning>
 <para>
-route6d を何も考えずに起動すると /64 を advertise してしまうので
-/48 に aggregate することを忘れずに。
+route6d を何も考えずに起動すると
+/64 を advertise してしまうので
+/48 に aggregate することを忘れずにしましょう。
 </para>
 </warning>
 
@@ -100,8 +101,8 @@ tunnel 10.1.1.1 10.2.2.2
 	</title>
 
 <para>
-IIJ のルータからは ::/0 (IPv4 なら 0/0) つまりデフォルトルートが
-流れてきます。
+IIJ のルータからは
+::/0 (IPv4 なら 0/0) つまりデフォルトルートが流れてきます。
 </para>
 
 <para>
