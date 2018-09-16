@@ -11,8 +11,9 @@
 
 <answer>
 <para>
-fmlconf コマンドが各ＭＬの変数一覧を表示してくれます。どのＭＬ(実は適
-当なＭＬでも良い)を指定しても良いので、fmlconf を実行して下さい。
+fmlconf コマンドが各ＭＬの変数一覧を表示してくれます。
+どのＭＬ(実のところ適当なＭＬでよい)を指定してかまいませんので、
+fmlconf を実行して下さい。
 たとえば
 <screen>
 % /usr/local/bin/fmlconf test |grep fml_version
