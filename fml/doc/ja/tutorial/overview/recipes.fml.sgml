@@ -26,8 +26,8 @@
 
 <para>
 &fml8; は 4 のコードを全て捨てて一から作りなおされたソフトウエアです。
-4 から 5 だと単なる 4 のアップグレードだと思われるので 1 bit ずらして 
-8 にしました。
+4 から 5 だと単なる 4 のアップグレードだと思われるので
+1 bit ずらして 8 にしました。
 </para>
 
 </answer>
@@ -66,7 +66,7 @@ current, stable, release どれをダウンロードするべきですか？
 <answer>
 <para>
 今のところ &fml8 にはそういった違いがありません。
-ファイルの日付を見て新しいものを選んで下さい。
+ファイルの日付もしくはバージョン番号を見て新しいものを選んで下さい。
 </para>
 
 <para>
@@ -91,8 +91,16 @@ current, stable, release どれをダウンロードするべきですか？
 <answer>
 	<para>
 	ドキュメントはテキストと HTML 版があります。
-
-	HTML 版は
+	</para>
+	
+	<para>
+	HTML 版は、
+	<ulink url="http://www.fml.org/software/fml8/">
+	http://www.fml.org/software/fml8/
+	</ulink>
+	を見るのが楽でしょう。
+	ただし、この URL で見えているのは最新版の内容です。
+	配布セット版ドキュメントの HTML 版は
 	トップ・ディレクトリにある index.html.ja からたどっていってください。
 	</para>
 </answer>

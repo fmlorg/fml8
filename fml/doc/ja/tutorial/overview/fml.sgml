@@ -56,7 +56,7 @@
 		リモート管理者の登録/削除、
 		ログを見る、
 		メンバーリストを見る、
-		他。		
+		他が実行できます。		
 	</para>
 
 	<para>
@@ -179,8 +179,9 @@
 
     <listitem>
 	<para>
-	&fml4; エミュレーション: &fml4; の fml.pl と &fml8; の fml.pl 
-	を入れ換えるだけで &fml8; に移行できるようにした。
+	&fml4; エミュレーション:
+	&fml4; の fml.pl と &fml8; の fml.pl を入れ換えるだけで
+	&fml8; に移行できるようにしました。
 	</para>
 
 	<para>
@@ -205,7 +206,7 @@
 	</link>
 	メンバーリストなどの取り扱いにおいて、
 	ファイル、/etc/group、 NIS、MySQL、PostgreSQL、LDAP などを
-	同列に扱います(設定ファイルに追加設定は必要)。
+	同列にあつかいます(設定ファイルに追加設定は必要)。
 	</para>
     </listitem>
     </itemizedlist>
@@ -224,9 +225,11 @@
 <important>
 
 <para>
-インスール方法は GNU autoconf を使うデファクトスタンダード(configure 
-そして make)なものとなっています。&fml4; にあまり似ていません。ですが、
-OS 附属のパッケージシステムとの親和性は高くなりました。
+インスール方法は
+GNU autoconf を使うデファクトスタンダード(configure そして make)
+なものとなっています。
+&fml4; にあまり似ていません。
+ですが、OS 附属のパッケージシステムとの親和性は高くなりました。
 </para>
 
 <para>
@@ -279,7 +282,8 @@ Unix 上で elena ＭＬ(elena@fml.org)を作成するケースを例にとりましょう。
 	<link linkend="install.fml.unix.configure">
 	configure
 	</link>
-	および make install を実行して下さい。
+	その後
+	make install を実行して下さい。
 <screen>
 % su root
 # groupadd fml
@@ -300,11 +304,13 @@ Unix 上で elena ＭＬ(elena@fml.org)を作成するケースを例にとりましょう。
 	</para>
 
 	<para>
-	デフォルトでは、インストーラはメインの MTA から呼ばれるプログラムを
-	/usr/local/libexec/fml/ 以下へ、
-	makefml や fmldoc など fml で始まるユーティリティプログラムを
-	/usr/local/bin
-	にインストールします。実は、これらは
+	デフォルトでは、
+	メインの MTA から呼ばれるプログラムを /usr/local/libexec/fml/ 以下へ、
+	makefml や fmldoc など
+	fml で始まるユーティリティプログラムを /usr/local/bin 以下に、
+	インストールします。
+	実のところ、
+	これらは
 	/usr/local/libexec/fml の下の実体を呼び出す単なる wrapper です。
 	</para>
    </listitem>
@@ -358,7 +364,8 @@ Unix 上で elena ＭＬ(elena@fml.org)を作成するケースを例にとりましょう。
 
 <warning>
 <para>
-&fml4; と異なりユーザ root でインストール作業をすることに注意して下さい。
+&fml4; と異なり、
+ユーザ root でインストール作業をすることに注意して下さい。
 </para>
 </warning>
 
@@ -410,8 +417,8 @@ elena@fml.org ＭＬを作るには
 
 <para>
 最近では、一人で複数のドメインを持つことはありふれていますので、
-全ＭＬをバーチャルドメインとして作成するほうが統一感のある運用方式になる
-と思われます。
+全ＭＬをバーチャルドメインとして作成するほうが、
+統一感のある運用方式になると思われます。
 実際 fml.org 自身もそのような運用方式です。
 </para>
 
@@ -444,7 +451,7 @@ elena@fml.org ＭＬを作るには
 </screen>
 でＯＫです(elena だけでＯＫ、つまり @fml.org なしでもＯＫ)。
 一方、バーチャルドメイン(nuinui.net)の場合は、
-ＭＬのアドレスをすべて指定して下さい。
+ＭＬのアドレスをすべて指定してください。
 <screen>
 % su fml
 % makefml subscribe elena@nuinui.net fukachan@sapporo.iij.ad.jp
@@ -468,7 +475,7 @@ elena@fml.org ＭＬを作るには
 </screen>
 でかまいません。
 一方、バーチャルドメイン(nuinui.net)の場合は、
-アドレスをドメインまで含めてすべて指定して下さい。
+アドレスをドメインまで含めてすべて指定してください。
 <screen>
 % su fml
 % makefml unsubscribe elena@nuinui.net fukachan@sapporo.iij.ad.jp
@@ -527,7 +534,9 @@ InitConfig {
 /var/spool/ml/elena/config.cf
 </screen>
 のようになっています。
-site_force.ph がありませんが、困ってないので、今のところ作る予定なし。
+site_force.ph に対応するファイルがありませんが、
+困ってもいないので、
+作る予定はありません。
 </para>
 
 </footnote>
@@ -588,7 +597,7 @@ config.cf のフォーマットは Postfix の設定ファイル
 <link linkend="bootloader">
 この仕組み
 </link>
-のおかげでアップグレードしても元に戻すのが簡単です。
+のおかげでアップグレードしても瞬時にダウングレードできます。
 これは &fml8; の特徴です。
 </para>
 
