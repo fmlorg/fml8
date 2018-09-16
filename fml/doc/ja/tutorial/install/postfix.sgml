@@ -20,7 +20,8 @@
 
 (3) virtual_maps へ追加		(バーチャルドメインごとに一回)
 </screen>
-ＭＬごとには「無し」です(ＭＬの新規作成・削除に伴う Postfix の変更は不要)。
+ＭＬごとの「作業はありません」
+(ＭＬの新規作成・削除に伴う Postfix の変更は不要です)。
 </para>
 </caution>
 
@@ -33,13 +34,15 @@ makefml newml (fml ML newml)を実行するだけでＭＬが自動的に有効になります。
 <caution>
 
 <para>
-複数のドメインを使う場合、ドメインごとに Postfix の alias_maps と 
-virtual_maps の追加設定が必要になることに注意して下さい。
+複数のドメインを使う場合、
+ドメインごとに Postfix の alias_maps と virtual_maps
+の追加設定が必要になることに注意して下さい。
 </para>
 
 <para>
 ただし、最初の一回だけでＯＫです。
-一つのドメインについては、一度 Postfix の設定をすれば、あとは 
+一つのドメインについては、一度 Postfix の設定をすれば、
+あとは 
 makefml ないしは fml コマンドの操作だけでＭＬの作成・削除が可能です。
 </para>
 
@@ -91,7 +94,7 @@ newml コマンドの使い方についての詳細は
 <link linkend="install.fml.unix">
 <xref linkend="install.fml.unix">
 </link>
-の章を参照。
+の章を参照してください。
 </para>
 
 <!--
@@ -100,15 +103,16 @@ XXX-TODO: newml の際に、Postfix 設定のヒントを表示するべきでしょう。
 
 <warning>
 <para>
-また mydestination にデフォルトのドメイン(おそらく $mydomain )が
-ちゃんと追加されていることを確認して下さい。
+また mydestination にデフォルトのドメイン(おそらく $mydomain )が、
+きちんと追加されていることを確認して下さい。
 </para>
 
 <para>
+たとえば
 <screen>
 % postconf mydestination
 </screen>
-を実行し、Postfix の設定を確認。
+を実行し、Postfix の設定を確認してください。
 </para>
 </warning>
 
@@ -153,13 +157,13 @@ makefml newml を実行すると
 
 nuinui.net /var/spool/nuinui.net
 </screen>
-という「ドメイン←→ディレクトリ」の定義がなされています。
-これは newdomain コマンドで設定します。
+というドメインとディレクトリ間の対応付けが設定されています。
+この対応付けは newdomain コマンドで設定します。
 詳細は
 <link linkend="install.fml.unix">
 <xref linkend="install.fml.unix">
 </link>
-の章を参照。
+の章を参照してください。
 </para>
 
 <!--
@@ -169,27 +173,31 @@ XXX-TODO: newml の際に、Postfix の設定のヒントを表示するべきでしょう。
 <warning>
 
 <para>
-&fml8; が作る virtual_maps のファイルは Postfix スタイルの 
-virtual_maps です。最近の Postfix には sendmail スタイルというのもあり
-ますが、&fml8; では昔からある postfix スタイルを使っているということに
+&fml8; が作る virtual_maps のファイルは
+Postfix スタイルの virtual_maps です。
+最近の Postfix には sendmail スタイルというのもありますが、
+&fml8; では昔からある postfix スタイルを使っているということに注意して下さい。
+</para>
+
+<para>
+mydestination には、
+デフォルトのドメイン(おそらく $mydomain)を入れることが普通ですが、
+バーチャルドメイン(ここでは nuinui.net)を
+mydestination に追加する必要はありません
+(Postfix は virtual_maps の値を見て mydestination 相当であるとみなしています)。
 注意して下さい。
 </para>
 
 <para>
-mydestination には、デフォルトのドメイン(おそらく $mydomain)を入れるこ
-とが普通ですが、バーチャルドメイン(ここでは nuinui.net)は 
-mydestination に追加する必要はありません(Postfix は virtual_maps の値
-を見て mydestination 相当であるとみなしています)。注意して下さい。
+バーチャルドメインが増えるたびに
+alias_maps には新しいドメインの aliaes を、
+virtual_maps にも virtual ファイルを追加する必要があります。
 </para>
 
 <para>
-バーチャルドメインが増えるたびに alias_maps には新しいドメインの 
-aliaes を、virtual_maps にも virtual ファイルを追加する必要があります。
-</para>
-
-<para>
-ちなみに、最近の postfix では virtual_alias_maps というのが正しい変数
-名ですが、デフォルト(/etc/postfix/main.cf.default)で
+ちなみに、
+最近の postfix では virtual_alias_maps というのが正しい変数名ですが、
+デフォルト(/etc/postfix/main.cf.default)で
 <screen>
 virtual_alias_maps = $virtual_maps 
 </screen>
