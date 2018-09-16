@@ -11,7 +11,7 @@
 <para>
 fmlalias (/usr/local/bin/fmlalias)
 はそのホストで定義されている全ての alias を表示します。
-正確には、postfix で定義されている alias の全てを表示します。
+正確には、Postfix で定義されている alias の全てを表示します。
 </para>
 
 <para>
@@ -26,7 +26,7 @@ fmlalias (/usr/local/bin/fmlalias)
 fmladdr と fmlalias の違いは、一覧に
 ユーザ( /etc/passwd で定義されているもの )を含むか否か？という点です。
 fmladdr は含みます、fmlalias は含みません。 
-fmlalias は純粋に alias 群を表示します。
+fmlalias は、純粋に alias 群のみを表示します。
 </para>
 </warning>
 </para>

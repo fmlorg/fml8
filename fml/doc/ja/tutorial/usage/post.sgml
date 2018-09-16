@@ -29,6 +29,9 @@ MTA へ配送処理を委ねます。
 	</title>
 
 
+<itemizedlist>
+
+<listitem>
 <para>
 subject のタグをつける、もしくは記事番号などを更新するなど
 <screen>
@@ -38,19 +41,28 @@ Subject: [elena:00100] エレナさん素敵
 </screen>
 (デフォルトではつけません)
 </para>
+</listitem>
 
+<listitem>  
 <para>
 記事の保存(テキストファイル)
 </para>
+</listitem>
 
+<listitem>  
 <para>
 HTML 化された記事を作る。
 ~fml/public_html/ 以下に作成されます。
 </para>
+</listitem>
 
+<listitem>  
 <para>
 スレッド追跡システムのデータベースを更新する。
 </para>
+</listitem>
+
+</itemizedlist>
 
 </sect2>
 
@@ -66,7 +78,7 @@ XXX-TODO 投稿記事の振舞いを制御する変数
 
 <warning>
 <para>
-ごめん、まだ、書いてない
+すいません、まだ、書いていません(_o_)
 </para>
 </warning>
 

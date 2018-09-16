@@ -14,14 +14,15 @@
 
 <answer>
 <para>
-elena ML のメンバ一覧を見たい場合、
+elena ML のメンバ一覧を見たい場合は、次のコマンドを実行してください
 <screen>
 makefml list elena
 </screen>
 もしくは
 <screen>
-makefml list member
+makefml list elena member
 </screen>
+実質的に、前者のコマンドは後者の member を省略したものに該当しています。
 </para>
 </answer>
 </qandaentry>
@@ -74,9 +75,14 @@ CGI でも同様です。rmml で消していれば reviveml で復活できます。
 </para>
 
 <para>
-もちろん「rm -fr /var/spool/ml/elena」などとしてＭＬを消去してしまって
-いれば元に戻す方法ありません。バックアップから戻して下さい(こまめにバッ
-クアップをとりましょう)。
+もちろん
+<screen>
+% rm -fr /var/spool/ml/elena
+</screen>
+などとしてＭＬを消去してしまった場合、
+&fml8; の範囲で元に戻す方法ありません。
+これは OS の世界の話です。
+OS のバックアップから戻して下さい(こまめにバックアップをとりましょう)。
 </para>
 
 </answer>
@@ -94,16 +100,18 @@ CGI でも同様です。rmml で消していれば reviveml で復活できます。
 
 <answer>
 <para>
-特別な利用法などないなら、普通にユーザとして登録してください。
+一般には、普通にユーザとして登録してください。
 <screen>
 % makefml add ＭＬ名 メールアドレス
 </screen>
+ただ、普通に登録すると、そのアドレスにも配送されてしまいます。
 </para>
 
 <para>
-会社からも、夜、自宅からもＭＬに投稿したいが、受取先は会社だけにしたい
-なら addmember コマンドを使って「投稿可能なアドレスだけを増やして」下
-さい。
+そこで、配送先は一ヶ所だけにしたい、たとえば
+「昼間は会社から、夜は自宅からもＭＬに投稿したいが、受取先は会社だけにしたい」
+なら、
+addmember コマンドを使って「投稿可能なアドレスだけを増やして」ください。
 </para>
 
 <para>
@@ -111,7 +119,7 @@ CGI でも同様です。rmml で消していれば reviveml で復活できます。
 <screen>
 % makefml addmember ＭＬ名 メールアドレス
 </screen>
-このコマンドは次の４つどれでも一緒です。
+このコマンドは次の４つどれを使っても動作は同じです。
 add2member
 add2members
 addmember
@@ -130,7 +138,7 @@ admin addmember ＭＬ名 メールアドレス
 </para>
 
 <para>
-いまのところ CGI ではこのコマンドが使えるようになっていません。
+いまのところ CGI では、このコマンドが使えるようになっていません。
 </para>
 
 </answer>
@@ -149,12 +157,12 @@ admin addmember ＭＬ名 メールアドレス
 <answer>
 
 <para>
-ＭＬの投稿は出来ないが記事の受信者として増やす場合です。
+ＭＬの投稿は出来ないけれど、記事の受信者として増やす場合です。
 たとえば
 <link linkend="config.mailmagazine.1">
 メールマガジン
 </link>
-のようなケースです。
+が該当します。
 </para>
 
 <para>
@@ -183,7 +191,7 @@ admin addrecipient ＭＬ名 メールアドレス
 </para>
 
 <para>
-いまのところ CGI ではこのコマンドが使えるようになっていません。
+いまのところ CGI では、このコマンドが使えるようになっていません。
 </para>
 
 </answer>
@@ -219,7 +227,7 @@ admin chaddr ＭＬ名 旧メールアドレス 新メールアドレス
 </para>
 
 <para>
-CGI でも chaddr コマンドが利用可能です。
+CGI でも chaddr コマンドは利用可能です。
 </para>
 
 </answer>

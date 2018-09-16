@@ -16,6 +16,7 @@ fml の任意のモジュールに対し、そのドキュメントを表示します。
 
 <para>
 たとえば、FML::Process::Kernel のドキュメントが見たい場合、
+次のように実行してください。
 <screen>
 % fmldoc FML::Process::Kernel
 </screen>

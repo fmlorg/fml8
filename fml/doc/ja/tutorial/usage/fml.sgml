@@ -20,12 +20,14 @@ fml コマンドでは
 <screen>
 % fml ＭＬ名 コマンド [コマンド固有のオプション]
 </screen>
-となります。一方、makefml では
+となります。
+一方、makefml では
 <screen>
 % makefml コマンド ＭＬ名 [コマンド固有のオプション]
 </screen>
 です。
-各コマンドの使い方については makefml を参照して下さい。
+各コマンドの使い方については、
+本章の makefml の節群を参照して下さい。
 </para>
 
 </sect1>
