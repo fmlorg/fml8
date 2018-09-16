@@ -23,7 +23,8 @@ newml 時にＭＬ管理者のメールアドレスを指定したい。
 
 <answer>
 <para>
-newml 時に、そのＭＬ用のエイリアスが準備されます。そのさい、
+newml 時に、そのＭＬ用のエイリアスが準備されます。
+その際、
 <screen>
 ${ml_name}-admin: 管理者のメールアドレス 
 </screen>
@@ -32,10 +33,12 @@ $newml_command_ml_admin_default_address
 変数の値が入ります。
 
 デフォルトでは、
-どのＭＬでも /usr/local/etc/fml/main.cf 
-で定義されている管理者のアドレス $fml_owner が使われます。
+どのＭＬでも
+/usr/local/etc/fml/main.cf で定義されている管理者のアドレス $fml_owner
+が使われます。
 
-それ以外のアドレスに変更したい場合、site_default_config.cf で
+それ以外のアドレスに変更したい場合、
+site_default_config.cf で
 $newml_command_ml_admin_default_address 
 にメールアドレスを設定して下さい。
 <screen>
@@ -104,7 +107,7 @@ newml_command_mta_config_list -= qmail
 	<link linkend="setupcgi">
 	<xref linkend="setupcgi">
 	</link>
-	の章を参照して CGI を有効に下さい。
+	の章を参照して CGI を有効にして下さい。
 	</para>
 
 </answer>

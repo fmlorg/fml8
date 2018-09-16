@@ -11,15 +11,17 @@
 <important>
 <para>
 対象となるドメインを増やす際、
-ドメインごとに /etc/postfix/main.cf への設定追加作業が一回必要です。
+ドメインごとに /etc/postfix/main.cf への設定追加作業が一回
+(最初の一回だけは)
+必要です。
 </para>
 
 <para>
 ドメインごとに一度 &fml8; の作成する見本に従って
 alias_maps (バーチャルドメインの場合は、alias_maps と virtual_maps 両方)
 を変更しておけば、
-ＭＬの作成・削除時に特別な作業はありません(
-&fml8; の設定ツールにより Postfix の設定は自動的に更新されます)。
+各ＭＬの作成・削除時に特別な作業はありません
+(&fml8; の設定ツールにより Postfix の設定は自動的に更新されます)。
 </para>
 
 <para>
@@ -33,15 +35,19 @@ Postfix の設定については
 
 <warning>
 <para>
-&fml8; は OS の 
-aliases (例: /etc/mail/aliases)を変更することはありません。
+&fml8; は
+OS の 
+aliases (例: /etc/mail/aliases)ファイルには関わりません
+(変更などはしません)。
 </para>
 
 <para>
-&fml8; の設定ツールは、各ドメインごとに用意されている alias ファイル 
-$ml_home_prefix/etc/mail/aliases へ必要な設定を追加し、
+&fml8; の設定ツールは、
+各ドメインごとに用意されている alias ファイル 
+$ml_home_prefix/etc/mail/aliases
+へ必要な設定を追加し、
 そのファイルから aliases.db を再生成する作業を行ないます
-(ＭＬの作成・削除に必要な作業は設定ツールにおまかせです)。
+(ＭＬの作成・削除に必要な作業は、&fml8; の設定ツールにおまかせできます)。
 </para>
 </warning>
 
@@ -51,7 +57,7 @@ $ml_home_prefix/etc/mail/aliases へ必要な設定を追加し、
 	</title>
 
 <para>
-&fml8; が管理しているＭＬの aliases のエントリは
+&fml8; が管理しているＭＬの aliases エントリは
 $ml_home_prefix/etc/mail/aliases
 に追加されます。
 <screen>

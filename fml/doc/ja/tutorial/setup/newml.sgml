@@ -70,7 +70,7 @@ makefml newdomain コマンドで使いたいパスを指定する、
 注意: 
 本ドキュメントの他の場所でも言及しているように、
 (運用するドメインは増えていくと仮定して)
-全ＭＬをバーチャルドメインで運用しておく方が素直だと考えてます。
+はじめから全ＭＬをバーチャルドメイン前提での運用が推奨です。
 </para>
 
 
@@ -110,7 +110,7 @@ makefml newdomain コマンドで使いたいパスを指定する、
    <listitem>
         <para>
 	procmailrc の見本を作る
-	(これは見本を作るだけ)。
+	(これは見本を作るだけです)。
         </para>
    </listitem>
 
@@ -178,15 +178,15 @@ makefml newdomain コマンドで使いたいパスを指定する、
 <para>
 (新しいドメインを使いはじめる際)
 初回は newdomain コマンドによるドメイン定義も必要です。
+たとえば、nuinui.net ドメインでのＭＬを使いはじめる時
 <screen>
-例: nuinui.net ドメインでのＭＬを使いはじめる時。
-
 % su root
 # makefml newdomain nuinui.net /var/spool/virtual/nuinui.net
 # exit
 % su fml
 % makefml newml elena@nuinui.net
 </screen>
+となります。
 二回目以降は
 <screen>
 % su fml
@@ -212,7 +212,8 @@ nuinui.net /var/spool/virtual/nuinui.net
 </para>
 
 <para>
-newml コマンドは、引数のＭＬ名を「ドメイン名つき」にする以外、
+newml コマンドの使い方は、
+引数のＭＬ名を「ドメイン名つき」にする以外、
 デフォルトドメインの場合と操作方法は同じです。
 </para>
 
@@ -234,8 +235,8 @@ MTA の設定変更時の参考にして下さい。
 ちなみに procmail は、見本(
 /var/spool/nuinui.net/etc/procmail/procmailrc
 )自体がドメイン名つきなので、
-特別バーチャルドメイン用ではありません。
-いずれにせよ、見本に御利用下さい。
+格別バーチャルドメイン用というわけではありません。
+どちらのケースでも設定見本に利用できます。
 </para>
 
 <para>

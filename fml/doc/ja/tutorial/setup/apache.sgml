@@ -54,7 +54,7 @@ CGI ユーザには、CGI 用途専用のユーザを用意して下さい。
 インストール後、~ユーザ/cgi-bin/ を許すように httpd.conf を
 変更する必要があります。
 <screen>
-設定例:
+設定例(Apache 2.2まで):
 
 &lt;Directory /home/*/*/public_html&gt;
     AllowOverride FileInfo AuthConfig Limit
@@ -73,6 +73,16 @@ CGI ユーザには、CGI 用途専用のユーザを用意して下さい。
 	... 略 ...
 &lt;/IfModule&gt;
 </screen>
+Apache 2.4 以降は、
+<screen>
+Order allow,deny
+Allow from 特定のホスト
+</screen>
+のところが、
+<screen>
+Require ...
+</screen>
+という呪文に変わります。
 </para>
 
 </sect1>

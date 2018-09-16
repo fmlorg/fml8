@@ -9,7 +9,8 @@
 	</title>
 
 <para>
-2004/03: &fml4; の $DIR ($ml_home_dirにあたるもの)、たとえば 
+2004/03: &fml4; の $DIR ($ml_home_dirにあたるもの)、
+たとえば 
 /var/spool/ml/elena 以下のファイル群を 
 &fml8; 形式の構成へ自動変換するコマンドを実装しました。
 ただ、まだ設定ファイルの翻訳機能は予備的なもので、
@@ -21,7 +22,8 @@
 <link linkend="mergeml.fml4.overview">
 &fml4; の fml.pl を &fml8; の fml.pl と入れ換え可能
 </link>
-としました。つまり、&fml8; による &fml4; の直接エミュレーションです。
+としました。
+つまり、&fml8; による &fml4; の直接エミュレーションです。
 これは &fml4; の fml.pl を &fml8; の fml.pl に入れ換えるだけで 
 &fml4; から &fml8; へのアップグレードを可能にしようとするものです。
 </para>
@@ -46,15 +48,19 @@
 </para>
 
 <para>
-そもそも 4 を 8 で上書きしてしまうと、一斉に移行を強制することになるし、
+そもそも 4 を 8 で上書きしてしまうと、
+一斉に移行を強制することになるし、
 失敗した時のエラーリカバリが大変です。
 やはり、少しずつ移行していきたいでしょう。
 また、少しずつ移行する場合にも、できれば逆戻りが可能であるべきです。
 </para>
 
 <para>
-そんなわけで、ＭＬを一つ一つ移行できるような仕組みにしておきたい。
-できれば、リカバリも出来ると良い、とおもうわけです。
+そんなわけで、
+ＭＬを一つ一つ移行できるような仕組みにしておきたい、
+できれば、
+リカバリも出来ると良い、
+と思うわけです。
 </para>
 
 <para>
@@ -70,7 +76,7 @@
 				hash:/var/spool/ml/etc/mail/aliases (fml8)
 
 
-3. &fml4; の ML を &fml8; へコンバートする。
+3. &fml4; の ML を &fml8; へ変換する。
 
    fml $ml mergeml &fml4; の$DIR 
 たとえば
@@ -81,19 +87,23 @@
 
 <para>
 aliases や include の自動変換は、makefml mergeml コマンドが処理します。
-また、&fml4; の設定ファイルとメンバーリストを 
-&fml8; 形式へ変換する作業も mergeml コマンドが行ないます。
+また、
+&fml4; の設定ファイルとメンバーリストを 
+&fml8; 形式へ変換する作業も
+mergeml コマンドが行ないます。
 </para>
 
 <para>
-さすがに、難しい設定てんこ盛りの config.ph は無理ですが、
+さすがに、
+難しい設定てんこ盛りの config.ph は無理ですが、
 簡単な config.ph であれば
-&fml8; の config.cf へ全自動で変換できているつもりです。
+&fml8; の config.cf へ全自動変換できているつもりです。
 </para>
 
 <para>
-なお、簡単な設定とは、Subject のタグと投稿制限の設定など &fml4; の 
-makefml config (メニュー)で設定変更ができたレベルのものを想定しています。
+なお、簡単な設定とは、
+Subject のタグと投稿制限の設定など
+&fml4; の makefml config (メニュー)で設定変更できた範囲を想定しています。
 </para>
 
 </sect1>
@@ -106,7 +116,8 @@ makefml config (メニュー)で設定変更ができたレベルのものを想定しています。
 	</title>
 
 <para>
-2004/11: &fml4; の fml.pl を &fml8; の fml.pl と入れ換え可能としました。
+2004/11:
+&fml4; の fml.pl を &fml8; の fml.pl と入れ換え可能としました。
 いわば、Postfix の /usr/sbin/sendmail (sendmail 互換コマンド)
 同様の扱いと考えてください。
 </para>
@@ -239,8 +250,9 @@ article_subject_tag           = [$ml_name:%05d]
 
 <para>
 そのため、場合によっては /usr/local/etc/fml/site_default_config.cf で
-一度「デフォルトでは使わない」に設定を変更し、その上で、あらためて以下
-の例外ルールを適用する必要があります。
+一度「デフォルトでは使わない」に設定を変更し、
+その上で、
+あらためて以下の例外ルールを適用する必要があります。
 </para>
 
 <para>
@@ -261,7 +273,7 @@ subscribe, chaddr, unsubscribe は confirmation が必須となっています。
 
 <para>
 変換するコマンド(makefml mergeml)が行なう作業を、以下で説明します。
-実際、手動で行なう必要はありません。
+手動で行なう必要はありません。
 </para>
 
 <para>
@@ -315,7 +327,9 @@ alias_maps	=	hash:/etc/mail/aliases
 			hash:/var/spool/ml/etc/aliases (fml4)
 			hash:/var/spool/ml/etc/mail/aliases (fml8)
 </screen>
-&fml4; と &fml8; の aliases ファイル間での重複は削除しておかないといけません。
+&fml4; と &fml8; の aliases ファイル間での重複
+(ＭＬ名 e.g. elena の重複)
+は削除があってはなりません。
 </para>
 
 <para>

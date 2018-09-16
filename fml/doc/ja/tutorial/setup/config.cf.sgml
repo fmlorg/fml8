@@ -11,8 +11,8 @@
 <para>
 makefml は、
 makefml newml を実行した際に、
-そのＭＬの config.cf などの設定ファイル群を一式を作り、
-さらに MTA が fml を起動する際に使う設定ファイル一式を用意します。
+そのＭＬの config.cf などの設定ファイル群一式を作ります。
+同時に、MTA が fml を起動する際に使う設定ファイル一式も用意します。
 MTA 用の設定ファイルとは、
 Postfix/Sendmail 用の include ファイル群および
 qmail 用の ~fml/.qmail-* 
@@ -40,7 +40,8 @@ config.cf include include-ctl include-error
 <para>
 makefml newml が作る config.cf には、ほとんど何も定義されていません
 (つまりデフォルト値を使うことになっています)。
-config.cf の先頭の ml_domain と ml_name もコメントになっていますが、
+config.cf ファイル先頭にある変数
+ml_domain と ml_name もコメントになっていますが、
 それらはコマンドの引数から自動的に決定されるものです
 (よって、コメントのままで OK)。
 </para>
@@ -50,13 +51,16 @@ config.cf の先頭の ml_domain と ml_name もコメントになっていますが、
 <screen>
 "| /usr/local/libexec/fml/distribute elena@fml.org"
 </screen>
-そして /var/spool/ml/elena/include-ctl ファイルは
+そして
+/var/spool/ml/elena/include-ctl ファイルは
 <screen>
 "| /usr/local/libexec/fml/command elena@fml.org"
 </screen>
-などとなっています。MTA から起動された 
+などとなっています。
+MTA から起動された 
 /usr/local/libexec/fml/distribute
-コマンドなどが、このコマンド引数の elena@fml.org の部分から
+コマンドなどが、
+このコマンド引数の elena@fml.org の部分から
 ml_domain と ml_name を自動的に設定します
 (そのため config.cf ではコメントのままで問題ありません)。
 </para>
