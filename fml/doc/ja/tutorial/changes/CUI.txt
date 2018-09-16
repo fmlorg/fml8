@@ -44,7 +44,7 @@ Q: qmail 用の設定を作る
 4: makefml qmail-setup ML
 8: 不要 (デフォルトで作成する)
 
-Q: aliaes を再生成する
+Q: aliases を再生成する
 4: makefml recollect-aliases ML
 8: 該当するものはない
 
