@@ -71,7 +71,8 @@ FML::Command::User 以下のモジュールから適当にコピー＆ペーストして
 </para>
 
 <para>
-すべてのＭＬで有効にする場合は、site_default_config.cf で、
+すべてのＭＬで有効にする場合は、
+site_default_config.cf で、
 「許可するコマンドのリスト」に追加してください。
 <screen>
 user_command_mail_allowed_commands += uja
@@ -81,7 +82,8 @@ user_command_mail_allowed_commands 変数は、
 </para>
 
 <para>
-elena MＬだけで有効にする場合は、elena ＭＬの config.cf で、
+elena MＬだけで有効にする場合は、
+elena ＭＬの config.cf で、
 許可するコマンドリストに追加してください。
 <screen>
 user_command_mail_allowed_commands += uja
@@ -106,7 +108,8 @@ FML::Command::Admin 以下から適当にコピー＆ペーストして
 </para>
 
 <para>
-すべてのＭＬでコマンドを有効にする場合は、site_default_config.cf で、
+すべてのＭＬでコマンドを有効にする場合は、
+site_default_config.cf で、
 許可するコマンドリストに追加してください。
 <screen>
 admin_command_mail_allowed_commands += uja
@@ -116,7 +119,8 @@ admin_command_mail_allowed_commands 変数は
 </para>
 
 <para>
-elena ＭＬだけで有効にする場合は、elena ＭＬの config.cf で、
+elena ＭＬだけで有効にする場合は、
+elena ＭＬの config.cf で、
 許可するコマンドリストに追加してください。
 <screen>
 admin_command_mail_allowed_commands += uja
@@ -142,7 +146,8 @@ admin_command_mail_allowed_commands += uja
 /usr/local/lib/fml/site_local/
 </screen>
 以下に配置して下さい。
-一方、特定のＭＬだけを拡張する場合は、各ＭＬのホーム以下の local/lib/
+一方、特定のＭＬだけを拡張する場合は、
+各ＭＬのホーム以下の local/lib/
 以下において下さい。
 <screen>
 ＭＬのホーム/local/lib/
@@ -173,8 +178,9 @@ makefml では「モジュールを置くだけで有効」になります。
 </para>
 
 <para>
-makefml を利用できる時点で、そのＭＬサーバの特権権限を奪取できているわ
-けですから、それ以上複雑な制限をつけても使いにくいだけでしょうから。
+makefml を利用できる時点で、
+そのＭＬサーバの特権権限を奪取できているわけですから、
+それ以上複雑な制限をつけても使いにくいだけでしょうから。
 </para>
 
 
@@ -192,7 +198,7 @@ makefml を利用できる時点で、そのＭＬサーバの特権権限を奪取できているわ
 
 <para>
 以下の記述で「利用可能な機能の追加」が出来ますが、
-それとは別に CGI 画面の作り込みは必要です。
+別途 CGI 画面の作り込みが必要です。
 </para>
 
 <para>
@@ -205,7 +211,9 @@ makefml を利用できる時点で、そのＭＬサーバの特権権限を奪取できているわ
 </para>
 
 <para>
-一方、特定のＭＬだけを拡張する場合は、各ＭＬのホーム以下の local/lib/
+一方、
+特定のＭＬだけを拡張する場合は、
+各ＭＬのホーム以下の local/lib/
 以下において下さい。
 <screen>
 ＭＬのホーム/local/lib/
@@ -236,17 +244,19 @@ FML::Command 以下から適当にコピー＆ペーストして
 </para>
 
 <para>
-すべてのＭＬで uja コマンドを有効にしたい場合、site_default_config.cf で、
+すべてのＭＬで uja コマンドを有効にしたい場合、
+site_default_config.cf で、
 許可するコマンドリストに追加してください。
 <screen>
 admin_cgi_allowed_commands += uja
 </screen>
-admin_cgi_allowed_commands 変数は管理者用 CGI インターフェイスで許可す
-るコマンドの一覧です。
+admin_cgi_allowed_commands 変数は、
+管理者用 CGI インターフェイスで許可するコマンドの一覧です。
 </para>
 
 <para>
-elena ＭＬだけで有効にする場合は、elena ＭＬの config.cf で、
+elena ＭＬだけで有効にする場合は、
+elena ＭＬの config.cf で、
 許可するコマンドリストに追加してください。
 <screen>
 admin_cgi_allowed_commands += uja
