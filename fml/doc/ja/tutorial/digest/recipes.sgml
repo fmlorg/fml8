@@ -33,7 +33,8 @@
 <answer>
 <para>
 できません。
-現在は MIME/Multipart しかサポートしていないので他の選択肢がありません。
+現在は MIME/Multipart しかサポートしていません。
+他の選択肢は、ありません。
 </para>
 </answer>
 
@@ -51,7 +52,8 @@ makefml add の時にまとめ送りパラメータも指定したい
 <answer>
 <para>
 できません。
-現在は MIME/Multipart しかサポートしていないので他の選択肢がありません。
+現在は MIME/Multipart しかサポートしていません。
+他の選択肢は、ありません。
 </para>
 </answer>
 
