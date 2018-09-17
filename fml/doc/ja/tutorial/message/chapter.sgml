@@ -14,9 +14,18 @@
 Mail::Message クラス
 </link>
 を見て下さい。
-このクラスが基本的な操作法を提供しています。
+この
+<link linkend="module.mail.message">
+Mail::Message クラス
+</link>
+が基本的な操作法を提供しています。
 Mail::Bounce や Mail::Delivery をはじめ、
-あらゆる関数がこのクラスに依存しています。
+あらゆる関数が、
+この
+<link linkend="module.mail.message">
+Mail::Message クラス
+</link>
+に依存しています。
 </para>
 
 
@@ -31,29 +40,46 @@ Mail::Bounce や Mail::Delivery をはじめ、
 MIME/Multipart のように、
 ボディは複数の部分(パート)から成ることもありますが、
 いずれにせよ数珠つなぎ構造です。
+<screen>
+(いわゆるテキストの場合)
+header -> body
+
+(マルチパートメールの場合)
+header -> preamble -> part1 -> part2 -> trailor
+</screen>
 </para>
 
 <para>
 メールの配送処理だけを考えるなら、
 メール本文の細部の構造を気にする必要はありません。
-一方で、フィルタリングをはじめとして、
+一方、
+メーリングリストドライバには、
+フィルタリングをはじめとして、
 メール本文の解析を必要としている処理が多々あります。
 </para>
 
 <para>
-それらのモジュールのために
+それらの処理をするモジュールのために
 <link linkend="module.mail.message">
 Mail::Message クラス
 </link>
 があり、
-メールの構造を表現するために用いられています。
-このクラスは
+メールの内部構造を表現するために用いられています。
+この
+<link linkend="module.mail.message">
+Mail::Message クラス
+</link>
+は
 Mail::Bounce や Mail::Delivery を始め、
-いたるところで使われています。
+多くのモジュールで使われています。
 </para>
 
 <para>
-たとえば、このような使い方をします。
+たとえば、
+<link linkend="module.mail.message">
+Mail::Message クラス
+</link>
+を使い、このようなコードを書く想定です。
 <screen>
     my $fh  = new FileHandle $file;
     my $msg = Mail::Message->parse( { fd => $fh } );
@@ -66,6 +92,20 @@ Mail::Bounce や Mail::Delivery を始め、
 	message   => $msg,
     });
 </screen>
+これは
+「メールを解析し、それをふたたび配送する」というだけのサンプルコードです。
+<footnote>
+<para>
+UNIX でいえば cat(1) ですね
+K&amp;Rの最初の方に出てくる、
+左から入力したものが右から出てくる単純なコード例:
+<screen>
+int c;
+while ((c = getchar()) != EOF) { putchar(c);}
+</screen>
+のメール版と言えるでしょう。
+<para>
+</footnote>
 </para>
 
 </sect1>
@@ -102,13 +142,14 @@ Mail::Bounce や Mail::Delivery を始め、
 
 <para>
 これはメール、
-特にコマンドメールの処理を返す場合などの返答
-などを構築する際に用いるクラスですが、単なるアダプタです。
+特にコマンドメールの処理を返す場合の返答などを構築する際に用いるクラスですが、
+単なるアダプタです。
 メールを作成する実体は
-CPAN の MIME::Lite クラスです。
+CPAN の MIME::Lite
+クラスです。
 作成のリクエストは
-MIME::Lite クラスへ
-丸投げされています。
+MIME::Lite
+クラスへ丸投げされています。
 </para>
 
 <para>
