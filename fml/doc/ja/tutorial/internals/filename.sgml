@@ -22,7 +22,7 @@
 	</title>
 
 <para>
-基本系は
+基本形は
 <screen>
 ファイル名-役割
 </screen>
@@ -35,7 +35,7 @@ members-役割
 </para>
 
 <para>
-さらに配送リスト以外でも同じルールを適用します。
+さらに配送リスト以外にも同じルールを適用します。
 たとえば
 <screen>
 passwd-admin
@@ -45,19 +45,19 @@ passwd-cgiadmin
 といったぐあいです。
 </para>
 
-
 <para>
 将来も同様に、新たな『役割』を新設するごとに
 <screen>
 members-役割
-recipient-役割
+recipients-役割
 </screen>
 を作ることにします。
-でも、たいてい recipient-* はダミーに過ぎないないことが多いでしょう:)
+でも、たいてい recipients-* はダミーに過ぎないないことが多いでしょう:)
 </para>
 
 <para>
-一応、使い分けるつもりですが、実際、
+一応、使い分けているつもりですが、
+実際、
 どういう場合に役立つのかはよくわからないです。
 悩んだときは、理論的に美しい方を採用することにしています。
 </para>
@@ -74,16 +74,17 @@ recipient-役割
 <screen>
 primary_recipient_maps	=	recipients
 
-# 互換性のため actives をいれておく
+# 互換性のため actives をいれてあります
 recipient_maps	=	recipients
 			actives
 </screen>
 </para>
 
+<!--
 <para>
-[TODO] warning 出るところがあるので、なんとかせな
+[TODO] warning 出るところがあるので、なんとかせな、あきません
 </para>
-
+-->
 
 </sect1>
 
@@ -139,7 +140,9 @@ etc/passwd-admin
 
 <para>
 パスワード認証以外の場合もあり得るので、
-ちゃんと「ファイル名-役割」としたかったというわけです。
+きちんと
+「ファイル名-役割」
+名にしました。
 </para>
 </warning>
 

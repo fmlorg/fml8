@@ -96,22 +96,26 @@ $curproc->_drive_cgi_by_table() メソッドは、
 </para>
 
 <para>
-たとえばコマンドを実行するメイン部分が run_cgi_main です。これは、
+たとえば、コマンドを実行するメイン部分が run_cgi_main です。
+これは、
 cgi_execute_command (FML::Process::CGI::Kernel) を呼び出し、
 FML::Command 経由で「FML::Command::Admin::コマンド」クラスを実行します。
 これが、GUI からコマンドを実行するコードの本体です。
 </para>
 
 <para>
-画面の表示をするには別のメソッド群が呼ばれています。
+画面の表示をする際には、
+別のメソッド群が呼ばれています。
 </para>
 
 <para>
 たとえば GUI から「ユーザのメールアドレスを登録する」場合、
 run_cgi_menu() が入力画面の生成をおこないます。
-run_cgi_menu() は cgi_execute_cgi_menu() 経由で各コマンドクラスの
+run_cgi_menu() は cgi_execute_cgi_menu() 経由で、
+各コマンドクラスの
 「FML::Command::Admin::コマンド::cgi_menu()」を実行しています。
-この場合 FML::Command::Admin::subscribe::cgi_menu() 
+この場合
+FML::Command::Admin::subscribe::cgi_menu() 
 メソッドを呼び出しています。
 </para>
 
@@ -123,16 +127,17 @@ FML::Command::Admin::subscribe::process()
 
 <para>
 他にも run_cgi_* 関数がありますが、
-これらは画面の作りに関係する補助的なものたちといってよいでしょう。
+これらは画面の作りに関係する補助的な関数と言ってよいでしょう。
 </para>
 
 <para>
-次の２つのメソッドは、たいていデフォルトのものを使っています。
+次の２つのメソッドは、たいていデフォルトの関数を呼び出しています。
 <screen>
 run_cgi_title             FML::Process::CGI::Kernel クラス (タイトル表示)
 run_cgi_options           FML::Process::CGI::Kernel クラス (言語選択画面)
 </screen>
-また、この .cgi 固有の画面作り関連メソッド群として次のものがあります。
+また、
+この .cgi 固有の画面作り関連メソッド群として次のものがあります。
 <screen>
 run_cgi_navigator         FML::CGI::Menu クラス
 run_cgi_help              FML::CGI::Menu クラス
@@ -140,8 +145,11 @@ run_cgi_command_help      FML::CGI::Menu クラス
 run_cgi_menu              FML::CGI::Menu クラス
 </screen>
 ヘルプなどはコマンドごとに違うわけですから、当たり前ですね？
-ただ、メッセージが異なるとかいうだけで、モジュールが違っても、
-ほぼ似たようなつくりです。
+もっとも、
+これらは、
+メッセージなどが異なるだけで、
+モジュールが違っても、
+ほぼ似たようなつくりになっています。
 </para>
 
 </sect1>

@@ -9,21 +9,30 @@
 	</title>
 
 <para>
-/usr/local/libexec/fml/error は &fml4; の 
+/usr/local/libexec/fml/error
+は
+&fml4;
+の 
 mead (libexec/mead) に相当するエラー解析プログラムです。
 </para>
 
 <para>
 $use_error_mail_analyzer_function を yes にすると、
 エラー解析機能が有効になります。
-ちなみに、デフォルトで $use_error_mail_analyzer_function は yes 
+ちなみに、
+デフォルトで
+$use_error_mail_analyzer_function は yes
+です。
 つまりエラー解析機能は有効になっています。
 このあたりは &fml4; と異なります。
 </para>
 
 <para>
 つまるところ、
-&fml8; では &fml4; でよく使う機能は初めから有効になっています。
+&fml8;
+では
+&fml4;
+でよく使う機能は初めから有効になっています。
 </para>
 
 
@@ -33,8 +42,10 @@ $use_error_mail_analyzer_function を yes にすると、
 	</title>
 
 <para>
-ＭＬ作成時に $ml-admin アドレス宛のメールは
-/usr/local/libexec/fml/error を呼び出すように設定されます。
+ＭＬ作成時に
+$ml-admin アドレス宛のメールは
+/usr/local/libexec/fml/error
+を呼び出すように設定されます。
 </para>
 
 <para>
@@ -46,24 +57,32 @@ $use_error_mail_analyzer_function を yes にすると、
 </para>
 
 <para>
-Mail::Bounce は、エラーメールについて「どの MTA が生成したものか？」
-「エラーを引き起こしたメールアドレス」「エラーの理由」を分析します。
+Mail::Bounce は、エラーメールについて
+「どの MTA が生成したものか？」
+「エラーを引き起こしたメールアドレス」
+「エラーの理由」
+を分析します。
 </para>
 
 <para>
-解析結果は $error_mail_analyzer_cache_dir ディレクトリに格納されます。
+解析結果は
+$error_mail_analyzer_cache_dir
+ディレクトリに格納されます。
 </para>
 
 <para>
 一定時間以上経過すると、
-$error_mail_analyzer_function がキャッシュのデータを解析し、
+$error_mail_analyzer_function
+がキャッシュのデータを解析し、
 あるメールアドレスが存在しないように思えるか否か？を判定します。
 その結果、消すべきだと判断されると、削除されます。
 </para>
 
 <para>
-「一定時間」と「消すべきか？という判断」
-の二つが主なチューニングパラメータになります。
+「一定時間」
+と
+「消すべきか？という判断」
+この二つが主なチューニングパラメータになります。
 </para>
 
 </sect1>
@@ -78,7 +97,10 @@ $error_mail_analyzer_function がキャッシュのデータを解析し、
 $error_mail_analyzer_function_select_list 
 にある関数名が利用し得るアルゴリズムです。
 デフォルトでは 
-simple_count と histgram という２つのアルゴリズムが用意されており、
+simple_count
+と
+histgram
+という２つのアルゴリズムが用意されており、
 histgram がデフォルトです。
 </para>
 
@@ -93,9 +115,12 @@ histgram がデフォルトです。
 </para>
 
 <para>
-単純にエラー数なので、”たまたま”受信者が設定を少しの間だけ間違えていて、
+単純にエラー数なので、
+”たまたま”受信者が設定を少しの間だけ間違えていて、
 ”たまたま”その日の流量が多い場合、
-その受信者は「削除対象」とみなされることになります。
+その受信者は
+「削除対象」
+とみなされることになります。
 </para>
 
 <para>
@@ -111,7 +136,7 @@ histgram がデフォルトです。
 	</title>
 
 <para>
-エラーが連続してＮ日続いた時に限り削除を行ないます。
+エラーが連続してＮ日続いた時にかぎり削除を行ないます。
 デフォルトでは 14 日(つまり二週)のあいだ連続してエラーの場合に、
 はじめてアドレスの削除が行なわれます。
 </para>
@@ -146,20 +171,20 @@ histgram がデフォルトです。
 
 <para>
 各エラーメール(らしきもの)の解析結果は 
-$error_mail_analyzer_cache_dir ディレクトリに格納されます。
+$error_mail_analyzer_cache_dir
+ディレクトリに格納されます。
 </para>
 
 <para>
-現在、キャッシュの入出力には Tie::JournaledDir クラスを使っていますが、
-正確には FML::Error::Cache 経由で Tie::JournaledDir 
-への IO を行なっています。
-</para>
-
-<para>
-FML::Error::Cache が Tie::JournaledDir の直前に位置し、
-アダプタ層となっています。
+現在、キャッシュの入出力には
+Tie::JournaledDir
+クラスを使っています。
+正確には
+FML::Error::Cache というアダプタ層が Tie::JournaledDir の直前に位置し、
+FML::Error::Cache 経由で Tie::JournaledDir への IO を行ないます。
 すべての IO は、FML::Error::Cache が提供する 
-primitive なメソッドを通じてのみ行なわなければなりません。
+primitive
+なメソッドを通じてのみ行なわなければなりません。
 </para>
 
 </sect1>
@@ -191,8 +216,10 @@ mime/multipart がＭＬの管理者へ送信されます。
 -->
 
 <para>
-そのうち、ヘッダ情報 + そのエラーメールのアドレスの分析レポートとか
-なんか付けてやれや〜とかちょっと思っています。
+そのうち、
+「ヘッダ情報 + そのエラーメールのアドレスの分析レポート」
+など、もう少し付加的な情報もつけるべきでしょうか
+(と考えつつ、未実装のままです)？
 </para>
 
 <para>

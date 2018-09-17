@@ -4,7 +4,7 @@
 
 <appendix id="structure">
 	<title>
-	データ構造のサンプル
+	データ構造の実例
 	</title>
 
 
@@ -14,7 +14,7 @@
 	</title>
 
 <para>
-FML::Process::Distribute が走っている時のデータ構造の例。
+FML::Process::Distribute が走っている時のデータ構造の例です。
 </para>
 
 &struct.curproc;
@@ -28,7 +28,7 @@ FML::Process::Distribute が走っている時のデータ構造の例。
 	</title>
 
 <para>
-PCB で使っているカテゴリとモジュール、および関数のリスト。
+PCB で使っているカテゴリとモジュール、および関数のリストです。
 </para>
 
 &list.pcb;

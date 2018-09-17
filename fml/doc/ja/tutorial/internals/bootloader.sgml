@@ -9,8 +9,9 @@
 	</title>
 
 <para>
-&fml8; にはインストールされている fml のバージョン依存性を考慮するため
-に、本章で述べるようなブートストラップの過程があります。
+&fml8; には、
+インストールされている fml のバージョン依存性を解決するために、
+本章で述べるブートストラップ過程があります。
 <screen>
 fml (libexec/distribute) が boot していく様子
 
@@ -36,7 +37,7 @@ fml (libexec/distribute) が boot していく様子
 
 <sect1 id="bootloader.example.distribute">
 	<title>
-	例: 配送の場合
+	例: 配送処理の場合
 	</title>
 
 <para>
@@ -45,33 +46,39 @@ loader から次々とモジュールが呼ばれていく様子は次のようになります。
 </para>
 
 <para>
-/usr/local/libexec/fml/distributre (の実体 
-/usr/local/libexec/fml/loader) は /usr/local/etc/fml/main.cf を読みこ
-み、fml_version 変数から使うべきライブラリのバージョンを決めます。
-たとえば fml_vesrion が current-20010501 となっていたら
-/usr/local/lib/fml/current-20010501/ 以下にあるライブラリを使うといっ
-たぐあいです。
+/usr/local/libexec/fml/distributre
+(の実体は /usr/local/libexec/fml/loader)
+は
+/usr/local/etc/fml/main.cf を読みこみ、
+fml_version 変数から使うべきライブラリのバージョンを決めます。
+たとえば fml_vesrion が 8.0.0 となっていれば、
+/usr/local/lib/fml/8.0.0/
+以下にあるライブラリを使うといった具合です。
 </para>
 
 <para>
 @INC を再設定した後、
 loader は FML::Process::Switch をロードし、
 $0 (プロセス名)を調べます。
-その名前から自分の仕事は配送処理なので
-FML::Process::Distribute クラスをロードし、配送処理に移ります。
+プロセス名から自分の仕事は配送処理なので、
+FML::Process::Distribute クラスをロードすればよいことを理解します。
+このクラスをロードし、配送処理に移ります。
+ここで、プロセス名とロードするべきクラスの対応関係は 
+/usr/local/etc/fml/defaults/バージョン/modules
+(例 /usr/local/etc/fml/defaults/8.0.0/modules)
+に定義されています。
 </para>
 
 <para>
-なお、プログラム名とクラスの対応関係は 
-/usr/local/etc/fml/defaults/バージョン/modules 
-で定義されています。
-</para>
-
-<para>
-こういった処理は見かけ上 FML::Process::Flow::ProcessStart() という関数
-が制御しています。ProcessStart() が引数として FML::Process::Distribute 
-オブジェクトを渡され、FML::Process::Distribute オブジェクトを実行して
-いくという流れになります。
+こういった処理は、
+見かけ上
+FML::Process::Flow::ProcessStart()
+という関数が制御しています。
+ProcessStart() が引数として
+FML::Process::Distribute 
+オブジェクトを渡され、
+FML::Process::Distribute
+オブジェクトを実行していくという流れになります。
 </para>
 
 </sect1>
@@ -99,84 +106,100 @@ FML::Process::Mead       >-|    |
 
 <sect1 id="bootloader.classes2">
 	<title>
-	プロセス実行時に使われるモジュール群
+	プロセス実行時の様子
 	</title>
 
 <itemizedlist>
 
    <listitem>
 	<para>
-	/usr/local/libexec/fml/loader (wrapper)。
-	これは Bootstrap() を実行します。
-	distribute などは、皆この loader へのシンボリックリンクです。
+	[/usr/local/libexec/fml/loader (wrapper)の実行]
+	</para>
+	
+	<para>
+	この段階では、まだ &fml8; Perl モジュール群に制御が移っていません。
+	このプログラムは、loader 内の関数 Bootstrap() を実行します。
+	</para>
+	
+	<para>
+	distribute など libexec/ 以下にあるプログラム群は、
+	どれも、この loader へのシンボリックリンクです。
 	/usr/local/libexec/fml/ 以下を参照してください。
 	</para>
    </listitem>
 
    <listitem>
-   <itemizedlist>
-	<listitem>
+	<para>
+	[loader 内 Bootstrap() 関数の実行]
+	</para>
+	
 	<para>
 	/usr/local/etc/fml/main.cf を読み込み、
-	fml のバージョンを知ります。
-	また、main.cf の値から @INC (Perl のライブラリサーチパス)を再設定し、
+	実行するべき fml のバージョンを知ります。
+	また、
+	main.cf の値から
+	@INC (Perl のライブラリサーチパス)を再設定し、
 	読み込むべきライブラリのバージョン依存性を解決します。
 	default_config.cf.{ja,en} はバージョン依存ですので、
 	設定ファイルを読み込む前に、
-	この段階でバージョンを評価しなければいけないことに注意してください。
+	この段階でバージョンを評価しなければいけません。
 	</para>
-	</listitem>
 
-	<listitem>
 	<para>
-	@ARGV (実行されたプログラムの引数 )を評価し、
-	どのＭＬの config.cf (設定ファイル)群を読み込むのかを判断します。
+	@ARGV (実行されたプログラムの引数)を評価し、
+	どのＭＬの config.cf (設定ファイル)群を読み込むべきか？を判断します。
 	</para>
-	</listitem>
+   </listitem>
 
-	<listitem>
+   <listitem>
 	<para>
-	次に
+	このあと、ようやく
 	FML::Process::Switch
 	(バージョン依存)クラスをロードします。
 	</para>
 
-	   <itemizedlist>
-		<listitem>
-		<para>
-		Bootstrap2() および ProcessSwitch() を実行し、
-		配送用、コマンドメール用などの各プロセスへ制御を移します。
-		この時点で、すでに $0 から、
-		どのプロセスへ成りかわればいいのかは分かっています。
-		</para>
-		</listitem>
+	<para>
+	Bootstrap2() および ProcessSwitch() を実行し、
+	FML::Process::Flow 経由で、
+	配送用、コマンドメール用などの各プロセスへ制御を移していきます。
+	</para>
+	
+	<para>
+	この時点で、
+	どのモジュール(例: FML::Process::Distribute)
+	をロードするのかは分かっています。
+	FML::Process::Distribute オブジェクトなどは、
+	FML::Process::Flow の関数を呼び出す際に引数として渡されています。
+	</para>
 
-		<listitem>
-		<para>
-		(ポリモーフィズムの例)
-		モジュールをダイナミックバインディングし、
-		該当するプロセスオブジェクトを生成、
-		そして、プロセスをスタートさせます。
+   </listitem>
 
-		FML::Process::Flow の中に、
-		どのように fml8 プロセスを実行するかが
-		定義されています。おおまかには
+   <listitem>
+	<para>
+	FML::Process::Flow 経由で、	
+	各モジュール(例: FML::Process::Distribute)
+	のメソッドを呼び出します。
+	</para>
+	
+	<para>
+	FML::Process::Flow の中には、
+	どのように &fml8; プロセスを実行するかが規格化/定義されています。
+	おおむね、どのプロセスも
 <screen>
-$process = new FML::Process::なにか;
+$process = new FML::Process::なになに;
 $process->prepare($args);
 $process->verify_request($args);
 $process->run($args);
 $process->finish($args);
 </screen>
-		のような実行順です。
-		各プロセスは、それぞれについて適当なメソッドを
-		FML::Process:: 以下のクラスで用意する必要があります。
-		</para>
-		</listitem>
-	   </itemizedlist>
-	</listitem>
-   </itemizedlist>
-   </listitem>
+	を実行していきます。
+	のため、各プロセスは、
+	それぞれについて適当なメソッドを
+	「FML::Process::なになに」
+	以下のクラスに用意する必要があります。
+	ダミーでもいいので、全メソッドの定義が必要です。
+	</para>
+    </listitem>
 </itemizedlist>
 </sect1>
 
@@ -187,13 +210,16 @@ $process->finish($args);
 	</title>
 
 <para>
-現在では、FML::Process:: の prepare() あたりで解決しています。
+現在は
+「FML::Process::なになに」
+の prepare() メソッドあたりで解決しています。
 </para>
 
 <para>
-以下、内部構造について、２、３の走り書き/おぼえがきを残しておきます。
+以下、内部構造についての走り書き/おぼえがきです。
 一応、こういった構造を考慮して、
-prepare() メソッドあたりに持ってきているわけです。 
+prepare()
+に持ってきています。 
 <screen>
 main::Bootstrap()
 
@@ -209,9 +235,9 @@ main::Bootstrap()
 main::Bootstrap2()
 ProcessSwitch()
 
-	使うモジュール( Process::なんか )を決める
+	使うモジュール( Process::なんか )を決定する
 		読み込むべき cf ファイルの決定（なんで？）
-		ライブラリパスの決定や @INC の修正など
+		ライブラリパスの決定や @INC の修正などを行う
 
 	hints を渡す？使う？ (CGI のみ？)	
 

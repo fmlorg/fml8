@@ -9,7 +9,7 @@
 	</title>
 
 <para>
-プロセス間の同期化はロックを用いて行ないます。
+プロセス間の同期化は(Unixカーネルの提供する)ロック機構を用いて行ないます。
 &fml8; でサポートされているロックメカニズムは 
 flock(2) もしくは lockf(2) を元にしたロック機構のみです。
 </para>
@@ -35,8 +35,9 @@ flock(2) もしくは lockf(2) を元にしたロック機構のみです。
 
 <para>
 Mail::Delivery::SMTP の操作の際にはメンバーリストのロックが必要です。
-現在は、Mail::Delivery::SMTP を呼び出す FML のクラス(実は FML::Send と 
-FML::Process::Delivery の２箇所しかない)の中でロック処理をしています。
+現在は、Mail::Delivery::SMTP を呼び出す FML のクラス
+(実は FML::Send と FML::Process::Delivery の２箇所しかない)
+の中でロック処理をしています。
 </para>
 
 <para>
@@ -45,9 +46,9 @@ FML::Process::Delivery の２箇所しかない)の中でロック処理をしています。
 </para>
 
 <para>
-そして、reader writer lock まで大げさでなくとも
-一般に map を使うモジュールにはロックが必要です。
-write 用の lock が必要とは限りません。
+そして、reader writer lock まで大げさでなくとも、
+一般に map へアクセスする際にはロックが必要です。
+そして write 用の lock が必要とは限りません。
 たとえば
 FML/Command/UserControl.pm 
 や
@@ -59,8 +60,10 @@ FML/Credential.pm
 
 <para>
 しかしながら、いまのところ reader writer lock は実装されていませんので、
-リソースごとの細かいロック制御で critical region 
-の時間を短くするようになっています。
+リソースごとの細かいロック制御で
+critical region の時間を短くするようにしています
+(メーリングリストドライバで、
+RWlock が必要なほど並列度の高い読み込み要求は来ない気がします)。
 </para>
 
 </sect1>
@@ -72,20 +75,23 @@ FML/Credential.pm
 	</title>
 
 <para>
-*_maps をよぶ前には MUTEX でロックをする。いや、やりすぎかもしれません。
+*_maps をよぶ前には MUTEX でロックをするべき…です？
+いや、やりすぎかもしれません。
 </para>
 
 <para>
-メンバーリストへ IO::Adapter をかます時に、
-READER WRITER LOCK がほしい。
+IO::Adapter 経由でメンバーリストを読む際には
+READER WRITER LOCK が欲しい気がしますが、
+それが必要なほど並列度の高い読み込み要求は来ない気がします。
 <footnote>
 <para>
-READ ロックは不要か？いや、だめだろ
-chaddr の途中で sleep したら敗けやから;)
+READ ロックは不要でしょうかか？
+いや、違うでしょう。
+chaddr の途中で sleep したら負けですから;)
 </para>
 </footnote>
-perl thread をつかえばできるけど、
-汎用的な実装はかなりむつかしいぽい;)
+Perl thread をつかえばできるけど、
+汎用的な実装はかなり難しいみたいです;)
 </para>
 
 </sect1>

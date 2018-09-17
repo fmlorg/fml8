@@ -16,7 +16,8 @@
 
 <para>
 全プログラムで統一された検査を行なうため、
-FML::Restriction クラスに基づいて検査が行なわれます。
+FML::Restriction
+クラスに基づいて検査が行なわれます。
 </para>
 
 
@@ -31,20 +32,24 @@ FML::Restriction クラスに基づいて検査が行なわれます。
 	</title>
 
 <para>
-そもそも記事に対する入力制限(入力データの表現範囲の制限)というものは考
-えにくい概念です。
-実際 FML::Restriction クラスによる入力データチェックは行なわれていません。
+そもそも、
+記事に対する入力制限(入力データの表現範囲の制限)は考えにくい概念です。
+実際
+FML::Restriction
+クラスによる入力データチェックは行なわれていません。
 </para>
 
 <caution>
 <para>
 (SPAM であろうと思われる)一行メールなどをはじくために 
-FML::Filter クラスによるフィルタチェックが行なわれ得ます。
+FML::Filter
+クラスによるフィルタチェックが行なわれ得ます。
 </para>
 
 <para>
 ただし、これは記事の内容に対するチェックではないので、
-FML::Restriction の対象としている操作とは意味合いが異なります。
+FML::Restriction
+の対象としている操作とは意味合いが異なります。
 </para>
 </caution>
 
@@ -57,10 +62,13 @@ FML::Restriction の対象としている操作とは意味合いが異なります。
 	</title>
 
 <para>
-コマンドメールは FML::Process::Command の中で一行ずつ
-FML::Restriction::Command で定義されている正規表現にしたがって
-入力されたコマンド列が検査されます。検査に合格すれば、
-FML::Command::{User,Admin}::コマンド の実行に進むことができます。
+コマンドメールは
+FML::Process::Command
+の中で一行ずつ
+FML::Restriction::Command
+で定義されている正規表現にしたがって入力されたコマンド列が検査されます。
+検査に合格すれば、
+FML::Command::{User,Admin}::コマンドの実行に進むことができます。
 </para>
 
 </sect2>
@@ -72,8 +80,9 @@ FML::Command::{User,Admin}::コマンド の実行に進むことができます。
 	</title>
 
 <para>
-CGI の各プログラムでは、safe_param_XXX() 
-という関数経由でのみ HTTP セッションからのデータを受けとることができます。
+CGI の各プログラムでは、
+safe_param_XXX() という関数経由でのみ
+HTTP セッションからのデータを受けとることができます。
 </para>
 
 <para>
@@ -84,8 +93,9 @@ try_cgi_*()
 </para>
 
 <para>
-これらの safe_param_XXX() は FML::Restriction::CGI (
-FML::Restriction::Base を継承している)経由でパターンの検査をし、
+これらの safe_param_XXX() は
+FML::Restriction::CGI (FML::Restriction::Base を継承している)
+経由でパターンの検査をし、
 検査に合格した場合にのみ値が返されています。
 </para>
 
@@ -99,9 +109,10 @@ FML::Restriction::Base を継承している)経由でパターンの検査をし、
 
 <para>
 コマンドラインで実行する(シェルの上での操作が可能である)ので
-「入力チェックをしない」のがデフォルトです。
-つまり、そのシェルが取れる時点で正規のユーザであると認証されているはず
-なので「正しいユーザ/そのユーザのすることはすべて正しい」と信じています。
+「入力チェックをしない」
+のがデフォルトです。
+サーバのシェルが取れる時点で、正規のユーザであると認証されているはずです。
+「正しいユーザ/そのユーザのすることはすべて正しい」と信じています。
 </para>
 
 <para>
@@ -124,17 +135,21 @@ FML::Restriction::Base を継承している)経由でパターンの検査をし、
 <para>
 入力データや、
 コマンドの ACL は
-FML::Restriction クラス以下にモジュールを配置することにしています。
+FML::Restriction
+クラス以下にモジュールを配置することにしています。
 </para>
 
 <para>
-たとえば、CGI では
-FML::Restriction::CGI クラスのモジュールを用いて
+たとえば、
+CGI では
+FML::Restriction::CGI
+クラスのモジュールを用いて
 入力データがある正規表現の中に収まるかどうか？の検査をしています。
 </para>
 
 <para>
-FML::Restriction 以下では Base を継承していますが、他のモジュールでは、
+FML::Restriction 以下では Base を継承していますが、
+他のモジュールでは、
 FML::Restriction クラスを object composition して使って下さい。
 たとえば、
 <screen>
@@ -156,7 +171,8 @@ if ($value =~ /^$allowed_regexp{$key}$) { ... ok, do something ... ;}
 	</title>
 
 <para>
-CGI では FML::Restriction::CGI クラスのモジュールを用いて
+CGI では
+FML::Restriction::CGI クラスのモジュールを用いて、
 入力データがある正規表現の中に収まるかどうか？の検査をします。
 </para>
 
@@ -212,9 +228,10 @@ RFC などで許されている表現のごく一部だけを許しています。
 
 <para>
 ただし
-FML::Restriction::Command はコマンドのシンタックスチェックは、
-もうちょっと粒度を上げるべきなのかもしれません。
-現状では未実装。
+FML::Restriction::Command
+によるコマンドのシンタックスチェックは、
+もう少し粒度を上げるべきなのかもしれません
+(現状、未実装です)。
 </para>
 
 </sect1>
