@@ -2,11 +2,16 @@
 		# see github on more details.
 
   FML_CURRENT_VERSION=7.99.1
-  
+
+7.99.2	documentation updates.
+
+	[20180917] merged maint/document-v7.99 branch
+	[22a2c064..76a554ff] where the document (fml/doc/ja/tutorial/)
+	has been reviewed for v8.0.0.
 
 7.99.1	subject MIME handling bug fixed.
 
-	Sep 8, 2018, we have merged the following branch
+	[20180908] we have merged the following branch
 	feature/utf8-mime-header-handling [2b9052aa..b9c2f6c2] into
 	the master.  XXX Mail::Message::ToHTML is broken.  XXX
 	Mail::Message::Outline may be broken.
