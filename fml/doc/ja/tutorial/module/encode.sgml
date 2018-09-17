@@ -10,7 +10,7 @@
 
 <sect1 id="module.mail.message.encode.examplee">
 	<title>
-	Mail::Message::Encode の使い方の見本
+	[見本] Mail::Message::Encode の使い方
 	</title>
 
 <para>
@@ -46,14 +46,14 @@ fml-help ML's Count: 02012, 02013, 02016 など
 
 <sect1 id="module.mail.message.encode.specification">
 	<title>
-	Mail::Message::Encode の仕様の粗筋
+	Mail::Message::Encode の仕様(あらすじ)
 	</title>
 
 <para>
-本体はプライベートメソッド _convert_str_ref() にまとめてある。
+本体はプライベートメソッド _convert_str_ref() にまとめてあります。
 
 <screen>
-   sub convert # 引数が STR
+   sub convert # 引数 STR が変換対象
    {
 	my ($self, $str, $out_code, $in_code) = @_;
 	_convert_str_ref(\$str, $out, $in);
@@ -62,14 +62,14 @@ fml-help ML's Count: 02012, 02013, 02016 など
    }
 
 
-   sub convert_str_ref # 引数が STR_REF
+   sub convert_str_ref # 引数 STR_REF が変換対象
    {
 	my ($self, $str, $out, $in) = @_;
 	_convert_str_ref($str, $out, $in);
    }
 
 
-   sub _convert_str_ref # 引数が STR_REF
+   sub _convert_str_ref # 引数 STR_REF が変換対象
    {
         my ($str, $out, $in) = @_;
 
@@ -79,12 +79,11 @@ fml-help ML's Count: 02012, 02013, 02016 など
         # 2. 変換をトライ
         if ($in がわかった or $in が指定された) {
                 $out へ変換
-                jcode, Jcode, Encode は perl バージョンによって
-                よろしく変換をがんばる
+                jcode, Jcode, Encode などのモジュールが変換をがんばる
                 return 1 ; ＃成功
         }
         else { # principle of least surprise ?
-                なにもしない＃ str はそのまま返す
+                なにもしない＃ str を、そのまま返す
         }
 
         return 0 ; # 失敗
@@ -95,17 +94,17 @@ fml-help ML's Count: 02012, 02013, 02016 など
 sub base64 {}
 sub quoted_printable {}
 </screen>
-があるといいかな〜
+があるといいですかね？
 <screen>
 $x = $encode->base64($s);
 </screen>
-また、互換性というか便宜上、STR2XXX() も準備する。
+また、互換性というか便宜上、STR2XXX() も準備します。
 <screen>
    STR2EUC(  $str, [$icode] )
    STR2JIS(  $str, [$icode] )
    STR2SJIS( $str, [$icode] )
 </screen>
-は convert_str_ref を wrap する。
+は convert_str_ref を wrap する関数です。
 </para>
 
 </sect1>
@@ -117,15 +116,17 @@ $x = $encode->base64($s);
 	</title>
 
 <para>
-言語依存処理の過程では、プログラムの扱いやすい文字コードに変換し、
+言語依存処理の過程では、
+プログラムが扱いやすい文字コード(内部処理コード)に変換し、
 処理を行なう関数が多数存在します。
-そこで、そういった処理のための下請け関数を用意すると便利です。
+そこで、そういった処理のための下請け関数を用意しておくと便利です。
 </para>
 
 <para>
 run_in_chcode() は、
-関数 $proc を実行します。
-引数は、あらかじめ指定された文字コードに変換後、
+引数にある関数 $proc を実行します。
+関数 $proc を実行する際の引数は、
+あらかじめ指定された文字コードに変換したあと、
 関数 $proc に渡されるという仕様です。
 </para>
 
@@ -154,9 +155,9 @@ sub run_in_code
 </screen>
 これは、次のように動作します。
 <screen>
-$s は EUC-JP へ変換。
-$proc($s, $args); を実行
-$proc の実行結果を返す。
+(1) $s を EUC-JP へ変換。
+(2) $proc($s, $args); を実行。
+(3) $proc の実行結果を返す。
 </screen>
 </para>
 
