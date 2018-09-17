@@ -1,6 +1,5 @@
 <!-- -*- mode:text coding:euc-jp -*-
-This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
-to generate various output formats.
+This is an SGML using DocBook dtd with DSSL provided by sgmltools-lite.
 
 $FML: book.sgml,v 1.72 2006/01/19 14:33:17 fukachan Exp $
 -->
@@ -24,7 +23,7 @@ $FML: book.sgml,v 1.72 2006/01/19 14:33:17 fukachan Exp $
 
 	<partintro>
 	<para>
-	本パートは初心者向けの設定ガイドを目指しています。
+	本パートは初心者向けの設定ガイドを目ざしています。
 	内容は基本的なデザイン思想や設定の仕方についてです。
 	</para>
 	<para>
@@ -50,9 +49,7 @@ $FML: book.sgml,v 1.72 2006/01/19 14:33:17 fukachan Exp $
 
 	<partintro>
 	<para>
-	トピックスごとに、まとめます。
-	セットアップの際に行なうであろう
-	標準的な順番に沿って解説しているつもりです。
+	セットアップの標準的な手順に沿ってトピックスごとに解説しています。
 	</para>
 	</partintro>
 
@@ -88,7 +85,7 @@ $FML: book.sgml,v 1.72 2006/01/19 14:33:17 fukachan Exp $
 
 	<partintro>
 	<para>
-	トピックスごとに、まとめます。
+	トピックスごとに、カスタマイズ例などをまとめています。
 	</para>
 	</partintro>
 
@@ -133,7 +130,7 @@ $FML: book.sgml,v 1.72 2006/01/19 14:33:17 fukachan Exp $
 
 	<partintro>
 	<para>
-	本パートではトラブルシューティングの話をします。
+	本パートではトラブルシューティングの話をしています。
 	</para>
 	</partintro>
 
@@ -149,7 +146,7 @@ $FML: book.sgml,v 1.72 2006/01/19 14:33:17 fukachan Exp $
 
 	<partintro>
 	<para>
-	本パートではデザインの話をします。
+	本パートではデザインの話をしています。
 	</para>
 	</partintro>
 
@@ -165,7 +162,7 @@ $FML: book.sgml,v 1.72 2006/01/19 14:33:17 fukachan Exp $
 
 	<partintro>
 	<para>
-	本パートでは開発者向けの内容についてまとめます。
+	本パートは開発者向けに内部構造を説明しています。
 	</para>
 	</partintro>
 
