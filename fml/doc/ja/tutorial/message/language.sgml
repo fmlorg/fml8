@@ -36,10 +36,14 @@ $curproc->reply_message_nl('error.already_member',
 <screen>
 $_arg_address
 </screen>
-は reply_message_nl() 
-の引数のハッシュリファレンスとして与えられた値へ展開されます。
-上の例でいえば、メッセージテンプレート中の $_arg_address 
-が引数中の _arg_address の値で展開されます。
+は
+reply_message_nl()
+メソッドの引数として与えられたハッシュリファレンス内の値へ展開されます。
+上の例でいえば、メッセージテンプレート中の
+$_arg_address 
+がメソッドの引数にある
+_arg_address
+の値で展開されます。
 </para>
 
 <para>
