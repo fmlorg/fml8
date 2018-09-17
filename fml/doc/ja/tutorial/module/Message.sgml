@@ -20,31 +20,39 @@ Mail::Message クラスはメールの解析と、
 <para>
 もう少し詳しく説明すると、このモジュールはメールを解析し、
 <screen>
-(multipart でない場合)
-
+(いわゆるテキストメールの場合)
 header -> body
 
-(multipart の場合)
-
+(マルチパートの場合)
 header -> preamble -> part1 -> part2 -> trailor
 </screen>
-のようにオブジェクトが数珠つなぎとなったデータ構造を作ります。ちなみに
-鎖と鎖の間は double link list です。Mail::Message のクラスはこのような
-データ構造に対して、さまざまな操作を行なうメソッドを提供しています。
+のようにオブジェクトが数珠つなぎとなったデータ構造を作ります。
+ちなみに、鎖と鎖の間は double link list です。
+Mail::Message のクラスは、
+このようなデータ構造に対して、
+さまざまな操作を行なうメソッドを提供しています。
 </para>
 
 <para>
-この鎖の部分部分それぞれが Mail::Message オブジェクトです。つまり一通
-のメールはメールヘッダから始まるオブジェクトの鎖として表現されます。
+この鎖の部分部分それぞれが Mail::Message オブジェクトです。
+つまり一通のメールは、
+メールヘッダから始まるオブジェクトの鎖として表現されます。
 </para>
 
 <para>
-メールヘッダは Mail::Message のタイプが text/rfc822-headers で、
+<screen>
+(マルチパートの場合)
+header -> preamble -> part1 -> part2 -> trailor
+</screen>
+を例に取りましょう。
+この左端(メールヘッダ)は、
+Mail::Message のタイプが text/rfc822-headers で、
 その data が Mail::Header オブジェクトになります。
 一方 part1 は
 text/plain
 で、
-data 部分が文字列(テキスト)へのリファレンスです。
+オブジェクトのデータ部分は、
+文字列(テキスト)へのリファレンスです。
 </para>
 
 <para>
@@ -63,13 +71,14 @@ Mail::Message モジュールのマニュアル(英語)
 	</title>
 
 <para>
-parse() メソッドは引数で与えられたファイル(名)かファイルディスクリプタ
-に対しメッセージの解析を試みます。
+parse() メソッドは、
+引数で与えられたファイル(名)かファイルディスクリプタからデータを読み込み、
+そのデータ(メッセージ)の解析を試みます。
 </para>
 
 <para>
-data_type_list() は鎖の列の情報を返します。情報は ARRAY REFERENCE の形
-で返されます。たとえば MIME/Multipart は次のように表現されています
+data_type_list() は鎖の列の情報を ARRAY REFERENCE の形で返します。
+たとえば MIME/Multipart は次のように表現されます
 (ちなみに、以下の表示はデバッグモードで出力されるものです)。
 <screen>
   type[ 1]: text/rfc822-headers       | multipart/mixed
@@ -105,15 +114,15 @@ build_mime_multipart_chain($args)
 parse_and_build_mime_multipart_chain($args)
 build_mime_header($args)
 </screen>
-注意: これらのメソッドを直接呼び出すことは実際ないので、
+注意: これらのメソッドは使わないでください。
+現状、これらのメソッドを直接呼び出していないので、
 将来、これらは private methods に移行するかもしれません。
-これらのメソッドは使わないでください。
 </para>
 
 <para>
-実際のところ MIME/mulitpart の作成には
+MIME/mulitpart の「作成」には
 Mail::Message::Compose クラスを使っています。
-実のところ、このクラスの実態は CPAN の MIME::Lite そのものです :-)
+そして、このクラスの実態は CPAN の MIME::Lite そのものです :-)
 </para>
 
 </sect1>
@@ -128,8 +137,8 @@ Mail::Message::Compose クラスを使っています。
 dup_header() メソッドは
 RFC822 型メッセージのヘッダ部分のみをコピーします。
 メール本体の部分はそのままです。
-複製されたヘッダオブジェクトからのリンクは
-メールの本体です。
+複製されたヘッダオブジェクトからのリンクはメールの本体です。
+つまり、ヘッダだけ枝分かれしている状態ですね。
 <screen>
 $header1 = $message0->dup_header0;
 
@@ -156,12 +165,12 @@ __last_message() は鎖の最後のオブジェクトを返します。
 これらのメソッドは使わないで下さい。
 将来、これらのコードは消去します。
 なお __head_message() は、
-通常、図の header オブジェクトを返すことになりますので、
-多くの場合 whole_message_header() と等価です。
+通常、図の header オブジェクトを返すことになるので、
+たいていの場合 whole_message_header() と等価です。
 </para>
 
 <para>
-header_data_type()
+whole_message_header_data_type()
 メソッドはメール全体のタイプ(文字列)を返します。
 つまり、このメッセージは単なるテキストなのかマルチパートなのか？
 などの情報を教える関数です。
@@ -179,11 +188,9 @@ header_data_type()
 本節では、次のようなオブジェクトの鎖を例にとることにします。
 <screen>
 (multipart でない場合)
-
 header -> body
 
 (multipart の場合)
-
 header -> preamble -> part1 -> part2 -> trailor
 </screen>
 </para>
@@ -193,7 +200,7 @@ header -> preamble -> part1 -> part2 -> trailor
 </para>
 
 <para>
-header_data_type()
+whole_message_header_data_type()
 メソッドはメール全体のタイプ(文字列)を返します。
 つまり、header の Content-Type で得られる情報です。
 </para>
@@ -208,16 +215,18 @@ whole_message_body_head() メソッドも同じ返り値です。
 __head_message() は鎖の先頭のオブジェクトを返します。
 __last_message() は鎖の最後のオブジェクトを返します。
 そのため、通常、図の header オブジェクトを返すことになりますので、
-多くの場合 whole_message_header() と等価です。
-__last_message() は鎖の最後の部分なのでメッセージ本文の最後になります。
+たいていの場合 whole_message_header() と等価です。
+__last_message()
+は、
+鎖の最後の部分なのでメッセージ本文の最後(図の右端のオブジェクト)になります。
 </para>
 
 <para>
 find_first_plaintext_message($args)
-は
+は、
 鎖の中で最初の plain/text タイプの Mail::Message オブジェクトを返します。
 フィルタリングでは最初の
-plain/text タイプのメッセージ部分に着目することが多いので
+plain/text タイプのメッセージ部分に着目することが多いため、
 この関数を使うと便利です。
 </para>
 
@@ -230,10 +239,11 @@ plain/text タイプのメッセージ部分に着目することが多いので
 	</title>
 
 <para>
-find() メソッドは Mail::Message オブジェクトの特定のタイプを探し、
+find()
+メソッドは、
+特定のタイプの Mail::Message オブジェクトを探し、
 最初に見つけたオブジェクトを返します。
-ヘッダの Content-Type: ではありません。
-注意。
+注意: ヘッダの Content-Type: を返すわけではありません。
 </para>
 
 </sect1>
@@ -245,14 +255,17 @@ find() メソッドは Mail::Message オブジェクトの特定のタイプを探し、
 	</title>
 
 <para>
-print() メソッドは文字どおり print です。
-通常は引数で出力するファイルディスクリプタを渡して下さい。
+print()
+メソッドは文字どおり表示(print)です。
+通常、
+引数で「出力するファイルディスクリプタ」を渡して下さい。
 </para>
 
 <para>
 print() には CRLF なのか LF なのかを指定する mode という概念があります。
 このために
-set_print_mode(mode) および
+set_print_mode(mode)
+および
 reset_print_mode()
 というメソッドがあります。
 通常は raw で、SMTP の時だけは smtp を指定して下さい。
@@ -274,11 +287,12 @@ reset_print_mode()
 <para>
 size()
 は(鎖の一つ一つの Mail::Message)オブジェクトのサイズを返します。
-メール全体ではありません。注意。
+注意: メール全体のサイズを返すわけではありません。
+なお、
 header_size()
 や
 body_size()
-を使うと、ヘッダやメール本文全体の長さを教えてくれます。
+を使うと、ヘッダサイズやメール本文全体の長さを教えてくれます。
 </para>
 
 <para>
@@ -287,7 +301,7 @@ is_empty()
 </para>
 
 <para>
-これらはフィルタリングで有用です。
+これらもフィルタリングのコードを書く際に有用です。
 </para>
 
 </sect2>
@@ -301,23 +315,26 @@ is_empty()
 <para>
 envelope_sender()
 はメールの送信者情報(文字列)を返します。
-文字通り、いわゆる Envelope Sender 情報です。
+文字どおり、いわゆる Envelope Sender 情報です。
 </para>
 
 <para>
 data_type()
 メソッドは
 Mail::Message オブジェクトのタイプ(文字列)を返します。
-これは、メール全体のタイプ（マルチパートとか text/plain)ではなく、
+これは、
+メール全体のタイプ（マルチパートとか text/plain)ではなく、
 鎖の各部分のオブジェクト・タイプであることに注意して下さい。
 </para>
 
 <para>
 encoding_mechanism()
 メソッドは
-Mail::Message オブジェクトのエンコーディングメカニズム(文字列)を返します。
+Mail::Message
+オブジェクトのエンコーディングメカニズム(文字列)を返します。
 エンコーディングされていない場合 undef が返ります。
-これは、メール全体のタイプ（マルチパートとか text/plain)ではなく、
+これは、
+メール全体のタイプ（マルチパートとか text/plain)ではなく、
 鎖の各部分のオブジェクト・タイプであることに注意して下さい。
 </para>
 
@@ -330,7 +347,7 @@ Mail::Message オブジェクトのエンコーディングメカニズム(文字列)を返します。
 	</title>
 
 <para>
-num_paragraph()
+num_paragraphs()
 メソッドは、
 その Mail::Message オブジェクトの中に
 何個のパラグラフがあるか(数字)を返します。
@@ -341,16 +358,19 @@ num_paragraph()
 nth_paragraph(数字)
 メソッドは
 「数字」番目のパラグラフの内容を文字列として返します。
-たとえば、一番目のパラグラフは 0 ではなく 1 と指定して下さい。
-ここは、わざとＣ言語風ではなく人間に分かりやすいように
-「 1から始まる仕様」としてあります。
+なお、
+一番目のパラグラフは 0 ではなく 1 と指定して下さい。
+ここは、
+(あえてC言語風ではなく)
+人間に分かりやすいように「 1から始まる」仕様になっています。
 </para>
 
-
+<!--
 <para>
 header()
 メソッドは
-MIME/multipart の各ブロックにあるヘッダ部分を返します。
+MIME/multipart
+の各ブロックにあるヘッダ部分を返します。
 data()
 メソッドは、データの部分です。
 それぞれ
@@ -359,6 +379,7 @@ message_fields($size)
 message_text($size)
 メソッドの alias になっています。
 </para>
+-->
 
 </sect2>
 
